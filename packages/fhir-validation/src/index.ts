@@ -374,6 +374,7 @@ async function validateComplex(
 ): Promise<OperationOutcome["issue"]> {
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
   let foundFields: string[] = [];
+
   const value = get(path, root);
 
   if (typeof value !== "object") {
@@ -400,6 +401,8 @@ async function validateComplex(
         if (!child) throw new Error("Child not found");
 
         const fields = determineTypesAndFields(child, value);
+        foundFields = foundFields.concat(fields.map((f) => f[0]));
+
         if (fields.length === 0) {
           return [
             issueError(
@@ -411,16 +414,7 @@ async function validateComplex(
             ),
           ];
         }
-        const { issues, fieldsFound } = await checkFields(
-          ctx,
-          path,
-          structureDefinition,
-          index,
-          root,
-          fields,
-        );
-        foundFields = foundFields.concat(fieldsFound);
-        return issues;
+        return checkFields(ctx, path, structureDefinition, index, root, fields);
       }),
     )
   ).flat();
@@ -434,7 +428,8 @@ async function validateComplex(
           if (!child) throw new Error("Child not found");
 
           const fields = determineTypesAndFields(child, value);
-          const { issues, fieldsFound } = await checkFields(
+          foundFields = foundFields.concat(fields.map((f) => f[0]));
+          return checkFields(
             ctx,
             path,
             structureDefinition,
@@ -442,8 +437,6 @@ async function validateComplex(
             root,
             fields,
           );
-          foundFields = foundFields.concat(fieldsFound);
-          return issues;
         }),
       )
     ).flat(),
@@ -574,6 +567,7 @@ async function validateSingular(
     );
   }
 }
+
 async function checkFields(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
@@ -581,16 +575,11 @@ async function checkFields(
   index: number,
   root: object,
   fields: [string, uri][],
-): Promise<{
-  fieldsFound: string[];
-  issues: OperationOutcome["issue"];
-}> {
-  const fieldsFound: string[] = [];
+): Promise<OperationOutcome["issue"]> {
   const issues = (
     await Promise.all(
       fields.map((fieldType) => {
         const [field, type] = fieldType;
-        fieldsFound.push(field);
         return validateElement(
           ctx,
           descend(path, field),
@@ -603,7 +592,7 @@ async function checkFields(
     )
   ).flat();
 
-  return { issues, fieldsFound };
+  return issues;
 }
 
 function validateIsObject(v: unknown): v is object {
