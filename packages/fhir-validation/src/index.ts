@@ -7,7 +7,6 @@ import {
   toJSONPointer,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
-import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   ElementDefinition,
   OperationOutcome,
@@ -28,23 +27,19 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { validatePrimitive } from "./primitive.js";
 import { ValidationCTX, Validator } from "./types.js";
-import { validateIsObject } from "./utilities.js";
+import {
+  capitalize,
+  isPrimitiveType,
+  isResourceType,
+  isTypeChoice,
+  notNull,
+  validateIsObject,
+} from "./utilities.js";
+import { validatePrimitive } from "./validate-primitive.js";
 
 export { ValidationCTX };
 // Create a validator for a given fhir type and value
-
-function isElement(
-  element: ElementDefinition | undefined,
-): element is ElementDefinition {
-  if (!element) return false;
-  return true;
-}
-
-function isTypeChoice(element: ElementDefinition) {
-  return (element.type || []).length > 1;
-}
 
 function fieldName(elementDefinition: ElementDefinition, type?: string) {
   const field = elementDefinition.path.split(".").pop() as string;
@@ -54,14 +49,6 @@ function fieldName(elementDefinition: ElementDefinition, type?: string) {
     return field.replace("[x]", capitalize(type));
   }
   return field;
-}
-
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
 }
 
 function resolveContentReferenceIndex(
@@ -154,7 +141,7 @@ async function validateReferenceTypeConstraint(
     if (value?.reference) {
       const resourceType = value.reference?.split("/")[0];
       // Could be ref in bundle so skip for now.
-      if (!resourceTypes.has(resourceType)) {
+      if (!isResourceType(resourceType)) {
         return [];
       }
       if (
@@ -425,7 +412,7 @@ async function validateElement(
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
-  if (!isElement(element)) {
+  if (!notNull(element)) {
     throw new OperationError(
       outcomeFatal(
         "structure",
@@ -489,7 +476,7 @@ export default async function validate(
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>(),
 ): Promise<OperationOutcome["issue"]> {
-  if (primitiveTypes.has(type))
+  if (isPrimitiveType(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
   const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
@@ -526,7 +513,7 @@ export default async function validate(
     ];
 
   if (
-    resourceTypes.has(type) &&
+    isResourceType(type) &&
     get(descend(path, "resourceType"), root) !== type
   ) {
     return [
