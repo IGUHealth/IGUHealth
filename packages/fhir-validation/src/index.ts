@@ -4,17 +4,14 @@ import {
   Loc,
   descend,
   get,
-  root,
   toJSONPointer,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
-import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   ElementDefinition,
   OperationOutcome,
   Reference,
   StructureDefinition,
-  canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -22,7 +19,6 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
-  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
@@ -31,200 +27,19 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-export interface ValidationCTX {
-  fhirVersion: FHIR_VERSION;
-  resolveTypeToCanonical<Version extends FHIR_VERSION>(
-    version: Version,
-    type: uri,
-  ): Promise<canonical | undefined>;
-  resolveCanonical: <
-    FHIRVersion extends FHIR_VERSION,
-    Type extends ResourceType<FHIRVersion>,
-  >(
-    fhirVersion: FHIRVersion,
-    type: Type,
-    url: canonical,
-  ) => Promise<Resource<FHIRVersion, Type> | undefined>;
-  validateCode?(system: string, code: string): Promise<boolean>;
-}
+import { ValidationCTX, Validator } from "./types.js";
+import {
+  capitalize,
+  isPrimitiveType,
+  isResourceType,
+  isTypeChoice,
+  notNull,
+  validateIsObject,
+} from "./utilities.js";
+import { validatePrimitive } from "./validate-primitive.js";
 
-type Validator = (input: unknown) => Promise<OperationOutcome["issue"]>;
-
+export { ValidationCTX };
 // Create a validator for a given fhir type and value
-
-const REGEX: Record<string, RegExp> = {
-  // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
-  uuid: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
-  time: /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/,
-  oid: /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/,
-  unsignedInt: /^([0]|([1-9][0-9]*))$/,
-  positiveInt: /^(\+?[1-9][0-9]*)$/,
-  instant:
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/,
-  id: /^[A-Za-z0-9\-.]{1,64}$/,
-  date: /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$/,
-  dateTime:
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$/,
-};
-
-async function validatePrimitive(
-  ctx: ValidationCTX,
-  element: ElementDefinition | undefined,
-  rootValue: unknown,
-  path: Loc<object, any, any>,
-  type: string,
-): Promise<OperationOutcome["issue"]> {
-  let value;
-  if (validateIsObject(rootValue)) value = get(path, rootValue);
-  else if (path === root(path)) value = rootValue;
-  else {
-    return [
-      issueError(
-        "structure",
-        `Expected primitive type '${type}' at path '${toJSONPointer(path)}'`,
-        [toJSONPointer(path)],
-      ),
-    ];
-  }
-
-  switch (type) {
-    case "http://hl7.org/fhirpath/System.String":
-    case "date":
-    case "dateTime":
-    case "time":
-    case "instant":
-    case "id":
-    case "string":
-    case "xhtml":
-    case "markdown":
-    case "base64Binary":
-    case "uri":
-    case "uuid":
-    case "canonical":
-    case "oid":
-    case "url": {
-      if (typeof value !== "string") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      if (REGEX[type] && !REGEX[type].test(value)) {
-        return [
-          issueError(
-            "value",
-            `Invalid value '${value}' at path '${toJSONPointer(
-              path,
-            )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
-      return [];
-    }
-
-    case "boolean": {
-      if (typeof value !== "boolean") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      return [];
-    }
-
-    case "code": {
-      const strength = element?.binding?.strength;
-      const valueSet = element?.binding?.valueSet;
-      if (typeof value !== "string") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
-      if (strength === "required" && valueSet && ctx.validateCode) {
-        const isValid = await ctx.validateCode(valueSet, value);
-        if (!isValid) {
-          return [
-            issueError(
-              "structure",
-              `Code '${value}' is not in value set '${valueSet}' at path '${toJSONPointer(
-                path,
-              )}'`,
-              [toJSONPointer(path)],
-            ),
-          ];
-        }
-      }
-
-      return [];
-    }
-    case "integer":
-    case "positiveInt":
-    case "unsignedInt":
-    case "decimal": {
-      if (typeof value !== "number") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      if (REGEX[type] && !REGEX[type].test(value.toString())) {
-        return [
-          issueError(
-            "value",
-            `Invalid value '${value}' at path '${toJSONPointer(
-              path,
-            )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      return [];
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "structure",
-          `Unknown primitive type '${type}' at path '${toJSONPointer(path)}'`,
-          [toJSONPointer(path)],
-        ),
-      );
-  }
-}
-
-function isElement(
-  element: ElementDefinition | undefined,
-): element is ElementDefinition {
-  if (!element) return false;
-  return true;
-}
-
-function isTypeChoice(element: ElementDefinition) {
-  return (element.type || []).length > 1;
-}
 
 function fieldName(elementDefinition: ElementDefinition, type?: string) {
   const field = elementDefinition.path.split(".").pop() as string;
@@ -234,14 +49,6 @@ function fieldName(elementDefinition: ElementDefinition, type?: string) {
     return field.replace("[x]", capitalize(type));
   }
   return field;
-}
-
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
 }
 
 function resolveContentReferenceIndex(
@@ -334,7 +141,7 @@ async function validateReferenceTypeConstraint(
     if (value?.reference) {
       const resourceType = value.reference?.split("/")[0];
       // Could be ref in bundle so skip for now.
-      if (!resourceTypes.has(resourceType)) {
+      if (!isResourceType(resourceType)) {
         return [];
       }
       if (
@@ -361,6 +168,9 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
+/**
+ * Validating root / backbone / element nested types here.
+ */
 async function validateComplex(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
@@ -369,11 +179,9 @@ async function validateComplex(
   root: object,
   childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
-  // Validating root / backbone / element nested types here.
-  // Need to validate that only the _field for primitives
-  // And the typechoice check on each field.
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
   let foundFields: string[] = [];
+
   const value = get(path, root);
 
   if (typeof value !== "object") {
@@ -400,6 +208,8 @@ async function validateComplex(
         if (!child) throw new Error("Child not found");
 
         const fields = determineTypesAndFields(child, value);
+        foundFields = foundFields.concat(fields.map((f) => f[0]));
+
         if (fields.length === 0) {
           return [
             issueError(
@@ -411,16 +221,7 @@ async function validateComplex(
             ),
           ];
         }
-        const { issues, fieldsFound } = await checkFields(
-          ctx,
-          path,
-          structureDefinition,
-          index,
-          root,
-          fields,
-        );
-        foundFields = foundFields.concat(fieldsFound);
-        return issues;
+        return checkFields(ctx, path, structureDefinition, index, root, fields);
       }),
     )
   ).flat();
@@ -434,7 +235,8 @@ async function validateComplex(
           if (!child) throw new Error("Child not found");
 
           const fields = determineTypesAndFields(child, value);
-          const { issues, fieldsFound } = await checkFields(
+          foundFields = foundFields.concat(fields.map((f) => f[0]));
+          return checkFields(
             ctx,
             path,
             structureDefinition,
@@ -442,8 +244,6 @@ async function validateComplex(
             root,
             fields,
           );
-          foundFields = foundFields.concat(fieldsFound);
-          return issues;
         }),
       )
     ).flat(),
@@ -574,6 +374,7 @@ async function validateSingular(
     );
   }
 }
+
 async function checkFields(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
@@ -581,16 +382,11 @@ async function checkFields(
   index: number,
   root: object,
   fields: [string, uri][],
-): Promise<{
-  fieldsFound: string[];
-  issues: OperationOutcome["issue"];
-}> {
-  const fieldsFound: string[] = [];
+): Promise<OperationOutcome["issue"]> {
   const issues = (
     await Promise.all(
       fields.map((fieldType) => {
         const [field, type] = fieldType;
-        fieldsFound.push(field);
         return validateElement(
           ctx,
           descend(path, field),
@@ -603,11 +399,7 @@ async function checkFields(
     )
   ).flat();
 
-  return { issues, fieldsFound };
-}
-
-function validateIsObject(v: unknown): v is object {
-  return typeof v === "object" && v !== null;
+  return issues;
 }
 
 async function validateElement(
@@ -620,7 +412,7 @@ async function validateElement(
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
-  if (!isElement(element)) {
+  if (!notNull(element)) {
     throw new OperationError(
       outcomeFatal(
         "structure",
@@ -684,7 +476,7 @@ export default async function validate(
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>(),
 ): Promise<OperationOutcome["issue"]> {
-  if (primitiveTypes.has(type))
+  if (isPrimitiveType(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
   const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
@@ -721,7 +513,7 @@ export default async function validate(
     ];
 
   if (
-    resourceTypes.has(type) &&
+    isResourceType(type) &&
     get(descend(path, "resourceType"), root) !== type
   ) {
     return [

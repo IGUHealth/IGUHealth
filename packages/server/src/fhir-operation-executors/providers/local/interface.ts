@@ -68,14 +68,17 @@ export default function InlineOperation<
         throw new OperationError(outcome(inputIssues));
 
       const result = await executor(ctx, request, input);
+
       const outputIssues = await op.validate(
         getOpCTX(ctx, request),
         "out",
         result,
       );
 
-      if (outputIssues.length > 0)
+      if (outputIssues.length > 0) {
+        console.log(JSON.stringify(result));
         throw new OperationError(outcome(outputIssues));
+      }
 
       return op.parseToParameters("out", result) as Parameters;
     },
