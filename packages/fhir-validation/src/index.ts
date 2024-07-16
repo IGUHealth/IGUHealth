@@ -14,7 +14,6 @@ import {
   OperationOutcome,
   Reference,
   StructureDefinition,
-  canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -22,7 +21,6 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
-  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
@@ -31,25 +29,9 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-export interface ValidationCTX {
-  fhirVersion: FHIR_VERSION;
-  resolveTypeToCanonical<Version extends FHIR_VERSION>(
-    version: Version,
-    type: uri,
-  ): Promise<canonical | undefined>;
-  resolveCanonical: <
-    FHIRVersion extends FHIR_VERSION,
-    Type extends ResourceType<FHIRVersion>,
-  >(
-    fhirVersion: FHIRVersion,
-    type: Type,
-    url: canonical,
-  ) => Promise<Resource<FHIRVersion, Type> | undefined>;
-  validateCode?(system: string, code: string): Promise<boolean>;
-}
+import { ValidationCTX, Validator } from "./types.js";
 
-type Validator = (input: unknown) => Promise<OperationOutcome["issue"]>;
-
+export { ValidationCTX };
 // Create a validator for a given fhir type and value
 
 const REGEX: Record<string, RegExp> = {
