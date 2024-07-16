@@ -4,7 +4,6 @@ import {
   Loc,
   descend,
   get,
-  root,
   toJSONPointer,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
@@ -29,173 +28,12 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { validatePrimitive } from "./primitive.js";
 import { ValidationCTX, Validator } from "./types.js";
+import { validateIsObject } from "./utilities.js";
 
 export { ValidationCTX };
 // Create a validator for a given fhir type and value
-
-const REGEX: Record<string, RegExp> = {
-  // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
-  uuid: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
-  time: /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/,
-  oid: /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/,
-  unsignedInt: /^([0]|([1-9][0-9]*))$/,
-  positiveInt: /^(\+?[1-9][0-9]*)$/,
-  instant:
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/,
-  id: /^[A-Za-z0-9\-.]{1,64}$/,
-  date: /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$/,
-  dateTime:
-    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$/,
-};
-
-async function validatePrimitive(
-  ctx: ValidationCTX,
-  element: ElementDefinition | undefined,
-  rootValue: unknown,
-  path: Loc<object, any, any>,
-  type: string,
-): Promise<OperationOutcome["issue"]> {
-  let value;
-  if (validateIsObject(rootValue)) value = get(path, rootValue);
-  else if (path === root(path)) value = rootValue;
-  else {
-    return [
-      issueError(
-        "structure",
-        `Expected primitive type '${type}' at path '${toJSONPointer(path)}'`,
-        [toJSONPointer(path)],
-      ),
-    ];
-  }
-
-  switch (type) {
-    case "http://hl7.org/fhirpath/System.String":
-    case "date":
-    case "dateTime":
-    case "time":
-    case "instant":
-    case "id":
-    case "string":
-    case "xhtml":
-    case "markdown":
-    case "base64Binary":
-    case "uri":
-    case "uuid":
-    case "canonical":
-    case "oid":
-    case "url": {
-      if (typeof value !== "string") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      if (REGEX[type] && !REGEX[type].test(value)) {
-        return [
-          issueError(
-            "value",
-            `Invalid value '${value}' at path '${toJSONPointer(
-              path,
-            )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
-      return [];
-    }
-
-    case "boolean": {
-      if (typeof value !== "boolean") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      return [];
-    }
-
-    case "code": {
-      const strength = element?.binding?.strength;
-      const valueSet = element?.binding?.valueSet;
-      if (typeof value !== "string") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
-      if (strength === "required" && valueSet && ctx.validateCode) {
-        const isValid = await ctx.validateCode(valueSet, value);
-        if (!isValid) {
-          return [
-            issueError(
-              "structure",
-              `Code '${value}' is not in value set '${valueSet}' at path '${toJSONPointer(
-                path,
-              )}'`,
-              [toJSONPointer(path)],
-            ),
-          ];
-        }
-      }
-
-      return [];
-    }
-    case "integer":
-    case "positiveInt":
-    case "unsignedInt":
-    case "decimal": {
-      if (typeof value !== "number") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${toJSONPointer(
-              path,
-            )}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      if (REGEX[type] && !REGEX[type].test(value.toString())) {
-        return [
-          issueError(
-            "value",
-            `Invalid value '${value}' at path '${toJSONPointer(
-              path,
-            )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-      return [];
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "structure",
-          `Unknown primitive type '${type}' at path '${toJSONPointer(path)}'`,
-          [toJSONPointer(path)],
-        ),
-      );
-  }
-}
 
 function isElement(
   element: ElementDefinition | undefined,
@@ -575,10 +413,6 @@ async function checkFields(
   ).flat();
 
   return issues;
-}
-
-function validateIsObject(v: unknown): v is object {
-  return typeof v === "object" && v !== null;
 }
 
 async function validateElement(
