@@ -361,6 +361,9 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
+/**
+ * Validating root / backbone / element nested types here.
+ */
 async function validateComplex(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
@@ -369,9 +372,6 @@ async function validateComplex(
   root: object,
   childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
-  // Validating root / backbone / element nested types here.
-  // Need to validate that only the _field for primitives
-  // And the typechoice check on each field.
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
   let foundFields: string[] = [];
   const value = get(path, root);

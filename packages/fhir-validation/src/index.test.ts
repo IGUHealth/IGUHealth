@@ -626,3 +626,46 @@ test("Type checking", async () => {
     },
   ]);
 });
+
+test("ValueSet validation test", async () => {
+  const valuesetValidator = createValidator(CTX, "ValueSet" as uri);
+
+  expect(
+    await valuesetValidator({
+      resourceType: "ValueSet",
+      id: "task-intent",
+      url: "http://hl7.org/fhir/ValueSet/task-intent",
+      version: "4.0.1",
+      name: "TaskIntent",
+      title: "TaskIntent",
+      status: "draft",
+      experimental: false,
+      date: "2019-11-01T09:29:23+11:00",
+      publisher: "HL7 (FHIR Project)",
+      contact: [
+        {
+          telecom: [
+            { system: "url", value: "http://hl7.org/fhir" },
+            { system: "email", value: "fhir@lists.hl7.org" },
+          ],
+        },
+      ],
+      description:
+        "Distinguishes whether the task is a proposal, plan or full order.",
+      immutable: true,
+      compose: {
+        include: [{ system: "http://hl7.org/fhir/task-intent" }],
+      },
+      expansion: {
+        timestamp: "2024-07-16T16:16:43.573Z",
+        contains: [
+          {
+            system: "http://hl7.org/fhir/request-intent",
+            code: "original-order",
+            display: undefined,
+          },
+        ],
+      },
+    }),
+  ).toEqual([]);
+});
