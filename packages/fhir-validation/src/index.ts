@@ -65,17 +65,22 @@ function resolveContentReferenceIndex(
   return referenceElementIndex;
 }
 
+type FieldType = { field: string; type: uri };
+
 function findBaseFieldAndType(
   element: ElementDefinition,
   value: object,
-): [string, uri] | undefined {
+): FieldType | undefined {
   if (element.contentReference) {
-    return [fieldName(element), (element.type?.[0].code || "") as uri];
+    return {
+      field: fieldName(element),
+      type: (element.type?.[0].code ?? "") as uri,
+    };
   }
   for (const type of element.type?.map((t) => t.code) || []) {
     const field = fieldName(element, type);
     if (field in value) {
-      return [field, type];
+      return { field, type };
     }
   }
 }
@@ -83,17 +88,17 @@ function findBaseFieldAndType(
 function determineTypesAndFields(
   element: ElementDefinition,
   value: object,
-): [string, uri][] {
-  const fields: [string, uri][] = [];
+): FieldType[] {
+  const fields: FieldType[] = [];
   const base = findBaseFieldAndType(element, value);
   if (base) {
     fields.push(base);
-    const [field, type] = base;
+    const { field, type } = base;
     if (isPrimitiveType(type)) {
-      const primitiveElementField: [string, uri] = [
-        `_${field}`,
-        "Element" as uri,
-      ];
+      const primitiveElementField = {
+        field: `_${field}`,
+        type: "Element" as uri,
+      };
       if (`_${field}` in value) fields.push(primitiveElementField);
     }
   } else {
@@ -102,10 +107,10 @@ function determineTypesAndFields(
       element.type?.filter((type) => isPrimitiveType(type.code)) || [];
     for (const primType of primitives) {
       if (`_${fieldName(element, primType.code)}` in value) {
-        const primitiveElementField: [string, uri] = [
-          `_${fieldName(element, primType.code)}`,
-          "Element" as uri,
-        ];
+        const primitiveElementField = {
+          field: `_${fieldName(element, primType.code)}`,
+          type: "Element" as uri,
+        };
         fields.push(primitiveElementField);
       }
     }
@@ -210,8 +215,10 @@ async function validateComplex(
             ),
           );
         }
+
+        // Because Primitives can be extended under seperate key we must check multiple fields.
         const fields = determineTypesAndFields(element, value);
-        foundFields = foundFields.concat(fields.map((f) => f[0]));
+        foundFields = foundFields.concat(fields.map((f) => f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
           return [
@@ -225,14 +232,20 @@ async function validateComplex(
           ];
         }
 
-        return validateFields(
-          ctx,
-          path,
-          structureDefinition,
-          elementIndex,
-          root,
-          fields,
-        );
+        return (
+          await Promise.all(
+            fields.map((fieldType) =>
+              validateElement(
+                ctx,
+                descend(path, fieldType.field),
+                structureDefinition,
+                elementIndex,
+                root,
+                fieldType.type,
+              ),
+            ),
+          )
+        ).flat();
       }),
     )
   ).flat();
@@ -332,33 +345,6 @@ async function validateSingular(
   }
 }
 
-async function validateFields(
-  ctx: ValidationCTX,
-  path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  index: number,
-  root: object,
-  fields: [string, uri][],
-): Promise<OperationOutcome["issue"]> {
-  const issues = (
-    await Promise.all(
-      fields.map((fieldType) => {
-        const [field, type] = fieldType;
-        return validateElement(
-          ctx,
-          descend(path, field),
-          structureDefinition,
-          index,
-          root,
-          type,
-        );
-      }),
-    )
-  ).flat();
-
-  return issues;
-}
-
 async function validateElement(
   ctx: ValidationCTX,
   path: Loc<any, any, any>,
@@ -368,7 +354,6 @@ async function validateElement(
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[elementIndex];
-
   if (!notNull(element)) {
     throw new OperationError(
       outcomeFatal(
@@ -379,51 +364,61 @@ async function validateElement(
     );
   }
 
-  const isArray = element.max === "*" || parseInt(element.max || "1") > 1;
-  const value = get(path, root) ?? (isArray ? [] : undefined);
+  const hasMany =
+    (element.max === "*" || parseInt(element.max || "1") > 1) &&
+    // Root element has * so ignore in this case.
+    elementIndex !== 0;
 
-  if (
-    isArray != Array.isArray(value) &&
-    // Validating cardinality
-    // Cardinality set to * on root element so just ignore it.
-    elementIndex !== 0
-  ) {
-    return [
-      issueError(
-        "structure",
-        `Element at path '${toJSONPointer(path)}' is expected to be ${
-          isArray ? "an array" : "a singular value"
-        }.`,
-        [toJSONPointer(path)],
-      ),
-    ];
-  }
+  const value = get(path, root);
 
-  if (Array.isArray(value)) {
-    // Validate each element in the array
-    return (
-      await Promise.all(
-        (value || []).map((_v: any, i: number) => {
-          return validateSingular(
-            ctx,
-            descend(path, i),
-            structureDefinition,
-            elementIndex,
-            root,
-            type,
-          );
-        }),
-      )
-    ).flat();
-  } else {
-    return validateSingular(
-      ctx,
-      path,
-      structureDefinition,
-      elementIndex,
-      root,
-      type,
-    );
+  switch (true) {
+    // If min is zero than allow undefined.
+    case element.min === 0 && value === undefined: {
+      return [];
+    }
+    case Array.isArray(value): {
+      if (!hasMany) {
+        return [
+          issueError(
+            "structure",
+            `Element is expected to be a singular value.`,
+            [toJSONPointer(path)],
+          ),
+        ];
+      }
+
+      return (
+        await Promise.all(
+          (value || []).map((_v: any, i: number) => {
+            return validateSingular(
+              ctx,
+              descend(path, i),
+              structureDefinition,
+              elementIndex,
+              root,
+              type,
+            );
+          }),
+        )
+      ).flat();
+    }
+    default: {
+      if (hasMany) {
+        return [
+          issueError("structure", `Element is expected to be an array.`, [
+            toJSONPointer(path),
+          ]),
+        ];
+      }
+      return validateSingular(
+        ctx,
+        path,
+        structureDefinition,
+        elementIndex,
+        root,
+        type,
+      );
+    }
   }
 }
 
