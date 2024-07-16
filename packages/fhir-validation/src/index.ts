@@ -39,7 +39,6 @@ import {
 import { validatePrimitive } from "./validate-primitive.js";
 
 export { ValidationCTX };
-// Create a validator for a given fhir type and value
 
 function fieldName(elementDefinition: ElementDefinition, type?: string) {
   const field = elementDefinition.path.split(".").pop() as string;
@@ -112,6 +111,10 @@ function determineTypesAndFields(
     }
   }
   return fields;
+}
+
+function isElementRequired(element: ElementDefinition) {
+  return (element.min ?? 0) > 0;
 }
 
 async function validateReferenceTypeConstraint(
@@ -194,60 +197,45 @@ async function validateComplex(
     ];
   }
 
-  const requiredElements = childrenIndexes.filter(
-    (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0,
-  );
-  const optionalElements = childrenIndexes.filter(
-    (i) => requiredElements.indexOf(i) === -1,
-  );
-
-  let issues = (
+  const issues = (
     await Promise.all(
-      requiredElements.map(async (index) => {
-        const child = structureDefinition.snapshot?.element?.[index];
-        if (!child) throw new Error("Child not found");
-
-        const fields = determineTypesAndFields(child, value);
+      childrenIndexes.map(async (elementIndex) => {
+        const element = structureDefinition.snapshot?.element?.[elementIndex];
+        if (!notNull(element)) {
+          throw new OperationError(
+            outcomeFatal(
+              "structure",
+              `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`,
+              [toJSONPointer(path)],
+            ),
+          );
+        }
+        const fields = determineTypesAndFields(element, value);
         foundFields = foundFields.concat(fields.map((f) => f[0]));
 
-        if (fields.length === 0) {
+        if (isElementRequired(element) && fields.length === 0) {
           return [
             issueError(
               "structure",
-              `Missing required field '${child.path}' at path '${toJSONPointer(
+              `Missing required field '${element.path}' at path '${toJSONPointer(
                 path,
               )}'`,
               [toJSONPointer(path)],
             ),
           ];
         }
-        return checkFields(ctx, path, structureDefinition, index, root, fields);
+
+        return validateFields(
+          ctx,
+          path,
+          structureDefinition,
+          elementIndex,
+          root,
+          fields,
+        );
       }),
     )
   ).flat();
-
-  issues = [
-    ...issues,
-    ...(
-      await Promise.all(
-        optionalElements.map(async (index) => {
-          const child = structureDefinition.snapshot?.element?.[index];
-          if (!child) throw new Error("Child not found");
-
-          const fields = determineTypesAndFields(child, value);
-          foundFields = foundFields.concat(fields.map((f) => f[0]));
-          return checkFields(
-            ctx,
-            path,
-            structureDefinition,
-            index,
-            root,
-            fields,
-          );
-        }),
-      )
-    ).flat(),
-  ];
 
   // Check for additional fields
   let additionalFields = Object.keys(value).filter(
@@ -271,51 +259,18 @@ async function validateComplex(
     additionalFields = additionalFields.filter((v) => v !== "resourceType");
   }
 
-  if (additionalFields.length > 0) {
-    issues = [
-      ...issues,
-      issueError(
-        "structure",
-        `Additional fields found at path '${toJSONPointer(
-          path,
-        )}': '${additionalFields.join(", ")}'`,
-        [toJSONPointer(path)],
-      ),
-    ];
-  }
-
-  return issues;
-}
-
-async function validateContentReference(
-  ctx: ValidationCTX,
-  path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementIndex: number,
-  root: object,
-  type: uri,
-) {
-  const element = structureDefinition.snapshot?.element?.[
-    elementIndex
-  ] as ElementDefinition;
-
-  if (!element.contentReference) {
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Element at ${elementIndex} is not a content reference`,
-      ),
-    );
-  }
-
-  return validateSingular(
-    ctx,
-    path,
-    structureDefinition,
-    resolveContentReferenceIndex(structureDefinition, element),
-    root,
-    type,
-  );
+  return additionalFields.length > 0
+    ? [
+        ...issues,
+        issueError(
+          "structure",
+          `Additional fields found at path '${toJSONPointer(
+            path,
+          )}': '${additionalFields.join(", ")}'`,
+          [toJSONPointer(path)],
+        ),
+      ]
+    : issues;
 }
 
 async function validateSingular(
@@ -330,22 +285,24 @@ async function validateSingular(
     elementIndex
   ] as ElementDefinition;
 
+  if (element.contentReference) {
+    return validateSingular(
+      ctx,
+      path,
+      structureDefinition,
+      resolveContentReferenceIndex(structureDefinition, element),
+      root,
+      type,
+    );
+  }
+
   const childrenIndixes = eleIndexToChildIndexes(
     structureDefinition.snapshot?.element || [],
     elementIndex,
   );
 
   // Leaf validation
-  if (element.contentReference)
-    return validateContentReference(
-      ctx,
-      path,
-      structureDefinition,
-      elementIndex,
-      root,
-      type,
-    );
-  else if (childrenIndixes.length === 0) {
+  if (childrenIndixes.length === 0) {
     if (
       isPrimitiveType(type) ||
       type === "http://hl7.org/fhirpath/System.String"
@@ -375,7 +332,7 @@ async function validateSingular(
   }
 }
 
-async function checkFields(
+async function validateFields(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
