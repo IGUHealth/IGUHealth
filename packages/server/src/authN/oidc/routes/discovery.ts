@@ -267,3 +267,34 @@ export function discoveryGet(): OIDCRouteHandler {
     await next();
   };
 }
+
+export function wellKnownSmartGET(): OIDCRouteHandler {
+  return async (ctx, next) => {
+    const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
+      issuer: IGUHEALTH_ISSUER,
+      grant_types_supported: ["authorization_code", "client_credentials"],
+      token_endpoint: new URL(
+        ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
+          tenant: ctx.state.oidc.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+
+      authorization_endpoint: new URL(
+        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
+          tenant: ctx.state.oidc.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+      jwks_uri: new URL(ctx.router.url(JWKS_GET) as string, process.env.API_URL)
+        .href,
+      token_endpoint_auth_methods_supported: [
+        "client_secret_basic",
+        "client_secret_post",
+      ],
+    };
+
+    ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
+    await next();
+  };
+}
