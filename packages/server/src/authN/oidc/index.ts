@@ -44,6 +44,12 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   );
 
   managementRouter.get(
+    OIDC_ROUTES.WELL_KNOWN_SMART,
+    "/.well-known/smart-configuration",
+    routes.wellKnownSmartGET(),
+  );
+
+  managementRouter.get(
     OIDC_ROUTES.USER_INFO,
     "/auth/userinfo",
     ...authMiddlewares,
