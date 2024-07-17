@@ -146,6 +146,85 @@ type OIDCDiscoveryDocument = {
   op_tos_uri?: string;
 };
 
+type WellKnownSmartConfiguration = {
+  /**
+   * CONDITIONAL, String conveying this system’s OpenID Connect Issuer URL.
+   * Required if the server’s capabilities include sso-openid-connect; otherwise, omitted.
+   */
+  issuer?: string;
+  /**
+   * CONDITIONAL, String conveying this system’s JSON Web Key Set URL.
+   * Required if the server’s capabilities include sso-openid-connect; otherwise, optional.
+   */
+  jwks_uri?: string;
+  /**
+   * CONDITIONAL, URL to the OAuth2 authorization endpoint.
+   * Required if server supports the launch-ehr or launch-standalone capability; otherwise, optional.
+   */
+  authorization_endpoint?: string;
+  /**
+   * REQUIRED, Array of grant types supported at the token endpoint.
+   * The options are “authorization_code” (when SMART App Launch is supported)
+   * and “client_credentials” (when SMART Backend Services is supported).
+   */
+  grant_types_supported: string[];
+  /**
+   * REQUIRED, URL to the OAuth2 token endpoint.
+   */
+  token_endpoint: string;
+  /**
+   * OPTIONAL, array of client authentication methods supported by the token endpoint.
+   * The options are “client_secret_post”, “client_secret_basic”, and “private_key_jwt”.
+   */
+  token_endpoint_auth_methods_supported?: string[];
+  /**
+   * OPTIONAL, If available, URL to the OAuth2 dynamic registration endpoint for this FHIR server.
+   */
+  registration_endpoint?: string;
+  /**
+   * OPTIONAL, Array of objects for endpoints that share the same authorization mechanism as this FHIR endpoint,
+   * each with a “url” and “capabilities” array. This property is deemed experimental.
+   */
+  associated_endpoints?: { url?: string; capabilities?: string }[];
+  /**
+   * RECOMMENDED, URL for a Brand Bundle. See User Access Brands.
+   */
+  user_access_brand_bundle?: string;
+  /**
+   * RECOMMENDED, Identifier for the primary entry in a Brand Bundle. See User Access Brands.
+   */
+  user_access_brand_identifier?: string;
+  /**
+   * Array of scopes a client may request. See scopes and launch context.
+   * The server SHALL support all scopes listed here; additional scopes MAY be supported
+   * (so clients should not consider this an exhaustive list).
+   */
+  scopes_supported?: string[];
+  /**
+   * RECOMMENDED, URL where an end-user can view which applications currently have access
+   * to data and can make adjustments to these access rights.
+   */
+  management_endpoint?: string;
+  /**
+   * RECOMMENDED, URL to a server’s introspection endpoint that can be used to validate a token.
+   */
+  introspection_endpoint?: string;
+  /**
+   * RECOMMENDED, URL to a server’s revoke endpoint that can be used to revoke a token.
+   */
+  revocation_endpoint?: string;
+  /**
+   * REQUIRED, Array of strings representing SMART capabilities
+   * (e.g., sso-openid-connect or launch-standalone) that the server supports.
+   */
+  capabilities?: string[];
+  /**
+   * REQUIRED, Array of PKCE code challenge methods supported.
+   * The S256 method SHALL be included in this list, and the plain method SHALL NOT be included in this list.
+   */
+  code_challenge_methods_supported?: string[];
+};
+
 export function discoveryGet(): OIDCRouteHandler {
   return async (ctx, next) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
@@ -185,6 +264,37 @@ export function discoveryGet(): OIDCRouteHandler {
     };
 
     ctx.body = OIDC_DISCOVERY_DOCUMENT;
+    await next();
+  };
+}
+
+export function wellKnownSmartGET(): OIDCRouteHandler {
+  return async (ctx, next) => {
+    const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
+      issuer: IGUHEALTH_ISSUER,
+      grant_types_supported: ["authorization_code", "client_credentials"],
+      token_endpoint: new URL(
+        ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
+          tenant: ctx.state.oidc.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+
+      authorization_endpoint: new URL(
+        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
+          tenant: ctx.state.oidc.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+      jwks_uri: new URL(ctx.router.url(JWKS_GET) as string, process.env.API_URL)
+        .href,
+      token_endpoint_auth_methods_supported: [
+        "client_secret_basic",
+        "client_secret_post",
+      ],
+    };
+
+    ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
     await next();
   };
 }

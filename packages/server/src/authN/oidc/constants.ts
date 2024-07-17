@@ -20,4 +20,5 @@ export const OIDC_ROUTES = {
   TOKEN_POST: "tenant-oidc-token-post",
   USER_INFO: "tenant-oidc-user-info",
   OIDC_DISCOVERY: "tenant-oidc-discovery",
+  WELL_KNOWN_SMART: "tenant-oidc-well-known-smart",
 };
