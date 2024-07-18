@@ -810,7 +810,7 @@ function parseRequest4(
   );
 }
 
-function convertVersion(fhirVersion: string): FHIR_VERSION {
+export function deriveFHIRVersion(fhirVersion: string): FHIR_VERSION {
   switch (true) {
     case fhirVersion === R4 || fhirVersion === "r4":
       return R4;
@@ -828,7 +828,7 @@ export function httpRequestToFHIRRequest(
   request: HTTPRequest,
 ): FHIRRequest {
   const urlPieces = request.url.split("?")[0].split("/");
-  const fhirVersion = convertVersion(fhirVersionUrlChunk);
+  const fhirVersion = deriveFHIRVersion(fhirVersionUrlChunk);
 
   switch (urlPieces.length) {
     case 1:
