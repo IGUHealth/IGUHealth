@@ -1,3 +1,5 @@
+import FHIR from "fhirclient";
+import Client from "fhirclient/lib/Client";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { ReportHandler } from "web-vitals";
@@ -42,9 +44,26 @@ function IGUHealthAuth() {
   );
 }
 
+function IGUHealthSMART() {
+  const [client, setClient] = useState<Client | undefined>();
+  useEffect(() => {
+    FHIR.oauth2
+      .init({
+        iss: "http://8qx2n41ha6dwlh2wxk10l.localhost:3001",
+        clientId: "JXjw2GE4l1JdRGOcJ42JNs",
+        scope: "openid launch patient/*.read",
+      })
+      .then((client) => {
+        setClient(client);
+      });
+  }, [setClient]);
+
+  return <div>Done</div>;
+}
+
 root.render(
   <React.StrictMode>
-    <IGUHealthAuth />
+    <IGUHealthSMART />
   </React.StrictMode>,
 );
 
