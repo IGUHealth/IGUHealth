@@ -29,8 +29,8 @@ function App() {
   return <div>{JSON.stringify(patients)}</div>;
 }
 
-root.render(
-  <React.StrictMode>
+function IGUHealthAuth() {
+  return (
     <IGUHealthProvider
       tenant={"system"}
       domain={"http://localhost:3000"}
@@ -39,6 +39,12 @@ root.render(
     >
       <App />
     </IGUHealthProvider>
+  );
+}
+
+root.render(
+  <React.StrictMode>
+    <IGUHealthAuth />
   </React.StrictMode>,
 );
 
