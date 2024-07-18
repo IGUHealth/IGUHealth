@@ -60,7 +60,6 @@ export namespace KoaExtensions {
       ) => Promise<boolean>;
 
       user?: User;
-      tenant: TenantId;
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;

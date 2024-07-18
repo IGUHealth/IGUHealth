@@ -1,5 +1,8 @@
+import Router from "@koa/router";
+
 import { IGUHEALTH_ISSUER } from "@iguhealth/jwt";
 
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { JWKS_GET, OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 
@@ -226,27 +229,27 @@ type WellKnownSmartConfiguration = {
 };
 
 export function discoveryGet(): OIDCRouteHandler {
-  return async (ctx, next) => {
+  return async (ctx) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
       issuer: IGUHEALTH_ISSUER,
 
       userinfo_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.USER_INFO, {
-          tenant: ctx.state.oidc.tenant,
+          tenant: ctx.state.iguhealth.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       token_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
-          tenant: ctx.state.oidc.tenant,
+          tenant: ctx.state.iguhealth.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       authorization_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.state.oidc.tenant,
+          tenant: ctx.state.iguhealth.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
@@ -264,29 +267,40 @@ export function discoveryGet(): OIDCRouteHandler {
     };
 
     ctx.body = OIDC_DISCOVERY_DOCUMENT;
-    await next();
   };
 }
 
-export function wellKnownSmartGET(): OIDCRouteHandler {
-  return async (ctx, next) => {
+export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
+  oidcRouter: Router<State, KoaExtensions.KoaIGUHealthContext>,
+): OIDCRouteHandler {
+  return async (ctx) => {
+    console.log(
+      "WELLKNOWN",
+      `Tenant: '${ctx.state.iguhealth.tenant}'`,
+      new URL(
+        oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
+          tenant: ctx.state.iguhealth.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+    );
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
       issuer: IGUHEALTH_ISSUER,
       grant_types_supported: ["authorization_code", "client_credentials"],
       token_endpoint: new URL(
-        ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
-          tenant: ctx.state.oidc.tenant,
+        oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
+          tenant: ctx.state.iguhealth.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       authorization_endpoint: new URL(
-        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.state.oidc.tenant,
+        oidcRouter.url(OIDC_ROUTES.AUTHORIZE_GET, {
+          tenant: ctx.state.iguhealth.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
-      jwks_uri: new URL(ctx.router.url(JWKS_GET) as string, process.env.API_URL)
+      jwks_uri: new URL(oidcRouter.url(JWKS_GET) as string, process.env.API_URL)
         .href,
       token_endpoint_auth_methods_supported: [
         "client_secret_basic",
@@ -295,6 +309,5 @@ export function wellKnownSmartGET(): OIDCRouteHandler {
     };
 
     ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
-    await next();
   };
 }

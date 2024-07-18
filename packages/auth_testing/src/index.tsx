@@ -47,13 +47,16 @@ function IGUHealthAuth() {
 function IGUHealthSMART() {
   const [client, setClient] = useState<Client | undefined>();
   useEffect(() => {
+    console.log("FHIR TRIGGER");
     FHIR.oauth2
       .init({
-        iss: "http://8qx2n41ha6dwlh2wxk10l.localhost:3001",
-        clientId: "JXjw2GE4l1JdRGOcJ42JNs",
+        iss: "http://localhost:3000/w/fbv7dwlc1szcpc9613e89/api/v1/fhir/r4",
+        clientId: "kzQN-TQkHVzRsPEVm3MLUU",
         scope: "openid launch patient/*.read",
       })
       .then((client) => {
+        console.log(client);
+        client.request("Patient").then((p) => console.log(p));
         setClient(client);
       });
   }, [setClient]);

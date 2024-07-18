@@ -13,20 +13,20 @@ function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
   const loginRoute = ctx.router.url(
     OIDC_ROUTES.LOGIN_POST,
     {
-      tenant: ctx.state.oidc.tenant,
+      tenant: ctx.state.iguhealth.tenant,
     },
     { query: { state: ctx.query.state } },
   );
   if (loginRoute instanceof Error) throw loginRoute;
 
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_GET, {
-    tenant: ctx.state.oidc.tenant,
+    tenant: ctx.state.iguhealth.tenant,
   });
   if (signupURL instanceof Error) throw signupURL;
 
   const forgotPasswordURL = ctx.router.url(
     OIDC_ROUTES.PASSWORD_RESET_INITIATE_GET,
-    { tenant: ctx.state.oidc.tenant },
+    { tenant: ctx.state.iguhealth.tenant },
   );
   if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
 
@@ -64,7 +64,7 @@ export function decodeState(
     if (
       !state.redirectUrl.startsWith(
         ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.state.oidc.tenant,
+          tenant: ctx.state.iguhealth.tenant,
         }),
       )
     ) {
@@ -110,7 +110,7 @@ async function validateCredentials(
 
 export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
   const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
-    tenant: ctx.state.oidc.tenant,
+    tenant: ctx.state.iguhealth.tenant,
   });
 
   if (loginURL instanceof Error) throw loginURL;
