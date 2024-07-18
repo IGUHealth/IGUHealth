@@ -15,6 +15,8 @@ import React from "react";
 import { fileURLToPath } from "url";
 import * as db from "zapatos/db";
 
+import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import { TenantId } from "@iguhealth/jwt";
 import {
@@ -47,8 +49,9 @@ import {
   createLogger,
   getRedisClient,
 } from "./fhir-api/index.js";
-import { IGUHealthServerCTX, KoaExtensions } from "./fhir-api/types.js";
+import { IGUHealthServerCTX, KoaExtensions, asRoot } from "./fhir-api/types.js";
 import {
+  deriveFHIRVersion,
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
@@ -61,15 +64,32 @@ import * as views from "./views/index.js";
 
 loadEnv();
 
+function fhirResponseSetKoa(
+  ctx: Koa.ParameterizedContext<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.KoaIGUHealthContext
+  >,
+  response: FHIRResponse,
+) {
+  const httpResponse = fhirResponseToHTTPResponse(response);
+  ctx.status = httpResponse.status;
+  ctx.body = httpResponse.body;
+  for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
+    ctx.set(key, value);
+  }
+
+  return ctx;
+}
+
 /**
  * Koa middleware that handles FHIR API requests. [Note expectation is ctx.state.iguhealth is set.]
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
  */
-async function FHIRAPIKoaMiddleware(): Promise<
+async function FHIRAPIKoaMiddleware(
+  fhirAPI: AsynchronousClient<unknown, IGUHealthServerCTX>,
+): Promise<
   Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
-  const fhirAPI = await createFHIRAPI();
-
   return async (ctx, next) => {
     let span;
     // @ts-ignore
@@ -80,6 +100,7 @@ async function FHIRAPIKoaMiddleware(): Promise<
         op: "fhirserver",
       });
     }
+
     if (!KoaExtensions.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
       throw new Error("FHIR Context is not authorized");
     }
@@ -96,12 +117,7 @@ async function FHIRAPIKoaMiddleware(): Promise<
         }),
       );
 
-      const httpResponse = fhirResponseToHTTPResponse(response);
-      ctx.status = httpResponse.status;
-      ctx.body = httpResponse.body;
-      for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
-        ctx.set(key, value);
-      }
+      fhirResponseSetKoa(ctx, response);
       await next();
     } finally {
       if (span) {
@@ -174,8 +190,8 @@ export default async function createServer(): Promise<
     await createCertsIfNoneExists(getCertLocation(), getCertKey());
   }
 
+  const fhirAPI = await createFHIRAPI();
   const redis = getRedisClient();
-
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     db: createPGPool(),
@@ -286,12 +302,20 @@ export default async function createServer(): Promise<
     prefix: "/api/v1",
   });
 
+  // Seperating as this should be a public endpoint for capabilities.
+  tenantAPIV1Router.get("/fhir/:fhirVersion/metadata", async (ctx) => {
+    ctx.state.iguhealth.cache.get(ctx.state.iguhealth, "capabilities");
+    ctx.body = await fhirAPI.capabilities(
+      asRoot(ctx.state.iguhealth),
+      deriveFHIRVersion(ctx.params.fhirVersion),
+    );
+  });
+
   // FHIR API Endpoint
   tenantAPIV1Router.all(
     "/fhir/:fhirVersion/:fhirUrl*",
-    // MonitoringSentry.tracingMiddleWare<KoaFHIRMiddlewareState>(process.env.SENTRY_SERVER_DSN),
     ...authMiddlewares,
-    await FHIRAPIKoaMiddleware(),
+    await FHIRAPIKoaMiddleware(fhirAPI),
   );
 
   // Instantiate OIDC routes
