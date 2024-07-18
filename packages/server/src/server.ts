@@ -38,6 +38,7 @@ import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
+import { wellKnownSmartGET } from "./authN/oidc/routes/discovery.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import createEmailProvider from "./email/index.js";
@@ -295,6 +296,18 @@ export default async function createServer(): Promise<
     await next();
   });
 
+  // Instantiate OIDC routes
+  const tenantOIDCRouter = await createOIDCRouter<KoaExtensions.IGUHealth>(
+    "/oidc",
+    {
+      authMiddlewares,
+      middleware: [
+        injectTenantManagement(),
+        setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
+      ],
+    },
+  );
+
   const tenantAPIV1Router = new Router<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
@@ -311,31 +324,16 @@ export default async function createServer(): Promise<
     );
   });
 
+  tenantAPIV1Router.get(
+    "/fhir/:fhirVersion/.well-known/smart-configuration",
+    wellKnownSmartGET(tenantRouter),
+  );
+
   // FHIR API Endpoint
   tenantAPIV1Router.all(
     "/fhir/:fhirVersion/:fhirUrl*",
     ...authMiddlewares,
     await FHIRAPIKoaMiddleware(fhirAPI),
-  );
-
-  // Instantiate OIDC routes
-  const tenantOIDCRouter = await createOIDCRouter<KoaExtensions.IGUHealth>(
-    "/oidc",
-    {
-      authMiddlewares,
-      middleware: [
-        injectTenantManagement(),
-        setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
-        // Inject tenant.
-        async (ctx, next) => {
-          ctx.state.oidc = {
-            ...ctx.state.oidc,
-            tenant: ctx.state.iguhealth.tenant,
-          };
-          await next();
-        },
-      ],
-    },
   );
 
   tenantRouter.use(tenantOIDCRouter.routes());

@@ -11,7 +11,7 @@ import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.j
 
 export const signupGET = (): OIDCRouteHandler => async (ctx) => {
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_POST, {
-    tenant: ctx.state.oidc.tenant,
+    tenant: ctx.state.iguhealth.tenant,
   });
   if (typeof signupURL !== "string") throw signupURL;
 
@@ -50,7 +50,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   if (existingUser !== undefined) {
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.state.iguhealth, tenant: ctx.state.oidc.tenant },
+      { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
       ctx.state.oidc.codeManagement,
       existingUser,
     );
@@ -70,7 +70,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     );
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.state.iguhealth, tenant: ctx.state.oidc.tenant },
+      { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
       ctx.state.oidc.codeManagement,
       user,
     );

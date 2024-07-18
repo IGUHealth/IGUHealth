@@ -64,7 +64,7 @@ export function authorizeGET(): OIDCRouteHandler {
         ctx.router.url(
           OIDC_ROUTES.LOGIN_GET,
           {
-            tenant: ctx.state.oidc.tenant,
+            tenant: ctx.state.iguhealth.tenant,
           },
           { query: { state } },
         ) as string,
