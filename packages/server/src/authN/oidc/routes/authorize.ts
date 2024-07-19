@@ -5,6 +5,8 @@ import { OIDCRouteHandler } from "../index.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 import { encodeState } from "./interactions/login.js";
 
+const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256", "plain"];
+
 /**
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
  * response_type
@@ -26,14 +28,40 @@ import { encodeState } from "./interactions/login.js";
          server includes this value when redirecting the user-agent back
          to the client.  The parameter SHOULD be used for preventing
          cross-site request forgery as described in Section 10.12.
+
+   ---------------------------------------------------
+   PKCE SUPPORT https://datatracker.ietf.org/doc/html/rfc7636#section-4.3
+   ---------------------------------------------------
+   Our implementation makes PKCE a requirement for security.
+   
+   code_challenge
+      Required. Code challenge.
+
+   code_challenge_method
+      OPTIONAL, defaults to "plain" if not present in the request.  Code
+      verifier transformation method is "S256" or "plain".
  */
 export function authorizeGET(): OIDCRouteHandler {
   return async (ctx, next) => {
     if (await ctx.state.oidc.isAuthenticated(ctx)) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
       // const scope = ctx.request.query.scope;
-      const state = ctx.request.query.state;
+      const state = ctx.state.oidc.parameters.state;
       const client = ctx.state.oidc.client;
+      const code_challenge = ctx.state.oidc.parameters.code_challenge;
+      const code_challenge_method =
+        ctx.state.oidc.parameters.code_challenge_method ?? "plain";
+
+      if (
+        SUPPORTED_CODE_CHALLENGE_METHODS.indexOf(code_challenge_method) === -1
+      ) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `Code challenge method '${code_challenge_method}' not supported.`,
+          ),
+        );
+      }
 
       if (!client)
         throw new OperationError(outcomeError("invalid", "Client not found."));
@@ -51,6 +79,8 @@ export function authorizeGET(): OIDCRouteHandler {
           client_id: client.id,
           // Should be safe to use here as is authenticated so user should be populated.
           user_id: ctx.state.oidc.user?.id as string,
+          pkce_code_challenge: code_challenge,
+          pkce_code_challenge_method: code_challenge_method as "S256" | "plain",
           expires_in: "15 minutes",
         },
       );

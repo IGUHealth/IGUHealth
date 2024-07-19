@@ -4,19 +4,17 @@ import { AccessToken, IDToken, TenantId } from "@iguhealth/jwt";
 
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
 import { OIDC_WELL_KNOWN, iguHealthReducer } from "./reducer";
-import { conditionalAddTenant, hasAuthQueryParams } from "./utilities";
+import {
+  conditionalAddTenant,
+  generateRandomString,
+  hasAuthQueryParams,
+  sha256,
+} from "./utilities";
 
-function dec2hex(dec: number) {
-  return dec.toString(16).padStart(2, "0");
-}
-
-function generateRandomString(len: number) {
-  const arr = new Uint8Array((len || 40) / 2);
-  window.crypto.getRandomValues(arr);
-  return Array.from(arr, dec2hex).join("");
-}
-
+const CODE_CHALLENGE_METHOD = "S256";
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
+const pkce_code_challenger_key = (client_id: string) =>
+  `iguhealth_pkce_code_${client_id}`;
 
 async function handleRedirectCallback({
   token_endpoint,
@@ -25,6 +23,9 @@ async function handleRedirectCallback({
   token_endpoint: string;
   clientId: string;
 }) {
+  const codeVerifier = window.localStorage.getItem(
+    pkce_code_challenger_key(clientId),
+  );
   const localStateParameter = window.localStorage.getItem(state_key(clientId));
   // Call to retrieve token using current url.
   const parameters: Record<string, string> = window.location.search
@@ -39,6 +40,11 @@ async function handleRedirectCallback({
   if (parameters.state !== localStateParameter)
     throw new Error("Invalid State");
 
+  window.localStorage.removeItem(state_key(clientId));
+  window.localStorage.removeItem(pkce_code_challenger_key(clientId));
+
+  if (!codeVerifier) throw new Error("Invalid Code Verifier");
+
   window.history.replaceState(null, "", location.pathname);
 
   const response: {
@@ -52,11 +58,11 @@ async function handleRedirectCallback({
 
     body: JSON.stringify({
       grant_type: "authorization_code",
+      code_verifier: await sha256(codeVerifier),
       code: parameters.code,
       client_id: clientId,
     }),
   }).then((v) => v.json());
-
   return response;
 }
 
@@ -69,11 +75,13 @@ async function handleAuthorizeInitial({
   clientId: string;
   redirectUrl: string;
 }) {
+  const code_challenge = generateRandomString(43);
   const state = generateRandomString(30);
+  localStorage.setItem(pkce_code_challenger_key(clientId), code_challenge);
   localStorage.setItem(state_key(clientId), state);
 
   const url = new URL(
-    `?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}`,
+    `?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}&code_challenge=${code_challenge}&code_challenge_method=${CODE_CHALLENGE_METHOD}`,
     authorize_endpoint,
   );
 

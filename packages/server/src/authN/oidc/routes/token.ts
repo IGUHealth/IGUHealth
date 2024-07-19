@@ -1,4 +1,5 @@
 import type * as Koa from "koa";
+import crypto from "node:crypto";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -21,6 +22,7 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../../certifications.js";
+import { AuthorizationCode } from "../../db/code/types.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -29,6 +31,26 @@ import {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
+  switch (code.pkce_code_challenge_method) {
+    case "S256": {
+      const code_challenge_hashed = crypto
+        .createHash("sha256")
+        .update(code.pkce_code_challenge ?? "")
+        .digest("base64")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+
+      return verifier === code_challenge_hashed;
+    }
+    case "plain":
+    default: {
+      return verifier === code.pkce_code_challenge;
+    }
+  }
 }
 
 /**
@@ -83,6 +105,14 @@ export function tokenPost<
                 outcomeError("invalid", "Code must be present and a string."),
               );
             }
+            if (typeof body.code_verifier !== "string") {
+              throw new OperationError(
+                outcomeError(
+                  "invalid",
+                  "Code verifier must be present and a string.",
+                ),
+              );
+            }
 
             const code = await ctx.state.oidc.codeManagement.search(
               fhirContext,
@@ -97,6 +127,12 @@ export function tokenPost<
               throw new OperationError(
                 outcomeError("invalid", "Invalid client"),
               );
+
+            if (!verifyCodeChallenge(code[0], body.code_verifier)) {
+              throw new OperationError(
+                outcomeError("forbidden", "Invalid code verifier"),
+              );
+            }
 
             const user = await ctx.state.oidc.userManagement.get(
               fhirContext,

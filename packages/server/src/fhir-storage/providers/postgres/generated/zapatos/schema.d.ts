@@ -31,6 +31,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type limitation_type = ['LIMIT_TOTAL'];
   }
+  export type pkce_method = 'S256' | 'plain';
+  export namespace every {
+    export type pkce_method = ['S256', 'plain'];
+  }
   export type user_role = 'admin' | 'member' | 'owner';
   export namespace every {
     export type user_role = ['admin', 'member', 'owner'];
@@ -169,6 +173,18 @@ declare module 'zapatos/schema' {
       */
       payload: db.JSONValue | null;
       /**
+      * **authorization_code.pkce_code_challenge**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge: string | null;
+      /**
+      * **authorization_code.pkce_code_challenge_method**
+      * - `pkce_method` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge_method: pkce_method | null;
+      /**
       * **authorization_code.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -230,6 +246,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       payload: db.JSONValue | null;
+      /**
+      * **authorization_code.pkce_code_challenge**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge: string | null;
+      /**
+      * **authorization_code.pkce_code_challenge_method**
+      * - `pkce_method` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge_method: pkce_method | null;
       /**
       * **authorization_code.scope**
       * - `user_scope` in database
@@ -293,6 +321,18 @@ declare module 'zapatos/schema' {
       */
       payload?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **authorization_code.pkce_code_challenge**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.pkce_code_challenge_method**
+      * - `pkce_method` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge_method?: pkce_method | db.Parameter<pkce_method> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, pkce_method | db.Parameter<pkce_method> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **authorization_code.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -355,6 +395,18 @@ declare module 'zapatos/schema' {
       */
       payload?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
       /**
+      * **authorization_code.pkce_code_challenge**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.pkce_code_challenge_method**
+      * - `pkce_method` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge_method?: pkce_method | db.Parameter<pkce_method> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **authorization_code.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -416,6 +468,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       payload?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.pkce_code_challenge**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.pkce_code_challenge_method**
+      * - `pkce_method` in database
+      * - Nullable, no default
+      */
+      pkce_code_challenge_method?: pkce_method | db.Parameter<pkce_method> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, pkce_method | db.Parameter<pkce_method> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **authorization_code.scope**
       * - `user_scope` in database
