@@ -70,9 +70,6 @@ jobs:
       - name: Migrate
         run: yarn workspace @iguhealth/server migrate up
 
-      - name: Load Terminology
-        run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
-
       - name: Create Test environment.
         run: |
           yarn workspace @iguhealth/server cli admin tenant create -i test-system -t team -e test@iguhealth.app -p testing
