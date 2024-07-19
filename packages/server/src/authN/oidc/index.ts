@@ -132,8 +132,8 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OIDC_ROUTES.AUTHORIZE_GET,
     "/auth/authorize",
     createValidateInjectOIDCParameters({
-      required: ["client_id", "response_type", "state"],
-      optional: ["scope", "redirect_uri"],
+      required: ["client_id", "response_type", "state", "code_challenge"],
+      optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),

@@ -9,7 +9,14 @@ export interface AuthorizationCodeManagement
     s.authorization_code.Whereable,
     Pick<
       s.authorization_code.Insertable,
-      "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
+      | "type"
+      | "user_id"
+      | "tenant"
+      | "expires_in"
+      | "client_id"
+      | "payload"
+      | "pkce_code_challenge"
+      | "pkce_code_challenge_method"
     >,
     s.authorization_code.Updatable
   > {}

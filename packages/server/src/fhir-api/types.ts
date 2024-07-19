@@ -64,6 +64,9 @@ export namespace KoaExtensions {
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;
       parameters: {
+        code_verifier?: string;
+        code_challenge_method?: string;
+        code_challenge?: string;
         state?: string;
         responseType?: code;
         response_type?: string;
