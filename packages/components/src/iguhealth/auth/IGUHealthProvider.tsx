@@ -13,7 +13,7 @@ import {
 
 const CODE_CHALLENGE_METHOD = "S256";
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
-const pkce_code_challenger_key = (client_id: string) =>
+const pkce_code_verifier_key = (client_id: string) =>
   `iguhealth_pkce_code_${client_id}`;
 
 async function handleRedirectCallback({
@@ -23,8 +23,8 @@ async function handleRedirectCallback({
   token_endpoint: string;
   clientId: string;
 }) {
-  const codeVerifier = window.localStorage.getItem(
-    pkce_code_challenger_key(clientId),
+  const code_verifier = window.localStorage.getItem(
+    pkce_code_verifier_key(clientId),
   );
   const localStateParameter = window.localStorage.getItem(state_key(clientId));
   // Call to retrieve token using current url.
@@ -41,9 +41,9 @@ async function handleRedirectCallback({
     throw new Error("Invalid State");
 
   window.localStorage.removeItem(state_key(clientId));
-  window.localStorage.removeItem(pkce_code_challenger_key(clientId));
+  window.localStorage.removeItem(pkce_code_verifier_key(clientId));
 
-  if (!codeVerifier) throw new Error("Invalid Code Verifier");
+  if (!code_verifier) throw new Error("Invalid Code Verifier");
 
   window.history.replaceState(null, "", location.pathname);
 
@@ -58,7 +58,7 @@ async function handleRedirectCallback({
 
     body: JSON.stringify({
       grant_type: "authorization_code",
-      code_verifier: await sha256(codeVerifier),
+      code_verifier,
       code: parameters.code,
       client_id: clientId,
     }),
@@ -75,9 +75,10 @@ async function handleAuthorizeInitial({
   clientId: string;
   redirectUrl: string;
 }) {
-  const code_challenge = generateRandomString(43);
+  const code_verifier = generateRandomString(43);
   const state = generateRandomString(30);
-  localStorage.setItem(pkce_code_challenger_key(clientId), code_challenge);
+  const code_challenge = await sha256(code_verifier);
+  localStorage.setItem(pkce_code_verifier_key(clientId), code_verifier);
   localStorage.setItem(state_key(clientId), state);
 
   const url = new URL(

@@ -38,13 +38,13 @@ function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
     case "S256": {
       const code_challenge_hashed = crypto
         .createHash("sha256")
-        .update(code.pkce_code_challenge ?? "")
+        .update(verifier ?? "")
         .digest("base64")
         .replace(/\+/g, "-")
         .replace(/\//g, "_")
         .replace(/=+$/, "");
 
-      return verifier === code_challenge_hashed;
+      return code.pkce_code_challenge === code_challenge_hashed;
     }
     case "plain":
     default: {
