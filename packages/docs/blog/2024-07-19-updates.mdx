@@ -8,28 +8,28 @@ tags: [iguhealth, updates]
 # Updates 2024-07-19
 
 ## Terminology
-We are now supporting the following external terminologies:
+We now support the following external terminologies:
 * [BCP-13 Media Types](https://www.rfc-editor.org/info/bcp13)
 * [ISO-4217 Currency codes](https://www.iso.org/iso-4217-currency-codes.html)
 * [ISO-3166 Country Codes](https://www.iso.org/iso-3166-country-codes.html)
 
-We will be adding support for Loinc, ICD-10 and RxNorm codes in the following weeks. 
+We will be adding support for Loinc, ICD-10, and RxNorm codes in the following weeks.
 
-## Server 
+## Server
 
 
 ### Conditional Updates
-We've added support for [conditional updates](https://hl7.org/fhir/R4/http.html#cond-update). 
+We've added support for [conditional updates](https://hl7.org/fhir/R4/http.html#cond-update).
 This allows you to update a resource only if certain conditions are met.
 
 ### Migration to Async for FHIRPath and Canonical Resolution
 Our fhirpath library and canonical resolution have been migrated to use async functions.
 This is to allow for querying external services and databases for terminology and data.
 
-### Workers migration to HTTP
-Workers are seperate processes we use for processing subscriptions and asynchronous tasks. 
+### Worker migration to HTTP
+Workers are separate processes we use for processing subscriptions and asynchronous tasks.
 We've migrated these workers to use HTTP to communicate and pull data from our server.
- This will allow us to scale workers horizontally and improve performance.
+This will allow us to scale workers horizontally and improve performance.
 
 ### GZip Compression
 We've added support for GZip compression on all responses.
@@ -37,7 +37,7 @@ We've added support for GZip compression on all responses.
 ### Security
 
 #### PKCE Support
-We've added support for [Proof Key for Code Exchange](https://datatracker.ietf.org/doc/html/rfc7636). 
+We've added support for [Proof Key for Code Exchange](https://datatracker.ietf.org/doc/html/rfc7636).
 This is a security feature that helps prevent authorization code interception attacks.
 This will now be required for all authorization code flows. Our component library has been updated to make use of this feature.
 
@@ -45,10 +45,10 @@ This will now be required for all authorization code flows. Our component librar
 CapabilityStatements are now public for all tenants. This will allow clients to query the server for the capabilities of the server without needing to authenticate.
 
 ### Conformance Testing
-Finished initial round of conformance testing via [Touchstone](https://touchstone.aegis.net/touchstone). We currently have a 91% pass on the FHIR Standard R4 suite.
+Finished the initial round of conformance testing via [Touchstone](https://touchstone.aegis.net/touchstone). We currently have a 91% pass on the FHIR Standard R4 suite.
 
-### Bugs
-* We now allow undefined values on resources where the SD has min set to 0 for the property.
+### Bug fixes
+* We now allow undefined values on resources where the SD has a minimum set to 0 for the property.
 
 ## General
 
