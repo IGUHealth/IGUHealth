@@ -220,12 +220,12 @@ type WellKnownSmartConfiguration = {
    * REQUIRED, Array of strings representing SMART capabilities
    * (e.g., sso-openid-connect or launch-standalone) that the server supports.
    */
-  capabilities?: string[];
+  capabilities: string[];
   /**
    * REQUIRED, Array of PKCE code challenge methods supported.
    * The S256 method SHALL be included in this list, and the plain method SHALL NOT be included in this list.
    */
-  code_challenge_methods_supported?: string[];
+  code_challenge_methods_supported: string[];
 };
 
 export function discoveryGet(): OIDCRouteHandler {
@@ -296,6 +296,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client_secret_basic",
         "client_secret_post",
       ],
+      capabilities: ["sso-openid-connect", "launch-standalone"],
       code_challenge_methods_supported: ["S256", "plain"],
     };
 
