@@ -27,7 +27,7 @@ export function codeGenerationCommands(command: Command) {
       const structureDefinitions = loadArtifacts({
         fhirVersion: options.version as FHIR_VERSION,
         resourceType: "StructureDefinition",
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
       });
 
       mkdirSync(options.output, { recursive: true });
@@ -50,10 +50,11 @@ export function codeGenerationCommands(command: Command) {
       if (options.version !== R4) {
         throw new Error("Currently only support r4");
       }
+
       const operationDefinitions = loadArtifacts({
         fhirVersion: options.version,
         resourceType: "OperationDefinition",
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
       });
 
       mkdirSync(options.output, { recursive: true });

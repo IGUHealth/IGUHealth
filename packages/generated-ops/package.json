@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/generated-ops",
   "version": "0.6.8",
-  "homepage": "https://docs.iguhealth.app",
+  "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/IGUHealth/IGUHealth.git"
@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
-    "generate": "yarn node ../cli/lib/iguhealth.js generate operations --output=./src/r4 && yarn prettier --write ./src/r4/**/*.ts",
+    "generate": "yarn iguhealth generate operations --output=./src/r4 && yarn prettier --write ./src/r4/**/*.ts",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
