@@ -274,16 +274,6 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
   oidcRouter: Router<State, KoaExtensions.KoaIGUHealthContext>,
 ): OIDCRouteHandler {
   return async (ctx) => {
-    console.log(
-      "WELLKNOWN",
-      `Tenant: '${ctx.state.iguhealth.tenant}'`,
-      new URL(
-        oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
-          tenant: ctx.state.iguhealth.tenant,
-        }) as string,
-        process.env.API_URL,
-      ).href,
-    );
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
       issuer: IGUHEALTH_ISSUER,
       grant_types_supported: ["authorization_code", "client_credentials"],

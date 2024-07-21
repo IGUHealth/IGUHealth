@@ -146,6 +146,10 @@ export interface IDTokenPayload<role> extends AccessTokenPayload<role> {
   updated_at?: number;
 }
 
+export interface SMARTPayload<role> extends IDTokenPayload<role> {
+  fhirUser?: string;
+}
+
 export type JWT<Payload> = string & { ["payload"]: Payload };
 
 export type AccessToken<role> = JWT<AccessTokenPayload<role>>;
