@@ -1,0 +1,5 @@
+ALTER TABLE users
+ALTER COLUMN fhir_user_id
+DROP NOT NULL,
+ALTER COLUMN fhir_user_versionid
+DROP NOT NULL;
