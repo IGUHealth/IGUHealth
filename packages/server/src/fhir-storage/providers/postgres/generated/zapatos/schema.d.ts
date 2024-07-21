@@ -6631,15 +6631,15 @@ declare module 'zapatos/schema' {
       /**
       * **users.fhir_user_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_id: string | null;
+      fhir_user_id: string;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_versionid: number | null;
+      fhir_user_versionid: number;
       /**
       * **users.first_name**
       * - `text` in database
@@ -6729,15 +6729,15 @@ declare module 'zapatos/schema' {
       /**
       * **users.fhir_user_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_id: string | null;
+      fhir_user_id: string;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_versionid: number | null;
+      fhir_user_versionid: number;
       /**
       * **users.first_name**
       * - `text` in database
@@ -6827,13 +6827,13 @@ declare module 'zapatos/schema' {
       /**
       * **users.fhir_user_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       fhir_user_versionid?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -6925,15 +6925,15 @@ declare module 'zapatos/schema' {
       /**
       * **users.fhir_user_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      fhir_user_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_versionid?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      fhir_user_versionid: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **users.first_name**
       * - `text` in database
@@ -7023,15 +7023,15 @@ declare module 'zapatos/schema' {
       /**
       * **users.fhir_user_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      fhir_user_versionid?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      fhir_user_versionid?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **users.first_name**
       * - `text` in database
