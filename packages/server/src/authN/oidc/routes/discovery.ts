@@ -296,6 +296,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client_secret_basic",
         "client_secret_post",
       ],
+      code_challenge_methods_supported: ["S256", "plain"],
     };
 
     ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
