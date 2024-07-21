@@ -220,12 +220,12 @@ type WellKnownSmartConfiguration = {
    * REQUIRED, Array of strings representing SMART capabilities
    * (e.g., sso-openid-connect or launch-standalone) that the server supports.
    */
-  capabilities?: string[];
+  capabilities: string[];
   /**
    * REQUIRED, Array of PKCE code challenge methods supported.
    * The S256 method SHALL be included in this list, and the plain method SHALL NOT be included in this list.
    */
-  code_challenge_methods_supported?: string[];
+  code_challenge_methods_supported: string[];
 };
 
 export function discoveryGet(): OIDCRouteHandler {
@@ -274,16 +274,6 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
   oidcRouter: Router<State, KoaExtensions.KoaIGUHealthContext>,
 ): OIDCRouteHandler {
   return async (ctx) => {
-    console.log(
-      "WELLKNOWN",
-      `Tenant: '${ctx.state.iguhealth.tenant}'`,
-      new URL(
-        oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
-          tenant: ctx.state.iguhealth.tenant,
-        }) as string,
-        process.env.API_URL,
-      ).href,
-    );
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
       issuer: IGUHEALTH_ISSUER,
       grant_types_supported: ["authorization_code", "client_credentials"],
@@ -306,6 +296,8 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client_secret_basic",
         "client_secret_post",
       ],
+      capabilities: ["sso-openid-connect", "launch-standalone"],
+      code_challenge_methods_supported: ["S256", "plain"],
     };
 
     ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
