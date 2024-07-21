@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/fhir-pointer",
   "version": "0.5.0",
-  "homepage": "https://docs.iguhealth.app",
+  "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/IGUHealth/IGUHealth.git"

@@ -45092,7 +45092,7 @@ resourceType: "Membership"
   /** 
    * The clinical resource linked to this Membership.
    */
-  link?: Array<Reference>;
+  link?: Reference;
   /** 
    * Users email address.
    */

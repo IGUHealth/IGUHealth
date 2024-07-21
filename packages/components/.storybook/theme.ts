@@ -4,6 +4,6 @@ export default create({
   base: "light",
   brandTitle: "IGUHealth Components",
   brandUrl: "https://iguhealth.app",
-  brandImage: "https://docs.iguhealth.app/img/logo.svg",
+  brandImage: "https://iguhealth.app/img/logo.svg",
   brandTarget: "_self",
 });
