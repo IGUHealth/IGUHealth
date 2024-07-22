@@ -44,7 +44,7 @@ export async function verifyAndAssociateUserFHIRContext<
     throw new OperationError(
       outcomeError(
         "security",
-        `This token was not issued for the current tenant.`,
+        `This token was not issued for the current tenant. '${ctx.state.iguhealth.user.payload.iss}' != '${TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant)}'`,
       ),
     );
   }
