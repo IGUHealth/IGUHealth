@@ -1,8 +1,11 @@
 import React from "react";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
+import { Membership } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { asRoot } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
@@ -55,10 +58,21 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       existingUser,
     );
   } else {
-    const user = await ctx.state.oidc.userManagement.create(
+    const membership = await ctx.state.iguhealth.client.create(
+      asRoot(ctx.state.iguhealth),
+      R4,
+      {
+        resourceType: "Membership",
+        role: "member",
+        email,
+      } as Membership,
+    );
+
+    const user = await ctx.state.oidc.userManagement.search(
       ctx.state.iguhealth,
       {
-        email,
+        fhir_user_id: membership.id,
+        fhir_user_versionid: parseInt(membership.meta?.versionId ?? ""),
       },
     );
 
@@ -66,13 +80,13 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     await sendAlertEmail(
       ctx.state.iguhealth.emailProvider,
       "New User",
-      `A new user with email '${user.email}' has signed up.`,
+      `A new user with email '${user[0]?.email}' has signed up.`,
     );
     await sendPasswordResetEmail(
       ctx.router,
       { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
       ctx.state.oidc.codeManagement,
-      user,
+      user[0],
     );
   }
 

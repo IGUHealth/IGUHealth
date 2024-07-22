@@ -71,7 +71,6 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       {
         email,
         email_verified: true,
-        scope: "tenant",
       },
       { columns: ["tenant", "role"] },
     )

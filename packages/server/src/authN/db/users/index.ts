@@ -24,15 +24,7 @@ export default class TenantUserManagement implements UserManagement {
     const user = await this.get(ctx, id);
     if (!user) return [];
 
-    switch (user.scope) {
-      case "tenant": {
-        return [
-          { id: user.tenant as TenantId, userRole: user.role as s.user_role },
-        ];
-      }
-    }
-
-    return [];
+    return [{ id: user.tenant as TenantId, userRole: user.role }];
   }
 
   async login<T extends keyof LoginParameters>(
@@ -43,7 +35,6 @@ export default class TenantUserManagement implements UserManagement {
     switch (type) {
       case "email-password": {
         const where: s.users.Whereable = {
-          scope: "tenant",
           tenant: this.tenant,
           method: "email-password",
           email: parameters.email,
@@ -74,7 +65,7 @@ export default class TenantUserManagement implements UserManagement {
     const tenantUser: User | undefined = (await db
       .selectOne(
         "users",
-        { id, tenant: this.tenant, scope: "tenant" },
+        { id, tenant: this.tenant },
         { columns: USER_QUERY_COLS },
       )
       .run(ctx.db)) as User | undefined;
@@ -88,7 +79,7 @@ export default class TenantUserManagement implements UserManagement {
     return db
       .select(
         "users",
-        { ...where, tenant: this.tenant, scope: "tenant" },
+        { ...where, tenant: this.tenant },
         { columns: USER_QUERY_COLS },
       )
       .run(ctx.db);
@@ -98,7 +89,7 @@ export default class TenantUserManagement implements UserManagement {
     user: s.users.Insertable,
   ): Promise<User> {
     return await db
-      .insert("users", { ...user, tenant: this.tenant, scope: "tenant" })
+      .insert("users", { ...user, tenant: this.tenant })
       .run(ctx.db);
   }
   async update(
@@ -108,7 +99,6 @@ export default class TenantUserManagement implements UserManagement {
   ): Promise<User> {
     return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
       const where: s.users.Whereable = {
-        scope: "tenant",
         tenant: this.tenant,
         id,
       };
@@ -122,7 +112,6 @@ export default class TenantUserManagement implements UserManagement {
           {
             ...update,
             tenant: this.tenant,
-            scope: "tenant",
             email_verified: determineEmailUpdate(update, currentUser),
           },
           where,
@@ -139,7 +128,6 @@ export default class TenantUserManagement implements UserManagement {
       const where: s.users.Whereable = {
         ...where_,
         tenant: this.tenant,
-        scope: "tenant",
       };
       const user = await db.select("users", where).run(ctx.db);
       if (user.length > 1) {

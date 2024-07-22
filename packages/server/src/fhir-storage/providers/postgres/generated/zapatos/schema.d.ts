@@ -6679,15 +6679,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.role**
       * - `user_role` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      role: user_role | null;
-      /**
-      * **users.scope**
-      * - `user_scope` in database
-      * - `NOT NULL`, default: `'global'::user_scope`
-      */
-      scope: user_scope;
+      role: user_role;
       /**
       * **users.tenant**
       * - `text` in database
@@ -6777,15 +6771,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.role**
       * - `user_role` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      role: user_role | null;
-      /**
-      * **users.scope**
-      * - `user_scope` in database
-      * - `NOT NULL`, default: `'global'::user_scope`
-      */
-      scope: user_scope;
+      role: user_role;
       /**
       * **users.tenant**
       * - `text` in database
@@ -6875,15 +6863,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.role**
       * - `user_role` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.scope**
-      * - `user_scope` in database
-      * - `NOT NULL`, default: `'global'::user_scope`
-      */
-      scope?: user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.tenant**
       * - `text` in database
@@ -6973,15 +6955,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.role**
       * - `user_role` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.scope**
-      * - `user_scope` in database
-      * - `NOT NULL`, default: `'global'::user_scope`
-      */
-      scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment;
+      role: user_role | db.Parameter<user_role> | db.SQLFragment;
       /**
       * **users.tenant**
       * - `text` in database
@@ -7071,15 +7047,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.role**
       * - `user_role` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.scope**
-      * - `user_scope` in database
-      * - `NOT NULL`, default: `'global'::user_scope`
-      */
-      scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment>;
+      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment>;
       /**
       * **users.tenant**
       * - `text` in database
@@ -7093,7 +7063,7 @@ declare module 'zapatos/schema' {
       */
       updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'tenant_owners_pkey' | 'unique_email';
+    export type UniqueIndex = 'tenant_owners_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

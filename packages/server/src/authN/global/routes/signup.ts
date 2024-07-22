@@ -91,7 +91,6 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
         }),
         R4,
         userToMembership({
-          scope: "tenant",
           role: "owner",
           tenant: tenant.id,
           email: email,
