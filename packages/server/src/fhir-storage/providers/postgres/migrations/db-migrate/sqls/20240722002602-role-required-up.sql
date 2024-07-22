@@ -1,0 +1,5 @@
+ALTER TABLE users
+DROP COLUMN scope,
+ALTER COLUMN role
+SET
+    NOT NULL;
