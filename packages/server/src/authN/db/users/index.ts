@@ -24,9 +24,7 @@ export default class TenantUserManagement implements UserManagement {
     const user = await this.get(ctx, id);
     if (!user) return [];
 
-    return [
-      { id: user.tenant as TenantId, userRole: user.role as s.user_role },
-    ];
+    return [{ id: user.tenant as TenantId, userRole: user.role }];
   }
 
   async login<T extends keyof LoginParameters>(
