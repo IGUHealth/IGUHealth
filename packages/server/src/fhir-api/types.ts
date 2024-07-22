@@ -24,9 +24,9 @@ import {
   AccessToken,
   AccessTokenPayload,
   CUSTOM_CLAIMS,
-  IGUHEALTH_ISSUER,
   JWT,
   Subject,
+  TENANT_ISSUER,
   TenantId,
 } from "@iguhealth/jwt";
 
@@ -141,9 +141,10 @@ export interface IGUHealthServerCTX {
   ) => Promise<Resource<FHIRVersion, Type> | undefined>;
 }
 
-export function rootJWT(tenant: TenantId): AccessTokenPayload<s.user_role> {
+export function rootClaims(tenant: TenantId): AccessTokenPayload<s.user_role> {
   return {
-    iss: IGUHEALTH_ISSUER,
+    iss: TENANT_ISSUER(process.env.API_URL, tenant),
+    aud: "iguhealth",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,
     [CUSTOM_CLAIMS.ROLE]: "admin",
@@ -165,7 +166,7 @@ export function asRoot(
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      payload: rootJWT(ctx.tenant),
+      payload: rootClaims(ctx.tenant),
     },
   };
 }

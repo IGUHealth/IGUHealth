@@ -24,7 +24,7 @@ import * as fhirpath from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
-  IGUHEALTH_ISSUER,
+  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -520,7 +520,7 @@ function createTokenPayload(
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
-    iss: IGUHEALTH_ISSUER,
+    iss: TENANT_ISSUER(process.env.API_URL, tenant),
     sub: `system-worker-${workerID}`,
     [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
@@ -557,10 +557,10 @@ async function createWorker(
         const client = createHTTPClient({
           url: new URL(`w/${tenant}`, process.env.API_URL).href,
           getAccessToken: async () => {
-            const token = await createToken(
-              await getSigningKey(getCertLocation(), getCertKey()),
-              createTokenPayload(workerID, tenant),
-            );
+            const token = await createToken({
+              signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+              payload: createTokenPayload(workerID, tenant),
+            });
             return token;
           },
         });

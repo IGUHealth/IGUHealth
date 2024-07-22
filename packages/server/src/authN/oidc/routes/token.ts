@@ -8,8 +8,8 @@ import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IDTokenPayload,
-  IGUHEALTH_ISSUER,
   Subject,
+  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -152,25 +152,26 @@ export function tokenPost<
             );
 
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-              iss: IGUHEALTH_ISSUER,
+              iss: TENANT_ISSUER(process.env.API_URL, user.tenant as TenantId),
+              aud: ctx.state.oidc.client?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
               [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
               [CUSTOM_CLAIMS.RESOURCE_ID]:
                 (user.fhir_user_id as id) ?? undefined,
               sub: user.id as string as Subject,
-              scope: "openid profile email offline_access",
             };
 
             return {
-              access_token: await createToken<AccessTokenPayload<s.user_role>>(
+              access_token: await createToken<AccessTokenPayload<s.user_role>>({
                 signingKey,
-                accessTokenPayload,
-                "2h",
-              ),
-              id_token: await createToken<IDTokenPayload<s.user_role>>(
+                payload: accessTokenPayload,
+                expiresIn: `2h`,
+              }),
+              id_token: await createToken<IDTokenPayload<s.user_role>>({
                 signingKey,
-                {
+                expiresIn: `2h`,
+                payload: {
                   ...accessTokenPayload,
                   email: user.email,
                   email_verified: user.email_verified
@@ -182,8 +183,7 @@ export function tokenPost<
                   given_name: user.first_name ? user.first_name : undefined,
                   family_name: user.last_name ? user.last_name : undefined,
                 },
-                "2h",
-              ),
+              }),
               token_type: "Bearer",
               // 2 hours in seconds
               expires_in: 7200,

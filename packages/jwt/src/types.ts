@@ -1,3 +1,5 @@
+import * as jose from "jose";
+
 import {
   Address,
   ClientApplication,
@@ -25,20 +27,7 @@ export type TOKEN_RESOURCE_TYPES =
   | ClientApplication["resourceType"]
   | Membership["resourceType"];
 
-export interface AccessTokenPayload<role> {
-  /**
-   * REQUIRED. Issuer Identifier for the Issuer of the response.
-   * The iss value is a case-sensitive URL using the https scheme that contains scheme, host, and optionally,
-   *  port number and path components and no query or fragment components.
-   */
-  iss: Issuer;
-  /**
-   * sub REQUIRED. Subject Identifier.
-   * A locally unique and never reassigned identifier within the Issuer for the End-User,
-   * which is intended to be consumed by the Client, e.g., 24400320 or AItOawmwtWwcT0k51BayewNvutrJUqsvl6qs7A4.
-   * It MUST NOT exceed 255 ASCII [RFC20] characters in length. The sub value is a case-sensitive string.
-   */
-  sub: Subject;
+export interface IGUHealthCustomClaims<role> {
   /**
    * Token can be associated with an Operation, Client or Membership this claim distinguishes between the three.
    */
@@ -55,14 +44,32 @@ export interface AccessTokenPayload<role> {
    * The tenant the token is associated with.
    */
   [CUSTOM_CLAIMS.TENANT]: TenantId;
-
-  /**
-   * Allow token to have additional claims.
-   */
-  [key: string]: unknown;
 }
 
-//
+export interface AccessTokenPayload<role>
+  extends IGUHealthCustomClaims<role>,
+    jose.JWTPayload {
+  /**
+   * REQUIRED. Issuer Identifier for the Issuer of the response.
+   * The iss value is a case-sensitive URL using the https scheme that contains scheme, host, and optionally,
+   *  port number and path components and no query or fragment components.
+   */
+  iss: Issuer;
+  /**
+   * sub REQUIRED. Subject Identifier.
+   * A locally unique and never reassigned identifier within the Issuer for the End-User,
+   * which is intended to be consumed by the Client, e.g., 24400320 or AItOawmwtWwcT0k51BayewNvutrJUqsvl6qs7A4.
+   * It MUST NOT exceed 255 ASCII [RFC20] characters in length. The sub value is a case-sensitive string.
+   */
+  sub: Subject;
+  /**
+   * REQUIRED. Audience(s) that this ID Token is intended for.
+   * It MUST contain the OAuth 2.0 client_id of the Relying Party as an audience value.
+   * It MAY also contain identifiers for other audiences. In the general case, the aud value is an array of case-sensitive strings.
+   * In the common special case when there is one audience, the aud value MAY be a single case-sensitive string.
+   */
+  aud: string;
+}
 
 /**
  * ID Token Payload. Extends Access token with additional claims from https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims.
@@ -151,6 +158,5 @@ export interface SMARTPayload<role> extends IDTokenPayload<role> {
 }
 
 export type JWT<Payload> = string & { ["payload"]: Payload };
-
 export type AccessToken<role> = JWT<AccessTokenPayload<role>>;
 export type IDToken<role> = JWT<IDTokenPayload<role>>;

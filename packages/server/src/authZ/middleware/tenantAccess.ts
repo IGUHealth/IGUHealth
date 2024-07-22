@@ -1,6 +1,6 @@
 import Koa from "koa";
 
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS, TENANT_ISSUER } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
@@ -32,6 +32,19 @@ export async function verifyAndAssociateUserFHIRContext<
       outcomeError(
         "security",
         `User is not authorized to access tenant ${ctx.params.tenant}`,
+      ),
+    );
+  }
+  // Check that the token was issued for the current tenant
+  // Each tenant has a unique issuer.
+  if (
+    ctx.state.iguhealth.user.payload.iss !==
+    TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant)
+  ) {
+    throw new OperationError(
+      outcomeError(
+        "security",
+        `This token was not issued for the current tenant.`,
       ),
     );
   }

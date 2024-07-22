@@ -8,9 +8,8 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
-  IGUHEALTH_AUDIENCE,
-  IGUHEALTH_ISSUER,
   Subject,
+  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -119,8 +118,6 @@ export async function createValidateUserJWTMiddleware<T, C>({
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
     },
-    audience: IGUHEALTH_AUDIENCE,
-    issuer: [IGUHEALTH_ISSUER],
     algorithms: ["RS256"],
   }) as unknown as Middleware<T, C>;
 }
@@ -158,17 +155,20 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
-    iss: IGUHEALTH_ISSUER,
+    iss: TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant),
+    aud: "iguhealth",
     sub: "public-user" as Subject,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",
   };
-  const token = await createToken(
-    await getSigningKey(getCertLocation(), getCertKey()),
-    user,
-  );
+
+  const token = await createToken({
+    signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+    payload: user,
+  });
+
   ctx.state = {
     ...ctx.state,
     __user__: user,

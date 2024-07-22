@@ -1,6 +1,5 @@
 import * as jose from "jose";
 
-import { IGUHEALTH_AUDIENCE, IGUHEALTH_ISSUER } from "./constants.js";
 import { JWT } from "./types.js";
 
 export function parseJwt<A, Token extends JWT<A>>(
@@ -24,20 +23,20 @@ export function parseJwt<A, Token extends JWT<A>>(
 /**
  * Creates a JWT token using the provided private key and payload.
  */
-export async function createToken<Payload>(
-  privatekey: { kid: string; key: jose.KeyLike },
-  payload: Payload,
+export async function createToken<Payload extends jose.JWTPayload>({
+  signingKey,
+  payload,
   expiresIn = "2h",
-): Promise<JWT<Payload>> {
-  const signedJWT = (await new jose.SignJWT({
-    ...payload,
-    iss: IGUHEALTH_ISSUER,
-    aud: IGUHEALTH_AUDIENCE,
-  })
-    .setProtectedHeader({ kid: privatekey.kid, alg: "RS256" })
+}: {
+  signingKey: { kid: string; key: jose.KeyLike };
+  payload: Payload;
+  expiresIn?: string;
+}): Promise<JWT<Payload>> {
+  const signedJWT = (await new jose.SignJWT(payload)
+    .setProtectedHeader({ kid: signingKey.kid, alg: "RS256" })
     .setIssuedAt()
     .setExpirationTime(expiresIn)
-    .sign(privatekey.key)) as JWT<Payload & { iss: string; aud: string }>;
+    .sign(signingKey.key)) as JWT<Payload>;
 
   return signedJWT;
 }
