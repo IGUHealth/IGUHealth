@@ -5,7 +5,6 @@ import Koa from "koa";
 import koaCompress from "koa-compress";
 import helmet from "koa-helmet";
 import mount from "koa-mount";
-import ratelimit from "koa-ratelimit";
 import redisStore from "koa-redis";
 import session from "koa-session";
 import serve from "koa-static";
@@ -365,30 +364,6 @@ export default async function createServer(): Promise<
           path.join(path.dirname(fileURLToPath(import.meta.url)), "../public"),
         ),
       ),
-    )
-    .use(
-      ratelimit({
-        driver: "redis",
-        db: getRedisClient(),
-        duration: 60000,
-        errorMessage: "Sometimes You Just Have to Slow Down.",
-        id: (ctx) => ctx.ip,
-        headers: {
-          remaining: "Rate-Limit-Remaining",
-          reset: "Rate-Limit-Reset",
-          total: "Rate-Limit-Total",
-        },
-        max: process.env.RATE_LIMIT_MAX
-          ? parseInt(process.env.RATE_LIMIT_MAX)
-          : 100,
-        disableHeader: false,
-        // whitelist: (ctx) => {
-        //   // some logic that returns a boolean
-        // },
-        // blacklist: (ctx) => {
-        //   // some logic that returns a boolean
-        // },
-      }),
     )
     .use(cors())
     .use(

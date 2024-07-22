@@ -31,8 +31,6 @@
 | AWS_KMS_ACCESS_KEY_ID | KMS client access key ID | false |  |
 | AWS_KMS_ACCESS_KEY_SECRET | KMS client access key secret | false |  |
 | AWS_ENCRYPTION_GENERATOR_KEY | KMS key used to generate data keys on keyring | false |  |
-| AWS_ENCRYPTION_KEY | Additional KMS key used for encryption | false |  |
-| RATE_LIMIT_MAX | Rate limiting amount per minute | false | 100 |
 | POSTGRES_TRANSACTION_ENTRY_LIMIT | Postgres transaction entry limit | false | 20 |
 | SENTRY_SERVER_DSN | Sentry DSN URL for monitoring errors and performance. | false |  |
 | SENTRY_WORKER_DSN | Sentry Worker for monitoring errors and performance on worker | false |  |

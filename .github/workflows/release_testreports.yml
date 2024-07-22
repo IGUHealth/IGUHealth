@@ -18,7 +18,6 @@ env:
   REDIS_HOST: localhost
   REDIS_PORT: 6379
   SESSION_COOKIE_SECRETS: "session-secret"
-  RATE_LIMIT_MAX: 10000000
 
 jobs:
   server-tests:
