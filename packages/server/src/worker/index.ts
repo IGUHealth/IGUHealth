@@ -515,14 +515,15 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
   return tenants.map((w) => w.id as TenantId);
 }
 
-function createTokenPayload(
+function getTokenClaims(
   workerID: string,
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
     iss: TENANT_ISSUER(process.env.API_URL, tenant),
-    sub: `system-worker-${workerID}`,
-    [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
+    aud: workerID,
+    sub: `iguhealth-worker`,
+    [CUSTOM_CLAIMS.RESOURCE_ID]: `iguhealth-worker`,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.TENANT]: tenant,
     [CUSTOM_CLAIMS.ROLE]: "admin",
@@ -554,12 +555,13 @@ async function createWorker(
     try {
       const activeTenants = await getActiveTenants(db);
       for (const tenant of activeTenants) {
+        const payload = getTokenClaims(workerID, tenant);
         const client = createHTTPClient({
           url: new URL(`w/${tenant}`, process.env.API_URL).href,
           getAccessToken: async () => {
             const token = await createToken({
               signingKey: await getSigningKey(getCertLocation(), getCertKey()),
-              payload: createTokenPayload(workerID, tenant),
+              payload,
             });
             return token;
           },
@@ -573,7 +575,7 @@ async function createWorker(
           cache,
           tenant: tenant,
           user: {
-            payload: createTokenPayload(workerID, tenant),
+            payload,
           },
         };
         const activeSubscriptionIds = (
