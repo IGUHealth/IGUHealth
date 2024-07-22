@@ -87,6 +87,10 @@ export interface IGUHealthEnvironment {
    */
   AUTH_ALLOW_TENANT_SIGNUP?: "true" | "false";
   /**
+   * The issuer of the tokens
+   */
+  AUTH_ISSUER: string;
+  /**
    * Location for local certifications for IGUHEALTH ISSUER
    */
   AUTH_LOCAL_CERTIFICATION_LOCATION: string;

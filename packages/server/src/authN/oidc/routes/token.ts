@@ -152,7 +152,10 @@ export function tokenPost<
             );
 
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-              iss: TENANT_ISSUER(process.env.API_URL, user.tenant as TenantId),
+              iss: TENANT_ISSUER(
+                process.env.AUTH_ISSUER,
+                user.tenant as TenantId,
+              ),
               aud: ctx.state.oidc.client?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
               [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,

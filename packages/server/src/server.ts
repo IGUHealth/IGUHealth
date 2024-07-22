@@ -390,7 +390,7 @@ export default async function createServer(): Promise<
 
       // For development we don't want to log all worker requests.
       if (
-        !ctx.state.iguhealth.user?.payload.sub.startsWith("system-worker") ||
+        !ctx.state.iguhealth.user?.payload.sub.startsWith("iguhealth-worker") ||
         process.env.NODE_ENV !== "development"
       ) {
         logger.info({

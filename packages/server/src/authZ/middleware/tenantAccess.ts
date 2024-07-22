@@ -39,12 +39,12 @@ export async function verifyAndAssociateUserFHIRContext<
   // Each tenant has a unique issuer.
   if (
     ctx.state.iguhealth.user.payload.iss !==
-    TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant)
+    TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant)
   ) {
     throw new OperationError(
       outcomeError(
         "security",
-        `This token was not issued for the current tenant. '${ctx.state.iguhealth.user.payload.iss}' != '${TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant)}'`,
+        `This token was not issued for the current tenant. '${ctx.state.iguhealth.user.payload.iss}' != '${TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant)}'`,
       ),
     );
   }

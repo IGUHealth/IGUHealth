@@ -155,7 +155,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
-    iss: TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant),
+    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant),
     aud: "iguhealth",
     sub: "public-user" as Subject,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
