@@ -2,7 +2,6 @@ import * as s from "zapatos/schema";
 export const USER_QUERY_COLS = <const>[
   "id",
   "tenant",
-  "scope",
   "email",
   "first_name",
   "last_name",
