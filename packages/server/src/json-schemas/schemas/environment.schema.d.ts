@@ -127,10 +127,6 @@ export interface IGUHealthEnvironment {
    */
   AWS_ENCRYPTION_KEY?: string;
   /**
-   * Rate limiting amount per minute
-   */
-  RATE_LIMIT_MAX?: string;
-  /**
    * Postgres transaction entry limit
    */
   POSTGRES_TRANSACTION_ENTRY_LIMIT?: string;

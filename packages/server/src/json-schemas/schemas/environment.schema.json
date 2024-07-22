@@ -170,13 +170,6 @@
       "type": "string",
       "description": "Additional KMS key used for encryption"
     },
-
-    "RATE_LIMIT_MAX": {
-      "type": "string",
-      "pattern": "[0-9]{3}",
-      "description": "Rate limiting amount per minute",
-      "default": "100"
-    },
     "POSTGRES_TRANSACTION_ENTRY_LIMIT": {
       "type": "string",
       "pattern": "[0-9]{2}",
