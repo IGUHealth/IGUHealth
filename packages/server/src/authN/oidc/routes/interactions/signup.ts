@@ -3,6 +3,7 @@ import React from "react";
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { asRoot } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";

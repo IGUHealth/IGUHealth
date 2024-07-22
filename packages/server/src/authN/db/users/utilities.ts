@@ -5,6 +5,7 @@ import {
   code,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 export function userToMembership(
   user: Partial<s.users.JSONSelectable> & { email: string },
@@ -28,15 +29,25 @@ export function userToMembership(
 }
 
 export function membershipToUser(user: Membership): s.users.Insertable {
+  const fhir_user_id = user.id;
+  const fhir_user_versionid = user.meta?.versionId;
+
+  if (!fhir_user_id) {
+    throw new OperationError(outcomeFatal("exception", "User id not found"));
+  }
+  if (!fhir_user_versionid) {
+    throw new OperationError(
+      outcomeFatal("exception", "User versionId not found"),
+    );
+  }
+
   return {
     email: user.email,
     first_name: user.name?.given?.[0] ?? null,
     last_name: user.name?.family ?? null,
     role: user.role as s.user_role,
-    fhir_user_versionid: user.meta?.versionId
-      ? parseInt(user.meta.versionId)
-      : null,
-    fhir_user_id: user.id,
+    fhir_user_versionid: parseInt(fhir_user_versionid),
+    fhir_user_id,
   };
 }
 
