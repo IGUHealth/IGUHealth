@@ -80,6 +80,7 @@ export function authorizeGET(): OIDCRouteHandler {
           // Should be safe to use here as is authenticated so user should be populated.
           user_id: ctx.state.oidc.user?.id as string,
           pkce_code_challenge: code_challenge,
+          redirect_uri: redirectUrl,
           pkce_code_challenge_method: code_challenge_method as "S256" | "plain",
           expires_in: "15 minutes",
         },

@@ -56,7 +56,12 @@ export default class TenantAuthorizationCodeManagement
     ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     model: Pick<
       s.authorization_code.Insertable,
-      "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
+      | "type"
+      | "user_id"
+      | "tenant"
+      | "expires_in"
+      | "client_id"
+      | "redirect_uri"
     >,
   ): Promise<AuthorizationCode> {
     return db

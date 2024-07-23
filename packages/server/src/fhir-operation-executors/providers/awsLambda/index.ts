@@ -288,9 +288,6 @@ async function createPayload(
   const issues = await op.validate(opCTX, "in", parsedBody);
   if (issues.length > 0) throw new OperationError(outcome(issues));
 
-  if (!process.env.API_URL)
-    throw new OperationError(outcomeFatal("invalid", "API_URL is not set"));
-
   return {
     ctx: {
       SEC_TOKEN: ctx.user.accessToken ?? "not-sec",

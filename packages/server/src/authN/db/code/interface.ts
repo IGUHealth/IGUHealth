@@ -14,7 +14,7 @@ export interface AuthorizationCodeManagement
       | "tenant"
       | "expires_in"
       | "client_id"
-      | "payload"
+      | "redirect_uri"
       | "pkce_code_challenge"
       | "pkce_code_challenge_method"
     >,
