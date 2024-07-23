@@ -520,7 +520,7 @@ function getTokenClaims(
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
-    iss: TENANT_ISSUER(process.env.API_URL, tenant),
+    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
     aud: workerID,
     sub: `iguhealth-worker`,
     [CUSTOM_CLAIMS.RESOURCE_ID]: `iguhealth-worker`,

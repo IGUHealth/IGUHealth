@@ -5,6 +5,7 @@
   "$id": "https://IGUHealth.app/environment-variables",
   "additionalProperties": true,
   "required": [
+    "AUTH_ISSUER",
     "API_URL",
     "FHIR_DATABASE_NAME",
     "FHIR_DATABASE_HOST",
@@ -126,6 +127,11 @@
       "default": "false"
     },
 
+    "AUTH_ISSUER": {
+      "type": "string",
+      "description": "The issuer of the tokens"
+    },
+
     "AUTH_LOCAL_CERTIFICATION_LOCATION": {
       "type": "string",
       "description": "Location for local certifications for IGUHEALTH ISSUER"
@@ -134,6 +140,7 @@
       "type": "string",
       "description": "The signing key used to generate new local tokens"
     },
+    
 
     "EMAIL_PROVIDER": {
       "type": "string",

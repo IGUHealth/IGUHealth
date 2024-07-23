@@ -41,6 +41,7 @@ jobs:
     env:
       NODE_ENV: development
       API_URL: http://localhost:3000
+      AUTH_ISSUER: http://localhost:3000
       FHIR_DATABASE_NAME: postgres
       FHIR_DATABASE_HOST: localhost
       FHIR_DATABASE_PORT: 5432

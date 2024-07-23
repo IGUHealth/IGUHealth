@@ -231,7 +231,10 @@ type WellKnownSmartConfiguration = {
 export function discoveryGet(): OIDCRouteHandler {
   return async (ctx) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
-      issuer: TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant),
+      issuer: TENANT_ISSUER(
+        process.env.AUTH_ISSUER,
+        ctx.state.iguhealth.tenant,
+      ),
 
       userinfo_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.USER_INFO, {
@@ -275,7 +278,10 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
 ): OIDCRouteHandler {
   return async (ctx) => {
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
-      issuer: TENANT_ISSUER(process.env.API_URL, ctx.state.iguhealth.tenant),
+      issuer: TENANT_ISSUER(
+        process.env.AUTH_ISSUER,
+        ctx.state.iguhealth.tenant,
+      ),
       grant_types_supported: ["authorization_code", "client_credentials"],
       token_endpoint: new URL(
         oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {

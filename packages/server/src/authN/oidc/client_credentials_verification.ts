@@ -73,7 +73,7 @@ export async function createClientCredentialToken(
   const signingKey = await getSigningKey(getCertLocation(), getCertKey());
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: TENANT_ISSUER(process.env.API_URL, tenant),
+    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
     aud: client.id as string,
     [CUSTOM_CLAIMS.TENANT]: tenant,
     [CUSTOM_CLAIMS.ROLE]: "member",
