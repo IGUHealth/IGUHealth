@@ -145,6 +145,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/auth/token",
     createValidateInjectOIDCParameters({
       required: ["client_id"],
+      optional: [],
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),

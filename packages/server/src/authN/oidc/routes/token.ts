@@ -1,3 +1,4 @@
+import Ajv from "ajv";
 import type * as Koa from "koa";
 import crypto from "node:crypto";
 import * as db from "zapatos/db";
@@ -17,6 +18,8 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
+import type { OAuth2TokenBody } from "../../../json-schemas/schemas/oauth2_token_body.schema.js";
+import OAuth2TokenBodySchema from "../../../json-schemas/schemas/oauth2_token_body.schema.json" with { type: "json" };
 import {
   getCertKey,
   getCertLocation,
@@ -28,10 +31,6 @@ import {
   createClientCredentialToken,
   getClientCredentials,
 } from "../client_credentials_verification.js";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
 
 function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
@@ -53,6 +52,19 @@ function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
   }
 }
 
+function verifyTokenBody(body: unknown): body is OAuth2TokenBody {
+  const ajv = new Ajv.default({});
+  const tokenBodyValidator = ajv.compile(OAuth2TokenBodySchema);
+  const bodyValid = tokenBodyValidator(body);
+  if (!bodyValid) {
+    throw new OperationError(
+      outcomeError("invalid", ajv.errorsText(tokenBodyValidator.errors)),
+    );
+  }
+
+  return true;
+}
+
 /**
  * Returns an access token that can be used to access protected resources.
  */
@@ -61,11 +73,9 @@ export function tokenPost<
   C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
-    const body = (ctx.request as unknown as Record<string, unknown>).body;
-    if (!isRecord(body)) {
-      throw new OperationError(
-        outcomeError("invalid", "Body must be a record."),
-      );
+    const body = ctx.request.body;
+    if (!verifyTokenBody(body)) {
+      throw new OperationError(outcomeError("invalid", "Invalid token body"));
     }
 
     if (!ctx.state.oidc.client) {
@@ -74,6 +84,9 @@ export function tokenPost<
       );
     }
 
+    /**
+     * Validate grant type aligns with the client.
+     */
     if (
       !ctx.state.oidc.client?.grantType.includes(
         body.grant_type?.toString() as code,
@@ -90,30 +103,10 @@ export function tokenPost<
     switch (body.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
       case "authorization_code": {
-        const body = (ctx.request as unknown as Record<string, unknown>).body;
-
         const response = await FHIRTransaction(
           ctx.state.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
-            if (!isRecord(body))
-              throw new OperationError(
-                outcomeError("invalid", "Body must be a record."),
-              );
-            if (typeof body.code !== "string") {
-              throw new OperationError(
-                outcomeError("invalid", "Code must be present and a string."),
-              );
-            }
-            if (typeof body.code_verifier !== "string") {
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  "Code verifier must be present and a string.",
-                ),
-              );
-            }
-
             const code = await ctx.state.oidc.codeManagement.search(
               fhirContext,
               {
@@ -123,6 +116,8 @@ export function tokenPost<
 
             if (code.length !== 1 || code[0].is_expired)
               throw new OperationError(outcomeError("invalid", "Invalid code"));
+
+            // Ensure the code is bound to the same client
             if (code[0].client_id !== ctx.state.oidc.client?.id)
               throw new OperationError(
                 outcomeError("invalid", "Invalid client"),
@@ -131,6 +126,11 @@ export function tokenPost<
             if (!verifyCodeChallenge(code[0], body.code_verifier)) {
               throw new OperationError(
                 outcomeError("forbidden", "Invalid code verifier"),
+              );
+            }
+            if (code[0].redirect_uri !== body.redirect_uri) {
+              throw new OperationError(
+                outcomeError("forbidden", "Invalid redirect uri"),
               );
             }
 

@@ -50,8 +50,8 @@ function IGUHealthSMART() {
     console.log("FHIR TRIGGER");
     FHIR.oauth2
       .init({
-        iss: "http://localhost:3000/w/fbv7dwlc1szcpc9613e89/api/v1/fhir/r4",
-        clientId: "kzQN-TQkHVzRsPEVm3MLUU",
+        iss: "http://localhost:3000/w/8qx2n41ha6dwlh2wxk10l/api/v1/fhir/r4",
+        clientId: "JXjw2GE4l1JdRGOcJ42JNs",
         scope: "openid launch patient/*.read",
       })
       .then((client) => {

@@ -143,7 +143,7 @@ export interface IGUHealthServerCTX {
 
 export function rootClaims(tenant: TenantId): AccessTokenPayload<s.user_role> {
   return {
-    iss: TENANT_ISSUER(process.env.API_URL, tenant),
+    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
     aud: "iguhealth",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,

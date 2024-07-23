@@ -18,8 +18,10 @@ const pkce_code_verifier_key = (client_id: string) =>
 
 async function handleRedirectCallback({
   token_endpoint,
+  redirect_uri,
   clientId,
 }: {
+  redirect_uri: string;
   token_endpoint: string;
   clientId: string;
 }) {
@@ -59,6 +61,7 @@ async function handleRedirectCallback({
     body: JSON.stringify({
       grant_type: "authorization_code",
       code_verifier,
+      redirect_uri,
       code: parameters.code,
       client_id: clientId,
     }),
@@ -129,6 +132,7 @@ export function IGUHealthProvider({
         if (hasAuthQueryParams()) {
           const authorizationPayload = await handleRedirectCallback({
             token_endpoint: well_known.token_endpoint,
+            redirect_uri: redirectUrl,
             clientId,
           });
 
