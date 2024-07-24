@@ -21,8 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     title: "IGUHealth",
-    acceptURL: "#",
-    denyURL: "#",
+    actionURL: "#",
     scopes: ["openid", "profile", "email"],
   },
 };

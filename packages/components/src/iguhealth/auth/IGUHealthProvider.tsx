@@ -72,10 +72,12 @@ async function handleRedirectCallback({
 async function handleAuthorizeInitial({
   authorize_endpoint,
   clientId,
+  scope,
   redirectUrl,
 }: {
   authorize_endpoint: string;
   clientId: string;
+  scope: string;
   redirectUrl: string;
 }) {
   const code_verifier = generateRandomString(43);
@@ -85,7 +87,7 @@ async function handleAuthorizeInitial({
   localStorage.setItem(state_key(clientId), state);
 
   const url = new URL(
-    `?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}&code_challenge=${code_challenge}&code_challenge_method=${CODE_CHALLENGE_METHOD}`,
+    `?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&state=${state}&response_type=${"code"}&code_challenge=${code_challenge}&code_challenge_method=${CODE_CHALLENGE_METHOD}`,
     authorize_endpoint,
   );
 
@@ -97,11 +99,13 @@ export function IGUHealthProvider({
   tenant,
   redirectUrl,
   domain,
+  scope,
   children,
   onRedirectCallback,
 }: Readonly<{
   tenant?: TenantId | string;
   clientId: string;
+  scope: string;
   domain: string;
   redirectUrl: string;
   children: React.ReactNode;
@@ -146,6 +150,7 @@ export function IGUHealthProvider({
             reInitiliaze: () =>
               handleAuthorizeInitial({
                 authorize_endpoint: well_known.authorization_endpoint,
+                scope,
                 clientId,
                 redirectUrl,
               }),
@@ -163,6 +168,7 @@ export function IGUHealthProvider({
           handleAuthorizeInitial({
             authorize_endpoint: well_known.authorization_endpoint,
             clientId,
+            scope,
             redirectUrl,
           });
         }

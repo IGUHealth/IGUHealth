@@ -1,4 +1,6 @@
 import { Command } from "commander";
+import { glob } from "glob";
+import { compileFromFile } from "json-schema-to-typescript";
 import { exec } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import util from "node:util";
@@ -47,12 +49,14 @@ async function generateTypes() {
     },
     outDir: "src/fhir-storage/providers/postgres/generated",
   });
-  const res = await execPromise(
-    "yarn json2ts -i 'src/json-schemas/schemas/*.json' -o src/json-schemas/schemas",
+
+  const schemaFiles = await glob("src/**/*.schema.json");
+  await Promise.all(
+    schemaFiles.map(async (schemaFile) => {
+      const ts = await compileFromFile(schemaFile);
+      writeFileSync(schemaFile.replace(".schema.json", ".schema.d.ts"), ts);
+    }),
   );
-  if (res.stderr) {
-    throw new Error(res.stderr);
-  }
 }
 
 export function generateCommands(command: Command) {

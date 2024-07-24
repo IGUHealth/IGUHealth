@@ -17,6 +17,7 @@ export const OIDC_ROUTES = {
   PASSWORD_RESET_VERIFY_POST:
     "tenant-oidc-interaction-password-reset-verify-post",
   AUTHORIZE_GET: "tenant-oidc-authorize-get",
+  AUTHORIZE_POST: "tenant-oidc-authorize-post",
   TOKEN_POST: "tenant-oidc-token-post",
   USER_INFO: "tenant-oidc-user-info",
   OIDC_DISCOVERY: "tenant-oidc-discovery",
