@@ -538,6 +538,12 @@ declare module 'zapatos/schema' {
       */
       scope: string;
       /**
+      * **authorization_scopes.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **authorization_scopes.user_id**
       * - `uuid` in database
       * - `NOT NULL`, no default
@@ -563,6 +569,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       scope: string;
+      /**
+      * **authorization_scopes.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
       /**
       * **authorization_scopes.user_id**
       * - `uuid` in database
@@ -590,6 +602,12 @@ declare module 'zapatos/schema' {
       */
       scope?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **authorization_scopes.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **authorization_scopes.user_id**
       * - `uuid` in database
       * - `NOT NULL`, no default
@@ -616,6 +634,12 @@ declare module 'zapatos/schema' {
       */
       scope: string | db.Parameter<string> | db.SQLFragment;
       /**
+      * **authorization_scopes.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **authorization_scopes.user_id**
       * - `uuid` in database
       * - `NOT NULL`, no default
@@ -641,6 +665,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       scope?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **authorization_scopes.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **authorization_scopes.user_id**
       * - `uuid` in database

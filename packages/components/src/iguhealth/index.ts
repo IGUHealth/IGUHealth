@@ -4,3 +4,4 @@ export * from "./components/EmailForm";
 export * from "./components/PasswordReset";
 export * from "./auth/index";
 export * from "./components/TenantSelect";
+export * from "./components/ScopeVerify";

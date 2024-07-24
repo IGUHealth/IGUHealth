@@ -1,3 +1,4 @@
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import React from "react";
 
 import { Container } from "./Container";
@@ -7,8 +8,7 @@ export interface ScopeVerifyProps {
   header?: string;
   scopes?: string[];
   logo?: string;
-  acceptURL: string;
-  denyURL: string;
+  actionURL: string;
 }
 
 export const ScopeVerifyForm = ({
@@ -16,8 +16,7 @@ export const ScopeVerifyForm = ({
   header = "Scopes",
   scopes = [],
   logo,
-  acceptURL,
-  denyURL,
+  actionURL,
 }: ScopeVerifyProps) => {
   return (
     <Container logo={logo} title={title}>
@@ -28,16 +27,24 @@ export const ScopeVerifyForm = ({
         <span>The application is requesting the following scopes:</span>
       </div>
       <div>
-        <ul className="list-inside list-disc">
+        <table className="border-collapse  list-inside list-disc w-full ">
           {scopes.map((scope) => (
-            <li key={scope}>{scope}</li>
+            <tr className="border" key={scope}>
+              <td className="p-4">{scope}</td>
+              <td>
+                <div className="items-center justify-center flex">
+                  <ExclamationCircleIcon className="w-6 h-6 text-gray-300" />
+                </div>
+              </td>
+            </tr>
           ))}
-        </ul>
+        </table>
       </div>
-      <div className="flex space-x-4">
-        <form action={acceptURL} method="POST">
+      <div className="justify-center items-center flex space-x-4">
+        <form action={actionURL} method="POST">
           {scopes.map((scope) => (
             <input
+              readOnly
               key={scope}
               name="scopes"
               className="hidden"
@@ -46,10 +53,11 @@ export const ScopeVerifyForm = ({
             />
           ))}
           <input
+            readOnly
             className="hidden"
             name="accept"
             type="checkbox"
-            checked={false}
+            checked={true}
           />
           <button
             type="submit"
@@ -58,9 +66,10 @@ export const ScopeVerifyForm = ({
             Allow
           </button>
         </form>
-        <form action={denyURL} method="POST">
+        <form action={actionURL} method="POST">
           {scopes.map((scope) => (
             <input
+              readOnly
               key={scope}
               name="scopes"
               className="hidden"
@@ -69,6 +78,7 @@ export const ScopeVerifyForm = ({
             />
           ))}
           <input
+            readOnly
             className="hidden"
             name="accept"
             type="checkbox"
@@ -76,7 +86,7 @@ export const ScopeVerifyForm = ({
           />
           <button
             type="submit"
-            className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            className="w-full text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
           >
             Deny
           </button>

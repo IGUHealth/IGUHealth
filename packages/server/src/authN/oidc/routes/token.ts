@@ -18,8 +18,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
-import type { OAuth2TokenBody } from "../../../json-schemas/schemas/oauth2_token_body.schema.js";
-import OAuth2TokenBodySchema from "../../../json-schemas/schemas/oauth2_token_body.schema.json" with { type: "json" };
 import {
   getCertKey,
   getCertLocation,
@@ -31,6 +29,8 @@ import {
   createClientCredentialToken,
   getClientCredentials,
 } from "../client_credentials_verification.js";
+import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
+import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
 
 function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
