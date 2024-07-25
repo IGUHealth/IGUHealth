@@ -8,6 +8,7 @@ import {
   injectHardcodedClients,
 } from "../oidc/middleware/index.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
+import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
@@ -132,39 +133,36 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   managementRouter.get(
     OIDC_ROUTES.AUTHORIZE_GET,
     "/auth/authorize",
+    OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state", "code_challenge"],
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    OAuthErrorHandlingMiddleware(),
     routes.authorizeGET(),
   );
 
   managementRouter.post(
     OIDC_ROUTES.AUTHORIZE_POST,
     "/auth/authorize",
+    OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state", "code_challenge"],
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    OAuthErrorHandlingMiddleware(),
     routes.authorizePOST(),
   );
 
   managementRouter.post(
     OIDC_ROUTES.TOKEN_POST,
     "/auth/token",
-    createValidateInjectOIDCParameters({
-      required: ["client_id"],
-      optional: [],
-    }),
+    OAuthErrorHandlingMiddleware(),
+    injectClientCredentialsMiddleware(),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    OAuthErrorHandlingMiddleware(),
     routes.tokenPost(),
   );
 

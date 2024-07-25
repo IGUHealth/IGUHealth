@@ -26,7 +26,6 @@ import { AuthorizationCode } from "../../db/code/types.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
-  getClientCredentials,
 } from "../client_credentials_verification.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
@@ -75,6 +74,8 @@ export function tokenPost<
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const body = ctx.request.body;
+    const clientApplication = ctx.state.oidc.client;
+
     if (!verifyTokenBody(body)) {
       throw new OIDCError({
         error: "invalid_request",
@@ -82,7 +83,7 @@ export function tokenPost<
       });
     }
 
-    if (!ctx.state.oidc.client) {
+    if (!clientApplication) {
       throw new OIDCError({
         error: "invalid_client",
         error_description: "Could not find client.",
@@ -93,9 +94,7 @@ export function tokenPost<
      * Validate grant type aligns with the client.
      */
     if (
-      !ctx.state.oidc.client?.grantType.includes(
-        body.grant_type?.toString() as code,
-      )
+      !clientApplication.grantType.includes(body.grant_type?.toString() as code)
     ) {
       throw new OIDCError({
         error: "unsupported_grant_type",
@@ -117,6 +116,20 @@ export function tokenPost<
               },
             );
 
+            if (
+              ctx.state.oidc.parameters.client_id &&
+              ctx.state.oidc.parameters.client_secret &&
+              !authenticateClientCredentials(clientApplication, {
+                client_id: ctx.state.oidc.parameters.client_id,
+                client_secret: ctx.state.oidc.parameters.client_secret,
+              })
+            ) {
+              throw new OIDCError({
+                error: "invalid_client",
+                error_description: "Invalid credentials for client.",
+              });
+            }
+
             if (code.length !== 1 || code[0].is_expired)
               throw new OIDCError({
                 error: "invalid_grant",
@@ -124,7 +137,7 @@ export function tokenPost<
               });
 
             // Ensure the code is bound to the same client
-            if (code[0].client_id !== ctx.state.oidc.client?.id)
+            if (code[0].client_id !== clientApplication?.id)
               throw new OIDCError({
                 error: "invalid_client",
                 error_description: "Client mismatch",
@@ -169,7 +182,7 @@ export function tokenPost<
                 process.env.AUTH_ISSUER,
                 user.tenant as TenantId,
               ),
-              aud: ctx.state.oidc.client?.id,
+              aud: clientApplication?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
               [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
@@ -218,9 +231,10 @@ export function tokenPost<
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
       case "client_credentials": {
-        const credentials = getClientCredentials(ctx.request);
-
-        if (!credentials) {
+        if (
+          !ctx.state.oidc.parameters.client_secret ||
+          !ctx.state.oidc.parameters.client_id
+        ) {
           throw new OIDCError({
             error: "invalid_request",
             error_description: "Could not find credentials in request.",
@@ -228,7 +242,10 @@ export function tokenPost<
         }
 
         if (
-          !authenticateClientCredentials(ctx.state.oidc.client, credentials)
+          !authenticateClientCredentials(clientApplication, {
+            client_id: ctx.state.oidc.parameters.client_id,
+            client_secret: ctx.state.oidc.parameters.client_secret,
+          })
         ) {
           throw new OIDCError({
             error: "invalid_client",
@@ -239,7 +256,7 @@ export function tokenPost<
         ctx.body = {
           access_token: await createClientCredentialToken(
             ctx.state.iguhealth.tenant,
-            ctx.state.oidc.client,
+            clientApplication,
           ),
           token_type: "Bearer",
           expires_in: 7200,

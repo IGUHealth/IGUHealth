@@ -533,7 +533,7 @@ declare module 'zapatos/schema' {
       created_at: Date;
       /**
       * **authorization_scopes.scope**
-      * - `varchar` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       scope: string;
@@ -565,7 +565,7 @@ declare module 'zapatos/schema' {
       created_at: db.TimestampTzString;
       /**
       * **authorization_scopes.scope**
-      * - `varchar` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       scope: string;
@@ -597,7 +597,7 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_scopes.scope**
-      * - `varchar` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       scope?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
@@ -629,7 +629,7 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **authorization_scopes.scope**
-      * - `varchar` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       scope: string | db.Parameter<string> | db.SQLFragment;
@@ -661,7 +661,7 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **authorization_scopes.scope**
-      * - `varchar` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       scope?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;

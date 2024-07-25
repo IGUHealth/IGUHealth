@@ -24,9 +24,13 @@ export type OAuth2TokenBody =
        */
       code_verifier: string;
       /**
-       * The client ID used in the initial request.
+       * The client ID used in the initial request. May also be included in the Basic header.
        */
       client_id: string;
+      /**
+       * The client Secret used in the initial request. May also be included in the Basic header.
+       */
+      client_secret?: string;
     }
   | {
       /**
