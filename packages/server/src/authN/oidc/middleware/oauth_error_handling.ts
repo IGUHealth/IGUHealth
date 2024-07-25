@@ -16,7 +16,14 @@ type OIDCErrorType =
   // The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
   | "temporarily_unavailable"
   // The user has denied access to the client.
-  | "access_denied";
+  | "access_denied"
+  // Client authentication failed (e.g., unknown client, no client authentication included, or unsupported authentication method).
+  | "invalid_client"
+  // The authorization grant type is not supported by the authorization server.
+  | "unsupported_grant_type"
+  // The provided authorization grant (e.g., authorization code, resource owner credentials) or refresh token is invalid,
+  // expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.
+  | "invalid_grant";
 
 export class OIDCError extends Error {
   private error;
@@ -45,7 +52,11 @@ export class OIDCError extends Error {
     this.redirect_uri = redirect_uri;
   }
 
-  getRedirectionUrl() {
+  shouldRedirect() {
+    return !!this.redirect_uri;
+  }
+
+  asRedirectionUrl() {
     let redirect_url = `${this.redirect_uri}?error=${this.error}&error_description=${this.error_description}`;
 
     if (this.error_uri) {
@@ -56,6 +67,14 @@ export class OIDCError extends Error {
     }
 
     return redirect_url;
+  }
+  asJSON() {
+    return {
+      error: this.error,
+      error_description: this.error_description,
+      error_uri: this.error_uri,
+      state: this.state,
+    };
   }
 }
 
@@ -73,8 +92,14 @@ export function OAuthErrorHandlingMiddleware(): Koa.Middleware<
     } catch (err) {
       switch (true) {
         case err instanceof OIDCError: {
-          ctx.redirect(err.getRedirectionUrl());
-          return;
+          if (err.shouldRedirect()) {
+            ctx.redirect(err.asRedirectionUrl());
+            return;
+          } else {
+            ctx.status = 400;
+            ctx.body = err.asJSON();
+            return;
+          }
         }
         default: {
           throw err;

@@ -14,7 +14,6 @@ import {
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
@@ -29,6 +28,7 @@ import {
   createClientCredentialToken,
   getClientCredentials,
 } from "../client_credentials_verification.js";
+import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
 import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
 
@@ -57,9 +57,10 @@ function verifyTokenBody(body: unknown): body is OAuth2TokenBody {
   const tokenBodyValidator = ajv.compile(OAuth2TokenBodySchema);
   const bodyValid = tokenBodyValidator(body);
   if (!bodyValid) {
-    throw new OperationError(
-      outcomeError("invalid", ajv.errorsText(tokenBodyValidator.errors)),
-    );
+    throw new OIDCError({
+      error: "invalid_request",
+      error_description: ajv.errorsText(tokenBodyValidator.errors),
+    });
   }
 
   return true;
@@ -75,13 +76,17 @@ export function tokenPost<
   return async (ctx) => {
     const body = ctx.request.body;
     if (!verifyTokenBody(body)) {
-      throw new OperationError(outcomeError("invalid", "Invalid token body"));
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "Invalid token body",
+      });
     }
 
     if (!ctx.state.oidc.client) {
-      throw new OperationError(
-        outcomeError("invalid", "Could not find client in context."),
-      );
+      throw new OIDCError({
+        error: "invalid_client",
+        error_description: "Could not find client.",
+      });
     }
 
     /**
@@ -92,12 +97,10 @@ export function tokenPost<
         body.grant_type?.toString() as code,
       )
     ) {
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Grant type not supported by client : '${body.grant_type}'`,
-        ),
-      );
+      throw new OIDCError({
+        error: "unsupported_grant_type",
+        error_description: `Grant type not supported by client : '${body.grant_type}'`,
+      });
     }
 
     switch (body.grant_type) {
@@ -115,23 +118,30 @@ export function tokenPost<
             );
 
             if (code.length !== 1 || code[0].is_expired)
-              throw new OperationError(outcomeError("invalid", "Invalid code"));
+              throw new OIDCError({
+                error: "invalid_grant",
+                error_description: "Invalid code",
+              });
 
             // Ensure the code is bound to the same client
             if (code[0].client_id !== ctx.state.oidc.client?.id)
-              throw new OperationError(
-                outcomeError("invalid", "Invalid client"),
-              );
+              throw new OIDCError({
+                error: "invalid_client",
+                error_description: "Client mismatch",
+              });
 
             if (!verifyCodeChallenge(code[0], body.code_verifier)) {
-              throw new OperationError(
-                outcomeError("forbidden", "Invalid code verifier"),
-              );
+              throw new OIDCError({
+                error: "invalid_request",
+                error_description: "Invalid code verifier",
+              });
             }
+
             if (code[0].redirect_uri !== body.redirect_uri) {
-              throw new OperationError(
-                outcomeError("forbidden", "Invalid redirect uri"),
-              );
+              throw new OIDCError({
+                error: "invalid_request",
+                error_description: "Invalid redirect uri",
+              });
             }
 
             const user = await ctx.state.oidc.userManagement.get(
@@ -140,7 +150,10 @@ export function tokenPost<
             );
 
             if (!user)
-              throw new OperationError(outcomeError("invalid", "Invalid user"));
+              throw new OIDCError({
+                error: "invalid_grant",
+                error_description: "Invalid user",
+              });
 
             await ctx.state.oidc.codeManagement.delete(fhirContext, {
               id: code[0].id,
@@ -208,17 +221,19 @@ export function tokenPost<
         const credentials = getClientCredentials(ctx.request);
 
         if (!credentials) {
-          throw new OperationError(
-            outcomeError("invalid", "Could not find credentials in request."),
-          );
+          throw new OIDCError({
+            error: "invalid_request",
+            error_description: "Could not find credentials in request.",
+          });
         }
 
         if (
           !authenticateClientCredentials(ctx.state.oidc.client, credentials)
         ) {
-          throw new OperationError(
-            outcomeError("security", "Invalid credentials for client."),
-          );
+          throw new OIDCError({
+            error: "invalid_client",
+            error_description: "Invalid credentials for client.",
+          });
         }
 
         ctx.body = {
@@ -234,9 +249,10 @@ export function tokenPost<
         break;
       }
       default: {
-        throw new OperationError(
-          outcomeError("invalid", "Grant type not supported"),
-        );
+        throw new OIDCError({
+          error: "unsupported_grant_type",
+          error_description: "Grant type not supported",
+        });
       }
     }
   };
