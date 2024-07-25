@@ -41,6 +41,8 @@ import ResourceType from "./views/ResourceType";
 import Resources from "./views/Resources";
 import Settings from "./views/Settings";
 
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 // Could potentially use HOST=iguhealth.localhost but instead just going to default redirect to system.iguhealth.localhost
 if (
   process.env.NODE_ENV === "development" &&
@@ -54,10 +56,21 @@ function LoginWrapper() {
 
   return (
     <>
-      {!iguhealth.isAuthenticated ? (
+      {iguhealth.loading ? (
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
           <Loading />
           <div className="mt-1 ">Loading...</div>
+        </div>
+      ) : iguhealth.error ? (
+        <div className="h-screen flex">
+          <div className="flex-1 flex items-center justify-center">
+            <div className="p-4 bg-red-100 text-red-800 border border-red-400 rounded-md space-y-2">
+              <div className="font-bold">
+                {iguhealth.error.code.split("_").map(capitalize).join(" ")}
+              </div>
+              <div>{iguhealth.error.description}</div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="h-screen flex">

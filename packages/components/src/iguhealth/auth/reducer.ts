@@ -21,8 +21,8 @@ export type OIDC_WELL_KNOWN = {
   subject_types_supported?: string[];
 };
 
-type INIT_ACTION = {
-  type: "INIT";
+type SUCCESS_ACTION = {
+  type: "ON_SUCCESS";
   well_known: OIDC_WELL_KNOWN;
   domain: string;
   tenant?: TenantId;
@@ -31,14 +31,41 @@ type INIT_ACTION = {
   reInitiliaze: () => void;
 };
 
-type ACTION = INIT_ACTION;
+type ERROR_ACTION = {
+  type: "ON_ERROR";
+  error: string;
+  error_description: string;
+  error_uri?: string;
+  state?: string;
+};
+
+type LOADING_ACTION = {
+  type: "SET_LOADING";
+  loading: boolean;
+};
+
+type ACTION = SUCCESS_ACTION | ERROR_ACTION | LOADING_ACTION;
 
 export function iguHealthReducer(
   state: IGUHealthContextState,
   action: ACTION,
 ): IGUHealthContextState {
   switch (action.type) {
-    case "INIT": {
+    case "SET_LOADING": {
+      return { ...state, loading: action.loading };
+    }
+    case "ON_ERROR": {
+      return {
+        ...state,
+        error: {
+          code: action.error,
+          description: action.error_description,
+          uri: action.error_uri,
+          state: action.state,
+        },
+      };
+    }
+    case "ON_SUCCESS": {
       const user = parseJwt(action.payload.id_token);
       const rootURL = new URL(
         `/w/${action.tenant ? action.tenant : user[CUSTOM_CLAIMS.TENANT]}`,
@@ -74,6 +101,7 @@ export function iguHealthReducer(
       };
     }
     default: {
+      // @ts-ignore
       throw new Error(`Unhandled action type: ${action.type}`);
     }
   }

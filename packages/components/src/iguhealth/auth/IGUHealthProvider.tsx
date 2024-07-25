@@ -16,26 +16,38 @@ const state_key = (client_id: string) => `iguhealth_${client_id}`;
 const pkce_code_verifier_key = (client_id: string) =>
   `iguhealth_pkce_code_${client_id}`;
 
-async function handleRedirectCallback({
-  token_endpoint,
-  redirect_uri,
-  clientId,
-}: {
-  redirect_uri: string;
-  token_endpoint: string;
-  clientId: string;
-}) {
-  const code_verifier = window.localStorage.getItem(
-    pkce_code_verifier_key(clientId),
-  );
-  const localStateParameter = window.localStorage.getItem(state_key(clientId));
-  // Call to retrieve token using current url.
-  const parameters: Record<string, string> = window.location.search
+type AccessTokenResponse = {
+  access_token: AccessToken<string>;
+  id_token: IDToken<string>;
+  token_type: string;
+  expires_in: number;
+};
+
+function getParsedParameters(): Record<string, string> {
+  const parameters = window.location.search
     .slice(1)
     .split("&")
     .map((v) => v.trim())
     .map((p) => p.split("=").map((v) => v.trim()))
-    .reduce((acc, [key, v]) => ({ ...acc, [key]: v }), {});
+    .reduce((acc, [key, v]) => ({ ...acc, [key]: decodeURIComponent(v) }), {});
+  return parameters;
+}
+
+async function exchangeAuthCodeForToken({
+  token_endpoint,
+  redirect_uri,
+  parameters,
+  clientId,
+}: {
+  redirect_uri: string;
+  token_endpoint: string;
+  parameters: Record<string, string>;
+  clientId: string;
+}): Promise<AccessTokenResponse> {
+  const code_verifier = window.localStorage.getItem(
+    pkce_code_verifier_key(clientId),
+  );
+  const localStateParameter = window.localStorage.getItem(state_key(clientId));
 
   if (!parameters.state) throw new Error();
   if (!parameters.code) throw new Error();
@@ -49,10 +61,7 @@ async function handleRedirectCallback({
 
   window.history.replaceState(null, "", location.pathname);
 
-  const response: {
-    access_token: AccessToken<string>;
-    id_token: IDToken<string>;
-  } = await fetch(token_endpoint, {
+  const response: AccessTokenResponse = await fetch(token_endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +112,7 @@ export function IGUHealthProvider({
   children,
   onRedirectCallback,
 }: Readonly<{
-  tenant?: TenantId | string;
+  tenant: TenantId;
   clientId: string;
   scope: string;
   domain: string;
@@ -122,6 +131,7 @@ export function IGUHealthProvider({
     isInitialized.current = true;
 
     (async (): Promise<void> => {
+      dispatch({ type: "SET_LOADING", loading: true });
       try {
         const well_known: OIDC_WELL_KNOWN = await fetch(
           new URL(
@@ -134,19 +144,35 @@ export function IGUHealthProvider({
         ).then((v) => v.json());
 
         if (hasAuthQueryParams()) {
-          const authorizationPayload = await handleRedirectCallback({
+          const parameters = getParsedParameters();
+
+          if (parameters.error) {
+            window.history.replaceState(null, "", location.pathname);
+            dispatch({
+              type: "ON_ERROR",
+              error: parameters.error,
+              error_description: parameters.error_description,
+              error_uri: parameters.error_uri,
+              state: parameters.state,
+            });
+            console.error("Failed to authenticate");
+            return;
+          }
+
+          const accessTokenPayload = await exchangeAuthCodeForToken({
+            parameters,
             token_endpoint: well_known.token_endpoint,
             redirect_uri: redirectUrl,
             clientId,
           });
 
           dispatch({
-            type: "INIT",
+            type: "ON_SUCCESS",
             domain,
             well_known,
-            tenant: tenant as TenantId,
+            tenant,
             clientId,
-            payload: authorizationPayload,
+            payload: accessTokenPayload,
             reInitiliaze: () =>
               handleAuthorizeInitial({
                 authorize_endpoint: well_known.authorization_endpoint,
@@ -175,6 +201,8 @@ export function IGUHealthProvider({
       } catch (error) {
         console.error(error);
         throw error;
+      } finally {
+        dispatch({ type: "SET_LOADING", loading: false });
       }
     })();
   }, [clientId, domain, redirectUrl]);

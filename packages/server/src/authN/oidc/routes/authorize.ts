@@ -8,6 +8,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import * as views from "../../../views/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
+import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { ScopeVerificationBody } from "../schemas/authorize_scope_body.schema.js";
 import ScopeVerificationBodySchema from "../schemas/authorize_scope_body.schema.json" with { type: "json" };
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
@@ -50,12 +51,20 @@ const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256", "plain"];
       verifier transformation method is "S256" or "plain".
  */
 export function authorizeGET(): OIDCRouteHandler {
-  return async (ctx, next) => {
+  return async (ctx) => {
+    const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
+    const client = ctx.state.oidc.client;
+    if (!client)
+      throw new OperationError(outcomeError("invalid", "Client not found."));
+    if (isInvalidRedirectUrl(redirectUrl, client)) {
+      throw new OperationError(
+        outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
+      );
+    }
+
     if (await ctx.state.oidc.isAuthenticated(ctx)) {
-      const redirectUrl = ctx.request.query.redirect_uri?.toString();
       // const scope = ctx.request.query.scope;
       const state = ctx.state.oidc.parameters.state;
-      const client = ctx.state.oidc.client;
       const code_challenge = ctx.state.oidc.parameters.code_challenge;
       const code_challenge_method =
         ctx.state.oidc.parameters.code_challenge_method ?? "plain";
@@ -63,21 +72,12 @@ export function authorizeGET(): OIDCRouteHandler {
       if (
         SUPPORTED_CODE_CHALLENGE_METHODS.indexOf(code_challenge_method) === -1
       ) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `Code challenge method '${code_challenge_method}' not supported.`,
-          ),
-        );
-      }
-
-      if (!client)
-        throw new OperationError(outcomeError("invalid", "Client not found."));
-
-      if (isInvalidRedirectUrl(redirectUrl, client)) {
-        throw new OperationError(
-          outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
-        );
+        throw new OIDCError({
+          error: "invalid_request",
+          error_description: `Code challenge method '${code_challenge_method}' not supported.`,
+          state,
+          redirect_uri: redirectUrl,
+        });
       }
 
       const approvedScopes = await db
@@ -153,7 +153,17 @@ function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
  * Used for verifying the scopes.
  */
 export function authorizePOST(): OIDCRouteHandler {
-  return async (ctx, next) => {
+  return async (ctx) => {
+    const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
+    const client = ctx.state.oidc.client;
+    if (!client)
+      throw new OperationError(outcomeError("invalid", "Client not found."));
+    if (isInvalidRedirectUrl(redirectUrl, client)) {
+      throw new OperationError(
+        outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
+      );
+    }
+
     if (await ctx.state.oidc.isAuthenticated(ctx)) {
       const body = ctx.request.body;
       if (!verifyScopeBody(body)) {
@@ -181,14 +191,20 @@ export function authorizePOST(): OIDCRouteHandler {
         // Redirect back to get request which generates the code etc... as next step.
         ctx.redirect(ctx.url);
       } else {
-        throw new OperationError(
-          outcomeError("invalid", "User did not accept scopes"),
-        );
+        throw new OIDCError({
+          error: "access_denied",
+          error_description: "User did not accept scopes",
+          state: ctx.state.oidc.parameters.state,
+          redirect_uri: redirectUrl,
+        });
       }
     } else {
-      throw new OperationError(
-        outcomeError("forbidden", "User is not authenticated"),
-      );
+      throw new OIDCError({
+        error: "unauthorized_client",
+        error_description: "User is not authorized.",
+        state: ctx.state.oidc.parameters.state,
+        redirect_uri: redirectUrl,
+      });
     }
   };
 }
