@@ -51,7 +51,7 @@ function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
   }
 }
 
-function verifyTokenBody(body: unknown): body is OAuth2TokenBody {
+function verifyTokenParameters(body: unknown): body is OAuth2TokenBody {
   const ajv = new Ajv.default({});
   const tokenBodyValidator = ajv.compile(OAuth2TokenBodySchema);
   const bodyValid = tokenBodyValidator(body);
@@ -73,10 +73,15 @@ export function tokenPost<
   C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
-    const body = ctx.request.body;
+    const tokenParameters = {
+      ...ctx.request.body,
+      client_id: ctx.state.oidc.parameters.client_id,
+      client_secret: ctx.state.oidc.parameters.client_secret,
+    };
+
     const clientApplication = ctx.state.oidc.client;
 
-    if (!verifyTokenBody(body)) {
+    if (!verifyTokenParameters(tokenParameters)) {
       throw new OIDCError({
         error: "invalid_request",
         error_description: "Invalid token body",
@@ -94,15 +99,17 @@ export function tokenPost<
      * Validate grant type aligns with the client.
      */
     if (
-      !clientApplication.grantType.includes(body.grant_type?.toString() as code)
+      !clientApplication.grantType.includes(
+        tokenParameters.grant_type?.toString() as code,
+      )
     ) {
       throw new OIDCError({
         error: "unsupported_grant_type",
-        error_description: `Grant type not supported by client : '${body.grant_type}'`,
+        error_description: `Grant type not supported by client : '${tokenParameters.grant_type}'`,
       });
     }
 
-    switch (body.grant_type) {
+    switch (tokenParameters.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
       case "authorization_code": {
         const response = await FHIRTransaction(
@@ -112,16 +119,16 @@ export function tokenPost<
             const code = await ctx.state.oidc.codeManagement.search(
               fhirContext,
               {
-                code: body.code,
+                code: tokenParameters.code,
               },
             );
 
             if (
-              ctx.state.oidc.parameters.client_id &&
-              ctx.state.oidc.parameters.client_secret &&
+              tokenParameters.client_id &&
+              tokenParameters.client_secret &&
               !authenticateClientCredentials(clientApplication, {
-                client_id: ctx.state.oidc.parameters.client_id,
-                client_secret: ctx.state.oidc.parameters.client_secret,
+                client_id: tokenParameters.client_id,
+                client_secret: tokenParameters.client_secret,
               })
             ) {
               throw new OIDCError({
@@ -143,14 +150,14 @@ export function tokenPost<
                 error_description: "Client mismatch",
               });
 
-            if (!verifyCodeChallenge(code[0], body.code_verifier)) {
+            if (!verifyCodeChallenge(code[0], tokenParameters.code_verifier)) {
               throw new OIDCError({
                 error: "invalid_request",
                 error_description: "Invalid code verifier",
               });
             }
 
-            if (code[0].redirect_uri !== body.redirect_uri) {
+            if (code[0].redirect_uri !== tokenParameters.redirect_uri) {
               throw new OIDCError({
                 error: "invalid_request",
                 error_description: "Invalid redirect uri",
@@ -231,10 +238,7 @@ export function tokenPost<
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
       case "client_credentials": {
-        if (
-          !ctx.state.oidc.parameters.client_secret ||
-          !ctx.state.oidc.parameters.client_id
-        ) {
+        if (!tokenParameters.client_secret || !tokenParameters.client_id) {
           throw new OIDCError({
             error: "invalid_request",
             error_description: "Could not find credentials in request.",
@@ -243,8 +247,8 @@ export function tokenPost<
 
         if (
           !authenticateClientCredentials(clientApplication, {
-            client_id: ctx.state.oidc.parameters.client_id,
-            client_secret: ctx.state.oidc.parameters.client_secret,
+            client_id: tokenParameters.client_id,
+            client_secret: tokenParameters.client_secret,
           })
         ) {
           throw new OIDCError({
