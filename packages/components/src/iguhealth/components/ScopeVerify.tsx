@@ -26,8 +26,8 @@ export const ScopeVerifyForm = ({
       <div>
         <span>The application is requesting the following scopes:</span>
       </div>
-      <div>
-        <table className="border-collapse  list-inside list-disc w-full ">
+      <div className="max-h-72 overflow-auto">
+        <table className="border-collapse  list-inside list-disc w-full">
           {scopes.map((scope) => (
             <tr className="border" key={scope}>
               <td className="p-4">{scope}</td>
