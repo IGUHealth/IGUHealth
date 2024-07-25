@@ -8,6 +8,7 @@ import {
   injectHardcodedClients,
 } from "../oidc/middleware/index.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
+import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
@@ -137,6 +138,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
+    OAuthErrorHandlingMiddleware(),
     routes.authorizeGET(),
   );
 
@@ -149,6 +151,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
+    OAuthErrorHandlingMiddleware(),
     routes.authorizePOST(),
   );
 

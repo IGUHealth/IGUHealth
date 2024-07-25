@@ -14,6 +14,13 @@ export type IGUHealthContextState = {
   access_token?: AccessToken<string>;
   id_token?: IDToken<string>;
   user?: IDTokenPayload<string>;
+  loading: boolean;
+  error?: {
+    code: string;
+    description: string;
+    uri?: string;
+    state?: string;
+  };
 };
 
 const stub = (): never => {
@@ -27,6 +34,8 @@ export const InitialContext: IGUHealthContextState = {
   access_token: undefined,
   id_token: undefined,
   user: undefined,
+  loading: false,
+  error: undefined,
 };
 
 const IGUHealthContext = createContext<IGUHealthContextState>({
