@@ -164,6 +164,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
+    OAuthErrorHandlingMiddleware(),
     routes.tokenPost(),
   );
 
