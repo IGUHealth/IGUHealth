@@ -33,7 +33,11 @@
                     "type": "string"
                 },
                 "client_id": {
-                    "description": "The client ID used in the initial request.",
+                    "description": "The client ID used in the initial request. May also be included in the Basic header.",
+                    "type": "string"
+                },
+                "client_secret": {
+                    "description": "The client Secret used in the initial request. May also be included in the Basic header.",
                     "type": "string"
                 }
             }

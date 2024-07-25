@@ -64,13 +64,15 @@ export namespace KoaExtensions {
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;
       parameters: {
+        client_id?: string;
+        client_secret?: string;
+
         code_verifier?: string;
         code_challenge_method?: string;
         code_challenge?: string;
         state?: string;
         responseType?: code;
         response_type?: string;
-        client_id?: string;
         redirect_uri?: string;
         scope?: string;
       };

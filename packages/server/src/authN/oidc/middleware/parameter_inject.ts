@@ -3,7 +3,6 @@ import * as Koa from "koa";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
-import { getClientId } from "../client_credentials_verification.js";
 
 type Parameters = KoaExtensions.OIDC["oidc"]["parameters"];
 type ParameterKey = keyof Parameters;
@@ -14,9 +13,6 @@ type ParameterKey = keyof Parameters;
  * @returns
  */
 function findParam(request: Koa.Request, parameter: ParameterKey): unknown {
-  // ClientID could also come from the basic auth header.
-  if (parameter === "client_id") return getClientId(request);
-
   const value =
     request.query[parameter] ||
     (request.body as Record<string, unknown>)?.[parameter];
