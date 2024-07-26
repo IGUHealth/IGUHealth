@@ -229,6 +229,8 @@ export function tokenPost<
 
         ctx.body = response;
         ctx.status = 200;
+        ctx.set("pragma", "no-cache");
+        ctx.set("cache-control", "no-store");
         ctx.set("Content-Type", "application/json; charset=utf-8");
         return;
       }
