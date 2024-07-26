@@ -73,25 +73,23 @@ export function tokenPost<
   C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
+    const clientApplication = ctx.state.oidc.client;
+    if (!clientApplication) {
+      throw new OIDCError({
+        error: "invalid_client",
+        error_description: "Could not find client.",
+      });
+    }
     const tokenParameters = {
       ...ctx.request.body,
       client_id: ctx.state.oidc.parameters.client_id,
       client_secret: ctx.state.oidc.parameters.client_secret,
     };
 
-    const clientApplication = ctx.state.oidc.client;
-
     if (!verifyTokenParameters(tokenParameters)) {
       throw new OIDCError({
         error: "invalid_request",
         error_description: "Invalid token body",
-      });
-    }
-
-    if (!clientApplication) {
-      throw new OIDCError({
-        error: "invalid_client",
-        error_description: "Could not find client.",
       });
     }
 
@@ -108,6 +106,14 @@ export function tokenPost<
         error_description: `Grant type not supported by client : '${tokenParameters.grant_type}'`,
       });
     }
+
+    const approvedScopes = await db
+      .selectOne("authorization_scopes", {
+        tenant: ctx.state.iguhealth.tenant,
+        client_id: clientApplication.id,
+        user_id: ctx.state.oidc.user?.id,
+      })
+      .run(ctx.state.iguhealth.db);
 
     switch (tokenParameters.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
@@ -199,6 +205,7 @@ export function tokenPost<
             };
 
             return {
+              scope: approvedScopes?.scope,
               access_token: await createToken<AccessTokenPayload<s.user_role>>({
                 signingKey,
                 payload: accessTokenPayload,
@@ -260,6 +267,7 @@ export function tokenPost<
         }
 
         ctx.body = {
+          scope: approvedScopes?.scope,
           access_token: await createClientCredentialToken(
             ctx.state.iguhealth.tenant,
             clientApplication,
