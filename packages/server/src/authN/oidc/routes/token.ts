@@ -107,14 +107,6 @@ export function tokenPost<
       });
     }
 
-    const approvedScopes = await db
-      .selectOne("authorization_scopes", {
-        tenant: ctx.state.iguhealth.tenant,
-        client_id: clientApplication.id,
-        user_id: ctx.state.oidc.user?.id,
-      })
-      .run(ctx.state.iguhealth.db);
-
     switch (tokenParameters.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
       case "authorization_code": {
@@ -204,6 +196,14 @@ export function tokenPost<
               sub: user.id as string as Subject,
             };
 
+            const approvedScopes = await db
+              .selectOne("authorization_scopes", {
+                tenant: ctx.state.iguhealth.tenant,
+                client_id: clientApplication.id,
+                user_id: code[0].user_id,
+              })
+              .run(ctx.state.iguhealth.db);
+
             return {
               scope: approvedScopes?.scope,
               access_token: await createToken<AccessTokenPayload<s.user_role>>({
@@ -267,7 +267,6 @@ export function tokenPost<
         }
 
         ctx.body = {
-          scope: approvedScopes?.scope,
           access_token: await createClientCredentialToken(
             ctx.state.iguhealth.tenant,
             clientApplication,
