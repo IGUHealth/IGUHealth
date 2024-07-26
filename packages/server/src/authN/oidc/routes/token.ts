@@ -73,25 +73,23 @@ export function tokenPost<
   C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
+    const clientApplication = ctx.state.oidc.client;
+    if (!clientApplication) {
+      throw new OIDCError({
+        error: "invalid_client",
+        error_description: "Could not find client.",
+      });
+    }
     const tokenParameters = {
       ...ctx.request.body,
       client_id: ctx.state.oidc.parameters.client_id,
       client_secret: ctx.state.oidc.parameters.client_secret,
     };
 
-    const clientApplication = ctx.state.oidc.client;
-
     if (!verifyTokenParameters(tokenParameters)) {
       throw new OIDCError({
         error: "invalid_request",
         error_description: "Invalid token body",
-      });
-    }
-
-    if (!clientApplication) {
-      throw new OIDCError({
-        error: "invalid_client",
-        error_description: "Could not find client.",
       });
     }
 
@@ -198,7 +196,16 @@ export function tokenPost<
               sub: user.id as string as Subject,
             };
 
+            const approvedScopes = await db
+              .selectOne("authorization_scopes", {
+                tenant: ctx.state.iguhealth.tenant,
+                client_id: clientApplication.id,
+                user_id: code[0].user_id,
+              })
+              .run(ctx.state.iguhealth.db);
+
             return {
+              scope: approvedScopes?.scope,
               access_token: await createToken<AccessTokenPayload<s.user_role>>({
                 signingKey,
                 payload: accessTokenPayload,
