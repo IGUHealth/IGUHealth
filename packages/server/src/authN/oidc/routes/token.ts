@@ -228,6 +228,11 @@ export function tokenPost<
         );
 
         ctx.body = response;
+        ctx.header = {
+          ...ctx.header,
+          pragma: "no-cache",
+          "cache-control": "no-store",
+        };
         ctx.status = 200;
         ctx.set("Content-Type", "application/json; charset=utf-8");
         return;
