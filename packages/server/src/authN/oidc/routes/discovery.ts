@@ -303,7 +303,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client_secret_post",
       ],
       capabilities: ["sso-openid-connect", "launch-standalone"],
-      code_challenge_methods_supported: ["S256", "plain"],
+      code_challenge_methods_supported: ["S256"],
     };
 
     ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
