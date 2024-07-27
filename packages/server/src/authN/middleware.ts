@@ -9,7 +9,6 @@ import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   Subject,
-  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -27,6 +26,7 @@ import {
   createClientCredentialToken,
   getBasicHeaderCredentials,
 } from "./oidc/client_credentials_verification.js";
+import { getIssuer } from "./oidc/constants.js";
 
 async function createLocalJWTSecret(
   certLocation: string,
@@ -155,7 +155,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
-    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant),
+    iss: getIssuer(ctx.params.tenant as TenantId),
     aud: "iguhealth",
     sub: "public-user" as Subject,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",

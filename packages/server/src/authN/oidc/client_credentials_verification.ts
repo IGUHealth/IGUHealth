@@ -7,7 +7,6 @@ import {
   CUSTOM_CLAIMS,
   JWT,
   Subject,
-  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -17,6 +16,7 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../certifications.js";
+import { getIssuer } from "./constants.js";
 
 export type ClientCredentials = { client_id: string; client_secret: string };
 
@@ -73,7 +73,7 @@ export async function createClientCredentialToken(
   const signingKey = await getSigningKey(getCertLocation(), getCertKey());
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
+    iss: getIssuer(tenant),
     aud: client.id as string,
     [CUSTOM_CLAIMS.TENANT]: tenant,
     [CUSTOM_CLAIMS.ROLE]: "member",

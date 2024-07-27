@@ -10,7 +10,6 @@ import {
   CUSTOM_CLAIMS,
   IDTokenPayload,
   Subject,
-  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -27,6 +26,7 @@ import {
   authenticateClientCredentials,
   createClientCredentialToken,
 } from "../client_credentials_verification.js";
+import { getIssuer } from "../constants.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
 import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
@@ -186,10 +186,7 @@ export function tokenPost<
             );
 
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-              iss: TENANT_ISSUER(
-                process.env.AUTH_ISSUER,
-                user.tenant as TenantId,
-              ),
+              iss: getIssuer(ctx.state.iguhealth.tenant),
               aud: clientApplication?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
               [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,

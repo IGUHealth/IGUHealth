@@ -1,3 +1,5 @@
+import { Issuer, TenantId } from "@iguhealth/jwt";
+
 export const USER_SESSION_KEY = "user";
 export const JWKS_GET = "JWKS_GET";
 
@@ -23,3 +25,10 @@ export const OIDC_ROUTES = {
   OIDC_DISCOVERY: "tenant-oidc-discovery",
   WELL_KNOWN_SMART: "tenant-oidc-well-known-smart",
 };
+
+export function getIssuer(tenant: TenantId): Issuer {
+  const issuer = new URL(`/w/${tenant}/oidc`, process.env.AUTH_ISSUER)
+    .href as Issuer;
+
+  return issuer;
+}
