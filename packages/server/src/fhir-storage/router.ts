@@ -251,14 +251,17 @@ function createRouterMiddleware<
           ).filter(
             (response): response is FHIRResponse => response !== undefined,
           );
+
           if (responses.length > 1)
             throw new OperationError(
               outcomeError("not-found", `Read response returned two items`),
             );
+
           if (responses.length !== 1)
             throw new OperationError(
               outcomeError("not-found", `Resource not found`),
             );
+
           return {
             ...context,
             response: responses[0],
