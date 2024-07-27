@@ -24,7 +24,6 @@ import * as fhirpath from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
-  TENANT_ISSUER,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -40,6 +39,7 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../authN/certifications.js";
+import { getIssuer } from "../authN/oidc/constants.js";
 import RedisCache from "../cache/providers/redis.js";
 import loadEnv from "../env.js";
 import { createLogger, getRedisClient } from "../fhir-api/index.js";
@@ -520,7 +520,7 @@ function getTokenClaims(
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
-    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
+    iss: getIssuer(tenant),
     aud: workerID,
     sub: `iguhealth-worker`,
     [CUSTOM_CLAIMS.RESOURCE_ID]: `iguhealth-worker`,

@@ -1,9 +1,7 @@
 import Router from "@koa/router";
 
-import { TENANT_ISSUER } from "@iguhealth/jwt";
-
 import { KoaExtensions } from "../../../fhir-api/types.js";
-import { JWKS_GET, OIDC_ROUTES } from "../constants.js";
+import { JWKS_GET, OIDC_ROUTES, getIssuer } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 
 type OIDCDiscoveryDocument = {
@@ -228,14 +226,10 @@ type WellKnownSmartConfiguration = {
   code_challenge_methods_supported: string[];
 };
 
-export function discoveryGet(): OIDCRouteHandler {
+export function wellKnownOpenIDConfiguration(): OIDCRouteHandler {
   return async (ctx) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
-      issuer: TENANT_ISSUER(
-        process.env.AUTH_ISSUER,
-        ctx.state.iguhealth.tenant,
-      ),
-
+      issuer: getIssuer(ctx.state.iguhealth.tenant),
       userinfo_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.USER_INFO, {
           tenant: ctx.state.iguhealth.tenant,
@@ -278,10 +272,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
 ): OIDCRouteHandler {
   return async (ctx) => {
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
-      issuer: TENANT_ISSUER(
-        process.env.AUTH_ISSUER,
-        ctx.state.iguhealth.tenant,
-      ),
+      issuer: getIssuer(ctx.state.iguhealth.tenant),
       grant_types_supported: ["authorization_code", "client_credentials"],
       token_endpoint: new URL(
         oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {

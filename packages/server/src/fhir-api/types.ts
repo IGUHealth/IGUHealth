@@ -26,13 +26,13 @@ import {
   CUSTOM_CLAIMS,
   JWT,
   Subject,
-  TENANT_ISSUER,
   TenantId,
 } from "@iguhealth/jwt";
 
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
 import { UserManagement } from "../authN/db/users/interface.js";
 import { User } from "../authN/db/users/types.js";
+import { getIssuer } from "../authN/oidc/constants.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
 import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
@@ -145,7 +145,7 @@ export interface IGUHealthServerCTX {
 
 export function rootClaims(tenant: TenantId): AccessTokenPayload<s.user_role> {
   return {
-    iss: TENANT_ISSUER(process.env.AUTH_ISSUER, tenant),
+    iss: getIssuer(tenant),
     aud: "iguhealth",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,

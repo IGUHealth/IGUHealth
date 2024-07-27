@@ -1,12 +1,13 @@
 import Koa from "koa";
 
-import { CUSTOM_CLAIMS, TENANT_ISSUER } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { getIssuer } from "../../authN/oidc/constants.js";
 import { KoaExtensions } from "../../fhir-api/types.js";
 
 /**
@@ -39,12 +40,12 @@ export async function verifyAndAssociateUserFHIRContext<
   // Each tenant has a unique issuer.
   if (
     ctx.state.iguhealth.user.payload.iss !==
-    TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant)
+    getIssuer(ctx.state.iguhealth.tenant)
   ) {
     throw new OperationError(
       outcomeError(
         "security",
-        `This token was not issued for the current tenant. '${ctx.state.iguhealth.user.payload.iss}' != '${TENANT_ISSUER(process.env.AUTH_ISSUER, ctx.state.iguhealth.tenant)}'`,
+        `This token was not issued for the current tenant. '${ctx.state.iguhealth.user.payload.iss}' != '${getIssuer(ctx.state.iguhealth.tenant)}'`,
       ),
     );
   }

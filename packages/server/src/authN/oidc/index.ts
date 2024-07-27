@@ -42,7 +42,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   managementRouter.get(
     OIDC_ROUTES.OIDC_DISCOVERY,
     "/.well-known/openid-configuration",
-    routes.discoveryGet(),
+    routes.wellKnownOpenIDConfiguration(),
   );
 
   managementRouter.get(
