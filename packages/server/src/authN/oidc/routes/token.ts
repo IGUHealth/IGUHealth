@@ -46,7 +46,10 @@ function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
     }
     case "plain":
     default: {
-      return verifier === code.pkce_code_challenge;
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "Plain code challenge is not supported",
+      });
     }
   }
 }

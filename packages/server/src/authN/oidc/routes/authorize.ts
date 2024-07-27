@@ -14,7 +14,7 @@ import ScopeVerificationBodySchema from "../schemas/authorize_scope_body.schema.
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 import { encodeState } from "./interactions/login.js";
 
-const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256", "plain"];
+const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
 
 /**
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
