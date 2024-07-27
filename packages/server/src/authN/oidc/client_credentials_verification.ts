@@ -11,7 +11,6 @@ import {
   createToken,
 } from "@iguhealth/jwt";
 
-import { KoaExtensions } from "../../fhir-api/types.js";
 import {
   getCertKey,
   getCertLocation,
