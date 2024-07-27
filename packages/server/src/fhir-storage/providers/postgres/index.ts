@@ -1001,7 +1001,6 @@ async function updateResource<
     // Allow clients to define their own ids.
     // Necessary for certain external test suites.
     // Note we automatically set id to be the request.id from update.
-
     if (!existingResource) {
       ctx.logger.warn({
         message: "Resource not found. Creating new resource with id.",

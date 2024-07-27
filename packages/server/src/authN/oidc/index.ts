@@ -3,10 +3,7 @@ import type * as Koa from "koa";
 
 import { KoaExtensions } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
-import {
-  clientInjectFHIRMiddleware,
-  injectHardcodedClients,
-} from "../oidc/middleware/index.js";
+import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
@@ -113,7 +110,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       required: [],
       optional: ["redirect_uri", "client_id"],
     }),
-    injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
     routes.logout(),
   );
@@ -125,7 +121,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       required: [],
       optional: ["redirect_uri", "client_id"],
     }),
-    injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
     routes.logout(),
   );
@@ -138,7 +133,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       required: ["client_id", "response_type", "state", "code_challenge"],
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
-    injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
     routes.authorizeGET(),
   );
@@ -151,7 +145,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       required: ["client_id", "response_type", "state", "code_challenge"],
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
-    injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
     routes.authorizePOST(),
   );
@@ -161,9 +154,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/auth/token",
     OAuthErrorHandlingMiddleware(),
     injectClientCredentialsMiddleware(),
-    injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-
     routes.tokenPost(),
   );
 
