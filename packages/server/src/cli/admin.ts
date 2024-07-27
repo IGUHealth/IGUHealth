@@ -93,17 +93,18 @@ async function createTenant(
         ctx,
         await getTenant(ctx, options),
       );
-      const password = options.password
-        ? options.password
-        : await inquirer.password({
-            message: "Enter root user password.",
-          });
 
       const membership: Membership = await ctx.client.create(
         asRoot({ ...ctx, tenant: tenant.id as TenantId }),
         R4,
         await getMembership(options),
       );
+
+      const password = options.password
+        ? options.password
+        : await inquirer.password({
+            message: "Enter root user password.",
+          });
 
       const userManagement = new TenantUserManagement(tenant.id as TenantId);
 
