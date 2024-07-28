@@ -259,7 +259,7 @@ export function wellKnownOpenIDConfiguration(): OIDCRouteHandler {
         "client_secret_basic",
         "client_secret_post",
       ],
-
+      id_token_signing_alg_values_supported: ["RS256"],
       subject_types_supported: ["public"],
     };
 
