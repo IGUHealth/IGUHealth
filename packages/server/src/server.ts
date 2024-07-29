@@ -37,7 +37,7 @@ import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
-import { wellKnownSmartGET } from "./authN/oidc/routes/discovery.js";
+import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import createEmailProvider from "./email/index.js";

@@ -78,16 +78,18 @@ async function exchangeAuthCodeForToken({
   return response;
 }
 
-async function handleAuthorizeInitial({
+async function authorize({
   authorize_endpoint,
   clientId,
   scope,
   redirectUrl,
+  method = "GET",
 }: {
   authorize_endpoint: string;
   clientId: string;
   scope: string;
   redirectUrl: string;
+  method?: "GET" | "POST";
 }) {
   const code_verifier = generateRandomString(43);
   const state = generateRandomString(30);
@@ -95,12 +97,51 @@ async function handleAuthorizeInitial({
   localStorage.setItem(pkce_code_verifier_key(clientId), code_verifier);
   localStorage.setItem(state_key(clientId), state);
 
-  const url = new URL(
-    `?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&state=${state}&response_type=${"code"}&code_challenge=${code_challenge}&code_challenge_method=${CODE_CHALLENGE_METHOD}`,
-    authorize_endpoint,
-  );
+  const parameters: Record<string, string> = {
+    client_id: clientId,
+    redirect_uri: redirectUrl,
+    scope,
+    state,
+    response_type: "code",
+    code_challenge: code_challenge,
+    code_challenge_method: CODE_CHALLENGE_METHOD,
+  };
 
-  window.location.replace(url);
+  switch (method) {
+    case "GET": {
+      const queryParameters = Object.keys(parameters)
+        .map((key) => `${key}=${parameters[key]}`)
+        .join("&");
+
+      const url = new URL(`?${queryParameters}`, authorize_endpoint);
+
+      window.location.replace(url);
+      return;
+    }
+    case "POST": {
+      const response = await fetch(authorize_endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        credentials: "include",
+        body: Object.keys(parameters)
+          .map((key) => `${key}=${parameters[key]}`)
+          .join("&"),
+      });
+
+      if (!response.redirected) {
+        throw new Error("Failed to redirect");
+      }
+
+      window.location.replace(response.url);
+
+      return;
+    }
+    default: {
+      throw new Error("Invalid Method");
+    }
+  }
 }
 
 export function IGUHealthProvider({
@@ -109,6 +150,7 @@ export function IGUHealthProvider({
   redirectUrl,
   domain,
   scope,
+  authorize_method,
   children,
   onRedirectCallback,
 }: Readonly<{
@@ -117,6 +159,7 @@ export function IGUHealthProvider({
   scope: string;
   domain: string;
   redirectUrl: string;
+  authorize_method?: "GET" | "POST";
   children: React.ReactNode;
   onRedirectCallback?: (initialPath: string) => void;
 }>) {
@@ -174,7 +217,8 @@ export function IGUHealthProvider({
             clientId,
             payload: accessTokenPayload,
             reInitiliaze: () =>
-              handleAuthorizeInitial({
+              authorize({
+                method: authorize_method,
                 authorize_endpoint: well_known.authorization_endpoint,
                 scope,
                 clientId,
@@ -191,7 +235,8 @@ export function IGUHealthProvider({
             "path",
             window.location.href.replace(window.location.origin, ""),
           );
-          handleAuthorizeInitial({
+          authorize({
+            method: authorize_method,
             authorize_endpoint: well_known.authorization_endpoint,
             clientId,
             scope,

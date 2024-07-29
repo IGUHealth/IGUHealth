@@ -1,4 +1,3 @@
-import Ajv from "ajv";
 import React from "react";
 import * as db from "zapatos/db";
 
@@ -9,14 +8,14 @@ import * as views from "../../../views/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
-import type { ScopeVerificationBody } from "../schemas/authorize_scope_body.schema.js";
-import ScopeVerificationBodySchema from "../schemas/authorize_scope_body.schema.json" with { type: "json" };
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
-import { encodeState } from "./interactions/login.js";
 
 const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
 
 /**
+ * Note can be POST or GET. With Post parameters are extracted from body. 
+ * See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest.
+ * 
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
  * response_type
          REQUIRED.  Value MUST be set to "code".
@@ -50,7 +49,7 @@ const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
       OPTIONAL, defaults to "plain" if not present in the request.  Code
       verifier transformation method is "S256" or "plain".
  */
-export function authorizeGET(): OIDCRouteHandler {
+export function authorize(): OIDCRouteHandler {
   return async (ctx) => {
     const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
     const client = ctx.state.oidc.client;
@@ -63,7 +62,6 @@ export function authorizeGET(): OIDCRouteHandler {
     }
 
     if (await ctx.state.oidc.isAuthenticated(ctx)) {
-      // const scope = ctx.request.query.scope;
       const state = ctx.state.oidc.parameters.state;
       const code_challenge = ctx.state.oidc.parameters.code_challenge;
       const code_challenge_method =
@@ -120,91 +118,15 @@ export function authorizeGET(): OIDCRouteHandler {
 
       ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
     } else {
-      // use a state parameter
-      const state = encodeState({ redirectUrl: ctx.url });
-
       ctx.redirect(
         ctx.router.url(
           OIDC_ROUTES.LOGIN_GET,
           {
             tenant: ctx.state.iguhealth.tenant,
           },
-          { query: { state } },
+          { query: ctx.state.oidc.parameters },
         ) as string,
       );
-    }
-  };
-}
-
-function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
-  const ajv = new Ajv.default({});
-  const tokenBodyValidator = ajv.compile(ScopeVerificationBodySchema);
-  const bodyValid = tokenBodyValidator(body);
-  if (!bodyValid) {
-    throw new OperationError(
-      outcomeError("invalid", ajv.errorsText(tokenBodyValidator.errors)),
-    );
-  }
-
-  return true;
-}
-
-/**
- * Used for verifying the scopes.
- */
-export function authorizePOST(): OIDCRouteHandler {
-  return async (ctx) => {
-    const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
-    const client = ctx.state.oidc.client;
-    if (!client)
-      throw new OperationError(outcomeError("invalid", "Client not found."));
-    if (isInvalidRedirectUrl(redirectUrl, client)) {
-      throw new OperationError(
-        outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
-      );
-    }
-
-    if (await ctx.state.oidc.isAuthenticated(ctx)) {
-      const body = ctx.request.body;
-      if (!verifyScopeBody(body)) {
-        throw new OperationError(outcomeError("invalid", "Invalid token body"));
-      }
-
-      if (body.accept === "on") {
-        await db
-          .upsert(
-            "authorization_scopes",
-            [
-              {
-                tenant: ctx.state.iguhealth.tenant,
-                client_id: ctx.state.oidc.client?.id as string,
-                user_id: ctx.state.oidc.user?.id as string,
-                scope: body.scopes.join(" "),
-              },
-            ],
-            db.constraint("authorization_scopes_pkey"),
-            {
-              updateColumns: ["scope"],
-            },
-          )
-          .run(ctx.state.iguhealth.db);
-        // Redirect back to get request which generates the code etc... as next step.
-        ctx.redirect(ctx.url);
-      } else {
-        throw new OIDCError({
-          error: "access_denied",
-          error_description: "User did not accept scopes",
-          state: ctx.state.oidc.parameters.state,
-          redirect_uri: redirectUrl,
-        });
-      }
-    } else {
-      throw new OIDCError({
-        error: "unauthorized_client",
-        error_description: "User is not authorized.",
-        state: ctx.state.oidc.parameters.state,
-        redirect_uri: redirectUrl,
-      });
     }
   };
 }

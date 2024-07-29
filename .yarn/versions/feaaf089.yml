@@ -1,0 +1,5 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/components": patch
+  "@iguhealth/koa-multipart-form": patch
+  "@iguhealth/server": patch

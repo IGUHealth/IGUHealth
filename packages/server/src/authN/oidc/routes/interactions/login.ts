@@ -15,13 +15,14 @@ function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
     {
       tenant: ctx.state.iguhealth.tenant,
     },
-    { query: { state: ctx.query.state } },
+    { query: ctx.state.oidc.parameters },
   );
   if (loginRoute instanceof Error) throw loginRoute;
 
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_GET, {
     tenant: ctx.state.iguhealth.tenant,
   });
+
   if (signupURL instanceof Error) throw signupURL;
 
   const forgotPasswordURL = ctx.router.url(
@@ -37,56 +38,11 @@ function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
   };
 }
 
-type LoginState = { redirectUrl: string };
-
-export function encodeState(state: LoginState): string {
-  // https://developer.mozilla.org/en-US/docs/Glossary/Base64
-  // A common variant is "Base64 URL safe", which omits the padding and replaces +/ with -_ to avoid characters that might cause problems in URL path segments or query parameters.
-  return btoa(JSON.stringify(state)).replace("+", "-").replace("/", "_");
-}
-
-export function decodeState(
-  ctx: Parameters<OIDCRouteHandler>[0],
-  stateString: string | undefined,
-): LoginState | undefined {
-  if (!stateString) return undefined;
-  try {
-    const state = JSON.parse(
-      atob(stateString.replace("-", "+").replace("_", "/")),
-    );
-    if (Object.keys(state).length !== 1) {
-      return undefined;
-    }
-    if (typeof state.redirectUrl !== "string") {
-      return undefined;
-    }
-    // Strict enforcement so redirect can only happen on authorize endpoint.
-    if (
-      !state.redirectUrl.startsWith(
-        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.state.iguhealth.tenant,
-        }),
-      )
-    ) {
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          "Redirect URL must be a relative path for login.",
-        ),
-      );
-    }
-
-    return state;
-  } catch (e) {
-    return undefined;
-  }
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object";
 }
 
-async function validateCredentials(
+async function sessionLogin(
   ctx: Parameters<OIDCRouteHandler>[0],
 ): Promise<User | undefined> {
   const body = ctx.request.body;
@@ -117,13 +73,17 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
 
   const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
 
-  const user = await validateCredentials(ctx);
+  const user = await sessionLogin(ctx);
 
   if (user !== undefined) {
-    const state = decodeState(ctx, ctx.query.state?.toString());
-
-    if (state?.redirectUrl) {
-      ctx.redirect(state?.redirectUrl);
+    if (ctx.state.oidc.parameters.client_id) {
+      const authorize_route = ctx.router.url(
+        OIDC_ROUTES.AUTHORIZE_GET,
+        { tenant: ctx.state.iguhealth.tenant },
+        { query: ctx.state.oidc.parameters },
+      );
+      if (authorize_route instanceof Error) throw authorize_route;
+      ctx.redirect(authorize_route);
       return;
     } else if (adminApp.ADMIN_APP() !== undefined) {
       const tenantClaims = await ctx.state.oidc.userManagement.getTenantClaims(
