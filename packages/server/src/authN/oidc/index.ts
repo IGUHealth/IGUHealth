@@ -1,6 +1,8 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
 
+import { multer } from "@iguhealth/koa-multipart-form";
+
 import { KoaExtensions } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
 import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
@@ -94,11 +96,33 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   managementRouter.get(
     OIDC_ROUTES.LOGIN_GET,
     "/interaction/login",
+    createValidateInjectOIDCParameters({
+      optional: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "scope",
+        "redirect_uri",
+        "code_challenge_method",
+      ],
+    }),
     routes.loginGET(),
   );
   managementRouter.post(
     OIDC_ROUTES.LOGIN_POST,
     "/interaction/login",
+    createValidateInjectOIDCParameters({
+      optional: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "scope",
+        "redirect_uri",
+        "code_challenge_method",
+      ],
+    }),
     routes.loginPOST(),
   );
   // Adding both as options to either get or post.
@@ -134,19 +158,20 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     clientInjectFHIRMiddleware(),
-    routes.authorizeGET(),
+    routes.authorize(),
   );
 
   managementRouter.post(
     OIDC_ROUTES.AUTHORIZE_POST,
     "/auth/authorize",
+    multer().none(),
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state", "code_challenge"],
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     clientInjectFHIRMiddleware(),
-    routes.authorizePOST(),
+    routes.authorize(),
   );
 
   managementRouter.post(

@@ -14,9 +14,8 @@ type ParameterKey = keyof Parameters;
  */
 function findParam(request: Koa.Request, parameter: ParameterKey): unknown {
   const value =
-    request.query[parameter] ||
+    request.query[parameter] ??
     (request.body as Record<string, unknown>)?.[parameter];
-
   return value;
 }
 
