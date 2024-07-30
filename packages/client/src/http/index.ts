@@ -13,10 +13,11 @@ import {
 } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
+type DeriveFHIRURL = (fhirVersion: FHIR_VERSION) => string;
 export type HTTPClientState = {
   onAuthenticationError?: () => void;
   getAccessToken?: () => Promise<string>;
-  url: string;
+  url: string | DeriveFHIRURL;
 };
 
 export type HTTPContext = {
@@ -48,9 +49,13 @@ function fhirUrlChunk(version: string) {
   }
 }
 
-type DeriveFHIRURL = (domain: string, fhirVersion: FHIR_VERSION) => string;
-
-const defaultDeriveURL: DeriveFHIRURL = (
+/**
+ * Used as default and for display purposes in admin app.
+ * @param domain IGUHealth Domain
+ * @param fhirVersion FHIRVersion
+ * @returns IGUHealth VersionedURL.
+ */
+export const deriveIGUHealthVersionedURL = (
   domain: string,
   fhirVersion: FHIR_VERSION,
 ) => {
@@ -67,9 +72,7 @@ async function toHTTPRequest(
   state: HTTPClientState,
   context: HTTPContext,
   request: FHIRRequest,
-  deriveURL: DeriveFHIRURL = defaultDeriveURL,
 ): Promise<{
-  deriveURL?: DeriveFHIRURL;
   url: string;
   headers?: Record<string, string>;
   method: string;
@@ -79,27 +82,37 @@ async function toHTTPRequest(
     "Content-Type": "application/fhir+json",
     ...context.headers,
   };
-  const FHIRUrl = deriveURL(state.url, request.fhirVersion);
+
+  let FHIRUrl =
+    typeof state.url === "string"
+      ? deriveIGUHealthVersionedURL(state.url, request.fhirVersion)
+      : state.url(request.fhirVersion);
+  if (!FHIRUrl.endsWith("/")) {
+    FHIRUrl = FHIRUrl + "/";
+  }
+
   if (state.getAccessToken) {
     const token = await state.getAccessToken();
     headers["Authorization"] = `Bearer ${token}`;
   }
   switch (request.type) {
-    case "capabilities-request":
-      return { headers, url: `${FHIRUrl}/metadata`, method: "GET" };
+    case "capabilities-request": {
+      return { headers, url: new URL("metadata", FHIRUrl).href, method: "GET" };
+    }
 
-    case "create-request":
+    case "create-request": {
       return {
-        url: `${FHIRUrl}/${request.resourceType}`,
+        url: new URL(request.resourceType, FHIRUrl).href,
         method: "POST",
         body: JSON.stringify(request.body),
         headers,
       };
-    case "update-request":
+    }
+    case "update-request": {
       switch (request.level) {
         case "instance": {
           return {
-            url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+            url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
             method: "PUT",
             body: JSON.stringify(request.body),
             headers,
@@ -108,7 +121,10 @@ async function toHTTPRequest(
         case "type": {
           const queryString = parametersToQueryString(request.parameters);
           return {
-            url: `${FHIRUrl}/${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            url: new URL(
+              `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+              FHIRUrl,
+            ).href,
             method: "PUT",
             body: JSON.stringify(request.body),
             headers,
@@ -118,33 +134,37 @@ async function toHTTPRequest(
           throw new OperationError(outcomeError("exception", "Invalid level"));
         }
       }
-
-    case "patch-request":
+    }
+    case "patch-request": {
       return {
-        url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+        url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
         method: "PATCH",
         body: JSON.stringify(request.body),
         headers,
       };
-
-    case "read-request":
+    }
+    case "read-request": {
       return {
-        url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+        url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
         method: "GET",
         headers,
       };
-    case "vread-request":
+    }
+    case "vread-request": {
       return {
-        url: `${FHIRUrl}/${request.resourceType}/${request.id}/_history/${request.versionId}`,
+        url: new URL(
+          `${request.resourceType}/${request.id}/_history/${request.versionId}`,
+          FHIRUrl,
+        ).href,
         method: "GET",
         headers,
       };
-
+    }
     case "delete-request": {
       switch (request.level) {
         case "instance": {
           return {
-            url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+            url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
             method: "DELETE",
             headers,
           };
@@ -152,7 +172,10 @@ async function toHTTPRequest(
         case "type": {
           const queryString = parametersToQueryString(request.parameters);
           return {
-            url: `${FHIRUrl}/${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            url: new URL(
+              `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+              FHIRUrl,
+            ).href,
             method: "DELETE",
             headers,
           };
@@ -160,7 +183,8 @@ async function toHTTPRequest(
         case "system": {
           const queryString = parametersToQueryString(request.parameters);
           return {
-            url: `${FHIRUrl}${queryString ? `?${queryString}` : ""}`,
+            url: new URL(`${queryString ? `?${queryString}` : ""}`, FHIRUrl)
+              .href,
             method: "DELETE",
             headers,
           };
@@ -169,71 +193,90 @@ async function toHTTPRequest(
       throw new OperationError(outcomeError("exception", "Invalid level"));
     }
     case "history-request": {
-      let url;
+      let historyUrl;
       const queryString = parametersToQueryString(request.parameters || []);
       switch (request.level) {
-        case "instance":
-          url = `${FHIRUrl}/${request.resourceType}/${request.id}/_history`;
+        case "instance": {
+          historyUrl = new URL(
+            `${request.resourceType}/${request.id}/_history`,
+            FHIRUrl,
+          ).href;
           break;
-        case "type":
-          url = `${FHIRUrl}/${request.resourceType}/_history`;
+        }
+        case "type": {
+          historyUrl = new URL(`${request.resourceType}/_history`, FHIRUrl)
+            .href;
           break;
-        case "system":
-          url = `${FHIRUrl}/_history`;
+        }
+        case "system": {
+          historyUrl = new URL(`_history`, FHIRUrl).href;
           break;
+        }
       }
 
       return {
-        url: `${url}${queryString ? `?${queryString}` : ""}`,
+        url: new URL(`${queryString ? `?${queryString}` : ""}`, historyUrl)
+          .href,
         method: "GET",
         headers,
       };
     }
 
     case "batch-request":
-    case "transaction-request":
+    case "transaction-request": {
       return {
-        url: `${FHIRUrl}`,
+        url: FHIRUrl,
         method: "POST",
         body: JSON.stringify(request.body),
         headers,
       };
+    }
     case "search-request": {
       const queryString = parametersToQueryString(request.parameters);
-      let url;
+      let searchURL;
       switch (request.level) {
         case "type":
-          url = `${FHIRUrl}/${request.resourceType}${
-            queryString ? `?${queryString}` : ""
-          }`;
+          searchURL = new URL(
+            `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            FHIRUrl,
+          ).href;
           break;
         case "system":
-          url = `${FHIRUrl}${queryString ? `?${queryString}` : ""}`;
+          searchURL = new URL(
+            `${queryString ? `?${queryString}` : ""}`,
+            FHIRUrl,
+          ).href;
           break;
       }
 
       return {
-        url,
+        url: searchURL,
         method: "GET",
         headers,
       };
     }
 
     case "invoke-request": {
-      let url;
+      let invokeURL;
       switch (request.level) {
         case "instance":
-          url = `${FHIRUrl}/${request.resourceType}/${request.id}/$${request.operation}`;
+          invokeURL = new URL(
+            `${request.resourceType}/${request.id}/$${request.operation}`,
+            FHIRUrl,
+          ).href;
           break;
         case "type":
-          url = `${FHIRUrl}/${request.resourceType}/$${request.operation}`;
+          invokeURL = new URL(
+            `${request.resourceType}/$${request.operation}`,
+            FHIRUrl,
+          ).href;
           break;
         case "system":
-          url = `${FHIRUrl}/$${request.operation}`;
+          invokeURL = new URL(`$${request.operation}`, FHIRUrl).href;
           break;
       }
       return {
-        url: url,
+        url: invokeURL,
         method: "POST",
         body: JSON.stringify(request.body),
         headers,
@@ -622,8 +665,6 @@ export default function createHTTPClient(
   initialState: HTTPClientState,
 ): AsynchronousClient<HTTPClientState, HTTPContext> {
   // Removing trailing slash
-  if (initialState.url.endsWith("/"))
-    initialState.url = initialState.url.slice(0, -1);
   const middleware = httpMiddleware();
   return new AsynchronousClient<HTTPClientState, HTTPContext>(
     initialState,

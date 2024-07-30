@@ -23,6 +23,7 @@ export type OIDC_WELL_KNOWN = {
 
 type SUCCESS_ACTION = {
   type: "ON_SUCCESS";
+  well_known_uri: string;
   well_known: OIDC_WELL_KNOWN;
   domain: string;
   tenant?: TenantId;
@@ -76,6 +77,7 @@ export function iguHealthReducer(
         ...state,
         rootURL,
         isAuthenticated: true,
+        well_known_uri: action.well_known_uri,
         well_known: action.well_known,
         id_token: action.payload.id_token,
         user,

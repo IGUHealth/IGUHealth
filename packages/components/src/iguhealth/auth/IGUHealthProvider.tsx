@@ -176,15 +176,17 @@ export function IGUHealthProvider({
     (async (): Promise<void> => {
       dispatch({ type: "SET_LOADING", loading: true });
       try {
-        const well_known: OIDC_WELL_KNOWN = await fetch(
-          new URL(
-            conditionalAddTenant(
-              `/oidc/.well-known/openid-configuration`,
-              tenant,
-            ),
-            domain,
-          ).toString(),
-        ).then((v) => v.json());
+        const well_known_uri = new URL(
+          conditionalAddTenant(
+            `/oidc/.well-known/openid-configuration`,
+            tenant,
+          ),
+          domain,
+        ).toString();
+
+        const well_known: OIDC_WELL_KNOWN = await fetch(well_known_uri).then(
+          (v) => v.json(),
+        );
 
         if (hasAuthQueryParams()) {
           const parameters = getParsedParameters();
@@ -212,6 +214,7 @@ export function IGUHealthProvider({
           dispatch({
             type: "ON_SUCCESS",
             domain,
+            well_known_uri,
             well_known,
             tenant,
             clientId,

@@ -7,6 +7,7 @@ import { OIDC_WELL_KNOWN } from "./reducer";
 
 export type IGUHealthContextState = {
   rootURL?: string;
+  well_known_uri?: string;
   well_known?: OIDC_WELL_KNOWN;
   getClient: () => ReturnType<typeof createHTTPClient>;
   logout: (redirect: string) => void;
@@ -30,6 +31,7 @@ const stub = (): never => {
 export const InitialContext: IGUHealthContextState = {
   getClient: stub,
   logout: stub,
+  well_known_uri: undefined,
   isAuthenticated: false,
   access_token: undefined,
   id_token: undefined,

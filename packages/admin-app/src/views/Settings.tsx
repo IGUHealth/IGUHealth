@@ -1,6 +1,6 @@
 import React from "react";
 
-import { versionUrl } from "@iguhealth/client/http";
+import { deriveIGUHealthVersionedURL } from "@iguhealth/client/http";
 import {
   Button,
   Input,
@@ -28,7 +28,7 @@ function Copyable({
 }: Readonly<{ value?: string; label?: string }>) {
   return (
     <div>
-      <label className="font-weight-500">{label}</label>
+      <label className="font-medium">{label}</label>
       <div className="flex flex-1 flex-row items-center">
         <div className="flex flex-1">
           <Input readOnly value={value} />
@@ -75,7 +75,9 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
                 <Copyable
                   label="R4"
                   value={
-                    iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4) : ""
+                    iguhealth.rootURL
+                      ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4)
+                      : ""
                   }
                 />
               </div>
@@ -83,15 +85,20 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
                 <Copyable
                   label="R4B"
                   value={
-                    iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4B) : ""
+                    iguhealth.rootURL
+                      ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4B)
+                      : ""
                   }
                 />
               </div>
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-2">Security</h3>
+            <h3 className="text-lg font-semibold mb-2">OpenID Connect</h3>
             <div className="pl-2 space-y-2">
+              <div className="flex flex-col ">
+                <Copyable label="Discovery" value={iguhealth.well_known_uri} />
+              </div>
               <div className="flex flex-col ">
                 <Copyable
                   label="Token"

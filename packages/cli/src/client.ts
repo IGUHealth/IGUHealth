@@ -1,20 +1,7 @@
-import path from "node:path";
-
 import httpClient from "@iguhealth/client/http";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { Tenant, getCurrentTenant, loadConfig } from "./config.js";
-
-function concatenateURLPaths(url: URL, urlPath: string) {
-  return new URL(path.join(url.pathname, urlPath), url.origin);
-}
-
-function getTenantURL(apiOrigin: string, tenant: Tenant["id"]) {
-  return concatenateURLPaths(new URL(apiOrigin), `/w/${tenant}`);
-}
-
-function getTenantAPIURL(apiOrigin: string, tenant: Tenant["id"]) {
-  return getTenantURL(apiOrigin, tenant);
-}
 
 function configureAuthHeader(tenant: Tenant) {
   return {
@@ -51,40 +38,49 @@ export function createClient(location: string) {
   let timeSent = new Date().getTime() / 1000;
 
   return httpClient({
-    url: getTenantAPIURL(tenant.api_origin, tenant.id).toString(),
-    getAccessToken: async function () {
-      if (
-        accessTokenResponse &&
-        isTokenResponseValid(timeSent, accessTokenResponse)
-      ) {
-        return accessTokenResponse.access_token;
+    url: (fhirversion) => {
+      switch (fhirversion) {
+        case R4:
+          return tenant.r4_url;
+        case R4B:
+          return tenant.r4b_url;
+        default:
+          throw new Error(`Unsupported FHIR version: ${fhirversion}`);
       }
-
-      timeSent = new Date().getTime() / 1000;
-      const response = await fetch(
-        concatenateURLPaths(
-          getTenantURL(tenant.api_origin, tenant.id),
-          "/oidc/auth/token",
-        ),
-        {
-          method: "POST",
-          body: new URLSearchParams({
-            grant_type: "client_credentials",
-          }),
-          ...configureAuthHeader(tenant),
-        },
-      );
-
-      accessTokenResponse = await response.json();
-
-      if (response.status >= 400) {
-        throw new Error(JSON.stringify(accessTokenResponse));
-      }
-      if (!accessTokenResponse) {
-        throw new Error("No access token received");
-      }
-
-      return accessTokenResponse.access_token;
     },
+    getAccessToken:
+      tenant.auth.type === "public"
+        ? undefined
+        : async function () {
+            const OIDCDiscoveryDocument = await fetch(
+              tenant.oidc_discovery_uri,
+            ).then((res) => res.json());
+            if (
+              accessTokenResponse &&
+              isTokenResponseValid(timeSent, accessTokenResponse)
+            ) {
+              return accessTokenResponse.access_token;
+            }
+
+            timeSent = new Date().getTime() / 1000;
+            const response = await fetch(OIDCDiscoveryDocument.token_endpoint, {
+              method: "POST",
+              body: new URLSearchParams({
+                grant_type: "client_credentials",
+              }),
+              ...configureAuthHeader(tenant),
+            });
+
+            accessTokenResponse = await response.json();
+
+            if (response.status >= 400) {
+              throw new Error(JSON.stringify(accessTokenResponse));
+            }
+            if (!accessTokenResponse) {
+              throw new Error("No access token received");
+            }
+
+            return accessTokenResponse.access_token;
+          },
   });
 }
