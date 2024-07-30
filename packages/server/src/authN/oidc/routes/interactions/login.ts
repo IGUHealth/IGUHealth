@@ -6,7 +6,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import * as views from "../../../../views/index.js";
 import { User } from "../../../db/users/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
-import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { OIDCRouteHandler } from "../../index.js";
 
 function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
@@ -76,39 +75,13 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
   const user = await sessionLogin(ctx);
 
   if (user !== undefined) {
-    if (ctx.state.oidc.parameters.client_id) {
-      const authorize_route = ctx.router.url(
-        OIDC_ROUTES.AUTHORIZE_GET,
-        { tenant: ctx.state.iguhealth.tenant },
-        { query: ctx.state.oidc.parameters },
-      );
-      if (authorize_route instanceof Error) throw authorize_route;
-      ctx.redirect(authorize_route);
-      return;
-    } else if (adminApp.ADMIN_APP() !== undefined) {
-      const tenantClaims = await ctx.state.oidc.userManagement.getTenantClaims(
-        ctx.state.iguhealth,
-        user.id,
-      );
-      const tenantId = tenantClaims[0]?.id;
-      if (tenantId) {
-        ctx.redirect(adminApp.redirectURL(tenantId) as string);
-      }
-      return;
-    }
-
-    // If logged in but no redirect display login with success message.
-    ctx.status = 201;
-    ctx.body = views.renderString(
-      React.createElement(Login, {
-        title: "IGUHealth",
-        logo: "/public/img/logo.svg",
-        action: loginRoute,
-        signupURL,
-        forgotPasswordURL,
-        messages: ["You have successfully logged in."],
-      }),
+    const authorize_route = ctx.router.url(
+      OIDC_ROUTES.AUTHORIZE_GET,
+      { tenant: ctx.state.iguhealth.tenant },
+      { query: ctx.state.oidc.parameters },
     );
+    if (authorize_route instanceof Error) throw authorize_route;
+    ctx.redirect(authorize_route);
   } else {
     ctx.status = 401;
     ctx.body = views.renderString(
@@ -121,7 +94,6 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
         errors: ["Invalid email or password. Please try again."],
       }),
     );
-    return;
   }
 
   await next();
