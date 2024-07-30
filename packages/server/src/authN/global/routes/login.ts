@@ -11,9 +11,11 @@ import * as s from "zapatos/schema";
 
 import { Login, TenantSelect } from "@iguhealth/components";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
 import { OIDC_ROUTES } from "../../oidc/constants.js";
+import * as adminApp from "../../oidc/hardcodedClients/admin-app.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
 
@@ -39,7 +41,6 @@ export const loginGET = (): GlobalAuthRouteHandler => async (ctx) => {
       title: "IGUHealth",
       logo: "/public/img/logo.svg",
       hidePassword: true,
-      // messages: message ? [message] : [],
       action: loginRoute,
       signupURL,
     }),
@@ -101,15 +102,13 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   // Auto redirect if one tenant.
   if (tenantClaims.length === 1) {
-    const tenantRoute = ctx.router.url(
-      OIDC_ROUTES.LOGIN_GET,
-      {
-        tenant: tenantClaims[0].id,
-      },
-      { query: { email } },
-    );
-    if (tenantRoute instanceof Error) throw tenantRoute;
-    ctx.redirect(tenantRoute);
+    const admin_app_url = adminApp.redirectURL(tenantClaims[0].id);
+    if (!admin_app_url)
+      throw new OperationError(
+        outcomeFatal("exception", "Admin app URL not found"),
+      );
+
+    ctx.redirect(admin_app_url);
     return;
   }
 
@@ -120,15 +119,12 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       email,
       tenants: tenantClaims,
       generateTenantURL: (email, tenantId) => {
-        const route = ctx.router.url(
-          OIDC_ROUTES.LOGIN_GET,
-          {
-            tenant: tenantId,
-          },
-          { query: { email } },
-        );
-        if (route instanceof Error) throw route;
-        return route;
+        const admin_app_url = adminApp.redirectURL(tenantId);
+        if (!admin_app_url)
+          throw new OperationError(
+            outcomeFatal("exception", "Admin app URL not found"),
+          );
+        return admin_app_url;
       },
     }),
   );

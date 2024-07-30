@@ -97,32 +97,32 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OIDC_ROUTES.LOGIN_GET,
     "/interaction/login",
     createValidateInjectOIDCParameters({
-      optional: [
+      required: [
         "client_id",
         "response_type",
         "state",
         "code_challenge",
-        "scope",
-        "redirect_uri",
         "code_challenge_method",
       ],
+      optional: ["scope", "redirect_uri"],
     }),
+    clientInjectFHIRMiddleware(),
     routes.loginGET(),
   );
   managementRouter.post(
     OIDC_ROUTES.LOGIN_POST,
     "/interaction/login",
     createValidateInjectOIDCParameters({
-      optional: [
+      required: [
         "client_id",
         "response_type",
         "state",
         "code_challenge",
-        "scope",
-        "redirect_uri",
         "code_challenge_method",
       ],
+      optional: ["scope", "redirect_uri"],
     }),
+    clientInjectFHIRMiddleware(),
     routes.loginPOST(),
   );
   // Adding both as options to either get or post.
@@ -161,6 +161,19 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     routes.authorize(),
   );
 
+  // managementRouter.post(
+  //   OIDC_ROUTES.AUTHORIZE_POST,
+  //   "/auth/authorize",
+  //   multer().none(),
+  //   OAuthErrorHandlingMiddleware(),
+  //   createValidateInjectOIDCParameters({
+  //     required: ["client_id", "response_type", "state", "code_challenge"],
+  //     optional: ["scope", "redirect_uri", "code_challenge_method"],
+  //   }),
+  //   clientInjectFHIRMiddleware(),
+  //   routes.authorize(),
+  // );
+
   managementRouter.post(
     OIDC_ROUTES.AUTHORIZE_POST,
     "/auth/authorize",
@@ -171,7 +184,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       optional: ["scope", "redirect_uri", "code_challenge_method"],
     }),
     clientInjectFHIRMiddleware(),
-    routes.authorize(),
+    routes.scopeVerifyPost(),
   );
 
   managementRouter.post(
@@ -182,6 +195,5 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     clientInjectFHIRMiddleware(),
     routes.tokenPost(),
   );
-
   return managementRouter;
 }
