@@ -15,7 +15,7 @@ import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
-import { dataCommand } from "../utilities.js";
+import { conversion, dataCommand } from "../utilities.js";
 
 function validateResourceType(
   fhirVersion: FHIR_VERSION,
@@ -27,24 +27,6 @@ function validateResourceType(
     }
     case R4B: {
       return r4bSets.resourceTypes.has(resourceType);
-    }
-  }
-}
-
-function asFHIRType(fhirType: string): FHIR_VERSION {
-  switch (fhirType) {
-    case "r4":
-    case R4: {
-      return R4;
-    }
-    case "r4b":
-    case R4B: {
-      return R4B;
-    }
-    default: {
-      throw new Error(
-        "invalid FHIR version must be 'r4' or 'r4b' or '4.3' or '4.0'",
-      );
     }
   }
 }
@@ -63,7 +45,7 @@ export function apiCommands(command: Command) {
     .argument("<fhirVersion>", "FHIR Version")
     .action(async (userFHIRVersion) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
       const capabilities = await client.capabilities({}, FHIRVersion);
       console.log(JSON.stringify(capabilities, null, 2));
     });
@@ -75,7 +57,7 @@ export function apiCommands(command: Command) {
       .action(async (userFHIRVersion, options) => {
         const resourceToSave = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
         if (!resourceToSave) {
           throw new Error("No resource provided to save");
@@ -96,7 +78,7 @@ export function apiCommands(command: Command) {
       .argument("<resourceType>", "Resource Type")
       .argument("<id>", "Resource ID")
       .action(async (userFHIRVersion, resourceType, id, options) => {
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
         if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
 
@@ -124,7 +106,7 @@ export function apiCommands(command: Command) {
       .action(async (userFHIRVersion, options) => {
         const batchBundle = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
         if (!batchBundle) {
           throw new Error("No resource provided to save");
         }
@@ -142,7 +124,7 @@ export function apiCommands(command: Command) {
       .action(async (userFHIRVersion, options) => {
         const transaction = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
         if (!transaction) {
           throw new Error("No resource provided to save");
         }
@@ -162,7 +144,7 @@ export function apiCommands(command: Command) {
       .action(async (userFHIRVersion, resourceType, id, options) => {
         const patches = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
         if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
@@ -189,7 +171,7 @@ export function apiCommands(command: Command) {
     .argument("<id>", "Resource ID")
     .action(async (userFHIRVersion, resourceType, id) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
@@ -210,7 +192,7 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (userFHIRVersion, query: string | undefined) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       const searchResponse = await client.search_system(
         {},
@@ -232,7 +214,7 @@ export function apiCommands(command: Command) {
         query: string | undefined,
       ) => {
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
         if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
@@ -252,7 +234,7 @@ export function apiCommands(command: Command) {
     .argument("<id>", "Resource ID")
     .action(async (userFHIRVersion, resourceType, id) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
@@ -268,7 +250,7 @@ export function apiCommands(command: Command) {
     .argument("<versionId>", "Resource version ID")
     .action(async (userFHIRVersion, resourceType, id, versionId) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
@@ -289,7 +271,7 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (userFHIRVersion, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       const history = await client.history_system({}, FHIRVersion, query);
       console.log(JSON.stringify(history, null, 2));
@@ -302,7 +284,7 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (userFHIRVersion, resourceType, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
@@ -323,7 +305,7 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (userFHIRVersion, resourceType, id, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
-      const FHIRVersion = asFHIRType(userFHIRVersion);
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
@@ -344,7 +326,7 @@ export function apiCommands(command: Command) {
       .argument("<code>", "code")
       .action(async (userFHIRVersion, code: string, options) => {
         const client = createClient(CONFIG_LOCATION);
-        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
         const parameters = dataCommand.readData(options);
         if (!parameters) {
           throw new Error("No Parameters provided");
@@ -375,7 +357,7 @@ export function apiCommands(command: Command) {
           options,
         ) => {
           const client = createClient(CONFIG_LOCATION);
-          const FHIRVersion = asFHIRType(userFHIRVersion);
+          const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
           const parameters = dataCommand.readData(options);
           if (!parameters) {
             throw new Error("No Parameters provided");
@@ -411,7 +393,7 @@ export function apiCommands(command: Command) {
           options,
         ) => {
           const client = createClient(CONFIG_LOCATION);
-          const FHIRVersion = asFHIRType(userFHIRVersion);
+          const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
           const parameters = dataCommand.readData(options);
           if (!parameters) {
             throw new Error("No Parameters provided");
