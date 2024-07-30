@@ -34,7 +34,8 @@ function App() {
 function IGUHealthAuth() {
   return (
     <IGUHealthProvider
-      tenant={"system"}
+      scope="openid launch patient/*.read"
+      tenant={"system" as any}
       domain={"http://localhost:3000"}
       clientId="admin-app"
       redirectUrl="http://system.localhost:3002"
