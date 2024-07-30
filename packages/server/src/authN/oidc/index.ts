@@ -154,8 +154,14 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/auth/authorize",
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters({
-      required: ["client_id", "response_type", "state", "code_challenge"],
-      optional: ["scope", "redirect_uri", "code_challenge_method"],
+      required: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "code_challenge_method",
+      ],
+      optional: ["scope", "redirect_uri"],
     }),
     clientInjectFHIRMiddleware(),
     routes.authorize(),
@@ -180,8 +186,14 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     multer().none(),
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters({
-      required: ["client_id", "response_type", "state", "code_challenge"],
-      optional: ["scope", "redirect_uri", "code_challenge_method"],
+      required: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "code_challenge_method",
+      ],
+      optional: ["scope", "redirect_uri"],
     }),
     clientInjectFHIRMiddleware(),
     routes.scopeVerifyPost(),
