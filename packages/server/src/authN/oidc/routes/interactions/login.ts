@@ -6,7 +6,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import * as views from "../../../../views/index.js";
 import { User } from "../../../db/users/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
-import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { OIDCRouteHandler } from "../../index.js";
 
 function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
