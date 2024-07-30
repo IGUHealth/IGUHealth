@@ -78,8 +78,10 @@ jobs:
           CLIENT_APP=$(yarn workspace @iguhealth/server cli admin client-app create -t test-system -s mysecret)
           yarn workspace @iguhealth/server iguhealth config add-tenant \
            --name my-tenant \
-           --url http://localhost:3000 \
-           --id test-system \
+           --r4-url http://localhost:3000/w/test-system/api/v1/fhir/r4 \
+           --r4b-url http://localhost:3000/w/test-system/api/v1/fhir/r4b \
+           --oidc http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration \
+           --auth client_credentials \
            --client-secret $(echo $CLIENT_APP | jq -r '.secret') \
            --client-id $(echo $CLIENT_APP | jq -r '.id')
 

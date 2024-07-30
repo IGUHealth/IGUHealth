@@ -30,9 +30,7 @@ For CLI authorization, we need to setup a client app with client credentials.
 ## Setup the CLI tenant. ​
 
 1. In the CLI, run `iguhealth config add-tenant`.
-2. Set the API origin (defaults to the cloud API URL).
-3. Set the tenant ID. In the admin console, this will be the section: `https://{tenantID}.admin.iguhealth.app/`.
-4. Set a unique value for what you call this tenant.
-5. Set up the client ID and client secret you wrote down in Step 6 of the Setup Client application.
-6. Switch to the tenant you've setup in `iguhealth config switch-tenant`.
-7. Test your connection with various API commands. Run the following to see the API commands available: `iguhealth api`
+2. Fill in the prompts with values pulled from the Admin Application settings page.
+3. Set up the client ID and client secret you wrote down in Step 6 of the Setup Client application.
+4. Switch to the tenant you've setup in `iguhealth config switch-tenant`.
+5. Test your connection with various API commands. Run the following to see the API commands available: `iguhealth api`

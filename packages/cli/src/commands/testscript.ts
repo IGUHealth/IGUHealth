@@ -37,13 +37,9 @@ async function executeTestScript<Version extends FHIR_VERSION>(
       target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
     },
   });
+  const client = createClient(CONFIG_LOCATION);
 
-  const report = await ts.run(
-    logger,
-    createClient(CONFIG_LOCATION),
-    fhirVersion,
-    testScript,
-  );
+  const report = await ts.run(logger, client, fhirVersion, testScript);
 
   return report;
 }

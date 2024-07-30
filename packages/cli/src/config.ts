@@ -8,13 +8,14 @@ import path from "node:path";
 export const CONFIG_LOCATION = path.join(homedir(), ".iguhealth/config.toml");
 
 export interface Tenant extends JsonMap {
-  api_origin: string;
-  id: string;
   name: string;
+  r4_url: string;
+  r4b_url: string;
+  oidc_discovery_uri: string;
   auth: {
-    type: "client_credentials";
-    client_id: string;
-    client_secret: string;
+    type: "public" | "client_credentials";
+    client_id?: string;
+    client_secret?: string;
   };
 }
 
@@ -101,7 +102,7 @@ export function configurationCommands(command: Command) {
     .requiredOption("-t, --tenant <tenant>", "Tenant name")
     .action(async (options) => {
       const config = loadConfig(CONFIG_LOCATION);
-      const tenants = config.tenants.filter((t) => t.name === options.tenant);
+      const tenants = config.tenants.filter((t) => t.name !== options.tenant);
 
       saveConfig(CONFIG_LOCATION, {
         ...config,
@@ -129,24 +130,16 @@ export function configurationCommands(command: Command) {
   command
     .command("add-tenant")
     .description("Add a tenant to the configuration file")
-    .option("-u, --url <url>", "Tenant url")
-    .option("-i, --id <id>", "Tenant id")
+    .option("-r4, --r4-url <r4Url>", "r4 URL")
+    .option("-r4b, --r4b-url <r4bUrl>", "r4b URL")
+    .option("-i, --oidc <oidcDiscovery>", "Enter the OIDC discovery URL")
+    .option("-a, --auth <authMethod>", "Enter auth method")
     .option("-n, --name <name>", "Tenant name")
     .option("--client-id <clientId>", "Client id")
     .option("--client-secret <clientSecret>", "Client secret")
     .action(async (options) => {
       const config = loadConfig(CONFIG_LOCATION);
 
-      const apiOrigin = options.url
-        ? options.url
-        : await inquirer.input({
-            message: "Enter the API origin example:",
-            default: "https://api.iguhealth.app",
-          });
-
-      const id = options.id
-        ? options.id
-        : await inquirer.input({ message: "Enter tenant id:" });
       const name = options.name
         ? options.name
         : await inquirer.input({
@@ -160,23 +153,57 @@ export function configurationCommands(command: Command) {
                 : true;
             },
           });
-      const client_id = options.clientId
-        ? options.clientId
+
+      const r4Url = options.r4Url
+        ? options.r4Url
         : await inquirer.input({
-            message: "Enter client id:",
+            message: "Enter the R4 URL",
           });
-      const client_secret = options.clientSecret
-        ? options.clientSecret
-        : await inquirer.password({
-            message: "Enter client secret:",
+      const r4bUrl = options.r4bUrl
+        ? options.r4bUrl
+        : await inquirer.input({
+            message: "Enter an R4B URL. ",
           });
 
+      const authMethod = options.auth
+        ? options.auth
+        : await inquirer.select({
+            message: "Select an auth method",
+            choices: [
+              { name: "public", value: "public" },
+              { name: "client_credentials", value: "client_credentials" },
+            ],
+          });
+
+      let oidcDiscovery = "";
+      let client_id = "";
+      let client_secret = "";
+
+      if (authMethod === "client_credentials") {
+        oidcDiscovery = options.oidc
+          ? options.oidc
+          : await inquirer.input({
+              message: "Enter the url for discovery. ",
+            });
+        client_id = options.clientId
+          ? options.clientId
+          : await inquirer.input({
+              message: "Enter client id:",
+            });
+        client_secret = options.clientSecret
+          ? options.clientSecret
+          : await inquirer.password({
+              message: "Enter client secret:",
+            });
+      }
+
       config.tenants.push({
-        api_origin: apiOrigin,
-        id,
+        r4_url: r4Url,
+        r4b_url: r4bUrl,
+        oidc_discovery_uri: oidcDiscovery,
         name,
         auth: {
-          type: "client_credentials",
+          type: authMethod,
           client_id,
           client_secret,
         },
