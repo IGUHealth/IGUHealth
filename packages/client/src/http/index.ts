@@ -48,7 +48,12 @@ function fhirUrlChunk(version: string) {
   }
 }
 
-export function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
+type DeriveFHIRURL = (domain: string, fhirVersion: FHIR_VERSION) => string;
+
+const defaultDeriveURL: DeriveFHIRURL = (
+  domain: string,
+  fhirVersion: FHIR_VERSION,
+) => {
   return new URL(
     pathJoin([
       new URL(domain).pathname,
@@ -56,13 +61,15 @@ export function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
     ]),
     domain,
   ).toString();
-}
+};
 
 async function toHTTPRequest(
   state: HTTPClientState,
   context: HTTPContext,
   request: FHIRRequest,
+  deriveURL: DeriveFHIRURL = defaultDeriveURL,
 ): Promise<{
+  deriveURL?: DeriveFHIRURL;
   url: string;
   headers?: Record<string, string>;
   method: string;
@@ -72,7 +79,7 @@ async function toHTTPRequest(
     "Content-Type": "application/fhir+json",
     ...context.headers,
   };
-  const FHIRUrl = versionUrl(state.url, request.fhirVersion);
+  const FHIRUrl = deriveURL(state.url, request.fhirVersion);
   if (state.getAccessToken) {
     const token = await state.getAccessToken();
     headers["Authorization"] = `Bearer ${token}`;
