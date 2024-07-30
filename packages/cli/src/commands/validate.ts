@@ -1,12 +1,12 @@
 import { Command } from "commander";
 
+import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   AllResourceTypes,
   R4,
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { ResourceValidate } from "@iguhealth/generated-ops/r4";
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
@@ -28,11 +28,14 @@ export function validate(command: Command) {
         switch (FHIRVersion) {
           case R4: {
             const result = await client.invoke_type(
-              ResourceValidate.Op,
+              "validate" as code,
               {},
               FHIRVersion,
               resource.resourceType,
-              { resource },
+              {
+                resourceType: "Parameters",
+                parameter: [{ name: "resource", resource }],
+              },
             );
 
             console.log(JSON.stringify(result, null, 2));
