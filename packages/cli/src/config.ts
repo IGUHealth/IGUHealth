@@ -96,6 +96,22 @@ export function configurationCommands(command: Command) {
     });
 
   command
+    .command("delete-tenant")
+    .description("Delete a tenant")
+    .requiredOption("-t, --tenant <tenant>", "Tenant name")
+    .action(async (options) => {
+      const config = loadConfig(CONFIG_LOCATION);
+      const tenants = config.tenants.filter((t) => t.name === options.tenant);
+
+      saveConfig(CONFIG_LOCATION, {
+        ...config,
+        defaultTenant:
+          options.tenant === config.defaultTenant ? "" : config.defaultTenant,
+        tenants,
+      });
+    });
+
+  command
     .command("show-tenant")
     .description("Display the current tenant.")
     .action(async () => {
