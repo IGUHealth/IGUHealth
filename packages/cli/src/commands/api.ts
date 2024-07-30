@@ -1,6 +1,5 @@
 import { confirm } from "@inquirer/prompts";
 import { Command } from "commander";
-import fs from "node:fs";
 
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -16,6 +15,7 @@ import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
+import { dataCommand } from "../utilities.js";
 
 function validateResourceType(
   fhirVersion: FHIR_VERSION,
@@ -49,26 +49,6 @@ function asFHIRType(fhirType: string): FHIR_VERSION {
   }
 }
 
-function dataCommand(command: Command) {
-  command
-    .option("-f, --file <file>", "File for resource")
-    .option("-d, --data <data>", "Data for resource");
-  return command;
-}
-
-type MutationOptions = { file?: string; data?: string };
-
-function readData(option: MutationOptions): unknown {
-  if (option.file) {
-    return JSON.parse(fs.readFileSync(option.file, "utf-8"));
-  }
-
-  if (option.data) {
-    return JSON.parse(option.data);
-  }
-  throw new Error("No resource provided");
-}
-
 function isBundle(value: unknown): value is Bundle {
   return (value as Record<string, unknown>)?.resourceType === "Bundle";
 }
@@ -88,12 +68,12 @@ export function apiCommands(command: Command) {
       console.log(JSON.stringify(capabilities, null, 2));
     });
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("create")
       .argument("<fhirVersion>", "FHIR Version")
       .action(async (userFHIRVersion, options) => {
-        const resourceToSave = readData(options);
+        const resourceToSave = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
 
@@ -109,7 +89,7 @@ export function apiCommands(command: Command) {
       }),
   );
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("update")
       .argument("<fhirVersion>", "FHIR Version")
@@ -120,7 +100,7 @@ export function apiCommands(command: Command) {
         if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
 
-        const resourceToSave = readData(options);
+        const resourceToSave = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
         if (!resourceToSave) {
           throw new Error("No resource provided to save");
@@ -137,12 +117,12 @@ export function apiCommands(command: Command) {
       }),
   );
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("batch")
       .argument("<fhirVersion>", "FHIR Version")
       .action(async (userFHIRVersion, options) => {
-        const batchBundle = readData(options);
+        const batchBundle = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
         if (!batchBundle) {
@@ -155,12 +135,12 @@ export function apiCommands(command: Command) {
       }),
   );
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("transaction")
       .argument("<fhirVersion>", "FHIR Version")
       .action(async (userFHIRVersion, options) => {
-        const transaction = readData(options);
+        const transaction = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
         if (!transaction) {
@@ -173,14 +153,14 @@ export function apiCommands(command: Command) {
       }),
   );
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("patch")
       .argument("<fhirVersion>", "FHIR Version")
       .argument("<resourceType>", "Resource Type")
       .argument("<id>", "Resource ID")
       .action(async (userFHIRVersion, resourceType, id, options) => {
-        const patches = readData(options);
+        const patches = dataCommand.readData(options);
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
 
@@ -357,7 +337,7 @@ export function apiCommands(command: Command) {
       console.log(JSON.stringify(history, null, 2));
     });
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("invoke_system")
       .argument("<fhirVersion>", "FHIR Version")
@@ -365,7 +345,7 @@ export function apiCommands(command: Command) {
       .action(async (userFHIRVersion, code: string, options) => {
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
-        const parameters = readData(options);
+        const parameters = dataCommand.readData(options);
         if (!parameters) {
           throw new Error("No Parameters provided");
         }
@@ -381,7 +361,7 @@ export function apiCommands(command: Command) {
       }),
   );
 
-  dataCommand(
+  dataCommand.command(
     command
       .command("invoke_type")
       .argument("<fhirVersion>", "FHIR Version")
@@ -396,7 +376,7 @@ export function apiCommands(command: Command) {
         ) => {
           const client = createClient(CONFIG_LOCATION);
           const FHIRVersion = asFHIRType(userFHIRVersion);
-          const parameters = readData(options);
+          const parameters = dataCommand.readData(options);
           if (!parameters) {
             throw new Error("No Parameters provided");
           }
@@ -415,7 +395,7 @@ export function apiCommands(command: Command) {
         },
       ),
   );
-  dataCommand(
+  dataCommand.command(
     command
       .command("invoke_instance")
       .argument("<fhirVersion>", "FHIR Version")
@@ -432,7 +412,7 @@ export function apiCommands(command: Command) {
         ) => {
           const client = createClient(CONFIG_LOCATION);
           const FHIRVersion = asFHIRType(userFHIRVersion);
-          const parameters = readData(options);
+          const parameters = dataCommand.readData(options);
           if (!parameters) {
             throw new Error("No Parameters provided");
           }
