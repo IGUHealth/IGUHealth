@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "scripts": {
     "build": "tsc && node executable.js ./lib/iguhealth.js && chmod +x ./lib/iguhealth.js",
