@@ -32,6 +32,8 @@ export function membershipToUser(user: Membership): s.users.Insertable {
   const fhir_user_id = user.id;
   const fhir_user_versionid = user.meta?.versionId;
 
+  console.log(user);
+
   if (!fhir_user_id) {
     throw new OperationError(outcomeFatal("exception", "User id not found"));
   }

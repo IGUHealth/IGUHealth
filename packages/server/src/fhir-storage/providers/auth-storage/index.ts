@@ -217,25 +217,13 @@ function updateUserTableMiddleware<
       case "update-request": {
         switch (context.request.level) {
           case "instance": {
-            const id = context.request.id;
-
-            const existingMembership = await context.state.fhirDB.read(
-              context.ctx,
-              R4,
-              "Membership",
-              id,
-            );
-
-            if (!existingMembership?.meta?.versionId)
-              throw new OperationError(
-                outcomeFatal("not-found", "Membership not found."),
-              );
+            const res = await next(context);
+            const membership = (res.response as R4UpdateResponse)
+              .body as Membership;
 
             const existingUser = await db
               .selectOne("users", {
-                fhir_user_versionid: parseInt(
-                  existingMembership.meta.versionId,
-                ),
+                fhir_user_id: membership.id as string,
               })
               .run(context.ctx.db);
 
@@ -247,12 +235,11 @@ function updateUserTableMiddleware<
             context.request.body = {
               ...(context.request.body as Membership),
               emailVerified: determineEmailUpdate(
-                membershipToUser(context.request?.body as Membership),
+                membershipToUser(membership),
                 existingUser,
               ),
             } as Membership;
 
-            const res = await next(context);
             if (!(res.response as R4UpdateResponse)?.body)
               throw new OperationError(
                 outcomeFatal("invariant", "Response body not found."),
@@ -262,9 +249,7 @@ function updateUserTableMiddleware<
               context.ctx,
               context.ctx.tenant,
               existingUser.id,
-              membershipToUser(
-                (res.response as R4UpdateResponse)?.body as Membership,
-              ),
+              membershipToUser(membership),
             );
 
             return res;
