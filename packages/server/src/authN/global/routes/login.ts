@@ -14,7 +14,6 @@ import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
-import { OIDC_ROUTES } from "../../oidc/constants.js";
 import * as adminApp from "../../oidc/hardcodedClients/admin-app.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";

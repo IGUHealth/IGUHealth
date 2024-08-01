@@ -21,7 +21,8 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../../certifications.js";
-import { AuthorizationCode } from "../../db/code/types.js";
+import * as codes from "../../db/code/index.js";
+import * as users from "../../db/users/index.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -31,7 +32,7 @@ import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
 import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
 
-function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
+function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
     case "S256": {
       const code_challenge_hashed = crypto
@@ -117,12 +118,9 @@ export function tokenPost<
           ctx.state.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
-            const code = await ctx.state.oidc.codeManagement.search(
-              fhirContext,
-              {
-                code: tokenParameters.code,
-              },
-            );
+            const code = await codes.search(fhirContext, fhirContext.tenant, {
+              code: tokenParameters.code,
+            });
 
             if (
               tokenParameters.client_id &&
@@ -165,8 +163,9 @@ export function tokenPost<
               });
             }
 
-            const user = await ctx.state.oidc.userManagement.get(
+            const user = await users.get(
               fhirContext,
+              fhirContext.tenant,
               code[0].user_id,
             );
 
@@ -176,7 +175,7 @@ export function tokenPost<
                 error_description: "Invalid user",
               });
 
-            await ctx.state.oidc.codeManagement.delete(fhirContext, {
+            await codes.remove(fhirContext, fhirContext.tenant, {
               id: code[0].id,
             });
 
@@ -189,11 +188,11 @@ export function tokenPost<
               iss: getIssuer(ctx.state.iguhealth.tenant),
               aud: clientApplication?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
-              [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,
+              [CUSTOM_CLAIMS.ROLE]: user.role,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
               [CUSTOM_CLAIMS.RESOURCE_ID]:
                 (user.fhir_user_id as id) ?? undefined,
-              sub: user.id as string as Subject,
+              sub: user.id as Subject,
             };
 
             const approvedScopes = await db

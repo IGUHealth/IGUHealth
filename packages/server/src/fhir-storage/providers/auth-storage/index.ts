@@ -21,7 +21,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import TenantUserManagement from "../../../authN/db/users/index.js";
+import * as users from "../../../authN/db/users/index.js";
 import {
   determineEmailUpdate,
   membershipToUser,
@@ -145,7 +145,6 @@ function updateUserTableMiddleware<
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
-    const tenantUserManagement = new TenantUserManagement(context.ctx.tenant);
     // Skip and run other middleware if not membership.
     if (
       !("resourceType" in context.request) ||
@@ -168,8 +167,9 @@ function updateUserTableMiddleware<
         membership.emailVerified = false;
 
         try {
-          await tenantUserManagement.create(
+          await users.create(
             context.ctx,
+            context.ctx.tenant,
             membershipToUser(membership),
           );
         } catch (e) {
@@ -198,7 +198,7 @@ function updateUserTableMiddleware<
                 outcomeFatal("not-found", "Membership not found."),
               );
 
-            await tenantUserManagement.delete(context.ctx, {
+            await users.remove(context.ctx, context.ctx.tenant, {
               fhir_user_versionid: parseInt(versionId),
             });
 
@@ -217,25 +217,13 @@ function updateUserTableMiddleware<
       case "update-request": {
         switch (context.request.level) {
           case "instance": {
-            const id = context.request.id;
-
-            const existingMembership = await context.state.fhirDB.read(
-              context.ctx,
-              R4,
-              "Membership",
-              id,
-            );
-
-            if (!existingMembership?.meta?.versionId)
-              throw new OperationError(
-                outcomeFatal("not-found", "Membership not found."),
-              );
+            const res = await next(context);
+            const membership = (res.response as R4UpdateResponse)
+              .body as Membership;
 
             const existingUser = await db
               .selectOne("users", {
-                fhir_user_versionid: parseInt(
-                  existingMembership.meta.versionId,
-                ),
+                fhir_user_id: membership.id as string,
               })
               .run(context.ctx.db);
 
@@ -247,23 +235,21 @@ function updateUserTableMiddleware<
             context.request.body = {
               ...(context.request.body as Membership),
               emailVerified: determineEmailUpdate(
-                membershipToUser(context.request?.body as Membership),
+                membershipToUser(membership),
                 existingUser,
               ),
             } as Membership;
 
-            const res = await next(context);
             if (!(res.response as R4UpdateResponse)?.body)
               throw new OperationError(
                 outcomeFatal("invariant", "Response body not found."),
               );
 
-            tenantUserManagement.update(
+            await users.update(
               context.ctx,
+              context.ctx.tenant,
               existingUser.id,
-              membershipToUser(
-                (res.response as R4UpdateResponse)?.body as Membership,
-              ),
+              membershipToUser(membership),
             );
 
             return res;

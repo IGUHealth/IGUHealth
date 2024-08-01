@@ -9,8 +9,8 @@ import {
   EmailTemplateText,
 } from "../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import { AuthorizationCodeManagement } from "../../db/code/interface.js";
-import { User } from "../../db/users/types.js";
+import * as codes from "../../db/code/index.js";
+import type { User } from "../../db/users/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 
 /**
@@ -20,12 +20,11 @@ import { OIDC_ROUTES } from "../constants.js";
  * @returns True if password reset should be sent. Based on no existing codes in the last 15 minutes.
  */
 async function shouldSendPasswordReset(
-  ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
-  codeManagement: AuthorizationCodeManagement,
+  ctx: Omit<IGUHealthServerCTX, "user">,
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await codeManagement.search(ctx, {
+  const existingCodes = await codes.search(ctx, ctx.tenant, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -37,7 +36,6 @@ export async function sendPasswordResetEmail(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   router: Router<any, any>,
   ctx: Omit<IGUHealthServerCTX, "user">,
-  codeManagement: AuthorizationCodeManagement,
   user: User,
 ) {
   if (!ctx.emailProvider) {
@@ -47,14 +45,14 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  if (!(await shouldSendPasswordReset(ctx, codeManagement, user))) {
+  if (!(await shouldSendPasswordReset(ctx, user))) {
     ctx.logger.warn(
       `Password reset already sent in the last 15 minutes. For user '${user.id}' with email '${user.email}'`,
     );
     return;
   }
 
-  const code = await codeManagement.create(ctx, {
+  const code = await codes.create(ctx, ctx.tenant, {
     type: "password_reset",
     user_id: user.id,
     expires_in: "15 minutes",

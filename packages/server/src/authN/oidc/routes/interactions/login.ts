@@ -4,7 +4,7 @@ import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
-import { User } from "../../../db/users/types.js";
+import type { User } from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 

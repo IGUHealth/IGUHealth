@@ -6,140 +6,157 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
-import { UserManagement } from "./interface.js";
-import { LoginParameters, USER_QUERY_COLS, User } from "./types.js";
 import { determineEmailUpdate } from "./utilities.js";
 
-export default class TenantUserManagement implements UserManagement {
-  private tenant: TenantId;
+export const USER_QUERY_COLS = <const>[
+  "id",
+  "tenant",
+  "email",
+  "first_name",
+  "last_name",
+  "email_verified",
+  "role",
+  "fhir_user_id",
+  "fhir_user_versionid",
+];
 
-  constructor(tenant: TenantId) {
-    this.tenant = tenant;
+export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;
+
+export type LoginParameters = {
+  "email-password" : {
+    email: string;
+    password: string;
+  },
+  "oidc-provider": {
+    email: string;
+    provider: string;
   }
+};
 
-  async getTenantClaims(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    id: string,
-  ): Promise<TenantClaim<s.user_role>[]> {
-    const user = await this.get(ctx, id);
-    if (!user) return [];
 
-    return [{ id: user.tenant as TenantId, userRole: user.role }];
-  }
+export async function getTenantClaims(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  id: string,
+): Promise<TenantClaim<s.user_role>[]> {
+  const user = await get(ctx, tenant, id);
+  if (!user) return [];
 
-  async login<T extends keyof LoginParameters>(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    type: T,
-    parameters: LoginParameters[T],
-  ): Promise<User | undefined> {
-    switch (type) {
-      case "email-password": {
-        const where: s.users.Whereable = {
-          tenant: this.tenant,
-          method: "email-password",
-          email: parameters.email,
-          password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
-        };
+  return [{ id: user.tenant as TenantId, userRole: user.role }];
+}
 
-        const user: User[] = await db
-          .select("users", where, { columns: USER_QUERY_COLS })
-          .run(ctx.db);
-
-        // Sanity check should never happen given unique check on email.
-        if (user.length > 1)
-          throw new Error(
-            "Multiple users found with the same email and password",
-          );
-
-        return user[0];
-      }
-      default:
-        return;
-    }
-  }
-
-  async get(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    id: string,
-  ): Promise<User | undefined> {
-    const tenantUser: User | undefined = (await db
-      .selectOne(
-        "users",
-        { id, tenant: this.tenant },
-        { columns: USER_QUERY_COLS },
-      )
-      .run(ctx.db)) as User | undefined;
-
-    return tenantUser;
-  }
-  async search(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    where: s.users.Whereable,
-  ): Promise<User[]> {
-    return db
-      .select(
-        "users",
-        { ...where, tenant: this.tenant },
-        { columns: USER_QUERY_COLS },
-      )
-      .run(ctx.db);
-  }
-  async create(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    user: s.users.Insertable,
-  ): Promise<User> {
-    return await db
-      .insert("users", { ...user, tenant: this.tenant })
-      .run(ctx.db);
-  }
-  async update(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    id: string,
-    update: s.users.Updatable,
-  ): Promise<User> {
-    return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+export async function login<T extends keyof LoginParameters>(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  type: T,
+  parameters: LoginParameters[T],
+): Promise<User | undefined> {
+  switch (type) {
+    case "email-password": {
       const where: s.users.Whereable = {
-        tenant: this.tenant,
-        id,
+        tenant,
+        method: "email-password",
+        email: parameters.email,
+        password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
       };
-      const currentUser = await db.selectOne("users", where).run(ctx.db);
-      if (!currentUser)
-        throw new OperationError(outcomeError("not-found", "User not found."));
 
-      const updatedUser = await db
-        .update(
-          "users",
-          {
-            ...update,
-            tenant: this.tenant,
-            email_verified: determineEmailUpdate(update, currentUser),
-          },
-          where,
-        )
+      const user: User[] = await db
+        .select("users", where, { columns: USER_QUERY_COLS })
         .run(ctx.db);
-      return updatedUser[0];
-    });
-  }
-  async delete(
-    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
-    where_: s.users.Whereable,
-  ): Promise<void> {
-    await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
-      const where: s.users.Whereable = {
-        ...where_,
-        tenant: this.tenant,
-      };
-      const user = await db.select("users", where).run(ctx.db);
-      if (user.length > 1) {
-        throw new OperationError(
-          outcomeError(
-            "invariant",
-            "Deletion only allowed for one user at a time.",
-          ),
-        );
-      }
 
-      await db.deletes("users", where).run(ctx.db);
-    });
+      // Sanity check should never happen given unique check on email.
+      if (user.length > 1)
+        throw new Error(
+          "Multiple users found with the same email and password",
+        );
+
+      return user[0];
+    }
+    default:
+      return;
   }
+}
+
+export async function get(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  id: string,
+): Promise<User | undefined> {
+  const tenantUser: User | undefined = (await db
+    .selectOne("users", { id, tenant }, { columns: USER_QUERY_COLS })
+    .run(ctx.db)) as User | undefined;
+
+  return tenantUser;
+}
+
+export async function search(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  where: s.users.Whereable,
+): Promise<User[]> {
+  return db
+    .select("users", { ...where, tenant }, { columns: USER_QUERY_COLS })
+    .run(ctx.db);
+}
+
+export async function create(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  user: s.users.Insertable,
+): Promise<User> {
+  return await db.insert("users", { ...user, tenant }).run(ctx.db);
+}
+
+export async function update(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  id: string,
+  update: s.users.Updatable,
+): Promise<User> {
+  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+    const where: s.users.Whereable = {
+      tenant,
+      id,
+    };
+    const currentUser = await db.selectOne("users", where).run(ctx.db);
+    if (!currentUser)
+      throw new OperationError(outcomeError("not-found", "User not found."));
+
+    const updatedUser = await db
+      .update(
+        "users",
+        {
+          ...update,
+          tenant,
+          email_verified: determineEmailUpdate(update, currentUser),
+        },
+        where,
+      )
+      .run(ctx.db);
+    return updatedUser[0];
+  });
+}
+
+export async function remove(
+  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  tenant: TenantId,
+  where_: s.users.Whereable,
+): Promise<void> {
+  await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+    const where: s.users.Whereable = {
+      ...where_,
+      tenant,
+    };
+    const user = await db.select("users", where).run(ctx.db);
+    if (user.length > 1) {
+      throw new OperationError(
+        outcomeError(
+          "invariant",
+          "Deletion only allowed for one user at a time.",
+        ),
+      );
+    }
+
+    await db.deletes("users", where).run(ctx.db);
+  });
 }

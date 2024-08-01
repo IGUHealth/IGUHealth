@@ -36,7 +36,6 @@ import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
-import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
 import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
@@ -301,7 +300,6 @@ export default async function createServer(): Promise<
     {
       authMiddlewares,
       middleware: [
-        injectTenantManagement(),
         setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
       ],
     },

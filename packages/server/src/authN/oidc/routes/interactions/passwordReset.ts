@@ -15,7 +15,10 @@ import {
 import { asRoot } from "../../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
 import * as views from "../../../../views/index.js";
+import * as codes from "../../../db/code/index.js";
+import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
+import * as GLOBAL from "../../../global/constants.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
@@ -39,8 +42,9 @@ export function passwordResetGET(): OIDCRouteHandler {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
 
-    const authorizationCodeSearch = await ctx.state.oidc.codeManagement.search(
+    const authorizationCodeSearch = await codes.search(
       ctx.state.iguhealth,
+      ctx.state.iguhealth.tenant,
       {
         type: "password_reset",
         code: queryCode,
@@ -142,8 +146,9 @@ export function passwordResetPOST(): OIDCRouteHandler {
       return;
     }
 
-    const res = await ctx.state.oidc.codeManagement.search(
+    const res = await codes.search(
       ctx.state.iguhealth,
+      ctx.state.iguhealth.tenant,
       {
         type: "password_reset",
         code: body.code,
@@ -169,8 +174,9 @@ export function passwordResetPOST(): OIDCRouteHandler {
       ctx.state.iguhealth,
       db.IsolationLevel.Serializable,
       async (fhirContext) => {
-        const update = await ctx.state.oidc.userManagement.update(
+        const update = await users.update(
           fhirContext,
+          fhirContext.tenant,
           authorizationCode.user_id,
           {
             password: body.password,
@@ -189,14 +195,14 @@ export function passwordResetPOST(): OIDCRouteHandler {
           userToMembership(update),
         );
 
-        await ctx.state.oidc.codeManagement.delete(fhirContext, {
+        await codes.remove(fhirContext, fhirContext.tenant, {
           code: body.code,
         });
       },
     );
 
     const loginRoute = ctx.router.url(
-      OIDC_ROUTES.LOGIN_GET,
+      GLOBAL.ROUTES.LOGIN_GET,
       {
         tenant: ctx.state.iguhealth.tenant,
       },
@@ -252,8 +258,9 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    const usersWithEmail = await ctx.state.oidc.userManagement.search(
+    const usersWithEmail = await users.search(
       ctx.state.iguhealth,
+      ctx.state.iguhealth.tenant,
       {
         email: email,
       },
@@ -296,7 +303,6 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     await sendPasswordResetEmail(
       ctx.router,
       { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
-      ctx.state.oidc.codeManagement,
       user,
     );
 
