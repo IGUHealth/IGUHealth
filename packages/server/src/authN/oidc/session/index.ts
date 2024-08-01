@@ -21,9 +21,7 @@ export async function deserializeUser(
       ctx.state.iguhealth.tenant,
       id,
     );
-    if (!user) {
-      return undefined;
-    }
+
     return user;
   } catch (err) {
     ctx.state.iguhealth.logger.error(err);
