@@ -6,3 +6,4 @@ export * from "./authorize.js";
 export * from "./token.js";
 export * from "./well_known.js";
 export * from "./userInfo.js";
+export * from "./scope.js";
