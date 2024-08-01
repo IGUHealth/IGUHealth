@@ -2,7 +2,6 @@
 import { Command } from "commander";
 import fs from "node:fs";
 import path from "node:path";
-import { pino } from "pino";
 
 import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
@@ -10,6 +9,7 @@ import * as ts from "@iguhealth/testscript-runner";
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
+import logger from "../logger.js";
 
 function getAllFiles(location: string): string[] {
   if (fs.lstatSync(location).isFile()) {
@@ -32,12 +32,7 @@ async function executeTestScript<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   testScript: Resource<Version, "TestScript">,
 ): Promise<Resource<Version, "TestReport">> {
-  const logger = pino<string>({
-    transport: {
-      target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
-    },
-  });
-  const client = createClient(CONFIG_LOCATION);
+  const client = await createClient(CONFIG_LOCATION);
 
   const report = await ts.run(logger, client, fhirVersion, testScript);
 

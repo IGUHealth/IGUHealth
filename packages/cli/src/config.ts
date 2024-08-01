@@ -5,6 +5,8 @@ import fs from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 
+import logger from "./logger.js";
+
 export const CONFIG_LOCATION = path.join(homedir(), ".iguhealth/config.toml");
 
 export interface Tenant extends JsonMap {
@@ -26,7 +28,7 @@ export interface Config extends JsonMap {
 }
 
 function initializeConfig(location: string): Config {
-  console.log("Initializing configuration file");
+  logger.info("Initializing configuration file");
 
   const initialConfig: Config = {
     defaultTenant: "",
@@ -119,11 +121,9 @@ export function configurationCommands(command: Command) {
       const config = loadConfig(CONFIG_LOCATION);
       const currentTenant = getCurrentTenant(CONFIG_LOCATION, config);
       if (currentTenant) {
-        console.log(`API URL: '${currentTenant.api_origin}'`);
-        console.log(`Tenant Id: '${currentTenant.id}'`);
-        console.log(`Tenant Name: '${currentTenant.name}'`);
+        logger.info(currentTenant);
       } else {
-        console.log("No tenant configured");
+        logger.warn("No tenant configured");
       }
     });
 
