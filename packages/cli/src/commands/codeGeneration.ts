@@ -11,6 +11,8 @@ import {
   R4,
 } from "@iguhealth/fhir-types/versions";
 
+import logger from "../logger.js";
+
 export function codeGenerationCommands(command: Command) {
   command
     .command("types-artifacts")
@@ -81,9 +83,9 @@ export function codeGenerationCommands(command: Command) {
         ignore: options.ignore,
         extension: options.extension,
       });
-      console.log("generating index file");
+      logger.info("generating index file");
       const indexLoc = path.join(options.packagedir, ".index.json");
       writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
-      console.log(`index generated and saved at '${indexLoc}'`);
+      logger.info(`index generated and saved at '${indexLoc}'`);
     });
 }

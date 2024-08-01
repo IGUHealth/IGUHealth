@@ -29,13 +29,21 @@ function isTokenResponseValid(
   return curSeconds - timeReceived < tokenResponse.expires_in - window;
 }
 
-export function createClient(location: string) {
+export async function createClient(location: string) {
   const config = loadConfig(location);
   const tenant = getCurrentTenant(location, config);
   if (!tenant) throw new Error("No tenant configured run config add-tenant.");
 
   let accessTokenResponse: TokenResponse | undefined = undefined;
   let timeSent = new Date().getTime() / 1000;
+
+  let wellknown = undefined;
+
+  if (tenant.oidc_discovery_uri) {
+    wellknown = await fetch(tenant.oidc_discovery_uri).then((res) =>
+      res.json(),
+    );
+  }
 
   return httpClient({
     url: (fhirversion) => {
@@ -52,9 +60,6 @@ export function createClient(location: string) {
       tenant.auth.type === "public"
         ? undefined
         : async function () {
-            const OIDCDiscoveryDocument = await fetch(
-              tenant.oidc_discovery_uri,
-            ).then((res) => res.json());
             if (
               accessTokenResponse &&
               isTokenResponseValid(timeSent, accessTokenResponse)
@@ -63,7 +68,7 @@ export function createClient(location: string) {
             }
 
             timeSent = new Date().getTime() / 1000;
-            const response = await fetch(OIDCDiscoveryDocument.token_endpoint, {
+            const response = await fetch(wellknown.token_endpoint, {
               method: "POST",
               body: new URLSearchParams({
                 grant_type: "client_credentials",

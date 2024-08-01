@@ -10,6 +10,7 @@ import {
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
+import logger from "../logger.js";
 import { conversion, dataCommand } from "../utilities.js";
 
 export function validate(command: Command) {
@@ -23,7 +24,7 @@ export function validate(command: Command) {
           AllResourceTypes
         >;
         const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
-        const client = createClient(CONFIG_LOCATION);
+        const client = await createClient(CONFIG_LOCATION);
 
         switch (FHIRVersion) {
           case R4: {
@@ -38,7 +39,7 @@ export function validate(command: Command) {
               },
             );
 
-            console.log(JSON.stringify(result, null, 2));
+            logger.warn(result);
             return;
           }
           case R4B:
