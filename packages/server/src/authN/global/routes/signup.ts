@@ -10,8 +10,8 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { asRoot } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as views from "../../../views/index.js";
-import TenantAuthorizationCodeManagement from "../../db/code/index.js";
-import { TenantManagement } from "../../db/tenant.js";
+import * as codeManagement from "../../db/code/index.js";
+import * as tenants from "../../db/tenant.js";
 import { USER_QUERY_COLS, User } from "../../db/users/types.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
@@ -80,9 +80,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     ctx.state.iguhealth,
     db.IsolationLevel.Serializable,
     async (ctx) => {
-      const tenantManagement = new TenantManagement();
-
-      const tenant = await tenantManagement.create(ctx, {});
+      const tenant = await tenants.create(ctx, {});
 
       const membership = await ctx.client.create(
         asRoot({
@@ -123,7 +121,6 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   await sendPasswordResetEmail(
     ctx.router,
     { ...ctx.state.iguhealth, tenant: tenant.id as TenantId },
-    new TenantAuthorizationCodeManagement(tenant.id as TenantId),
     user,
   );
 
