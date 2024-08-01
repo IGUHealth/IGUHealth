@@ -9,7 +9,7 @@ import {
   EmailTemplateText,
 } from "../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import * as codeManagement from "../../db/code/index.js";
+import * as codes from "../../db/code/index.js";
 import type { User } from "../../db/users/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 
@@ -24,7 +24,7 @@ async function shouldSendPasswordReset(
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await codeManagement.search(ctx, ctx.tenant, {
+  const existingCodes = await codes.search(ctx, ctx.tenant, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -52,7 +52,7 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await codeManagement.create(ctx, ctx.tenant, {
+  const code = await codes.create(ctx, ctx.tenant, {
     type: "password_reset",
     user_id: user.id,
     expires_in: "15 minutes",

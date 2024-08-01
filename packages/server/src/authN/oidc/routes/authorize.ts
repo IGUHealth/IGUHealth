@@ -5,6 +5,7 @@ import { ScopeVerifyForm } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
+import * as codes from "../../db/code/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
@@ -101,8 +102,9 @@ export function authorize(): OIDCRouteHandler {
         return;
       }
 
-      const code = await ctx.state.oidc.codeManagement.create(
+      const code = await codes.create(
         ctx.state.iguhealth,
+        ctx.state.iguhealth.tenant,
         {
           type: "oauth2_code_grant",
           client_id: client.id,

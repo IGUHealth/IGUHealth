@@ -50,7 +50,14 @@ export async function create(
   tenant: TenantId,
   model: Pick<
     s.authorization_code.Insertable,
-    "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "redirect_uri"
+    | "type"
+    | "user_id"
+    | "tenant"
+    | "expires_in"
+    | "client_id"
+    | "redirect_uri"
+    | "pkce_code_challenge"
+    | "pkce_code_challenge_method"
   >,
 ): Promise<AuthorizationCode> {
   return db

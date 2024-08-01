@@ -13,8 +13,8 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
-import { TenantManagement } from "../authN/db/tenant.js";
-import TenantUserManagement from "../authN/db/users/index.js";
+import * as tenants from "../authN/db/tenant.js";
+import * as users from "../authN/db/users/index.js";
 import RedisCache from "../cache/providers/redis.js";
 import {
   createClient,
@@ -33,8 +33,8 @@ async function getTenant(
     id?: string;
     tier?: string;
   },
-): Promise<Parameters<TenantManagement["create"]>[1]> {
-  const tenant: Parameters<TenantManagement["create"]>[1] = {
+): Promise<Parameters<(typeof tenants)["create"]>[1]> {
+  const tenant: Parameters<(typeof tenants)["create"]>[1] = {
     id: options.id,
     subscription_tier: options.tier,
   };
@@ -88,11 +88,7 @@ async function createTenant(
     ctx,
     db.IsolationLevel.Serializable,
     async (ctx) => {
-      const tenantManagement = new TenantManagement();
-      const tenant = await tenantManagement.create(
-        ctx,
-        await getTenant(ctx, options),
-      );
+      const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
       const membership: Membership = await ctx.client.create(
         asRoot({ ...ctx, tenant: tenant.id as TenantId }),
@@ -106,13 +102,11 @@ async function createTenant(
             message: "Enter root user password.",
           });
 
-      const userManagement = new TenantUserManagement(tenant.id as TenantId);
-
-      const user = await userManagement.search(ctx, {
+      const user = await users.search(ctx, tenant.id as TenantId, {
         fhir_user_id: membership.id as string,
       });
 
-      await userManagement.update(ctx, user[0].id, {
+      await users.update(ctx, tenant.id as TenantId, user[0].id, {
         ...user[0],
         password,
         email_verified: true,

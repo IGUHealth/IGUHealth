@@ -29,9 +29,7 @@ import {
   TenantId,
 } from "@iguhealth/jwt";
 
-import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
-import { UserManagement } from "../authN/db/users/interface.js";
-import { User } from "../authN/db/users/types.js";
+import { User } from "../authN/db/users/index.js";
 import { getIssuer } from "../authN/oidc/constants.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
 import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
@@ -58,10 +56,7 @@ export namespace KoaExtensions {
       isAuthenticated: (
         ctx: Parameters<OIDCRouteHandler>[0],
       ) => Promise<boolean>;
-
       user?: User;
-      userManagement: UserManagement;
-      codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;
       parameters: {
         client_id?: string;

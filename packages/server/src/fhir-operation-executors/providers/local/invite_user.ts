@@ -12,8 +12,8 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import TenantAuthorizationCodeManagement from "../../../authN/db/code/index.js";
-import TenantUserManagement from "../../../authN/db/users/index.js";
+import * as codes from "../../../authN/db/code/index.js";
+import * as users from "../../../authN/db/users/index.js";
 import {
   EmailTemplate,
   EmailTemplateButton,
@@ -72,19 +72,14 @@ const IguhealthInviteUserInvoke = InlineOperation(
           }
         }
 
-        const codeManagement = new TenantAuthorizationCodeManagement(
-          ctx.tenant,
-        );
-        const userManagement = new TenantUserManagement(ctx.tenant);
-
-        const user = await userManagement.search(ctx, {
+        const user = await users.search(ctx, ctx.tenant, {
           fhir_user_id: membership.id,
         });
 
         if (!user[0]) {
           throw new OperationError(outcomeError("not-found", "User not found"));
         }
-        const code = await codeManagement.create(ctx, {
+        const code = await codes.create(ctx, ctx.tenant, {
           type: "password_reset",
           user_id: user[0].id,
           expires_in: "15 minutes",

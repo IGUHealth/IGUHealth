@@ -7,6 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
+import * as users from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 import { sendAlertEmail } from "../../utilities/sendAlertEmail.js";
@@ -46,17 +47,12 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await ctx.state.oidc.userManagement.search(ctx.state.iguhealth, {
+    await users.search(ctx.state.iguhealth, ctx.state.iguhealth.tenant, {
       email,
     })
   )[0];
   if (existingUser !== undefined) {
-    await sendPasswordResetEmail(
-      ctx.router,
-      { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
-      ctx.state.oidc.codeManagement,
-      existingUser,
-    );
+    await sendPasswordResetEmail(ctx.router, ctx.state.iguhealth, existingUser);
   } else {
     const membership = await ctx.state.iguhealth.client.create(
       asRoot(ctx.state.iguhealth),
@@ -68,8 +64,9 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       } as Membership,
     );
 
-    const user = await ctx.state.oidc.userManagement.search(
+    const user = await users.search(
       ctx.state.iguhealth,
+      ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,
         fhir_user_versionid: parseInt(membership.meta?.versionId ?? ""),
@@ -85,7 +82,6 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     await sendPasswordResetEmail(
       ctx.router,
       { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
-      ctx.state.oidc.codeManagement,
       user[0],
     );
   }

@@ -2,24 +2,21 @@
  * Session utilities for managing user session login.
  */
 
-import { LoginParameters, User } from "../../db/users/types.js";
+import * as users from "../../db/users/index.js";
 import { USER_SESSION_KEY } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 
-export function serializeUser(user: User): string {
+export function serializeUser(user: users.User): string {
   return user.id;
 }
 
 export async function deserializeUser(
   ctx: Parameters<OIDCRouteHandler>[0],
-): Promise<User | undefined> {
+): Promise<users.User | undefined> {
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = await ctx.state.oidc.userManagement.get(
-      ctx.state.iguhealth,
-      id,
-    );
+    const user = users.get(ctx.state.iguhealth, ctx.state.iguhealth.tenant, id);
     if (!user) {
       return undefined;
     }
@@ -41,17 +38,18 @@ export async function isAuthenticated(
  * @param ctx Koa context
  * @returns True if the user is logged in. False otherwise.
  */
-export async function sessionLogin<Method extends keyof LoginParameters>(
+export async function sessionLogin<Method extends keyof users.LoginParameters>(
   ctx: Parameters<OIDCRouteHandler>[0],
   method: Method,
-  credentials: LoginParameters[Method],
-): Promise<User | undefined> {
+  credentials: users.LoginParameters[Method],
+): Promise<users.User | undefined> {
   if (!ctx.session) {
     throw new Error("Session not found in context.");
   }
 
-  const user = await ctx.state.oidc.userManagement.login(
+  const user = await users.login(
     ctx.state.iguhealth,
+    ctx.state.iguhealth.tenant,
     method,
     credentials,
   );

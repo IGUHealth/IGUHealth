@@ -21,7 +21,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import TenantUserManagement from "../../../authN/db/users/index.js";
+import * as users from "../../../authN/db/users/index.js";
 import {
   determineEmailUpdate,
   membershipToUser,
@@ -145,7 +145,6 @@ function updateUserTableMiddleware<
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
-    const tenantUserManagement = new TenantUserManagement(context.ctx.tenant);
     // Skip and run other middleware if not membership.
     if (
       !("resourceType" in context.request) ||
@@ -168,8 +167,9 @@ function updateUserTableMiddleware<
         membership.emailVerified = false;
 
         try {
-          await tenantUserManagement.create(
+          await users.create(
             context.ctx,
+            context.ctx.tenant,
             membershipToUser(membership),
           );
         } catch (e) {
@@ -198,7 +198,7 @@ function updateUserTableMiddleware<
                 outcomeFatal("not-found", "Membership not found."),
               );
 
-            await tenantUserManagement.delete(context.ctx, {
+            await users.remove(context.ctx, context.ctx.tenant, {
               fhir_user_versionid: parseInt(versionId),
             });
 
@@ -258,8 +258,9 @@ function updateUserTableMiddleware<
                 outcomeFatal("invariant", "Response body not found."),
               );
 
-            tenantUserManagement.update(
+            await users.update(
               context.ctx,
+              context.ctx.tenant,
               existingUser.id,
               membershipToUser(
                 (res.response as R4UpdateResponse)?.body as Membership,
