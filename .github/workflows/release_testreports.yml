@@ -86,7 +86,7 @@ jobs:
            --client-id $(echo $CLIENT_APP | jq -r '.id')
 
       - name: Start server
-        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/interaction/login
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
 
       - name: R4 TestScripts
         run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json
