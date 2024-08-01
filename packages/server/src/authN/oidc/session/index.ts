@@ -16,7 +16,11 @@ export async function deserializeUser(
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = users.get(ctx.state.iguhealth, ctx.state.iguhealth.tenant, id);
+    const user = await users.get(
+      ctx.state.iguhealth,
+      ctx.state.iguhealth.tenant,
+      id,
+    );
     if (!user) {
       return undefined;
     }

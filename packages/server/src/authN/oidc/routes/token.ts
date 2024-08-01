@@ -188,11 +188,11 @@ export function tokenPost<
               iss: getIssuer(ctx.state.iguhealth.tenant),
               aud: clientApplication?.id,
               [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
-              [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,
+              [CUSTOM_CLAIMS.ROLE]: user.role,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
               [CUSTOM_CLAIMS.RESOURCE_ID]:
                 (user.fhir_user_id as id) ?? undefined,
-              sub: user.id as string as Subject,
+              sub: user.id as Subject,
             };
 
             const approvedScopes = await db
