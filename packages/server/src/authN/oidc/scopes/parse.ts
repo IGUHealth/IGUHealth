@@ -1,0 +1,226 @@
+import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
+
+import { OIDCError } from "../middleware/oauth_error_handling.js";
+
+type OIDCScope = {
+  type: "openid" | "profile" | "email";
+};
+
+type LaunchScope = {
+  type: "launch";
+  scope: "" | "encounter" | "patient";
+};
+
+type SMARTResourceScope = {
+  type: "smart-resource";
+  level: "user" | "system" | "patient";
+  scope: "resource" | "all";
+  resourceType?: string;
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  delete: boolean;
+  search: boolean;
+};
+
+type SMARTScope =
+  | SMARTResourceScope
+  | LaunchScope
+  | {
+      type: "fhirUser";
+    };
+
+type Scope = OIDCScope | SMARTScope;
+
+/**
+ * Validates a resource type from scope.
+ * @param type some chunk from scope
+ * @returns boolean if the resource type is valid.
+ */
+function validateResourceType(type: string): boolean {
+  return r4Sets.resourceTypes.has(type) || r4bSets.resourceTypes.has(type);
+}
+
+function parseMethods(methods: string): {
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  delete: boolean;
+  search: boolean;
+} {
+  if (methods === "*") {
+    return {
+      create: true,
+      read: true,
+      update: true,
+      delete: true,
+      search: true,
+    };
+  }
+
+  const methodsObj = {
+    create: false,
+    read: false,
+    update: false,
+    delete: false,
+    search: false,
+  };
+  for (const method of methods.split("")) {
+    switch (method) {
+      /**
+       * Type level create
+       */
+      case "c": {
+        methodsObj.create = true;
+        break;
+      }
+      /**
+       * Instance level read
+       * Instance level vread
+       * Instance level history
+       */
+      case "r": {
+        methodsObj.read = true;
+        break;
+      }
+      /**
+       * Instance level update Note that some servers allow for an update operation to create a new instance,
+       * and this is allowed by the update scope
+       * Instance level patch
+       */
+      case "u": {
+        methodsObj.update = true;
+        break;
+      }
+      /**
+       * Instance level delete
+       */
+      case "d": {
+        methodsObj.delete = true;
+        break;
+      }
+      /**
+       * Type level search
+       * Type level history
+       * System level search
+       * System level history
+       */
+      case "s": {
+        methodsObj.search = true;
+        break;
+      }
+      default: {
+        throw new OIDCError({
+          error: "invalid_scope",
+          error_description: `Invalid scope access type methods: '${methods}' not supported.`,
+        });
+      }
+    }
+  }
+
+  return methodsObj;
+}
+
+function isOIDCScope(scope: string): scope is "openid" | "profile" | "email" {
+  return ["openid", "profile", "email"].includes(scope);
+}
+
+function validateSmartResourceLevel(
+  level: string,
+): level is "user" | "system" | "patient" {
+  return ["user", "system", "patient"].includes(level);
+}
+
+export function parseScopes(scopes: string): Scope[] {
+  return scopes
+    .split(/\s/)
+    .filter((scope) => scope !== "")
+    .map((scope): Scope => {
+      switch (true) {
+        case isOIDCScope(scope): {
+          return { type: scope };
+        }
+        case scope === "fhirUser": {
+          return { type: scope };
+        }
+        case scope.startsWith("launch"): {
+          if (scope === "launch") {
+            return { type: scope, scope: "" };
+          }
+          const chunks = scope.split("/");
+          switch (chunks[1]) {
+            case "patient":
+            case "encounter": {
+              return { type: "launch", scope: chunks[1] };
+            }
+            default: {
+              throw new OIDCError({
+                error: "invalid_scope",
+                error_description: `Invalid scope: '${scope}'.`,
+              });
+            }
+          }
+        }
+        case scope.startsWith("user/"):
+        case scope.startsWith("system/"):
+        case scope.startsWith("patient/"): {
+          const [level, permissionString] = scope.split("/");
+          if (!permissionString) {
+            throw new OIDCError({
+              error: "invalid_scope",
+              error_description: `Invalid scope: '${scope}'.`,
+            });
+          }
+          if (!validateSmartResourceLevel(level)) {
+            throw new OIDCError({
+              error: "invalid_scope",
+              error_description: `Invalid scope: '${scope}'.`,
+            });
+          }
+
+          const permissions = permissionString.split(".");
+          if (permissions.length !== 2) {
+            throw new OIDCError({
+              error: "invalid_scope",
+              error_description: `Invalid scope: '${scope}'.`,
+            });
+          }
+
+          const [resourceType, methods] = permissions;
+
+          switch (true) {
+            case resourceType === "*": {
+              return {
+                type: "smart-resource",
+                level,
+                scope: "all",
+                ...parseMethods(methods),
+              };
+            }
+            case validateResourceType(resourceType): {
+              return {
+                type: "smart-resource",
+                level,
+                scope: "resource",
+                resourceType,
+                ...parseMethods(methods),
+              };
+            }
+            default: {
+              throw new OIDCError({
+                error: "invalid_scope",
+                error_description: `Invalid scope: '${scope}'.`,
+              });
+            }
+          }
+        }
+        default: {
+          throw new OIDCError({
+            error: "invalid_scope",
+            error_description: `Invalid scope: '${scope}' not supported.`,
+          });
+        }
+      }
+    });
+}

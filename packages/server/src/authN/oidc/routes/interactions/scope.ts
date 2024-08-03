@@ -3,11 +3,11 @@ import * as db from "zapatos/db";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { OIDCRouteHandler } from "../index.js";
-import { OIDCError } from "../middleware/oauth_error_handling.js";
-import type { ScopeVerificationBody } from "../schemas/authorize_scope_body.schema.js";
-import ScopeVerificationBodySchema from "../schemas/authorize_scope_body.schema.json" with { type: "json" };
-import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
+import { OIDCRouteHandler } from "../../index.js";
+import { OIDCError } from "../../middleware/oauth_error_handling.js";
+import type { ScopeVerificationBody } from "../../schemas/authorize_scope_body.schema.js";
+import ScopeVerificationBodySchema from "../../schemas/authorize_scope_body.schema.json" with { type: "json" };
+import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 
 function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
   const ajv = new Ajv.default({});
