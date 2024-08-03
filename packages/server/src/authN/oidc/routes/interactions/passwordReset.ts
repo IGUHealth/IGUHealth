@@ -43,7 +43,7 @@ export function passwordResetGET(): OIDCRouteHandler {
     }
 
     const authorizationCodeSearch = await codes.search(
-      ctx.state.iguhealth,
+      ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
       {
         type: "password_reset",
@@ -147,7 +147,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
     }
 
     const res = await codes.search(
-      ctx.state.iguhealth,
+      ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
       {
         type: "password_reset",
@@ -175,7 +175,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
       db.IsolationLevel.Serializable,
       async (fhirContext) => {
         const update = await users.update(
-          fhirContext,
+          fhirContext.db,
           fhirContext.tenant,
           authorizationCode.user_id,
           {
@@ -195,7 +195,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           userToMembership(update),
         );
 
-        await codes.remove(fhirContext, fhirContext.tenant, {
+        await codes.remove(fhirContext.db, fhirContext.tenant, {
           code: body.code,
         });
       },
@@ -259,7 +259,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     }
 
     const usersWithEmail = await users.search(
-      ctx.state.iguhealth,
+      ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
       {
         email: email,

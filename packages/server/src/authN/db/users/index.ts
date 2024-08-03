@@ -4,8 +4,6 @@ import type * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { determineEmailUpdate } from "./utilities.js";
 
 export const USER_QUERY_COLS = <const>[
@@ -23,30 +21,29 @@ export const USER_QUERY_COLS = <const>[
 export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;
 
 export type LoginParameters = {
-  "email-password" : {
+  "email-password": {
     email: string;
     password: string;
-  },
+  };
   "oidc-provider": {
     email: string;
     provider: string;
-  }
+  };
 };
 
-
 export async function getTenantClaims(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   id: string,
 ): Promise<TenantClaim<s.user_role>[]> {
-  const user = await get(ctx, tenant, id);
+  const user = await get(pg, tenant, id);
   if (!user) return [];
 
   return [{ id: user.tenant as TenantId, userRole: user.role }];
 }
 
 export async function login<T extends keyof LoginParameters>(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
@@ -62,7 +59,7 @@ export async function login<T extends keyof LoginParameters>(
 
       const user: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
-        .run(ctx.db);
+        .run(pg);
 
       // Sanity check should never happen given unique check on email.
       if (user.length > 1)
@@ -78,47 +75,47 @@ export async function login<T extends keyof LoginParameters>(
 }
 
 export async function get(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   id: string,
 ): Promise<User | undefined> {
   const tenantUser: User | undefined = (await db
     .selectOne("users", { id, tenant }, { columns: USER_QUERY_COLS })
-    .run(ctx.db)) as User | undefined;
+    .run(pg)) as User | undefined;
 
   return tenantUser;
 }
 
 export async function search(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   where: s.users.Whereable,
 ): Promise<User[]> {
   return db
     .select("users", { ...where, tenant }, { columns: USER_QUERY_COLS })
-    .run(ctx.db);
+    .run(pg);
 }
 
 export async function create(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   user: s.users.Insertable,
 ): Promise<User> {
-  return await db.insert("users", { ...user, tenant }).run(ctx.db);
+  return await db.insert("users", { ...user, tenant }).run(pg);
 }
 
 export async function update(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   id: string,
   update: s.users.Updatable,
 ): Promise<User> {
-  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return db.serializable(pg, async (tx) => {
     const where: s.users.Whereable = {
       tenant,
       id,
     };
-    const currentUser = await db.selectOne("users", where).run(ctx.db);
+    const currentUser = await db.selectOne("users", where).run(tx);
     if (!currentUser)
       throw new OperationError(outcomeError("not-found", "User not found."));
 
@@ -132,22 +129,22 @@ export async function update(
         },
         where,
       )
-      .run(ctx.db);
+      .run(tx);
     return updatedUser[0];
   });
 }
 
 export async function remove(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   where_: s.users.Whereable,
 ): Promise<void> {
-  await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return db.serializable(pg, async (tx) => {
     const where: s.users.Whereable = {
       ...where_,
       tenant,
     };
-    const user = await db.select("users", where).run(ctx.db);
+    const user = await db.select("users", where).run(tx);
     if (user.length > 1) {
       throw new OperationError(
         outcomeError(
@@ -157,6 +154,6 @@ export async function remove(
       );
     }
 
-    await db.deletes("users", where).run(ctx.db);
+    await db.deletes("users", where).run(tx);
   });
 }

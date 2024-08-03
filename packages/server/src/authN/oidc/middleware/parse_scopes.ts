@@ -30,6 +30,7 @@ export function validateScopesMiddleware(): Koa.Middleware<
     }
     try {
       const _parsedScopes = parseScopes(scopeString);
+      ctx.state.oidc.scopes = _parsedScopes;
     } catch (e) {
       if (e instanceof OIDCError) {
         throw new OIDCError({

@@ -17,11 +17,13 @@ type SMARTResourceScope = {
   level: "user" | "system" | "patient";
   scope: "resource" | "all";
   resourceType?: string;
-  create: boolean;
-  read: boolean;
-  update: boolean;
-  delete: boolean;
-  search: boolean;
+  permissions: {
+    create: boolean;
+    read: boolean;
+    update: boolean;
+    delete: boolean;
+    search: boolean;
+  };
 };
 
 type SMARTScope =
@@ -31,7 +33,7 @@ type SMARTScope =
       type: "fhirUser";
     };
 
-type Scope = OIDCScope | SMARTScope;
+export type Scope = OIDCScope | SMARTScope;
 
 /**
  * Validates a resource type from scope.
@@ -42,7 +44,7 @@ function validateResourceType(type: string): boolean {
   return r4Sets.resourceTypes.has(type) || r4bSets.resourceTypes.has(type);
 }
 
-function parseMethods(methods: string): {
+function parsePermissions(methods: string): {
   create: boolean;
   read: boolean;
   update: boolean;
@@ -195,7 +197,7 @@ export function parseScopes(scopes: string): Scope[] {
                 type: "smart-resource",
                 level,
                 scope: "all",
-                ...parseMethods(methods),
+                permissions: parsePermissions(methods),
               };
             }
             case validateResourceType(resourceType): {
@@ -204,7 +206,7 @@ export function parseScopes(scopes: string): Scope[] {
                 level,
                 scope: "resource",
                 resourceType,
-                ...parseMethods(methods),
+                permissions: parsePermissions(methods),
               };
             }
             default: {
@@ -223,4 +225,27 @@ export function parseScopes(scopes: string): Scope[] {
         }
       }
     });
+}
+
+export function toString(scopes: Scope[]): string {
+  return scopes
+    .reduce((scopeString, scope: Scope) => {
+      switch (scope.type) {
+        case "openid":
+        case "profile":
+        case "email": {
+          return `${scopeString} ${scope.type}`;
+        }
+        case "fhirUser": {
+          return `${scopeString} fhirUser`;
+        }
+        case "launch": {
+          return `${scopeString} launch${scope.scope ? `/${scope.scope}` : ""}`;
+        }
+        case "smart-resource": {
+          return `${scopeString} ${scope.level}/${scope.scope === "all" ? "*" : scope.resourceType}.${scope.permissions.create ? "c" : ""}${scope.permissions.read ? "r" : ""}${scope.permissions.update ? "u" : ""}${scope.permissions.delete ? "d" : ""}${scope.permissions.search ? "s" : ""}`;
+        }
+      }
+    }, "")
+    .slice(1);
 }

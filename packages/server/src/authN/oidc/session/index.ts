@@ -17,7 +17,7 @@ export async function deserializeUser(
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
     const user = await users.get(
-      ctx.state.iguhealth,
+      ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
       id,
     );
@@ -50,7 +50,7 @@ export async function sessionLogin<Method extends keyof users.LoginParameters>(
   }
 
   const user = await users.login(
-    ctx.state.iguhealth,
+    ctx.state.iguhealth.db,
     ctx.state.iguhealth.tenant,
     method,
     credentials,

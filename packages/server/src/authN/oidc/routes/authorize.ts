@@ -1,11 +1,11 @@
 import React from "react";
-import * as db from "zapatos/db";
 
 import { ScopeVerifyForm } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
 import * as codes from "../../db/code/index.js";
+import * as scopes from "../../db/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
@@ -78,14 +78,30 @@ export function authorize(): OIDCRouteHandler {
           redirect_uri: redirectUrl,
         });
       }
-
-      const approvedScopes = await db
-        .selectOne("authorization_scopes", {
-          tenant: ctx.state.iguhealth.tenant,
-          client_id: client.id,
-          user_id: ctx.state.oidc.user?.id,
-        })
-        .run(ctx.state.iguhealth.db);
+      const clientId = ctx.state.oidc.client?.id;
+      if (!clientId) {
+        throw new OIDCError({
+          error: "invalid_request",
+          error_description: `Client ID not found.`,
+          state,
+          redirect_uri: redirectUrl,
+        });
+      }
+      const userId = ctx.state.oidc.user?.id;
+      if (!userId) {
+        throw new OIDCError({
+          error: "invalid_request",
+          error_description: `User ID not found.`,
+          state,
+          redirect_uri: redirectUrl,
+        });
+      }
+      const approvedScopes = await scopes.getApprovedScope(
+        ctx.state.iguhealth.db,
+        ctx.state.iguhealth.tenant,
+        clientId,
+        userId,
+      );
 
       // If Scopes are misaligned.
       if (approvedScopes?.scope !== ctx.state.oidc.parameters.scope) {
@@ -103,7 +119,7 @@ export function authorize(): OIDCRouteHandler {
       }
 
       const code = await codes.create(
-        ctx.state.iguhealth,
+        ctx.state.iguhealth.db,
         ctx.state.iguhealth.tenant,
         {
           type: "oauth2_code_grant",

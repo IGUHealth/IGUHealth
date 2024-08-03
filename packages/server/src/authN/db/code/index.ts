@@ -5,8 +5,6 @@ import * as s from "zapatos/schema";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { is_expired, is_not_expired } from "./utilities.js";
 
 export type AuthorizationCode = s.authorization_code.JSONSelectable & {
@@ -14,7 +12,7 @@ export type AuthorizationCode = s.authorization_code.JSONSelectable & {
 };
 
 export async function get(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   id: string,
 ): Promise<AuthorizationCode | undefined> {
@@ -26,10 +24,11 @@ export async function get(
         extras: { is_expired },
       },
     )
-    .run(ctx.db);
+    .run(pg);
 }
+
 export async function search(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   where: s.authorization_code.Whereable,
 ): Promise<AuthorizationCode[]> {
@@ -43,10 +42,10 @@ export async function search(
     .select("authorization_code", db.sql`${whereable} AND ${is_not_expired}`, {
       extras: { is_expired },
     })
-    .run(ctx.db);
+    .run(pg);
 }
 export async function create(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   model: Pick<
     s.authorization_code.Insertable,
@@ -71,15 +70,15 @@ export async function create(
       },
       { extras: { is_expired } },
     )
-    .run(ctx.db);
+    .run(pg);
 }
 export async function update(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   id: string,
   update: s.authorization_code.Updatable,
 ): Promise<AuthorizationCode> {
-  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return db.serializable(pg, async (tx) => {
     const where: s.authorization_code.Whereable = {
       scope: "tenant",
       tenant,
@@ -87,7 +86,7 @@ export async function update(
     };
     const authorization_codes = await db
       .selectOne("authorization_code", where)
-      .run(ctx.db);
+      .run(tx);
 
     if (!authorization_codes)
       throw new OperationError(outcomeError("not-found", "Code not found."));
@@ -103,17 +102,17 @@ export async function update(
         where,
         { extras: { is_expired } },
       )
-      .run(ctx.db);
+      .run(tx);
     return updatedAuthorizationCode[0];
   });
 }
 
 export async function remove(
-  ctx: KoaExtensions.IGUHealthServices["iguhealth"],
+  pg: db.Queryable,
   tenant: TenantId,
   where_: s.authorization_code.Whereable,
 ): Promise<void> {
-  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  db.serializable(pg, async (tx) => {
     const where: s.authorization_code.Whereable = {
       ...where_,
       scope: "tenant",
@@ -121,7 +120,7 @@ export async function remove(
     };
     const authorization_code = await db
       .select("authorization_code", where)
-      .run(ctx.db);
+      .run(tx);
     if (authorization_code.length > 1) {
       throw new OperationError(
         outcomeError(
@@ -130,6 +129,6 @@ export async function remove(
         ),
       );
     }
-    await db.deletes("authorization_code", where).run(ctx.db);
+    await db.deletes("authorization_code", where).run(tx);
   });
 }
