@@ -9,6 +9,7 @@ import * as scopes from "../../db/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
+import * as scopeParse from "../scopes/parse.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 
 const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
@@ -104,7 +105,10 @@ export function authorize(): OIDCRouteHandler {
       );
 
       // If Scopes are misaligned.
-      if (approvedScopes?.scope !== ctx.state.oidc.parameters.scope) {
+      if (
+        approvedScopes?.scope !==
+        scopeParse.toString(ctx.state.oidc.scopes ?? [])
+      ) {
         ctx.status = 200;
         ctx.body = views.renderString(
           React.createElement(ScopeVerifyForm, {
