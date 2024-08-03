@@ -32,6 +32,7 @@ import {
 import { User } from "../authN/db/users/index.js";
 import { getIssuer } from "../authN/oidc/constants.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
+import { Scope } from "../authN/oidc/scopes/parse.js";
 import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
@@ -71,6 +72,7 @@ export namespace KoaExtensions {
         redirect_uri?: string;
         scope?: string;
       };
+      scopes?: Scope[];
     };
   };
 

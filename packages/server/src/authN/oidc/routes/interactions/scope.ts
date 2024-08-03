@@ -7,6 +7,7 @@ import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
 import type { ScopeVerificationBody } from "../../schemas/authorize_scope_body.schema.js";
 import ScopeVerificationBodySchema from "../../schemas/authorize_scope_body.schema.json" with { type: "json" };
+import * as scopeParse from "../../scopes/parse.js";
 import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 
 function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
@@ -40,6 +41,10 @@ export function scopeVerifyPost(): OIDCRouteHandler {
       }
 
       if (body.accept === "on") {
+        const parsedScopes = scopeParse.toString(
+          scopeParse.parseScopes(body.scopes.join(" ")),
+        );
+
         await db
           .upsert(
             "authorization_scopes",
@@ -48,7 +53,7 @@ export function scopeVerifyPost(): OIDCRouteHandler {
                 tenant: ctx.state.iguhealth.tenant,
                 client_id: ctx.state.oidc.client?.id as string,
                 user_id: ctx.state.oidc.user?.id as string,
-                scope: body.scopes.join(" "),
+                scope: parsedScopes,
               },
             ],
             db.constraint("authorization_scopes_pkey"),

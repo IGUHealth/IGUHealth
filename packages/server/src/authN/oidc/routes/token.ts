@@ -118,9 +118,13 @@ export function tokenPost<
           ctx.state.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
-            const code = await codes.search(fhirContext, fhirContext.tenant, {
-              code: tokenParameters.code,
-            });
+            const code = await codes.search(
+              fhirContext.db,
+              fhirContext.tenant,
+              {
+                code: tokenParameters.code,
+              },
+            );
 
             if (
               tokenParameters.client_id &&
@@ -164,7 +168,7 @@ export function tokenPost<
             }
 
             const user = await users.get(
-              fhirContext,
+              fhirContext.db,
               fhirContext.tenant,
               code[0].user_id,
             );
@@ -175,7 +179,7 @@ export function tokenPost<
                 error_description: "Invalid user",
               });
 
-            await codes.remove(fhirContext, fhirContext.tenant, {
+            await codes.remove(fhirContext.db, fhirContext.tenant, {
               id: code[0].id,
             });
 

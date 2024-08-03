@@ -168,7 +168,7 @@ function updateUserTableMiddleware<
 
         try {
           await users.create(
-            context.ctx,
+            context.ctx.db,
             context.ctx.tenant,
             membershipToUser(membership),
           );
@@ -198,7 +198,7 @@ function updateUserTableMiddleware<
                 outcomeFatal("not-found", "Membership not found."),
               );
 
-            await users.remove(context.ctx, context.ctx.tenant, {
+            await users.remove(context.ctx.db, context.ctx.tenant, {
               fhir_user_versionid: parseInt(versionId),
             });
 
@@ -246,7 +246,7 @@ function updateUserTableMiddleware<
               );
 
             await users.update(
-              context.ctx,
+              context.ctx.db,
               context.ctx.tenant,
               existingUser.id,
               membershipToUser(membership),

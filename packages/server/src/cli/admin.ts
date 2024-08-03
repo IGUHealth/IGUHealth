@@ -102,11 +102,11 @@ async function createTenant(
             message: "Enter root user password.",
           });
 
-      const user = await users.search(ctx, tenant.id as TenantId, {
+      const user = await users.search(ctx.db, tenant.id as TenantId, {
         fhir_user_id: membership.id as string,
       });
 
-      await users.update(ctx, tenant.id as TenantId, user[0].id, {
+      await users.update(ctx.db, tenant.id as TenantId, user[0].id, {
         ...user[0],
         password,
         email_verified: true,

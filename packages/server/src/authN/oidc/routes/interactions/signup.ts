@@ -47,7 +47,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await users.search(ctx.state.iguhealth, ctx.state.iguhealth.tenant, {
+    await users.search(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
       email,
     })
   )[0];
@@ -65,7 +65,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     );
 
     const user = await users.search(
-      ctx.state.iguhealth,
+      ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,

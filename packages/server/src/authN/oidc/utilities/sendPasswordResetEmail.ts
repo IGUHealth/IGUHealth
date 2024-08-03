@@ -24,7 +24,7 @@ async function shouldSendPasswordReset(
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await codes.search(ctx, ctx.tenant, {
+  const existingCodes = await codes.search(ctx.db, ctx.tenant, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -52,7 +52,7 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await codes.create(ctx, ctx.tenant, {
+  const code = await codes.create(ctx.db, ctx.tenant, {
     type: "password_reset",
     user_id: user.id,
     expires_in: "15 minutes",
