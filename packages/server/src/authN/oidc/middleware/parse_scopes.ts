@@ -11,7 +11,7 @@ import { OIDCError } from "./oauth_error_handling.js";
  * Used in subsequent oidc routes.
  * @returns Koa.Middleware
  */
-export function validateScopesMiddleware(): Koa.Middleware<
+export function parseScopesMiddleware(): Koa.Middleware<
   KoaExtensions.IGUHealth,
   KoaExtensions.KoaIGUHealthContext
 > {

@@ -9,7 +9,7 @@ import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
-import { validateScopesMiddleware as parseScopesMiddleware } from "./middleware/parse_scopes.js";
+import { parseScopesMiddleware } from "./middleware/parse_scopes.js";
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
