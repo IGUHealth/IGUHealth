@@ -1,6 +1,7 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
@@ -8,7 +9,6 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 
 /**
  * Determine whether or not the policy access has access to the resource type.

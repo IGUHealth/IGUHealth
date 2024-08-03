@@ -9,6 +9,7 @@ import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
+import { validateScopesMiddleware } from "./middleware/validate_scopes.js";
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
@@ -107,6 +108,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       optional: ["scope", "redirect_uri"],
     }),
     clientInjectFHIRMiddleware(),
+    validateScopesMiddleware(),
     routes.loginGET(),
   );
   managementRouter.post(
@@ -164,6 +166,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       optional: ["scope", "redirect_uri"],
     }),
     clientInjectFHIRMiddleware(),
+    validateScopesMiddleware(),
     routes.authorize(),
   );
 
@@ -196,6 +199,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
       optional: ["scope", "redirect_uri"],
     }),
     clientInjectFHIRMiddleware(),
+    validateScopesMiddleware(),
     routes.scopeVerifyPost(),
   );
 
