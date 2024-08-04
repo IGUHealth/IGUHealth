@@ -106,7 +106,7 @@ export function authorize(): OIDCRouteHandler {
 
       // If Scopes are misaligned.
       if (
-        approvedScopes?.scope !==
+        scopeParse.toString(approvedScopes) !==
         scopeParse.toString(ctx.state.oidc.scopes ?? [])
       ) {
         ctx.status = 200;

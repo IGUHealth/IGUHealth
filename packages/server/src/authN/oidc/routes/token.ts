@@ -22,6 +22,7 @@ import {
   getSigningKey,
 } from "../../certifications.js";
 import * as codes from "../../db/code/index.js";
+import * as scopes from "../../db/scopes/index.js";
 import * as users from "../../db/users/index.js";
 import {
   authenticateClientCredentials,
@@ -31,6 +32,7 @@ import { getIssuer } from "../constants.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
 import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
+import * as parseScopes from "../scopes/parse.js";
 
 function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
@@ -69,6 +71,36 @@ function verifyTokenParameters(body: unknown): body is OAuth2TokenBody {
   return true;
 }
 
+function getIDTokenPayload(
+  user: users.User,
+  approvedScopes: parseScopes.Scope[],
+):
+  | Pick<
+      IDTokenPayload<s.user_role>,
+      "email" | "email_verified" | "name" | "given_name" | "family_name"
+    >
+  | undefined {
+  if (!approvedScopes.find((v) => v.type === "openid")) {
+    return undefined;
+  }
+  const idTokenPayload: Partial<IDTokenPayload<s.user_role>> = {};
+  if (approvedScopes.find((v) => v.type === "email")) {
+    idTokenPayload.email = user.email;
+    idTokenPayload.email_verified = user.email_verified
+      ? user.email_verified
+      : false;
+  }
+  if (approvedScopes.find((v) => v.type === "profile")) {
+    idTokenPayload.name = [user.first_name, user.last_name]
+      .filter((v) => v !== null && v !== undefined)
+      .join(" ");
+    idTokenPayload.given_name = user.first_name ?? undefined;
+    idTokenPayload.family_name = user.last_name ?? undefined;
+  }
+
+  return idTokenPayload;
+}
+
 /**
  * Returns an access token that can be used to access protected resources.
  */
@@ -78,7 +110,7 @@ export function tokenPost<
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const clientApplication = ctx.state.oidc.client;
-    if (!clientApplication) {
+    if (!clientApplication?.id) {
       throw new OIDCError({
         error: "invalid_client",
         error_description: "Could not find client.",
@@ -199,41 +231,35 @@ export function tokenPost<
               sub: user.id as Subject,
             };
 
-            const approvedScopes = await db
-              .selectOne("authorization_scopes", {
-                tenant: ctx.state.iguhealth.tenant,
-                client_id: clientApplication.id,
-                user_id: code[0].user_id,
-              })
-              .run(ctx.state.iguhealth.db);
+            const approvedScopes = await scopes.getApprovedScope(
+              fhirContext.db,
+              ctx.state.iguhealth.tenant,
+              clientApplication.id,
+              code[0].user_id,
+            );
 
-            return {
-              scope: approvedScopes?.scope,
+            const idTokenPayload = getIDTokenPayload(user, approvedScopes);
+
+            const body = {
+              scope: parseScopes.toString(approvedScopes),
               access_token: await createToken<AccessTokenPayload<s.user_role>>({
                 signingKey,
                 payload: accessTokenPayload,
                 expiresIn: `2h`,
               }),
-              id_token: await createToken<IDTokenPayload<s.user_role>>({
-                signingKey,
-                expiresIn: `2h`,
-                payload: {
-                  ...accessTokenPayload,
-                  email: user.email,
-                  email_verified: user.email_verified
-                    ? user.email_verified
-                    : false,
-                  name: [user.first_name, user.last_name]
-                    .filter((v) => v !== undefined)
-                    .join(" "),
-                  given_name: user.first_name ? user.first_name : undefined,
-                  family_name: user.last_name ? user.last_name : undefined,
-                },
-              }),
+              id_token: idTokenPayload
+                ? await createToken<IDTokenPayload<s.user_role>>({
+                    signingKey: signingKey,
+                    payload: { ...accessTokenPayload, ...idTokenPayload },
+                    expiresIn: `2h`,
+                  })
+                : undefined,
               token_type: "Bearer",
               // 2 hours in seconds
               expires_in: 7200,
             };
+
+            return body;
           },
         );
 
