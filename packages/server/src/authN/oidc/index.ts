@@ -7,6 +7,7 @@ import { KoaExtensions } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
 import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
+import { injectApprovedScopesMiddleware } from "./middleware/inject_approved_scopes.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import { parseScopesMiddleware } from "./middleware/parse_scopes.js";
@@ -127,8 +128,8 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     clientInjectFHIRMiddleware(),
     routes.loginPOST(),
   );
-  // Adding both as options to either get or post.
 
+  // Adding both as options to either get or post.
   managementRouter.get(
     OIDC_ROUTES.LOGOUT_GET,
     "/interaction/logout",
@@ -209,6 +210,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     injectClientCredentialsMiddleware(),
     clientInjectFHIRMiddleware(),
+    injectApprovedScopesMiddleware(),
     routes.tokenPost(),
   );
   return managementRouter;
