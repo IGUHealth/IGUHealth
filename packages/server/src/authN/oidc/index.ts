@@ -127,8 +127,8 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     clientInjectFHIRMiddleware(),
     routes.loginPOST(),
   );
-  // Adding both as options to either get or post.
 
+  // Adding both as options to either get or post.
   managementRouter.get(
     OIDC_ROUTES.LOGOUT_GET,
     "/interaction/logout",
