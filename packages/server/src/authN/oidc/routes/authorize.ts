@@ -114,7 +114,7 @@ export function authorize(): OIDCRouteHandler {
           React.createElement(ScopeVerifyForm, {
             logo: "/public/img/logo.svg",
             title: "IGUHealth",
-            scopes: ctx.state.oidc.parameters.scope?.split(" "),
+            scopes: scopeParse.toString(ctx.state.oidc.scopes ?? []).split(" "),
             header: "Scope Verification",
             actionURL: ctx.url,
           }),
