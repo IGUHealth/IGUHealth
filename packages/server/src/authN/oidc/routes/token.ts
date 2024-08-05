@@ -5,16 +5,21 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { code, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
-  IDTokenPayload,
+  SMARTPayload,
   Subject,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import {
+  IGUHealthServerCTX,
+  KoaExtensions,
+  asRoot,
+} from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import {
   getCertKey,
@@ -71,19 +76,27 @@ function verifyTokenParameters(body: unknown): body is OAuth2TokenBody {
   return true;
 }
 
-function getIDTokenPayload(
+async function getIDTokenPayload(
+  iguhealth: IGUHealthServerCTX,
   user: users.User,
   approvedScopes: parseScopes.Scope[],
-):
+): Promise<
   | Pick<
-      IDTokenPayload<s.user_role>,
-      "email" | "email_verified" | "name" | "given_name" | "family_name"
+      SMARTPayload<s.user_role>,
+      | "email"
+      | "email_verified"
+      | "name"
+      | "given_name"
+      | "family_name"
+      | "fhirUser"
     >
-  | undefined {
+  | undefined
+> {
   if (!approvedScopes.find((v) => v.type === "openid")) {
     return undefined;
   }
-  const idTokenPayload: Partial<IDTokenPayload<s.user_role>> = {};
+
+  const idTokenPayload: Partial<SMARTPayload<s.user_role>> = {};
   if (approvedScopes.find((v) => v.type === "email")) {
     idTokenPayload.email = user.email;
     idTokenPayload.email_verified = user.email_verified
@@ -96,6 +109,17 @@ function getIDTokenPayload(
       .join(" ");
     idTokenPayload.given_name = user.first_name ?? undefined;
     idTokenPayload.family_name = user.last_name ?? undefined;
+  }
+  if (user.fhir_user_id && approvedScopes.find((v) => v.type === "fhirUser")) {
+    const membership = await iguhealth.client.read(
+      iguhealth,
+      R4,
+      "Membership",
+      user.fhir_user_id as id,
+    );
+    if (membership?.link) {
+      idTokenPayload.fhirUser = membership.link.reference;
+    }
   }
 
   return idTokenPayload;
@@ -238,7 +262,11 @@ export function tokenPost<
               code[0].user_id,
             );
 
-            const idTokenPayload = getIDTokenPayload(user, approvedScopes);
+            const idTokenPayload = await getIDTokenPayload(
+              asRoot(ctx.state.iguhealth),
+              user,
+              approvedScopes,
+            );
 
             const body = {
               scope: parseScopes.toString(approvedScopes),
@@ -248,7 +276,7 @@ export function tokenPost<
                 expiresIn: `2h`,
               }),
               id_token: idTokenPayload
-                ? await createToken<IDTokenPayload<s.user_role>>({
+                ? await createToken<SMARTPayload<s.user_role>>({
                     signingKey: signingKey,
                     payload: { ...accessTokenPayload, ...idTokenPayload },
                     expiresIn: `2h`,
