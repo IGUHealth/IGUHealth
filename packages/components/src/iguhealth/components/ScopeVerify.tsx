@@ -1,31 +1,65 @@
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import classNames from "classnames";
 import React from "react";
 
+import { generateTailwindColorFromValue } from "../utilities";
 import { Container } from "./Container";
 
 export interface ScopeVerifyProps {
   title?: string;
   header?: string;
   scopes?: string[];
+  client: {
+    name: string;
+    logoUri?: string;
+  };
   logo?: string;
   actionURL: string;
 }
 
 export const ScopeVerifyForm = ({
   title = "IGUHealth",
-  header = "Scopes",
+  header = "Authorize",
+  client,
   scopes = [],
   logo,
   actionURL,
 }: ScopeVerifyProps) => {
   return (
     <Container logo={logo} title={title}>
-      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-        {header}
-      </h1>
       <div>
-        <span>The application is requesting the following scopes:</span>
+        <div className="flex flex-col justify-center items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white space-y-2">
+          <div>
+            {client.logoUri ? (
+              <img
+                className="w-12 h-12 rounded-full"
+                src={client.logoUri}
+                alt="logo"
+              />
+            ) : (
+              <div
+                className={classNames(
+                  "flex  justify-center items-center w-12 h-12 rounded-full",
+                  `bg-${generateTailwindColorFromValue(client.name)}-100`,
+                  `text-${generateTailwindColorFromValue(client.name)}-800`,
+                  `dark:bg-${generateTailwindColorFromValue(client.name)}-800`,
+                  `dark:text-${generateTailwindColorFromValue(client.name)}-100`,
+                )}
+              >
+                <div>{client.name.substring(0, 1).toUpperCase()}</div>
+              </div>
+            )}
+          </div>
+          <div>{client.name}</div>
+        </div>
       </div>
+      <div>
+        <span className="text-sm text-gray-500">
+          The above app is requesting the following permissions. Please review
+          and either consent or deny access for the app.
+        </span>
+      </div>
+
       <div className="max-h-72 overflow-auto">
         <table className="border-collapse  list-inside list-disc w-full">
           {scopes.map((scope) => (

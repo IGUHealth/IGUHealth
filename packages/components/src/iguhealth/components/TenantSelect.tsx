@@ -3,6 +3,7 @@ import React from "react";
 
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 
+import { generateTailwindColorFromValue } from "../utilities";
 import { Container } from "./Container";
 
 export interface TenantSelectProps {
@@ -11,15 +12,6 @@ export interface TenantSelectProps {
   generateTenantURL: (email: string, tenantId: TenantId) => string;
   title?: string;
   logo?: string;
-}
-
-function generateTailwindColorFromValue(value: string) {
-  const colors = ["red", "yellow", "green", "blue", "indigo", "purple", "pink"];
-
-  // Generate tailwind color using value
-  const index = value.charCodeAt(0) % colors.length;
-
-  return colors[index];
 }
 
 export const InitialDisplay = ({ value }: { value: string }) => {

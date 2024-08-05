@@ -1,7 +1,6 @@
 import React from "react";
 
 import { ScopeVerifyForm } from "@iguhealth/components";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
 import * as codes from "../../db/code/index.js";
@@ -55,12 +54,17 @@ export function authorize(): OIDCRouteHandler {
   return async (ctx) => {
     const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
     const client = ctx.state.oidc.client;
-    if (!client)
-      throw new OperationError(outcomeError("invalid", "Client not found."));
+    if (!client) {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "Client not found.",
+      });
+    }
     if (isInvalidRedirectUrl(redirectUrl, client)) {
-      throw new OperationError(
-        outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
-      );
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: `Redirect URI '${redirectUrl}' not found.`,
+      });
     }
 
     if (await ctx.state.oidc.isAuthenticated(ctx)) {
@@ -79,8 +83,7 @@ export function authorize(): OIDCRouteHandler {
           redirect_uri: redirectUrl,
         });
       }
-      const clientId = ctx.state.oidc.client?.id;
-      if (!clientId) {
+      if (!client.id) {
         throw new OIDCError({
           error: "invalid_request",
           error_description: `Client ID not found.`,
@@ -100,7 +103,7 @@ export function authorize(): OIDCRouteHandler {
       const approvedScopes = await scopes.getApprovedScope(
         ctx.state.iguhealth.db,
         ctx.state.iguhealth.tenant,
-        clientId,
+        client.id,
         userId,
       );
 
@@ -114,6 +117,10 @@ export function authorize(): OIDCRouteHandler {
           React.createElement(ScopeVerifyForm, {
             logo: "/public/img/logo.svg",
             title: "IGUHealth",
+            client: {
+              name: client.name,
+              logoUri: client.logoUri,
+            },
             scopes: scopeParse.toString(ctx.state.oidc.scopes ?? []).split(" "),
             header: "Scope Verification",
             actionURL: ctx.url,
