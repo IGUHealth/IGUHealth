@@ -5,10 +5,16 @@ import {
   Button,
   Input,
   Loading,
+  Table,
   Toaster,
   useIGUHealth,
 } from "@iguhealth/components";
+import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/versions";
+import {
+  IguhealthDeleteScope,
+  IguhealthListScopes,
+} from "@iguhealth/generated-ops/lib/r4/ops";
 import { IDTokenPayload } from "@iguhealth/jwt";
 
 function copytoClipboard(token: string | undefined) {
@@ -47,29 +53,129 @@ function Copyable({
   );
 }
 
+function Scopes() {
+  const iguhealth = useIGUHealth();
+  const [scopes, setScopes] = React.useState<
+    IguhealthListScopes.Output["scopes"]
+  >([]);
+  const fetchScopes = React.useMemo(() => {
+    return () => {
+      iguhealth
+        .getClient()
+        .invoke_system(IguhealthListScopes.Op, {}, R4, {})
+        .then((res) => {
+          setScopes(res.scopes);
+        });
+    };
+  }, [iguhealth]);
+  React.useEffect(() => {
+    fetchScopes();
+  }, []);
+  const deleteScopes = React.useMemo(() => {
+    return (client_id: id) => {
+      const deletePromise = iguhealth
+        .getClient()
+        .invoke_system(IguhealthDeleteScope.Op, {}, R4, {
+          client_id,
+        })
+        .then((res) => {
+          if (res.issue[0]?.code !== "informational") {
+            throw new Error("Failed to delete");
+          }
+          return res;
+        });
+      Toaster.promise(deletePromise, {
+        loading: "Deleting Resource",
+        success: (res) => {
+          const result = res as OperationOutcome;
+          fetchScopes();
+          return result.issue[0].diagnostics ?? "Deleted";
+        },
+        error: (error) => {
+          console.error(error);
+          return "Failed to delete authorization.";
+        },
+      });
+    };
+  }, [iguhealth]);
+
+  return (
+    <div className="space-y-2">
+      <h2 className="text-xl font-semibold ">Authorized Apps</h2>
+      <div className="flex flex-col p-2 space-y-2">
+        <Table
+          columns={[
+            {
+              id: "client_id",
+              content: "Client ID",
+              selectorType: "fhirpath",
+              selector: "$this.client_id",
+            },
+            {
+              id: "scopes",
+              content: "Scopes",
+              selectorType: "fhirpath",
+              selector: "$this.scopes",
+            },
+            {
+              id: "created_at",
+              content: "Authorized At",
+              selectorType: "fhirpath",
+              selector: "$this.created_at",
+            },
+            {
+              id: "actions",
+              content: "Actions",
+              selectorType: "fhirpath",
+              selector: "$this",
+              renderer: (data) => {
+                const scope = data[0] as NonNullable<
+                  IguhealthListScopes.Output["scopes"]
+                >[number];
+
+                return (
+                  <span
+                    onClick={() => {
+                      deleteScopes(scope.client_id);
+                    }}
+                    className="cursor-pointer font-semibold text-red-600 hover:text-red-700"
+                  >
+                    Revoke
+                  </span>
+                );
+              },
+            },
+          ]}
+          data={scopes ?? []}
+        />
+      </div>
+    </div>
+  );
+}
+
 function SettingDisplay({ user }: Readonly<SettingProps>) {
   const iguhealth = useIGUHealth();
   return (
-    <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold mb-8">Settings</h2>
-      <div className="mb-2">
+    <div className="flex flex-col flex-1 space-y-4">
+      <h2 className="text-2xl font-semibold mb-0">Settings</h2>
+      <div className="space-y-2">
         <h2 className="text-xl font-semibold ">User Information</h2>
-        <div className="flex flex-col p-2">
-          <div className="mb-2">
+        <div className="flex flex-col p-2 space-y-2">
+          <div>
             <label className="block font-medium">Name:</label>
             <span>{user?.name}</span>
           </div>
-          <div className="mb-2">
+          <div>
             <label className="block font-medium">Email:</label>
             <span>{user?.email}</span>
           </div>
         </div>
       </div>
-      <div className="mb-2">
+      <div className="space-y-2">
         <h2 className="text-xl font-semibold">Endpoints</h2>
-        <div className="pl-2 mt-4 space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">FHIR</h3>
+        <div className="pl-2 space-y-2">
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold ">FHIR</h3>
             <div className="pl-2 space-y-2">
               <div className="flex flex-col ">
                 <Copyable
@@ -93,8 +199,8 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
               </div>
             </div>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2">OpenID Connect</h3>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold ">OpenID Connect</h3>
             <div className="pl-2 space-y-2">
               <div className="flex flex-col ">
                 <Copyable label="Discovery" value={iguhealth.well_known_uri} />
@@ -115,6 +221,7 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
           </div>
         </div>
       </div>
+      <Scopes />
     </div>
   );
 }

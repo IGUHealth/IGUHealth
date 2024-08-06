@@ -5318,6 +5318,107 @@ export namespace IguhealthMessagePost {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthDeleteScope {
+  export type Input = { client_id: fhirTypes.id };
+  export type Output = fhirTypes.OperationOutcome;
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-delete-scope",
+    url: "https://iguhealth.app/OperationDefinition/delete-scopes",
+    version: "4.0.1",
+    name: "Delete Scope",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Delete scope from user accepted scopes for the client.",
+    code: "delete-scope",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "client_id",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Client for which scopes are being shown.",
+        type: "id",
+      },
+      {
+        name: "return",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "Result of the delete operation.",
+        type: "OperationOutcome",
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
+export namespace IguhealthListScopes {
+  export type Input = Record<string, never>;
+  export type Output = {
+    scopes?: Array<{
+      client_id: fhirTypes.id;
+      scopes: fhirTypes.string;
+      created_at: fhirTypes.dateTime;
+    }>;
+  };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-list-scopes",
+    url: "https://iguhealth.app/OperationDefinition/list-scopes",
+    version: "4.0.1",
+    name: "Show Scopes",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Show list of user accepted scopes for apps.",
+    code: "scopes",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "scopes",
+        use: "out",
+        min: 0,
+        max: "*",
+        documentation: "The result of the operation.",
+        part: [
+          {
+            name: "client_id",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "Client for which scopes are being shown.",
+            type: "id",
+          },
+          {
+            name: "scopes",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "Scopes user accepted.",
+            type: "string",
+          },
+          {
+            name: "created_at",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "When the scopes were accepted.",
+            type: "dateTime",
+          },
+        ],
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
 export namespace IguhealthUsageStatistics {
   export type Input = Record<string, never>;
   export type Output = {

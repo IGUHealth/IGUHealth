@@ -2,6 +2,7 @@ import { Redis } from "ioredis";
 import { pino } from "pino";
 
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
@@ -9,7 +10,6 @@ import {
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
@@ -18,6 +18,8 @@ import InlineExecutioner from "../fhir-operation-executors/providers/local/index
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
 import ResourceValidateInvoke from "../fhir-operation-executors/providers/local/resource_validate.js";
+import IguHealthDeleteScope from "../fhir-operation-executors/providers/local/scopes/delete-scope.js";
+import IguHealthListScopes from "../fhir-operation-executors/providers/local/scopes/list-scopes.js";
 import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/snapshot.js";
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
@@ -156,6 +158,8 @@ export function createClient(): {
     IguhealthMessagePostInvoke,
     IguhealthInviteUserInvoke,
     IguhealthUsageStatisticsInvoke,
+    IguHealthListScopes,
+    IguHealthDeleteScope,
   ]);
   const client = createFHIRClient([
     // OP INVOCATION
