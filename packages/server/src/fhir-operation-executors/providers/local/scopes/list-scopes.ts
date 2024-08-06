@@ -1,4 +1,4 @@
-import { dateTime } from "@iguhealth/fhir-types/r4/types";
+import { dateTime, id } from "@iguhealth/fhir-types/r4/types";
 import { IguhealthListScopes } from "@iguhealth/generated-ops/r4";
 
 import * as scopes from "../../../../authN/db/scopes/index.js";
@@ -16,7 +16,7 @@ const IguhealthEncryptInvoke = InlineOperation(
 
     return {
       scopes: approvedScopes.map((scope) => ({
-        client_id: scope.client_id,
+        client_id: scope.client_id as id,
         scopes: scope.scope,
         created_at: scope.created_at as dateTime,
       })),
