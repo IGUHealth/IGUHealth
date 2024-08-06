@@ -134,14 +134,14 @@ function Scopes() {
                 >[number];
 
                 return (
-                  <span
+                  <div
                     onClick={() => {
                       deleteScopes(scope.client_id);
                     }}
                     className="cursor-pointer font-semibold text-red-600 hover:text-red-700"
                   >
                     Revoke
-                  </span>
+                  </div>
                 );
               },
             },
