@@ -1,13 +1,9 @@
-import createHTTPClient from "@iguhealth/client/http";
-import {
-  AccessToken,
-  CUSTOM_CLAIMS,
-  IDToken,
-  TenantId,
-  parseJwt,
-} from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS, TenantId, parseJwt } from "@iguhealth/jwt";
 
-import type { IGUHealthContextState } from "./IGUHealthContext";
+import type {
+  AccessTokenResponse,
+  IGUHealthContextState,
+} from "./IGUHealthContext";
 import { conditionalAddTenant } from "./utilities";
 
 export type OIDC_WELL_KNOWN = {
@@ -28,8 +24,13 @@ type SUCCESS_ACTION = {
   domain: string;
   tenant?: TenantId;
   clientId: string;
-  payload: { id_token: IDToken<string>; access_token: AccessToken<string> };
-  reInitiliaze: () => void;
+  payload: AccessTokenResponse;
+  reAuthenticate: (context: IGUHealthContextState) => void;
+};
+
+type REFRESH_ACTION = {
+  type: "ON_REFRESH";
+  payload: AccessTokenResponse;
 };
 
 type ERROR_ACTION = {
@@ -45,7 +46,7 @@ type LOADING_ACTION = {
   loading: boolean;
 };
 
-type ACTION = SUCCESS_ACTION | ERROR_ACTION | LOADING_ACTION;
+type ACTION = SUCCESS_ACTION | ERROR_ACTION | LOADING_ACTION | REFRESH_ACTION;
 
 export function iguHealthReducer(
   state: IGUHealthContextState,
@@ -66,6 +67,15 @@ export function iguHealthReducer(
         },
       };
     }
+    case "ON_REFRESH": {
+      const user = parseJwt(action.payload.id_token);
+      return {
+        ...state,
+        user,
+        payload: action.payload,
+      };
+    }
+
     case "ON_SUCCESS": {
       const user = parseJwt(action.payload.id_token);
       const rootURL = new URL(
@@ -79,9 +89,8 @@ export function iguHealthReducer(
         isAuthenticated: true,
         well_known_uri: action.well_known_uri,
         well_known: action.well_known,
-        id_token: action.payload.id_token,
+        payload: action.payload,
         user,
-        access_token: action.payload.access_token,
         logout: (redirect: string) => {
           const url = new URL(
             conditionalAddTenant(
@@ -93,13 +102,7 @@ export function iguHealthReducer(
 
           window.location.replace(url);
         },
-        getClient: () => {
-          return createHTTPClient({
-            onAuthenticationError: action.reInitiliaze,
-            getAccessToken: () => Promise.resolve(action.payload.access_token),
-            url: rootURL,
-          });
-        },
+        reAuthenticate: action.reAuthenticate,
       };
     }
     default: {

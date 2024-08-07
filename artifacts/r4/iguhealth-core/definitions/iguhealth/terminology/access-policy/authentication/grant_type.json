@@ -28,6 +28,10 @@
             "display": "Authorization Code"
           },
           {
+            "code": "refresh_token",
+            "display": "Refresh Token"
+          },
+          {
             "code": "basic_auth",
             "display": "Basic Authentication"
           }

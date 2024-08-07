@@ -15,7 +15,7 @@ import { ParsedParameter } from "../url.js";
 
 type DeriveFHIRURL = (fhirVersion: FHIR_VERSION) => string;
 export type HTTPClientState = {
-  onAuthenticationError?: () => void;
+  authenticate?: () => void;
   getAccessToken?: () => Promise<string>;
   url: string | DeriveFHIRURL;
 };
@@ -650,8 +650,8 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, HTTPContext> {
       } catch (e) {
         if (isResponseError(e)) {
           if (e.response.body.issue[0].code === "login") {
-            if (context.state.onAuthenticationError) {
-              context.state.onAuthenticationError();
+            if (context.state.authenticate) {
+              context.state.authenticate();
             }
           }
         }

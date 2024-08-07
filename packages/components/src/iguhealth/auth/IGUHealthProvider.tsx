@@ -1,8 +1,12 @@
 import React, { useEffect, useReducer, useRef } from "react";
 
-import { AccessToken, IDToken, TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt";
 
-import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
+import IGUHealthContext, {
+  AccessTokenResponse,
+  IGUHealthContextState,
+  InitialContext,
+} from "./IGUHealthContext";
 import { OIDC_WELL_KNOWN, iguHealthReducer } from "./reducer";
 import {
   conditionalAddTenant,
@@ -15,13 +19,6 @@ const CODE_CHALLENGE_METHOD = "S256";
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
 const pkce_code_verifier_key = (client_id: string) =>
   `iguhealth_pkce_code_${client_id}`;
-
-type AccessTokenResponse = {
-  access_token: AccessToken<string>;
-  id_token: IDToken<string>;
-  token_type: string;
-  expires_in: number;
-};
 
 function getParsedParameters(): Record<string, string> {
   const parameters = window.location.search
@@ -78,13 +75,15 @@ async function exchangeAuthCodeForToken({
   return response;
 }
 
-async function authorize({
+export async function authorize({
+  refresh,
   authorize_endpoint,
   clientId,
   scope,
   redirectUrl,
   method = "GET",
 }: {
+  refresh?: boolean;
   authorize_endpoint: string;
   clientId: string;
   scope: string;
@@ -100,7 +99,7 @@ async function authorize({
   const parameters: Record<string, string> = {
     client_id: clientId,
     redirect_uri: redirectUrl,
-    scope,
+    scope: refresh ? scope + " offline_access" : scope,
     state,
     response_type: "code",
     code_challenge: code_challenge,
@@ -144,6 +143,30 @@ async function authorize({
   }
 }
 
+export async function refreshToken({
+  token_endpoint,
+  payload,
+}: {
+  payload: AccessTokenResponse;
+  token_endpoint: string;
+}): Promise<AccessTokenResponse> {
+  const parameters: Record<string, unknown> = {
+    grant_type: "refresh_token",
+    refresh_token: payload.refresh_token,
+  };
+  const response = await fetch(token_endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: Object.keys(parameters)
+      .map((key) => `${key}=${parameters[key]}`)
+      .join("&"),
+  }).then((v) => v.json());
+
+  return response as AccessTokenResponse;
+}
+
 export function IGUHealthProvider({
   clientId,
   tenant,
@@ -151,21 +174,51 @@ export function IGUHealthProvider({
   domain,
   scope,
   authorize_method,
-  children,
+  refresh,
   onRedirectCallback,
+  children,
 }: Readonly<{
+  /**
+   * The tenant to use for the authentication.
+   */
   tenant: TenantId;
+  /**
+   * The client id to use for the authentication.
+   */
   clientId: string;
+  /**
+   * The scope to use for the authentication.
+   */
   scope: string;
+  /**
+   * The domain to use for the authentication.
+   */
   domain: string;
+  /**
+   * The redirect url to use for the authentication.
+   */
   redirectUrl: string;
+  /**
+   * The method to use for the authentication.
+   */
   authorize_method?: "GET" | "POST";
+  /**
+   * Whether to use refresh grant for authentication
+   */
+  refresh?: boolean;
+  /**
+   * The children to render.
+   */
   children: React.ReactNode;
+  /**
+   *  Allows for SPA to redirect back to initial page.
+   * @param initialPath Initial path that started authentication
+   */
   onRedirectCallback?: (initialPath: string) => void;
 }>) {
   const [state, dispatch] = useReducer(iguHealthReducer, InitialContext);
-
   const isInitialized = useRef(false);
+  const isRefreshing = useRef(false);
 
   useEffect(() => {
     if (isInitialized.current) {
@@ -204,13 +257,6 @@ export function IGUHealthProvider({
             return;
           }
 
-          const accessTokenPayload = await exchangeAuthCodeForToken({
-            parameters,
-            token_endpoint: well_known.token_endpoint,
-            redirect_uri: redirectUrl,
-            clientId,
-          });
-
           dispatch({
             type: "ON_SUCCESS",
             domain,
@@ -218,15 +264,55 @@ export function IGUHealthProvider({
             well_known,
             tenant,
             clientId,
-            payload: accessTokenPayload,
-            reInitiliaze: () =>
-              authorize({
-                method: authorize_method,
-                authorize_endpoint: well_known.authorization_endpoint,
-                scope,
-                clientId,
-                redirectUrl,
-              }),
+            payload: await exchangeAuthCodeForToken({
+              parameters,
+              token_endpoint: well_known.token_endpoint,
+              redirect_uri: redirectUrl,
+              clientId,
+            }),
+            reAuthenticate: async (state: IGUHealthContextState) => {
+              if (!state.payload) {
+                throw new Error("Payload is missing");
+              }
+
+              if (refresh) {
+                if (!isRefreshing.current) {
+                  isRefreshing.current = true;
+                  try {
+                    const payload = await refreshToken({
+                      payload: state.payload,
+                      token_endpoint: well_known.token_endpoint,
+                    });
+                    dispatch({
+                      type: "ON_REFRESH",
+                      payload,
+                    });
+                  } catch {
+                    // In event that refresh fails we will reauthorize.
+                    // This could happen if refresh token is expired.
+                    authorize({
+                      refresh,
+                      method: authorize_method,
+                      authorize_endpoint: well_known.authorization_endpoint,
+                      scope,
+                      clientId,
+                      redirectUrl,
+                    });
+                  } finally {
+                    isRefreshing.current = false;
+                  }
+                }
+              } else {
+                authorize({
+                  refresh,
+                  method: authorize_method,
+                  authorize_endpoint: well_known.authorization_endpoint,
+                  scope,
+                  clientId,
+                  redirectUrl,
+                });
+              }
+            },
           });
 
           // Allows for SPA to redirect back.
@@ -239,6 +325,7 @@ export function IGUHealthProvider({
             window.location.href.replace(window.location.origin, ""),
           );
           authorize({
+            refresh,
             method: authorize_method,
             authorize_endpoint: well_known.authorization_endpoint,
             clientId,

@@ -1,19 +1,24 @@
 import { createContext } from "react";
 
-import createHTTPClient from "@iguhealth/client/http";
 import { AccessToken, IDToken, IDTokenPayload } from "@iguhealth/jwt";
 
 import { OIDC_WELL_KNOWN } from "./reducer";
+
+export type AccessTokenResponse = {
+  access_token: AccessToken<string>;
+  id_token: IDToken<string>;
+  token_type: string;
+  expires_in: number;
+  refresh_token?: string;
+};
 
 export type IGUHealthContextState = {
   rootURL?: string;
   well_known_uri?: string;
   well_known?: OIDC_WELL_KNOWN;
-  getClient: () => ReturnType<typeof createHTTPClient>;
   logout: (redirect: string) => void;
   isAuthenticated: boolean;
-  access_token?: AccessToken<string>;
-  id_token?: IDToken<string>;
+  payload?: AccessTokenResponse;
   user?: IDTokenPayload<string>;
   loading: boolean;
   error?: {
@@ -22,6 +27,7 @@ export type IGUHealthContextState = {
     uri?: string;
     state?: string;
   };
+  reAuthenticate: (state: IGUHealthContextState) => void;
 };
 
 const stub = (): never => {
@@ -29,12 +35,11 @@ const stub = (): never => {
 };
 
 export const InitialContext: IGUHealthContextState = {
-  getClient: stub,
   logout: stub,
+  reAuthenticate: stub,
   well_known_uri: undefined,
   isAuthenticated: false,
-  access_token: undefined,
-  id_token: undefined,
+  payload: undefined,
   user: undefined,
   loading: false,
   error: undefined,
