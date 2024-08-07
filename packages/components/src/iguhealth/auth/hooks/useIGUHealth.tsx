@@ -1,8 +1,25 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 
-import IGUHealthContext from "../IGUHealthContext";
+import createHTTPClient from "@iguhealth/client/lib/http";
 
-export function useIGUHealth() {
+import IGUHealthContext, { IGUHealthContextState } from "../IGUHealthContext";
+
+export function useIGUHealth(): IGUHealthContextState & {
+  client: ReturnType<typeof createHTTPClient>;
+} {
   const context = useContext(IGUHealthContext);
-  return context;
+
+  const client = useMemo(() => {
+    return createHTTPClient({
+      authenticate: () => context.reAuthenticate(context),
+      getAccessToken: () =>
+        Promise.resolve(context.payload?.access_token as string),
+      url: context.rootURL as string,
+    });
+  }, [context.payload]);
+
+  return {
+    ...context,
+    client,
+  };
 }

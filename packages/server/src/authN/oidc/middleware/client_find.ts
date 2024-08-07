@@ -7,7 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
 import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
 
-async function findClient(
+export async function findClient(
   ctx: Koa.ParameterizedContext<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext

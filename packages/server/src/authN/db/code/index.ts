@@ -112,23 +112,23 @@ export async function remove(
   tenant: TenantId,
   where_: s.authorization_code.Whereable,
 ): Promise<void> {
-  db.serializable(pg, async (tx) => {
-    const where: s.authorization_code.Whereable = {
-      ...where_,
-      scope: "tenant",
-      tenant,
-    };
-    const authorization_code = await db
-      .select("authorization_code", where)
-      .run(tx);
-    if (authorization_code.length > 1) {
-      throw new OperationError(
-        outcomeError(
-          "invariant",
-          "Deletion only allowed for one code at a time.",
-        ),
-      );
-    }
-    await db.deletes("authorization_code", where).run(tx);
-  });
+  const where: s.authorization_code.Whereable = {
+    ...where_,
+    scope: "tenant",
+    tenant,
+  };
+  const authorization_code = await db
+    .select("authorization_code", where)
+    .run(pg);
+
+  if (authorization_code.length > 1) {
+    throw new OperationError(
+      outcomeError(
+        "invariant",
+        "Deletion only allowed for one code at a time.",
+      ),
+    );
+  }
+
+  await db.deletes("authorization_code", where).run(pg);
 }

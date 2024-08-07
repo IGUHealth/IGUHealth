@@ -4,7 +4,7 @@ import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 
 type OIDCScope = {
-  type: "openid" | "profile" | "email";
+  type: "openid" | "profile" | "email" | "offline_access" | "online_access";
 };
 
 type LaunchScope = {
@@ -124,8 +124,21 @@ function parsePermissions(methods: string): {
   return methodsObj;
 }
 
-function isOIDCScope(scope: string): scope is "openid" | "profile" | "email" {
-  return ["openid", "profile", "email"].includes(scope);
+function isOIDCScope(
+  scope: string,
+): scope is
+  | "openid"
+  | "profile"
+  | "email"
+  | "offline_access"
+  | "online_access" {
+  return [
+    "openid",
+    "profile",
+    "email",
+    "offline_access",
+    "online_access",
+  ].includes(scope);
 }
 
 function validateSmartResourceLevel(
@@ -231,6 +244,8 @@ export function toString(scopes: Scope[]): string {
   return scopes
     .reduce((scopeString, scope: Scope) => {
       switch (scope.type) {
+        case "online_access":
+        case "offline_access":
         case "openid":
         case "profile":
         case "email": {

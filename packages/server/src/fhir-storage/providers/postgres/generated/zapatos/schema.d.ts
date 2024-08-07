@@ -19,9 +19,9 @@ declare module 'zapatos/schema' {
 
   /* --- enums --- */
 
-  export type code_type = 'oauth2_code_grant' | 'password_reset';
+  export type code_type = 'oauth2_code_grant' | 'password_reset' | 'refresh_token';
   export namespace every {
-    export type code_type = ['oauth2_code_grant', 'password_reset'];
+    export type code_type = ['oauth2_code_grant', 'password_reset', 'refresh_token'];
   }
   export type fhir_version = 'r4' | 'r4b' | 'r5';
   export namespace every {

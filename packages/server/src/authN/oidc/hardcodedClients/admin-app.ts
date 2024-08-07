@@ -10,7 +10,7 @@ export function ADMIN_APP(): ClientApplication | undefined {
     ? ({
         resourceType: "ClientApplication",
         id: "admin-app" as id,
-        grantType: ["authorization_code" as code],
+        grantType: ["authorization_code" as code, "refresh_token" as code],
         redirectUri: [process.env.ADMIN_APP_REDIRECT_URI],
         name: "Admin Application",
         responseTypes: "code" as code,

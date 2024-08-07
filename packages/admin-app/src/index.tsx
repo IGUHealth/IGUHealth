@@ -83,14 +83,14 @@ function LoginWrapper() {
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
   const iguhealth = useIGUHealth();
-  const client = iguhealth.isAuthenticated ? iguhealth.getClient() : undefined;
+  const client = iguhealth.isAuthenticated ? iguhealth.client : undefined;
   const [c, setClient] = useRecoilState(getClient);
 
   React.useEffect(() => {
     if (client) {
       setClient(createAdminAppClient(client));
     }
-  }, [setClient, iguhealth.isAuthenticated]);
+  }, [setClient, iguhealth.isAuthenticated, iguhealth.client]);
 
   return <>{c ? <>{children}</> : undefined}</>;
 }
@@ -114,6 +114,7 @@ function IGUHealthWrapper() {
 
   return (
     <IGUHealthProvider
+      refresh
       authorize_method="GET"
       scope="openid email profile fhirUser user/*.*"
       domain={REACT_APP_FHIR_BASE_URL || ""}

@@ -45,6 +45,14 @@ export type OAuth2TokenBody =
        * The scope of the access request.
        */
       scope?: string;
+      /**
+       * The client ID used in the initial request. May also be included in the Basic header.
+       */
+      client_id?: string;
+      /**
+       * The client Secret used in the initial request. May also be included in the Basic header.
+       */
+      client_secret?: string;
     }
   | {
       /**
@@ -54,9 +62,9 @@ export type OAuth2TokenBody =
       /**
        * The client ID used in the initial request. May also be included in the Basic header.
        */
-      client_id?: string;
+      client_id: string;
       /**
        * The client Secret used in the initial request. May also be included in the Basic header.
        */
-      client_secret?: string;
+      client_secret: string;
     };

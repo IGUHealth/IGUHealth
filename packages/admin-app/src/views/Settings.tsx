@@ -1,4 +1,5 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 
 import { deriveIGUHealthVersionedURL } from "@iguhealth/client/http";
 import {
@@ -16,6 +17,8 @@ import {
   IguhealthListScopes,
 } from "@iguhealth/generated-ops/lib/r4/ops";
 import { IDTokenPayload } from "@iguhealth/jwt";
+
+import { getClient } from "../db/client";
 
 function copytoClipboard(token: string | undefined) {
   if (token) {
@@ -55,17 +58,15 @@ function Copyable({
 
 function Scopes() {
   const iguhealth = useIGUHealth();
+  const client = useRecoilValue(getClient);
   const [scopes, setScopes] = React.useState<
     IguhealthListScopes.Output["scopes"]
   >([]);
   const fetchScopes = React.useMemo(() => {
     return () => {
-      iguhealth
-        .getClient()
-        .invoke_system(IguhealthListScopes.Op, {}, R4, {})
-        .then((res) => {
-          setScopes(res.scopes);
-        });
+      client.invoke_system(IguhealthListScopes.Op, {}, R4, {}).then((res) => {
+        setScopes(res.scopes);
+      });
     };
   }, [iguhealth]);
   React.useEffect(() => {
@@ -73,8 +74,7 @@ function Scopes() {
   }, []);
   const deleteScopes = React.useMemo(() => {
     return (client_id: id) => {
-      const deletePromise = iguhealth
-        .getClient()
+      const deletePromise = client
         .invoke_system(IguhealthDeleteScope.Op, {}, R4, {
           client_id,
         })

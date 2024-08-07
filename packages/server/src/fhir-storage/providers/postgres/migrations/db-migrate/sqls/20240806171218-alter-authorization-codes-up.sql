@@ -1,0 +1,1 @@
+ALTER TYPE code_type ADD VALUE 'refresh_token';
