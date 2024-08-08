@@ -115,7 +115,7 @@ function IGUHealthWrapper() {
   return (
     <IGUHealthProvider
       refresh
-      authorize_method="POST"
+      authorize_method="GET"
       scope="openid email profile fhirUser user/*.*"
       domain={REACT_APP_FHIR_BASE_URL || ""}
       tenant={deriveTenantID()}
