@@ -236,7 +236,7 @@ export function wellKnownOpenIDConfiguration(): OIDCRouteHandler {
         }) as string,
         process.env.API_URL,
       ).href,
-
+      scopes_supported: ["openid", "profile", "email", "offline_access"],
       token_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
           tenant: ctx.state.iguhealth.tenant,
@@ -299,6 +299,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client-confidential-symmetric",
         "client-public",
         "authorize-post",
+        "permission-offline",
       ],
       code_challenge_methods_supported: ["S256"],
     };
