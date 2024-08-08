@@ -123,7 +123,6 @@ export async function authorize({
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        credentials: "include",
         body: Object.keys(parameters)
           .map((key) => `${key}=${parameters[key]}`)
           .join("&"),

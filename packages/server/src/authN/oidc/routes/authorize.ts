@@ -5,6 +5,8 @@ import { ScopeVerifyForm } from "@iguhealth/components";
 import * as views from "../../../views/index.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
+import * as globalConst from "../../global/constants.js";
+import * as oidcConst from "../constants.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
@@ -112,6 +114,17 @@ export function authorize(): OIDCRouteHandler {
         scopeParse.toString(approvedScopes) !==
         scopeParse.toString(ctx.state.oidc.scopes ?? [])
       ) {
+        const scopePost = ctx.router.url(
+          oidcConst.OIDC_ROUTES.SCOPE_VERIFY_POST,
+          {
+            tenant: ctx.state.iguhealth.tenant,
+          },
+          { query: ctx.state.oidc.parameters },
+        );
+        if (scopePost instanceof Error) {
+          throw scopePost;
+        }
+
         ctx.status = 200;
         ctx.body = views.renderString(
           React.createElement(ScopeVerifyForm, {
@@ -123,7 +136,7 @@ export function authorize(): OIDCRouteHandler {
             },
             scopes: scopeParse.toString(ctx.state.oidc.scopes ?? []).split(" "),
             header: "Scope Verification",
-            actionURL: ctx.url,
+            actionURL: scopePost,
           }),
         );
         return;

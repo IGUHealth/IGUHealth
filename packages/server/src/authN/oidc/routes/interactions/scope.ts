@@ -3,6 +3,7 @@ import * as db from "zapatos/db";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
 import type { ScopeVerificationBody } from "../../schemas/authorize_scope_body.schema.js";
@@ -62,8 +63,15 @@ export function scopeVerifyPost(): OIDCRouteHandler {
             },
           )
           .run(ctx.state.iguhealth.db);
+
         // Redirect back to get request which generates the code etc... as next step.
-        ctx.redirect(ctx.url);
+        const authorizeRoute = ctx.router.url(
+          OIDC_ROUTES.AUTHORIZE_GET,
+          { tenant: ctx.state.iguhealth.tenant },
+          { query: ctx.state.oidc.parameters },
+        );
+        if (authorizeRoute instanceof Error) throw authorizeRoute;
+        ctx.redirect(authorizeRoute);
       } else {
         throw new OIDCError({
           error: "access_denied",
