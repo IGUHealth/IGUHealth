@@ -119,8 +119,8 @@ function createFHIRClient(sources: RouterState["sources"]) {
       createValidationMiddleware(),
       createCapabilitiesMiddleware(),
       createEncryptionMiddleware(["OperationDefinition"]),
-      createAuthorizationMiddleware(),
       createInjectScopesMiddleware(),
+      createAuthorizationMiddleware(),
     ],
     sources,
   );

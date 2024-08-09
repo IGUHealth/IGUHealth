@@ -1,3 +1,4 @@
+import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -6,11 +7,108 @@ import * as scopes from "../../authN/db/scopes/index.js";
 import * as parseScopes from "../../authN/oidc/scopes/parse.js";
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 
+function requestTypeToScope(
+  request: FHIRRequest,
+): keyof parseScopes.SMARTResourceScope["permissions"] {
+  switch (request.type) {
+    case "create-request": {
+      return "create";
+    }
+    case "read-request": {
+      return "read";
+    }
+    case "update-request": {
+      return "update";
+    }
+    case "delete-request": {
+      return "delete";
+    }
+    case "search-request": {
+      return "search";
+    }
+    default: {
+      throw new Error("Not implemented");
+    }
+  }
+}
+
+function fitsResourceType(
+  scope: parseScopes.SMARTResourceScope,
+  request: FHIRRequest,
+): boolean {
+  if (scope.scope === "all") return true;
+  if (request.level === "type" || request.level === "instance") {
+    return scope.resourceType === request.resourceType;
+  }
+  return false;
+}
+
+const smartScopeLevelWeight: Record<
+  parseScopes.SMARTResourceScope["level"],
+  number
+> = {
+  system: 3,
+  user: 2,
+  patient: 1,
+};
+
+function getHighestValueScopeForRequest(
+  scopes: parseScopes.Scope[],
+  request: FHIRRequest,
+): parseScopes.SMARTResourceScope | undefined {
+  const smartScopes = scopes
+    .filter(
+      (scope): scope is parseScopes.SMARTResourceScope =>
+        scope.type === "smart-resource" &&
+        scope.permissions[requestTypeToScope(request)] &&
+        fitsResourceType(scope, request),
+    )
+    .sort(
+      (a, b) => smartScopeLevelWeight[b.level] - smartScopeLevelWeight[a.level],
+    );
+
+  return smartScopes[0];
+}
+
 export function createValidateScopesMiddleware(): MiddlewareAsyncChain<
   unknown,
   IGUHealthServerCTX
 > {
-  return async (_context, _next) => {
+  return async (context, next) => {
+    const scopes = context.ctx.user.scope;
+    const smartScope = getHighestValueScopeForRequest(
+      scopes ?? [],
+      context.request,
+    );
+
+    if (!smartScope) {
+      throw new OperationError(
+        outcomeError("forbidden", "No approved scopes found"),
+      );
+    }
+
+    switch (smartScope.level) {
+      case "patient": {
+        switch (context.request.type) {
+          case "create-request":
+          case "read-request":
+          case "update-request":
+          case "delete-request":
+          case "search-request":
+          default: {
+            throw new OperationError(outcomeError("forbidden", "Forbidden"));
+          }
+        }
+      }
+      // Already established that the user has access to the resource type.
+      // because of existant of the smartScope so pass allong to authorization.
+      case "user": {
+        return next(context);
+      }
+      case "system": {
+        return next(context);
+      }
+    }
     throw new Error("Not implemented");
   };
 }
