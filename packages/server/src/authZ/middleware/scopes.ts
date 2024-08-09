@@ -179,7 +179,7 @@ export function createInjectScopesMiddleware<T>(): MiddlewareAsyncChain<
       // For non user types just automically set to full access.
       case "OperationDefinition":
       case "ClientApplication": {
-        const approvedScopes = parseScopes.parseScopes("user/*.*");
+        const approvedScopes = parseScopes.parseScopes("system/*.*");
         context.ctx.user.scope = approvedScopes;
         return next(context);
       }
