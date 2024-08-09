@@ -5,7 +5,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
-import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
+import getHardCodedClients from "../hardcodedClients/index.js";
 
 export async function findClient(
   ctx: Koa.ParameterizedContext<
@@ -14,9 +14,10 @@ export async function findClient(
   >,
   clientId: string,
 ): Promise<ClientApplication | undefined> {
-  switch (clientId) {
-    case ADMIN_APP()?.id: {
-      return ADMIN_APP();
+  switch (true) {
+    case getHardCodedClients().find((client) => client.id === clientId) !==
+      undefined: {
+      return getHardCodedClients().find((client) => client.id === clientId);
     }
     default: {
       try {

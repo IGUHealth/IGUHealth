@@ -14,7 +14,6 @@ import React from "react";
 import { fileURLToPath } from "url";
 import * as db from "zapatos/db";
 
-import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import { TenantId } from "@iguhealth/jwt";
@@ -34,6 +33,7 @@ import {
 import { createGlobalAuthRouter } from "./authN/global/index.js";
 import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
+import { WORKER_APP } from "./authN/oidc/hardcodedClients/worker-app.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
@@ -44,7 +44,6 @@ import createEncryptionProvider from "./encryption/index.js";
 import loadEnv from "./env.js";
 import {
   createClient,
-  createFHIRAPI,
   createLogger,
   getRedisClient,
 } from "./fhir-api/index.js";
@@ -84,10 +83,9 @@ function fhirResponseSetKoa(
  * Koa middleware that handles FHIR API requests. [Note expectation is ctx.state.iguhealth is set.]
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
  */
-async function FHIRAPIKoaMiddleware(
-  fhirAPI: AsynchronousClient<unknown, IGUHealthServerCTX>,
-): Promise<
-  Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
+function createFHIRKoaMiddleware(): Koa.Middleware<
+  KoaExtensions.IGUHealth,
+  KoaExtensions.KoaIGUHealthContext
 > {
   return async (ctx, next) => {
     let span;
@@ -105,7 +103,7 @@ async function FHIRAPIKoaMiddleware(
     }
 
     try {
-      const response = await fhirAPI.request(
+      const response = await ctx.state.iguhealth.client.request(
         ctx.state.iguhealth,
         httpRequestToFHIRRequest(ctx.params.fhirVersion, {
           url: `${ctx.params.fhirUrl || ""}${
@@ -189,7 +187,6 @@ export default async function createServer(): Promise<
     await createCertsIfNoneExists(getCertLocation(), getCertKey());
   }
 
-  const fhirAPI = await createFHIRAPI();
   const redis = getRedisClient();
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
@@ -314,8 +311,7 @@ export default async function createServer(): Promise<
 
   // Seperating as this should be a public endpoint for capabilities.
   tenantAPIV1Router.get("/fhir/:fhirVersion/metadata", async (ctx) => {
-    ctx.state.iguhealth.cache.get(ctx.state.iguhealth, "capabilities");
-    ctx.body = await fhirAPI.capabilities(
+    ctx.body = await ctx.state.iguhealth.client.capabilities(
       asRoot(ctx.state.iguhealth),
       deriveFHIRVersion(ctx.params.fhirVersion),
     );
@@ -330,7 +326,7 @@ export default async function createServer(): Promise<
   tenantAPIV1Router.all(
     "/fhir/:fhirVersion/:fhirUrl*",
     ...authMiddlewares,
-    await FHIRAPIKoaMiddleware(fhirAPI),
+    createFHIRKoaMiddleware(),
   );
 
   tenantRouter.use(tenantOIDCRouter.routes());
@@ -388,7 +384,7 @@ export default async function createServer(): Promise<
 
       // For development we don't want to log all worker requests.
       if (
-        !ctx.state.iguhealth.user?.payload.sub.startsWith("iguhealth-worker") ||
+        ctx.state.iguhealth.user?.payload.sub !== (WORKER_APP.id as string) ||
         process.env.NODE_ENV !== "development"
       ) {
         logger.info({

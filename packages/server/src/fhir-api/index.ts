@@ -1,18 +1,14 @@
 import { Redis } from "ioredis";
 import { pino } from "pino";
 
-import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
-import {
-  MiddlewareAsyncChain,
-  createMiddlewareAsync,
-} from "@iguhealth/client/middleware";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 
-import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
+import { createAssociateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
+import { createInjectScopesMiddleware } from "../authZ/middleware/scopes.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
@@ -118,11 +114,13 @@ export function getRedisClient(): Redis {
 function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
+      createAssociateUserMiddleware(),
       createCheckTenantUsageMiddleware(),
       createValidationMiddleware(),
       createCapabilitiesMiddleware(),
       createEncryptionMiddleware(["OperationDefinition"]),
-      createAuthorizationMiddleware<RouterState>(),
+      createAuthorizationMiddleware(),
+      createInjectScopesMiddleware(),
     ],
     sources,
   );
@@ -256,30 +254,4 @@ export function createClient(): {
     resolveTypeToCanonical: memSource.resolveTypeToCanonical,
     client,
   };
-}
-
-async function fhirAPIMiddleware(): Promise<
-  MiddlewareAsyncChain<unknown, IGUHealthServerCTX>
-> {
-  return createMiddlewareAsync([
-    associateUserMiddleware,
-    async (context) => {
-      return {
-        state: context.state,
-        ctx: context.ctx,
-        request: context.request,
-        response: await context.ctx.client.request(
-          context.ctx,
-          context.request,
-        ),
-      };
-    },
-  ]);
-}
-
-export async function createFHIRAPI() {
-  return new AsynchronousClient(
-    {},
-    createMiddlewareAsync([await fhirAPIMiddleware()]),
-  );
 }
