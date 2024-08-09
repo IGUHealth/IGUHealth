@@ -8,7 +8,10 @@ import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 
 import { createAssociateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
-import { createInjectScopesMiddleware } from "../authZ/middleware/scopes.js";
+import {
+  createInjectScopesMiddleware,
+  createValidateScopesMiddleware,
+} from "../authZ/middleware/scopes.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
@@ -119,8 +122,9 @@ function createFHIRClient(sources: RouterState["sources"]) {
       createValidationMiddleware(),
       createCapabilitiesMiddleware(),
       createEncryptionMiddleware(["OperationDefinition"]),
-      createAuthorizationMiddleware(),
       createInjectScopesMiddleware(),
+      createValidateScopesMiddleware(),
+      createAuthorizationMiddleware(),
     ],
     sources,
   );

@@ -3,16 +3,16 @@ import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 
-type OIDCScope = {
+export type OIDCScope = {
   type: "openid" | "profile" | "email" | "offline_access" | "online_access";
 };
 
-type LaunchScope = {
+export type LaunchScope = {
   type: "launch";
   scope: "" | "encounter" | "patient";
 };
 
-type SMARTResourceScope = {
+export type SMARTResourceScope = {
   type: "smart-resource";
   level: "user" | "system" | "patient";
   scope: "resource" | "all";
