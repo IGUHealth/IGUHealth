@@ -70,8 +70,8 @@ function getHighestValueScopeForRequest(
   return smartScopes[0];
 }
 
-export function createValidateScopesMiddleware(): MiddlewareAsyncChain<
-  unknown,
+export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
+  T,
   IGUHealthServerCTX
 > {
   return async (context, next) => {
