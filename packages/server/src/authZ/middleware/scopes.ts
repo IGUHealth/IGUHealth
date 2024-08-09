@@ -1,12 +1,22 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { id } from "@iguhealth/fhir-types/r4/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import * as scopes from "../../authN/db/scopes/index.js";
 import * as parseScopes from "../../authN/oidc/scopes/parse.js";
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 
+/**
+ * Note that request types like patch and update-request will be treated as update. Same with read vread and history + search.
+ * This function converts those fhir request types to smart resource scope permissions.
+ * @param request Request type to scope type permission.
+ * @returns https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html resource scope type from request type.
+ */
 function requestTypeToScope(
   request: FHIRRequest,
 ): keyof parseScopes.SMARTResourceScope["permissions"] {
@@ -14,15 +24,18 @@ function requestTypeToScope(
     case "create-request": {
       return "create";
     }
+    case "vread-request":
     case "read-request": {
       return "read";
     }
+    case "patch-request":
     case "update-request": {
       return "update";
     }
     case "delete-request": {
       return "delete";
     }
+    case "history-request":
     case "search-request": {
       return "search";
     }
@@ -75,41 +88,70 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
   IGUHealthServerCTX
 > {
   return async (context, next) => {
-    const scopes = context.ctx.user.scope;
-    const smartScope = getHighestValueScopeForRequest(
-      scopes ?? [],
-      context.request,
-    );
+    switch (context.request.type) {
+      case "create-request":
+      case "read-request":
+      case "update-request":
+      case "delete-request":
+      case "vread-request":
+      case "patch-request":
+      case "history-request":
+      case "search-request": {
+        const scopes = context.ctx.user.scope;
+        const smartScope = getHighestValueScopeForRequest(
+          scopes ?? [],
+          context.request,
+        );
 
-    if (!smartScope) {
-      throw new OperationError(
-        outcomeError("forbidden", "No approved scopes found"),
-      );
-    }
+        if (!smartScope) {
+          throw new OperationError(
+            outcomeError("forbidden", "No approved scopes found"),
+          );
+        }
 
-    switch (smartScope.level) {
-      case "patient": {
-        switch (context.request.type) {
-          case "create-request":
-          case "read-request":
-          case "update-request":
-          case "delete-request":
-          case "search-request":
+        switch (smartScope.level) {
+          case "patient": {
+            switch (context.request.type) {
+              case "create-request":
+              case "read-request":
+              case "update-request":
+              case "delete-request":
+              case "search-request":
+              default: {
+                throw new OperationError(
+                  outcomeError("forbidden", "Forbidden"),
+                );
+              }
+            }
+          }
+          // Already established that the user has access to the resource type.
+          // because of existant of the smartScope so pass allong to authorization.
+          case "user": {
+            return next(context);
+          }
+          case "system": {
+            return next(context);
+          }
           default: {
-            throw new OperationError(outcomeError("forbidden", "Forbidden"));
+            throw new OperationError(outcomeFatal("invalid", "invalid scope"));
           }
         }
       }
-      // Already established that the user has access to the resource type.
-      // because of existant of the smartScope so pass allong to authorization.
-      case "user": {
+      case "capabilities-request":
+      case "transaction-request":
+      case "batch-request":
+      case "invoke-request": {
+        // Note for invoke-request will need to implement custom scopes (SMART does not have a scope for invocation of operations).
+        // Batch and transaction hit authorization again per request in Bundle.
+        // Capabilities should always be allowed as public.
         return next(context);
       }
-      case "system": {
-        return next(context);
+      default: {
+        throw new OperationError(
+          outcomeFatal("invalid", "Invalid request.type"),
+        );
       }
     }
-    throw new Error("Not implemented");
   };
 }
 
