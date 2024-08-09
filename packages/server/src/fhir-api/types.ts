@@ -31,6 +31,7 @@ import {
 
 import { User } from "../authN/db/users/index.js";
 import { getIssuer } from "../authN/oidc/constants.js";
+import { SYSTEM_APP } from "../authN/oidc/hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
 import { Scope } from "../authN/oidc/scopes/parse.js";
 import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
@@ -105,6 +106,7 @@ export interface UserContext {
   accessToken?: JWT<AccessTokenPayload<s.user_role>>;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
+  scope?: Scope[];
 }
 
 export interface IGUHealthServerCTX {
@@ -140,15 +142,18 @@ export interface IGUHealthServerCTX {
   ) => Promise<Resource<FHIRVersion, Type> | undefined>;
 }
 
-export function rootClaims(tenant: TenantId): AccessTokenPayload<s.user_role> {
+function rootClaims(
+  tenant: TenantId,
+  clientApp: ClientApplication,
+): AccessTokenPayload<s.user_role> {
   return {
     iss: getIssuer(tenant),
-    aud: "iguhealth",
-    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-    [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,
+    sub: clientApp.id as string as Subject,
+    aud: clientApp.id as id,
+    [CUSTOM_CLAIMS.RESOURCE_ID]: clientApp.id as id,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: clientApp.resourceType,
     [CUSTOM_CLAIMS.ROLE]: "admin",
     [CUSTOM_CLAIMS.TENANT]: tenant,
-    sub: "system" as Subject,
   };
 }
 
@@ -165,7 +170,7 @@ export function asRoot(
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      payload: rootClaims(ctx.tenant),
+      payload: rootClaims(ctx.tenant, SYSTEM_APP),
     },
   };
 }

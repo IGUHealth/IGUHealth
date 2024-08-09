@@ -51,15 +51,9 @@ function minimizeResource<T extends Resource<FHIR_VERSION, AllResourceTypes>>(
       };
       return minimizedSd as T;
     }
-    case "ValueSet": {
-      return resource;
-    }
-    case "CodeSystem": {
-      return resource;
-    }
-    case "OperationDefinition": {
-      return resource;
-    }
+    case "ValueSet":
+    case "CodeSystem":
+    case "OperationDefinition":
     default: {
       return resource;
     }
