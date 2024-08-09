@@ -75,7 +75,7 @@ export function createAssociateUserMiddleware<T>(): MiddlewareAsyncChain<
       case "Membership":
       case "ClientApplication":
       case "OperationDefinition": {
-        const { resource: resource, accessPolicies } =
+        const { resource, accessPolicies } =
           await findResourceAndAccessPolicies(
             context.ctx,
             context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],

@@ -12,7 +12,6 @@ export function createValidateScopesMiddleware(): MiddlewareAsyncChain<
 > {
   return async (_context, _next) => {
     throw new Error("Not implemented");
-    // return next(context);
   };
 }
 
