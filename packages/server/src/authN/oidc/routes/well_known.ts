@@ -300,6 +300,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client-public",
         "authorize-post",
         "permission-offline",
+        "permission-v2",
       ],
       code_challenge_methods_supported: ["S256"],
     };
