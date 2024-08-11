@@ -1,6 +1,5 @@
 import { Issuer, TenantId } from "@iguhealth/jwt";
 
-export const USER_SESSION_KEY = "user";
 export const JWKS_GET = "JWKS_GET";
 
 export const OIDC_ROUTES = {
@@ -20,7 +19,8 @@ export const OIDC_ROUTES = {
     "tenant-oidc-interaction-password-reset-verify-post",
   AUTHORIZE_GET: "tenant-oidc-authorize-get",
   AUTHORIZE_POST: "tenant-oidc-authorize-post",
-  SCOPE_VERIFY_POST: "tenant-oidc-scope-verify-post",
+  SCOPE_POST: "tenant-oidc-scope-verify-post",
+  SCOPE_GET: "tenant-oidc-scope-verify-get",
   TOKEN_POST: "tenant-oidc-token-post",
   USER_INFO: "tenant-oidc-user-info",
   OIDC_DISCOVERY: "tenant-oidc-discovery",

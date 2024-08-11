@@ -1,15 +1,9 @@
-import React from "react";
-
-import { ScopeVerifyForm } from "@iguhealth/components";
-
-import * as views from "../../../views/index.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
-import * as oidcConst from "../constants.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
-import * as scopeParse from "../scopes/parse.js";
+import * as parseScopes from "../scopes/parse.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 
 const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
@@ -108,36 +102,18 @@ export function authorize(): OIDCRouteHandler {
         userId,
       );
 
-      // If Scopes are misaligned.
+      // If Scopes are misaligned redirect to scope verify page.
       if (
-        scopeParse.toString(approvedScopes) !==
-        scopeParse.toString(ctx.state.oidc.scopes ?? [])
+        parseScopes.toString(approvedScopes) !==
+        parseScopes.toString(ctx.state.oidc.scopes ?? [])
       ) {
-        const scopePost = ctx.router.url(
-          oidcConst.OIDC_ROUTES.SCOPE_VERIFY_POST,
-          {
-            tenant: ctx.state.iguhealth.tenant,
-          },
+        const scopeRoute = ctx.router.url(
+          OIDC_ROUTES.SCOPE_GET,
+          { tenant: ctx.state.iguhealth.tenant },
           { query: ctx.state.oidc.parameters },
         );
-        if (scopePost instanceof Error) {
-          throw scopePost;
-        }
-
-        ctx.status = 200;
-        ctx.body = views.renderString(
-          React.createElement(ScopeVerifyForm, {
-            logo: "/public/img/logo.svg",
-            title: "IGUHealth",
-            client: {
-              name: client.name,
-              logoUri: client.logoUri,
-            },
-            scopes: scopeParse.toString(ctx.state.oidc.scopes ?? []).split(" "),
-            header: "Scope Verification",
-            actionURL: scopePost,
-          }),
-        );
+        if (scopeRoute instanceof Error) throw scopeRoute;
+        ctx.redirect(scopeRoute);
         return;
       }
 
