@@ -3,8 +3,8 @@
  */
 
 import * as users from "../../db/users/index.js";
-import { USER_SESSION_KEY } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
+import { USER_SESSION_KEY } from "./constants.js";
 
 export function serializeUser(user: users.User): string {
   return user.id;

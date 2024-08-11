@@ -184,7 +184,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   );
 
   managementRouter.post(
-    OIDC_ROUTES.SCOPE_VERIFY_POST,
+    OIDC_ROUTES.SCOPE_POST,
     "/auth/scope",
     multer().none(),
     OAuthErrorHandlingMiddleware(),
@@ -200,7 +200,26 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     }),
     clientInjectFHIRMiddleware(),
     parseScopesMiddleware(),
-    routes.scopeVerifyPost(),
+    routes.scopePOST(),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES.SCOPE_GET,
+    "/auth/scope",
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters({
+      required: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "code_challenge_method",
+      ],
+      optional: ["scope", "redirect_uri"],
+    }),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+    routes.scopeGET(),
   );
 
   managementRouter.post(
@@ -209,6 +228,25 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     injectClientCredentialsMiddleware(),
     routes.tokenPost(),
+  );
+
+  managementRouter.get(
+    "/smart/launch",
+    multer().none(),
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters({
+      required: [
+        "client_id",
+        "response_type",
+        "state",
+        "code_challenge",
+        "code_challenge_method",
+      ],
+      optional: ["scope", "redirect_uri"],
+    }),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+    routes.smartLaunchGET(),
   );
   return managementRouter;
 }
