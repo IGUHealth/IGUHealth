@@ -1,4 +1,4 @@
-import { FHIRGenerativeSearchTable } from "@iguhealth/components";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { OIDCRouteHandler } from "../../index.js";
 
@@ -7,6 +7,6 @@ import { OIDCRouteHandler } from "../../index.js";
  */
 export function smartLaunchGET(): OIDCRouteHandler {
   return async (ctx, next) => {
-    ctx.body = FHIRGenerativeSearchTable;
+    throw new OperationError(outcomeError("not-supported", "Not implemented"));
   };
 }
