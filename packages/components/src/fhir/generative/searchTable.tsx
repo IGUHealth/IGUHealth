@@ -20,11 +20,11 @@ import {
   Range,
   Reference,
   Timing,
-  code,
   decimal,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
   ResourceType,
@@ -46,7 +46,6 @@ import { FHIRCodeableConceptReadOnly } from "../complex/CodeableConceptReadOnly"
 import { FHIRQuantityReadOnly } from "../complex/QuantityReadOnly";
 import { FHIRTimingReadOnly } from "../complex/TimingReadOnly";
 import {
-  FHIRCodeEditable,
   FHIRDecimalEditable,
   FHIRStringEditable,
   FHIRUriEditable,
@@ -66,7 +65,7 @@ const modifiers: Record<string, string[]> = {
   string: ["exact", "contains"],
 };
 
-interface SearchColumnModalBodyInputProps extends ClientProps {
+interface SearchColumnModalBodyInputProps {
   value: ParsedParameter<string | number | undefined>;
   index: number;
   onChange: (v: ParsedParameter<string | number | undefined>) => void;
@@ -78,8 +77,6 @@ function SearchColumnModalBodyInput({
   index,
   onChange: onChangeProp,
   searchParameter,
-  fhirVersion,
-  client,
 }: Readonly<SearchColumnModalBodyInputProps>) {
   const onChange = useMemo(() => {
     return (v: string | number | undefined) => {
@@ -104,19 +101,10 @@ function SearchColumnModalBodyInput({
     }
     case "date":
     case "string":
+    case "token":
       return (
         <FHIRStringEditable
           value={(value.value[index]?.toString() ?? "") as string}
-          onChange={onChange}
-        />
-      );
-    case "token":
-      return (
-        <FHIRCodeEditable
-          open
-          value={(value.value[index]?.toString() ?? "") as code}
-          fhirVersion={fhirVersion}
-          client={client}
           onChange={onChange}
         />
       );
@@ -144,7 +132,7 @@ function SearchColumnModalBodyInput({
   }
 }
 
-interface SearchColumnModalBodyProps extends ClientProps {
+interface SearchColumnModalBodyProps {
   value: ParsedParameter<string | number | undefined>;
   onChange: (v: ParsedParameter<string | number | undefined>) => void;
   searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
@@ -223,7 +211,7 @@ function SearchColumnModalBody({
   );
 }
 
-interface SearchColumnModalProps extends ClientProps {
+interface SearchColumnModalProps {
   searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
   parameters: ParsedParameter<string | number | undefined>[];
   onChange: (v: ParsedParameter<string | number | undefined>[]) => void;
@@ -293,8 +281,6 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
         <SearchColumnModalBody
           value={curValue}
           searchParameter={props.searchParameter}
-          fhirVersion={props.fhirVersion}
-          client={props.client}
           onChange={(d) => {
             setCurValue(d);
           }}
@@ -539,6 +525,162 @@ function SearchParameterSortControl({
   }
 }
 
+export interface FHIRGenerativeSearchTableDisplayProps<
+  Version extends FHIR_VERSION,
+> {
+  parameters: ParsedParameter<string | number | undefined>[];
+  onParametersChange: (
+    v: ParsedParameter<string | number | undefined>[],
+  ) => void;
+  searchParameters: Resource<Version, "SearchParameter">[];
+  data: { total?: number; resources: Resource<Version, AllResourceTypes>[] };
+  loading?: boolean;
+  columns?: TableProps["columns"];
+  onRowClick?: TableProps["onRowClick"];
+  pagination?: number;
+}
+
+export function FHIRGenerativeSearchTableDisplay<Version extends FHIR_VERSION>({
+  pagination = 20,
+  loading,
+  parameters,
+  onParametersChange,
+  searchParameters,
+  data,
+  columns,
+  onRowClick,
+}: Readonly<FHIRGenerativeSearchTableDisplayProps<Version>>) {
+  const sortParam = parameters.find((p) => p.name === "_sort");
+  const [selectedSearchParameter, setSelectedSearchParameter] =
+    useState<number>(0);
+
+  return (
+    <Modal
+      ModalContent={(setOpen) => (
+        <SearchColumnModal
+          parameters={parameters}
+          onChange={(params) => {
+            onParametersChange(params);
+            setOpen(false);
+          }}
+          searchParameter={(searchParameters ?? [])[selectedSearchParameter]}
+        />
+      )}
+    >
+      {(openParamModal) => (
+        <>
+          <div className="flex items-center w-full overflow-x-auto">
+            <div className="flex flex-1  space-x-1 mr-1">
+              {parameters
+                .filter((p) => searchParameters?.find((s) => s.code === p.name))
+                .map((p) => {
+                  const paramIndex = searchParameters?.findIndex(
+                    (sp) => sp.code === p.name,
+                  );
+                  return (
+                    <Tag
+                      color={searchParameterTypeToColor(
+                        searchParameters?.[paramIndex ?? 0]?.type,
+                      )}
+                      onClick={() => {
+                        setSelectedSearchParameter(paramIndex ?? 0);
+                        openParamModal(true);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      {p.name}
+                      {p.modifier ? `:${p.modifier} ` : " "} ={" "}
+                      {p.value.join(", ")}
+                    </Tag>
+                  );
+                })}
+            </div>
+            <div className="flex items-center">
+              {sortParam && (
+                <Tag className="pointer" color={"blue"}>
+                  _sort: {sortParam.value.join(",")}
+                </Tag>
+              )}
+            </div>
+          </div>
+          <Table
+            isLoading={loading}
+            data={data.resources}
+            onRowClick={onRowClick}
+            columns={[
+              ...(searchParameters ?? []).map(
+                (searchParameter, i) =>
+                  ({
+                    id: searchParameter.id,
+                    content: (
+                      <div className="space-x-2 flex items-center">
+                        <div
+                          className="flex flex-1"
+                          onClick={() => {
+                            setSelectedSearchParameter(i);
+                            openParamModal(true);
+                          }}
+                        >
+                          <div className="mr-2">{searchParameter.code}</div>
+                          <FunnelIcon className="hover:text-blue-400 cursor-pointer w-4 h-4" />
+                        </div>
+                        <div className="flex justify-end">
+                          <SearchParameterSortControl
+                            sortParam={sortParam}
+                            searchParameter={searchParameter}
+                            onChange={(v) => {
+                              onParametersChange([
+                                ...parameters.filter((p) => p.name !== "_sort"),
+                                ...(v ? [v] : []),
+                              ]);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ),
+                    selector: searchParameter.expression as string,
+                    selectorType: "fhirpath",
+                    renderer(data: unknown[]) {
+                      return DataDisplay(
+                        searchParameter.type,
+                        data.slice(0, 3),
+                      );
+                    },
+                  }) as Parameters<typeof Table>[0]["columns"][number],
+              ),
+              ...(columns ?? []),
+            ]}
+          />
+          <div className="mt-2 flex justify-end">
+            <Pagination
+              currentPage={
+                Math.floor(
+                  parseInt(
+                    (
+                      parameters.find((p) => p.name === "_offset")?.value[0] ??
+                      0
+                    ).toString(),
+                  ) / pagination,
+                ) + 1
+              }
+              totalPages={Math.ceil((data.total ?? 0) / pagination)}
+              onPagination={(pageNumber) => {
+                onParametersChange([
+                  ...parameters.filter((p) => p.name !== "_offset"),
+                  {
+                    name: "_offset",
+                    value: [(pageNumber - 1) * pagination],
+                  },
+                ]);
+              }}
+            />
+          </div>
+        </>
+      )}
+    </Modal>
+  );
+}
+
 export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   props: Readonly<FHIRGenerativeSearchTableProps<Version>>,
 ) {
@@ -553,14 +695,10 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   ]);
   const [searchParameters, setSearchParameters] =
     useState<Resource<Version, "SearchParameter">[]>();
-  const [selectedSearchParameter, setSelectedSearchParameter] =
-    useState<number>(0);
   const [data, setData] = useState<{
     total?: number;
     resources: Resource<Version, ResourceType<Version>>[];
   }>({ total: 0, resources: [] });
-
-  const sortParam = parameters.find((p) => p.name === "_sort");
 
   useEffect(() => {
     if (props.refresh) {
@@ -617,130 +755,15 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   }, [props.resourceType, props.fhirVersion]);
 
   return (
-    <Modal
-      ModalContent={(setOpen) => (
-        <SearchColumnModal
-          parameters={parameters}
-          onChange={(params) => {
-            setParameters(params);
-            setOpen(false);
-          }}
-          searchParameter={(searchParameters ?? [])[selectedSearchParameter]}
-          fhirVersion={props.fhirVersion}
-          client={props.client}
-        />
-      )}
-    >
-      {(openParamModal) => (
-        <>
-          <div className="flex items-center w-full overflow-x-auto">
-            <div className="flex flex-1  space-x-1 mr-1">
-              {parameters
-                .filter((p) => searchParameters?.find((s) => s.code === p.name))
-                .map((p) => {
-                  const paramIndex = searchParameters?.findIndex(
-                    (sp) => sp.code === p.name,
-                  );
-                  return (
-                    <Tag
-                      color={searchParameterTypeToColor(
-                        searchParameters?.[paramIndex ?? 0]?.type,
-                      )}
-                      onClick={() => {
-                        setSelectedSearchParameter(paramIndex ?? 0);
-                        openParamModal(true);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      {p.name}
-                      {p.modifier ? `:${p.modifier} ` : " "} ={" "}
-                      {p.value.join(", ")}
-                    </Tag>
-                  );
-                })}
-            </div>
-            <div className="flex items-center">
-              {sortParam && (
-                <Tag className="pointer" color={"blue"}>
-                  _sort: {sortParam.value.join(",")}
-                </Tag>
-              )}
-            </div>
-          </div>
-          <Table
-            isLoading={loading}
-            data={data.resources}
-            onRowClick={props.onRowClick}
-            columns={[
-              ...(searchParameters ?? []).map(
-                (searchParameter, i) =>
-                  ({
-                    id: searchParameter.id,
-                    content: (
-                      <div className="space-x-2 flex items-center">
-                        <div
-                          className="flex flex-1"
-                          onClick={() => {
-                            setSelectedSearchParameter(i);
-                            openParamModal(true);
-                          }}
-                        >
-                          <div className="mr-2">{searchParameter.code}</div>
-                          <FunnelIcon className="hover:text-blue-400 cursor-pointer w-4 h-4" />
-                        </div>
-                        <div className="flex justify-end">
-                          <SearchParameterSortControl
-                            sortParam={sortParam}
-                            searchParameter={searchParameter}
-                            onChange={(v) => {
-                              setParameters([
-                                ...parameters.filter((p) => p.name !== "_sort"),
-                                ...(v ? [v] : []),
-                              ]);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ),
-                    selector: searchParameter.expression as string,
-                    selectorType: "fhirpath",
-                    renderer(data: unknown[]) {
-                      return DataDisplay(
-                        searchParameter.type,
-                        data.slice(0, 3),
-                      );
-                    },
-                  }) as Parameters<typeof Table>[0]["columns"][number],
-              ),
-              ...(props.columns ?? []),
-            ]}
-          />
-          <div className="mt-2 flex justify-end">
-            <Pagination
-              currentPage={
-                Math.floor(
-                  parseInt(
-                    (
-                      parameters.find((p) => p.name === "_offset")?.value[0] ??
-                      0
-                    ).toString(),
-                  ) / pagination,
-                ) + 1
-              }
-              totalPages={Math.ceil((data.total ?? 0) / pagination)}
-              onPagination={(pageNumber) => {
-                setParameters([
-                  ...parameters.filter((p) => p.name !== "_offset"),
-                  {
-                    name: "_offset",
-                    value: [(pageNumber - 1) * pagination],
-                  },
-                ]);
-              }}
-            />
-          </div>
-        </>
-      )}
-    </Modal>
+    <FHIRGenerativeSearchTableDisplay
+      parameters={parameters}
+      onParametersChange={setParameters}
+      searchParameters={searchParameters ?? []}
+      data={data}
+      loading={loading}
+      columns={props.columns}
+      onRowClick={props.onRowClick}
+      pagination={pagination}
+    />
   );
 }

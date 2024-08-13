@@ -30,9 +30,9 @@ test("Simple Smarts", () => {
       type: "openid",
     },
     { type: "fhirUser" },
-    { type: "launch", scope: "" },
-    { type: "launch", scope: "encounter" },
-    { type: "launch", scope: "patient" },
+    { type: "launch" },
+    { type: "launch-type", launchType: "encounter" },
+    { type: "launch-type", launchType: "patient" },
   ]);
 });
 
@@ -46,9 +46,9 @@ test("Simple Smarts", () => {
       type: "openid",
     },
     { type: "fhirUser" },
-    { type: "launch", scope: "" },
-    { type: "launch", scope: "encounter" },
-    { type: "launch", scope: "patient" },
+    { type: "launch" },
+    { type: "launch-type", launchType: "encounter" },
+    { type: "launch-type", launchType: "patient" },
     {
       scope: "resource",
       type: "smart-resource",
@@ -112,8 +112,8 @@ test("*.* SMART", () => {
     "openid fhirUser user/*.cruds",
   );
   expect(parseScopes("launch launch/patient patient/*.*")).toEqual([
-    { type: "launch", scope: "" },
-    { type: "launch", scope: "patient" },
+    { type: "launch" },
+    { type: "launch-type", launchType: "patient" },
     {
       level: "patient",
       scope: "all",

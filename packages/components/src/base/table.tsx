@@ -36,12 +36,11 @@ async function extract(
   }
 }
 
-function RenderRow({
+function RenderCell({
   column,
   row,
 }: Readonly<{ column: Columns; row: unknown }>) {
   const [value, setValue] = useState<unknown[]>([]);
-
   useEffect(() => {
     extract(row, column.selector, column.selectorType).then(setValue);
   }, [column, row]);
@@ -91,7 +90,7 @@ export function Table({
                   onClick={() => onRowClick(row)}
                 >
                   {columns.map((column) => (
-                    <RenderRow key={column.id} row={row} column={column} />
+                    <RenderCell key={column.id} row={row} column={column} />
                   ))}
                 </tr>
               ))}
