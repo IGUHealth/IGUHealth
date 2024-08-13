@@ -26,22 +26,22 @@ export function createSessionValidateAuthentication(): OIDCRouteHandler {
     if (await isAuthenticated(ctx)) {
       await next();
     } else {
-      // ctx.status = 308;
-      ctx.redirect(
-        ctx.router.url(
-          OIDC_ROUTES.LOGIN_VIEW_GET,
-          {
-            tenant: ctx.state.iguhealth.tenant,
-          },
-          { query: ctx.state.oidc.parameters },
-          // // In event of post request we should avoid setting on query
-          // // As url may be too large to set on query.
-          // // Authorize post can be used to avoid url character limit.
-          // ctx.request.method === "GET"
-          //   ? { query: ctx.state.oidc.parameters }
-          //   : undefined,
-        ) as string,
+      const loginURl = ctx.router.url(
+        OIDC_ROUTES.LOGIN_VIEW,
+        {
+          tenant: ctx.state.iguhealth.tenant,
+        },
+        // In event of post request we should avoid setting on query
+        // As url may be too large to set on query.
+        // Authorize post can be used to avoid url character limit.
+        ctx.request.method === "GET"
+          ? { query: ctx.state.oidc.parameters }
+          : undefined,
       );
+      if (loginURl instanceof Error) throw loginURl;
+
+      ctx.status = 308;
+      ctx.redirect(loginURl);
     }
   };
 }

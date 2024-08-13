@@ -64,7 +64,7 @@ async function sessionLogin(
 }
 
 export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
-  const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_VIEW_GET, {
+  const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_VIEW, {
     tenant: ctx.state.iguhealth.tenant,
   });
 
