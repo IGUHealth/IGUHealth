@@ -230,23 +230,24 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     routes.tokenPost(),
   );
 
-  managementRouter.get(
-    "/smart/launch",
-    multer().none(),
-    OAuthErrorHandlingMiddleware(),
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    parseScopesMiddleware(),
-    routes.smartLaunchGET(),
-  );
+  // managementRouter.get(
+  //   "/smart/launch",
+  //   multer().none(),
+  //   OAuthErrorHandlingMiddleware(),
+  //   createValidateInjectOIDCParameters({
+  //     required: [
+  //       "client_id",
+  //       "response_type",
+  //       "state",
+  //       "code_challenge",
+  //       "code_challenge_method",
+  //     ],
+  //     optional: ["scope", "redirect_uri"],
+  //   }),
+  //   clientInjectFHIRMiddleware(),
+  //   parseScopesMiddleware(),
+  //   routes.smartLaunchGET(),
+  // );
+
   return managementRouter;
 }

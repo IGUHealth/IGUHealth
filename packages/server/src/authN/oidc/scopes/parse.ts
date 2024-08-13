@@ -9,7 +9,11 @@ export type OIDCScope = {
 
 export type LaunchScope = {
   type: "launch";
-  scope: "" | "encounter" | "patient";
+};
+
+export type LaunchTypeScope = {
+  type: "launch-type";
+  launchType: "encounter" | "patient";
 };
 
 export type SMARTResourceScope = {
@@ -28,6 +32,7 @@ export type SMARTResourceScope = {
 
 type SMARTScope =
   | SMARTResourceScope
+  | LaunchTypeScope
   | LaunchScope
   | {
       type: "fhirUser";
@@ -159,15 +164,15 @@ export function parseScopes(scopes: string): Scope[] {
         case scope === "fhirUser": {
           return { type: scope };
         }
+        case scope === "launch": {
+          return { type: "launch" };
+        }
         case scope.startsWith("launch"): {
-          if (scope === "launch") {
-            return { type: scope, scope: "" };
-          }
           const chunks = scope.split("/");
           switch (chunks[1]) {
             case "patient":
             case "encounter": {
-              return { type: "launch", scope: chunks[1] };
+              return { type: "launch-type", launchType: chunks[1] };
             }
             default: {
               throw new OIDCError({
@@ -254,8 +259,11 @@ export function toString(scopes: Scope[]): string {
         case "fhirUser": {
           return `${scopeString} fhirUser`;
         }
+        case "launch-type": {
+          return `${scopeString} launch/${scope.launchType}`;
+        }
         case "launch": {
-          return `${scopeString} launch${scope.scope ? `/${scope.scope}` : ""}`;
+          return `${scopeString} launch`;
         }
         case "smart-resource": {
           return `${scopeString} ${scope.level}/${scope.scope === "all" ? "*" : scope.resourceType}.${scope.permissions.create ? "c" : ""}${scope.permissions.read ? "r" : ""}${scope.permissions.update ? "u" : ""}${scope.permissions.delete ? "d" : ""}${scope.permissions.search ? "s" : ""}`;

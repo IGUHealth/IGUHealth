@@ -26,10 +26,6 @@ function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
   return true;
 }
 
-function findLaunch(scopes: parseScopes.Scope[]): parseScopes.Scope[] {
-  return scopes.filter((scope) => scope.type === "launch");
-}
-
 /**
  * https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#standalone-apps
  * Per spec:
@@ -44,7 +40,7 @@ function findLaunch(scopes: parseScopes.Scope[]): parseScopes.Scope[] {
  */
 function checkPatientScopesForLaunch(scopes: parseScopes.Scope[]): boolean {
   const patientLaunch = scopes.find(
-    (scope) => scope.type === "launch" && scope.scope === "patient",
+    (scope) => scope.type === "launch-type" && scope.launchType === "patient",
   );
 
   const patientPermissions = scopes.filter(
