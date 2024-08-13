@@ -85,11 +85,19 @@ export function smartLaunchGET(): OIDCRouteHandler {
             abort();
             ctx.set("Content-Type", "text/html");
             ctx.body = "<!doctype html><p>Loading...</p></script>";
-            reject();
+            reject(
+              new OperationError(
+                outcomeError("exception", "Failed to render launch"),
+              ),
+            );
           },
           onError(error) {
             console.error(error);
-            reject();
+            reject(
+              new OperationError(
+                outcomeError("exception", "Failed to render launch"),
+              ),
+            );
           },
         },
       );
