@@ -30,7 +30,7 @@ export const logout = (): OIDCRouteHandler => async (ctx) => {
   }
 
   ctx.redirect(
-    ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
+    ctx.router.url(OIDC_ROUTES.LOGIN_VIEW_GET, {
       tenant: ctx.state.iguhealth.tenant,
     }) as string,
   );

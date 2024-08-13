@@ -29,7 +29,7 @@ export function createSessionValidateAuthentication(): OIDCRouteHandler {
       // ctx.status = 308;
       ctx.redirect(
         ctx.router.url(
-          OIDC_ROUTES.LOGIN_GET,
+          OIDC_ROUTES.LOGIN_VIEW_GET,
           {
             tenant: ctx.state.iguhealth.tenant,
           },

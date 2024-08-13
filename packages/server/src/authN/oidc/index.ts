@@ -146,17 +146,26 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   );
 
   managementRouter.get(
-    OIDC_ROUTES.LOGIN_GET,
+    OIDC_ROUTES.LOGIN_VIEW_GET,
     "/interaction/login",
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
     parseScopesMiddleware(),
-    routes.loginGET(),
+    routes.loginView(),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES.LOGIN_VIEW_POST,
+    "/interaction/login",
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+    routes.loginView(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES.LOGIN_POST,
-    "/interaction/login",
+    OIDC_ROUTES.LOGIN_AUTH_POST,
+    "/auth/login",
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
     routes.loginPOST(),

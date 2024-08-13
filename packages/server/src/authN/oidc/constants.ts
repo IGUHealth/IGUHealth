@@ -3,8 +3,9 @@ import { Issuer, TenantId } from "@iguhealth/jwt";
 export const JWKS_GET = "JWKS_GET";
 
 export const OIDC_ROUTES = {
-  LOGIN_GET: "tenant-oidc-interaction-login-get",
-  LOGIN_POST: "tenant-oidc-interaction-login-post",
+  LOGIN_VIEW_GET: "tenant-oidc-interaction-login-view-get",
+  LOGIN_VIEW_POST: "tenant-oidc-interaction-login-view-post",
+  LOGIN_AUTH_POST: "tenant-oidc-interaction-login-post",
   LOGOUT_GET: "tenant-oidc-interaction-logout-get",
   LOGOUT_POST: "tenant-oidc-interaction-logout-post",
   SIGNUP_GET: "tenant-oidc-interaction-signup-get",

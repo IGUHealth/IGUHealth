@@ -10,7 +10,7 @@ import type { OIDCRouteHandler } from "../../index.js";
 
 function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
   const loginRoute = ctx.router.url(
-    OIDC_ROUTES.LOGIN_POST,
+    OIDC_ROUTES.LOGIN_AUTH_POST,
     {
       tenant: ctx.state.iguhealth.tenant,
     },
@@ -64,7 +64,7 @@ async function sessionLogin(
 }
 
 export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
-  const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
+  const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_VIEW_GET, {
     tenant: ctx.state.iguhealth.tenant,
   });
 
@@ -99,7 +99,7 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
   await next();
 };
 
-export const loginGET = (): OIDCRouteHandler => async (ctx) => {
+export const loginView = (): OIDCRouteHandler => async (ctx) => {
   const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
   const message = ctx.request.query["message"]?.toString();
   const email = ctx.request.query["email"]?.toString();
