@@ -1,30 +1,12 @@
-import Ajv from "ajv";
-import React from "react";
 import * as db from "zapatos/db";
 
-import { ScopeVerifyForm } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
-import type { ScopeVerificationBody } from "../../schemas/authorize_scope_body.schema.js";
-import ScopeVerificationBodySchema from "../../schemas/authorize_scope_body.schema.json" with { type: "json" };
 import * as parseScopes from "../../scopes/parse.js";
 import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
-
-function verifyScopeBody(body: unknown): body is ScopeVerificationBody {
-  const ajv = new Ajv.default({});
-  const tokenBodyValidator = ajv.compile(ScopeVerificationBodySchema);
-  const bodyValid = tokenBodyValidator(body);
-  if (!bodyValid) {
-    throw new OperationError(
-      outcomeError("invalid", ajv.errorsText(tokenBodyValidator.errors)),
-    );
-  }
-  return true;
-}
 
 /**
  * https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#standalone-apps
@@ -69,84 +51,45 @@ export function scopePOST(): OIDCRouteHandler {
       );
     }
 
-    if (await ctx.state.oidc.isAuthenticated(ctx)) {
-      const body = ctx.request.body;
-      if (!verifyScopeBody(body)) {
-        throw new OperationError(outcomeError("invalid", "Invalid token body"));
-      }
+    const body = ctx.request.body;
 
-      if (body.accept === "on") {
-        const scopes = parseScopes.parseScopes(body.scopes.join(" "));
-        const parsedScopes = parseScopes.toString(scopes);
-        checkPatientScopesForLaunch(scopes);
+    if (body?.accept === "on") {
+      const scopes = ctx.state.oidc.scopes ?? [];
+      checkPatientScopesForLaunch(scopes);
 
-        await db
-          .upsert(
-            "authorization_scopes",
-            [
-              {
-                tenant: ctx.state.iguhealth.tenant,
-                client_id: ctx.state.oidc.client?.id as string,
-                user_id: ctx.state.oidc.user?.id as string,
-                scope: parsedScopes,
-              },
-            ],
-            db.constraint("authorization_scopes_pkey"),
+      await db
+        .upsert(
+          "authorization_scopes",
+          [
             {
-              updateColumns: ["scope"],
+              tenant: ctx.state.iguhealth.tenant,
+              client_id: ctx.state.oidc.client?.id as string,
+              user_id: ctx.state.oidc.user?.id as string,
+              scope: parseScopes.toString(scopes),
             },
-          )
-          .run(ctx.state.iguhealth.db);
+          ],
+          db.constraint("authorization_scopes_pkey"),
+          {
+            updateColumns: ["scope"],
+          },
+        )
+        .run(ctx.state.iguhealth.db);
 
-        // Redirect back to get request which generates the code etc... as next step.
-        const authorizeRoute = ctx.router.url(
-          OIDC_ROUTES.AUTHORIZE_GET,
-          { tenant: ctx.state.iguhealth.tenant },
-          { query: ctx.state.oidc.parameters },
-        );
-        if (authorizeRoute instanceof Error) throw authorizeRoute;
-        ctx.redirect(authorizeRoute);
-      } else {
-        throw new OIDCError({
-          error: "access_denied",
-          error_description: "User did not accept scopes",
-          state: ctx.state.oidc.parameters.state,
-          redirect_uri: redirectUrl,
-        });
-      }
+      // Redirect back to get request which generates the code etc... as next step.
+      const authorizeRoute = ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
+        tenant: ctx.state.iguhealth.tenant,
+      });
+      if (authorizeRoute instanceof Error) throw authorizeRoute;
+      // Setting as 308 to allow POST with Scope body.
+      ctx.status = 308;
+      ctx.redirect(authorizeRoute);
     } else {
       throw new OIDCError({
-        error: "unauthorized_client",
-        error_description: "User is not authorized.",
+        error: "access_denied",
+        error_description: "User did not accept scopes",
         state: ctx.state.oidc.parameters.state,
         redirect_uri: redirectUrl,
       });
     }
-  };
-}
-
-export function scopeGET(): OIDCRouteHandler {
-  return async (ctx) => {
-    const client = ctx.state.oidc.client;
-    if (!client) {
-      throw new OIDCError({
-        error: "invalid_request",
-        error_description: "Client not found.",
-      });
-    }
-    ctx.status = 200;
-    ctx.body = views.renderString(
-      React.createElement(ScopeVerifyForm, {
-        logo: "/public/img/logo.svg",
-        title: "IGUHealth",
-        client: {
-          name: client.name,
-          logoUri: client.logoUri,
-        },
-        scopes: parseScopes.toString(ctx.state.oidc.scopes ?? []).split(" "),
-        header: "Scope Verification",
-        actionURL: ctx.url,
-      }),
-    );
   };
 }

@@ -7,9 +7,9 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
-import * as parseScopes from "../../../oidc/scopes/parse.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
+import * as parseScopes from "../../scopes/parse.js";
 
 function getLaunchScopes(
   scopes: parseScopes.Scope[],
@@ -57,11 +57,11 @@ export function smartLaunchGET(): OIDCRouteHandler {
 
     return new Promise((_resolve, reject) => {
       const { pipe, abort } = views.renderPipe(
-        React.createElement(FHIRGenerativeSearchTableDisplay, {
-          parameters: [],
-          onParametersChange: (z) => {},
-          searchParameters: searchParameters.resources,
-          data: {
+        <FHIRGenerativeSearchTableDisplay
+          parameters={[]}
+          onParametersChange={(z) => {}}
+          searchParameters={searchParameters.resources}
+          data={{
             total: 1,
             resources: [
               {
@@ -70,8 +70,8 @@ export function smartLaunchGET(): OIDCRouteHandler {
                 name: [{ family: "Doe", given: ["John"] }],
               },
             ],
-          },
-        }),
+          }}
+        />,
         {
           onShellReady() {
             ctx.respond = false;
