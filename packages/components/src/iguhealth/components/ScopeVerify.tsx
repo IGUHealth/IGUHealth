@@ -7,23 +7,34 @@ import { Container } from "./Container";
 
 export interface ScopeVerifyProps {
   title?: string;
-  header?: string;
-  scopes?: string[];
+  logo?: string;
+
+  // Pulled from authorize endpoint where scope post should ultimatley go too.
+  authorizeParameters: {
+    client_id: string;
+    response_type: string;
+    state: string;
+    code_challenge: string;
+    code_challenge_method: string;
+
+    scope?: string;
+    redirect_uri?: string;
+  };
+
   client: {
     name: string;
     logoUri?: string;
   };
-  logo?: string;
-  actionURL: string;
+
+  postURL: string;
 }
 
 export const ScopeVerifyForm = ({
   title = "IGUHealth",
-  header = "Authorize",
+  authorizeParameters,
   client,
-  scopes = [],
   logo,
-  actionURL,
+  postURL,
 }: ScopeVerifyProps) => {
   return (
     <Container logo={logo} title={title}>
@@ -62,7 +73,7 @@ export const ScopeVerifyForm = ({
 
       <div className="max-h-72 overflow-auto">
         <table className="border-collapse  list-inside list-disc w-full">
-          {scopes.map((scope) => (
+          {authorizeParameters.scope?.split(" ").map((scope) => (
             <tr className="border" key={scope}>
               <td className="p-4">{scope}</td>
               <td>
@@ -75,15 +86,17 @@ export const ScopeVerifyForm = ({
         </table>
       </div>
       <div className="justify-center items-center flex space-x-4">
-        <form action={actionURL} method="POST">
-          {scopes.map((scope) => (
+        <form action={postURL} method="POST">
+          {Object.keys(authorizeParameters).map((key) => (
             <input
               readOnly
-              key={scope}
-              name="scopes"
+              key={key}
+              name={key}
               className="hidden"
               type="text"
-              value={scope}
+              value={
+                authorizeParameters[key as keyof typeof authorizeParameters]
+              }
             />
           ))}
           <input
@@ -100,15 +113,17 @@ export const ScopeVerifyForm = ({
             Allow
           </button>
         </form>
-        <form action={actionURL} method="POST">
-          {scopes.map((scope) => (
+        <form action={postURL} method="POST">
+          {Object.keys(authorizeParameters).map((key) => (
             <input
               readOnly
-              key={scope}
-              name="scopes"
+              key={key}
+              name={key}
               className="hidden"
               type="text"
-              value={scope}
+              value={
+                authorizeParameters[key as keyof typeof authorizeParameters]
+              }
             />
           ))}
           <input

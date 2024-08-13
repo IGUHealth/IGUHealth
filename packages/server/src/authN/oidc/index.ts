@@ -11,11 +11,27 @@ import { injectClientCredentialsMiddleware } from "./middleware/inject_client_cr
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import { parseScopesMiddleware } from "./middleware/parse_scopes.js";
 import * as routes from "./routes/index.js";
-import { sessionAuthorizationMiddleware } from "./session/middleware.js";
+import {
+  createSessionInjectMethodsMiddleware,
+  createSessionValidateAuthentication,
+} from "./session/middleware.js";
 
 export type OIDCRouteHandler = Parameters<
   Awaited<ReturnType<typeof createOIDCRouter>>["all"]
 >[2];
+
+const AUTHORIZE_PARAMETERS: Parameters<
+  typeof createValidateInjectOIDCParameters
+>[0] = {
+  required: [
+    "client_id",
+    "response_type",
+    "state",
+    "code_challenge",
+    "code_challenge_method",
+  ],
+  optional: ["scope", "redirect_uri"],
+};
 
 /**
  * OIDC Router
@@ -23,10 +39,13 @@ export type OIDCRouteHandler = Parameters<
 export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   prefix: string,
   {
-    authMiddlewares,
+    tokenAuthMiddlewares,
     middleware,
   }: {
-    authMiddlewares: Koa.Middleware<State, KoaExtensions.KoaIGUHealthContext>[];
+    tokenAuthMiddlewares: Koa.Middleware<
+      State,
+      KoaExtensions.KoaIGUHealthContext
+    >[];
     middleware: Router.Middleware<State, KoaExtensions.KoaIGUHealthContext>[];
   },
 ) {
@@ -37,7 +56,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   );
 
   managementRouter.use(...middleware);
-  managementRouter.use(sessionAuthorizationMiddleware());
+  managementRouter.use(createSessionInjectMethodsMiddleware());
 
   managementRouter.get(
     OIDC_ROUTES.OIDC_DISCOVERY,
@@ -48,14 +67,14 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   managementRouter.get(
     OIDC_ROUTES.USER_INFO,
     "/auth/userinfo",
-    ...authMiddlewares,
+    ...tokenAuthMiddlewares,
     routes.userInfo(),
   );
 
   managementRouter.post(
     OIDC_ROUTES.USER_INFO,
     "/auth/userinfo",
-    ...authMiddlewares,
+    ...tokenAuthMiddlewares,
     routes.userInfo(),
   );
 
@@ -94,39 +113,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/interaction/password-reset-verify",
     routes.passwordResetPOST(),
   );
-  managementRouter.get(
-    OIDC_ROUTES.LOGIN_GET,
-    "/interaction/login",
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    parseScopesMiddleware(),
-    routes.loginGET(),
-  );
-  managementRouter.post(
-    OIDC_ROUTES.LOGIN_POST,
-    "/interaction/login",
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    routes.loginPOST(),
-  );
 
   // Adding both as options to either get or post.
   managementRouter.get(
@@ -151,77 +137,6 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     routes.logout(),
   );
 
-  managementRouter.get(
-    OIDC_ROUTES.AUTHORIZE_GET,
-    "/auth/authorize",
-    OAuthErrorHandlingMiddleware(),
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    parseScopesMiddleware(),
-    routes.authorize(),
-  );
-
-  managementRouter.post(
-    OIDC_ROUTES.AUTHORIZE_POST,
-    "/auth/authorize",
-    multer().none(),
-    OAuthErrorHandlingMiddleware(),
-    createValidateInjectOIDCParameters({
-      required: ["client_id", "response_type", "state", "code_challenge"],
-      optional: ["scope", "redirect_uri", "code_challenge_method"],
-    }),
-    clientInjectFHIRMiddleware(),
-    routes.authorize(),
-  );
-
-  managementRouter.post(
-    OIDC_ROUTES.SCOPE_POST,
-    "/auth/scope",
-    multer().none(),
-    OAuthErrorHandlingMiddleware(),
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    parseScopesMiddleware(),
-    routes.scopePOST(),
-  );
-
-  managementRouter.get(
-    OIDC_ROUTES.SCOPE_GET,
-    "/auth/scope",
-    OAuthErrorHandlingMiddleware(),
-    createValidateInjectOIDCParameters({
-      required: [
-        "client_id",
-        "response_type",
-        "state",
-        "code_challenge",
-        "code_challenge_method",
-      ],
-      optional: ["scope", "redirect_uri"],
-    }),
-    clientInjectFHIRMiddleware(),
-    parseScopesMiddleware(),
-    routes.scopeGET(),
-  );
-
   managementRouter.post(
     OIDC_ROUTES.TOKEN_POST,
     "/auth/token",
@@ -230,24 +145,76 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     routes.tokenPost(),
   );
 
-  // managementRouter.get(
-  //   "/smart/launch",
-  //   multer().none(),
-  //   OAuthErrorHandlingMiddleware(),
-  //   createValidateInjectOIDCParameters({
-  //     required: [
-  //       "client_id",
-  //       "response_type",
-  //       "state",
-  //       "code_challenge",
-  //       "code_challenge_method",
-  //     ],
-  //     optional: ["scope", "redirect_uri"],
-  //   }),
-  //   clientInjectFHIRMiddleware(),
-  //   parseScopesMiddleware(),
-  //   routes.smartLaunchGET(),
-  // );
+  managementRouter.get(
+    OIDC_ROUTES.LOGIN_GET,
+    "/interaction/login",
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+    routes.loginGET(),
+  );
+
+  managementRouter.post(
+    OIDC_ROUTES.LOGIN_POST,
+    "/interaction/login",
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    routes.loginPOST(),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES.AUTHORIZE_GET,
+    "/auth/authorize",
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+
+    createSessionValidateAuthentication(),
+
+    routes.authorize(),
+  );
+
+  managementRouter.post(
+    OIDC_ROUTES.AUTHORIZE_POST,
+    "/auth/authorize",
+    multer().none(),
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+
+    createSessionValidateAuthentication(),
+
+    routes.authorize(),
+  );
+
+  managementRouter.post(
+    OIDC_ROUTES.SCOPE_POST,
+    "/auth/scope",
+    multer().none(),
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+
+    createSessionValidateAuthentication(),
+
+    routes.scopePOST(),
+  );
+
+  managementRouter.get(
+    "/smart/launch",
+    multer().none(),
+    OAuthErrorHandlingMiddleware(),
+    createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
+    clientInjectFHIRMiddleware(),
+    parseScopesMiddleware(),
+
+    createSessionValidateAuthentication(),
+
+    routes.smartLaunchGET(),
+  );
 
   return managementRouter;
 }

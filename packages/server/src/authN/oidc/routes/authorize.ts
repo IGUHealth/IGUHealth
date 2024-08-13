@@ -1,3 +1,8 @@
+import React from "react";
+
+import { ScopeVerifyForm } from "@iguhealth/components";
+
+import * as views from "../../../views/index.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
@@ -62,88 +67,94 @@ export function authorize(): OIDCRouteHandler {
       });
     }
 
-    if (await ctx.state.oidc.isAuthenticated(ctx)) {
-      const state = ctx.state.oidc.parameters.state;
-      const code_challenge = ctx.state.oidc.parameters.code_challenge;
-      const code_challenge_method =
-        ctx.state.oidc.parameters.code_challenge_method ?? "plain";
+    const state = ctx.state.oidc.parameters.state;
+    const code_challenge = ctx.state.oidc.parameters.code_challenge;
+    const code_challenge_method =
+      ctx.state.oidc.parameters.code_challenge_method ?? "plain";
 
-      if (
-        SUPPORTED_CODE_CHALLENGE_METHODS.indexOf(code_challenge_method) === -1
-      ) {
-        throw new OIDCError({
-          error: "invalid_request",
-          error_description: `Code challenge method '${code_challenge_method}' not supported.`,
-          state,
-          redirect_uri: redirectUrl,
-        });
-      }
-      if (!client.id) {
-        throw new OIDCError({
-          error: "invalid_request",
-          error_description: `Client ID not found.`,
-          state,
-          redirect_uri: redirectUrl,
-        });
-      }
-      const userId = ctx.state.oidc.user?.id;
-      if (!userId) {
-        throw new OIDCError({
-          error: "invalid_request",
-          error_description: `User ID not found.`,
-          state,
-          redirect_uri: redirectUrl,
-        });
-      }
-      const approvedScopes = await scopes.getApprovedScope(
-        ctx.state.iguhealth.db,
-        ctx.state.iguhealth.tenant,
-        client.id,
-        userId,
-      );
-
-      // If Scopes are misaligned redirect to scope verify page.
-      if (
-        parseScopes.toString(approvedScopes) !==
-        parseScopes.toString(ctx.state.oidc.scopes ?? [])
-      ) {
-        const scopeRoute = ctx.router.url(
-          OIDC_ROUTES.SCOPE_GET,
-          { tenant: ctx.state.iguhealth.tenant },
-          { query: ctx.state.oidc.parameters },
-        );
-        if (scopeRoute instanceof Error) throw scopeRoute;
-        ctx.redirect(scopeRoute);
-        return;
-      }
-
-      const code = await codes.create(
-        ctx.state.iguhealth.db,
-        ctx.state.iguhealth.tenant,
-        {
-          type: "oauth2_code_grant",
-          client_id: client.id,
-          tenant: ctx.state.iguhealth.tenant,
-          // Should be safe to use here as is authenticated so user should be populated.
-          user_id: ctx.state.oidc.user?.id as string,
-          pkce_code_challenge: code_challenge,
-          redirect_uri: redirectUrl,
-          pkce_code_challenge_method: code_challenge_method as "S256" | "plain",
-          expires_in: "15 minutes",
-        },
-      );
-
-      ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
-    } else {
-      ctx.redirect(
-        ctx.router.url(
-          OIDC_ROUTES.LOGIN_GET,
-          {
-            tenant: ctx.state.iguhealth.tenant,
-          },
-          { query: ctx.state.oidc.parameters },
-        ) as string,
-      );
+    if (
+      SUPPORTED_CODE_CHALLENGE_METHODS.indexOf(code_challenge_method) === -1
+    ) {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: `Code challenge method '${code_challenge_method}' not supported.`,
+        state,
+        redirect_uri: redirectUrl,
+      });
     }
+    if (!client.id) {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: `Client ID not found.`,
+        state,
+        redirect_uri: redirectUrl,
+      });
+    }
+    const userId = ctx.state.oidc.user?.id;
+    if (!userId) {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: `User ID not found.`,
+        state,
+        redirect_uri: redirectUrl,
+      });
+    }
+    const approvedScopes = await scopes.getApprovedScope(
+      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.tenant,
+      client.id,
+      userId,
+    );
+
+    // If Scopes are misaligned redirect to scope verify page.
+    if (
+      parseScopes.toString(approvedScopes) !==
+      parseScopes.toString(ctx.state.oidc.scopes ?? [])
+    ) {
+      const scopePostURL = ctx.router.url(OIDC_ROUTES.SCOPE_POST, {
+        tenant: ctx.state.iguhealth.tenant,
+      });
+      if (scopePostURL instanceof Error) throw scopePostURL;
+      ctx.status = 200;
+      ctx.body = views.renderString(
+        React.createElement(ScopeVerifyForm, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          client: {
+            name: client.name,
+            logoUri: client.logoUri,
+          },
+          authorizeParameters: {
+            ...ctx.state.oidc.parameters,
+            client_id: client.id,
+            response_type: ctx.state.oidc.parameters.response_type as string,
+            state: ctx.state.oidc.parameters.state as string,
+            code_challenge: ctx.state.oidc.parameters.code_challenge as string,
+            code_challenge_method: ctx.state.oidc.parameters
+              .code_challenge_method as string,
+          },
+          postURL: scopePostURL,
+        }),
+      );
+      return;
+    }
+
+    const code = await codes.create(
+      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.tenant,
+      {
+        type: "oauth2_code_grant",
+        client_id: client.id,
+        tenant: ctx.state.iguhealth.tenant,
+        // Should be safe to use here as is authenticated so user should be populated.
+        user_id: ctx.state.oidc.user?.id as string,
+        pkce_code_challenge: code_challenge,
+        redirect_uri: redirectUrl,
+        pkce_code_challenge_method: code_challenge_method as "S256" | "plain",
+        expires_in: "15 minutes",
+      },
+    );
+
+    ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
   };
 }

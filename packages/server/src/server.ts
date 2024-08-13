@@ -295,7 +295,7 @@ export default async function createServer(): Promise<
   const tenantOIDCRouter = await createOIDCRouter<KoaExtensions.IGUHealth>(
     "/oidc",
     {
-      authMiddlewares,
+      tokenAuthMiddlewares: authMiddlewares,
       middleware: [
         setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
       ],
