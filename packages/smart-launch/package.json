@@ -1,0 +1,18 @@
+{
+  "name": "@iguhealth/smart-launch",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "echo 'test'"
+  },
+  "dependencies": {
+    "@iguhealth/components": "workspace:^",
+    "@types/react": "^18.3.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@babel/preset-react": "^7.18.6",
+    "typescript": "5.5.4"
+  }
+}

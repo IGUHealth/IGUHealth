@@ -123,6 +123,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/server"\
     },\
     {\
+      "name": "@iguhealth/smart-launch",\
+      "reference": "workspace:packages/smart-launch"\
+    },\
+    {\
       "name": "@iguhealth/testscript-runner",\
       "reference": "workspace:packages/testscript-runner"\
     },\
@@ -160,6 +164,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
+    ["@iguhealth/smart-launch", ["workspace:packages/smart-launch"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
     ["@iguhealth/x-fhir-query", ["workspace:packages/x-fhir-query"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
@@ -15431,6 +15436,22 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"],\
           ["validator", "npm:13.12.0"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.4.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/smart-launch", [\
+      ["workspace:packages/smart-launch", {\
+        "packageLocation": "./packages/smart-launch/",\
+        "packageDependencies": [\
+          ["@iguhealth/smart-launch", "workspace:packages/smart-launch"],\
+          ["@babel/core", "npm:7.24.5"],\
+          ["@babel/preset-react", "virtual:53837c94fe0f74fafc75833122c429cfaa547fd5fc7a6d940cac3b691a98f8d8c1a980b7cdd8cd9afbd5a152244f09ae2b693859798df1e2ad67d70e49a9f4d3#npm:7.22.5"],\
+          ["@iguhealth/components", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components"],\
+          ["@types/react", "npm:18.3.3"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.3.1"],\
+          ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\
         "linkType": "SOFT"\
       }]\
