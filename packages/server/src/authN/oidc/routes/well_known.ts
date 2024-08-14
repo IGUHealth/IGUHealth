@@ -274,6 +274,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
       issuer: getIssuer(ctx.state.iguhealth.tenant),
       grant_types_supported: ["authorization_code", "client_credentials"],
+
       token_endpoint: new URL(
         oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
           tenant: ctx.state.iguhealth.tenant,
@@ -287,12 +288,15 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         }) as string,
         process.env.API_URL,
       ).href,
+
       jwks_uri: new URL(oidcRouter.url(JWKS_GET) as string, process.env.API_URL)
         .href,
+
       token_endpoint_auth_methods_supported: [
         "client_secret_basic",
         "client_secret_post",
       ],
+
       capabilities: [
         "sso-openid-connect",
         "launch-standalone",

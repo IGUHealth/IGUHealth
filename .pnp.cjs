@@ -15671,6 +15671,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/smart-launch", "workspace:packages/smart-launch"],\
           ["@babel/core", "npm:7.25.2"],\
           ["@babel/preset-react", "virtual:0f0af4424510760de9c3aca0d6376f160d5d68be7934d8a5c1537779ad4da6f0a2e3a8696e0b1f936ded20ef5690899e765b0bb2286d104d177f3fc8b44ab71f#npm:7.24.7"],\
+          ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/components", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components"],\
           ["@rollup/plugin-babel", "virtual:0f0af4424510760de9c3aca0d6376f160d5d68be7934d8a5c1537779ad4da6f0a2e3a8696e0b1f936ded20ef5690899e765b0bb2286d104d177f3fc8b44ab71f#npm:6.0.4"],\
           ["@rollup/plugin-commonjs", "virtual:0f0af4424510760de9c3aca0d6376f160d5d68be7934d8a5c1537779ad4da6f0a2e3a8696e0b1f936ded20ef5690899e765b0bb2286d104d177f3fc8b44ab71f#npm:26.0.1"],\
@@ -15679,9 +15680,15 @@ const RAW_RUNTIME_STATE =
           ["@rollup/plugin-typescript", "virtual:0f0af4424510760de9c3aca0d6376f160d5d68be7934d8a5c1537779ad4da6f0a2e3a8696e0b1f936ded20ef5690899e765b0bb2286d104d177f3fc8b44ab71f#npm:11.1.6"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
+          ["autoprefixer", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:10.4.19"],\
+          ["cssnano", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:7.0.2"],\
+          ["postcss", "npm:8.4.38"],\
+          ["postcss-cli", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.0.0"],\
+          ["postcss-import", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:16.1.0"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.3.1"],\
           ["rollup", "npm:4.20.0"],\
+          ["tailwindcss", "npm:3.4.4"],\
           ["tslib", "npm:2.6.3"],\
           ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
         ],\

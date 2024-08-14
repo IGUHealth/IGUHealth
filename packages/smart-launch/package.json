@@ -2,9 +2,11 @@
   "name": "@iguhealth/smart-launch",
   "version": "0.0.1",
   "scripts": {
+    "build-css": "yarn postcss -o dist/css/index.css index.css",
     "build": "echo 'test'"
   },
   "dependencies": {
+    "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
     "@types/react": "^18.3.3",
     "react": "^18.3.0",
@@ -19,7 +21,13 @@
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^7.0.2",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
     "rollup": "^4.20.0",
+    "tailwindcss": "^3.4.4",
     "tslib": "^2.6.3",
     "typescript": "5.5.4"
   }
