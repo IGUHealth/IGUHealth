@@ -49,7 +49,6 @@ import {
 import {
   fhirResourceToBundleEntry,
   fhirResponseToBundleEntry,
-  fullUrl,
 } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { asRoot, IGUHealthServerCTX } from "../../../fhir-api/types.js";
@@ -65,6 +64,7 @@ import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
+import { createFHIRURL } from "../../../fhir-api/constants.js";
 
 async function getAllParametersForResource<
   CTX extends IGUHealthServerCTX,
@@ -853,7 +853,7 @@ async function getHistory<
     return {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resource: resource as any,
-      fullUrl: fullUrl(
+      fullUrl: createFHIRURL(
         fhirVersion,
         ctx.tenant,
         `${resource.resourceType}/${resource.id}`,

@@ -158,6 +158,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
     iss: getIssuer(ctx.params.tenant as TenantId),
     aud: "iguhealth",
     sub: "public-user" as Subject,
+    scope: "user/*.*",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,

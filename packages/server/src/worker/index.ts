@@ -523,6 +523,7 @@ function getTokenClaims(
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
     iss: getIssuer(tenant),
+    scope: "system/*.*",
     aud: WORKER_APP.id as id,
     sub: WORKER_APP.id as string as Subject,
     [CUSTOM_CLAIMS.RESOURCE_ID]: WORKER_APP.id as id,

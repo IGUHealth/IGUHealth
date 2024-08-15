@@ -17,9 +17,12 @@ function App() {
   const [patients, setPatients] = useState<Patient[]>([]);
   useEffect(() => {
     async function fetchPatients() {
-      const patients = await iguhealth
-        .getClient()
-        .search_type({}, R4, "Patient", []);
+      const patients = await iguhealth.client.search_type(
+        {},
+        R4,
+        "Patient",
+        [],
+      );
       setPatients(patients.resources);
     }
     if (iguhealth.isAuthenticated) fetchPatients();
@@ -46,7 +49,7 @@ function IGUHealthAuth() {
 }
 
 function IGUHealthSMART() {
-  const [client, setClient] = useState<Client | undefined>();
+  const [_client, setClient] = useState<Client | undefined>();
   useEffect(() => {
     console.log("FHIR TRIGGER");
     FHIR.oauth2
