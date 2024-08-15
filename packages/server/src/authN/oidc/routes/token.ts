@@ -221,17 +221,6 @@ async function createTokenResponse({
   clientApplication: ClientApplication;
 }): Promise<Oauth2TokenBodyResponse> {
   const signingKey = await getSigningKey(getCertLocation(), getCertKey());
-
-  const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.tenant),
-    aud: clientApplication.id as id,
-    [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
-    [CUSTOM_CLAIMS.ROLE]: user.role,
-    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-    [CUSTOM_CLAIMS.RESOURCE_ID]: (user.fhir_user_id as id) ?? undefined,
-    sub: user.id as Subject,
-  };
-
   const approvedScopes = await scopes.getApprovedScope(
     ctx.db,
     ctx.tenant,
@@ -239,8 +228,17 @@ async function createTokenResponse({
     user.id,
   );
 
+  const accessTokenPayload: AccessTokenPayload<s.user_role> = {
+    iss: getIssuer(ctx.tenant),
+    aud: clientApplication.id as id,
+    scope: parseScopes.toString(approvedScopes),
+    [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
+    [CUSTOM_CLAIMS.ROLE]: user.role,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+    [CUSTOM_CLAIMS.RESOURCE_ID]: (user.fhir_user_id as id) ?? undefined,
+    sub: user.id as Subject,
+  };
   const idTokenPayload = await getIDTokenPayload(ctx, user, approvedScopes);
-
   const tokenExiration = "2h";
 
   const body = {

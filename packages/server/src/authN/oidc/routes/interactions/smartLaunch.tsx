@@ -1,106 +1,88 @@
 import React from "react";
+import ReactDOM from "react-dom/server";
+import { user_role } from "zapatos/schema";
 
-import { FHIRGenerativeSearchTableDisplay } from "@iguhealth/components";
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  AccessTokenPayload,
+  CUSTOM_CLAIMS,
+  Subject,
+  createToken,
+} from "@iguhealth/jwt";
 
-import { asRoot } from "../../../../fhir-api/types.js";
-import * as views from "../../../../views/index.js";
+import { createTenantURL } from "../../../../fhir-api/constants.js";
+import resolveStatic from "../../../../resolveStatic.js";
+import {
+  getCertKey,
+  getCertLocation,
+  getSigningKey,
+} from "../../../certifications.js";
+import { getIssuer } from "../../constants.js";
+import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../../index.js";
-import { OIDCError } from "../../middleware/oauth_error_handling.js";
 import * as parseScopes from "../../scopes/parse.js";
 
-function getLaunchScopes(
+export function getLaunchScopes(
   scopes: parseScopes.Scope[],
 ): parseScopes.LaunchTypeScope[] {
   return scopes.filter((scope) => scope.type === "launch-type");
 }
 
-function canLaunch(scopes: parseScopes.Scope[]): boolean {
+export function canLaunch(scopes: parseScopes.Scope[]): boolean {
   return scopes.find((scope) => scope.type === "launch") !== undefined;
 }
 
-/**
- *
- */
-export function smartLaunchGET(): OIDCRouteHandler {
-  return async (ctx) => {
-    const scopes = ctx.state.oidc.scopes ?? [];
-    if (!canLaunch(scopes)) {
-      throw new OIDCError({
-        error: "invalid_scope",
-        error_description: "Launch scope required.",
-      });
-    }
+export async function launchView(ctx: Parameters<OIDCRouteHandler>[0]) {
+  const accessToken = await createToken<AccessTokenPayload<user_role>>({
+    signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+    payload: {
+      sub: ctx.state.oidc.user?.id as Subject,
+      scope: "user/Patient.rs user/SearchParameter.rs",
+      iss: getIssuer(ctx.state.iguhealth.tenant),
+      aud: SYSTEM_APP.id as string,
+      [CUSTOM_CLAIMS.ROLE]: ctx.state.oidc.user?.role as user_role,
+      [CUSTOM_CLAIMS.TENANT]: ctx.state.iguhealth.tenant,
+      [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+      [CUSTOM_CLAIMS.RESOURCE_ID]: ctx.state.oidc.user?.fhir_user_id as id,
+    },
+  });
 
-    const launchScopes = getLaunchScopes(scopes);
-
-    if (launchScopes.length < 1) {
-      throw new OIDCError({
-        error: "invalid_scope",
-        error_description: "Launch scope required.",
-      });
-    }
-
-    const launchTypes = launchScopes.map((scope) => scope.launchType);
-
-    const searchParameters = await ctx.state.iguhealth.client.search_type(
-      asRoot(ctx.state.iguhealth),
-      R4,
-      "SearchParameter",
-      [
-        { name: "base", value: ["Resource", "Patient"] },
-        { name: "_count", value: ["100"] },
-      ],
-    );
-
-    return new Promise((_resolve, reject) => {
-      const { pipe, abort } = views.renderPipe(
-        <FHIRGenerativeSearchTableDisplay
-          parameters={[]}
-          onParametersChange={(z) => {}}
-          searchParameters={searchParameters.resources}
-          data={{
-            total: 1,
-            resources: [
-              {
-                resourceType: "Patient",
-                id: "1" as id,
-                name: [{ family: "Doe", given: ["John"] }],
-              },
-            ],
-          }}
-        />,
-        {
-          onShellReady() {
-            ctx.respond = false;
-            ctx.status = 200;
-            ctx.set("Content-Type", "text/html");
-            pipe(ctx.res);
-            ctx.res.end();
-          },
-          onShellError() {
-            ctx.status = 500;
-            abort();
-            ctx.set("Content-Type", "text/html");
-            ctx.body = "<!doctype html><p>Loading...</p></script>";
-            reject(
-              new OperationError(
-                outcomeError("exception", "Failed to render launch"),
-              ),
-            );
-          },
-          onError(error) {
-            console.error(error);
-            reject(
-              new OperationError(
-                outcomeError("exception", "Failed to render launch"),
-              ),
-            );
-          },
-        },
-      );
-    });
+  const variables = {
+    API_URL: createTenantURL(ctx.state.iguhealth.tenant),
+    ACCESS_TOKEN: accessToken,
+    FHIR_VERSION: R4,
+    RESOURCE_TYPE: "Patient",
   };
+
+  const windowScript = `
+  window.API_URL = "${variables.API_URL}"; 
+  window.ACCESS_TOKEN = "${variables.ACCESS_TOKEN}"; 
+  window.FHIR_VERSION = "${variables.FHIR_VERSION}"; 
+  window.RESOURCE_TYPE = "${variables.RESOURCE_TYPE}";`;
+
+  return ReactDOM.renderToString(
+    <html lang="en">
+      <head>
+        <style nonce={ctx.state.corsNonce}>
+          {resolveStatic("@iguhealth/smart-launch/dist/css/index.css")}
+        </style>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script
+          nonce={ctx.state.corsNonce}
+          dangerouslySetInnerHTML={{
+            __html: windowScript,
+          }}
+        ></script>
+        <script
+          nonce={ctx.state.corsNonce}
+          dangerouslySetInnerHTML={{
+            __html: resolveStatic("@iguhealth/smart-launch/dist/launch.js"),
+          }}
+        ></script>
+      </body>
+    </html>,
+  );
 }

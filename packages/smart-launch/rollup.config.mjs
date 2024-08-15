@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import typescript from "@rollup/plugin-typescript";
+import terser from '@rollup/plugin-terser';
 
 export default {
    output: {
@@ -25,6 +26,7 @@ export default {
       replace({
          preventAssignment: false,
          'process.env.NODE_ENV': '"development"'
-      })
+      }),
+      terser()
    ]
 }

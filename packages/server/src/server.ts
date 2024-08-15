@@ -8,6 +8,7 @@ import mount from "koa-mount";
 import redisStore from "koa-redis";
 import session from "koa-session";
 import serve from "koa-static";
+import { randomBytes } from "node:crypto";
 import path from "node:path";
 import zlib from "node:zlib";
 import React from "react";
@@ -338,19 +339,25 @@ export default async function createServer(): Promise<
   rootRouter.use(tenantRouter.allowedMethods());
 
   app
-    .use(
-      helmet({
+    .use(async (ctx, next) => {
+      ctx.state.corsNonce = randomBytes(6).toString("hex");
+      await next();
+    })
+    .use(async (ctx, next) => {
+      return helmet({
         contentSecurityPolicy: {
           // See https://github.com/w3c/webappsec-csp/issues/8
           // Not compatible with redirect on OIDC
           directives: {
             "form-action": null,
-            "style-src": "'self'",
+            "style-src": ["'self'", `'nonce-${ctx.state.corsNonce}'`],
+            "script-src": ["'self'", `'nonce-${ctx.state.corsNonce}'`],
             "default-src": "none",
+            "connect-src": ["'self'"],
           },
         },
-      }),
-    )
+      })(ctx, next);
+    })
     .use(
       mount(
         "/public",

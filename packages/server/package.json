@@ -47,6 +47,7 @@
     "@iguhealth/meta-value": "workspace:^",
     "@iguhealth/operation-execution": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
+    "@iguhealth/smart-launch": "workspace:^",
     "@inquirer/prompts": "^5.3.5",
     "@koa/bodyparser": "^5.1.1",
     "@koa/cors": "^5.0.0",

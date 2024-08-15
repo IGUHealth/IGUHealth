@@ -4,24 +4,12 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   R4,
-  R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
+import { createFHIRURL } from "../../fhir-api/constants.js";
 import { fhirResponseToHTTPResponse } from "../../fhir-http/index.js";
-
-export function fullUrl(
-  fhirVersion: FHIR_VERSION,
-  tenant: string,
-  end: string,
-): uri | undefined {
-  const fhirSlug =
-    fhirVersion === R4 ? "r4" : fhirVersion === R4B ? "r4b" : fhirVersion;
-  return `${process.env.API_URL}/w/${tenant}/api/v1/fhir/${fhirSlug}/${end}` as
-    | uri
-    | undefined;
-}
 
 export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
   version: Version,
@@ -29,7 +17,7 @@ export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
   resource: Resource<Version, AllResourceTypes>,
 ): NonNullable<Resource<Version, "Bundle">["entry"]>[number] {
   return {
-    fullUrl: fullUrl(
+    fullUrl: createFHIRURL(
       version,
       tenant,
       `${resource.resourceType}/${resource.id}`,
@@ -49,7 +37,7 @@ export function fhirResponseToBundleEntry(
       location: (httpResponse.headers?.Location ??
         httpResponse.headers?.["Content-Location"]) as uri | undefined,
     },
-    fullUrl: fullUrl(
+    fullUrl: createFHIRURL(
       fhirResponse.fhirVersion,
       tenant,
       httpResponse.headers?.Location ?? "",

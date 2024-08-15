@@ -86,6 +86,7 @@ export namespace KoaExtensions {
     allowSignup?: boolean;
     __user__?: AccessTokenPayload<s.user_role>;
     __access_token__?: AccessToken<s.user_role>;
+    corsNonce: string;
     iguhealth: MakeOptional<IGUHealthServerCTX, "user" | "tenant">;
   };
 
@@ -147,6 +148,7 @@ function rootClaims(
   clientApp: ClientApplication,
 ): AccessTokenPayload<s.user_role> {
   return {
+    scope: "system/*.*",
     iss: getIssuer(tenant),
     sub: clientApp.id as string as Subject,
     aud: clientApp.id as id,

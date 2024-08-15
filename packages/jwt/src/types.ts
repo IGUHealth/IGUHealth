@@ -69,6 +69,10 @@ export interface AccessTokenPayload<role>
    * In the common special case when there is one audience, the aud value MAY be a single case-sensitive string.
    */
   aud: string;
+  /**
+   * scope Required. OAuth 2.0 scopes. Space-separated string.
+   */
+  scope: string;
 }
 
 /**
