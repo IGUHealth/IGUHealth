@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/server";
 import { user_role } from "zapatos/schema";
 
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -33,12 +33,16 @@ export function canLaunch(scopes: parseScopes.Scope[]): boolean {
   return scopes.find((scope) => scope.type === "launch") !== undefined;
 }
 
-export async function launchView(ctx: Parameters<OIDCRouteHandler>[0]) {
+export async function launchView<Version extends FHIR_VERSION>(
+  ctx: Parameters<OIDCRouteHandler>[0],
+  fhirVersion: Version,
+  resourceType: ResourceType<Version>,
+) {
   const accessToken = await createToken<AccessTokenPayload<user_role>>({
     signingKey: await getSigningKey(getCertLocation(), getCertKey()),
     payload: {
       sub: ctx.state.oidc.user?.id as Subject,
-      scope: "user/Patient.rs user/SearchParameter.rs",
+      scope: `user/${resourceType}.rs user/SearchParameter.rs`,
       iss: getIssuer(ctx.state.iguhealth.tenant),
       aud: SYSTEM_APP.id as string,
       [CUSTOM_CLAIMS.ROLE]: ctx.state.oidc.user?.role as user_role,
@@ -51,8 +55,8 @@ export async function launchView(ctx: Parameters<OIDCRouteHandler>[0]) {
   const variables = {
     API_URL: createTenantURL(ctx.state.iguhealth.tenant),
     ACCESS_TOKEN: accessToken,
-    FHIR_VERSION: R4,
-    RESOURCE_TYPE: "Patient",
+    FHIR_VERSION: fhirVersion,
+    RESOURCE_TYPE: resourceType,
   };
 
   const windowScript = `
