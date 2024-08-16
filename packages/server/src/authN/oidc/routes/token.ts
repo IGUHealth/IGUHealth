@@ -40,6 +40,7 @@ import { OIDCError } from "../middleware/oauth_error_handling.js";
 import type { OAuth2TokenBody } from "../schemas/oauth2_token_body.schema.js";
 import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" with { type: "json" };
 import * as parseScopes from "../scopes/parse.js";
+import { ResolvedLaunchParameters } from "./interactions/smartLaunch.js";
 
 function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
@@ -106,6 +107,14 @@ function verifyClient(
   }
 
   return client;
+}
+
+function getLaunchParameters(
+  code: codes.AuthorizationCode,
+): ResolvedLaunchParameters | undefined {
+  return (
+    code.meta as unknown as undefined | { launch: ResolvedLaunchParameters }
+  )?.["launch"];
 }
 
 function verifyTokenParameters(body: unknown): body is OAuth2TokenBody {
@@ -185,6 +194,7 @@ async function createRefreshToken(
   tenant: TenantId,
   client: ClientApplication,
   user: users.User,
+  launchParameters?: ResolvedLaunchParameters,
   expires_in: string = "12 hours",
 ): Promise<codes.AuthorizationCode> {
   const refresh_token = await codes.create(pg, tenant, {
@@ -194,6 +204,7 @@ async function createRefreshToken(
     // Should be safe to use here as is authenticated so user should be populated.
     user_id: user.id,
     expires_in,
+    meta: launchParameters ? { launch: launchParameters } : undefined,
   });
 
   return refresh_token;
@@ -205,7 +216,7 @@ async function createRefreshToken(
 type Oauth2TokenBodyResponse = {
   access_token: JWT<AccessTokenPayload<s.user_role>>;
   id_token: JWT<SMARTPayload<s.user_role>>;
-  token_type: "bearer";
+  token_type: "Bearer";
   expires_in: number;
   refresh_token?: string;
   scope?: string;
@@ -215,10 +226,12 @@ async function createTokenResponse({
   user,
   ctx,
   clientApplication,
+  launchParameters,
 }: {
   user: users.User;
   ctx: IGUHealthServerCTX;
   clientApplication: ClientApplication;
+  launchParameters?: ResolvedLaunchParameters;
 }): Promise<Oauth2TokenBodyResponse> {
   const signingKey = await getSigningKey(getCertLocation(), getCertKey());
   const approvedScopes = await scopes.getApprovedScope(
@@ -230,6 +243,8 @@ async function createTokenResponse({
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: getIssuer(ctx.tenant),
+    patient: launchParameters?.Patient,
+    encounter: launchParameters?.Encounter,
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
     [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
@@ -243,6 +258,8 @@ async function createTokenResponse({
 
   const body = {
     scope: parseScopes.toString(approvedScopes),
+    patient: launchParameters?.Patient,
+    encounter: launchParameters?.Encounter,
     access_token: await createToken<AccessTokenPayload<s.user_role>>({
       signingKey,
       payload: accessTokenPayload,
@@ -255,14 +272,20 @@ async function createTokenResponse({
           expiresIn: tokenExiration,
         })
       : undefined,
-    token_type: "bearer",
+    token_type: "Bearer",
     // 2 hours in seconds
     expires_in: 7200,
   } as Oauth2TokenBodyResponse;
 
   if (approvedScopes.find((v) => v.type === "offline_access")) {
     body.refresh_token = (
-      await createRefreshToken(ctx.db, ctx.tenant, clientApplication, user)
+      await createRefreshToken(
+        ctx.db,
+        ctx.tenant,
+        clientApplication,
+        user,
+        launchParameters,
+      )
     ).code;
   }
 
@@ -339,10 +362,13 @@ export function tokenPost<
               id: code[0].id,
             });
 
+            const launchParameters = getLaunchParameters(code[0]);
+
             return createTokenResponse({
               user,
               ctx: asRoot(fhirContext),
               clientApplication,
+              launchParameters,
             });
           },
         );
@@ -416,10 +442,13 @@ export function tokenPost<
               id: code[0].id,
             });
 
+            const launchParameters = getLaunchParameters(code[0]);
+
             return createTokenResponse({
               user,
               ctx: asRoot(fhirContext),
               clientApplication,
+              launchParameters,
             });
           },
         );
@@ -443,7 +472,7 @@ export function tokenPost<
             ctx.state.iguhealth.tenant,
             clientApplication,
           ),
-          token_type: "bearer",
+          token_type: "Bearer",
           expires_in: 7200,
         } as Oauth2TokenBodyResponse;
         ctx.status = 200;

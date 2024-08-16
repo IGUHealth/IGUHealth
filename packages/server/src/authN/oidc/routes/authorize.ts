@@ -10,6 +10,7 @@ import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
 import * as parseScopes from "../scopes/parse.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
+import { launchContexts } from "./interactions/smartLaunch.js";
 
 const SUPPORTED_CODE_CHALLENGE_METHODS = ["S256"];
 
@@ -139,6 +140,24 @@ export function authorize(): OIDCRouteHandler {
       return;
     }
 
+    const { unResolvedLaunchParameters, resolvedLaunchParameters } =
+      launchContexts(ctx, client, ctx.state.oidc.scopes ?? []);
+
+    if (unResolvedLaunchParameters.length > 0) {
+      const smartLaunchURL = ctx.router.url(
+        OIDC_ROUTES.SMART_LAUNCH_GET,
+        {
+          tenant: ctx.state.iguhealth.tenant,
+        },
+        {
+          query: ctx.state.oidc.parameters,
+        },
+      );
+      if (smartLaunchURL instanceof Error) throw smartLaunchURL;
+      ctx.redirect(smartLaunchURL);
+      return;
+    }
+
     const code = await codes.create(
       ctx.state.iguhealth.db,
       ctx.state.iguhealth.tenant,
@@ -152,6 +171,7 @@ export function authorize(): OIDCRouteHandler {
         redirect_uri: redirectUrl,
         pkce_code_challenge_method: code_challenge_method as "S256" | "plain",
         expires_in: "15 minutes",
+        meta: { launch: resolvedLaunchParameters },
       },
     );
 

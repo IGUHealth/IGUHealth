@@ -25,6 +25,7 @@ export const OIDC_ROUTES = {
   USER_INFO: "tenant-oidc-user-info",
   OIDC_DISCOVERY: "tenant-oidc-discovery",
   WELL_KNOWN_SMART: "tenant-oidc-well-known-smart",
+  SMART_LAUNCH_GET: "tenant-oidc-smart-launch-get",
 };
 
 export function getIssuer(tenant: TenantId): Issuer {

@@ -2,8 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom/server";
 import { user_role } from "zapatos/schema";
 
-import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
+import {
+  ClientApplication,
+  id,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -21,16 +29,64 @@ import {
 import { getIssuer } from "../../constants.js";
 import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../../index.js";
+import { OIDCError } from "../../middleware/oauth_error_handling.js";
 import * as parseScopes from "../../scopes/parse.js";
+import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 
-export function getLaunchScopes(
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function getLaunchScopes(
   scopes: parseScopes.Scope[],
 ): parseScopes.LaunchTypeScope[] {
   return scopes.filter((scope) => scope.type === "launch-type");
 }
 
-export function canLaunch(scopes: parseScopes.Scope[]): boolean {
+function canLaunch(scopes: parseScopes.Scope[]): boolean {
   return scopes.find((scope) => scope.type === "launch") !== undefined;
+}
+
+export type ResolvedLaunchParameters = Partial<Record<AllResourceTypes, id>>;
+
+export function launchContexts(
+  ctx: Parameters<OIDCRouteHandler>[0],
+  client: ClientApplication,
+  scopes: parseScopes.Scope[],
+): {
+  resolvedLaunchParameters: ResolvedLaunchParameters;
+  unResolvedLaunchParameters: parseScopes.LaunchTypeScope[];
+} {
+  const launchScopes = getLaunchScopes(scopes);
+  if (launchScopes.length !== 0 && !canLaunch(scopes)) {
+    throw new OIDCError({
+      error: "invalid_scope",
+      error_description:
+        "Invalid scope 'launch' scope must be present when requesting launch contexts.",
+    });
+  }
+
+  return {
+    resolvedLaunchParameters: launchScopes
+      .filter((scope) => {
+        const id = ctx.query[`launch/${scope.launchType}`];
+        return id !== undefined;
+      })
+      .reduce(
+        (acc: ResolvedLaunchParameters, scope) => ({
+          ...acc,
+          [capitalize(scope.launchType) as AllResourceTypes]: ctx.query[
+            `launch/${scope.launchType}`
+          ] as id,
+        }),
+        {},
+      ),
+
+    unResolvedLaunchParameters: launchScopes.filter((scope) => {
+      const id = ctx.query[`launch/${scope.launchType}`];
+      return id === undefined;
+    }),
+  };
 }
 
 export async function launchView<Version extends FHIR_VERSION>(
@@ -89,4 +145,47 @@ export async function launchView<Version extends FHIR_VERSION>(
       </body>
     </html>,
   );
+}
+
+export function smartLaunch(): OIDCRouteHandler {
+  return async (ctx) => {
+    const client = ctx.state.oidc.client;
+    if (!client) {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "Client not found.",
+      });
+    }
+
+    const { unResolvedLaunchParameters } = launchContexts(
+      ctx,
+      client,
+      ctx.state.oidc.scopes ?? [],
+    );
+
+    if (unResolvedLaunchParameters.length !== 0) {
+      ctx.status = 200;
+      ctx.body = await launchView(
+        ctx,
+        R4,
+        capitalize(
+          unResolvedLaunchParameters[0].launchType,
+        ) as ResourceType<R4>,
+      );
+    } else {
+      const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
+      if (isInvalidRedirectUrl(redirectUrl, client)) {
+        throw new OIDCError({
+          error: "invalid_request",
+          error_description: `Redirect URI '${redirectUrl}' not found.`,
+        });
+      }
+
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "No unresolved launch scopes.",
+        redirect_uri: redirectUrl,
+      });
+    }
+  };
 }

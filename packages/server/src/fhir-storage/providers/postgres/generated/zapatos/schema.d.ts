@@ -167,6 +167,12 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **authorization_code.meta**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      meta: db.JSONValue | null;
+      /**
       * **authorization_code.pkce_code_challenge**
       * - `text` in database
       * - Nullable, no default
@@ -240,6 +246,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id: string;
+      /**
+      * **authorization_code.meta**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      meta: db.JSONValue | null;
       /**
       * **authorization_code.pkce_code_challenge**
       * - `text` in database
@@ -315,6 +327,12 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **authorization_code.meta**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      meta?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **authorization_code.pkce_code_challenge**
       * - `text` in database
       * - Nullable, no default
@@ -389,6 +407,12 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
+      * **authorization_code.meta**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      meta?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **authorization_code.pkce_code_challenge**
       * - `text` in database
       * - Nullable, no default
@@ -462,6 +486,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.meta**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      meta?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **authorization_code.pkce_code_challenge**
       * - `text` in database
