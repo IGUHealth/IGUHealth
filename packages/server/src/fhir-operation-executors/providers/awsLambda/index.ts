@@ -109,6 +109,7 @@ async function getLambda(
 
     return response;
   } catch (e) {
+    ctx.logger.error(e);
     return undefined;
   }
 }
