@@ -31,6 +31,7 @@ import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
 import * as parseScopes from "../../scopes/parse.js";
+import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -172,9 +173,18 @@ export function smartLaunch(): OIDCRouteHandler {
         ) as ResourceType<R4>,
       );
     } else {
+      const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
+      if (isInvalidRedirectUrl(redirectUrl, client)) {
+        throw new OIDCError({
+          error: "invalid_request",
+          error_description: `Redirect URI '${redirectUrl}' not found.`,
+        });
+      }
+
       throw new OIDCError({
         error: "invalid_request",
         error_description: "No unresolved launch scopes.",
+        redirect_uri: redirectUrl,
       });
     }
   };
