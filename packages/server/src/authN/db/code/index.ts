@@ -57,6 +57,7 @@ export async function create(
     | "redirect_uri"
     | "pkce_code_challenge"
     | "pkce_code_challenge_method"
+    | "meta"
   >,
 ): Promise<AuthorizationCode> {
   return db

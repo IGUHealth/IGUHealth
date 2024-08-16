@@ -1,0 +1,4 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/server": patch
+  "@iguhealth/smart-launch": patch

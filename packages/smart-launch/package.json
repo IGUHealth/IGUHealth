@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build-css": "yarn postcss -o dist/css/index.css index.css",
-    "build": "yarn rollup -c -i src/index.tsx -o dist/launch.js & yarn build-css"
+    "build": "yarn rollup -c -i src/launch.tsx -o dist/launch.js & yarn build-css"
   },
   "dependencies": {
     "@iguhealth/client": "workspace:^",
