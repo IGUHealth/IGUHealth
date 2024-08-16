@@ -1,6 +1,5 @@
 {
   "name": "@iguhealth/hl7.fhir.r4b.test-data",
-  "packageManager": "yarn@4.3.1",
   "type": "module",
   "version": "0.1.2",
   "title": "Hl7 Test data for R4B",

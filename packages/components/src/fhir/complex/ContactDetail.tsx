@@ -24,7 +24,9 @@ export const FHIRContactDetailEditable = ({
           label="Name"
           value={value?.name}
           onChange={(name) => {
-            name && onChange?.call(this, { ...value, name });
+            if (name) {
+              onChange?.call(this, { ...value, name });
+            }
           }}
         />
         <FHIRCodeEditable
@@ -45,11 +47,12 @@ export const FHIRContactDetailEditable = ({
           label="Value"
           value={value?.telecom?.[0]?.value}
           onChange={(telecomValue) => {
-            telecomValue &&
+            if (telecomValue) {
               onChange?.call(this, {
                 ...value,
                 telecom: [{ ...value?.telecom?.[0], value: telecomValue }],
               });
+            }
           }}
         />
       </div>

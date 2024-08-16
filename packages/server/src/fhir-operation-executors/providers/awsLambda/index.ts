@@ -109,6 +109,7 @@ async function getLambda(
 
     return response;
   } catch (e) {
+    ctx.logger.error(e);
     return undefined;
   }
 }
@@ -127,9 +128,9 @@ type Payload = {
 
 // Used within lambda code for setup.
 async function handler(event: Payload, _context: Payload["ctx"]) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const userHandler = require("./user");
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const client = await import("@iguhealth/client/http");
   // Pass in token here and instantiate client. Later.
 

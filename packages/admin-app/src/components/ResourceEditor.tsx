@@ -153,7 +153,7 @@ export default function ResourceEditorComponent({
   const client = useRecoilValue(getClient);
   const setValue = useMemo(
     () => (getResource: (r: Resource) => Resource) => {
-      onChange &&
+      if (onChange) {
         onChange((resource) => {
           const newResource = getResource(
             resource
@@ -164,6 +164,7 @@ export default function ResourceEditorComponent({
           );
           return newResource;
         });
+      }
     },
     [structureDefinition, onChange],
   );
@@ -195,8 +196,9 @@ export default function ResourceEditorComponent({
                 setValue={(v) => {
                   try {
                     const resource = JSON.parse(v);
-                    onChange && onChange(resource);
+                    if (onChange) onChange(resource);
                   } catch (e) {
+                    console.error(e);
                     return;
                   }
                 }}

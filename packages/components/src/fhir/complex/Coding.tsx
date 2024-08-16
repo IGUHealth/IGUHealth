@@ -23,7 +23,9 @@ export const FHIRCodingEditable = ({
           label="System"
           value={value?.system}
           onChange={(system) => {
-            system && onChange?.call(this, { ...value, system: system });
+            if (system) {
+              onChange?.call(this, { ...value, system: system });
+            }
           }}
         />
         <FHIRCodeEditable

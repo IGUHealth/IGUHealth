@@ -1,6 +1,5 @@
 {
   "name": "@iguhealth/hl7.fhir.r4.test-data",
-  "packageManager": "yarn@4.3.1",
   "version": "0.2.2",
   "homepage": "https://iguhealth.app",
   "repository": {

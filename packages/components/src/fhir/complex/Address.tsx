@@ -21,7 +21,9 @@ export const FHIRAddressEditable = ({
           label="Line"
           value={value?.line?.[0] || ""}
           onChange={(line) => {
-            line && onChange?.call(this, { ...value, line: [line] });
+            if (line) {
+              onChange?.call(this, { ...value, line: [line] });
+            }
           }}
         />
         <FHIRStringEditable
