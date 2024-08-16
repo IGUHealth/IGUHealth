@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/hl7.fhir.r4b.test-data",
   "type": "module",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "title": "Hl7 Test data for R4B",
   "description": "IGUHEALTH package that contains hl7 R4B test data.",
   "fhirVersions": [

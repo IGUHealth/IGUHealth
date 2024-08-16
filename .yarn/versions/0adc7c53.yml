@@ -1,4 +1,0 @@
-releases:
-  "@iguhealth/admin-app": patch
-  "@iguhealth/components": patch
-  "@iguhealth/server": patch
