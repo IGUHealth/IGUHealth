@@ -14,6 +14,8 @@ export default function loadEnv() {
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends IGUHealthEnvironment {}
+    interface ProcessEnv extends IGUHealthEnvironment {
+      [k: string]: unknown;
+    }
   }
 }
