@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
-import { FHIRGenerativeSearchTable, Loading } from "@iguhealth/components";
+import {
+  Container,
+  FHIRGenerativeSearchTable,
+  Loading,
+} from "@iguhealth/components";
 
 declare global {
   interface Window {
@@ -36,22 +40,24 @@ function SMARTSelector() {
       <Loading />
     </div>
   ) : (
-    <FHIRGenerativeSearchTable
-      fhirVersion={window.FHIR_VERSION}
-      client={client}
-      resourceType={window.RESOURCE_TYPE as any}
-      onRowClick={(row) => {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set(
-          `launch/${window.RESOURCE_TYPE.toLowerCase()}`,
-          (row as Record<string, string>).id,
-        );
+    <Container title={`Select ${window.RESOURCE_TYPE}`} size="lg">
+      <FHIRGenerativeSearchTable
+        fhirVersion={window.FHIR_VERSION}
+        client={client}
+        resourceType={window.RESOURCE_TYPE as any}
+        onRowClick={(row) => {
+          const urlParams = new URLSearchParams(window.location.search);
+          urlParams.set(
+            `launch/${window.RESOURCE_TYPE.toLowerCase()}`,
+            (row as Record<string, string>).id,
+          );
 
-        window.location.replace(
-          wellKnown.authorization_endpoint + "?" + urlParams.toString(),
-        );
-      }}
-    />
+          window.location.replace(
+            wellKnown.authorization_endpoint + "?" + urlParams.toString(),
+          );
+        }}
+      />
+    </Container>
   );
 }
 
