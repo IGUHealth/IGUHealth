@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/testscript-runner",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "target": "node",
   "type": "module",
   "main": "lib/index.js",
