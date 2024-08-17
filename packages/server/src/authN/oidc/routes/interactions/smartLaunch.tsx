@@ -2,10 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/server";
 import { user_role } from "zapatos/schema";
 
-import {
-  ClientApplication,
-  id,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -51,7 +48,6 @@ export type ResolvedLaunchParameters = Partial<Record<AllResourceTypes, id>>;
 
 export function launchContexts(
   ctx: Parameters<OIDCRouteHandler>[0],
-  client: ClientApplication,
   scopes: parseScopes.Scope[],
 ): {
   resolvedLaunchParameters: ResolvedLaunchParameters;
@@ -69,21 +65,20 @@ export function launchContexts(
   return {
     resolvedLaunchParameters: launchScopes
       .filter((scope) => {
-        const id = ctx.query[`launch/${scope.launchType}`];
+        const id = ctx.state.oidc.launch?.[`launch/${scope.launchType}`];
         return id !== undefined;
       })
       .reduce(
         (acc: ResolvedLaunchParameters, scope) => ({
           ...acc,
-          [capitalize(scope.launchType) as AllResourceTypes]: ctx.query[
-            `launch/${scope.launchType}`
-          ] as id,
+          [capitalize(scope.launchType) as AllResourceTypes]: ctx.state.oidc
+            .launch?.[`launch/${scope.launchType}`] as id,
         }),
         {},
       ),
 
     unResolvedLaunchParameters: launchScopes.filter((scope) => {
-      const id = ctx.query[`launch/${scope.launchType}`];
+      const id = ctx.state.oidc.launch?.[`launch/${scope.launchType}`];
       return id === undefined;
     }),
   };
@@ -159,7 +154,6 @@ export function smartLaunch(): OIDCRouteHandler {
 
     const { unResolvedLaunchParameters } = launchContexts(
       ctx,
-      client,
       ctx.state.oidc.scopes ?? [],
     );
 

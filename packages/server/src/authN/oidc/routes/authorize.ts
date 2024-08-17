@@ -141,7 +141,7 @@ export function authorize(): OIDCRouteHandler {
     }
 
     const { unResolvedLaunchParameters, resolvedLaunchParameters } =
-      launchContexts(ctx, client, ctx.state.oidc.scopes ?? []);
+      launchContexts(ctx, ctx.state.oidc.scopes ?? []);
 
     if (unResolvedLaunchParameters.length > 0) {
       const smartLaunchURL = ctx.router.url(
@@ -150,7 +150,7 @@ export function authorize(): OIDCRouteHandler {
           tenant: ctx.state.iguhealth.tenant,
         },
         {
-          query: ctx.state.oidc.parameters,
+          query: { ...ctx.state.oidc.parameters, ...ctx.state.oidc.launch },
         },
       );
       if (smartLaunchURL instanceof Error) throw smartLaunchURL;

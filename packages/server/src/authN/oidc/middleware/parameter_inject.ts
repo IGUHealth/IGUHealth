@@ -1,5 +1,6 @@
 import * as Koa from "koa";
 
+import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions } from "../../../fhir-api/types.js";
@@ -26,14 +27,43 @@ function isValidParam(param: ParameterKey, value: unknown): value is string {
   return true;
 }
 
+function findLaunchParameters(
+  context: Record<string, unknown> | undefined,
+): Record<string, id> {
+  return Object.keys(context ?? {})
+    .filter((k) => k.startsWith("launch/"))
+    .reduce((launchParameters: Record<string, id>, queryKey) => {
+      const parts = queryKey.split("/");
+      if (parts.length !== 2) {
+        throw new OperationError(
+          outcomeError("invalid", `Invalid launch parameter '${queryKey}'.`),
+        );
+      }
+      const value = context?.[queryKey] as id;
+      return {
+        ...launchParameters,
+        [queryKey]: value,
+      };
+    }, {});
+}
+
+function getLaunchParameters(request: Koa.Request): Record<string, id> {
+  return {
+    ...findLaunchParameters(request.query),
+    ...findLaunchParameters(request.body),
+  };
+}
+
 /**
  * Middleware that finds+validates and injects oidc parameters.
  * @returns Koa.Middleware
  */
 export function createValidateInjectOIDCParameters({
+  allowLaunchParameters,
   required,
   optional,
 }: {
+  allowLaunchParameters?: boolean;
   required?: ParameterKey[];
   optional?: ParameterKey[];
 }): Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext> {
@@ -42,7 +72,7 @@ export function createValidateInjectOIDCParameters({
       ...(required ?? []).map((p) => ({ required: true, param: p })),
       ...(optional ?? []).map((p) => ({ required: false, param: p })),
     ];
-    const requiredParams = params.reduce((acc, { required, param }) => {
+    const oidcParameters = params.reduce((acc, { required, param }) => {
       const value = findParam(ctx.request, param);
       if (!value) {
         if (required)
@@ -62,7 +92,12 @@ export function createValidateInjectOIDCParameters({
 
     ctx.state.oidc = {
       ...ctx.state.oidc,
-      parameters: { ...requiredParams },
+      parameters: {
+        ...oidcParameters,
+      },
+      launch: allowLaunchParameters
+        ? getLaunchParameters(ctx.request)
+        : undefined,
     };
 
     await next();
