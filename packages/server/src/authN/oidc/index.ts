@@ -23,6 +23,7 @@ export type OIDCRouteHandler = Parameters<
 const AUTHORIZE_PARAMETERS: Parameters<
   typeof createValidateInjectOIDCParameters
 >[0] = {
+  allowLaunchParameters: true,
   required: [
     "client_id",
     "response_type",

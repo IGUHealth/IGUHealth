@@ -73,6 +73,7 @@ export namespace KoaExtensions {
         redirect_uri?: string;
         scope?: string;
       };
+      launch?: Record<string, id>;
       scopes?: Scope[];
     };
   };
