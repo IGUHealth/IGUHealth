@@ -40,10 +40,6 @@ function getLaunchScopes(
   return scopes.filter((scope) => scope.type === "launch-type");
 }
 
-function canLaunch(scopes: parseScopes.Scope[]): boolean {
-  return scopes.find((scope) => scope.type === "launch") !== undefined;
-}
-
 export type ResolvedLaunchParameters = Partial<Record<AllResourceTypes, id>>;
 
 export function launchContexts(
@@ -54,14 +50,6 @@ export function launchContexts(
   unResolvedLaunchParameters: parseScopes.LaunchTypeScope[];
 } {
   const launchScopes = getLaunchScopes(scopes);
-  if (launchScopes.length !== 0 && !canLaunch(scopes)) {
-    throw new OIDCError({
-      error: "invalid_scope",
-      error_description:
-        "Invalid scope 'launch' scope must be present when requesting launch contexts.",
-    });
-  }
-
   return {
     resolvedLaunchParameters: launchScopes
       .filter((scope) => {
