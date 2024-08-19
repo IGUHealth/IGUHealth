@@ -95,8 +95,11 @@ export async function authorize({
   const code_verifier = generateRandomString(43);
   const state = generateRandomString(30);
   const code_challenge = await sha256(code_verifier);
-  sessionStorage.setItem(pkce_code_verifier_key(clientId), code_verifier);
-  sessionStorage.setItem(state_key(clientId), state);
+  window.sessionStorage.setItem(
+    pkce_code_verifier_key(clientId),
+    code_verifier,
+  );
+  window.sessionStorage.setItem(state_key(clientId), state);
 
   const parameters: Record<string, string> = {
     client_id: clientId,
@@ -318,10 +321,10 @@ export function IGUHealthProvider({
 
           // Allows for SPA to redirect back.
           if (onRedirectCallback) {
-            onRedirectCallback(sessionStorage.getItem("path") ?? "/");
+            onRedirectCallback(window.sessionStorage.getItem("path") ?? "/");
           }
         } else {
-          sessionStorage.setItem(
+          window.sessionStorage.setItem(
             "path",
             window.location.href.replace(window.location.origin, ""),
           );
