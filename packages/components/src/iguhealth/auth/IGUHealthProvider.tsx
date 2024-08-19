@@ -16,7 +16,7 @@ import {
 } from "./utilities";
 
 const CODE_CHALLENGE_METHOD = "S256";
-const state_key = (client_id: string) => `iguhealth_${client_id}`;
+const state_key = (client_id: string) => `iguhealth_state_${client_id}`;
 const pkce_code_verifier_key = (client_id: string) =>
   `iguhealth_pkce_code_${client_id}`;
 
