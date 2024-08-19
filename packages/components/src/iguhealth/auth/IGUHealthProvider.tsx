@@ -41,18 +41,20 @@ async function exchangeAuthCodeForToken({
   parameters: Record<string, string>;
   clientId: string;
 }): Promise<AccessTokenResponse> {
-  const code_verifier = window.localStorage.getItem(
+  const code_verifier = window.sessionStorage.getItem(
     pkce_code_verifier_key(clientId),
   );
-  const localStateParameter = window.localStorage.getItem(state_key(clientId));
+  const localStateParameter = window.sessionStorage.getItem(
+    state_key(clientId),
+  );
 
   if (!parameters.state) throw new Error();
   if (!parameters.code) throw new Error();
   if (parameters.state !== localStateParameter)
     throw new Error("Invalid State");
 
-  window.localStorage.removeItem(state_key(clientId));
-  window.localStorage.removeItem(pkce_code_verifier_key(clientId));
+  window.sessionStorage.removeItem(state_key(clientId));
+  window.sessionStorage.removeItem(pkce_code_verifier_key(clientId));
 
   if (!code_verifier) throw new Error("Invalid Code Verifier");
 
@@ -93,8 +95,8 @@ export async function authorize({
   const code_verifier = generateRandomString(43);
   const state = generateRandomString(30);
   const code_challenge = await sha256(code_verifier);
-  localStorage.setItem(pkce_code_verifier_key(clientId), code_verifier);
-  localStorage.setItem(state_key(clientId), state);
+  sessionStorage.setItem(pkce_code_verifier_key(clientId), code_verifier);
+  sessionStorage.setItem(state_key(clientId), state);
 
   const parameters: Record<string, string> = {
     client_id: clientId,
