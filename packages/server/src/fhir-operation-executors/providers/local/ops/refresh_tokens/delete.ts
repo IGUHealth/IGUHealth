@@ -1,11 +1,11 @@
 import { IguhealthDeleteRefreshToken } from "@iguhealth/generated-ops/r4";
-import { outcomeError, outcomeInfo } from "@iguhealth/operation-outcomes";
+import { outcomeInfo } from "@iguhealth/operation-outcomes";
 
 import * as codes from "../../../../../authN/db/code/index.js";
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import InlineOperation from "../../interface.js";
 
-const IguhealthDeleteScopeOp = InlineOperation(
+export const IguhealthDeleteRefreshTokenInvoke = InlineOperation(
   IguhealthDeleteRefreshToken.Op,
   async (ctx: IGUHealthServerCTX, _request, input) => {
     await codes.remove(ctx.db, ctx.tenant, {
@@ -17,5 +17,3 @@ const IguhealthDeleteScopeOp = InlineOperation(
     return outcomeInfo("informational", "Refresh token deleted.");
   },
 );
-
-export default IguhealthDeleteScopeOp;
