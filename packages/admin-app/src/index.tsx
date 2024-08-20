@@ -461,7 +461,7 @@ function Root() {
             </div>
           </div>
           <div
-            className="p-4 flex flex-1 "
+            className="p-4 flex flex-1"
             style={{ maxHeight: "calc(100vh - 64px)" }}
           >
             <Toaster.Toaster />

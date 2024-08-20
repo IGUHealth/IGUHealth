@@ -156,7 +156,7 @@ function Scopes() {
 function SettingDisplay({ user }: Readonly<SettingProps>) {
   const iguhealth = useIGUHealth();
   return (
-    <div className="flex flex-col flex-1 space-y-4">
+    <div className="flex flex-col flex-1 space-y-4 w-full">
       <h2 className="text-2xl font-semibold mb-0">Settings</h2>
       <div className="space-y-2">
         <h2 className="text-xl font-semibold ">User Information</h2>
