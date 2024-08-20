@@ -3,11 +3,8 @@ import { jwtVerify } from "jose";
 import { JWSInvalid } from "jose/errors";
 import { user_role } from "zapatos/schema";
 
-import {
-  AccessTokenPayload,
-  IDTokenPayload,
-  SMARTPayload,
-} from "@iguhealth/jwt";
+import { Reference, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { AccessTokenPayload, IDTokenPayload } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import {
@@ -114,6 +111,10 @@ type TokenInfoResponse = {
    * SMART Claims for fhirUser.
    */
   fhirUser?: string;
+
+  patient?: id;
+  encounter?: id;
+  fhirContext?: Reference[];
 };
 
 export function tokenInfo(): OIDCRouteHandler {
@@ -129,9 +130,7 @@ export function tokenInfo(): OIDCRouteHandler {
     const signingKey = await getSigningKey(getCertLocation(), getCertKey());
     try {
       const result = await jwtVerify<
-        | AccessTokenPayload<user_role>
-        | SMARTPayload<user_role>
-        | IDTokenPayload<user_role>
+        AccessTokenPayload<user_role> | IDTokenPayload<user_role>
       >(body.token, signingKey.key, {
         issuer: getIssuer(ctx.state.iguhealth.tenant),
         algorithms: ["RS256"],
@@ -149,6 +148,9 @@ export function tokenInfo(): OIDCRouteHandler {
         scope: result.payload.scope,
         aud: result.payload.aud,
         fhirUser: result.payload.fhirUser,
+        patient: result.payload.patient,
+        encounter: result.payload.encounter,
+        fhirContext: result.payload.fhirContext,
       } as TokenInfoResponse;
     } catch (e) {
       if (e instanceof JWSInvalid) {

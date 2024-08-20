@@ -5,6 +5,7 @@ import {
   ClientApplication,
   Membership,
   OperationDefinition,
+  Reference,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 
@@ -46,8 +47,16 @@ export interface IGUHealthCustomClaims<role> {
   [CUSTOM_CLAIMS.TENANT]: TenantId;
 }
 
+export interface SMARTPayload {
+  fhirUser?: string;
+  patient?: id;
+  encounter?: id;
+  fhirContext?: Reference[];
+}
+
 export interface AccessTokenPayload<role>
   extends IGUHealthCustomClaims<role>,
+    SMARTPayload,
     jose.JWTPayload {
   /**
    * REQUIRED. Issuer Identifier for the Issuer of the response.
@@ -155,10 +164,6 @@ export interface IDTokenPayload<role> extends AccessTokenPayload<role> {
    * Time the End-User's information was last updated. Its value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z as measured in UTC until the date/time.
    */
   updated_at?: number;
-}
-
-export interface SMARTPayload<role> extends IDTokenPayload<role> {
-  fhirUser?: string;
 }
 
 export type JWT<Payload> = string & { ["payload"]: Payload };
