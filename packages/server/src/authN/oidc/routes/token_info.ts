@@ -139,7 +139,7 @@ export function tokenInfo(): OIDCRouteHandler {
 
       ctx.status = 200;
       ctx.body = {
-        active: result.payload.exp ?? 0 > Date.now() / 1000,
+        active: (result.payload.exp ?? 0) > Date.now() / 1000,
         iss: result.payload.iss,
         client_id: result.payload.aud,
         username: result.payload.sub,
