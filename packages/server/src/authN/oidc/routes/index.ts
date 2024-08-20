@@ -8,3 +8,4 @@ export * from "./well_known.js";
 export * from "./userInfo.js";
 export * from "./interactions/scope.js";
 export * from "./interactions/smartLaunch.js";
+export * from "./token_info.js";
