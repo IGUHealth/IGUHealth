@@ -9,8 +9,8 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
+  IDTokenPayload,
   JWT,
-  SMARTPayload,
   Subject,
   TenantId,
   createToken,
@@ -137,7 +137,7 @@ async function getIDTokenPayload(
   approvedScopes: parseScopes.Scope[],
 ): Promise<
   | Pick<
-      SMARTPayload<s.user_role>,
+      IDTokenPayload<s.user_role>,
       | "email"
       | "email_verified"
       | "name"
@@ -151,7 +151,7 @@ async function getIDTokenPayload(
     return undefined;
   }
 
-  const idTokenPayload: Partial<SMARTPayload<s.user_role>> = {};
+  const idTokenPayload: Partial<IDTokenPayload<s.user_role>> = {};
   if (approvedScopes.find((v) => v.type === "email")) {
     idTokenPayload.email = user.email;
     idTokenPayload.email_verified = user.email_verified
@@ -215,7 +215,7 @@ async function createRefreshToken(
  */
 type Oauth2TokenBodyResponse = {
   access_token: JWT<AccessTokenPayload<s.user_role>>;
-  id_token: JWT<SMARTPayload<s.user_role>>;
+  id_token: JWT<IDTokenPayload<s.user_role>>;
   token_type: "Bearer";
   expires_in: number;
   refresh_token?: string;
@@ -243,8 +243,11 @@ async function createTokenResponse({
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: getIssuer(ctx.tenant),
+
+    // Smart claims.
     patient: launchParameters?.Patient,
     encounter: launchParameters?.Encounter,
+
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
     [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
@@ -266,7 +269,7 @@ async function createTokenResponse({
       expiresIn: tokenExiration,
     }),
     id_token: idTokenPayload
-      ? await createToken<SMARTPayload<s.user_role>>({
+      ? await createToken<IDTokenPayload<s.user_role>>({
           signingKey: signingKey,
           payload: { ...accessTokenPayload, ...idTokenPayload },
           expiresIn: tokenExiration,
