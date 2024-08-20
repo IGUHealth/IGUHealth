@@ -257,7 +257,7 @@ async function createTokenResponse({
     sub: user.id as Subject,
   };
   const idTokenPayload = await getIDTokenPayload(ctx, user, approvedScopes);
-  const tokenExiration = "2h";
+  const tokenExiration = "1h";
 
   const body = {
     scope: parseScopes.toString(approvedScopes),
@@ -277,7 +277,7 @@ async function createTokenResponse({
       : undefined,
     token_type: "Bearer",
     // 2 hours in seconds
-    expires_in: 7200,
+    expires_in: 3600,
   } as Oauth2TokenBodyResponse;
 
   if (approvedScopes.find((v) => v.type === "offline_access")) {
@@ -476,7 +476,7 @@ export function tokenPost<
             clientApplication,
           ),
           token_type: "Bearer",
-          expires_in: 7200,
+          expires_in: 3600,
         } as Oauth2TokenBodyResponse;
         ctx.status = 200;
         ctx.set("pragma", "no-cache");

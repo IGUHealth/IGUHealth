@@ -69,6 +69,7 @@ export function authenticateClientCredentials(
 export async function createClientCredentialToken(
   tenant: TenantId,
   client: ClientApplication,
+  expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
   const signingKey = await getSigningKey(getCertLocation(), getCertKey());
 
@@ -86,6 +87,7 @@ export async function createClientCredentialToken(
   const token = await createToken<AccessTokenPayload<s.user_role>>({
     signingKey,
     payload: accessTokenPayload,
+    expiresIn,
   });
 
   return token;
