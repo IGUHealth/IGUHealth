@@ -1,9 +1,9 @@
 import { IguhealthDeleteScope } from "@iguhealth/generated-ops/r4";
 import { outcomeError, outcomeInfo } from "@iguhealth/operation-outcomes";
 
-import * as scopes from "../../../../authN/db/scopes/index.js";
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import InlineOperation from "../interface.js";
+import * as scopes from "../../../../../authN/db/scopes/index.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import InlineOperation from "../../interface.js";
 
 const IguhealthEncryptInvoke = InlineOperation(
   IguhealthDeleteScope.Op,

@@ -13,17 +13,17 @@ import {
   createValidateScopesMiddleware,
 } from "../authZ/middleware/scopes.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
-import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
-import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
-import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
-import ResourceValidateInvoke from "../fhir-operation-executors/providers/local/resource_validate.js";
-import IguHealthDeleteScope from "../fhir-operation-executors/providers/local/scopes/delete-scope.js";
-import IguHealthListScopes from "../fhir-operation-executors/providers/local/scopes/list-scopes.js";
-import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/snapshot.js";
-import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
-import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
-import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/terminology/validate.js";
-import IguhealthUsageStatisticsInvoke from "../fhir-operation-executors/providers/local/usage_statistics.js";
+import InlineExecutioner from "../fhir-operation-executors/providers/local/middleware.js";
+import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/ops/invite_user.js";
+import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/ops/message_post.js";
+import ResourceValidateInvoke from "../fhir-operation-executors/providers/local/ops/resource_validate.js";
+import IguHealthDeleteScope from "../fhir-operation-executors/providers/local/ops/scopes/delete.js";
+import IguHealthListScopes from "../fhir-operation-executors/providers/local/ops/scopes/list.js";
+import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/ops/snapshot.js";
+import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/ops/terminology/expand.js";
+import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/ops/terminology/lookup.js";
+import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/ops/terminology/validate.js";
+import IguhealthUsageStatisticsInvoke from "../fhir-operation-executors/providers/local/ops/usage_statistics.js";
 import {
   AUTH_METHODS_ALLOWED,
   AUTH_RESOURCETYPES,

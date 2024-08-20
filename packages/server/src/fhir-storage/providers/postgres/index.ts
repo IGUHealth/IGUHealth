@@ -59,7 +59,7 @@ import {
   buildTransactionTopologicalGraph,
   FHIRTransaction,
 } from "../../transactions.js";
-import { validateResource } from "../../../fhir-operation-executors/providers/local/resource_validate.js";
+import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { toDBFHIRVersion } from "../../utilities/version.js";
