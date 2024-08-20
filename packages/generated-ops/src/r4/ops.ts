@@ -5319,7 +5319,7 @@ export namespace IguhealthMessagePost {
   } as fhirTypes.OperationDefinition);
 }
 export namespace IguhealthDeleteRefreshToken {
-  export type Input = { refresh_token: fhirTypes.string };
+  export type Input = { id: fhirTypes.id };
   export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
@@ -5339,12 +5339,12 @@ export namespace IguhealthDeleteRefreshToken {
     instance: false,
     parameter: [
       {
-        name: "refresh_token",
+        name: "id",
         use: "in",
         min: 1,
         max: "1",
-        documentation: "Refresh token to delete.",
-        type: "string",
+        documentation: "Refresh token id to delete.",
+        type: "id",
       },
       {
         name: "return",
@@ -5362,7 +5362,7 @@ export namespace IguhealthListRefreshTokens {
   export type Output = {
     "refresh-tokens"?: Array<{
       client_id: fhirTypes.id;
-      token: fhirTypes.string;
+      id: fhirTypes.id;
       created_at: fhirTypes.dateTime;
     }>;
   };
@@ -5399,12 +5399,12 @@ export namespace IguhealthListRefreshTokens {
             type: "id",
           },
           {
-            name: "token",
+            name: "id",
             use: "out",
             min: 1,
             max: "1",
-            documentation: "Refresh token.",
-            type: "string",
+            documentation: "Refresh token id to delete.",
+            type: "id",
           },
           {
             name: "created_at",
