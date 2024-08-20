@@ -26,7 +26,7 @@ export function parseJwt<A, Token extends JWT<A>>(
 export async function createToken<Payload extends jose.JWTPayload>({
   signingKey,
   payload,
-  expiresIn = "2h",
+  expiresIn = "1h",
 }: {
   signingKey: { kid: string; key: jose.KeyLike };
   payload: Payload;
