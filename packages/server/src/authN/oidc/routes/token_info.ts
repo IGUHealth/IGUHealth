@@ -1,5 +1,6 @@
 import Ajv from "ajv";
 import { jwtVerify } from "jose";
+import { JWSInvalid } from "jose/errors";
 import { user_role } from "zapatos/schema";
 
 import {
@@ -126,28 +127,38 @@ export function tokenInfo(): OIDCRouteHandler {
     }
 
     const signingKey = await getSigningKey(getCertLocation(), getCertKey());
+    try {
+      const result = await jwtVerify<
+        | AccessTokenPayload<user_role>
+        | SMARTPayload<user_role>
+        | IDTokenPayload<user_role>
+      >(body.token, signingKey.key, {
+        issuer: getIssuer(ctx.state.iguhealth.tenant),
+        algorithms: ["RS256"],
+      });
 
-    const result = await jwtVerify<
-      | AccessTokenPayload<user_role>
-      | SMARTPayload<user_role>
-      | IDTokenPayload<user_role>
-    >(body.token, signingKey.key, {
-      issuer: getIssuer(ctx.state.iguhealth.tenant),
-      algorithms: ["RS256"],
-    });
-
-    ctx.status = 200;
-    ctx.body = {
-      active: result.payload.exp ?? 0 > Date.now() / 1000,
-      iss: result.payload.iss,
-      client_id: result.payload.aud,
-      username: result.payload.sub,
-      sub: result.payload.sub,
-      iat: result.payload.iat,
-      exp: result.payload.exp,
-      scope: result.payload.scope,
-      aud: result.payload.aud,
-      fhirUser: result.payload.fhirUser,
-    } as TokenInfoResponse;
+      ctx.status = 200;
+      ctx.body = {
+        active: result.payload.exp ?? 0 > Date.now() / 1000,
+        iss: result.payload.iss,
+        client_id: result.payload.aud,
+        username: result.payload.sub,
+        sub: result.payload.sub,
+        iat: result.payload.iat,
+        exp: result.payload.exp,
+        scope: result.payload.scope,
+        aud: result.payload.aud,
+        fhirUser: result.payload.fhirUser,
+      } as TokenInfoResponse;
+    } catch (e) {
+      if (e instanceof JWSInvalid) {
+        ctx.status = 200;
+        ctx.body = {
+          active: false,
+        } as TokenInfoResponse;
+      } else {
+        throw e;
+      }
+    }
   };
 }
