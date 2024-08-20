@@ -79,7 +79,7 @@ async function generateSnapshot(
   } as StructureDefinition;
 }
 
-const StructureDefinitionSnapshotInvoke = InlineOperation(
+export const StructureDefinitionSnapshotInvoke = InlineOperation(
   StructureDefinitionSnapshot.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!input.definition && !input.url) {
@@ -112,5 +112,3 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
     return generateSnapshot(request.fhirVersion, ctx, sd);
   },
 );
-
-export default StructureDefinitionSnapshotInvoke;

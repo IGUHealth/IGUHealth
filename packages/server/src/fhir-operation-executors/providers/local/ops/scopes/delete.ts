@@ -5,7 +5,7 @@ import * as scopes from "../../../../../authN/db/scopes/index.js";
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import InlineOperation from "../../interface.js";
 
-const IguhealthEncryptInvoke = InlineOperation(
+export const IguhealthDeleteScopeInvoke = InlineOperation(
   IguhealthDeleteScope.Op,
   async (ctx: IGUHealthServerCTX, _request, input) => {
     const deleteResult = await scopes.deleteUserScope(
@@ -22,5 +22,3 @@ const IguhealthEncryptInvoke = InlineOperation(
     return outcomeInfo("informational", "Scopes deleted successfully.");
   },
 );
-
-export default IguhealthEncryptInvoke;

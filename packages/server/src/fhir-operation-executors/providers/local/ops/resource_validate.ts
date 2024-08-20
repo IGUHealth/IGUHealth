@@ -78,11 +78,14 @@ export const validateResource = async (
   }
 };
 
-export default InlineOperation(ResourceValidate.Op, (ctx, request, input) => {
-  return validateResource(
-    ctx,
-    request.fhirVersion,
-    (request as R4TypeInteraction | R4BTypeInteraction).resourceType,
-    input,
-  );
-});
+export const ResourceValidateInvoke = InlineOperation(
+  ResourceValidate.Op,
+  (ctx, request, input) => {
+    return validateResource(
+      ctx,
+      request.fhirVersion,
+      (request as R4TypeInteraction | R4BTypeInteraction).resourceType,
+      input,
+    );
+  },
+);

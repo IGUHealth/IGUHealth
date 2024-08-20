@@ -24,7 +24,7 @@ import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
 import InlineOperation from "../interface.js";
 
-const IguhealthInviteUserInvoke = InlineOperation(
+export const IguhealthInviteUserInvoke = InlineOperation(
   IguhealthInviteUser.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.emailProvider)
@@ -127,5 +127,3 @@ const IguhealthInviteUserInvoke = InlineOperation(
     );
   },
 );
-
-export default IguhealthInviteUserInvoke;

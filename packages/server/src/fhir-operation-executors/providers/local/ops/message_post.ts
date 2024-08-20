@@ -66,7 +66,7 @@ async function postMessageBroker(
   }
 }
 
-const IguhealthMessagePostInvoke = InlineOperation(
+export const IguhealthMessagePostInvoke = InlineOperation(
   IguhealthMessagePost.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     switch (request.level) {
@@ -105,5 +105,3 @@ const IguhealthMessagePostInvoke = InlineOperation(
     }
   },
 );
-
-export default IguhealthMessagePostInvoke;

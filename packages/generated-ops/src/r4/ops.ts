@@ -5320,7 +5320,7 @@ export namespace IguhealthMessagePost {
 }
 export namespace IguhealthDeleteRefreshToken {
   export type Input = { refresh_token: fhirTypes.string };
-  export type Output = Record<string, never>;
+  export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -5345,6 +5345,14 @@ export namespace IguhealthDeleteRefreshToken {
         max: "1",
         documentation: "Refresh token to delete.",
         type: "string",
+      },
+      {
+        name: "return",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "Result of the delete operation.",
+        type: "OperationOutcome",
       },
     ],
   } as fhirTypes.OperationDefinition);

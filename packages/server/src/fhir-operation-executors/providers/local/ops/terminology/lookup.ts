@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import InlineOperation from "../../interface.js";
 
-const CodeSystemLookupInvoke = InlineOperation(
+export const CodeSystemLookupInvoke = InlineOperation(
   CodeSystemLookup.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.terminologyProvider)
@@ -20,5 +20,3 @@ const CodeSystemLookupInvoke = InlineOperation(
     return lookup;
   },
 );
-
-export default CodeSystemLookupInvoke;

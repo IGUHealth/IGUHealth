@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import InlineOperation from "../../interface.js";
 
-const ValueSetValidateInvoke = InlineOperation(
+export const ValueSetValidateInvoke = InlineOperation(
   ValueSetValidateCode.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.terminologyProvider)
@@ -20,5 +20,3 @@ const ValueSetValidateInvoke = InlineOperation(
     return validationResult;
   },
 );
-
-export default ValueSetValidateInvoke;
