@@ -5318,6 +5318,99 @@ export namespace IguhealthMessagePost {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthDeleteRefreshToken {
+  export type Input = { refresh_token: fhirTypes.string };
+  export type Output = Record<string, never>;
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-delete-refresh-token",
+    url: "https://iguhealth.app/OperationDefinition/delete-refresh-tokens",
+    version: "4.0.1",
+    name: "Delete refresh token",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Delete refresh token from the user for the client.",
+    code: "delete-refresh-token",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "refresh_token",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Refresh token to delete.",
+        type: "string",
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
+export namespace IguhealthListRefreshTokens {
+  export type Input = Record<string, never>;
+  export type Output = {
+    "refresh-tokens"?: Array<{
+      client_id: fhirTypes.id;
+      token: fhirTypes.string;
+      created_at: fhirTypes.dateTime;
+    }>;
+  };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-list-refresh-tokens",
+    url: "https://iguhealth.app/OperationDefinition/list-refresh-tokens",
+    version: "4.0.1",
+    name: "Show Refresh Tokens",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Show list of users refresh tokens.",
+    code: "refresh-tokens",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "refresh-tokens",
+        use: "out",
+        min: 0,
+        max: "*",
+        documentation: "The result of the operation.",
+        part: [
+          {
+            name: "client_id",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "Client for refresh token.",
+            type: "id",
+          },
+          {
+            name: "token",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "Refresh token.",
+            type: "string",
+          },
+          {
+            name: "created_at",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "When the refresh token was created.",
+            type: "dateTime",
+          },
+        ],
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
 export namespace IguhealthDeleteScope {
   export type Input = { client_id: fhirTypes.id };
   export type Output = fhirTypes.OperationOutcome;

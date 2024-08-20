@@ -22,6 +22,7 @@
 | AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false | false |
 | AUTH_ALLOW_GLOBAL_SIGNUP | Sets whether to allow global signup for users. | false | false |
 | AUTH_ALLOW_TENANT_SIGNUP | Sets whether to allow tenant signup for users. | false | false |
+| AUTH_ISSUER | The issuer of the tokens | true |  |
 | AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | true |  |
 | AUTH_LOCAL_SIGNING_KEY | The signing key used to generate new local tokens | true |  |
 | EMAIL_PROVIDER | Set the email provider. | false |  |
@@ -31,9 +32,12 @@
 | AWS_KMS_ACCESS_KEY_ID | KMS client access key ID | false |  |
 | AWS_KMS_ACCESS_KEY_SECRET | KMS client access key secret | false |  |
 | AWS_ENCRYPTION_GENERATOR_KEY | KMS key used to generate data keys on keyring | false |  |
+| AWS_ENCRYPTION_KEY | Additional KMS key used for encryption | false |  |
 | POSTGRES_TRANSACTION_ENTRY_LIMIT | Postgres transaction entry limit | false | 20 |
 | SENTRY_SERVER_DSN | Sentry DSN URL for monitoring errors and performance. | false |  |
 | SENTRY_WORKER_DSN | Sentry Worker for monitoring errors and performance on worker | false |  |
 | SENTRY_TRACES_SAMPLE_RATE | Sentry sample rate. | false |  |
 | SENTRY_PROFILES_SAMPLE_RATE | Sentry profiles rate. | false |  |
 | ADMIN_APP_REDIRECT_URI | Redirect URI for admin app | false |  |
+| PROXY | Whether behind proxy and server should use X-Forwarded-For header. | false | false |
+| PROXY_IP_HEADER | Header to derive the users IP address from | false | false |
