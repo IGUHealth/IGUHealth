@@ -11,7 +11,6 @@ import {
   CUSTOM_CLAIMS,
   IDTokenPayload,
   JWT,
-  SMARTPayload,
   Subject,
   TenantId,
   createToken,
