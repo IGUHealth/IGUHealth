@@ -243,8 +243,11 @@ async function createTokenResponse({
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: getIssuer(ctx.tenant),
+
+    // Smart claims.
     patient: launchParameters?.Patient,
     encounter: launchParameters?.Encounter,
+
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
     [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
