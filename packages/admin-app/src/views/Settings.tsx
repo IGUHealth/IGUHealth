@@ -101,7 +101,7 @@ function Scopes() {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xl font-semibold ">Authorized Apps</h2>
+      <h2 className="text-lg font-semibold ">Authorized Apps</h2>
       <div className="flex flex-col p-2 space-y-2">
         <Table
           columns={[
@@ -158,64 +158,69 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
   return (
     <div className="flex flex-col flex-1 space-y-4 w-full">
       <h2 className="text-2xl font-semibold mb-0">Settings</h2>
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold ">User Information</h2>
-        <div className="flex flex-col p-2 space-y-2">
-          <div>
-            <label className="block font-medium">Name:</label>
-            <span>{user?.name}</span>
-          </div>
-          <div>
-            <label className="block font-medium">Email:</label>
-            <span>{user?.email}</span>
-          </div>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Endpoints</h2>
-        <div className="pl-2 space-y-2">
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold ">FHIR</h3>
-            <div className="pl-2 space-y-2">
-              <div className="flex flex-col ">
-                <Copyable
-                  label="R4"
-                  value={
-                    iguhealth.rootURL
-                      ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4)
-                      : ""
-                  }
-                />
-              </div>
-              <div className="flex flex-col ">
-                <Copyable
-                  label="R4B"
-                  value={
-                    iguhealth.rootURL
-                      ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4B)
-                      : ""
-                  }
-                />
-              </div>
+      <div className="px-2">
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">User Information</h2>
+          <div className="flex flex-col p-2 space-y-2">
+            <div>
+              <label className="block font-medium">Name:</label>
+              <span>{user?.name}</span>
+            </div>
+            <div>
+              <label className="block font-medium">Email:</label>
+              <span>{user?.email}</span>
             </div>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold ">OpenID Connect</h3>
-            <div className="pl-2 space-y-2">
-              <div className="flex flex-col ">
-                <Copyable label="Discovery" value={iguhealth.well_known_uri} />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">Endpoints</h2>
+          <div className="pl-2 space-y-2">
+            <div className="space-y-2">
+              <h3 className="text-md font-semibold ">FHIR</h3>
+              <div className="pl-2 space-y-2">
+                <div className="flex flex-col">
+                  <Copyable
+                    label="R4"
+                    value={
+                      iguhealth.rootURL
+                        ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4)
+                        : ""
+                    }
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Copyable
+                    label="R4B"
+                    value={
+                      iguhealth.rootURL
+                        ? deriveIGUHealthVersionedURL(iguhealth.rootURL, R4B)
+                        : ""
+                    }
+                  />
+                </div>
               </div>
-              <div className="flex flex-col ">
-                <Copyable
-                  label="Token"
-                  value={iguhealth.well_known?.token_endpoint}
-                />
-              </div>
-              <div className="flex flex-col ">
-                <Copyable
-                  label="Authorization"
-                  value={iguhealth.well_known?.authorization_endpoint}
-                />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold ">OpenID Connect</h3>
+              <div className="pl-2 space-y-2">
+                <div className="flex flex-col">
+                  <Copyable
+                    label="Discovery"
+                    value={iguhealth.well_known_uri}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Copyable
+                    label="Token"
+                    value={iguhealth.well_known?.token_endpoint}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Copyable
+                    label="Authorization"
+                    value={iguhealth.well_known?.authorization_endpoint}
+                  />
+                </div>
               </div>
             </div>
           </div>
