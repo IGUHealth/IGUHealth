@@ -210,7 +210,7 @@ function RefreshTokens() {
               id: "id",
               content: "ID",
               selectorType: "fhirpath",
-              selector: "$this.refresh_id",
+              selector: "$this.id",
             },
             {
               id: "client_id",
