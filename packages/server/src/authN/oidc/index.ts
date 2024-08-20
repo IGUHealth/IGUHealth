@@ -146,6 +146,14 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     routes.tokenPost(),
   );
 
+  managementRouter.post(
+    OIDC_ROUTES.TOKEN_INTROSPECTION_POST,
+    "/auth/token_info",
+    multer().none(),
+    OAuthErrorHandlingMiddleware(),
+    routes.tokenInfo(),
+  );
+
   managementRouter.get(
     OIDC_ROUTES.LOGIN_GET,
     "/interaction/login",

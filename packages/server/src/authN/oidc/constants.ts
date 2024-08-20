@@ -22,6 +22,7 @@ export const OIDC_ROUTES = {
   SCOPE_POST: "tenant-oidc-scope-verify-post",
   SCOPE_GET: "tenant-oidc-scope-verify-get",
   TOKEN_POST: "tenant-oidc-token-post",
+  TOKEN_INTROSPECTION_POST: "tenant-oidc-token-info-post",
   USER_INFO: "tenant-oidc-user-info",
   OIDC_DISCOVERY: "tenant-oidc-discovery",
   WELL_KNOWN_SMART: "tenant-oidc-well-known-smart",

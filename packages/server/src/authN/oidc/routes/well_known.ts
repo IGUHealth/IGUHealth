@@ -307,6 +307,12 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "permission-v2",
       ],
       code_challenge_methods_supported: ["S256"],
+      introspection_endpoint: new URL(
+        oidcRouter.url(OIDC_ROUTES.TOKEN_INTROSPECTION_POST, {
+          tenant: ctx.state.iguhealth.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
     };
 
     ctx.body = WELL_KNOWN_SMART_CONFIGURATION;
