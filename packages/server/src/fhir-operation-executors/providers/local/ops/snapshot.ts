@@ -5,8 +5,8 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import InlineOperation from "./interface.js";
+import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import InlineOperation from "../interface.js";
 
 function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
   let index = -1;
@@ -79,7 +79,7 @@ async function generateSnapshot(
   } as StructureDefinition;
 }
 
-const StructureDefinitionSnapshotInvoke = InlineOperation(
+export const StructureDefinitionSnapshotInvoke = InlineOperation(
   StructureDefinitionSnapshot.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!input.definition && !input.url) {
@@ -112,5 +112,3 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
     return generateSnapshot(request.fhirVersion, ctx, sd);
   },
 );
-
-export default StructureDefinitionSnapshotInvoke;

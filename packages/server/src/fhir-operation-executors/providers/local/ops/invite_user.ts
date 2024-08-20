@@ -12,19 +12,19 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import * as codes from "../../../authN/db/code/index.js";
-import * as users from "../../../authN/db/users/index.js";
+import * as codes from "../../../../authN/db/code/index.js";
+import * as users from "../../../../authN/db/users/index.js";
 import {
   EmailTemplate,
   EmailTemplateButton,
   EmailTemplateImage,
   EmailTemplateText,
-} from "../../../email/templates/base.js";
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
-import InlineOperation from "./interface.js";
+} from "../../../../email/templates/base.js";
+import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
+import InlineOperation from "../interface.js";
 
-const IguhealthInviteUserInvoke = InlineOperation(
+export const IguhealthInviteUserInvoke = InlineOperation(
   IguhealthInviteUser.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.emailProvider)
@@ -127,5 +127,3 @@ const IguhealthInviteUserInvoke = InlineOperation(
     );
   },
 );
-
-export default IguhealthInviteUserInvoke;

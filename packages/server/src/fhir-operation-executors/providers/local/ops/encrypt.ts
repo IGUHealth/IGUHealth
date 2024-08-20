@@ -2,10 +2,10 @@ import { FHIRRequest } from "@iguhealth/client/types";
 import { IguhealthEncrypt } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import InlineOperation from "./interface.js";
+import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import InlineOperation from "../interface.js";
 
-const IguhealthEncryptInvoke = InlineOperation(
+export const IguhealthEncryptInvoke = InlineOperation(
   IguhealthEncrypt.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.encryptionProvider)
@@ -20,5 +20,3 @@ const IguhealthEncryptInvoke = InlineOperation(
     };
   },
 );
-
-export default IguhealthEncryptInvoke;

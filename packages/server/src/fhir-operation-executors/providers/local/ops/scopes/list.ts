@@ -1,11 +1,11 @@
 import { dateTime, id } from "@iguhealth/fhir-types/r4/types";
 import { IguhealthListScopes } from "@iguhealth/generated-ops/r4";
 
-import * as scopes from "../../../../authN/db/scopes/index.js";
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import InlineOperation from "../interface.js";
+import * as scopes from "../../../../../authN/db/scopes/index.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import InlineOperation from "../../interface.js";
 
-const IguhealthEncryptInvoke = InlineOperation(
+export const IguhealthListScopesInvoke = InlineOperation(
   IguhealthListScopes.Op,
   async (ctx: IGUHealthServerCTX) => {
     const approvedScopes = await scopes.getAllUserApprovedScopes(
@@ -23,5 +23,3 @@ const IguhealthEncryptInvoke = InlineOperation(
     };
   },
 );
-
-export default IguhealthEncryptInvoke;

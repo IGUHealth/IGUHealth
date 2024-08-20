@@ -6,11 +6,11 @@ import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/r4";
 import {
   getResourceCountTotal,
   getTenantLimits,
-} from "../../../fhir-api/middleware/usageCheck.js";
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import InlineOperation from "./interface.js";
+} from "../../../../fhir-api/middleware/usageCheck.js";
+import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import InlineOperation from "../interface.js";
 
-const IguhealthUsageStatisticsInvoke = InlineOperation(
+export const IguhealthUsageStatisticsInvoke = InlineOperation(
   IguhealthUsageStatistics.Op,
   async (ctx: IGUHealthServerCTX, _request: FHIRRequest, _input) => {
     const r4Limits = await getTenantLimits(ctx.db, ctx.tenant, R4);
@@ -59,5 +59,3 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
     };
   },
 );
-
-export default IguhealthUsageStatisticsInvoke;

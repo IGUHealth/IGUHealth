@@ -2,10 +2,10 @@ import { FHIRRequest } from "@iguhealth/client/types";
 import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import InlineOperation from "../interface.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import InlineOperation from "../../interface.js";
 
-const ValueSetExpandInvoke = InlineOperation(
+export const ValueSetExpandInvoke = InlineOperation(
   ValueSetExpand.Op,
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     if (!ctx.terminologyProvider)
@@ -20,5 +20,3 @@ const ValueSetExpandInvoke = InlineOperation(
     return expandedValueSet;
   },
 );
-
-export default ValueSetExpandInvoke;

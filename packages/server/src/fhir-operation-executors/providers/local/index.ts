@@ -1,101 +1,13 @@
-/*
- ** Sets of custom operations.
- ** Consideration to move these to use operation-executioners?
- **  - Because sets of operations are used in path critical flows like $validate may be to slow.
- */
-import { AsynchronousClient } from "@iguhealth/client";
-import {
-  MiddlewareAsync,
-  createMiddlewareAsync,
-} from "@iguhealth/client/middleware";
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
-import { R4, R4B } from "@iguhealth/fhir-types/versions";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import { InlineOp } from "./interface.js";
-
-function createExecutor(): MiddlewareAsync<
-  InlineOp<unknown, unknown>[],
-  IGUHealthServerCTX
-> {
-  return createMiddlewareAsync<
-    InlineOp<unknown, unknown>[],
-    IGUHealthServerCTX
-  >([
-    async (context) => {
-      switch (context.request.fhirVersion) {
-        case R4B: {
-          throw new OperationError(
-            outcomeFatal("not-supported", "FHIR 4.3 is not supported"),
-          );
-        }
-        case R4: {
-          switch (context.request.type) {
-            case "invoke-request": {
-              for (const op of context.state) {
-                if (op.code === context.request.operation) {
-                  const parameterOutput = await op.execute(
-                    context.ctx,
-                    context.request,
-                  );
-                  return {
-                    ...context,
-                    response: {
-                      fhirVersion: R4,
-                      type: "invoke-response",
-                      level: "system",
-                      operation: context.request.operation,
-                      body: parameterOutput,
-                    },
-                  };
-                }
-              }
-              throw new OperationError(
-                outcomeFatal(
-                  "not-supported",
-                  `Operation '${context.request.operation}' is not supported`,
-                ),
-              );
-            }
-            default:
-              throw new OperationError(
-                outcomeFatal(
-                  "invalid",
-                  `Invocation client only supports invoke-request not '${context.request.type}'`,
-                ),
-              );
-          }
-        }
-      }
-    },
-  ]);
-}
-
-class OperationClient extends AsynchronousClient<
-  InlineOp<unknown, unknown>[],
-  IGUHealthServerCTX
-> {
-  _state: InlineOp<unknown, unknown>[];
-  constructor(
-    initialState: InlineOp<unknown, unknown>[],
-    middleware: MiddlewareAsync<
-      InlineOp<unknown, unknown>[],
-      IGUHealthServerCTX
-    >,
-  ) {
-    super(initialState, middleware);
-    this._state = initialState;
-  }
-  supportedOperations(): OperationDefinition[] {
-    return this._state.map((op) => op.operationDefinition);
-  }
-}
-
-export default function InlineOperations(
-  ops: InlineOp<unknown, unknown>[],
-): OperationClient {
-  const client = new OperationClient(ops, createExecutor());
-
-  return client;
-}
+export * from "./ops/refresh_tokens/delete.js";
+export * from "./ops/refresh_tokens/list.js";
+export * from "./ops/scopes/delete.js";
+export * from "./ops/scopes/list.js";
+export * from "./ops/terminology/expand.js";
+export * from "./ops/terminology/lookup.js";
+export * from "./ops/terminology/validate.js";
+export * from "./ops/encrypt.js";
+export * from "./ops/invite_user.js";
+export * from "./ops/message_post.js";
+export * from "./ops/resource_validate.js";
+export * from "./ops/snapshot.js";
+export * from "./ops/usage_statistics.js";
