@@ -33,7 +33,7 @@ export async function createToken<Payload extends jose.JWTPayload>({
   expiresIn?: string;
 }): Promise<JWT<Payload>> {
   const signedJWT = (await new jose.SignJWT(payload)
-    .setProtectedHeader({ kid: signingKey.kid, alg: ALGORITHMS.RS256 })
+    .setProtectedHeader({ kid: signingKey.kid, alg: ALGORITHMS.RS384 })
     .setIssuedAt()
     .setExpirationTime(expiresIn)
     .sign(signingKey.key)) as JWT<Payload>;

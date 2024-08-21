@@ -114,7 +114,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
     },
-    algorithms: [ALGORITHMS.RS256],
+    algorithms: [ALGORITHMS.RS384],
   }) as unknown as Middleware<T, C>;
 }
 

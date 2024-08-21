@@ -1,5 +1,7 @@
 import Router from "@koa/router";
 
+import { ALGORITHMS } from "@iguhealth/jwt";
+
 import { KoaExtensions } from "../../../fhir-api/types.js";
 import { JWKS_GET, OIDC_ROUTES, getIssuer } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
@@ -259,7 +261,7 @@ export function wellKnownOpenIDConfiguration(): OIDCRouteHandler {
         "client_secret_basic",
         "client_secret_post",
       ],
-      id_token_signing_alg_values_supported: ["RS256"],
+      id_token_signing_alg_values_supported: [ALGORITHMS.RS384],
       subject_types_supported: ["public"],
     };
 
