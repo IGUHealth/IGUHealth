@@ -17,7 +17,7 @@ import * as db from "zapatos/db";
 
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId, createCertsIfNoneExists, getJWKS } from "@iguhealth/jwt";
 import {
   OperationError,
   isOperationError,
@@ -25,12 +25,6 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  createCertsIfNoneExists,
-  getCertKey,
-  getCertLocation,
-  getJWKS,
-} from "./authN/certifications.js";
 import { createGlobalAuthRouter } from "./authN/global/index.js";
 import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
@@ -185,7 +179,10 @@ export default async function createServer(): Promise<
     });
 
   if (process.env.NODE_ENV === "development") {
-    await createCertsIfNoneExists(getCertLocation(), getCertKey());
+    await createCertsIfNoneExists(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    );
   }
 
   const redis = getRedisClient();
@@ -235,7 +232,7 @@ export default async function createServer(): Promise<
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    const jwks = await getJWKS(getCertLocation());
+    const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
     ctx.body = jwks;
     await next();
   });
@@ -248,7 +245,8 @@ export default async function createServer(): Promise<
     process.env.AUTH_PUBLIC_ACCESS === "true"
       ? authN.allowPublicAccessMiddleware
       : await authN.createValidateUserJWTMiddleware({
-          AUTH_LOCAL_CERTIFICATION_LOCATION: getCertLocation(),
+          AUTH_LOCAL_CERTIFICATION_LOCATION:
+            process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
         }),
     authN.associateUserToIGUHealth,
     verifyAndAssociateUserFHIRContext,

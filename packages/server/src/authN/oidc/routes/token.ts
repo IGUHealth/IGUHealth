@@ -14,6 +14,7 @@ import {
   Subject,
   TenantId,
   createToken,
+  getSigningKey,
 } from "@iguhealth/jwt";
 
 import {
@@ -22,11 +23,6 @@ import {
   asRoot,
 } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
-import {
-  getCertKey,
-  getCertLocation,
-  getSigningKey,
-} from "../../certifications.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
 import * as users from "../../db/users/index.js";
@@ -233,7 +229,10 @@ async function createTokenResponse({
   clientApplication: ClientApplication;
   launchParameters?: ResolvedLaunchParameters;
 }): Promise<Oauth2TokenBodyResponse> {
-  const signingKey = await getSigningKey(getCertLocation(), getCertKey());
+  const signingKey = await getSigningKey(
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+    process.env.AUTH_LOCAL_SIGNING_KEY,
+  );
   const approvedScopes = await scopes.getApprovedScope(
     ctx.db,
     ctx.tenant,

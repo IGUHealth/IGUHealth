@@ -107,14 +107,6 @@ export async function getSigningKey(
   return { kid, key: privateKey };
 }
 
-export function getCertLocation() {
-  return path.resolve(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
-}
-
-export function getCertKey() {
-  return process.env.AUTH_LOCAL_SIGNING_KEY;
-}
-
 /**
  * Create certifications if not exist. Saves by default
  * private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
@@ -130,7 +122,7 @@ export async function createCertsIfNoneExists(
 ) {
   try {
     await getSigningKey(directory, kid, alg);
-  } catch (e) {
+  } catch (_e) {
     if (!existsSync(directory)) {
       mkdirSync(directory);
     }

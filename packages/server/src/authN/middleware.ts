@@ -12,16 +12,10 @@ import {
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
+import { ALGORITHMS, getJWKS, getSigningKey } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../fhir-api/types.js";
-import {
-  ALGORITHMS,
-  getCertKey,
-  getCertLocation,
-  getJWKS,
-  getSigningKey,
-} from "./certifications.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -167,7 +161,10 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   };
 
   const token = await createToken({
-    signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+    signingKey: await getSigningKey(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    ),
     payload: user,
   });
 

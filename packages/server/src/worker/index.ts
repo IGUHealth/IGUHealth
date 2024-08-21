@@ -26,7 +26,9 @@ import {
   CUSTOM_CLAIMS,
   Subject,
   TenantId,
+  createCertsIfNoneExists,
   createToken,
+  getSigningKey,
 } from "@iguhealth/jwt";
 import {
   OperationError,
@@ -34,12 +36,6 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  createCertsIfNoneExists,
-  getCertKey,
-  getCertLocation,
-  getSigningKey,
-} from "../authN/certifications.js";
 import { getIssuer } from "../authN/oidc/constants.js";
 import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import RedisCache from "../cache/providers/redis.js";
@@ -81,7 +77,10 @@ type WorkerServices = Pick<
 >;
 
 if (process.env.NODE_ENV === "development") {
-  await createCertsIfNoneExists(getCertLocation(), getCertKey());
+  await createCertsIfNoneExists(
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+    process.env.AUTH_LOCAL_SIGNING_KEY,
+  );
 }
 
 if (process.env.SENTRY_WORKER_DSN)
@@ -563,7 +562,10 @@ async function createWorker(
           url: new URL(`w/${tenant}`, process.env.API_URL).href,
           getAccessToken: async () => {
             const token = await createToken({
-              signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+              signingKey: await getSigningKey(
+                process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+                process.env.AUTH_LOCAL_SIGNING_KEY,
+              ),
               payload,
             });
             return token;

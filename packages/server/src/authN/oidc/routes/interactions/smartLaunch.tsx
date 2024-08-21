@@ -15,14 +15,10 @@ import {
   Subject,
   createToken,
 } from "@iguhealth/jwt";
+import { getSigningKey } from "@iguhealth/jwt";
 
 import { createTenantURL } from "../../../../fhir-api/constants.js";
 import resolveStatic from "../../../../resolveStatic.js";
-import {
-  getCertKey,
-  getCertLocation,
-  getSigningKey,
-} from "../../../certifications.js";
 import { getIssuer } from "../../constants.js";
 import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../../index.js";
@@ -78,7 +74,10 @@ export async function launchView<Version extends FHIR_VERSION>(
   resourceType: ResourceType<Version>,
 ) {
   const accessToken = await createToken<AccessTokenPayload<user_role>>({
-    signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+    signingKey: await getSigningKey(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    ),
     payload: {
       sub: ctx.state.oidc.user?.id as Subject,
       scope: `user/${resourceType}.rs user/SearchParameter.rs`,
