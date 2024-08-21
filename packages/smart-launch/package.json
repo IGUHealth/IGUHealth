@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/smart-launch",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "build-css": "yarn postcss -o dist/css/index.css index.css",
     "build": "yarn rollup -c -i src/launch.tsx -o dist/launch.js & yarn build-css"
