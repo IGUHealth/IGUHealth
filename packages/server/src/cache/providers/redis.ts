@@ -1,6 +1,6 @@
 import Redis from "ioredis";
 
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 import { IOCache } from "../interface.js";
 

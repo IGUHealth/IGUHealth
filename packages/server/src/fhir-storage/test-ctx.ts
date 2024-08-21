@@ -13,7 +13,11 @@ import {
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { AccessTokenPayload, CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
+import {
+  AccessTokenPayload,
+  CUSTOM_CLAIMS,
+  TenantId,
+} from "@iguhealth/jwt/types";
 
 import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";

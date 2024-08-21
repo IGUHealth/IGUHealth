@@ -9,19 +9,17 @@ import {
 } from "node:fs";
 import path from "node:path";
 
+import { ALGORITHMS } from "./constants.js";
+
 /**
  * Generates a keypair using the provided algorithm.
  * @param alg
  * @returns privateKey and publicKey generated using jose library.
  */
-export async function generateKeyPair(alg: string = "RS256") {
+export async function generateKeyPair(alg: string = ALGORITHMS.RS256) {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
 }
-
-export const ALGORITHMS = {
-  RS256: "RS256",
-};
 
 /**
  * Saves certifications as follows:
@@ -107,14 +105,6 @@ export async function getSigningKey(
   return { kid, key: privateKey };
 }
 
-export function getCertLocation() {
-  return path.resolve(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
-}
-
-export function getCertKey() {
-  return process.env.AUTH_LOCAL_SIGNING_KEY;
-}
-
 /**
  * Create certifications if not exist. Saves by default
  * private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
@@ -130,7 +120,7 @@ export async function createCertsIfNoneExists(
 ) {
   try {
     await getSigningKey(directory, kid, alg);
-  } catch (e) {
+  } catch (_e) {
     if (!existsSync(directory)) {
       mkdirSync(directory);
     }

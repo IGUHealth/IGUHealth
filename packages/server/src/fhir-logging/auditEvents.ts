@@ -3,7 +3,7 @@ import * as s from "zapatos/schema";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { Reference, code, instant, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
-import { AccessTokenPayload } from "@iguhealth/jwt";
+import { AccessTokenPayload } from "@iguhealth/jwt/types";
 
 export type OUTCOMES = {
   SUCCESS: "0";

@@ -1,6 +1,6 @@
 import * as jose from "jose";
 
-import { JWT } from "./types.js";
+import { ALGORITHMS, JWT } from "./types.js";
 
 export function parseJwt<A, Token extends JWT<A>>(
   token: Token,
@@ -33,7 +33,7 @@ export async function createToken<Payload extends jose.JWTPayload>({
   expiresIn?: string;
 }): Promise<JWT<Payload>> {
   const signedJWT = (await new jose.SignJWT(payload)
-    .setProtectedHeader({ kid: signingKey.kid, alg: "RS256" })
+    .setProtectedHeader({ kid: signingKey.kid, alg: ALGORITHMS.RS256 })
     .setIssuedAt()
     .setExpirationTime(expiresIn)
     .sign(signingKey.key)) as JWT<Payload>;

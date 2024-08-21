@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import RedisCache from "../../../../cache/providers/redis.js";

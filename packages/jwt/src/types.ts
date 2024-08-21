@@ -11,6 +11,8 @@ import {
 
 import { CUSTOM_CLAIMS } from "./constants.js";
 
+export * from "./constants.js";
+
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
 export interface TenantClaim<role> {

@@ -5,7 +5,7 @@ import * as db from "zapatos/db";
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
 import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
   outcomeError,

@@ -6,7 +6,7 @@ import {
   R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 import { createFHIRURL } from "../../fhir-api/constants.js";
 import { fhirResponseToHTTPResponse } from "../../fhir-http/index.js";

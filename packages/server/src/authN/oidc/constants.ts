@@ -1,4 +1,4 @@
-import { Issuer, TenantId } from "@iguhealth/jwt";
+import { Issuer, TenantId } from "@iguhealth/jwt/types";
 
 export const JWKS_GET = "JWKS_GET";
 

@@ -4,3 +4,7 @@ export const CUSTOM_CLAIMS = {
   TENANT: <const>"https://iguhealth.app/tenant",
   ROLE: <const>"https://iguhealth.app/role"
 };
+
+export const ALGORITHMS = {
+  RS256: "RS256",
+};

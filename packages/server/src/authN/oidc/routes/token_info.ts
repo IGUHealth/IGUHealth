@@ -3,15 +3,11 @@ import { jwtVerify } from "jose";
 import { JWSInvalid } from "jose/errors";
 import { user_role } from "zapatos/schema";
 
-import { Reference, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { AccessTokenPayload, IDTokenPayload } from "@iguhealth/jwt";
+import { Reference, id } from "@iguhealth/fhir-types/r4/types";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { AccessTokenPayload, IDTokenPayload } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import {
-  getCertKey,
-  getCertLocation,
-  getSigningKey,
-} from "../../certifications.js";
 import { getIssuer } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OAuth2TokenIntrospectionBody } from "../schemas/oauth2_token_introspection.schema.js";
@@ -127,7 +123,10 @@ export function tokenInfo(): OIDCRouteHandler {
       );
     }
 
-    const signingKey = await getSigningKey(getCertLocation(), getCertKey());
+    const signingKey = await getSigningKey(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    );
     try {
       const result = await jwtVerify<
         AccessTokenPayload<user_role> | IDTokenPayload<user_role>

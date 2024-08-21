@@ -3,7 +3,7 @@ import {
   code,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 export function ADMIN_APP(): ClientApplication | undefined {
   return process.env.ADMIN_APP_REDIRECT_URI

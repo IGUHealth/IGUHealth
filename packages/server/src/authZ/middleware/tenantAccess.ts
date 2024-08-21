@@ -1,6 +1,6 @@
 import Koa from "koa";
 
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import {
   OperationError,
   outcomeError,

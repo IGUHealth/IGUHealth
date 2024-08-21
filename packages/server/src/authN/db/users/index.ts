@@ -1,7 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { TenantClaim, TenantId } from "@iguhealth/jwt";
+import { TenantClaim, TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { determineEmailUpdate } from "./utilities.js";

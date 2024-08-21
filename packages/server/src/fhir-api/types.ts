@@ -27,7 +27,7 @@ import {
   JWT,
   Subject,
   TenantId,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 
 import { User } from "../authN/db/users/index.js";
 import { getIssuer } from "../authN/oidc/constants.js";

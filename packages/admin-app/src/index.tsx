@@ -24,7 +24,7 @@ import {
   useIGUHealth,
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";

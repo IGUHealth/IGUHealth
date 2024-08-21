@@ -1,7 +1,7 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import {
   OperationError,
   outcomeError,

@@ -1,7 +1,7 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { AccessPolicy, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, Resource, ResourceType } from "@iguhealth/fhir-types/versions";
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import getHardCodedClients from "../../authN/oidc/hardcodedClients/index.js";

@@ -5,22 +5,18 @@ import * as s from "zapatos/schema";
 
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { getJWKS, getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
+  ALGORITHMS,
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   Subject,
   TenantId,
-  createToken,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../fhir-api/types.js";
-import {
-  getCertKey,
-  getCertLocation,
-  getJWKS,
-  getSigningKey,
-} from "./certifications.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -118,7 +114,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
     },
-    algorithms: ["RS256"],
+    algorithms: [ALGORITHMS.RS256],
   }) as unknown as Middleware<T, C>;
 }
 
@@ -166,7 +162,10 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   };
 
   const token = await createToken({
-    signingKey: await getSigningKey(getCertLocation(), getCertKey()),
+    signingKey: await getSigningKey(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    ),
     payload: user,
   });
 

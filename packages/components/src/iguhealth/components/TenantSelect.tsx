@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 
-import { TenantClaim, TenantId } from "@iguhealth/jwt";
+import { TenantClaim, TenantId } from "@iguhealth/jwt/types";
 
 import { generateTailwindColorFromValue } from "../utilities";
 import { Container } from "./Container";

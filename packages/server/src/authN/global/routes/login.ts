@@ -10,7 +10,7 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { Login, TenantSelect } from "@iguhealth/components";
-import { TenantClaim, TenantId } from "@iguhealth/jwt";
+import { TenantClaim, TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";

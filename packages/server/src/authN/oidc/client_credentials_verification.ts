@@ -2,20 +2,16 @@ import type * as Koa from "koa";
 import * as s from "zapatos/schema";
 
 import { ClientApplication, id } from "@iguhealth/fhir-types/r4/types";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   JWT,
   Subject,
   TenantId,
-  createToken,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 
-import {
-  getCertKey,
-  getCertLocation,
-  getSigningKey,
-} from "../certifications.js";
 import { getIssuer } from "./constants.js";
 
 export type ClientCredentials = { client_id: string; client_secret: string };
@@ -71,7 +67,10 @@ export async function createClientCredentialToken(
   client: ClientApplication,
   expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
-  const signingKey = await getSigningKey(getCertLocation(), getCertKey());
+  const signingKey = await getSigningKey(
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+    process.env.AUTH_LOCAL_SIGNING_KEY,
+  );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: getIssuer(tenant),
