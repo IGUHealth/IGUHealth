@@ -31,6 +31,7 @@
     "@aws-sdk/client-lambda": "^3.632.0",
     "@aws-sdk/client-resource-groups-tagging-api": "^3.632.0",
     "@dagrejs/graphlib": "^2.2.4",
+    "@iguhealth/access-control": "workspace:^",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/cli": "workspace:^",
     "@iguhealth/client": "workspace:^",

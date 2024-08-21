@@ -8622,6 +8622,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iguhealth/access-control@workspace:^, @iguhealth/access-control@workspace:packages/access-control":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/access-control@workspace:packages/access-control"
+  dependencies:
+    "@iguhealth/client": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/jwt": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^"
+    "@jest/globals": "npm:^29.7.0"
+    "@types/jest": "npm:^29.5.12"
+    jest: "npm:^29.7.0"
+    ts-jest: "npm:^29.2.4"
+    typescript: "npm:5.5.4"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/admin-app@workspace:packages/admin-app":
   version: 0.0.0-use.local
   resolution: "@iguhealth/admin-app@workspace:packages/admin-app"
@@ -9063,6 +9079,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.25.3"
     "@babel/preset-typescript": "npm:^7.24.7"
     "@dagrejs/graphlib": "npm:^2.2.4"
+    "@iguhealth/access-control": "workspace:^"
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
     "@iguhealth/client": "workspace:^"
