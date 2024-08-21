@@ -14,7 +14,7 @@ import path from "node:path";
  * @param alg
  * @returns privateKey and publicKey generated using jose library.
  */
-export async function generateKeyPair(alg: string = "RS256") {
+export async function generateKeyPair(alg: string = ALGORITHMS.RS256) {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
 }

@@ -16,6 +16,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../fhir-api/types.js";
 import {
+  ALGORITHMS,
   getCertKey,
   getCertLocation,
   getJWKS,
@@ -118,7 +119,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
     },
-    algorithms: ["RS256"],
+    algorithms: [ALGORITHMS.RS256],
   }) as unknown as Middleware<T, C>;
 }
 
