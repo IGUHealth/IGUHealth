@@ -14,8 +14,8 @@ import {
   CUSTOM_CLAIMS,
   Subject,
   createToken,
+  getSigningKey,
 } from "@iguhealth/jwt";
-import { getSigningKey } from "@iguhealth/jwt";
 
 import { createTenantURL } from "../../../../fhir-api/constants.js";
 import resolveStatic from "../../../../resolveStatic.js";

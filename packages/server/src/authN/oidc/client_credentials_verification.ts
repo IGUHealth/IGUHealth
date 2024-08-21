@@ -9,8 +9,8 @@ import {
   Subject,
   TenantId,
   createToken,
+  getSigningKey,
 } from "@iguhealth/jwt";
-import { getSigningKey } from "@iguhealth/jwt";
 
 import { getIssuer } from "./constants.js";
 
