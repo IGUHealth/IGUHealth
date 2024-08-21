@@ -16,7 +16,7 @@ import { ALGORITHMS } from "./constants.js";
  * @param alg
  * @returns privateKey and publicKey generated using jose library.
  */
-export async function generateKeyPair(alg: string = ALGORITHMS.RS256) {
+export async function generateKeyPair(alg: string = ALGORITHMS.RS384) {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
 }
@@ -32,7 +32,7 @@ export async function generateKeyPair(alg: string = ALGORITHMS.RS256) {
 export async function createCertifications(
   directory: string,
   kid: string,
-  alg: string = ALGORITHMS.RS256,
+  alg: string = ALGORITHMS.RS384,
 ) {
   mkdirSync(directory, { recursive: true });
 
@@ -58,7 +58,7 @@ export async function createCertifications(
  */
 export async function getJWKS(
   directory: string,
-  alg: string = ALGORITHMS.RS256,
+  alg: string = ALGORITHMS.RS384,
 ) {
   const publicKeyPaths = readdirSync(directory);
   const keys = await Promise.all(
@@ -94,7 +94,7 @@ export async function getJWKS(
 export async function getSigningKey(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS256,
+  alg = ALGORITHMS.RS384,
 ): Promise<{ key: KeyObject; kid: string }> {
   const privateKeyPath = path.join(directory, `${kid}.p8`);
   const privateKey = await jose.importPKCS8<KeyObject & jose.KeyLike>(
@@ -116,7 +116,7 @@ export async function getSigningKey(
 export async function createCertsIfNoneExists(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS256,
+  alg = ALGORITHMS.RS384,
 ) {
   try {
     await getSigningKey(directory, kid, alg);

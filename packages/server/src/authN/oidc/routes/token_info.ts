@@ -5,7 +5,11 @@ import { user_role } from "zapatos/schema";
 
 import { Reference, id } from "@iguhealth/fhir-types/r4/types";
 import { getSigningKey } from "@iguhealth/jwt/certifications";
-import { AccessTokenPayload, IDTokenPayload } from "@iguhealth/jwt/types";
+import {
+  ALGORITHMS,
+  AccessTokenPayload,
+  IDTokenPayload,
+} from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getIssuer } from "../constants.js";
@@ -132,7 +136,7 @@ export function tokenInfo(): OIDCRouteHandler {
         AccessTokenPayload<user_role> | IDTokenPayload<user_role>
       >(body.token, signingKey.key, {
         issuer: getIssuer(ctx.state.iguhealth.tenant),
-        algorithms: ["RS256"],
+        algorithms: [ALGORITHMS.RS384],
       });
 
       ctx.status = 200;

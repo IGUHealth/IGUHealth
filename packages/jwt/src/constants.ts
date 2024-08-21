@@ -7,4 +7,5 @@ export const CUSTOM_CLAIMS = {
 
 export const ALGORITHMS = {
   RS256: "RS256",
+  RS384: "RS384",
 };
