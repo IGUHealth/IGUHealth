@@ -11,7 +11,7 @@ export const IguhealthDeleteRefreshTokenInvoke = InlineOperation(
     await codes.remove(ctx.db, ctx.tenant, {
       user_id: ctx.user.payload.sub,
       type: "refresh_token",
-      code: input.refresh_token,
+      id: input.id,
     });
 
     return outcomeInfo("informational", "Refresh token deleted.");

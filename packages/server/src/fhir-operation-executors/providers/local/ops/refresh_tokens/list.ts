@@ -15,8 +15,8 @@ export const IguhealthListRefreshTokensInvoke = InlineOperation(
 
     return {
       "refresh-tokens": refreshTokens.map((refreshToken) => ({
+        id: refreshToken.id as id,
         client_id: refreshToken.client_id as id,
-        token: refreshToken.scope,
         created_at: refreshToken.created_at as dateTime,
       })),
     };

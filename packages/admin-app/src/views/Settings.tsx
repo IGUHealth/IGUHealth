@@ -13,7 +13,9 @@ import {
 import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import {
+  IguhealthDeleteRefreshToken,
   IguhealthDeleteScope,
+  IguhealthListRefreshTokens,
   IguhealthListScopes,
 } from "@iguhealth/generated-ops/lib/r4/ops";
 import { IDTokenPayload } from "@iguhealth/jwt";
@@ -153,6 +155,105 @@ function Scopes() {
   );
 }
 
+function RefreshTokens() {
+  const iguhealth = useIGUHealth();
+  const client = useRecoilValue(getClient);
+  const [refreshTokens, setRefreshTokens] = React.useState<
+    IguhealthListRefreshTokens.Output["refresh-tokens"]
+  >([]);
+  const fetchRefreshTokens = React.useMemo(() => {
+    return () => {
+      client
+        .invoke_system(IguhealthListRefreshTokens.Op, {}, R4, {})
+        .then((res) => {
+          setRefreshTokens(res["refresh-tokens"]);
+        });
+    };
+  }, [iguhealth]);
+  React.useEffect(() => {
+    fetchRefreshTokens();
+  }, []);
+  const deleteRefreshToken = React.useMemo(() => {
+    return (id: id) => {
+      const deletePromise = client
+        .invoke_system(IguhealthDeleteRefreshToken.Op, {}, R4, {
+          id,
+        })
+        .then((res) => {
+          if (res.issue[0]?.code !== "informational") {
+            throw new Error("Failed to delete");
+          }
+          return res;
+        });
+      Toaster.promise(deletePromise, {
+        loading: "Deleting Resource",
+        success: (res) => {
+          const result = res as OperationOutcome;
+          fetchRefreshTokens();
+          return result.issue[0].diagnostics ?? "Deleted";
+        },
+        error: (error) => {
+          console.error(error);
+          return "Failed to delete authorization.";
+        },
+      });
+    };
+  }, [iguhealth]);
+
+  return (
+    <div className="space-y-2">
+      <h2 className="text-lg font-semibold ">Active Refresh Tokens</h2>
+      <div className="flex flex-col p-2 space-y-2">
+        <Table
+          columns={[
+            {
+              id: "id",
+              content: "ID",
+              selectorType: "fhirpath",
+              selector: "$this.id",
+            },
+            {
+              id: "client_id",
+              content: "Client ID",
+              selectorType: "fhirpath",
+              selector: "$this.client_id",
+            },
+            {
+              id: "created_at",
+              content: "Authorized At",
+              selectorType: "fhirpath",
+              selector: "$this.created_at",
+            },
+            {
+              id: "actions",
+              content: "Actions",
+              selectorType: "fhirpath",
+              selector: "$this",
+              renderer: (data) => {
+                const refreshToken = data[0] as NonNullable<
+                  IguhealthListRefreshTokens.Output["refresh-tokens"]
+                >[number];
+
+                return (
+                  <div
+                    onClick={() => {
+                      deleteRefreshToken(refreshToken.id);
+                    }}
+                    className="cursor-pointer font-semibold text-red-600 hover:text-red-700"
+                  >
+                    Revoke
+                  </div>
+                );
+              },
+            },
+          ]}
+          data={refreshTokens ?? []}
+        />
+      </div>
+    </div>
+  );
+}
+
 function SettingDisplay({ user }: Readonly<SettingProps>) {
   const iguhealth = useIGUHealth();
   return (
@@ -227,6 +328,7 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
         </div>
       </div>
       <Scopes />
+      <RefreshTokens />
     </div>
   );
 }
