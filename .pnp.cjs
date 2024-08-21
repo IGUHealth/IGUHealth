@@ -43,6 +43,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:artifacts/r4b/test-data/examples-json"\
     },\
     {\
+      "name": "@iguhealth/access-control",\
+      "reference": "workspace:packages/access-control"\
+    },\
+    {\
       "name": "@iguhealth/admin-app",\
       "reference": "workspace:packages/admin-app"\
     },\
@@ -138,6 +142,7 @@ const RAW_RUNTIME_STATE =
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
+    ["@iguhealth/access-control", ["workspace:packages/access-control"]],\
     ["@iguhealth/admin-app", ["workspace:packages/admin-app"]],\
     ["@iguhealth/artifacts", ["workspace:packages/artifacts"]],\
     ["@iguhealth/auth_testing", ["workspace:packages/auth_testing"]],\
@@ -15344,6 +15349,24 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@iguhealth/access-control", [\
+      ["workspace:packages/access-control", {\
+        "packageLocation": "./packages/access-control/",\
+        "packageDependencies": [\
+          ["@iguhealth/access-control", "workspace:packages/access-control"],\
+          ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
+          ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/jest", "npm:29.5.12"],\
+          ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
+          ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.2.4"],\
+          ["typescript", "patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@iguhealth/admin-app", [\
       ["workspace:packages/admin-app", {\
         "packageLocation": "./packages/admin-app/",\
@@ -15910,6 +15933,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-env", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.25.3"],\
           ["@babel/preset-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.24.7"],\
           ["@dagrejs/graphlib", "npm:2.2.4"],\
+          ["@iguhealth/access-control", "workspace:packages/access-control"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/client", "workspace:packages/client"],\
