@@ -4,7 +4,7 @@ import * as db from "zapatos/db";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../fhir-api/types.js";

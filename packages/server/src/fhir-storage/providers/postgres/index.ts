@@ -61,7 +61,7 @@ import {
 } from "../../transactions.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";

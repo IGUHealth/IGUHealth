@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { is_expired, is_not_expired } from "./utilities.js";

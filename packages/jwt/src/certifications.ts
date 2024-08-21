@@ -9,6 +9,8 @@ import {
 } from "node:fs";
 import path from "node:path";
 
+import { ALGORITHMS } from "./constants.js";
+
 /**
  * Generates a keypair using the provided algorithm.
  * @param alg
@@ -18,10 +20,6 @@ export async function generateKeyPair(alg: string = ALGORITHMS.RS256) {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
 }
-
-export const ALGORITHMS = {
-  RS256: "RS256",
-};
 
 /**
  * Saves certifications as follows:

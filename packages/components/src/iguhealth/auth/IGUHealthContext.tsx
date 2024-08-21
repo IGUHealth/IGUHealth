@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { AccessToken, IDToken, IDTokenPayload } from "@iguhealth/jwt";
+import { AccessToken, IDToken, IDTokenPayload } from "@iguhealth/jwt/types";
 
 import { OIDC_WELL_KNOWN } from "./reducer";
 

@@ -2,7 +2,7 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { id } from "@iguhealth/fhir-types/r4/types";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 import { Scope, parseScopes } from "../../oidc/scopes/parse.js";
 

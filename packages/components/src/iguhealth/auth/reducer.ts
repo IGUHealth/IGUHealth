@@ -1,4 +1,5 @@
-import { CUSTOM_CLAIMS, TenantId, parseJwt } from "@iguhealth/jwt";
+import { parseJwt } from "@iguhealth/jwt/token";
+import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt/types";
 
 import type {
   AccessTokenResponse,

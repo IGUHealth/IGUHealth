@@ -22,14 +22,16 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
 import {
+  createCertsIfNoneExists,
+  getSigningKey,
+} from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
+import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   Subject,
   TenantId,
-  createCertsIfNoneExists,
-  createToken,
-  getSigningKey,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 import {
   OperationError,
   isOperationError,

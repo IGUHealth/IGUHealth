@@ -20,6 +20,12 @@
     "ts-jest": "^29.2.4",
     "typescript": "5.5.4"
   },
+  "exports": {
+    ".": "./lib/index.js",
+    "./token": "./lib/token.js",
+    "./certifications": "./lib/certifications.js",
+    "./types": "./lib/types.js"
+  },
   "files": [
     "lib/**",
     "src/**"

@@ -3,12 +3,9 @@ import { jwtVerify } from "jose";
 import { JWSInvalid } from "jose/errors";
 import { user_role } from "zapatos/schema";
 
-import { Reference, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import {
-  AccessTokenPayload,
-  IDTokenPayload,
-  getSigningKey,
-} from "@iguhealth/jwt";
+import { Reference, id } from "@iguhealth/fhir-types/r4/types";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { AccessTokenPayload, IDTokenPayload } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getIssuer } from "../constants.js";

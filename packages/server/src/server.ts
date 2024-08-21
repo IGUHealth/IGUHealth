@@ -17,7 +17,11 @@ import * as db from "zapatos/db";
 
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
-import { TenantId, createCertsIfNoneExists, getJWKS } from "@iguhealth/jwt";
+import {
+  createCertsIfNoneExists,
+  getJWKS,
+} from "@iguhealth/jwt/certifications";
+import { TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
   isOperationError,

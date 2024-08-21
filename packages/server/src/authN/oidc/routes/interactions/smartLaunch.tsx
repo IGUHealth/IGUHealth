@@ -9,13 +9,13 @@ import {
   R4,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   Subject,
-  createToken,
-  getSigningKey,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 
 import { createTenantURL } from "../../../../fhir-api/constants.js";
 import resolveStatic from "../../../../resolveStatic.js";

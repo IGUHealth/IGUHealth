@@ -6,6 +6,8 @@ import * as s from "zapatos/schema";
 
 import { ClientApplication, code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -13,9 +15,7 @@ import {
   JWT,
   Subject,
   TenantId,
-  createToken,
-  getSigningKey,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 
 import {
   IGUHealthServerCTX,

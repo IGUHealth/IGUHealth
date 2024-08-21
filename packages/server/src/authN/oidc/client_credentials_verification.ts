@@ -2,15 +2,15 @@ import type * as Koa from "koa";
 import * as s from "zapatos/schema";
 
 import { ClientApplication, id } from "@iguhealth/fhir-types/r4/types";
+import { getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   JWT,
   Subject,
   TenantId,
-  createToken,
-  getSigningKey,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 
 import { getIssuer } from "./constants.js";
 

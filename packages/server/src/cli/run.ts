@@ -3,7 +3,7 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 // import { R4, R4B } from "@iguhealth/fhir-types/versions";
-// import { TenantId } from "@iguhealth/jwt";
+// import { TenantId } from "@iguhealth/jwt/types";
 
 // import syncArtifacts from "../fhir-storage/providers/postgres/migrations/syncArtifacts.js";
 import createServer from "../server.js";

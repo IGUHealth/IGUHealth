@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt/types";
 
 export function createTenantURL(tenant: TenantId): string {
   const base = new URL(process.env.API_URL);

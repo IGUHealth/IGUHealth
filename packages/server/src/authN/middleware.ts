@@ -5,16 +5,15 @@ import * as s from "zapatos/schema";
 
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { getJWKS, getSigningKey } from "@iguhealth/jwt/certifications";
+import { createToken } from "@iguhealth/jwt/token";
 import {
   ALGORITHMS,
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   Subject,
   TenantId,
-  createToken,
-  getJWKS,
-  getSigningKey,
-} from "@iguhealth/jwt";
+} from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../fhir-api/types.js";

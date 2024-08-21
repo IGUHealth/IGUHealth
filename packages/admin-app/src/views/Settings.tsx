@@ -18,7 +18,7 @@ import {
   IguhealthListRefreshTokens,
   IguhealthListScopes,
 } from "@iguhealth/generated-ops/lib/r4/ops";
-import { IDTokenPayload } from "@iguhealth/jwt";
+import { IDTokenPayload } from "@iguhealth/jwt/types";
 
 import { getClient } from "../db/client";
 
