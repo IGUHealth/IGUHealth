@@ -1,6 +1,10 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
+import {
+  AccessPolicy,
+  AccessPolicyAccess,
+  code,
+} from "@iguhealth/fhir-types/r4/types";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import {
   OperationError,
@@ -143,10 +147,10 @@ function validateFHIRMethodAccess(
  * @returns boolean as to whether or not a user is being granted access.
  */
 function evaluateAccessPolicy(
-  ctx: IGUHealthServerCTX,
+  policies: AccessPolicy[],
   request: FHIRRequest,
 ): boolean {
-  for (const accessPolicy of ctx.user.accessPolicies ?? []) {
+  for (const accessPolicy of policies ?? []) {
     switch (accessPolicy.type) {
       case "fhir-rest": {
         const access = accessPolicy.access?.find((access) => {
@@ -192,7 +196,7 @@ function canUserMakeRequest(
     ctx.user.payload[CUSTOM_CLAIMS.ROLE] === "owner"
   )
     return true;
-  return evaluateAccessPolicy(ctx, request);
+  return evaluateAccessPolicy(ctx.user.accessPolicies ?? [], request);
 }
 
 /**
