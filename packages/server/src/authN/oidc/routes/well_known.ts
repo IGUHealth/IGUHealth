@@ -298,6 +298,8 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
       ],
 
       capabilities: [
+        "context-standalone-patient",
+        "context-standalone-encounter",
         "sso-openid-connect",
         "launch-standalone",
         "client-confidential-symmetric",
@@ -305,6 +307,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "authorize-post",
         "permission-offline",
         "permission-v2",
+        "permission-user",
       ],
       code_challenge_methods_supported: ["S256"],
       introspection_endpoint: new URL(
