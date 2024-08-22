@@ -28,7 +28,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 21.6.1
+          node-version: 22.7.0
           cache: "yarn"
           registry-url: "https://registry.npmjs.org"
 

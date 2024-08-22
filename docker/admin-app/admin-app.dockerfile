@@ -1,4 +1,4 @@
-FROM node:21.6.1-slim  AS node
+FROM node:22.7.0-slim  AS node
 
 # Rust setup for 1.77.1
 ENV RUSTUP_HOME=/usr/local/rustup \
