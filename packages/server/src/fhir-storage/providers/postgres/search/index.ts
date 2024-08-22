@@ -18,6 +18,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import {
+  ParameterType,
   SearchParameterResource,
   SearchParameterResult,
   deriveLimit,
@@ -30,6 +31,54 @@ import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
 import { buildParameterSQL } from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
+
+type FHIRSearchRequest =
+  | R4SystemSearchRequest
+  | R4TypeSearchRequest
+  | R4BSystemSearchRequest
+  | R4BTypeSearchRequest;
+
+type InteralSearchRequest<Version extends FHIR_VERSION> = {
+  resourceTypes: ResourceType<Version>[];
+  fhirVersion: Version;
+  parameters: ParameterType[];
+};
+
+/**
+ * Performs request processing to get the correct parameters and resource types and returns object with metadata.
+ * @param ctx Server context
+ * @param request A FHIR Search Request
+ * @returns Object with parameter metadata and derived resourcetype filters.
+ */
+async function fhirSearchRequesttoInteralRequest<
+  Request extends FHIRSearchRequest,
+>(
+  ctx: IGUHealthServerCTX,
+  request: Request,
+): Promise<InteralSearchRequest<Request["fhirVersion"]>> {
+  const queryParameters = request.parameters;
+  const resourceTypes = deriveResourceTypeFilter(request);
+
+  const parameters = await parametersWithMetaAssociated(
+    async (resourceTypes, name) =>
+      await findSearchParameter(
+        ctx.client,
+        asRoot(ctx),
+        request.fhirVersion,
+        resourceTypes,
+        name,
+      ),
+    resourceTypes,
+    // Used for resource type filtering.
+    queryParameters.filter((p) => p.name !== "_type"),
+  );
+
+  return {
+    resourceTypes,
+    fhirVersion: request.fhirVersion,
+    parameters,
+  };
+}
 
 function buildParametersSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
@@ -202,50 +251,50 @@ async function processInclude<Version extends FHIR_VERSION>(
   ).flat();
 }
 
-export async function executeSearchQuery<
-  Request extends
-    | R4SystemSearchRequest
-    | R4TypeSearchRequest
-    | R4BSystemSearchRequest
-    | R4BTypeSearchRequest,
->(
+/**
+ * Returns columns for search query on resources.
+ * @param totalParameter _total parameter value.
+ */
+function resourceSearchColumns(totalParameterValue: string): string[] {
+  switch (totalParameterValue) {
+    case "none": {
+      return ["*"];
+    }
+    case "accurate":
+    case "estimate": {
+      return ["*", "count(*) OVER () AS total_count"];
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'",
+        ),
+      );
+  }
+}
+
+async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
-  request: Request,
-): Promise<{
-  total?: number;
-  resources: Resource<Request["fhirVersion"], AllResourceTypes>[];
-}> {
-  const resourceTypes = deriveResourceTypeFilter(request);
-  // Remove _type as using on derived resourceTypeFilter
-  request.parameters = request.parameters.filter(
-    // Filter _type and empty param values.
-    (p) => p.name !== "_type" && p.value.length > 0,
-  );
-
-  const parameters = await parametersWithMetaAssociated(
-    async (resourceTypes, name) =>
-      await findSearchParameter(
-        ctx.client,
-        asRoot(ctx),
-        request.fhirVersion,
-        resourceTypes,
-        name,
-      ),
-    resourceTypes,
-    request.parameters,
-  );
-
-  const resourceParameters = parameters
+  request: InteralSearchRequest<Version>,
+): Promise<
+  db.SQLFragment<
+    (s.resources.Selectable & {
+      total_count?: string;
+    })[]
+  >
+> {
+  const resourceParameters = request.parameters
     .filter((v): v is SearchParameterResource => v.type === "resource")
     .concat(
       await getParameterForLatestId(
         asRoot(ctx),
         request.fhirVersion,
-        resourceTypes,
+        request.resourceTypes,
       ),
     );
 
-  const parametersResult = parameters.filter(
+  const parametersResult = request.parameters.filter(
     (v): v is SearchParameterResult => v.type === "result",
   );
 
@@ -262,11 +311,6 @@ export async function executeSearchQuery<
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
-  const includeParam = parametersResult.find((p) => p.name === "_include");
-  const revIncludeParam = parametersResult.find(
-    (p) => p.name === "_revinclude",
-  );
-
   const limit = deriveLimit([0, 50], countParam);
 
   const offset =
@@ -279,25 +323,7 @@ export async function executeSearchQuery<
       : 0;
 
   const totalParamValue = totalParam?.value[0]?.toString() || "none";
-  let cols: string[] = ["*"];
-
-  switch (totalParamValue) {
-    case "none": {
-      break;
-    }
-    case "accurate":
-    case "estimate": {
-      cols = ["*", "count(*) OVER () AS total_count"];
-      break;
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          "Unknown total type received must be 'none', 'estimate' or 'accurate'",
-        ),
-      );
-  }
+  const cols = resourceSearchColumns(totalParamValue);
 
   let sql = db.sql<
     s.resources.SQL,
@@ -313,31 +339,45 @@ export async function executeSearchQuery<
       WHERE ${"resources"}.${"tenant"} = ${db.param(ctx.tenant)}
       AND ${"resources"}.${"fhir_version"} = ${db.param(toDBFHIRVersion(request.fhirVersion))}
       AND ${"resources"}.${"resource_type"} ${
-        resourceTypes.length > 0
-          ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`
+        request.resourceTypes.length > 0
+          ? db.sql`in (${sqlUtils.paramsWithComma(request.resourceTypes)})`
           : db.sql`is not null`
       }`;
 
-  if (sortBy)
+  if (sortBy) {
     sql = await deriveSortQuery(
       ctx,
       request.fhirVersion,
-      resourceTypes,
+      request.resourceTypes,
       sortBy,
       sql,
     );
+  }
 
   sql = db.sql<
     s.resources.SQL,
     s.resources.Selectable[]
   >`${sql} LIMIT ${db.param(limit)} OFFSET ${db.param(offset)}`;
 
+  return sql;
+}
+
+export async function executeSearchQuery<Request extends FHIRSearchRequest>(
+  ctx: IGUHealthServerCTX,
+  fhirRequest: Request,
+): Promise<{
+  total?: number;
+  resources: Resource<Request["fhirVersion"], AllResourceTypes>[];
+}> {
+  const request = await fhirSearchRequesttoInteralRequest(ctx, fhirRequest);
+  const searchSQL = await deriveResourceSearchSQL(ctx, request);
+
   if (process.env.LOG_SQL) {
-    const v = sql.compile();
+    const v = searchSQL.compile();
     ctx.logger.info(v.text);
   }
 
-  const result = await sql.run(ctx.db);
+  const result = await searchSQL.run(ctx.db);
 
   const total =
     // In case where nothing returned means that total_count col will not be present.
@@ -356,6 +396,12 @@ export async function executeSearchQuery<
         >,
     );
 
+  const includeParam = request.parameters.find(
+    (p) => p.name === "_include" && p.type === "result",
+  ) as SearchParameterResult | undefined;
+  const revIncludeParam = request.parameters.find(
+    (p) => p.name === "_revinclude" && p.type === "result",
+  ) as SearchParameterResult | undefined;
   if (revIncludeParam) {
     resources = resources.concat(
       await processRevInclude(
@@ -372,7 +418,6 @@ export async function executeSearchQuery<
       ),
     );
   }
-
   if (includeParam) {
     resources = resources.concat(
       await processInclude(
@@ -393,9 +438,6 @@ export async function executeSearchQuery<
 
   return {
     total,
-    resources: resources as Resource<
-      Request["fhirVersion"],
-      AllResourceTypes
-    >[],
+    resources,
   };
 }
