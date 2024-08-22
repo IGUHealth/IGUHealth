@@ -91,7 +91,11 @@
         "path": "AccessPolicy.name",
         "definition": "The name of the access policy.",
         "short": "The name of the access policy.",
-        "type": [{ "code": "string" }],
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
         "min": 1,
         "max": "1"
       },
@@ -100,7 +104,11 @@
         "path": "AccessPolicy.code",
         "definition": "Unique identifier for an access policy.",
         "short": "Unique identifier for the access policy.",
-        "type": [{ "code": "code" }],
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
         "min": 1,
         "max": "1"
       },
@@ -109,7 +117,11 @@
         "path": "AccessPolicy.description",
         "definition": "Description of the access policy.",
         "short": "Description of the access policy.",
-        "type": [{ "code": "string" }],
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
         "min": 0,
         "max": "1"
       },
@@ -118,7 +130,11 @@
         "path": "AccessPolicy.type",
         "definition": "The type of evaluation that is performed to determine if access is granted or denied.",
         "short": "The type of evaluation that is performed to determine if access is granted or denied.",
-        "type": [{ "code": "code" }],
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
         "min": 1,
         "max": "1",
         "binding": {

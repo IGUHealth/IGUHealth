@@ -2,8 +2,8 @@
   "name": "@iguhealth/access-control",
   "version": "0.0.2",
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/v1.js",
+  "types": "lib/v1.d.ts",
   "scripts": {
     "build": "tsc",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
@@ -20,5 +20,9 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.4",
     "typescript": "5.5.4"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./v1": "./lib/v1.js"
   }
 }
