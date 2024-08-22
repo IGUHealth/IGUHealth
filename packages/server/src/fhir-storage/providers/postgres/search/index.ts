@@ -387,11 +387,11 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
         ? parseInt(result[0]?.total_count)
         : undefined;
 
-  let resources: Resource<typeof fhirRequest.fhirVersion, AllResourceTypes>[] =
+  let resources: Resource<typeof request.fhirVersion, AllResourceTypes>[] =
     result.map(
       (r) =>
         r.resource as unknown as Resource<
-          typeof fhirRequest.fhirVersion,
+          typeof request.fhirVersion,
           AllResourceTypes
         >,
     );
@@ -406,12 +406,12 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
     resources = resources.concat(
       await processRevInclude(
         ctx,
-        fhirRequest.fhirVersion,
+        request.fhirVersion,
         revIncludeParam,
         result.map(
           (r) =>
             r.resource as unknown as Resource<
-              typeof fhirRequest.fhirVersion,
+              typeof request.fhirVersion,
               AllResourceTypes
             >,
         ),
@@ -423,12 +423,12 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
       await processInclude(
         ctx.db,
         ctx,
-        fhirRequest.fhirVersion,
+        request.fhirVersion,
         includeParam,
         result.map(
           (r) =>
             r.resource as unknown as Resource<
-              typeof fhirRequest.fhirVersion,
+              typeof request.fhirVersion,
               AllResourceTypes
             >,
         ),
