@@ -8,7 +8,7 @@
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
-    "@types/react": "^18.3.3",
+    "@types/react": "^18.3.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -27,7 +27,7 @@
     "postcss": "^8.4.41",
     "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.0",
-    "rollup": "^4.20.0",
+    "rollup": "^4.21.0",
     "tailwindcss": "^3.4.10",
     "tslib": "^2.6.3",
     "typescript": "5.5.4"

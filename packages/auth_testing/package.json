@@ -49,8 +49,8 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.12",
-    "@types/node": "^22.4.0",
-    "@types/react": "^18.3.3",
+    "@types/node": "^22.5.0",
+    "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.4.10"
