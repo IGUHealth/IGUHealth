@@ -438,9 +438,6 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
 
   return {
     total,
-    resources: resources as Resource<
-      Request["fhirVersion"],
-      AllResourceTypes
-    >[],
+    resources,
   };
 }
