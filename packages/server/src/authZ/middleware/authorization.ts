@@ -1,4 +1,4 @@
-import evaluateAccessPolicy from "@iguhealth/access-control";
+import evaluateAccessPolicy from "@iguhealth/access-control/v1";
 import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
