@@ -202,6 +202,29 @@ async function processInclude<Version extends FHIR_VERSION>(
   ).flat();
 }
 
+/**
+ * Returns columns for search query on resources.
+ * @param totalParameter _total parameter value.
+ */
+function resourceSearchColumns(totalParameterValue: string): string[] {
+  switch (totalParameterValue) {
+    case "none": {
+      return ["*"];
+    }
+    case "accurate":
+    case "estimate": {
+      return ["*", "count(*) OVER () AS total_count"];
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'",
+        ),
+      );
+  }
+}
+
 export async function executeSearchQuery<
   Request extends
     | R4SystemSearchRequest
@@ -279,25 +302,7 @@ export async function executeSearchQuery<
       : 0;
 
   const totalParamValue = totalParam?.value[0]?.toString() || "none";
-  let cols: string[] = ["*"];
-
-  switch (totalParamValue) {
-    case "none": {
-      break;
-    }
-    case "accurate":
-    case "estimate": {
-      cols = ["*", "count(*) OVER () AS total_count"];
-      break;
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          "Unknown total type received must be 'none', 'estimate' or 'accurate'",
-        ),
-      );
-  }
+  const cols = resourceSearchColumns(totalParamValue);
 
   let sql = db.sql<
     s.resources.SQL,
