@@ -4384,6 +4384,7 @@ export type ResourceMap = {
   ValueSet: ValueSet;
   VerificationResult: VerificationResult;
   VisionPrescription: VisionPrescription;
+  AccessPolicyV2: AccessPolicyV2;
   AccessPolicy: AccessPolicy;
   ClientApplication: ClientApplication;
   Membership: Membership;
@@ -44869,6 +44870,86 @@ resourceType: "VisionPrescription"
    * Vision lens authorization
    */
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
+}
+
+export interface AccessPolicyV2Rule {
+  /** 
+   * Access Policy rule identifier.
+   */
+  id: id;
+  /** 
+   * Access Policy rule identifier.
+   */
+  _id?: Element
+  /** 
+   * Rule description
+   */
+  description: string;
+  /** 
+   * Rule description
+   */
+  _description?: Element
+  /** 
+   * Determine wether to use and/or to combine rules.
+   */
+  combineBehavior?: code;
+  /** 
+   * Determine wether to use and/or to combine rules.
+   */
+  _combineBehavior?: Element
+  /** 
+   * Nested rules
+   */
+  rule?: Array<AccessPolicyV2Rule>;
+}
+export interface AccessPolicyV2Target {
+  /** 
+   * The target reference of the access policy applies to.
+   */
+  link: Reference;
+}
+export interface AccessPolicyV2 {
+resourceType: "AccessPolicyV2"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /** 
+   * The name of the access policy.
+   */
+  name: string;
+  /** 
+   * The name of the access policy.
+   */
+  _name?: Element
+  /** 
+   * Description of the access policy.
+   */
+  description?: string;
+  /** 
+   * Description of the access policy.
+   */
+  _description?: Element
+  /** 
+   * The type of evaluation that is performed to determine if access is granted or denied.
+   */
+  engine: code;
+  /** 
+   * The type of evaluation that is performed to determine if access is granted or denied.
+   */
+  _engine?: Element
+  /** 
+   * The rules that govern how the access policy is applied.
+   */
+  rule?: Array<AccessPolicyV2Rule>;
+  /** 
+   * Who the access policy applies to.
+   */
+  target?: Array<AccessPolicyV2Target>;
 }
 
 export interface AccessPolicyTarget {
