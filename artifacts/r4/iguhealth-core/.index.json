@@ -98,6 +98,10 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "definitions/iguhealth/structuredefinition/access-policy-v2.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "definitions/iguhealth/structuredefinition/access-policy.json",
       "resourceType": "StructureDefinition"
     },
@@ -116,6 +120,22 @@
     {
       "filename": "definitions/iguhealth/structuredefinition/message-topic.json",
       "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/combine-behavior.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/combine-behavior.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/engine.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/engine.json",
+      "resourceType": "ValueSet"
     },
     {
       "filename": "definitions/iguhealth/terminology/access-policy/authentication/grant_type.json",
