@@ -182,7 +182,7 @@
                 ],
                 "binding": {
                     "strength": "required",
-                    "valueSet": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyV2CombineBehavior|4.0.1"
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2CombineBehavior|4.0.1"
                 }
             },
             {
