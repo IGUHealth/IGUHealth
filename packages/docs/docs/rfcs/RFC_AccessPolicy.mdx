@@ -34,7 +34,70 @@ It also is not possible to model [patient](https://hl7.org/fhir/smart-app-launch
 To create a new FHIR resource called AccessPolicyV2 built around the concept of rules.  
 Each rule will be evaluated to true or false and the AccessPolicyV2 will be evaluated to true or false based on the rules.
 
-### Flow
+### Context
+
+The Context will have the following properties:
+* User 
+  * Claims: This will be the list of claims a user has pulled from the access token.
+  * Membership: The Membership resource that's associated to the user.
+* Request
+  * FHIR Request: The FHIR request that's being made.
+  * Http Request: The HTTP request that's being made This will include the method, path, headers, query.
+
+
+### Rules
+A Rule is composed of a conditional logic evaluating to true or false. Each assertion will allow either hardcoded values or [fhirpath expressions](https://hl7.org/fhir/R4/metadatatypes.html#Expression).
+FHIRPath expressions will be evaluated with variables for context \(see above\).
+
+**Simple Assertion**
+```json
+{ 
+    "condition": {
+        "operator": "equals",
+        "left": { valueExpression: {"expression": "%request.http.method", "language": "text/fhirpath" }, 
+        "right": { valueString: "GET" },
+    }
+}
+```
+**Nested**
+```json
+{
+    "rule": [
+        { 
+            "combineBehavior": "all",
+            "condition": {
+                "operator": "equals",
+                "left": { valueExpression: {"expression": "%request.http.method", "language": "text/fhirpath" }, 
+                "right": { valueString: "GET" },
+            }
+        }
+    ]
+}
+```
+
+
+### Evaluation
+A few notes on relationships
+- User 0..* Access policies
+- AccessPolicy 0..* Rules
+- Rule 0..* Rules Nested children rules where the parent rule is evaluated to true if all children rules are evaluated to true
+ with and logic and false if any child rule is evaluated to false. 
+
+#### Rule evaluation
+Rule evaluation is based around the condition property which defines the operator and expressions for a boolean evaluation.
+For more complicated rules we can combine rules with the combineBehavior property.
+The combineBehavior being set to **all** means all sub rules must evaluate to true for the parent rule to evaluate to true.
+The combineBehavior being set to **any** means any sub rule that evaluates to true will cause the parent rule to evaluate to true.
+
+#### AccessPolicyV2 Evaluation
+The AccessPolicyv2 will evaluate as whether passed or failed (with details provided in the OperationOutcome) based on the rules.
+The AccessPolicyV2 at the top level uses or logic to evaluate the rules in it's AccessPolicyV2.rule property.
+
+#### User with multiple AccessPolicyV2 resources 
+If a user has multiple AccessPolicyV2 the system will loop through each policy and evaluate until one is successful. 
+If none are successful the system will return a 403 Forbidden response with an OperationOutcome detailing the reason for the denial.
+
+### System Flow
 
 ```mermaid
 flowchart LR
@@ -50,9 +113,3 @@ flowchart LR
 ## Down the Road
 ### Domain Specific Language
 We will consider writing a DSL that will serialize to the AccessPolicyV2 Resource.
-
-## Alternative Solutions `<Optional>`
-Describe any alternative solutions that were considered and why they were not chosen.
-
-## Migration Plan `<Optional>`
-Describe how the changes will be rolled out and what impact they will have on existing systems.
