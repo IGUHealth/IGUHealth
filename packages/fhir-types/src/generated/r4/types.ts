@@ -44872,19 +44872,37 @@ resourceType: "VisionPrescription"
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
 }
 
+export interface AccessPolicyV2RuleCondition {
+  /** 
+   * Condition operator to evaluate determining whether pass/deny.
+   */
+  operator?: code;
+  /** 
+   * Condition operator to evaluate determining whether pass/deny.
+   */
+  _operator?: Element
+  /** 
+   * Left hand of the condition.
+   */
+  left?: Expression;
+  /** 
+   * Right hand of the condition.
+   */
+  right?: Expression;
+}
 export interface AccessPolicyV2Rule {
   /** 
    * Access Policy rule identifier.
    */
-  id: id;
+  name: string;
   /** 
    * Access Policy rule identifier.
    */
-  _id?: Element
+  _name?: Element
   /** 
    * Rule description
    */
-  description: string;
+  description?: string;
   /** 
    * Rule description
    */
@@ -44897,6 +44915,10 @@ export interface AccessPolicyV2Rule {
    * Determine wether to use and/or to combine rules.
    */
   _combineBehavior?: Element
+  /** 
+   * Condition to evaluate determining whether pass/deny.
+   */
+  condition?: AccessPolicyV2RuleCondition;
   /** 
    * Nested rules
    */
