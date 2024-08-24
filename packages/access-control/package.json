@@ -11,6 +11,7 @@
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
+    "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/jwt": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^"
   },

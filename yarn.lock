@@ -8704,6 +8704,7 @@ __metadata:
   dependencies:
     "@iguhealth/client": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
     "@jest/globals": "npm:^29.7.0"

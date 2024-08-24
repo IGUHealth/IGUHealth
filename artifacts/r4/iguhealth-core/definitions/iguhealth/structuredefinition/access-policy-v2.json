@@ -143,15 +143,15 @@
                 "max": "*"
             },
             {
-                "id": "AccessPolicyV2.rule.id",
-                "path": "AccessPolicyV2.rule.id",
+                "id": "AccessPolicyV2.rule.name",
+                "path": "AccessPolicyV2.rule.name",
                 "definition": "Rule identifier",
                 "short": "Access Policy rule identifier.",
                 "min": 1,
                 "max": "1",
                 "type": [
                     {
-                        "code": "id"
+                        "code": "string"
                     }
                 ]
             },
@@ -160,7 +160,7 @@
                 "path": "AccessPolicyV2.rule.description",
                 "definition": "Rule description",
                 "short": "Rule description",
-                "min": 1,
+                "min": 0,
                 "max": "1",
                 "type": [
                     {
@@ -178,6 +178,62 @@
                 "type": [
                     {
                         "code": "code"
+                    }
+                ],
+                "binding": {
+                    "strength": "required",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2CombineBehavior|4.0.1"
+                }
+            },
+            {
+                "id": "AccessPolicyV2.rule.condition",
+                "path": "AccessPolicyV2.rule.condition",
+                "short": "Condition to evaluate determining whether pass/deny.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "BackboneElement"
+                    }
+                ]
+            },
+            {
+                "id": "AccessPolicyV2.rule.condition.operator",
+                "path": "AccessPolicyV2.rule.condition.operator",
+                "short": "Condition operator to evaluate determining whether pass/deny.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "code"
+                    }
+                ],
+                "binding": {
+                    "strength": "required",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2RuleConditionOperator|4.0.1"
+                }
+            },
+            {
+                "id": "AccessPolicyV2.rule.condition.left",
+                "path": "AccessPolicyV2.rule.condition.left",
+                "short": "Left hand of the condition.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "Expression"
+                    }
+                ]
+            },
+            {
+                "id": "AccessPolicyV2.rule.condition.right",
+                "path": "AccessPolicyV2.rule.condition.right",
+                "short": "Right hand of the condition.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "Expression"
                     }
                 ],
                 "binding": {

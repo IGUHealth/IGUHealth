@@ -122,19 +122,27 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/iguhealth/terminology/access-policy-v2/combine-behavior.json",
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/accesspolicy-engine.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/iguhealth/terminology/access-policy-v2/combine-behavior.json",
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/accesspolicy-engine.json",
       "resourceType": "ValueSet"
     },
     {
-      "filename": "definitions/iguhealth/terminology/access-policy-v2/engine.json",
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/rule-combine-behavior.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/iguhealth/terminology/access-policy-v2/engine.json",
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/rule-combine-behavior.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/rule-condition-operators.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/rule-condition-operators.json",
       "resourceType": "ValueSet"
     },
     {

@@ -1,6 +1,6 @@
 {
     "resourceType": "Bundle",
-    "id": "access-policy-engine",
+    "id": "access-policy-rule-combine-behavior",
     "type": "collection",
     "entry": [
         {

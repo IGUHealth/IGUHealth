@@ -15447,6 +15447,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/access-control", "workspace:packages/access-control"],\
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
