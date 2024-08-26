@@ -4,7 +4,7 @@ import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
   AccessPolicyV2Rule,
-  AccessPolicyV2RuleCondition,
+  AccessPolicyV2RuleTarget,
   Expression,
   Membership,
   OperationOutcome,
@@ -25,6 +25,12 @@ export interface PolicyContext {
   user: { claims: AccessTokenPayload<Role>; membership: Membership };
   request: FHIRRequest;
 }
+
+const PERMISSION_LEVELS = {
+  deny: <const>-1,
+  undetermined: <const>0,
+  permit: <const>1,
+};
 
 async function evaluateExpression(
   context: PolicyContext,
@@ -78,33 +84,54 @@ async function evaluateExpression(
 
 async function evaluateConditon(
   context: PolicyContext,
-  loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleCondition | undefined, any>,
+  loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<boolean> {
+): Promise<(typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]> {
+  const rule = pt.get(loc, policy);
+  const effect: "permit" | "deny" =
+  (rule?.effect as unknown as "permit" | "deny" | undefined) ?? "permit";
   const evaluation = await evaluateExpression(
     context,
-    pt.descend(loc, "expression"),
+    pt.descend(pt.descend(loc, "condition"), "expression"),
     policy,
   );
+  return (evaluation ? PERMISSION_LEVELS[effect] : -(PERMISSION_LEVELS[effect])) as (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS];
+}
 
-  return evaluation;
+async function shouldEvaluateRule(
+  context: PolicyContext,
+  loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
+  policy: AccessPolicyV2): Promise<boolean> {
+  const target = pt.get(loc, policy);
+  if(target?.expression === undefined) return true;
+
+  return evaluateExpression(context, pt.descend(loc, "expression"), policy);
 }
 
 async function evaluateAccessPolicyRule(
   context: PolicyContext,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<boolean> {
+): Promise<{
+  result: (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS],
+  loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>
+}> {
   const rule = pt.get(loc, policy);
   if (!rule) {
     throw new OperationError(
       outcomeFatal("exception", `Invalid access policy rule at '${loc}'.`),
     );
   }
+  if(await shouldEvaluateRule(context, pt.descend(loc, "target"), policy) === false) {
+    return {
+      result: PERMISSION_LEVELS.undetermined,
+      loc
+    };
+  }
 
   switch (true) {
     case rule.condition !== undefined: {
-      return evaluateConditon(context, pt.descend(loc, "condition"), policy);
+      return { result: await evaluateConditon(context, loc, policy), loc }
     }
     case rule.rule !== undefined: {
       const behavior = rule.combineBehavior ?? "all";
@@ -112,24 +139,39 @@ async function evaluateAccessPolicyRule(
         case "all": {
           for (let i = 0; i < (rule.rule ?? []).length; i++) {
             const childRuleLoc = pt.descend(pt.descend(loc, "rule"), i);
+            const childResult = await evaluateAccessPolicyRule(context, childRuleLoc, policy)
+            // Could be undetermined but skipping that like permit.
             if (
-              !(await evaluateAccessPolicyRule(context, childRuleLoc, policy))
+              childResult.result === PERMISSION_LEVELS.deny
             ) {
-              return false;
+              return {
+                result: PERMISSION_LEVELS.deny,
+                loc: childResult.loc
+              }
             }
           }
-          return true;
+          return {
+            result: PERMISSION_LEVELS.permit,
+            loc
+          };
         }
         case "any": {
           for (let i = 0; i < (rule.rule ?? []).length; i++) {
             const childRuleLoc = pt.descend(pt.descend(loc, "rule"), i);
+            const childResult = await evaluateAccessPolicyRule(context, childRuleLoc, policy);
             if (
-              !(await evaluateAccessPolicyRule(context, childRuleLoc, policy))
+                childResult.result === PERMISSION_LEVELS.permit
             ) {
-              return true;
+              return {
+                result: PERMISSION_LEVELS.permit,
+                loc: childResult.loc
+              }
             }
           }
-          return false;
+          return {
+            result: PERMISSION_LEVELS.deny,
+            loc
+          };
         }
         default: {
           throw new OperationError(
@@ -160,8 +202,9 @@ export default async function (
   const loc = pt.pointer("AccessPolicyV2", accessPolicy.id as id);
   for (let i = 0; i < (accessPolicy.rule ?? []).length; i++) {
     const ruleLoc = pt.descend(pt.descend(loc, "rule"), i);
-    if (!(await evaluateAccessPolicyRule(context, ruleLoc, accessPolicy))) {
-      return outcomeError("forbidden", "Access Denied.");
+    const ruleResult = await evaluateAccessPolicyRule(context, ruleLoc, accessPolicy);
+    if (ruleResult.result === PERMISSION_LEVELS.deny) {
+      return outcomeError("forbidden", "Access Denied.", [pt.toJSONPointer(ruleResult.loc)]);
     }
   }
 
