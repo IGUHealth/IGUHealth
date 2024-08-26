@@ -107,8 +107,8 @@ async function shouldEvaluateRule(
   const target = pt.get(loc, policy);
   if(target?.expression === undefined) return true;
 
-  return evaluateExpression(context, pt.descend(loc, "expression"), policy);
-
+  const result = await evaluateExpression(context, pt.descend(loc, "expression"), policy);
+  return result;
 }
 
 async function evaluateAccessPolicyRule(
@@ -125,7 +125,7 @@ async function evaluateAccessPolicyRule(
       outcomeFatal("exception", `Invalid access policy rule at '${loc}'.`),
     );
   }
-  if(!shouldEvaluateRule(context, pt.descend(loc, "target"), policy)) {
+  if(await shouldEvaluateRule(context, pt.descend(loc, "target"), policy) === false) {
     return {
       result: PERMISSION_LEVELS.undetermined,
       loc
