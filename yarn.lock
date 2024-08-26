@@ -8703,6 +8703,7 @@ __metadata:
   resolution: "@iguhealth/access-control@workspace:packages/access-control"
   dependencies:
     "@iguhealth/client": "workspace:^"
+    "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/jwt": "workspace:^"

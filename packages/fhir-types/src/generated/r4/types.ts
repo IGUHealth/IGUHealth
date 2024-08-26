@@ -44874,21 +44874,9 @@ resourceType: "VisionPrescription"
 
 export interface AccessPolicyV2RuleCondition {
   /** 
-   * Condition operator to evaluate determining whether pass/deny.
+   * Condition expression to evaluate determining whether pass/deny.
    */
-  operator?: code;
-  /** 
-   * Condition operator to evaluate determining whether pass/deny.
-   */
-  _operator?: Element
-  /** 
-   * Left hand of the condition.
-   */
-  left?: Expression;
-  /** 
-   * Right hand of the condition.
-   */
-  right?: Expression;
+  expression: Expression;
 }
 export interface AccessPolicyV2Rule {
   /** 

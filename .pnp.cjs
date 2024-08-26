@@ -15446,6 +15446,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@iguhealth/access-control", "workspace:packages/access-control"],\
           ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
