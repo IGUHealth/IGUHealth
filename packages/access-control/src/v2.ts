@@ -4,7 +4,6 @@ import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
   AccessPolicyV2Rule,
-  AccessPolicyV2RuleCondition,
   AccessPolicyV2RuleTarget,
   Expression,
   Membership,
