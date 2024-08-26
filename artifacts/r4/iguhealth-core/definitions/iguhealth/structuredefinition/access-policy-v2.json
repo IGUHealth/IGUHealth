@@ -198,48 +198,16 @@
                 ]
             },
             {
-                "id": "AccessPolicyV2.rule.condition.operator",
-                "path": "AccessPolicyV2.rule.condition.operator",
-                "short": "Condition operator to evaluate determining whether pass/deny.",
-                "min": 0,
-                "max": "1",
-                "type": [
-                    {
-                        "code": "code"
-                    }
-                ],
-                "binding": {
-                    "strength": "required",
-                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2RuleConditionOperator|4.0.1"
-                }
-            },
-            {
-                "id": "AccessPolicyV2.rule.condition.left",
-                "path": "AccessPolicyV2.rule.condition.left",
-                "short": "Left hand of the condition.",
-                "min": 0,
+                "id": "AccessPolicyV2.rule.condition.expression",
+                "path": "AccessPolicyV2.rule.condition.expression",
+                "short": "Condition expression to evaluate determining whether pass/deny.",
+                "min": 1,
                 "max": "1",
                 "type": [
                     {
                         "code": "Expression"
                     }
                 ]
-            },
-            {
-                "id": "AccessPolicyV2.rule.condition.right",
-                "path": "AccessPolicyV2.rule.condition.right",
-                "short": "Right hand of the condition.",
-                "min": 0,
-                "max": "1",
-                "type": [
-                    {
-                        "code": "Expression"
-                    }
-                ],
-                "binding": {
-                    "strength": "required",
-                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2CombineBehavior|4.0.1"
-                }
             },
             {
                 "id": "AccessPolicyV2.rule.rule",

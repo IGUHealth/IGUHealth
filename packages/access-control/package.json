@@ -6,10 +6,12 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@iguhealth/client": "workspace:^",
+    "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/jwt": "workspace:^",
