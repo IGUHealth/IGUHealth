@@ -96,7 +96,6 @@ async function evaluateConditon(
     pt.descend(pt.descend(loc, "condition"), "expression"),
     policy,
   );
-
   return (evaluation ? PERMISSION_LEVELS[effect] : -(PERMISSION_LEVELS[effect])) as (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS];
 }
 
@@ -107,8 +106,7 @@ async function shouldEvaluateRule(
   const target = pt.get(loc, policy);
   if(target?.expression === undefined) return true;
 
-  const result = await evaluateExpression(context, pt.descend(loc, "expression"), policy);
-  return result;
+  return evaluateExpression(context, pt.descend(loc, "expression"), policy);
 }
 
 async function evaluateAccessPolicyRule(

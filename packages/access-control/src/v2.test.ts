@@ -295,3 +295,109 @@ test("Simple Target Logic", async () => {
     resourceType: "OperationOutcome",
   });
 });
+
+test("Test Rule Effect Log", async () => {
+  expect(
+    evaluatePolicy(getContext(), {
+      name: "Request Check",
+      resourceType: "AccessPolicyV2",
+      engine: "rule-engine" as code,
+      rule: [
+        {
+          name: "And Logic",
+          combineBehavior: "all" as code,
+          rule: [
+            {
+              name: "Skip over because of target",
+              target: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression:
+                    "%user.claims.`https://iguhealth.app/role` = 'owner'",
+                },
+              },
+              condition: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression: "false",
+                },
+              },
+            },
+            {
+              name: "Admin check",
+              effect: "deny" as code,
+              condition: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression: "false",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    }),
+  ).resolves.toEqual({
+    issue: [
+      {
+        code: "informational",
+        diagnostics: "Access succeeded.",
+        expression: undefined,
+        severity: "information",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
+
+  expect(
+    evaluatePolicy(getContext(), {
+      name: "Request Check",
+      resourceType: "AccessPolicyV2",
+      engine: "rule-engine" as code,
+      rule: [
+        {
+          name: "And Logic",
+          combineBehavior: "all" as code,
+          rule: [
+            {
+              name: "Skip over because of target",
+              target: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression:
+                    "%user.claims.`https://iguhealth.app/role` = 'owner'",
+                },
+              },
+              condition: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression: "false",
+                },
+              },
+            },
+            {
+              name: "Admin check",
+              effect: "permit" as code,
+              condition: {
+                expression: {
+                  language: "text/fhirpath" as code,
+                  expression: "false",
+                },
+              },
+            },
+          ],
+        },
+      ],
+    }),
+  ).resolves.toEqual({
+    issue: [
+      {
+        code: "forbidden",
+        diagnostics: "Access Denied.",
+        expression: ["/rule/0/rule/1"],
+        severity: "error",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
+});
