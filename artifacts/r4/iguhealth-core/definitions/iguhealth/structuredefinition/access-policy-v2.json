@@ -186,6 +186,46 @@
                 }
             },
             {
+                "id": "AccessPolicyV2.rule.effect",
+                "path": "AccessPolicyV2.rule.effect",
+                "short": "Determine whether to evaluate the rule.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "code"
+                    }
+                ],
+                "binding": {
+                    "strength": "required",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyV2RuleEffect|4.0.1"
+                }
+            },
+            {
+                "id": "AccessPolicyV2.rule.target",
+                "path": "AccessPolicyV2.rule.target",
+                "short": "Determine whether to evaluate the rule.",
+                "min": 0,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "BackboneElement"
+                    }
+                ]
+            },
+            {
+                "id": "AccessPolicyV2.rule.target.expression",
+                "path": "AccessPolicyV2.rule.target.expression",
+                "short": "Determine whether to evaluate the rule.",
+                "min": 1,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "Expression"
+                    }
+                ]
+            },
+            {
                 "id": "AccessPolicyV2.rule.condition",
                 "path": "AccessPolicyV2.rule.condition",
                 "short": "Condition to evaluate determining whether pass/deny.",

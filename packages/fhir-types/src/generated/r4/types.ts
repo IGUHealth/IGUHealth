@@ -44872,6 +44872,12 @@ resourceType: "VisionPrescription"
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
 }
 
+export interface AccessPolicyV2RuleTarget {
+  /** 
+   * Determine whether to evaluate the rule.
+   */
+  expression: Expression;
+}
 export interface AccessPolicyV2RuleCondition {
   /** 
    * Condition expression to evaluate determining whether pass/deny.
@@ -44903,6 +44909,18 @@ export interface AccessPolicyV2Rule {
    * Determine wether to use and/or to combine rules.
    */
   _combineBehavior?: Element
+  /** 
+   * Determine whether to evaluate the rule.
+   */
+  effect?: code;
+  /** 
+   * Determine whether to evaluate the rule.
+   */
+  _effect?: Element
+  /** 
+   * Determine whether to evaluate the rule.
+   */
+  target?: AccessPolicyV2RuleTarget;
   /** 
    * Condition to evaluate determining whether pass/deny.
    */

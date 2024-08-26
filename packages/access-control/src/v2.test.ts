@@ -61,8 +61,8 @@ test("Simple conditional check", async () => {
       {
         code: "forbidden",
         diagnostics: "Access Denied.",
-        expression: undefined,
         severity: "error",
+        expression: ["/rule/0"],
       },
     ],
     resourceType: "OperationOutcome",
@@ -184,7 +184,7 @@ test("Simple And Logic", async () => {
       {
         code: "forbidden",
         diagnostics: "Access Denied.",
-        expression: undefined,
+        expression: ["/rule/0/rule/0"],
         severity: "error",
       },
     ],
