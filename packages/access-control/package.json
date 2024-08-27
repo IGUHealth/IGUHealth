@@ -26,6 +26,7 @@
   },
   "exports": {
     ".": "./lib/index.js",
-    "./v1": "./lib/v1.js"
+    "./v1": "./lib/v1.js",
+    "./v2": "./lib/v2.js"
   }
 }
