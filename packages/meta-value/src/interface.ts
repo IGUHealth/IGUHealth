@@ -1,16 +1,20 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 type Location = (string | number)[];
 
 export interface TypeInfo {
-  fhirVersion: R4;
+  fhirVersion: FHIR_VERSION;
   type: r4.uri;
 }
 
-export interface MetaValue<T> {
+export interface IMetaValue<T> {
   meta(): TypeInfo | undefined;
   getValue(): T;
-  isArray(): this is MetaValue<T[]>;
+  isArray(): this is IMetaValueArray<T>;
   location(): Location | undefined;
+}
+
+export interface IMetaValueArray<T> extends IMetaValue<T[]> {
+  toArray(): IMetaValue<T>[];
 }

@@ -1,7 +1,7 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 
-import { MetaValue } from "../interface.js";
+import { IMetaValue, IMetaValueArray } from "../interface.js";
 import { TypeMeta, deriveNextMetaInformation, initializeMeta } from "./meta.js";
 
 type Element = r4.Element | r4b.Element;
@@ -62,9 +62,11 @@ export async function metaValue<T>(
   value: T | T[],
   element?: Element | Element[],
 ): Promise<
-  MetaValueSingular<NonNullable<T>> | MetaValueArray<NonNullable<T>> | undefined
+  | MetaValueSingular<NonNullable<T>>
+  | MetaValueArrayImpl<NonNullable<T>>
+  | undefined
 > {
-  if (value instanceof MetaValueArray || value instanceof MetaValueSingular)
+  if (value instanceof MetaValueArrayImpl || value instanceof MetaValueSingular)
     return value;
   // Assign a type automatically if the value is a resourceType
   if (isObject(value) && typeof value.resourceType === "string")
@@ -82,7 +84,7 @@ export async function metaValue<T>(
     return undefined;
 
   if (isArray(value)) {
-    return new MetaValueArray(
+    return new MetaValueArrayImpl(
       meta,
       value as NonNullable<T>[],
       element && isArray(element) ? element : undefined,
@@ -123,9 +125,9 @@ function descendLoc<T>(v: MetaValueSingular<T>, field: string): Location {
 }
 
 export async function descend<T>(
-  node: MetaValue<T>,
+  node: IMetaValue<T>,
   field: string,
-): Promise<MetaValue<NonNullable<unknown>> | undefined> {
+): Promise<IMetaValue<NonNullable<unknown>> | undefined> {
   if (node instanceof MetaValueSingular) {
     const internalValue = node.internalValue;
     if (isObject(internalValue)) {
@@ -149,14 +151,14 @@ export async function descend<T>(
 }
 
 export function flatten<T>(
-  node: MetaValue<T> | MetaValue<T[]> | undefined,
+  node: IMetaValue<T> | IMetaValue<T[]> | undefined,
 ): MetaValueSingular<T>[] {
-  if (node instanceof MetaValueArray) return node.toArray();
+  if (node instanceof MetaValueArrayImpl) return node.toArray();
   if (node instanceof MetaValueSingular) return [node];
   return [];
 }
 
-class MetaValueArray<T> implements MetaValue<Array<T>> {
+class MetaValueArrayImpl<T> implements IMetaValueArray<T> {
   private value: Array<MetaValueSingular<T>>;
   private _meta: Meta;
   constructor(meta: Meta, value: Array<T>, element?: Element[]) {
@@ -179,7 +181,7 @@ class MetaValueArray<T> implements MetaValue<Array<T>> {
   toArray(): Array<MetaValueSingular<T>> {
     return this.value;
   }
-  isArray(): this is MetaValueArray<Array<T>> {
+  isArray(): this is MetaValueArrayImpl<Array<T>> {
     return true;
   }
   meta(): TypeMeta | undefined {
@@ -190,7 +192,7 @@ class MetaValueArray<T> implements MetaValue<Array<T>> {
   }
 }
 
-class MetaValueSingular<T> implements MetaValue<T> {
+class MetaValueSingular<T> implements IMetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
   private _meta: Meta;
   constructor(meta: Meta, value: T, element?: Element) {
@@ -215,7 +217,7 @@ class MetaValueSingular<T> implements MetaValue<T> {
   meta(): TypeMeta | undefined {
     return this._meta.type;
   }
-  isArray(): this is MetaValueArray<T> {
+  isArray(): this is MetaValueArrayImpl<T> {
     return false;
   }
   location(): Location {

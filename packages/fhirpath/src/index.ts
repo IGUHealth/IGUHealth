@@ -1,5 +1,5 @@
 import { Reference, Resource, uri } from "@iguhealth/fhir-types/r4/types";
-import { MetaValue } from "@iguhealth/meta-value/interface";
+import { IMetaValue } from "@iguhealth/meta-value/interface";
 import * as metaValueV1 from "@iguhealth/meta-value/v1";
 
 import { parse } from "./parser.js";
@@ -19,7 +19,7 @@ function flatten<T>(arr: T[][]): T[] {
 async function getVariableValue(
   name: string,
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   let value;
   if (options?.variables instanceof Function) {
     value = options.variables(name);
@@ -52,9 +52,9 @@ const fp_functions: Record<
   string,
   (
     ast: AST,
-    context: MetaValue<unknown>[],
+    context: IMetaValue<unknown>[],
     options?: Options,
-  ) => Promise<MetaValue<unknown>[]>
+  ) => Promise<IMetaValue<unknown>[]>
 > = {
   // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
@@ -166,14 +166,14 @@ const fp_functions: Record<
   },
   async distinct(_ast, context) {
     const map = context
-      .map((v: MetaValue<unknown>): [string, MetaValue<unknown>] => [
+      .map((v: IMetaValue<unknown>): [string, IMetaValue<unknown>] => [
         JSON.stringify(v.getValue()),
         v,
       ])
       .reduce(
         (
-          m: { [key: string]: MetaValue<unknown> },
-          [k, v]: [string, MetaValue<unknown>],
+          m: { [key: string]: IMetaValue<unknown> },
+          [k, v]: [string, IMetaValue<unknown>],
         ) => {
           m[k] = v;
           return m;
@@ -194,7 +194,7 @@ const fp_functions: Record<
   // [FILTER FUNCTIONS]
   async where(ast, context, options) {
     const criteria = ast.next[0];
-    const result: MetaValue<unknown>[] = [];
+    const result: IMetaValue<unknown>[] = [];
     for (const v of context) {
       const evaluation = await _evaluate(criteria, [v], options);
       assert(evaluation.length === 1, "result must be one");
@@ -250,7 +250,7 @@ const fp_functions: Record<
   },
   async repeat(ast, context, options) {
     const projection = ast.next[0];
-    let endResult: MetaValue<unknown>[] = [];
+    let endResult: IMetaValue<unknown>[] = [];
     let cur = context;
     while (cur.length !== 0) {
       cur = await _evaluate(projection, cur, options);
@@ -315,9 +315,9 @@ const fp_functions: Record<
 
 async function evaluateInvocation(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Index":
       throw new Error("Not implemented");
@@ -347,9 +347,9 @@ async function evaluateInvocation(
 
 async function _evaluateTermStart(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Invocation": {
       // Special code handling for start with typeidentifier
@@ -378,9 +378,9 @@ async function _evaluateTermStart(
 
 async function evaluateProperty(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   switch (ast.type) {
     case "Invocation": {
       return evaluateInvocation(ast, context, options);
@@ -401,9 +401,9 @@ async function evaluateProperty(
 
 async function evaluateSingular(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   let start = await _evaluateTermStart(ast, context, options);
   if (ast.next) {
     for (const next of ast.next) {
@@ -425,9 +425,9 @@ type ValidOperandType = "number" | "string" | "boolean";
 
 function typeChecking<T extends ValidOperandType>(
   typeChecking: T,
-  args: MetaValue<unknown>[],
-): args is MetaValue<OperatorType<T>>[] {
-  return args.reduce((acc: boolean, v: MetaValue<unknown>) => {
+  args: IMetaValue<unknown>[],
+): args is IMetaValue<OperatorType<T>>[] {
+  return args.reduce((acc: boolean, v: IMetaValue<unknown>) => {
     if (typeof v.getValue() !== typeChecking) return false;
     return acc;
   }, true) as boolean;
@@ -446,18 +446,18 @@ export class InvalidOperandError extends Error {
 }
 
 type EvaledOperation = (
-  left: MetaValue<unknown>[],
-  right: MetaValue<unknown>[],
+  left: IMetaValue<unknown>[],
+  right: IMetaValue<unknown>[],
   options?: Options,
-) => Promise<MetaValue<unknown>[]>;
+) => Promise<IMetaValue<unknown>[]>;
 
 function op_prevaled(
   operation_function: EvaledOperation,
 ): (
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-) => Promise<MetaValue<unknown>[]> {
+) => Promise<IMetaValue<unknown>[]> {
   return async (ast, context, options) => {
     const left = await _evaluate(ast.left, context, options);
     const right = await _evaluate(ast.right, context, options);
@@ -467,8 +467,8 @@ function op_prevaled(
 }
 
 const equalityCheck = (
-  left: MetaValue<unknown>[],
-  right: MetaValue<unknown>[],
+  left: IMetaValue<unknown>[],
+  right: IMetaValue<unknown>[],
 ): boolean => {
   // TODO improve Deep Equals speed.
   if (left.length !== right.length) {
@@ -481,7 +481,7 @@ const equalityCheck = (
   return left[0].getValue() === right[0].getValue();
 };
 
-function isType(v: MetaValue<unknown>, type: string): boolean {
+function isType(v: IMetaValue<unknown>, type: string): boolean {
   if (v.meta()?.type === "Reference" && type !== "Reference") {
     return (v.getValue() as Reference).reference?.split("/")[0] === type;
   }
@@ -491,7 +491,7 @@ function isType(v: MetaValue<unknown>, type: string): boolean {
   return (v.getValue() as Resource | undefined)?.resourceType === type;
 }
 
-function filterByType<T>(type: string, context: MetaValue<T>[]) {
+function filterByType<T>(type: string, context: IMetaValue<T>[]) {
   // Special handling for type 'Resource' and 'DomainResource' abstract types
   if (type === "Resource" || type === "DomainResource") {
     return context.filter(
@@ -507,9 +507,9 @@ const fp_operations: Record<
   string,
   (
     ast: AST,
-    context: MetaValue<unknown>[],
+    context: IMetaValue<unknown>[],
     options?: Options,
-  ) => Promise<MetaValue<unknown>[]>
+  ) => Promise<IMetaValue<unknown>[]>
 > = {
   "+": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
@@ -630,9 +630,9 @@ const fp_operations: Record<
 
 async function evaluateOperation(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   const operator = fp_operations[ast.operator];
   if (operator) return operator(ast, context, options);
   else throw new Error("Unsupported operator: '" + ast.operator + "'");
@@ -640,9 +640,9 @@ async function evaluateOperation(
 
 async function _evaluate(
   ast: AST,
-  context: MetaValue<unknown>[],
+  context: IMetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValue<unknown>[]> {
+): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Operation": {
       return evaluateOperation(ast.value, context, options);
@@ -668,7 +668,7 @@ export async function evaluateWithMeta(
   expression: string,
   ctx: unknown,
   options?: Options,
-): Promise<MetaValue<NonNullable<unknown>>[]> {
+): Promise<IMetaValue<NonNullable<unknown>>[]> {
   if (!cachedAST[expression]) {
     const ast = parse(expression);
     cachedAST[expression] = ast;
@@ -681,7 +681,7 @@ export async function evaluateWithMeta(
       ),
       options,
     )
-  ).filter((v: MetaValue<unknown>): v is MetaValue<NonNullable<unknown>> =>
+  ).filter((v: IMetaValue<unknown>): v is IMetaValue<NonNullable<unknown>> =>
     nonNullable(v.getValue()),
   );
 }

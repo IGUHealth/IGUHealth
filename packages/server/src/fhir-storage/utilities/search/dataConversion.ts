@@ -24,7 +24,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { MetaValue } from "@iguhealth/meta-value/interface";
+import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { descend, flatten } from "@iguhealth/meta-value/v1";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -36,7 +36,7 @@ import { getDecimalPrecision } from "./parameters.js";
 // https://hl7.org/fhir/r4/search.html#table
 // ---------------------------------------------------------
 
-function toStringParameters(value: MetaValue<NonNullable<unknown>>): string[] {
+function toStringParameters(value: IMetaValue<NonNullable<unknown>>): string[] {
   switch (value.meta()?.type) {
     // Even though spec states won't encounter this it does. [ImplementationGuide.description]
     case "markdown":
@@ -80,7 +80,7 @@ function toStringParameters(value: MetaValue<NonNullable<unknown>>): string[] {
 // string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
 
 async function toTokenParameters(
-  value: MetaValue<NonNullable<unknown>>,
+  value: IMetaValue<NonNullable<unknown>>,
 ): Promise<Array<{ system?: string; code?: string }>> {
   switch (value.meta()?.type) {
     case "Coding": {
@@ -133,7 +133,7 @@ async function toTokenParameters(
   }
 }
 
-function toURIParameters(value: MetaValue<NonNullable<unknown>>): string[] {
+function toURIParameters(value: IMetaValue<NonNullable<unknown>>): string[] {
   switch (value.meta()?.type) {
     case "uri":
     case "url":
@@ -151,7 +151,7 @@ function toURIParameters(value: MetaValue<NonNullable<unknown>>): string[] {
   }
 }
 
-function toReferenceLocal(value: MetaValue<NonNullable<unknown>>): Array<{
+function toReferenceLocal(value: IMetaValue<NonNullable<unknown>>): Array<{
   reference: Reference;
   resourceType?: ResourceType<FHIR_VERSION>;
   id?: id;
@@ -193,7 +193,7 @@ export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
 async function toReferenceRemote<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
-  value: MetaValue<NonNullable<unknown>>,
+  value: IMetaValue<NonNullable<unknown>>,
   resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
   Array<{
@@ -264,7 +264,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
 }
 
 async function toDateRange(
-  value: MetaValue<NonNullable<unknown>>,
+  value: IMetaValue<NonNullable<unknown>>,
 ): Promise<{ start: string; end: string }[]> {
   switch (value.meta()?.type) {
     case "Period": {
@@ -324,7 +324,7 @@ function getQuantityRange(value: number): { start: number; end: number } {
 }
 
 function toQuantityRange(
-  value: MetaValue<NonNullable<unknown>>,
+  value: IMetaValue<NonNullable<unknown>>,
 ): { start: QuantityIndex; end: QuantityIndex }[] {
   switch (value.meta()?.type) {
     case "Range": {
@@ -402,7 +402,7 @@ export type ADataConversion<T extends SEARCH_TYPE> = DATA_CONVERSION[T];
 
 export async function dataConversionLocal<T extends SEARCH_TYPE>(
   type: T,
-  evaluation: MetaValue<NonNullable<unknown>>[],
+  evaluation: IMetaValue<NonNullable<unknown>>[],
 ): Promise<ADataConversion<T>[]> {
   switch (type) {
     case "number": {
@@ -460,7 +460,7 @@ export default async function dataConversion<
   fhirVersion: Version,
   parameter: Resource<FHIR_VERSION, "SearchParameter">,
   type: T,
-  evaluation: MetaValue<NonNullable<unknown>>[],
+  evaluation: IMetaValue<NonNullable<unknown>>[],
   resolveRemoteCanonical?: ResolveRemoteCanonical,
 ): Promise<ADataConversion<T>[]> {
   switch (type) {
