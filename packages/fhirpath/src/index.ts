@@ -1,6 +1,6 @@
 import { Reference, Resource, uri } from "@iguhealth/fhir-types/r4/types";
 import { MetaValue } from "@iguhealth/meta-value/interface";
-import * as mv1 from "@iguhealth/meta-value/v1";
+import * as metaValueV1 from "@iguhealth/meta-value/v1";
 
 import { parse } from "./parser.js";
 
@@ -9,7 +9,7 @@ type AST = any;
 
 export type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
-  meta?: Partial<mv1.TypeMeta>;
+  meta?: Partial<metaValueV1.TypeMeta>;
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -27,7 +27,9 @@ async function getVariableValue(
     value = options.variables[name];
   }
 
-  return mv1.flatten(await mv1.metaValue({ type: options?.meta }, value));
+  return metaValueV1.flatten(
+    await metaValueV1.metaValue({ type: options?.meta }, value),
+  );
 }
 
 function assert(assertion: boolean, message?: string) {
@@ -58,26 +60,29 @@ const fp_functions: Record<
   // Returns true if the input collection is empty ({ }) and false otherwise.
   async exists(ast, context, options) {
     if (ast.next.length === 1) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           (await _evaluate(ast.next[0], context, options)).length > 0,
         ),
       );
     }
-    return mv1.flatten(
-      await mv1.metaValue({ type: options?.meta }, context.length > 0),
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue({ type: options?.meta }, context.length > 0),
     );
   },
   // exists([criteria : expression]) : Boolean
   async empty(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue({ type: options?.meta }, context.length === 0),
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
+        { type: options?.meta },
+        context.length === 0,
+      ),
     );
   },
   async all(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         flatten(
           await Promise.all(
@@ -90,32 +95,32 @@ const fp_functions: Record<
     );
   },
   async allTrue(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.reduce((acc, v) => v.getValue() === true && acc, true),
       ),
     );
   },
   async anyTrue(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.reduce((acc, v) => v.getValue() === true || acc, false),
       ),
     );
   },
   async allFalse(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.reduce((acc, v) => v.getValue() === false && acc, true),
       ),
     );
   },
   async anyFalse(ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.reduce((acc, v) => v.getValue() === false || acc, false),
       ),
@@ -123,8 +128,8 @@ const fp_functions: Record<
   },
   async subsetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.reduce(
           (acc, v1) =>
@@ -140,8 +145,8 @@ const fp_functions: Record<
   // Conceptionally this is the opposite of subsetOf.
   async supersetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         otherSet.reduce(
           (acc, v1) =>
@@ -155,8 +160,8 @@ const fp_functions: Record<
     );
   },
   async count(_ast, context, options) {
-    return mv1.flatten(
-      await mv1.metaValue({ type: options?.meta }, context.length),
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue({ type: options?.meta }, context.length),
     );
   },
   async distinct(_ast, context) {
@@ -179,8 +184,8 @@ const fp_functions: Record<
   },
   async isDistinct(ast, context, options) {
     const distinct = await fp_functions.distinct(undefined, context, options);
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: options?.meta },
         context.length === distinct.length,
       ),
@@ -215,7 +220,9 @@ const fp_functions: Record<
 
           const children = flatten(
             await Promise.all(
-              keys.map(async (k) => mv1.flatten(await mv1.descend(node, k))),
+              keys.map(async (k) =>
+                metaValueV1.flatten(await metaValueV1.descend(node, k)),
+              ),
             ),
           );
           return children;
@@ -297,8 +304,8 @@ const fp_functions: Record<
     const find = findEval[0].getValue();
     const replace = replaceEval[0].getValue();
 
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: context[0].meta() },
         value.replace(find, replace),
       ),
@@ -322,7 +329,7 @@ async function evaluateInvocation(
       return (
         await Promise.all(
           context.map(async (v) =>
-            mv1.flatten(await mv1.descend(v, ast.value.value)),
+            metaValueV1.flatten(await metaValueV1.descend(v, ast.value.value)),
           ),
         )
       ).flat();
@@ -354,8 +361,8 @@ async function _evaluateTermStart(
       return evaluateInvocation(ast.value, context, options);
     }
     case "Literal": {
-      return mv1.flatten(
-        await mv1.metaValue({ type: options?.meta }, ast.value.value),
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue({ type: options?.meta }, ast.value.value),
       );
     }
     case "Variable": {
@@ -506,15 +513,15 @@ const fp_operations: Record<
 > = {
   "+": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           left[0].getValue() + right[0].getValue(),
         ),
       );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           left[0].getValue() + right[0].getValue(),
         ),
@@ -542,8 +549,8 @@ const fp_operations: Record<
     return (
       await Promise.all(
         context.map(async (c) => {
-          return mv1.flatten(
-            await mv1.metaValue(
+          return metaValueV1.flatten(
+            await metaValueV1.metaValue(
               { type: { ...options?.meta, type: "boolean" as uri } },
               isType(c, typeIdentifier),
             ),
@@ -554,8 +561,8 @@ const fp_operations: Record<
   },
   "-": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           left[0].getValue() - right[0].getValue(),
         ),
@@ -566,8 +573,8 @@ const fp_operations: Record<
   }),
   "*": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           left[0].getValue() * right[0].getValue(),
         ),
@@ -578,8 +585,8 @@ const fp_operations: Record<
   }),
   "/": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: options?.meta },
           left[0].getValue() / right[0].getValue(),
         ),
@@ -593,8 +600,8 @@ const fp_operations: Record<
   }),
   and: op_prevaled(async (left, right, options) => {
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
-      return mv1.flatten(
-        await mv1.metaValue(
+      return metaValueV1.flatten(
+        await metaValueV1.metaValue(
           { type: { ...options?.meta, type: "boolean" as uri } },
           left[0].getValue() && right[0].getValue(),
         ),
@@ -603,14 +610,17 @@ const fp_operations: Record<
     throw new InvalidOperandError([left[0], right[0]], "/");
   }),
   "=": op_prevaled(async (left, right, options) =>
-    mv1.flatten(
-      await mv1.metaValue({ type: options?.meta }, equalityCheck(left, right)),
+    metaValueV1.flatten(
+      await metaValueV1.metaValue(
+        { type: options?.meta },
+        equalityCheck(left, right),
+      ),
     ),
   ),
   "!=": op_prevaled(async (left, right, options) => {
     const equality = equalityCheck(left, right);
-    return mv1.flatten(
-      await mv1.metaValue(
+    return metaValueV1.flatten(
+      await metaValueV1.metaValue(
         { type: { ...options?.meta, type: "boolean" as uri } },
         equality === false,
       ),
@@ -666,7 +676,9 @@ export async function evaluateWithMeta(
   return (
     await _evaluate(
       cachedAST[expression],
-      mv1.flatten(await mv1.metaValue({ type: options?.meta }, ctx)),
+      metaValueV1.flatten(
+        await metaValueV1.metaValue({ type: options?.meta }, ctx),
+      ),
       options,
     )
   ).filter((v: MetaValue<unknown>): v is MetaValue<NonNullable<unknown>> =>
