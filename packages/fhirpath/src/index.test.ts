@@ -4,9 +4,9 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  canonical,
   OperationDefinition,
   StructureDefinition,
+  canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
@@ -911,4 +911,12 @@ test("QR testing for authored", async () => {
       )
     ).map((v) => v.meta()?.type),
   ).toEqual([]);
+});
+
+test("Replace function test", async () => {
+  const result = await evaluate(
+    "'Hello, World!'.replace('World', 'Universe')",
+    {},
+  );
+  expect(result).toEqual(["Hello, Universe!"]);
 });

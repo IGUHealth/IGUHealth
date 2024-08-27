@@ -269,6 +269,40 @@ const fp_functions: Record<
     // console.warn("not supporting resolve just returning item");
     return context;
   },
+
+  async replace(ast, context, options) {
+    if (ast.next.length !== 2) {
+      throw new Error("Replace function must have two arguments");
+    }
+    if (context.length !== 1) {
+      throw new Error("Replace function must have one context");
+    }
+    if (!typeChecking("string", context)) {
+      throw new Error("Replace function arguments must be strings");
+    }
+    const value = context[0].getValue();
+
+    const [findAST, replaceAST] = ast.next;
+    const findEval = await _evaluate(findAST, context, options);
+    const replaceEval = await _evaluate(replaceAST, context, options);
+    if (
+      findEval.length !== 1 ||
+      replaceEval.length !== 1 ||
+      !typeChecking("string", findEval) ||
+      !typeChecking("string", replaceEval)
+    ) {
+      throw new Error("Replace function arguments must be strings");
+    }
+    const find = findEval[0].getValue();
+    const replace = replaceEval[0].getValue();
+
+    return mv.flatten(
+      await mv.metaValue(
+        { type: context[0].meta() },
+        value.replace(find, replace),
+      ),
+    );
+  },
 };
 
 async function evaluateInvocation(
