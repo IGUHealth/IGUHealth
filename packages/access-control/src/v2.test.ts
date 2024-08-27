@@ -8,9 +8,9 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
-import evaluatePolicy, { PolicyContext } from "./v2.js";
+import * as v2 from "./v2.js";
 
-function getContext(): PolicyContext {
+function getContext(): v2.PolicyContext {
   return {
     user: {
       claims: {
@@ -40,7 +40,7 @@ function getContext(): PolicyContext {
 
 test("Simple conditional check", async () => {
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -68,7 +68,7 @@ test("Simple conditional check", async () => {
     resourceType: "OperationOutcome",
   });
 
-  const res = await evaluatePolicy(getContext(), {
+  const res = await v2.evaluate(getContext(), {
     name: "Request Check",
     resourceType: "AccessPolicyV2",
     engine: "rule-engine" as code,
@@ -100,7 +100,7 @@ test("Simple conditional check", async () => {
 
 test("Simple Or Logic", async () => {
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -147,7 +147,7 @@ test("Simple Or Logic", async () => {
 
 test("Simple And Logic", async () => {
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -194,7 +194,7 @@ test("Simple And Logic", async () => {
 
 test("Simple Target Logic", async () => {
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -245,7 +245,7 @@ test("Simple Target Logic", async () => {
   });
 
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -298,7 +298,7 @@ test("Simple Target Logic", async () => {
 
 test("Test Rule Effect Log", async () => {
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -350,7 +350,7 @@ test("Test Rule Effect Log", async () => {
   });
 
   expect(
-    evaluatePolicy(getContext(), {
+    v2.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,

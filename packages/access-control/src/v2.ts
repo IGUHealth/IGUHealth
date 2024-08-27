@@ -195,7 +195,7 @@ async function evaluateAccessPolicyRule(
  * @param request  The FHIR request being made.
  * @returns boolean as to whether or not a user is being granted access.
  */
-export default async function (
+export async function evaluate (
   context: PolicyContext,
   accessPolicy: AccessPolicyV2,
 ): Promise<OperationOutcome> {
