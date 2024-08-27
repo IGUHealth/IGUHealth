@@ -19,7 +19,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
-import { MetaValue } from "@iguhealth/meta-value";
+import { IMetaValue } from "@iguhealth/meta-value/interface";
 import {
   isOperationError,
   OperationError,
@@ -106,7 +106,7 @@ async function indexSearchParameter<
     id: id;
     meta: { versionId: id };
   },
-  evaluation: MetaValue<NonNullable<unknown>>[],
+  evaluation: IMetaValue<NonNullable<unknown>>[],
 ) {
   switch (parameter.type) {
     case "quantity": {

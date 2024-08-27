@@ -8,6 +8,8 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
+import { TypeInfo } from "../interface.js";
+
 type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
 type StructureDefinition = r4.StructureDefinition | r4b.StructureDefinition;
 type uri = r4.uri | r4b.uri;
@@ -42,12 +44,9 @@ export async function initializeMeta(
   return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
 }
 
-export type TypeMeta = {
-  fhirVersion: FHIR_VERSION;
+export interface TypeMeta extends TypeInfo {
   sd: StructureDefinition;
   elementIndex: number;
-  // Typechoice so need to maintain the type here.
-  type: uri;
   resolveTypeToCanonical: (
     fhirVersion: FHIR_VERSION,
     type: uri,
@@ -60,7 +59,7 @@ export type TypeMeta = {
     type: Type,
     url: r4.canonical,
   ) => Promise<Resource<Version, Type> | undefined>;
-};
+}
 
 function isResourceOrComplexType(type: string): boolean {
   return (

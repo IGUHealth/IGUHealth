@@ -4,11 +4,11 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  canonical,
   ConceptMap,
   Patient,
   Practitioner,
   StructureDefinition,
+  canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
@@ -18,13 +18,13 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/lib/versions";
 
-import { flatten, descend, metaValue } from "./index";
+import { PartialMeta, descend, flatten, metaValue } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
 });
 
 async function resolveTypeToCanonical(
@@ -47,7 +47,7 @@ async function resolveCanonical<
   return foundSD as Resource<Version, Type> | undefined;
 }
 
-function meta(version: FHIR_VERSION, type: uri) {
+function meta(version: FHIR_VERSION, type: uri): PartialMeta {
   return {
     type: {
       fhirVersion: version,
