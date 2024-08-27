@@ -34,6 +34,7 @@
   ],
   "exports": {
     ".": "./lib/v1/index.js",
-    "./v1": "./lib/v1/index.js"
+    "./v1": "./lib/v1/index.js",
+    "./interface": "./lib/interface.js"
   }
 }

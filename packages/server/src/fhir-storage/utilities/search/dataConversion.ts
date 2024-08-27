@@ -24,7 +24,8 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { descend, MetaValue, flatten } from "@iguhealth/meta-value";
+import { MetaValue } from "@iguhealth/meta-value/interface";
+import { descend, flatten } from "@iguhealth/meta-value/v1";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getDecimalPrecision } from "./parameters.js";

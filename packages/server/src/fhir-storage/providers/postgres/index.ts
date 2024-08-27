@@ -19,7 +19,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
-import { MetaValue } from "@iguhealth/meta-value";
+import { MetaValue } from "@iguhealth/meta-value/interface";
 import {
   isOperationError,
   OperationError,
