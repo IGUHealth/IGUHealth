@@ -1,6 +1,7 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 
+import { MetaValue } from "../interface.js";
 import { TypeMeta, deriveNextMetaInformation, initializeMeta } from "./meta.js";
 
 type Element = r4.Element | r4b.Element;
@@ -10,13 +11,6 @@ type Location = (string | number)[];
 export { TypeMeta };
 type Meta = { location: Location; type: TypeMeta | undefined };
 export type PartialMeta = { location?: Location; type?: Partial<TypeMeta> };
-
-export interface MetaValue<T> {
-  meta(): TypeMeta | undefined;
-  getValue(): T;
-  isArray(): this is MetaValueArray<T>;
-  location(): Location | undefined;
-}
 
 type RawPrimitive = string | number | boolean | undefined;
 type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
