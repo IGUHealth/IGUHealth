@@ -200,13 +200,19 @@ export default async function (
   accessPolicy: AccessPolicyV2,
 ): Promise<OperationOutcome> {
   const loc = pt.pointer("AccessPolicyV2", accessPolicy.id as id);
+  let result: (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS] = PERMISSION_LEVELS.deny;
   for (let i = 0; i < (accessPolicy.rule ?? []).length; i++) {
     const ruleLoc = pt.descend(pt.descend(loc, "rule"), i);
     const ruleResult = await evaluateAccessPolicyRule(context, ruleLoc, accessPolicy);
     if (ruleResult.result === PERMISSION_LEVELS.deny) {
       return outcomeError("forbidden", "Access Denied.", [pt.toJSONPointer(ruleResult.loc)]);
     }
+    result = Math.max(result, ruleResult.result) as unknown as  (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS];
   }
 
-  return outcomeInfo("informational", "Access succeeded.");
+  if(result === PERMISSION_LEVELS.permit) {
+    return outcomeInfo("informational", "Access succeeded.");
+  }
+
+  return outcomeError("forbidden", "Access Denied.");
 }
