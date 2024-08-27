@@ -1,6 +1,7 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { deriveNextMetaInformation, initializeMeta, TypeMeta } from "./meta.js";
+
+import { TypeMeta, deriveNextMetaInformation, initializeMeta } from "./meta.js";
 
 type Element = r4.Element | r4b.Element;
 type uri = r4.uri | r4b.uri;

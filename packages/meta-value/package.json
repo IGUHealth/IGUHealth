@@ -31,5 +31,9 @@
   },
   "files": [
     "lib/**"
-  ]
+  ],
+  "exports": {
+    ".": "./lib/v1/index.js",
+    "./v1": "./lib/v1/index.js"
+  }
 }
