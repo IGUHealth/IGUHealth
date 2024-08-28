@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen";
+import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
   descend,

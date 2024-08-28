@@ -1,10 +1,11 @@
-import { traversalBottomUp } from "@iguhealth/codegen";
 import {
   ElementDefinition,
   ElementDefinitionType,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+
+import { traversalBottomUp } from "../sdTraversal.js";
 
 interface SingularNode {
   _type_: "meta";
@@ -159,11 +160,8 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
 export function generateMetaData<Version extends FHIR_VERSION>(
   sds: Resource<Version, "StructureDefinition">[],
 ): MetaV2Compiled {
-  const meta: MetaV2Compiled = {};
-
-  for (const sd of sds) {
-    meta[sd.type] = SDToMetaData(sd);
-  }
-
-  return meta;
+  return sds.reduce((acc: MetaV2Compiled, sd) => {
+    acc[sd.type] = SDToMetaData(sd);
+    return acc;
+  }, {} as MetaV2Compiled);
 }

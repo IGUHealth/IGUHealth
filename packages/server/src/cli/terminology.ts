@@ -58,7 +58,7 @@ async function insertEdgesDB(
 function readCSV(filepath: string): csv.parser.Parser {
   const parser = fs
     .createReadStream(filepath)
-    .pipe(csv.parse({ columns: true }));
+    .pipe(csv.parse({ columns: true, encoding: "utf-8" }));
   return parser;
 }
 

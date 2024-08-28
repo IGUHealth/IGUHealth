@@ -7,8 +7,6 @@
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -28,5 +26,12 @@
   },
   "files": [
     "lib/**"
-  ]
+  ],
+  "exports": {
+    "./generate/meta": "./lib/generate/meta.js",
+    "./generate/operation-definition": "./lib/generate/operation-definition.js",
+    "./generate/sets": "./lib/generate/sets.js",
+    "./generate/typescript-types": "./lib/generate/typescript-types.js",
+    "./traversal/structure-definition": "./lib/sdTraversal.js"
+  }
 }

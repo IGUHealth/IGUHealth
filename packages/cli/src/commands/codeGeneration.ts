@@ -4,7 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
-import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
+import generateOps from "@iguhealth/codegen/generate/operation-definition";
+import { generateSets } from "@iguhealth/codegen/generate/sets";
+import { generateTypes } from "@iguhealth/codegen/generate/typescript-types";
 import {
   FHIR_VERSION,
   FHIR_VERSIONS_SUPPORTED,
