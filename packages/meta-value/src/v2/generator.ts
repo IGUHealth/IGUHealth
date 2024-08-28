@@ -42,11 +42,11 @@ function preGenerateIndices(
     const element = sd.snapshot?.element[i];
     if (!element) throw new Error("No Element");
     const types = element?.type ?? [];
-    indices[element.path as ElementPath] = ++curIndex;
+    indices[element.path as ElementPath] = curIndex++;
     if (determineIsTypeChoice(element)) {
       for (const type of types) {
         indices[combineWithPath(element.path as ElementPath, type.code)] =
-          ++curIndex;
+          curIndex++;
       }
     }
   }
