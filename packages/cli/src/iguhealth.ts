@@ -1,7 +1,7 @@
 import { Command } from "commander";
 
 import { apiCommands } from "./commands/api.js";
-import { codeGenerationCommands } from "./commands/codeGeneration.js";
+import { codeGenerationCommands } from "./commands/generation.js";
 import { minimizeCommands } from "./commands/minimize.js";
 import { testscriptCommands } from "./commands/testscript.js";
 import { validate } from "./commands/validate.js";
@@ -9,10 +9,7 @@ import { configurationCommands } from "./config.js";
 
 const program = new Command();
 
-program
-  .name("IGUHEALTH CLI Tool")
-  .description("IGUHEALTH CLI interface.")
-  .version("0.8.0");
+program.name("IGUHEALTH CLI Tool").description("IGUHEALTH CLI interface.");
 
 configurationCommands(program.command("config"));
 codeGenerationCommands(program.command("generate"));

@@ -11,6 +11,7 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
+    "generate": "yarn node ../cli/lib/iguhealth.js generate meta --output src/v2/generated/r4.json && yarn node ../cli/lib/iguhealth.js generate meta --version 4.3 --output src/v2/generated/r4b.json",
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
