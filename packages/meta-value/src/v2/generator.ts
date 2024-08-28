@@ -1,11 +1,10 @@
 import { traversalBottomUp } from "@iguhealth/codegen";
-import { ElementDefinition, uri } from "@iguhealth/fhir-types/r4/types";
+import {
+  ElementDefinition,
+  ElementDefinitionType,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
-
-interface TypeChoiceNode {
-  _type_: "typechoice";
-  types: Record<uri, number>;
-}
 
 interface SingularNode {
   _type_: "meta";
@@ -14,7 +13,7 @@ interface SingularNode {
   properties?: Record<string, number>;
 }
 
-type MetaNode = SingularNode | TypeChoiceNode;
+type MetaNode = SingularNode;
 
 function determineIsTypeChoice(element: ElementDefinition): boolean {
   return (element.type ?? []).length > 1;
@@ -43,15 +42,13 @@ function preGenerateIndices(
     const element = sd.snapshot?.element[i];
     if (!element) throw new Error("No Element");
     const types = element?.type ?? [];
-    indices[element.path as ElementPath] = curIndex;
+    indices[element.path as ElementPath] = curIndex++;
     if (determineIsTypeChoice(element)) {
       for (const type of types) {
         indices[combineWithPath(element.path as ElementPath, type.code)] =
-          curIndex;
+          curIndex++;
       }
     }
-
-    curIndex++;
   }
 
   return indices;
@@ -72,9 +69,29 @@ function getElementField(element: ElementDefinition, type?: string) {
   return field;
 }
 
+function generateSingularNode(
+  element: ElementDefinition,
+  type: ElementDefinitionType | undefined,
+  children: { index: number; field: string }[],
+): MetaNode {
+  const node: MetaNode = {
+    _type_: "meta",
+    type: type?.code as uri,
+    cardinality: element.max === "1" ? "single" : "array",
+  };
+
+  if (children.length > 0) {
+    node.properties = children.reduce((acc: Record<string, number>, k) => {
+      acc[k.field] = k.index;
+      return acc;
+    }, {});
+  }
+
+  return node;
+}
+
 function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
   const indices = preGenerateIndices(sd);
-  console.log(indices);
   const metaInfo: Array<MetaNode> = [
     ...new Array(Math.max(...Object.values(indices))),
   ];
@@ -84,7 +101,9 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
     (element: ElementDefinition, children) => {
       if (element.contentReference) {
         const index =
-          indices[element.contentReference as unknown as ElementPath];
+          indices[
+            element.contentReference.substring(1) as unknown as ElementPath
+          ];
         return [
           {
             index,
@@ -101,55 +120,36 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
           );
 
           const index = indices[indexKey];
-          metaInfo[index] = {
-            _type_: "meta",
-            type: type.code as uri,
-            cardinality: element.max === "1" ? "single" : "array",
-            properties:
-              children.length === 0
-                ? undefined
-                : children.reduce((acc: Record<string, number>, k) => {
-                    acc[k.field] = k.index;
-                    return acc;
-                  }, {}),
-          };
+          metaInfo[index] = generateSingularNode(element, type, children);
         }
+        return (element.type ?? []).map((type) => {
+          const indexKey = combineWithPath(
+            element.path as ElementPath,
+            type.code,
+          );
 
+          const index = indices[indexKey];
+          return {
+            index,
+            field: getElementField(element, type.code),
+          };
+        });
         // For Type choices include a typechoice node which points to the types loc.
-
-        metaInfo[indices[element.path as ElementPath]] = {
-          _type_: "typechoice",
-          types:
-            element.type?.reduce((acc: Record<uri, number>, type) => {
-              acc[type.code] =
-                indices[
-                  combineWithPath(element.path as ElementPath, type.code)
-                ];
-              return acc;
-            }, {}) ?? {},
-        };
       } else {
         const index = indices[element.path as ElementPath];
-        metaInfo[index] = {
-          _type_: "meta",
-          type: element.type?.[0].code as uri,
-          cardinality: element.max === "1" ? "single" : "array",
-          properties:
-            children.length === 0
-              ? undefined
-              : children.reduce((acc: Record<string, number>, k) => {
-                  acc[k.field] = k.index;
-                  return acc;
-                }, {}),
-        };
-      }
+        metaInfo[index] = generateSingularNode(
+          element,
+          element.type?.[0] as ElementDefinitionType,
+          children,
+        );
 
-      return (element.type ?? []).map((type) => {
-        return {
-          index: indices[element.path as ElementPath],
-          field: getElementField(element, type.code),
-        };
-      });
+        return [
+          {
+            index: indices[element.path as ElementPath],
+            field: getElementField(element),
+          },
+        ];
+      }
     },
   );
 
