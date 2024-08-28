@@ -15967,7 +15967,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
-          ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
