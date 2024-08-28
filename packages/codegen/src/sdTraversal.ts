@@ -36,7 +36,7 @@ function traversalBottomUpSdElements<T>(
   visitorFunction: VisitorFunction<T>,
 ) {
   const childIndices = eleIndexToChildIndices(elements, index);
-  const childTraversalValues: any[] = childIndices
+  const childTraversalValues: ReturnType<VisitorFunction<T>> = childIndices
     .map((childIndex) => {
       return traversalBottomUpSdElements(elements, childIndex, visitorFunction);
     })

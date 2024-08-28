@@ -1,7 +1,7 @@
 import { ElementDefinition, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
-import { traversalBottomUp } from "./sdTraversal.js";
+import { traversalBottomUp } from "../sdTraversal.js";
 
 export const primitiveTypes: Set<string> = new Set([
   "base64Binary",
