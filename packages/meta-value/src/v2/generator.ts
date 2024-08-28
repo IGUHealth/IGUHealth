@@ -101,7 +101,9 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
     (element: ElementDefinition, children) => {
       if (element.contentReference) {
         const index =
-          indices[element.contentReference as unknown as ElementPath];
+          indices[
+            element.contentReference.substring(1) as unknown as ElementPath
+          ];
         return [
           {
             index,

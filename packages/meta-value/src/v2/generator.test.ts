@@ -20,3 +20,9 @@ test("Generate R4 Patient", async () => {
     generateMetaData(sds.filter((sd) => sd.type === "Patient")),
   ).toMatchSnapshot();
 });
+
+test("Generate R4 Questionnaire", async () => {
+  expect(
+    generateMetaData(sds.filter((sd) => sd.type === "Questionnaire")),
+  ).toMatchSnapshot();
+});
