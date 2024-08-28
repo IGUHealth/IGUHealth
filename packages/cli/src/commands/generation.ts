@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
+import { generateMetaData } from "@iguhealth/codegen/generate/meta-data";
 import generateOps from "@iguhealth/codegen/generate/operation-definition";
 import { generateSets } from "@iguhealth/codegen/generate/sets";
 import { generateTypes } from "@iguhealth/codegen/generate/typescript-types";
@@ -16,6 +17,25 @@ import {
 import logger from "../logger.js";
 
 export function codeGenerationCommands(command: Command) {
+  command
+    .command("meta")
+    .description("Generate metadata")
+    .requiredOption("-o, --output <output>", "output file")
+    .option("-v, --version <version>", "FHIR Profiles to use", R4)
+    .action(async (options) => {
+      console.log(path.join(fileURLToPath(import.meta.url), "../../../"));
+      const structureDefinitions = loadArtifacts({
+        fhirVersion: options.version as FHIR_VERSION,
+        resourceType: "StructureDefinition",
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+      });
+
+      mkdirSync(path.join(options.output, ".."), { recursive: true });
+      const metadata = generateMetaData(structureDefinitions);
+
+      writeFileSync(options.output, JSON.stringify(metadata));
+    });
+
   command
     .command("types-artifacts")
     .description("Generates typescript types off profiles")

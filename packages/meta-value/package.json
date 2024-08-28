@@ -11,7 +11,7 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn iguhealth generate meta --output src/v2/generated/r4.json && yarn iguhealth generate meta --output src/v2/generated/r4b.json && tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
@@ -20,6 +20,7 @@
   "license": "ISC",
   "devDependencies": {
     "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/cli": "workspace:^",
     "@iguhealth/codegen": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",

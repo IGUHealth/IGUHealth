@@ -28,7 +28,8 @@
     "lib/**"
   ],
   "exports": {
-    "./generate/meta": "./lib/generate/meta.js",
+    ".": "./lib/index.js",
+    "./generate/meta-data": "./lib/generate/meta-data.js",
     "./generate/operation-definition": "./lib/generate/operation-definition.js",
     "./generate/sets": "./lib/generate/sets.js",
     "./generate/typescript-types": "./lib/generate/typescript-types.js",
