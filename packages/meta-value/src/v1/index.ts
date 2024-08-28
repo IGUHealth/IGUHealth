@@ -62,12 +62,14 @@ export async function metaValue<T>(
   value: T | T[],
   element?: Element | Element[],
 ): Promise<
-  | MetaValueSingular<NonNullable<T>>
-  | MetaValueArrayImpl<NonNullable<T>>
-  | undefined
+  IMetaValue<NonNullable<T>> | IMetaValueArray<NonNullable<T>> | undefined
 > {
-  if (value instanceof MetaValueArrayImpl || value instanceof MetaValueSingular)
-    return value;
+  if (
+    value instanceof MetaValueArrayImpl ||
+    value instanceof MetaValueSingular
+  ) {
+    throw new Error("Cannot create a MetaValue from another MetaValue");
+  }
   // Assign a type automatically if the value is a resourceType
   if (isObject(value) && typeof value.resourceType === "string")
     initialMeta = {
@@ -152,10 +154,21 @@ export async function descend<T>(
 
 export function flatten<T>(
   node: IMetaValue<T> | IMetaValue<T[]> | undefined,
-): MetaValueSingular<T>[] {
-  if (node instanceof MetaValueArrayImpl) return node.toArray();
-  if (node instanceof MetaValueSingular) return [node];
-  return [];
+): IMetaValue<T>[] {
+  switch (true) {
+    case node === undefined: {
+      return [];
+    }
+    case node?.isArray(): {
+      return node.toArray();
+    }
+    case node && node.isArray() === false: {
+      return [node as IMetaValue<T>];
+    }
+    default: {
+      throw new Error("Should not reach here");
+    }
+  }
 }
 
 class MetaValueArrayImpl<T> implements IMetaValueArray<T> {

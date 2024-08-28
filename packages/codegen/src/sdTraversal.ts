@@ -1,7 +1,11 @@
 import { ElementDefinition } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
-type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
+type VisitorFunction<T> = (
+  element: ElementDefinition,
+  children: T[],
+  info: { curIndex: number },
+) => T[];
 
 export function eleIndexToChildIndices(
   elements: Array<ElementDefinition>,
@@ -26,7 +30,7 @@ export function eleIndexToChildIndices(
   }
 }
 
-function traversalSdElements<T>(
+function traversalBottomUpSdElements<T>(
   elements: Array<ElementDefinition>,
   index: number,
   visitorFunction: VisitorFunction<T>,
@@ -34,10 +38,12 @@ function traversalSdElements<T>(
   const childIndices = eleIndexToChildIndices(elements, index);
   const childTraversalValues: any[] = childIndices
     .map((childIndex) => {
-      return traversalSdElements(elements, childIndex, visitorFunction);
+      return traversalBottomUpSdElements(elements, childIndex, visitorFunction);
     })
     .flatMap((x) => x);
-  return visitorFunction(elements[index], childTraversalValues);
+  return visitorFunction(elements[index], childTraversalValues, {
+    curIndex: index,
+  });
 }
 
 export function traversalBottomUp<T>(
@@ -46,5 +52,5 @@ export function traversalBottomUp<T>(
 ) {
   const elements = sd.snapshot?.element;
   if (!elements) throw new Error("StructureDefinition has no elements");
-  return traversalSdElements(elements, 0, visitorFunction);
+  return traversalBottomUpSdElements(elements, 0, visitorFunction);
 }
