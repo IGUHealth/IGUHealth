@@ -33,7 +33,7 @@ export function codeGenerationCommands(command: Command) {
       mkdirSync(path.join(options.output, ".."), { recursive: true });
       const metadata = generateMetaData(structureDefinitions);
 
-      writeFileSync(options.output, JSON.stringify(metadata));
+      writeFileSync(options.output, JSON.stringify(metadata, null, 2));
     });
 
   command
