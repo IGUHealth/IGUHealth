@@ -7,18 +7,18 @@ import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { traversalBottomUp } from "../sdTraversal.js";
 
-interface TypeChoiceNode {
+export interface TypeChoiceNode {
   _type_: "typechoice";
   cardinality: "array" | "single";
-  types?: Record<string, number>;
+  fields?: Record<string, number>;
 }
-interface SingularNode {
+export interface TypeNode {
   _type_: "meta";
   type: uri;
   cardinality: "array" | "single";
   properties?: Record<string, number>;
 }
-export type MetaNode = SingularNode | TypeChoiceNode;
+export type MetaNode = TypeNode | TypeChoiceNode;
 export interface MetaV2Compiled {
   [key: string]: Array<MetaNode>;
 }
@@ -67,11 +67,11 @@ function capitalize(str: string) {
 function getElementField(element: ElementDefinition, type?: string) {
   const path = element.path;
   const pathSplit = path.split(".");
-  let field = pathSplit[pathSplit.length - 1];
+  const field = pathSplit[pathSplit.length - 1];
   if (type) {
-    field = field.replace("[x]", capitalize(type));
+    return field.replace("[x]", capitalize(type));
   }
-  return field;
+  return (element.type ?? []).length > 1 ? field.replace("[x]", "") : field;
 }
 
 function createSingularNode(
@@ -102,8 +102,8 @@ function createTypeChoiceNode(
   return {
     _type_: "typechoice",
     cardinality: element.max === "1" ? "single" : "array",
-    types: (element.type ?? []).reduce((acc: Record<string, number>, type) => {
-      acc[type.code] =
+    fields: (element.type ?? []).reduce((acc: Record<string, number>, type) => {
+      acc[getElementField(element, type.code)] =
         indices[combineWithPath(element.path as ElementPath, type.code)];
       return acc;
     }, {}),

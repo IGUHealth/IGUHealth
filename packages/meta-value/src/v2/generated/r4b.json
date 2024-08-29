@@ -247,7 +247,7 @@
         "subjectCodeableConcept": 18,
         "subjectReference": 19,
         "subjectCanonical": 20,
-        "subject[x]": 21,
+        "subject": 21,
         "date": 22,
         "publisher": 23,
         "contact": 24,
@@ -279,12 +279,12 @@
         "timingPeriod": 51,
         "timingRange": 52,
         "timingDuration": 53,
-        "timing[x]": 54,
+        "timing": 54,
         "location": 55,
         "participant": 56,
         "productReference": 63,
         "productCodeableConcept": 64,
-        "product[x]": 65,
+        "product": 65,
         "quantity": 66,
         "dosage": 67,
         "bodySite": 68,
@@ -394,10 +394,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 18,
-        "Reference": 19,
-        "canonical": 20
+      "fields": {
+        "subjectCodeableConcept": 18,
+        "subjectReference": 19,
+        "subjectCanonical": 20
       }
     },
     {
@@ -559,13 +559,13 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Timing": 48,
-        "dateTime": 49,
-        "Age": 50,
-        "Period": 51,
-        "Range": 52,
-        "Duration": 53
+      "fields": {
+        "timingTiming": 48,
+        "timingDateTime": 49,
+        "timingAge": 50,
+        "timingPeriod": 51,
+        "timingRange": 52,
+        "timingDuration": 53
       }
     },
     {
@@ -624,9 +624,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 63,
-        "CodeableConcept": 64
+      "fields": {
+        "productReference": 63,
+        "productCodeableConcept": 64
       }
     },
     {
@@ -821,7 +821,7 @@
         "valueDate": 25,
         "valueBoolean": 26,
         "valueAttachment": 27,
-        "value[x]": 28,
+        "value": 28,
         "status": 29
       }
     },
@@ -874,12 +874,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 23,
-        "Quantity": 24,
-        "date": 25,
-        "boolean": 26,
-        "Attachment": 27
+      "fields": {
+        "valueCodeableConcept": 23,
+        "valueQuantity": 24,
+        "valueDate": 25,
+        "valueBoolean": 26,
+        "valueAttachment": 27
       }
     },
     {
@@ -1304,7 +1304,7 @@
         "onsetPeriod": 21,
         "onsetRange": 22,
         "onsetString": 23,
-        "onset[x]": 24,
+        "onset": 24,
         "recordedDate": 25,
         "recorder": 26,
         "asserter": 27,
@@ -1427,12 +1427,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 19,
-        "Age": 20,
-        "Period": 21,
-        "Range": 22,
-        "string": 23
+      "fields": {
+        "onsetDateTime": 19,
+        "onsetAge": 20,
+        "onsetPeriod": 21,
+        "onsetRange": 22,
+        "onsetString": 23
       }
     },
     {
@@ -2227,7 +2227,7 @@
         "type": 60,
         "valueString": 62,
         "valueBase64Binary": 63,
-        "value[x]": 64
+        "value": 64
       }
     },
     {
@@ -2264,9 +2264,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "string": 62,
-        "base64Binary": 63
+      "fields": {
+        "valueString": 62,
+        "valueBase64Binary": 63
       }
     }
   ],
@@ -2519,7 +2519,7 @@
         "source": 21,
         "collectedDateTime": 23,
         "collectedPeriod": 24,
-        "collected[x]": 25
+        "collected": 25
       }
     },
     {
@@ -2561,9 +2561,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 23,
-        "Period": 24
+      "fields": {
+        "collectedDateTime": 23,
+        "collectedPeriod": 24
       }
     },
     {
@@ -2579,7 +2579,7 @@
         "additive": 32,
         "timeDateTime": 34,
         "timePeriod": 35,
-        "time[x]": 36
+        "time": 36
       }
     },
     {
@@ -2626,9 +2626,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 34,
-        "Period": 35
+      "fields": {
+        "timeDateTime": 34,
+        "timePeriod": 35
       }
     },
     {
@@ -2642,7 +2642,7 @@
         "description": 41,
         "timeDateTime": 43,
         "timePeriod": 44,
-        "time[x]": 45
+        "time": 45
       }
     },
     {
@@ -2679,9 +2679,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 43,
-        "Period": 44
+      "fields": {
+        "timeDateTime": 43,
+        "timePeriod": 44
       }
     },
     {
@@ -4188,12 +4188,12 @@
         "scheduledTiming": 53,
         "scheduledPeriod": 54,
         "scheduledString": 55,
-        "scheduled[x]": 56,
+        "scheduled": 56,
         "location": 57,
         "performer": 58,
         "productCodeableConcept": 60,
         "productReference": 61,
-        "product[x]": 62,
+        "product": 62,
         "dailyAmount": 63,
         "quantity": 64,
         "description": 65
@@ -4283,10 +4283,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Timing": 53,
-        "Period": 54,
-        "string": 55
+      "fields": {
+        "scheduledTiming": 53,
+        "scheduledPeriod": 54,
+        "scheduledString": 55
       }
     },
     {
@@ -4313,9 +4313,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 60,
-        "Reference": 61
+      "fields": {
+        "productCodeableConcept": 60,
+        "productReference": 61
       }
     },
     {
@@ -4707,7 +4707,7 @@
         "occurrenceDateTime": 18,
         "occurrencePeriod": 19,
         "occurrenceTiming": 20,
-        "occurrence[x]": 21,
+        "occurrence": 21,
         "performer": 22,
         "performingOrganization": 28,
         "requestingOrganization": 29,
@@ -4723,7 +4723,7 @@
         "service": 39,
         "productReference": 41,
         "productCodeableConcept": 42,
-        "product[x]": 43,
+        "product": 43,
         "account": 44,
         "note": 45,
         "supportingInformation": 46
@@ -4828,10 +4828,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 18,
-        "Period": 19,
-        "Timing": 20
+      "fields": {
+        "occurrenceDateTime": 18,
+        "occurrencePeriod": 19,
+        "occurrenceTiming": 20
       }
     },
     {
@@ -4945,9 +4945,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 41,
-        "CodeableConcept": 42
+      "fields": {
+        "productReference": 41,
+        "productCodeableConcept": 42
       }
     },
     {
@@ -5605,7 +5605,7 @@
         "targetIdentifier": 60,
         "targetReference": 61,
         "targetAttachment": 62,
-        "target[x]": 63
+        "target": 63
       }
     },
     {
@@ -5657,11 +5657,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "uri": 59,
-        "Identifier": 60,
-        "Reference": 61,
-        "Attachment": 62
+      "fields": {
+        "targetUri": 59,
+        "targetIdentifier": 60,
+        "targetReference": 61,
+        "targetAttachment": 62
       }
     },
     {
@@ -5953,7 +5953,7 @@
         "targetIdentifier": 115,
         "targetReference": 116,
         "targetAttachment": 117,
-        "target[x]": 118
+        "target": 118
       }
     },
     {
@@ -6005,11 +6005,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "uri": 114,
-        "Identifier": 115,
-        "Reference": 116,
-        "Attachment": 117
+      "fields": {
+        "targetUri": 114,
+        "targetIdentifier": 115,
+        "targetReference": 116,
+        "targetAttachment": 117
       }
     },
     {
@@ -6953,13 +6953,13 @@
         "code": 54,
         "timingDate": 56,
         "timingPeriod": 57,
-        "timing[x]": 58,
+        "timing": 58,
         "valueBoolean": 60,
         "valueString": 61,
         "valueQuantity": 62,
         "valueAttachment": 63,
         "valueReference": 64,
-        "value[x]": 65,
+        "value": 65,
         "reason": 66
       }
     },
@@ -7007,9 +7007,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 56,
-        "Period": 57
+      "fields": {
+        "timingDate": 56,
+        "timingPeriod": 57
       }
     },
     null,
@@ -7041,12 +7041,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 60,
-        "string": 61,
-        "Quantity": 62,
-        "Attachment": 63,
-        "Reference": 64
+      "fields": {
+        "valueBoolean": 60,
+        "valueString": 61,
+        "valueQuantity": 62,
+        "valueAttachment": 63,
+        "valueReference": 64
       }
     },
     {
@@ -7065,7 +7065,7 @@
         "sequence": 71,
         "diagnosisCodeableConcept": 73,
         "diagnosisReference": 74,
-        "diagnosis[x]": 75,
+        "diagnosis": 75,
         "type": 76,
         "onAdmission": 77,
         "packageCode": 78
@@ -7105,9 +7105,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 73,
-        "Reference": 74
+      "fields": {
+        "diagnosisCodeableConcept": 73,
+        "diagnosisReference": 74
       }
     },
     {
@@ -7138,7 +7138,7 @@
         "date": 85,
         "procedureCodeableConcept": 87,
         "procedureReference": 88,
-        "procedure[x]": 89,
+        "procedure": 89,
         "udi": 90
       }
     },
@@ -7186,9 +7186,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 87,
-        "Reference": 88
+      "fields": {
+        "procedureCodeableConcept": 87,
+        "procedureReference": 88
       }
     },
     {
@@ -7275,7 +7275,7 @@
         "type": 107,
         "locationAddress": 109,
         "locationReference": 110,
-        "location[x]": 111
+        "location": 111
       }
     },
     {
@@ -7317,9 +7317,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Address": 109,
-        "Reference": 110
+      "fields": {
+        "locationAddress": 109,
+        "locationReference": 110
       }
     },
     {
@@ -7342,11 +7342,11 @@
         "programCode": 125,
         "servicedDate": 127,
         "servicedPeriod": 128,
-        "serviced[x]": 129,
+        "serviced": 129,
         "locationCodeableConcept": 131,
         "locationAddress": 132,
         "locationReference": 133,
-        "location[x]": 134,
+        "location": 134,
         "quantity": 135,
         "unitPrice": 136,
         "factor": 137,
@@ -7437,9 +7437,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 127,
-        "Period": 128
+      "fields": {
+        "servicedDate": 127,
+        "servicedPeriod": 128
       }
     },
     null,
@@ -7461,10 +7461,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 131,
-        "Address": 132,
-        "Reference": 133
+      "fields": {
+        "locationCodeableConcept": 131,
+        "locationAddress": 132,
+        "locationReference": 133
       }
     },
     {
@@ -8037,11 +8037,11 @@
         "programCode": 62,
         "servicedDate": 64,
         "servicedPeriod": 65,
-        "serviced[x]": 66,
+        "serviced": 66,
         "locationCodeableConcept": 68,
         "locationAddress": 69,
         "locationReference": 70,
-        "location[x]": 71,
+        "location": 71,
         "quantity": 72,
         "unitPrice": 73,
         "factor": 74,
@@ -8117,9 +8117,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 64,
-        "Period": 65
+      "fields": {
+        "servicedDate": 64,
+        "servicedPeriod": 65
       }
     },
     null,
@@ -8141,10 +8141,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 68,
-        "Address": 69,
-        "Reference": 70
+      "fields": {
+        "locationCodeableConcept": 68,
+        "locationAddress": 69,
+        "locationReference": 70
       }
     },
     {
@@ -8617,7 +8617,7 @@
         "encounter": 15,
         "effectiveDateTime": 17,
         "effectivePeriod": 18,
-        "effective[x]": 19,
+        "effective": 19,
         "date": 20,
         "assessor": 21,
         "previous": 22,
@@ -8721,9 +8721,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 17,
-        "Period": 18
+      "fields": {
+        "effectiveDateTime": 17,
+        "effectivePeriod": 18
       }
     },
     {
@@ -9049,7 +9049,7 @@
         "intendedEffect": 35,
         "durationRange": 37,
         "durationString": 38,
-        "duration[x]": 39,
+        "duration": 39,
         "undesirableEffect": 40,
         "otherTherapy": 22
       }
@@ -9103,9 +9103,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Range": 37,
-        "string": 38
+      "fields": {
+        "durationRange": 37,
+        "durationString": 38
       }
     },
     {
@@ -9154,7 +9154,7 @@
         "modifierExtension": 49,
         "itemReference": 51,
         "itemCodeableConcept": 52,
-        "item[x]": 53
+        "item": 53
       }
     },
     {
@@ -9186,9 +9186,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 51,
-        "CodeableConcept": 52
+      "fields": {
+        "itemReference": 51,
+        "itemCodeableConcept": 52
       }
     },
     {
@@ -9696,7 +9696,7 @@
         "valueBoolean": 72,
         "valueDateTime": 73,
         "valueDecimal": 74,
-        "value[x]": 75
+        "value": 75
       }
     },
     {
@@ -9758,14 +9758,14 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "code": 68,
-        "Coding": 69,
-        "string": 70,
-        "integer": 71,
-        "boolean": 72,
-        "dateTime": 73,
-        "decimal": 74
+      "fields": {
+        "valueCode": 68,
+        "valueCoding": 69,
+        "valueString": 70,
+        "valueInteger": 71,
+        "valueBoolean": 72,
+        "valueDateTime": 73,
+        "valueDecimal": 74
       }
     }
   ],
@@ -9963,7 +9963,7 @@
         "contentString": 35,
         "contentAttachment": 36,
         "contentReference": 37,
-        "content[x]": 38
+        "content": 38
       }
     },
     {
@@ -10000,10 +10000,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "string": 35,
-        "Attachment": 36,
-        "Reference": 37
+      "fields": {
+        "contentString": 35,
+        "contentAttachment": 36,
+        "contentReference": 37
       }
     },
     {
@@ -10041,7 +10041,7 @@
         "payload": 22,
         "occurrenceDateTime": 32,
         "occurrencePeriod": 33,
-        "occurrence[x]": 34,
+        "occurrence": 34,
         "authoredOn": 35,
         "requester": 36,
         "recipient": 37,
@@ -10167,7 +10167,7 @@
         "contentString": 27,
         "contentAttachment": 28,
         "contentReference": 29,
-        "content[x]": 30
+        "content": 30
       }
     },
     {
@@ -10204,10 +10204,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "string": 27,
-        "Attachment": 28,
-        "Reference": 29
+      "fields": {
+        "contentString": 27,
+        "contentAttachment": 28,
+        "contentReference": 29
       }
     },
     null,
@@ -10224,9 +10224,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 32,
-        "Period": 33
+      "fields": {
+        "occurrenceDateTime": 32,
+        "occurrencePeriod": 33
       }
     },
     {
@@ -10622,7 +10622,7 @@
         "code": 31,
         "targetIdentifier": 33,
         "targetReference": 34,
-        "target[x]": 35
+        "target": 35
       }
     },
     {
@@ -10659,9 +10659,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Identifier": 33,
-        "Reference": 34
+      "fields": {
+        "targetIdentifier": 33,
+        "targetReference": 34
       }
     },
     {
@@ -10818,10 +10818,10 @@
         "copyright": 23,
         "sourceUri": 25,
         "sourceCanonical": 26,
-        "source[x]": 27,
+        "source": 27,
         "targetUri": 29,
         "targetCanonical": 30,
-        "target[x]": 31,
+        "target": 31,
         "group": 32
       }
     },
@@ -10954,9 +10954,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "uri": 25,
-        "canonical": 26
+      "fields": {
+        "sourceUri": 25,
+        "sourceCanonical": 26
       }
     },
     null,
@@ -10973,9 +10973,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "uri": 29,
-        "canonical": 30
+      "fields": {
+        "targetUri": 29,
+        "targetCanonical": 30
       }
     },
     {
@@ -11245,13 +11245,13 @@
         "onsetPeriod": 21,
         "onsetRange": 22,
         "onsetString": 23,
-        "onset[x]": 24,
+        "onset": 24,
         "abatementDateTime": 26,
         "abatementAge": 27,
         "abatementPeriod": 28,
         "abatementRange": 29,
         "abatementString": 30,
-        "abatement[x]": 31,
+        "abatement": 31,
         "recordedDate": 32,
         "recorder": 33,
         "asserter": 34,
@@ -11374,12 +11374,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 19,
-        "Age": 20,
-        "Period": 21,
-        "Range": 22,
-        "string": 23
+      "fields": {
+        "onsetDateTime": 19,
+        "onsetAge": 20,
+        "onsetPeriod": 21,
+        "onsetRange": 22,
+        "onsetString": 23
       }
     },
     null,
@@ -11411,12 +11411,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 26,
-        "Age": 27,
-        "Period": 28,
-        "Range": 29,
-        "string": 30
+      "fields": {
+        "abatementDateTime": 26,
+        "abatementAge": 27,
+        "abatementPeriod": 28,
+        "abatementRange": 29,
+        "abatementString": 30
       }
     },
     {
@@ -11543,7 +11543,7 @@
         "organization": 16,
         "sourceAttachment": 18,
         "sourceReference": 19,
-        "source[x]": 20,
+        "source": 20,
         "policy": 21,
         "policyRule": 27,
         "verification": 28,
@@ -11644,9 +11644,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Attachment": 18,
-        "Reference": 19
+      "fields": {
+        "sourceAttachment": 18,
+        "sourceReference": 19
       }
     },
     {
@@ -11921,7 +11921,7 @@
         "scope": 29,
         "topicCodeableConcept": 31,
         "topicReference": 32,
-        "topic[x]": 33,
+        "topic": 33,
         "type": 34,
         "subType": 35,
         "contentDefinition": 36,
@@ -11934,7 +11934,7 @@
         "rule": 209,
         "legallyBindingAttachment": 218,
         "legallyBindingReference": 219,
-        "legallyBinding[x]": 220
+        "legallyBinding": 220
       }
     },
     {
@@ -12096,9 +12096,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 31,
-        "Reference": 32
+      "fields": {
+        "topicCodeableConcept": 31,
+        "topicReference": 32
       }
     },
     {
@@ -12185,7 +12185,7 @@
         "applies": 52,
         "topicCodeableConcept": 54,
         "topicReference": 55,
-        "topic[x]": 56,
+        "topic": 56,
         "type": 57,
         "subType": 58,
         "text": 59,
@@ -12240,9 +12240,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 54,
-        "Reference": 55
+      "fields": {
+        "topicCodeableConcept": 54,
+        "topicReference": 55
       }
     },
     {
@@ -12426,7 +12426,7 @@
         "valueCoding": 97,
         "valueQuantity": 98,
         "valueReference": 99,
-        "value[x]": 100
+        "value": 100
       }
     },
     {
@@ -12508,19 +12508,19 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 88,
-        "decimal": 89,
-        "integer": 90,
-        "date": 91,
-        "dateTime": 92,
-        "time": 93,
-        "string": 94,
-        "uri": 95,
-        "Attachment": 96,
-        "Coding": 97,
-        "Quantity": 98,
-        "Reference": 99
+      "fields": {
+        "valueBoolean": 88,
+        "valueDecimal": 89,
+        "valueInteger": 90,
+        "valueDate": 91,
+        "valueDateTime": 92,
+        "valueTime": 93,
+        "valueString": 94,
+        "valueUri": 95,
+        "valueAttachment": 96,
+        "valueCoding": 97,
+        "valueQuantity": 98,
+        "valueReference": 99
       }
     },
     {
@@ -12692,7 +12692,7 @@
         "modifierExtension": 131,
         "entityCodeableConcept": 133,
         "entityReference": 134,
-        "entity[x]": 135,
+        "entity": 135,
         "identifier": 136,
         "effectiveTime": 137,
         "quantity": 138,
@@ -12737,9 +12737,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 133,
-        "Reference": 134
+      "fields": {
+        "entityCodeableConcept": 133,
+        "entityReference": 134
       }
     },
     {
@@ -12826,7 +12826,7 @@
         "occurrenceDateTime": 167,
         "occurrencePeriod": 168,
         "occurrenceTiming": 169,
-        "occurrence[x]": 170,
+        "occurrence": 170,
         "requester": 171,
         "requesterLinkId": 172,
         "performerType": 173,
@@ -12947,10 +12947,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 167,
-        "Period": 168,
-        "Timing": 169
+      "fields": {
+        "occurrenceDateTime": 167,
+        "occurrencePeriod": 168,
+        "occurrenceTiming": 169
       }
     },
     {
@@ -13077,7 +13077,7 @@
         "modifierExtension": 196,
         "contentAttachment": 198,
         "contentReference": 199,
-        "content[x]": 200
+        "content": 200
       }
     },
     {
@@ -13109,9 +13109,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Attachment": 198,
-        "Reference": 199
+      "fields": {
+        "contentAttachment": 198,
+        "contentReference": 199
       }
     },
     {
@@ -13124,7 +13124,7 @@
         "modifierExtension": 204,
         "contentAttachment": 206,
         "contentReference": 207,
-        "content[x]": 208
+        "content": 208
       }
     },
     {
@@ -13156,9 +13156,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Attachment": 206,
-        "Reference": 207
+      "fields": {
+        "contentAttachment": 206,
+        "contentReference": 207
       }
     },
     {
@@ -13171,7 +13171,7 @@
         "modifierExtension": 212,
         "contentAttachment": 214,
         "contentReference": 215,
-        "content[x]": 216
+        "content": 216
       }
     },
     {
@@ -13203,9 +13203,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Attachment": 214,
-        "Reference": 215
+      "fields": {
+        "contentAttachment": 214,
+        "contentReference": 215
       }
     },
     null,
@@ -13222,9 +13222,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Attachment": 218,
-        "Reference": 219
+      "fields": {
+        "legallyBindingAttachment": 218,
+        "legallyBindingReference": 219
       }
     }
   ],
@@ -13419,7 +13419,7 @@
         "type": 33,
         "valueQuantity": 35,
         "valueMoney": 36,
-        "value[x]": 37,
+        "value": 37,
         "exception": 38
       }
     },
@@ -13457,9 +13457,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 35,
-        "Money": 36
+      "fields": {
+        "valueQuantity": 35,
+        "valueMoney": 36
       }
     },
     {
@@ -13530,7 +13530,7 @@
         "patient": 13,
         "servicedDate": 15,
         "servicedPeriod": 16,
-        "serviced[x]": 17,
+        "serviced": 17,
         "created": 18,
         "enterer": 19,
         "provider": 20,
@@ -13620,9 +13620,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 15,
-        "Period": 16
+      "fields": {
+        "servicedDate": 15,
+        "servicedPeriod": 16
       }
     },
     {
@@ -13821,7 +13821,7 @@
         "modifierExtension": 52,
         "diagnosisCodeableConcept": 54,
         "diagnosisReference": 55,
-        "diagnosis[x]": 56
+        "diagnosis": 56
       }
     },
     {
@@ -13853,9 +13853,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 54,
-        "Reference": 55
+      "fields": {
+        "diagnosisCodeableConcept": 54,
+        "diagnosisReference": 55
       }
     },
     {
@@ -13883,7 +13883,7 @@
         "patient": 12,
         "servicedDate": 14,
         "servicedPeriod": 15,
-        "serviced[x]": 16,
+        "serviced": 16,
         "created": 17,
         "requestor": 18,
         "request": 19,
@@ -13970,9 +13970,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 14,
-        "Period": 15
+      "fields": {
+        "servicedDate": 14,
+        "servicedPeriod": 15
       }
     },
     {
@@ -14150,11 +14150,11 @@
         "allowedUnsignedInt": 50,
         "allowedString": 51,
         "allowedMoney": 52,
-        "allowed[x]": 53,
+        "allowed": 53,
         "usedUnsignedInt": 55,
         "usedString": 56,
         "usedMoney": 57,
-        "used[x]": 58
+        "used": 58
       }
     },
     {
@@ -14196,10 +14196,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "unsignedInt": 50,
-        "string": 51,
-        "Money": 52
+      "fields": {
+        "allowedUnsignedInt": 50,
+        "allowedString": 51,
+        "allowedMoney": 52
       }
     },
     null,
@@ -14221,10 +14221,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "unsignedInt": 55,
-        "string": 56,
-        "Money": 57
+      "fields": {
+        "usedUnsignedInt": 55,
+        "usedString": 56,
+        "usedMoney": 57
       }
     },
     {
@@ -14304,7 +14304,7 @@
         "patient": 13,
         "identifiedDateTime": 15,
         "identifiedPeriod": 16,
-        "identified[x]": 17,
+        "identified": 17,
         "author": 18,
         "implicated": 19,
         "evidence": 20,
@@ -14392,9 +14392,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 15,
-        "Period": 16
+      "fields": {
+        "identifiedDateTime": 15,
+        "identifiedPeriod": 16
       }
     },
     {
@@ -14923,7 +14923,7 @@
         "udiDeviceIdentifier": 10,
         "manufacturerString": 18,
         "manufacturerReference": 19,
-        "manufacturer[x]": 20,
+        "manufacturer": 20,
         "deviceName": 21,
         "modelNumber": 27,
         "type": 28,
@@ -15047,9 +15047,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "string": 18,
-        "Reference": 19
+      "fields": {
+        "manufacturerString": 18,
+        "manufacturerReference": 19
       }
     },
     {
@@ -15498,14 +15498,14 @@
         "priority": 17,
         "codeReference": 19,
         "codeCodeableConcept": 20,
-        "code[x]": 21,
+        "code": 21,
         "parameter": 22,
         "subject": 33,
         "encounter": 34,
         "occurrenceDateTime": 36,
         "occurrencePeriod": 37,
         "occurrenceTiming": 38,
-        "occurrence[x]": 39,
+        "occurrence": 39,
         "authoredOn": 40,
         "requester": 41,
         "performerType": 42,
@@ -15617,9 +15617,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 19,
-        "CodeableConcept": 20
+      "fields": {
+        "codeReference": 19,
+        "codeCodeableConcept": 20
       }
     },
     {
@@ -15635,7 +15635,7 @@
         "valueQuantity": 29,
         "valueRange": 30,
         "valueBoolean": 31,
-        "value[x]": 32
+        "value": 32
       }
     },
     {
@@ -15682,11 +15682,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 28,
-        "Quantity": 29,
-        "Range": 30,
-        "boolean": 31
+      "fields": {
+        "valueCodeableConcept": 28,
+        "valueQuantity": 29,
+        "valueRange": 30,
+        "valueBoolean": 31
       }
     },
     {
@@ -15718,10 +15718,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 36,
-        "Period": 37,
-        "Timing": 38
+      "fields": {
+        "occurrenceDateTime": 36,
+        "occurrencePeriod": 37,
+        "occurrenceTiming": 38
       }
     },
     {
@@ -15796,7 +15796,7 @@
         "timingTiming": 15,
         "timingPeriod": 16,
         "timingDateTime": 17,
-        "timing[x]": 18,
+        "timing": 18,
         "recordedOn": 19,
         "source": 20,
         "device": 21,
@@ -15890,10 +15890,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Timing": 15,
-        "Period": 16,
-        "dateTime": 17
+      "fields": {
+        "timingTiming": 15,
+        "timingPeriod": 16,
+        "timingDateTime": 17
       }
     },
     {
@@ -15954,7 +15954,7 @@
         "encounter": 15,
         "effectiveDateTime": 17,
         "effectivePeriod": 18,
-        "effective[x]": 19,
+        "effective": 19,
         "issued": 20,
         "performer": 21,
         "resultsInterpreter": 22,
@@ -16056,9 +16056,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 17,
-        "Period": 18
+      "fields": {
+        "effectiveDateTime": 17,
+        "effectivePeriod": 18
       }
     },
     {
@@ -17635,7 +17635,7 @@
         "experimental": 16,
         "subjectCodeableConcept": 18,
         "subjectReference": 19,
-        "subject[x]": 20,
+        "subject": 20,
         "date": 21,
         "publisher": 22,
         "contact": 23,
@@ -17751,9 +17751,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 18,
-        "Reference": 19
+      "fields": {
+        "subjectCodeableConcept": 18,
+        "subjectReference": 19
       }
     },
     {
@@ -17871,7 +17871,7 @@
         "title": 12,
         "citeAsReference": 14,
         "citeAsMarkdown": 15,
-        "citeAs[x]": 16,
+        "citeAs": 16,
         "status": 17,
         "date": 18,
         "useContext": 19,
@@ -17968,9 +17968,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 14,
-        "markdown": 15
+      "fields": {
+        "citeAsReference": 14,
+        "citeAsMarkdown": 15
       }
     },
     {
@@ -18479,7 +18479,7 @@
         "relatedIdentifier": 13,
         "citeAsReference": 15,
         "citeAsMarkdown": 16,
-        "citeAs[x]": 17,
+        "citeAs": 17,
         "type": 18,
         "note": 19,
         "relatedArtifact": 20,
@@ -18573,9 +18573,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 15,
-        "markdown": 16
+      "fields": {
+        "citeAsReference": 15,
+        "citeAsMarkdown": 16
       }
     },
     {
@@ -18634,7 +18634,7 @@
         "valueBoolean": 33,
         "valueQuantity": 34,
         "valueRange": 35,
-        "value[x]": 36,
+        "value": 36,
         "exclude": 37,
         "period": 38
       }
@@ -18688,12 +18688,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 31,
-        "CodeableConcept": 32,
-        "boolean": 33,
-        "Quantity": 34,
-        "Range": 35
+      "fields": {
+        "valueReference": 31,
+        "valueCodeableConcept": 32,
+        "valueBoolean": 33,
+        "valueQuantity": 34,
+        "valueRange": 35
       }
     },
     {
@@ -18752,7 +18752,7 @@
         "code": 50,
         "targetIdentifier": 52,
         "targetReference": 53,
-        "target[x]": 54
+        "target": 54
       }
     },
     {
@@ -18789,9 +18789,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Identifier": 52,
-        "Reference": 53
+      "fields": {
+        "targetIdentifier": 52,
+        "targetReference": 53
       }
     },
     {
@@ -19084,7 +19084,7 @@
         "definitionCanonical": 37,
         "definitionCodeableConcept": 38,
         "definitionExpression": 39,
-        "definition[x]": 40,
+        "definition": 40,
         "method": 41,
         "device": 42,
         "exclude": 43,
@@ -19136,11 +19136,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 36,
-        "canonical": 37,
-        "CodeableConcept": 38,
-        "Expression": 39
+      "fields": {
+        "definitionReference": 36,
+        "definitionCanonical": 37,
+        "definitionCodeableConcept": 38,
+        "definitionExpression": 39
       }
     },
     {
@@ -19229,7 +19229,7 @@
         "valueCodeableConcept": 60,
         "valueQuantity": 61,
         "valueRange": 62,
-        "value[x]": 63
+        "value": 63
       }
     },
     {
@@ -19271,10 +19271,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 60,
-        "Quantity": 61,
-        "Range": 62
+      "fields": {
+        "valueCodeableConcept": 60,
+        "valueQuantity": 61,
+        "valueRange": 62
       }
     }
   ],
@@ -20162,13 +20162,13 @@
         "code": 61,
         "timingDate": 63,
         "timingPeriod": 64,
-        "timing[x]": 65,
+        "timing": 65,
         "valueBoolean": 67,
         "valueString": 68,
         "valueQuantity": 69,
         "valueAttachment": 70,
         "valueReference": 71,
-        "value[x]": 72,
+        "value": 72,
         "reason": 73
       }
     },
@@ -20216,9 +20216,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 63,
-        "Period": 64
+      "fields": {
+        "timingDate": 63,
+        "timingPeriod": 64
       }
     },
     null,
@@ -20250,12 +20250,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 67,
-        "string": 68,
-        "Quantity": 69,
-        "Attachment": 70,
-        "Reference": 71
+      "fields": {
+        "valueBoolean": 67,
+        "valueString": 68,
+        "valueQuantity": 69,
+        "valueAttachment": 70,
+        "valueReference": 71
       }
     },
     {
@@ -20274,7 +20274,7 @@
         "sequence": 78,
         "diagnosisCodeableConcept": 80,
         "diagnosisReference": 81,
-        "diagnosis[x]": 82,
+        "diagnosis": 82,
         "type": 83,
         "onAdmission": 84,
         "packageCode": 85
@@ -20314,9 +20314,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 80,
-        "Reference": 81
+      "fields": {
+        "diagnosisCodeableConcept": 80,
+        "diagnosisReference": 81
       }
     },
     {
@@ -20347,7 +20347,7 @@
         "date": 92,
         "procedureCodeableConcept": 94,
         "procedureReference": 95,
-        "procedure[x]": 96,
+        "procedure": 96,
         "udi": 97
       }
     },
@@ -20395,9 +20395,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 94,
-        "Reference": 95
+      "fields": {
+        "procedureCodeableConcept": 94,
+        "procedureReference": 95
       }
     },
     {
@@ -20465,7 +20465,7 @@
         "type": 111,
         "locationAddress": 113,
         "locationReference": 114,
-        "location[x]": 115
+        "location": 115
       }
     },
     {
@@ -20507,9 +20507,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Address": 113,
-        "Reference": 114
+      "fields": {
+        "locationAddress": 113,
+        "locationReference": 114
       }
     },
     {
@@ -20532,11 +20532,11 @@
         "programCode": 129,
         "servicedDate": 131,
         "servicedPeriod": 132,
-        "serviced[x]": 133,
+        "serviced": 133,
         "locationCodeableConcept": 135,
         "locationAddress": 136,
         "locationReference": 137,
-        "location[x]": 138,
+        "location": 138,
         "quantity": 139,
         "unitPrice": 140,
         "factor": 141,
@@ -20629,9 +20629,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 131,
-        "Period": 132
+      "fields": {
+        "servicedDate": 131,
+        "servicedPeriod": 132
       }
     },
     null,
@@ -20653,10 +20653,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 135,
-        "Address": 136,
-        "Reference": 137
+      "fields": {
+        "locationCodeableConcept": 135,
+        "locationAddress": 136,
+        "locationReference": 137
       }
     },
     {
@@ -20969,11 +20969,11 @@
         "programCode": 200,
         "servicedDate": 202,
         "servicedPeriod": 203,
-        "serviced[x]": 204,
+        "serviced": 204,
         "locationCodeableConcept": 206,
         "locationAddress": 207,
         "locationReference": 208,
-        "location[x]": 209,
+        "location": 209,
         "quantity": 210,
         "unitPrice": 211,
         "factor": 212,
@@ -21049,9 +21049,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 202,
-        "Period": 203
+      "fields": {
+        "servicedDate": 202,
+        "servicedPeriod": 203
       }
     },
     null,
@@ -21073,10 +21073,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 206,
-        "Address": 207,
-        "Reference": 208
+      "fields": {
+        "locationCodeableConcept": 206,
+        "locationAddress": 207,
+        "locationReference": 208
       }
     },
     {
@@ -21497,10 +21497,10 @@
         "allowedUnsignedInt": 287,
         "allowedString": 288,
         "allowedMoney": 289,
-        "allowed[x]": 290,
+        "allowed": 290,
         "usedUnsignedInt": 292,
         "usedMoney": 293,
-        "used[x]": 294
+        "used": 294
       }
     },
     {
@@ -21542,10 +21542,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "unsignedInt": 287,
-        "string": 288,
-        "Money": 289
+      "fields": {
+        "allowedUnsignedInt": 287,
+        "allowedString": 288,
+        "allowedMoney": 289
       }
     },
     null,
@@ -21562,9 +21562,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "unsignedInt": 292,
-        "Money": 293
+      "fields": {
+        "usedUnsignedInt": 292,
+        "usedMoney": 293
       }
     }
   ],
@@ -21594,18 +21594,18 @@
         "bornPeriod": 20,
         "bornDate": 21,
         "bornString": 22,
-        "born[x]": 23,
+        "born": 23,
         "ageAge": 25,
         "ageRange": 26,
         "ageString": 27,
-        "age[x]": 28,
+        "age": 28,
         "estimatedAge": 29,
         "deceasedBoolean": 31,
         "deceasedAge": 32,
         "deceasedRange": 33,
         "deceasedDate": 34,
         "deceasedString": 35,
-        "deceased[x]": 36,
+        "deceased": 36,
         "reasonCode": 37,
         "reasonReference": 38,
         "note": 39,
@@ -21721,10 +21721,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Period": 20,
-        "date": 21,
-        "string": 22
+      "fields": {
+        "bornPeriod": 20,
+        "bornDate": 21,
+        "bornString": 22
       }
     },
     null,
@@ -21746,10 +21746,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Age": 25,
-        "Range": 26,
-        "string": 27
+      "fields": {
+        "ageAge": 25,
+        "ageRange": 26,
+        "ageString": 27
       }
     },
     {
@@ -21786,12 +21786,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 31,
-        "Age": 32,
-        "Range": 33,
-        "date": 34,
-        "string": 35
+      "fields": {
+        "deceasedBoolean": 31,
+        "deceasedAge": 32,
+        "deceasedRange": 33,
+        "deceasedDate": 34,
+        "deceasedString": 35
       }
     },
     {
@@ -21824,7 +21824,7 @@
         "onsetRange": 49,
         "onsetPeriod": 50,
         "onsetString": 51,
-        "onset[x]": 52,
+        "onset": 52,
         "note": 53
       }
     },
@@ -21882,11 +21882,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Age": 48,
-        "Range": 49,
-        "Period": 50,
-        "string": 51
+      "fields": {
+        "onsetAge": 48,
+        "onsetRange": 49,
+        "onsetPeriod": 50,
+        "onsetString": 51
       }
     },
     {
@@ -22021,7 +22021,7 @@
         "subject": 15,
         "startDate": 17,
         "startCodeableConcept": 18,
-        "start[x]": 19,
+        "start": 19,
         "target": 20,
         "statusDate": 38,
         "statusReason": 39,
@@ -22121,9 +22121,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 17,
-        "CodeableConcept": 18
+      "fields": {
+        "startDate": 17,
+        "startCodeableConcept": 18
       }
     },
     {
@@ -22142,10 +22142,10 @@
         "detailBoolean": 30,
         "detailInteger": 31,
         "detailRatio": 32,
-        "detail[x]": 33,
+        "detail": 33,
         "dueDate": 35,
         "dueDuration": 36,
-        "due[x]": 37
+        "due": 37
       }
     },
     {
@@ -22207,14 +22207,14 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 26,
-        "Range": 27,
-        "CodeableConcept": 28,
-        "string": 29,
-        "boolean": 30,
-        "integer": 31,
-        "Ratio": 32
+      "fields": {
+        "detailQuantity": 26,
+        "detailRange": 27,
+        "detailCodeableConcept": 28,
+        "detailString": 29,
+        "detailBoolean": 30,
+        "detailInteger": 31,
+        "detailRatio": 32
       }
     },
     null,
@@ -22231,9 +22231,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 35,
-        "Duration": 36
+      "fields": {
+        "dueDate": 35,
+        "dueDuration": 36
       }
     },
     {
@@ -22688,7 +22688,7 @@
         "valueQuantity": 25,
         "valueRange": 26,
         "valueReference": 27,
-        "value[x]": 28,
+        "value": 28,
         "exclude": 29,
         "period": 30
       }
@@ -22742,12 +22742,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 23,
-        "boolean": 24,
-        "Quantity": 25,
-        "Range": 26,
-        "Reference": 27
+      "fields": {
+        "valueCodeableConcept": 23,
+        "valueBoolean": 24,
+        "valueQuantity": 25,
+        "valueRange": 26,
+        "valueReference": 27
       }
     },
     {
@@ -22822,7 +22822,7 @@
         "moduleUri": 12,
         "moduleCanonical": 13,
         "moduleCodeableConcept": 14,
-        "module[x]": 15,
+        "module": 15,
         "status": 16,
         "subject": 17,
         "encounter": 18,
@@ -22906,10 +22906,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "uri": 12,
-        "canonical": 13,
-        "CodeableConcept": 14
+      "fields": {
+        "moduleUri": 12,
+        "moduleCanonical": 13,
+        "moduleCodeableConcept": 14
       }
     },
     {
@@ -23646,7 +23646,7 @@
         "encounter": 14,
         "occurrenceDateTime": 16,
         "occurrenceString": 17,
-        "occurrence[x]": 18,
+        "occurrence": 18,
         "recorded": 19,
         "primarySource": 20,
         "reportOrigin": 21,
@@ -23754,9 +23754,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 16,
-        "string": 17
+      "fields": {
+        "occurrenceDateTime": 16,
+        "occurrenceString": 17
       }
     },
     {
@@ -23986,10 +23986,10 @@
         "targetDisease": 63,
         "doseNumberPositiveInt": 65,
         "doseNumberString": 66,
-        "doseNumber[x]": 67,
+        "doseNumber": 67,
         "seriesDosesPositiveInt": 69,
         "seriesDosesString": 70,
-        "seriesDoses[x]": 71
+        "seriesDoses": 71
       }
     },
     {
@@ -24036,9 +24036,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 65,
-        "string": 66
+      "fields": {
+        "doseNumberPositiveInt": 65,
+        "doseNumberString": 66
       }
     },
     null,
@@ -24055,9 +24055,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 69,
-        "string": 70
+      "fields": {
+        "seriesDosesPositiveInt": 69,
+        "seriesDosesString": 70
       }
     }
   ],
@@ -24087,10 +24087,10 @@
         "series": 19,
         "doseNumberPositiveInt": 21,
         "doseNumberString": 22,
-        "doseNumber[x]": 23,
+        "doseNumber": 23,
         "seriesDosesPositiveInt": 25,
         "seriesDosesString": 26,
-        "seriesDoses[x]": 27
+        "seriesDoses": 27
       }
     },
     {
@@ -24202,9 +24202,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 21,
-        "string": 22
+      "fields": {
+        "doseNumberPositiveInt": 21,
+        "doseNumberString": 22
       }
     },
     null,
@@ -24221,9 +24221,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 25,
-        "string": 26
+      "fields": {
+        "seriesDosesPositiveInt": 25,
+        "seriesDosesString": 26
       }
     }
   ],
@@ -24325,10 +24325,10 @@
         "series": 29,
         "doseNumberPositiveInt": 31,
         "doseNumberString": 32,
-        "doseNumber[x]": 33,
+        "doseNumber": 33,
         "seriesDosesPositiveInt": 35,
         "seriesDosesString": 36,
-        "seriesDoses[x]": 37,
+        "seriesDoses": 37,
         "supportingImmunization": 38,
         "supportingPatientInformation": 39
       }
@@ -24434,9 +24434,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 31,
-        "string": 32
+      "fields": {
+        "doseNumberPositiveInt": 31,
+        "doseNumberString": 32
       }
     },
     null,
@@ -24453,9 +24453,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "positiveInt": 35,
-        "string": 36
+      "fields": {
+        "seriesDosesPositiveInt": 35,
+        "seriesDosesString": 36
       }
     },
     {
@@ -24785,7 +24785,7 @@
         "description": 55,
         "exampleBoolean": 57,
         "exampleCanonical": 58,
-        "example[x]": 59,
+        "example": 59,
         "groupingId": 60
       }
     },
@@ -24838,9 +24838,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 57,
-        "canonical": 58
+      "fields": {
+        "exampleBoolean": 57,
+        "exampleCanonical": 58
       }
     },
     {
@@ -24858,7 +24858,7 @@
         "modifierExtension": 64,
         "nameUrl": 66,
         "nameReference": 67,
-        "name[x]": 68,
+        "name": 68,
         "title": 69,
         "generation": 70,
         "page": 61
@@ -24893,9 +24893,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "url": 66,
-        "Reference": 67
+      "fields": {
+        "nameUrl": 66,
+        "nameReference": 67
       }
     },
     {
@@ -25035,7 +25035,7 @@
         "reference": 94,
         "exampleBoolean": 96,
         "exampleCanonical": 97,
-        "example[x]": 98,
+        "example": 98,
         "relativePath": 99
       }
     },
@@ -25073,9 +25073,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 96,
-        "canonical": 97
+      "fields": {
+        "exampleBoolean": 96,
+        "exampleCanonical": 97
       }
     },
     {
@@ -25309,11 +25309,11 @@
         "modifierExtension": 29,
         "presentationRatio": 31,
         "presentationRatioRange": 32,
-        "presentation[x]": 33,
+        "presentation": 33,
         "textPresentation": 34,
         "concentrationRatio": 36,
         "concentrationRatioRange": 37,
-        "concentration[x]": 38,
+        "concentration": 38,
         "textConcentration": 39,
         "measurementPoint": 40,
         "country": 41,
@@ -25349,9 +25349,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Ratio": 31,
-        "RatioRange": 32
+      "fields": {
+        "presentationRatio": 31,
+        "presentationRatioRange": 32
       }
     },
     {
@@ -25373,9 +25373,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Ratio": 36,
-        "RatioRange": 37
+      "fields": {
+        "concentrationRatio": 36,
+        "concentrationRatioRange": 37
       }
     },
     {
@@ -25404,7 +25404,7 @@
         "substance": 46,
         "strengthRatio": 48,
         "strengthRatioRange": 49,
-        "strength[x]": 50,
+        "strength": 50,
         "measurementPoint": 51,
         "country": 52
       }
@@ -25443,9 +25443,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Ratio": 48,
-        "RatioRange": 49
+      "fields": {
+        "strengthRatio": 48,
+        "strengthRatioRange": 49
       }
     },
     {
@@ -26123,7 +26123,7 @@
         "sequence": 28,
         "chargeItemReference": 30,
         "chargeItemCodeableConcept": 31,
-        "chargeItem[x]": 32,
+        "chargeItem": 32,
         "priceComponent": 33
       }
     },
@@ -26161,9 +26161,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 30,
-        "CodeableConcept": 31
+      "fields": {
+        "chargeItemReference": 30,
+        "chargeItemCodeableConcept": 31
       }
     },
     {
@@ -26261,7 +26261,7 @@
         "type": 17,
         "subjectCodeableConcept": 19,
         "subjectReference": 20,
-        "subject[x]": 21,
+        "subject": 21,
         "date": 22,
         "publisher": 23,
         "contact": 24,
@@ -26384,9 +26384,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 19,
-        "Reference": 20
+      "fields": {
+        "subjectCodeableConcept": 19,
+        "subjectReference": 20
       }
     },
     {
@@ -27125,7 +27125,7 @@
         "valueDate": 23,
         "valueBoolean": 24,
         "valueAttachment": 25,
-        "value[x]": 26
+        "value": 26
       }
     },
     {
@@ -27177,12 +27177,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 21,
-        "Quantity": 22,
-        "date": 23,
-        "boolean": 24,
-        "Attachment": 25
+      "fields": {
+        "valueCodeableConcept": 21,
+        "valueQuantity": 22,
+        "valueDate": 23,
+        "valueBoolean": 24,
+        "valueAttachment": 25
       }
     }
   ],
@@ -27209,7 +27209,7 @@
         "experimental": 16,
         "subjectCodeableConcept": 18,
         "subjectReference": 19,
-        "subject[x]": 20,
+        "subject": 20,
         "date": 21,
         "publisher": 22,
         "contact": 23,
@@ -27338,9 +27338,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 18,
-        "Reference": 19
+      "fields": {
+        "subjectCodeableConcept": 18,
+        "subjectReference": 19
       }
     },
     {
@@ -28086,7 +28086,7 @@
         "encounter": 17,
         "createdDateTime": 19,
         "createdPeriod": 20,
-        "created[x]": 21,
+        "created": 21,
         "issued": 22,
         "operator": 23,
         "reasonCode": 24,
@@ -28200,9 +28200,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 19,
-        "Period": 20
+      "fields": {
+        "createdDateTime": 19,
+        "createdPeriod": 20
       }
     },
     {
@@ -28369,7 +28369,7 @@
         "modifierExtension": 18,
         "itemCodeableConcept": 20,
         "itemReference": 21,
-        "item[x]": 22,
+        "item": 22,
         "isActive": 23,
         "strength": 24
       }
@@ -28403,9 +28403,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 20,
-        "Reference": 21
+      "fields": {
+        "itemCodeableConcept": 20,
+        "itemReference": 21
       }
     },
     {
@@ -28477,13 +28477,13 @@
         "category": 14,
         "medicationCodeableConcept": 16,
         "medicationReference": 17,
-        "medication[x]": 18,
+        "medication": 18,
         "subject": 19,
         "context": 20,
         "supportingInformation": 21,
         "effectiveDateTime": 23,
         "effectivePeriod": 24,
-        "effective[x]": 25,
+        "effective": 25,
         "performer": 26,
         "reasonCode": 32,
         "reasonReference": 33,
@@ -28578,9 +28578,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 16,
-        "Reference": 17
+      "fields": {
+        "medicationCodeableConcept": 16,
+        "medicationReference": 17
       }
     },
     {
@@ -28612,9 +28612,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 23,
-        "Period": 24
+      "fields": {
+        "effectiveDateTime": 23,
+        "effectivePeriod": 24
       }
     },
     {
@@ -28694,7 +28694,7 @@
         "dose": 45,
         "rateRatio": 47,
         "rateQuantity": 48,
-        "rate[x]": 49
+        "rate": 49
       }
     },
     {
@@ -28751,9 +28751,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Ratio": 47,
-        "Quantity": 48
+      "fields": {
+        "rateRatio": 47,
+        "rateQuantity": 48
       }
     },
     {
@@ -28780,11 +28780,11 @@
         "status": 11,
         "statusReasonCodeableConcept": 13,
         "statusReasonReference": 14,
-        "statusReason[x]": 15,
+        "statusReason": 15,
         "category": 16,
         "medicationCodeableConcept": 18,
         "medicationReference": 19,
-        "medication[x]": 20,
+        "medication": 20,
         "subject": 21,
         "context": 22,
         "supportingInformation": 23,
@@ -28874,9 +28874,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 13,
-        "Reference": 14
+      "fields": {
+        "statusReasonCodeableConcept": 13,
+        "statusReasonReference": 14
       }
     },
     {
@@ -28898,9 +28898,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 18,
-        "Reference": 19
+      "fields": {
+        "medicationCodeableConcept": 18,
+        "medicationReference": 19
       }
     },
     {
@@ -29271,7 +29271,7 @@
         "modifierExtension": 32,
         "itemCodeableConcept": 34,
         "itemReference": 35,
-        "item[x]": 36,
+        "item": 36,
         "isActive": 37,
         "strength": 38
       }
@@ -29305,9 +29305,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 34,
-        "Reference": 35
+      "fields": {
+        "itemCodeableConcept": 34,
+        "itemReference": 35
       }
     },
     {
@@ -29421,7 +29421,7 @@
         "dosage": 58,
         "indicationCodeableConcept": 65,
         "indicationReference": 66,
-        "indication[x]": 67,
+        "indication": 67,
         "patientCharacteristics": 68
       }
     },
@@ -29491,9 +29491,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 65,
-        "Reference": 66
+      "fields": {
+        "indicationCodeableConcept": 65,
+        "indicationReference": 66
       }
     },
     {
@@ -29506,7 +29506,7 @@
         "modifierExtension": 71,
         "characteristicCodeableConcept": 73,
         "characteristicQuantity": 74,
-        "characteristic[x]": 75,
+        "characteristic": 75,
         "value": 76
       }
     },
@@ -29539,9 +29539,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 73,
-        "Quantity": 74
+      "fields": {
+        "characteristicCodeableConcept": 73,
+        "characteristicQuantity": 74
       }
     },
     {
@@ -29636,7 +29636,7 @@
         "valueString": 96,
         "valueQuantity": 97,
         "valueBase64Binary": 98,
-        "value[x]": 99
+        "value": 99
       }
     },
     {
@@ -29683,11 +29683,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 95,
-        "string": 96,
-        "Quantity": 97,
-        "base64Binary": 98
+      "fields": {
+        "valueCodeableConcept": 95,
+        "valueString": 96,
+        "valueQuantity": 97,
+        "valueBase64Binary": 98
       }
     },
     {
@@ -29900,10 +29900,10 @@
         "doNotPerform": 15,
         "reportedBoolean": 17,
         "reportedReference": 18,
-        "reported[x]": 19,
+        "reported": 19,
         "medicationCodeableConcept": 21,
         "medicationReference": 22,
-        "medication[x]": 23,
+        "medication": 23,
         "subject": 24,
         "encounter": 25,
         "supportingInformation": 26,
@@ -30018,9 +30018,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 17,
-        "Reference": 18
+      "fields": {
+        "reportedBoolean": 17,
+        "reportedReference": 18
       }
     },
     null,
@@ -30037,9 +30037,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 21,
-        "Reference": 22
+      "fields": {
+        "medicationCodeableConcept": 21,
+        "medicationReference": 22
       }
     },
     {
@@ -30241,7 +30241,7 @@
         "modifierExtension": 61,
         "allowedBoolean": 63,
         "allowedCodeableConcept": 64,
-        "allowed[x]": 65,
+        "allowed": 65,
         "reason": 66
       }
     },
@@ -30274,9 +30274,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 63,
-        "CodeableConcept": 64
+      "fields": {
+        "allowedBoolean": 63,
+        "allowedCodeableConcept": 64
       }
     },
     {
@@ -30321,12 +30321,12 @@
         "category": 14,
         "medicationCodeableConcept": 16,
         "medicationReference": 17,
-        "medication[x]": 18,
+        "medication": 18,
         "subject": 19,
         "context": 20,
         "effectiveDateTime": 22,
         "effectivePeriod": 23,
-        "effective[x]": 24,
+        "effective": 24,
         "dateAsserted": 25,
         "informationSource": 26,
         "derivedFrom": 27,
@@ -30420,9 +30420,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 16,
-        "Reference": 17
+      "fields": {
+        "medicationCodeableConcept": 16,
+        "medicationReference": 17
       }
     },
     {
@@ -30449,9 +30449,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 22,
-        "Period": 23
+      "fields": {
+        "effectiveDateTime": 22,
+        "effectivePeriod": 23
       }
     },
     {
@@ -30944,7 +30944,7 @@
         "valueDate": 79,
         "valueBoolean": 80,
         "valueAttachment": 81,
-        "value[x]": 82
+        "value": 82
       }
     },
     {
@@ -30996,12 +30996,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 77,
-        "Quantity": 78,
-        "date": 79,
-        "boolean": 80,
-        "Attachment": 81
+      "fields": {
+        "valueCodeableConcept": 77,
+        "valueQuantity": 78,
+        "valueDate": 79,
+        "valueBoolean": 80,
+        "valueAttachment": 81
       }
     }
   ],
@@ -31038,7 +31038,7 @@
         "parent": 26,
         "eventCoding": 28,
         "eventUri": 29,
-        "event[x]": 30,
+        "event": 30,
         "category": 31,
         "focus": 32,
         "responseRequired": 40,
@@ -31190,9 +31190,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Coding": 28,
-        "uri": 29
+      "fields": {
+        "eventCoding": 28,
+        "eventUri": 29
       }
     },
     {
@@ -31312,7 +31312,7 @@
         "modifierExtension": 8,
         "eventCoding": 10,
         "eventUri": 11,
-        "event[x]": 12,
+        "event": 12,
         "destination": 13,
         "sender": 21,
         "enterer": 22,
@@ -31379,9 +31379,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Coding": 10,
-        "uri": 11
+      "fields": {
+        "eventCoding": 10,
+        "eventUri": 11
       }
     },
     {
@@ -32768,7 +32768,7 @@
         "quantity": 66,
         "rateQuantity": 68,
         "rateRatio": 69,
-        "rate[x]": 70
+        "rate": 70
       }
     },
     {
@@ -32810,9 +32810,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 68,
-        "Ratio": 69
+      "fields": {
+        "rateQuantity": 68,
+        "rateRatio": 69
       }
     },
     {
@@ -33010,7 +33010,7 @@
         "valueBase64Binary": 35,
         "valueAttachment": 36,
         "valueBoolean": 37,
-        "value[x]": 38
+        "value": 38
       }
     },
     {
@@ -33067,13 +33067,13 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 32,
-        "string": 33,
-        "Quantity": 34,
-        "base64Binary": 35,
-        "Attachment": 36,
-        "boolean": 37
+      "fields": {
+        "valueCodeableConcept": 32,
+        "valueString": 33,
+        "valueQuantity": 34,
+        "valueBase64Binary": 35,
+        "valueAttachment": 36,
+        "valueBoolean": 37
       }
     },
     {
@@ -33163,7 +33163,7 @@
         "effectivePeriod": 20,
         "effectiveTiming": 21,
         "effectiveInstant": 22,
-        "effective[x]": 23,
+        "effective": 23,
         "issued": 24,
         "performer": 25,
         "valueQuantity": 27,
@@ -33177,7 +33177,7 @@
         "valueTime": 35,
         "valueDateTime": 36,
         "valuePeriod": 37,
-        "value[x]": 38,
+        "value": 38,
         "dataAbsentReason": 39,
         "interpretation": 40,
         "note": 41,
@@ -33300,11 +33300,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 19,
-        "Period": 20,
-        "Timing": 21,
-        "instant": 22
+      "fields": {
+        "effectiveDateTime": 19,
+        "effectivePeriod": 20,
+        "effectiveTiming": 21,
+        "effectiveInstant": 22
       }
     },
     {
@@ -33376,18 +33376,18 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 27,
-        "CodeableConcept": 28,
-        "string": 29,
-        "boolean": 30,
-        "integer": 31,
-        "Range": 32,
-        "Ratio": 33,
-        "SampledData": 34,
-        "time": 35,
-        "dateTime": 36,
-        "Period": 37
+      "fields": {
+        "valueQuantity": 27,
+        "valueCodeableConcept": 28,
+        "valueString": 29,
+        "valueBoolean": 30,
+        "valueInteger": 31,
+        "valueRange": 32,
+        "valueRatio": 33,
+        "valueSampledData": 34,
+        "valueTime": 35,
+        "valueDateTime": 36,
+        "valuePeriod": 37
       }
     },
     {
@@ -33516,7 +33516,7 @@
         "valueTime": 72,
         "valueDateTime": 73,
         "valuePeriod": 74,
-        "value[x]": 75,
+        "value": 75,
         "dataAbsentReason": 76,
         "interpretation": 77,
         "referenceRange": 46
@@ -33601,18 +33601,18 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 64,
-        "CodeableConcept": 65,
-        "string": 66,
-        "boolean": 67,
-        "integer": 68,
-        "Range": 69,
-        "Ratio": 70,
-        "SampledData": 71,
-        "time": 72,
-        "dateTime": 73,
-        "Period": 74
+      "fields": {
+        "valueQuantity": 64,
+        "valueCodeableConcept": 65,
+        "valueString": 66,
+        "valueBoolean": 67,
+        "valueInteger": 68,
+        "valueRange": 69,
+        "valueRatio": 70,
+        "valueSampledData": 71,
+        "valueTime": 72,
+        "valueDateTime": 73,
+        "valuePeriod": 74
       }
     },
     {
@@ -34905,7 +34905,7 @@
         "type": 40,
         "periodDuration": 42,
         "periodString": 43,
-        "period[x]": 44,
+        "period": 44,
         "specialPrecautionsForStorage": 45
       }
     },
@@ -34943,9 +34943,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Duration": 42,
-        "string": 43
+      "fields": {
+        "periodDuration": 42,
+        "periodString": 43
       }
     },
     {
@@ -34972,7 +34972,7 @@
         "valueDate": 55,
         "valueBoolean": 56,
         "valueAttachment": 57,
-        "value[x]": 58
+        "value": 58
       }
     },
     {
@@ -35024,12 +35024,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 53,
-        "Quantity": 54,
-        "date": 55,
-        "boolean": 56,
-        "Attachment": 57
+      "fields": {
+        "valueCodeableConcept": 53,
+        "valueQuantity": 54,
+        "valueDate": 55,
+        "valueBoolean": 56,
+        "valueAttachment": 57
       }
     },
     {
@@ -35161,7 +35161,7 @@
         "valueUsageContext": 58,
         "valueDosage": 59,
         "valueMeta": 60,
-        "value[x]": 61,
+        "value": 61,
         "resource": 62,
         "part": 5
       }
@@ -35440,57 +35440,57 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 11,
-        "boolean": 12,
-        "canonical": 13,
-        "code": 14,
-        "date": 15,
-        "dateTime": 16,
-        "decimal": 17,
-        "id": 18,
-        "instant": 19,
-        "integer": 20,
-        "markdown": 21,
-        "oid": 22,
-        "positiveInt": 23,
-        "string": 24,
-        "time": 25,
-        "unsignedInt": 26,
-        "uri": 27,
-        "url": 28,
-        "uuid": 29,
-        "Address": 30,
-        "Age": 31,
-        "Annotation": 32,
-        "Attachment": 33,
-        "CodeableConcept": 34,
-        "Coding": 35,
-        "ContactPoint": 36,
-        "Count": 37,
-        "Distance": 38,
-        "Duration": 39,
-        "HumanName": 40,
-        "Identifier": 41,
-        "Money": 42,
-        "Period": 43,
-        "Quantity": 44,
-        "Range": 45,
-        "Ratio": 46,
-        "Reference": 47,
-        "SampledData": 48,
-        "Signature": 49,
-        "Timing": 50,
-        "ContactDetail": 51,
-        "Contributor": 52,
-        "DataRequirement": 53,
-        "Expression": 54,
-        "ParameterDefinition": 55,
-        "RelatedArtifact": 56,
-        "TriggerDefinition": 57,
-        "UsageContext": 58,
-        "Dosage": 59,
-        "Meta": 60
+      "fields": {
+        "valueBase64Binary": 11,
+        "valueBoolean": 12,
+        "valueCanonical": 13,
+        "valueCode": 14,
+        "valueDate": 15,
+        "valueDateTime": 16,
+        "valueDecimal": 17,
+        "valueId": 18,
+        "valueInstant": 19,
+        "valueInteger": 20,
+        "valueMarkdown": 21,
+        "valueOid": 22,
+        "valuePositiveInt": 23,
+        "valueString": 24,
+        "valueTime": 25,
+        "valueUnsignedInt": 26,
+        "valueUri": 27,
+        "valueUrl": 28,
+        "valueUuid": 29,
+        "valueAddress": 30,
+        "valueAge": 31,
+        "valueAnnotation": 32,
+        "valueAttachment": 33,
+        "valueCodeableConcept": 34,
+        "valueCoding": 35,
+        "valueContactPoint": 36,
+        "valueCount": 37,
+        "valueDistance": 38,
+        "valueDuration": 39,
+        "valueHumanName": 40,
+        "valueIdentifier": 41,
+        "valueMoney": 42,
+        "valuePeriod": 43,
+        "valueQuantity": 44,
+        "valueRange": 45,
+        "valueRatio": 46,
+        "valueReference": 47,
+        "valueSampledData": 48,
+        "valueSignature": 49,
+        "valueTiming": 50,
+        "valueContactDetail": 51,
+        "valueContributor": 52,
+        "valueDataRequirement": 53,
+        "valueExpression": 54,
+        "valueParameterDefinition": 55,
+        "valueRelatedArtifact": 56,
+        "valueTriggerDefinition": 57,
+        "valueUsageContext": 58,
+        "valueDosage": 59,
+        "valueMeta": 60
       }
     },
     {
@@ -35520,12 +35520,12 @@
         "birthDate": 14,
         "deceasedBoolean": 16,
         "deceasedDateTime": 17,
-        "deceased[x]": 18,
+        "deceased": 18,
         "address": 19,
         "maritalStatus": 20,
         "multipleBirthBoolean": 22,
         "multipleBirthInteger": 23,
-        "multipleBirth[x]": 24,
+        "multipleBirth": 24,
         "photo": 25,
         "contact": 26,
         "communication": 37,
@@ -35618,9 +35618,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 16,
-        "dateTime": 17
+      "fields": {
+        "deceasedBoolean": 16,
+        "deceasedDateTime": 17
       }
     },
     {
@@ -35647,9 +35647,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 22,
-        "integer": 23
+      "fields": {
+        "multipleBirthBoolean": 22,
+        "multipleBirthInteger": 23
       }
     },
     {
@@ -36368,7 +36368,7 @@
         "subjectCodeableConcept": 19,
         "subjectReference": 20,
         "subjectCanonical": 21,
-        "subject[x]": 22,
+        "subject": 22,
         "date": 23,
         "publisher": 24,
         "contact": 25,
@@ -36496,10 +36496,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 19,
-        "Reference": 20,
-        "canonical": 21
+      "fields": {
+        "subjectCodeableConcept": 19,
+        "subjectReference": 20,
+        "subjectCanonical": 21
       }
     },
     {
@@ -36671,7 +36671,7 @@
         "detailQuantity": 58,
         "detailRange": 59,
         "detailCodeableConcept": 60,
-        "detail[x]": 61,
+        "detail": 61,
         "due": 62
       }
     },
@@ -36714,10 +36714,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 58,
-        "Range": 59,
-        "CodeableConcept": 60
+      "fields": {
+        "detailQuantity": 58,
+        "detailRange": 59,
+        "detailCodeableConcept": 60
       }
     },
     {
@@ -36745,7 +36745,7 @@
         "subjectCodeableConcept": 77,
         "subjectReference": 78,
         "subjectCanonical": 79,
-        "subject[x]": 80,
+        "subject": 80,
         "trigger": 81,
         "condition": 82,
         "input": 88,
@@ -36757,7 +36757,7 @@
         "timingDuration": 104,
         "timingRange": 105,
         "timingTiming": 106,
-        "timing[x]": 107,
+        "timing": 107,
         "participant": 108,
         "type": 114,
         "groupingBehavior": 115,
@@ -36767,7 +36767,7 @@
         "cardinalityBehavior": 119,
         "definitionCanonical": 121,
         "definitionUri": 122,
-        "definition[x]": 123,
+        "definition": 123,
         "transform": 124,
         "dynamicValue": 125,
         "action": 63
@@ -36852,10 +36852,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 77,
-        "Reference": 78,
-        "canonical": 79
+      "fields": {
+        "subjectCodeableConcept": 77,
+        "subjectReference": 78,
+        "subjectCanonical": 79
       }
     },
     {
@@ -36922,7 +36922,7 @@
         "relationship": 95,
         "offsetDuration": 97,
         "offsetRange": 98,
-        "offset[x]": 99
+        "offset": 99
       }
     },
     {
@@ -36964,9 +36964,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Duration": 97,
-        "Range": 98
+      "fields": {
+        "offsetDuration": 97,
+        "offsetRange": 98
       }
     },
     null,
@@ -37003,13 +37003,13 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 101,
-        "Age": 102,
-        "Period": 103,
-        "Duration": 104,
-        "Range": 105,
-        "Timing": 106
+      "fields": {
+        "timingDateTime": 101,
+        "timingAge": 102,
+        "timingPeriod": 103,
+        "timingDuration": 104,
+        "timingRange": 105,
+        "timingTiming": 106
       }
     },
     {
@@ -37093,9 +37093,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "canonical": 121,
-        "uri": 122
+      "fields": {
+        "definitionCanonical": 121,
+        "definitionUri": 122
       }
     },
     {
@@ -37546,7 +37546,7 @@
         "performedString": 23,
         "performedAge": 24,
         "performedRange": 25,
-        "performed[x]": 26,
+        "performed": 26,
         "recorder": 27,
         "asserter": 28,
         "performer": 29,
@@ -37689,12 +37689,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 21,
-        "Period": 22,
-        "string": 23,
-        "Age": 24,
-        "Range": 25
+      "fields": {
+        "performedDateTime": 21,
+        "performedPeriod": 22,
+        "performedString": 23,
+        "performedAge": 24,
+        "performedRange": 25
       }
     },
     {
@@ -37864,7 +37864,7 @@
         "target": 9,
         "occurredPeriod": 11,
         "occurredDateTime": 12,
-        "occurred[x]": 13,
+        "occurred": 13,
         "recorded": 14,
         "policy": 15,
         "location": 16,
@@ -37934,9 +37934,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Period": 11,
-        "dateTime": 12
+      "fields": {
+        "occurredPeriod": 11,
+        "occurredDateTime": 12
       }
     },
     {
@@ -38331,7 +38331,7 @@
         "answerCoding": 54,
         "answerQuantity": 55,
         "answerReference": 56,
-        "answer[x]": 57
+        "answer": 57
       }
     },
     {
@@ -38413,17 +38413,17 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 47,
-        "decimal": 48,
-        "integer": 49,
-        "date": 50,
-        "dateTime": 51,
-        "time": 52,
-        "string": 53,
-        "Coding": 54,
-        "Quantity": 55,
-        "Reference": 56
+      "fields": {
+        "answerBoolean": 47,
+        "answerDecimal": 48,
+        "answerInteger": 49,
+        "answerDate": 50,
+        "answerDateTime": 51,
+        "answerTime": 52,
+        "answerString": 53,
+        "answerCoding": 54,
+        "answerQuantity": 55,
+        "answerReference": 56
       }
     },
     {
@@ -38470,7 +38470,7 @@
         "valueString": 72,
         "valueCoding": 73,
         "valueReference": 74,
-        "value[x]": 75,
+        "value": 75,
         "initialSelected": 76
       }
     },
@@ -38523,13 +38523,13 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "integer": 69,
-        "date": 70,
-        "time": 71,
-        "string": 72,
-        "Coding": 73,
-        "Reference": 74
+      "fields": {
+        "valueInteger": 69,
+        "valueDate": 70,
+        "valueTime": 71,
+        "valueString": 72,
+        "valueCoding": 73,
+        "valueReference": 74
       }
     },
     {
@@ -38557,7 +38557,7 @@
         "valueCoding": 91,
         "valueQuantity": 92,
         "valueReference": 93,
-        "value[x]": 94
+        "value": 94
       }
     },
     {
@@ -38639,19 +38639,19 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 82,
-        "decimal": 83,
-        "integer": 84,
-        "date": 85,
-        "dateTime": 86,
-        "time": 87,
-        "string": 88,
-        "uri": 89,
-        "Attachment": 90,
-        "Coding": 91,
-        "Quantity": 92,
-        "Reference": 93
+      "fields": {
+        "valueBoolean": 82,
+        "valueDecimal": 83,
+        "valueInteger": 84,
+        "valueDate": 85,
+        "valueDateTime": 86,
+        "valueTime": 87,
+        "valueString": 88,
+        "valueUri": 89,
+        "valueAttachment": 90,
+        "valueCoding": 91,
+        "valueQuantity": 92,
+        "valueReference": 93
       }
     }
   ],
@@ -38836,7 +38836,7 @@
         "valueCoding": 40,
         "valueQuantity": 41,
         "valueReference": 42,
-        "value[x]": 43,
+        "value": 43,
         "item": 19
       }
     },
@@ -38919,19 +38919,19 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 31,
-        "decimal": 32,
-        "integer": 33,
-        "date": 34,
-        "dateTime": 35,
-        "time": 36,
-        "string": 37,
-        "uri": 38,
-        "Attachment": 39,
-        "Coding": 40,
-        "Quantity": 41,
-        "Reference": 42
+      "fields": {
+        "valueBoolean": 31,
+        "valueDecimal": 32,
+        "valueInteger": 33,
+        "valueDate": 34,
+        "valueDateTime": 35,
+        "valueTime": 36,
+        "valueString": 37,
+        "valueUri": 38,
+        "valueAttachment": 39,
+        "valueCoding": 40,
+        "valueQuantity": 41,
+        "valueReference": 42
       }
     },
     null
@@ -39083,7 +39083,7 @@
         "status": 28,
         "datePeriod": 30,
         "dateDateTime": 31,
-        "date[x]": 32,
+        "date": 32,
         "application": 22
       }
     },
@@ -39131,9 +39131,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Period": 30,
-        "dateTime": 31
+      "fields": {
+        "datePeriod": 30,
+        "dateDateTime": 31
       }
     }
   ],
@@ -39478,7 +39478,7 @@
         "timingDuration": 57,
         "timingRange": 58,
         "timingTiming": 59,
-        "timing[x]": 60,
+        "timing": 60,
         "participant": 61,
         "type": 62,
         "groupingBehavior": 63,
@@ -39589,7 +39589,7 @@
         "relationship": 48,
         "offsetDuration": 50,
         "offsetRange": 51,
-        "offset[x]": 52
+        "offset": 52
       }
     },
     {
@@ -39631,9 +39631,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Duration": 50,
-        "Range": 51
+      "fields": {
+        "offsetDuration": 50,
+        "offsetRange": 51
       }
     },
     null,
@@ -39670,13 +39670,13 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 54,
-        "Age": 55,
-        "Period": 56,
-        "Duration": 57,
-        "Range": 58,
-        "Timing": 59
+      "fields": {
+        "timingDateTime": 54,
+        "timingAge": 55,
+        "timingPeriod": 56,
+        "timingDuration": 57,
+        "timingRange": 58,
+        "timingTiming": 59
       }
     },
     {
@@ -39744,7 +39744,7 @@
         "experimental": 17,
         "subjectCodeableConcept": 19,
         "subjectReference": 20,
-        "subject[x]": 21,
+        "subject": 21,
         "date": 22,
         "publisher": 23,
         "contact": 24,
@@ -39870,9 +39870,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 19,
-        "Reference": 20
+      "fields": {
+        "subjectCodeableConcept": 19,
+        "subjectReference": 20
       }
     },
     {
@@ -40020,7 +40020,7 @@
         "experimental": 17,
         "subjectCodeableConcept": 19,
         "subjectReference": 20,
-        "subject[x]": 21,
+        "subject": 21,
         "date": 22,
         "publisher": 23,
         "contact": 24,
@@ -40145,9 +40145,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 19,
-        "Reference": 20
+      "fields": {
+        "subjectCodeableConcept": 19,
+        "subjectReference": 20
       }
     },
     {
@@ -40272,7 +40272,7 @@
         "definitionCanonical": 50,
         "definitionExpression": 51,
         "definitionDataRequirement": 52,
-        "definition[x]": 53,
+        "definition": 53,
         "usageContext": 54,
         "exclude": 55,
         "unitOfMeasure": 56,
@@ -40281,7 +40281,7 @@
         "studyEffectivePeriod": 60,
         "studyEffectiveDuration": 61,
         "studyEffectiveTiming": 62,
-        "studyEffective[x]": 63,
+        "studyEffective": 63,
         "studyEffectiveTimeFromStart": 64,
         "studyEffectiveGroupMeasure": 65,
         "participantEffectiveDescription": 66,
@@ -40289,7 +40289,7 @@
         "participantEffectivePeriod": 69,
         "participantEffectiveDuration": 70,
         "participantEffectiveTiming": 71,
-        "participantEffective[x]": 72,
+        "participantEffective": 72,
         "participantEffectiveTimeFromStart": 73,
         "participantEffectiveGroupMeasure": 74
       }
@@ -40333,11 +40333,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 49,
-        "canonical": 50,
-        "Expression": 51,
-        "DataRequirement": 52
+      "fields": {
+        "definitionCodeableConcept": 49,
+        "definitionCanonical": 50,
+        "definitionExpression": 51,
+        "definitionDataRequirement": 52
       }
     },
     {
@@ -40384,11 +40384,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 59,
-        "Period": 60,
-        "Duration": 61,
-        "Timing": 62
+      "fields": {
+        "studyEffectiveDateTime": 59,
+        "studyEffectivePeriod": 60,
+        "studyEffectiveDuration": 61,
+        "studyEffectiveTiming": 62
       }
     },
     {
@@ -40430,11 +40430,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 68,
-        "Period": 69,
-        "Duration": 70,
-        "Timing": 71
+      "fields": {
+        "participantEffectiveDateTime": 68,
+        "participantEffectivePeriod": 69,
+        "participantEffectiveDuration": 70,
+        "participantEffectiveTiming": 71
       }
     },
     {
@@ -40845,7 +40845,7 @@
         "encounter": 16,
         "occurrenceDateTime": 18,
         "occurrencePeriod": 19,
-        "occurrence[x]": 20,
+        "occurrence": 20,
         "condition": 21,
         "performer": 22,
         "reasonCode": 23,
@@ -40950,9 +40950,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 18,
-        "Period": 19
+      "fields": {
+        "occurrenceDateTime": 18,
+        "occurrencePeriod": 19
       }
     },
     {
@@ -40991,12 +40991,12 @@
         "outcome": 30,
         "probabilityDecimal": 32,
         "probabilityRange": 33,
-        "probability[x]": 34,
+        "probability": 34,
         "qualitativeRisk": 35,
         "relativeRisk": 36,
         "whenPeriod": 38,
         "whenRange": 39,
-        "when[x]": 40,
+        "when": 40,
         "rationale": 41
       }
     },
@@ -41034,9 +41034,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "decimal": 32,
-        "Range": 33
+      "fields": {
+        "probabilityDecimal": 32,
+        "probabilityRange": 33
       }
     },
     {
@@ -41063,9 +41063,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Period": 38,
-        "Range": 39
+      "fields": {
+        "whenPeriod": 38,
+        "whenRange": 39
       }
     },
     {
@@ -41461,16 +41461,16 @@
         "quantityQuantity": 23,
         "quantityRatio": 24,
         "quantityRange": 25,
-        "quantity[x]": 26,
+        "quantity": 26,
         "subject": 27,
         "encounter": 28,
         "occurrenceDateTime": 30,
         "occurrencePeriod": 31,
         "occurrenceTiming": 32,
-        "occurrence[x]": 33,
+        "occurrence": 33,
         "asNeededBoolean": 35,
         "asNeededCodeableConcept": 36,
-        "asNeeded[x]": 37,
+        "asNeeded": 37,
         "authoredOn": 38,
         "requester": 39,
         "performerType": 40,
@@ -41612,10 +41612,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 23,
-        "Ratio": 24,
-        "Range": 25
+      "fields": {
+        "quantityQuantity": 23,
+        "quantityRatio": 24,
+        "quantityRange": 25
       }
     },
     {
@@ -41647,10 +41647,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 30,
-        "Period": 31,
-        "Timing": 32
+      "fields": {
+        "occurrenceDateTime": 30,
+        "occurrencePeriod": 31,
+        "occurrenceTiming": 32
       }
     },
     null,
@@ -41667,9 +41667,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 35,
-        "CodeableConcept": 36
+      "fields": {
+        "asNeededBoolean": 35,
+        "asNeededCodeableConcept": 36
       }
     },
     {
@@ -41989,14 +41989,14 @@
         "collector": 21,
         "collectedDateTime": 23,
         "collectedPeriod": 24,
-        "collected[x]": 25,
+        "collected": 25,
         "duration": 26,
         "quantity": 27,
         "method": 28,
         "bodySite": 29,
         "fastingStatusCodeableConcept": 31,
         "fastingStatusDuration": 32,
-        "fastingStatus[x]": 33
+        "fastingStatus": 33
       }
     },
     {
@@ -42033,9 +42033,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 23,
-        "Period": 24
+      "fields": {
+        "collectedDateTime": 23,
+        "collectedPeriod": 24
       }
     },
     {
@@ -42072,9 +42072,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 31,
-        "Duration": 32
+      "fields": {
+        "fastingStatusCodeableConcept": 31,
+        "fastingStatusDuration": 32
       }
     },
     {
@@ -42090,7 +42090,7 @@
         "additive": 40,
         "timeDateTime": 42,
         "timePeriod": 43,
-        "time[x]": 44
+        "time": 44
       }
     },
     {
@@ -42137,9 +42137,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 42,
-        "Period": 43
+      "fields": {
+        "timeDateTime": 42,
+        "timePeriod": 43
       }
     },
     {
@@ -42157,7 +42157,7 @@
         "specimenQuantity": 53,
         "additiveCodeableConcept": 55,
         "additiveReference": 56,
-        "additive[x]": 57
+        "additive": 57
       }
     },
     {
@@ -42214,9 +42214,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 55,
-        "Reference": 56
+      "fields": {
+        "additiveCodeableConcept": 55,
+        "additiveReference": 56
       }
     },
     {
@@ -42379,7 +42379,7 @@
         "capacity": 29,
         "minimumVolumeQuantity": 31,
         "minimumVolumeString": 32,
-        "minimumVolume[x]": 33,
+        "minimumVolume": 33,
         "additive": 34,
         "preparation": 42
       }
@@ -42438,9 +42438,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 31,
-        "string": 32
+      "fields": {
+        "minimumVolumeQuantity": 31,
+        "minimumVolumeString": 32
       }
     },
     {
@@ -42453,7 +42453,7 @@
         "modifierExtension": 37,
         "additiveCodeableConcept": 39,
         "additiveReference": 40,
-        "additive[x]": 41
+        "additive": 41
       }
     },
     {
@@ -42485,9 +42485,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 39,
-        "Reference": 40
+      "fields": {
+        "additiveCodeableConcept": 39,
+        "additiveReference": 40
       }
     },
     {
@@ -43306,7 +43306,7 @@
         "defaultValueUsageContext": 110,
         "defaultValueDosage": 111,
         "defaultValueMeta": 112,
-        "defaultValue[x]": 113,
+        "defaultValue": 113,
         "element": 114,
         "listMode": 115,
         "variable": 116,
@@ -43604,57 +43604,57 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 63,
-        "boolean": 64,
-        "canonical": 65,
-        "code": 66,
-        "date": 67,
-        "dateTime": 68,
-        "decimal": 69,
-        "id": 70,
-        "instant": 71,
-        "integer": 72,
-        "markdown": 73,
-        "oid": 74,
-        "positiveInt": 75,
-        "string": 76,
-        "time": 77,
-        "unsignedInt": 78,
-        "uri": 79,
-        "url": 80,
-        "uuid": 81,
-        "Address": 82,
-        "Age": 83,
-        "Annotation": 84,
-        "Attachment": 85,
-        "CodeableConcept": 86,
-        "Coding": 87,
-        "ContactPoint": 88,
-        "Count": 89,
-        "Distance": 90,
-        "Duration": 91,
-        "HumanName": 92,
-        "Identifier": 93,
-        "Money": 94,
-        "Period": 95,
-        "Quantity": 96,
-        "Range": 97,
-        "Ratio": 98,
-        "Reference": 99,
-        "SampledData": 100,
-        "Signature": 101,
-        "Timing": 102,
-        "ContactDetail": 103,
-        "Contributor": 104,
-        "DataRequirement": 105,
-        "Expression": 106,
-        "ParameterDefinition": 107,
-        "RelatedArtifact": 108,
-        "TriggerDefinition": 109,
-        "UsageContext": 110,
-        "Dosage": 111,
-        "Meta": 112
+      "fields": {
+        "defaultValueBase64Binary": 63,
+        "defaultValueBoolean": 64,
+        "defaultValueCanonical": 65,
+        "defaultValueCode": 66,
+        "defaultValueDate": 67,
+        "defaultValueDateTime": 68,
+        "defaultValueDecimal": 69,
+        "defaultValueId": 70,
+        "defaultValueInstant": 71,
+        "defaultValueInteger": 72,
+        "defaultValueMarkdown": 73,
+        "defaultValueOid": 74,
+        "defaultValuePositiveInt": 75,
+        "defaultValueString": 76,
+        "defaultValueTime": 77,
+        "defaultValueUnsignedInt": 78,
+        "defaultValueUri": 79,
+        "defaultValueUrl": 80,
+        "defaultValueUuid": 81,
+        "defaultValueAddress": 82,
+        "defaultValueAge": 83,
+        "defaultValueAnnotation": 84,
+        "defaultValueAttachment": 85,
+        "defaultValueCodeableConcept": 86,
+        "defaultValueCoding": 87,
+        "defaultValueContactPoint": 88,
+        "defaultValueCount": 89,
+        "defaultValueDistance": 90,
+        "defaultValueDuration": 91,
+        "defaultValueHumanName": 92,
+        "defaultValueIdentifier": 93,
+        "defaultValueMoney": 94,
+        "defaultValuePeriod": 95,
+        "defaultValueQuantity": 96,
+        "defaultValueRange": 97,
+        "defaultValueRatio": 98,
+        "defaultValueReference": 99,
+        "defaultValueSampledData": 100,
+        "defaultValueSignature": 101,
+        "defaultValueTiming": 102,
+        "defaultValueContactDetail": 103,
+        "defaultValueContributor": 104,
+        "defaultValueDataRequirement": 105,
+        "defaultValueExpression": 106,
+        "defaultValueParameterDefinition": 107,
+        "defaultValueRelatedArtifact": 108,
+        "defaultValueTriggerDefinition": 109,
+        "defaultValueUsageContext": 110,
+        "defaultValueDosage": 111,
+        "defaultValueMeta": 112
       }
     },
     {
@@ -43768,7 +43768,7 @@
         "valueBoolean": 138,
         "valueInteger": 139,
         "valueDecimal": 140,
-        "value[x]": 141
+        "value": 141
       }
     },
     {
@@ -43815,12 +43815,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "id": 136,
-        "string": 137,
-        "boolean": 138,
-        "integer": 139,
-        "decimal": 140
+      "fields": {
+        "valueId": 136,
+        "valueString": 137,
+        "valueBoolean": 138,
+        "valueInteger": 139,
+        "valueDecimal": 140
       }
     },
     null,
@@ -44706,7 +44706,7 @@
         "quantity": 25,
         "substanceCodeableConcept": 27,
         "substanceReference": 28,
-        "substance[x]": 29
+        "substance": 29
       }
     },
     {
@@ -44743,9 +44743,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 27,
-        "Reference": 28
+      "fields": {
+        "substanceCodeableConcept": 27,
+        "substanceReference": 28
       }
     }
   ],
@@ -44894,7 +44894,7 @@
         "molecularFormula": 29,
         "amountQuantity": 31,
         "amountString": 32,
-        "amount[x]": 33,
+        "amount": 33,
         "measurementType": 34
       }
     },
@@ -44957,9 +44957,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 31,
-        "string": 32
+      "fields": {
+        "amountQuantity": 31,
+        "amountString": 32
       }
     },
     {
@@ -44981,7 +44981,7 @@
         "valueDate": 43,
         "valueBoolean": 44,
         "valueAttachment": 45,
-        "value[x]": 46
+        "value": 46
       }
     },
     {
@@ -45033,12 +45033,12 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 41,
-        "Quantity": 42,
-        "date": 43,
-        "boolean": 44,
-        "Attachment": 45
+      "fields": {
+        "valueCodeableConcept": 41,
+        "valueQuantity": 42,
+        "valueDate": 43,
+        "valueBoolean": 44,
+        "valueAttachment": 45
       }
     },
     {
@@ -45383,13 +45383,13 @@
         "modifierExtension": 106,
         "substanceDefinitionReference": 108,
         "substanceDefinitionCodeableConcept": 109,
-        "substanceDefinition[x]": 110,
+        "substanceDefinition": 110,
         "type": 111,
         "isDefining": 112,
         "amountQuantity": 114,
         "amountRatio": 115,
         "amountString": 116,
-        "amount[x]": 117,
+        "amount": 117,
         "ratioHighLimitAmount": 118,
         "comparator": 119,
         "source": 120
@@ -45424,9 +45424,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 108,
-        "CodeableConcept": 109
+      "fields": {
+        "substanceDefinitionReference": 108,
+        "substanceDefinitionCodeableConcept": 109
       }
     },
     {
@@ -45458,10 +45458,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Quantity": 114,
-        "Ratio": 115,
-        "string": 116
+      "fields": {
+        "amountQuantity": 114,
+        "amountRatio": 115,
+        "amountString": 116
       }
     },
     {
@@ -45558,7 +45558,7 @@
         "occurrenceDateTime": 25,
         "occurrencePeriod": 26,
         "occurrenceTiming": 27,
-        "occurrence[x]": 28,
+        "occurrence": 28,
         "supplier": 29,
         "destination": 30,
         "receiver": 31
@@ -45645,7 +45645,7 @@
         "quantity": 19,
         "itemCodeableConcept": 21,
         "itemReference": 22,
-        "item[x]": 23
+        "item": 23
       }
     },
     {
@@ -45682,9 +45682,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 21,
-        "Reference": 22
+      "fields": {
+        "itemCodeableConcept": 21,
+        "itemReference": 22
       }
     },
     null,
@@ -45706,10 +45706,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 25,
-        "Period": 26,
-        "Timing": 27
+      "fields": {
+        "occurrenceDateTime": 25,
+        "occurrencePeriod": 26,
+        "occurrenceTiming": 27
       }
     },
     {
@@ -45747,13 +45747,13 @@
         "priority": 12,
         "itemCodeableConcept": 14,
         "itemReference": 15,
-        "item[x]": 16,
+        "item": 16,
         "quantity": 17,
         "parameter": 18,
         "occurrenceDateTime": 30,
         "occurrencePeriod": 31,
         "occurrenceTiming": 32,
-        "occurrence[x]": 33,
+        "occurrence": 33,
         "authoredOn": 34,
         "requester": 35,
         "supplier": 36,
@@ -45837,9 +45837,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 14,
-        "Reference": 15
+      "fields": {
+        "itemCodeableConcept": 14,
+        "itemReference": 15
       }
     },
     {
@@ -45860,7 +45860,7 @@
         "valueQuantity": 25,
         "valueRange": 26,
         "valueBoolean": 27,
-        "value[x]": 28
+        "value": 28
       }
     },
     {
@@ -45907,11 +45907,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 24,
-        "Quantity": 25,
-        "Range": 26,
-        "boolean": 27
+      "fields": {
+        "valueCodeableConcept": 24,
+        "valueQuantity": 25,
+        "valueRange": 26,
+        "valueBoolean": 27
       }
     },
     null,
@@ -45933,10 +45933,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 30,
-        "Period": 31,
-        "Timing": 32
+      "fields": {
+        "occurrenceDateTime": 30,
+        "occurrencePeriod": 31,
+        "occurrenceTiming": 32
       }
     },
     {
@@ -46303,7 +46303,7 @@
         "valueUsageContext": 97,
         "valueDosage": 98,
         "valueMeta": 99,
-        "value[x]": 100
+        "value": 100
       }
     },
     {
@@ -46580,57 +46580,57 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 50,
-        "boolean": 51,
-        "canonical": 52,
-        "code": 53,
-        "date": 54,
-        "dateTime": 55,
-        "decimal": 56,
-        "id": 57,
-        "instant": 58,
-        "integer": 59,
-        "markdown": 60,
-        "oid": 61,
-        "positiveInt": 62,
-        "string": 63,
-        "time": 64,
-        "unsignedInt": 65,
-        "uri": 66,
-        "url": 67,
-        "uuid": 68,
-        "Address": 69,
-        "Age": 70,
-        "Annotation": 71,
-        "Attachment": 72,
-        "CodeableConcept": 73,
-        "Coding": 74,
-        "ContactPoint": 75,
-        "Count": 76,
-        "Distance": 77,
-        "Duration": 78,
-        "HumanName": 79,
-        "Identifier": 80,
-        "Money": 81,
-        "Period": 82,
-        "Quantity": 83,
-        "Range": 84,
-        "Ratio": 85,
-        "Reference": 86,
-        "SampledData": 87,
-        "Signature": 88,
-        "Timing": 89,
-        "ContactDetail": 90,
-        "Contributor": 91,
-        "DataRequirement": 92,
-        "Expression": 93,
-        "ParameterDefinition": 94,
-        "RelatedArtifact": 95,
-        "TriggerDefinition": 96,
-        "UsageContext": 97,
-        "Dosage": 98,
-        "Meta": 99
+      "fields": {
+        "valueBase64Binary": 50,
+        "valueBoolean": 51,
+        "valueCanonical": 52,
+        "valueCode": 53,
+        "valueDate": 54,
+        "valueDateTime": 55,
+        "valueDecimal": 56,
+        "valueId": 57,
+        "valueInstant": 58,
+        "valueInteger": 59,
+        "valueMarkdown": 60,
+        "valueOid": 61,
+        "valuePositiveInt": 62,
+        "valueString": 63,
+        "valueTime": 64,
+        "valueUnsignedInt": 65,
+        "valueUri": 66,
+        "valueUrl": 67,
+        "valueUuid": 68,
+        "valueAddress": 69,
+        "valueAge": 70,
+        "valueAnnotation": 71,
+        "valueAttachment": 72,
+        "valueCodeableConcept": 73,
+        "valueCoding": 74,
+        "valueContactPoint": 75,
+        "valueCount": 76,
+        "valueDistance": 77,
+        "valueDuration": 78,
+        "valueHumanName": 79,
+        "valueIdentifier": 80,
+        "valueMoney": 81,
+        "valuePeriod": 82,
+        "valueQuantity": 83,
+        "valueRange": 84,
+        "valueRatio": 85,
+        "valueReference": 86,
+        "valueSampledData": 87,
+        "valueSignature": 88,
+        "valueTiming": 89,
+        "valueContactDetail": 90,
+        "valueContributor": 91,
+        "valueDataRequirement": 92,
+        "valueExpression": 93,
+        "valueParameterDefinition": 94,
+        "valueRelatedArtifact": 95,
+        "valueTriggerDefinition": 96,
+        "valueUsageContext": 97,
+        "valueDosage": 98,
+        "valueMeta": 99
       }
     },
     {
@@ -46692,7 +46692,7 @@
         "valueUsageContext": 154,
         "valueDosage": 155,
         "valueMeta": 156,
-        "value[x]": 157
+        "value": 157
       }
     },
     {
@@ -46969,57 +46969,57 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 107,
-        "boolean": 108,
-        "canonical": 109,
-        "code": 110,
-        "date": 111,
-        "dateTime": 112,
-        "decimal": 113,
-        "id": 114,
-        "instant": 115,
-        "integer": 116,
-        "markdown": 117,
-        "oid": 118,
-        "positiveInt": 119,
-        "string": 120,
-        "time": 121,
-        "unsignedInt": 122,
-        "uri": 123,
-        "url": 124,
-        "uuid": 125,
-        "Address": 126,
-        "Age": 127,
-        "Annotation": 128,
-        "Attachment": 129,
-        "CodeableConcept": 130,
-        "Coding": 131,
-        "ContactPoint": 132,
-        "Count": 133,
-        "Distance": 134,
-        "Duration": 135,
-        "HumanName": 136,
-        "Identifier": 137,
-        "Money": 138,
-        "Period": 139,
-        "Quantity": 140,
-        "Range": 141,
-        "Ratio": 142,
-        "Reference": 143,
-        "SampledData": 144,
-        "Signature": 145,
-        "Timing": 146,
-        "ContactDetail": 147,
-        "Contributor": 148,
-        "DataRequirement": 149,
-        "Expression": 150,
-        "ParameterDefinition": 151,
-        "RelatedArtifact": 152,
-        "TriggerDefinition": 153,
-        "UsageContext": 154,
-        "Dosage": 155,
-        "Meta": 156
+      "fields": {
+        "valueBase64Binary": 107,
+        "valueBoolean": 108,
+        "valueCanonical": 109,
+        "valueCode": 110,
+        "valueDate": 111,
+        "valueDateTime": 112,
+        "valueDecimal": 113,
+        "valueId": 114,
+        "valueInstant": 115,
+        "valueInteger": 116,
+        "valueMarkdown": 117,
+        "valueOid": 118,
+        "valuePositiveInt": 119,
+        "valueString": 120,
+        "valueTime": 121,
+        "valueUnsignedInt": 122,
+        "valueUri": 123,
+        "valueUrl": 124,
+        "valueUuid": 125,
+        "valueAddress": 126,
+        "valueAge": 127,
+        "valueAnnotation": 128,
+        "valueAttachment": 129,
+        "valueCodeableConcept": 130,
+        "valueCoding": 131,
+        "valueContactPoint": 132,
+        "valueCount": 133,
+        "valueDistance": 134,
+        "valueDuration": 135,
+        "valueHumanName": 136,
+        "valueIdentifier": 137,
+        "valueMoney": 138,
+        "valuePeriod": 139,
+        "valueQuantity": 140,
+        "valueRange": 141,
+        "valueRatio": 142,
+        "valueReference": 143,
+        "valueSampledData": 144,
+        "valueSignature": 145,
+        "valueTiming": 146,
+        "valueContactDetail": 147,
+        "valueContributor": 148,
+        "valueDataRequirement": 149,
+        "valueExpression": 150,
+        "valueParameterDefinition": 151,
+        "valueRelatedArtifact": 152,
+        "valueTriggerDefinition": 153,
+        "valueUsageContext": 154,
+        "valueDosage": 155,
+        "valueMeta": 156
       }
     }
   ],
@@ -49380,7 +49380,7 @@
         "valueUri": 77,
         "valueCode": 78,
         "valueDateTime": 79,
-        "value[x]": 80
+        "value": 80
       }
     },
     {
@@ -49442,14 +49442,14 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "string": 73,
-        "boolean": 74,
-        "integer": 75,
-        "decimal": 76,
-        "uri": 77,
-        "code": 78,
-        "dateTime": 79
+      "fields": {
+        "valueString": 73,
+        "valueBoolean": 74,
+        "valueInteger": 75,
+        "valueDecimal": 76,
+        "valueUri": 77,
+        "valueCode": 78,
+        "valueDateTime": 79
       }
     },
     {
@@ -50770,7 +50770,7 @@
         "extension": 2,
         "authorReference": 4,
         "authorString": 5,
-        "author[x]": 6,
+        "author": 6,
         "time": 7,
         "text": 8
       }
@@ -50799,9 +50799,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Reference": 4,
-        "string": 5
+      "fields": {
+        "authorReference": 4,
+        "authorString": 5
       }
     },
     {
@@ -51178,7 +51178,7 @@
         "profile": 4,
         "subjectCodeableConcept": 6,
         "subjectReference": 7,
-        "subject[x]": 8,
+        "subject": 8,
         "mustSupport": 9,
         "codeFilter": 10,
         "dateFilter": 17,
@@ -51220,9 +51220,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 6,
-        "Reference": 7
+      "fields": {
+        "subjectCodeableConcept": 6,
+        "subjectReference": 7
       }
     },
     {
@@ -51285,7 +51285,7 @@
         "valueDateTime": 23,
         "valuePeriod": 24,
         "valueDuration": 25,
-        "value[x]": 26
+        "value": 26
       }
     },
     {
@@ -51327,10 +51327,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "dateTime": 23,
-        "Period": 24,
-        "Duration": 25
+      "fields": {
+        "valueDateTime": 23,
+        "valuePeriod": 24,
+        "valueDuration": 25
       }
     },
     {
@@ -51435,7 +51435,7 @@
         "timing": 8,
         "asNeededBoolean": 10,
         "asNeededCodeableConcept": 11,
-        "asNeeded[x]": 12,
+        "asNeeded": 12,
         "site": 13,
         "route": 14,
         "method": 15,
@@ -51499,9 +51499,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "boolean": 10,
-        "CodeableConcept": 11
+      "fields": {
+        "asNeededBoolean": 10,
+        "asNeededCodeableConcept": 11
       }
     },
     {
@@ -51529,11 +51529,11 @@
         "type": 19,
         "doseRange": 21,
         "doseQuantity": 22,
-        "dose[x]": 23,
+        "dose": 23,
         "rateRatio": 25,
         "rateRange": 26,
         "rateQuantity": 27,
-        "rate[x]": 28
+        "rate": 28
       }
     },
     {
@@ -51565,9 +51565,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Range": 21,
-        "Quantity": 22
+      "fields": {
+        "doseRange": 21,
+        "doseQuantity": 22
       }
     },
     null,
@@ -51589,10 +51589,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Ratio": 25,
-        "Range": 26,
-        "Quantity": 27
+      "fields": {
+        "rateRatio": 25,
+        "rateRange": 26,
+        "rateQuantity": 27
       }
     },
     {
@@ -51737,7 +51737,7 @@
         "defaultValueTriggerDefinition": 92,
         "defaultValueUsageContext": 93,
         "defaultValueDosage": 94,
-        "defaultValue[x]": 95,
+        "defaultValue": 95,
         "meaningWhenMissing": 96,
         "orderMeaning": 97,
         "fixedBase64Binary": 99,
@@ -51791,7 +51791,7 @@
         "fixedTriggerDefinition": 147,
         "fixedUsageContext": 148,
         "fixedDosage": 149,
-        "fixed[x]": 150,
+        "fixed": 150,
         "patternBase64Binary": 152,
         "patternBoolean": 153,
         "patternCanonical": 154,
@@ -51843,7 +51843,7 @@
         "patternTriggerDefinition": 200,
         "patternUsageContext": 201,
         "patternDosage": 202,
-        "pattern[x]": 203,
+        "pattern": 203,
         "example": 204,
         "minValueDate": 262,
         "minValueDateTime": 263,
@@ -51854,7 +51854,7 @@
         "minValuePositiveInt": 268,
         "minValueUnsignedInt": 269,
         "minValueQuantity": 270,
-        "minValue[x]": 271,
+        "minValue": 271,
         "maxValueDate": 273,
         "maxValueDateTime": 274,
         "maxValueInstant": 275,
@@ -51864,7 +51864,7 @@
         "maxValuePositiveInt": 279,
         "maxValueUnsignedInt": 280,
         "maxValueQuantity": 281,
-        "maxValue[x]": 282,
+        "maxValue": 282,
         "maxLength": 283,
         "condition": 284,
         "constraint": 285,
@@ -52375,58 +52375,58 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 44,
-        "boolean": 45,
-        "canonical": 46,
-        "code": 47,
-        "date": 48,
-        "dateTime": 49,
-        "decimal": 50,
-        "id": 51,
-        "instant": 52,
-        "integer": 53,
-        "markdown": 54,
-        "oid": 55,
-        "positiveInt": 56,
-        "string": 57,
-        "time": 58,
-        "unsignedInt": 59,
-        "uri": 60,
-        "url": 61,
-        "uuid": 62,
-        "Address": 63,
-        "Age": 64,
-        "Annotation": 65,
-        "Attachment": 66,
-        "CodeableConcept": 67,
-        "CodeableReference": 68,
-        "Coding": 69,
-        "ContactPoint": 70,
-        "Count": 71,
-        "Distance": 72,
-        "Duration": 73,
-        "HumanName": 74,
-        "Identifier": 75,
-        "Money": 76,
-        "Period": 77,
-        "Quantity": 78,
-        "Range": 79,
-        "Ratio": 80,
-        "RatioRange": 81,
-        "Reference": 82,
-        "SampledData": 83,
-        "Signature": 84,
-        "Timing": 85,
-        "ContactDetail": 86,
-        "Contributor": 87,
-        "DataRequirement": 88,
-        "Expression": 89,
-        "ParameterDefinition": 90,
-        "RelatedArtifact": 91,
-        "TriggerDefinition": 92,
-        "UsageContext": 93,
-        "Dosage": 94
+      "fields": {
+        "defaultValueBase64Binary": 44,
+        "defaultValueBoolean": 45,
+        "defaultValueCanonical": 46,
+        "defaultValueCode": 47,
+        "defaultValueDate": 48,
+        "defaultValueDateTime": 49,
+        "defaultValueDecimal": 50,
+        "defaultValueId": 51,
+        "defaultValueInstant": 52,
+        "defaultValueInteger": 53,
+        "defaultValueMarkdown": 54,
+        "defaultValueOid": 55,
+        "defaultValuePositiveInt": 56,
+        "defaultValueString": 57,
+        "defaultValueTime": 58,
+        "defaultValueUnsignedInt": 59,
+        "defaultValueUri": 60,
+        "defaultValueUrl": 61,
+        "defaultValueUuid": 62,
+        "defaultValueAddress": 63,
+        "defaultValueAge": 64,
+        "defaultValueAnnotation": 65,
+        "defaultValueAttachment": 66,
+        "defaultValueCodeableConcept": 67,
+        "defaultValueCodeableReference": 68,
+        "defaultValueCoding": 69,
+        "defaultValueContactPoint": 70,
+        "defaultValueCount": 71,
+        "defaultValueDistance": 72,
+        "defaultValueDuration": 73,
+        "defaultValueHumanName": 74,
+        "defaultValueIdentifier": 75,
+        "defaultValueMoney": 76,
+        "defaultValuePeriod": 77,
+        "defaultValueQuantity": 78,
+        "defaultValueRange": 79,
+        "defaultValueRatio": 80,
+        "defaultValueRatioRange": 81,
+        "defaultValueReference": 82,
+        "defaultValueSampledData": 83,
+        "defaultValueSignature": 84,
+        "defaultValueTiming": 85,
+        "defaultValueContactDetail": 86,
+        "defaultValueContributor": 87,
+        "defaultValueDataRequirement": 88,
+        "defaultValueExpression": 89,
+        "defaultValueParameterDefinition": 90,
+        "defaultValueRelatedArtifact": 91,
+        "defaultValueTriggerDefinition": 92,
+        "defaultValueUsageContext": 93,
+        "defaultValueDosage": 94
       }
     },
     {
@@ -52698,58 +52698,58 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 99,
-        "boolean": 100,
-        "canonical": 101,
-        "code": 102,
-        "date": 103,
-        "dateTime": 104,
-        "decimal": 105,
-        "id": 106,
-        "instant": 107,
-        "integer": 108,
-        "markdown": 109,
-        "oid": 110,
-        "positiveInt": 111,
-        "string": 112,
-        "time": 113,
-        "unsignedInt": 114,
-        "uri": 115,
-        "url": 116,
-        "uuid": 117,
-        "Address": 118,
-        "Age": 119,
-        "Annotation": 120,
-        "Attachment": 121,
-        "CodeableConcept": 122,
-        "CodeableReference": 123,
-        "Coding": 124,
-        "ContactPoint": 125,
-        "Count": 126,
-        "Distance": 127,
-        "Duration": 128,
-        "HumanName": 129,
-        "Identifier": 130,
-        "Money": 131,
-        "Period": 132,
-        "Quantity": 133,
-        "Range": 134,
-        "Ratio": 135,
-        "RatioRange": 136,
-        "Reference": 137,
-        "SampledData": 138,
-        "Signature": 139,
-        "Timing": 140,
-        "ContactDetail": 141,
-        "Contributor": 142,
-        "DataRequirement": 143,
-        "Expression": 144,
-        "ParameterDefinition": 145,
-        "RelatedArtifact": 146,
-        "TriggerDefinition": 147,
-        "UsageContext": 148,
-        "Dosage": 149
+      "fields": {
+        "fixedBase64Binary": 99,
+        "fixedBoolean": 100,
+        "fixedCanonical": 101,
+        "fixedCode": 102,
+        "fixedDate": 103,
+        "fixedDateTime": 104,
+        "fixedDecimal": 105,
+        "fixedId": 106,
+        "fixedInstant": 107,
+        "fixedInteger": 108,
+        "fixedMarkdown": 109,
+        "fixedOid": 110,
+        "fixedPositiveInt": 111,
+        "fixedString": 112,
+        "fixedTime": 113,
+        "fixedUnsignedInt": 114,
+        "fixedUri": 115,
+        "fixedUrl": 116,
+        "fixedUuid": 117,
+        "fixedAddress": 118,
+        "fixedAge": 119,
+        "fixedAnnotation": 120,
+        "fixedAttachment": 121,
+        "fixedCodeableConcept": 122,
+        "fixedCodeableReference": 123,
+        "fixedCoding": 124,
+        "fixedContactPoint": 125,
+        "fixedCount": 126,
+        "fixedDistance": 127,
+        "fixedDuration": 128,
+        "fixedHumanName": 129,
+        "fixedIdentifier": 130,
+        "fixedMoney": 131,
+        "fixedPeriod": 132,
+        "fixedQuantity": 133,
+        "fixedRange": 134,
+        "fixedRatio": 135,
+        "fixedRatioRange": 136,
+        "fixedReference": 137,
+        "fixedSampledData": 138,
+        "fixedSignature": 139,
+        "fixedTiming": 140,
+        "fixedContactDetail": 141,
+        "fixedContributor": 142,
+        "fixedDataRequirement": 143,
+        "fixedExpression": 144,
+        "fixedParameterDefinition": 145,
+        "fixedRelatedArtifact": 146,
+        "fixedTriggerDefinition": 147,
+        "fixedUsageContext": 148,
+        "fixedDosage": 149
       }
     },
     null,
@@ -53011,58 +53011,58 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 152,
-        "boolean": 153,
-        "canonical": 154,
-        "code": 155,
-        "date": 156,
-        "dateTime": 157,
-        "decimal": 158,
-        "id": 159,
-        "instant": 160,
-        "integer": 161,
-        "markdown": 162,
-        "oid": 163,
-        "positiveInt": 164,
-        "string": 165,
-        "time": 166,
-        "unsignedInt": 167,
-        "uri": 168,
-        "url": 169,
-        "uuid": 170,
-        "Address": 171,
-        "Age": 172,
-        "Annotation": 173,
-        "Attachment": 174,
-        "CodeableConcept": 175,
-        "CodeableReference": 176,
-        "Coding": 177,
-        "ContactPoint": 178,
-        "Count": 179,
-        "Distance": 180,
-        "Duration": 181,
-        "HumanName": 182,
-        "Identifier": 183,
-        "Money": 184,
-        "Period": 185,
-        "Quantity": 186,
-        "Range": 187,
-        "Ratio": 188,
-        "RatioRange": 189,
-        "Reference": 190,
-        "SampledData": 191,
-        "Signature": 192,
-        "Timing": 193,
-        "ContactDetail": 194,
-        "Contributor": 195,
-        "DataRequirement": 196,
-        "Expression": 197,
-        "ParameterDefinition": 198,
-        "RelatedArtifact": 199,
-        "TriggerDefinition": 200,
-        "UsageContext": 201,
-        "Dosage": 202
+      "fields": {
+        "patternBase64Binary": 152,
+        "patternBoolean": 153,
+        "patternCanonical": 154,
+        "patternCode": 155,
+        "patternDate": 156,
+        "patternDateTime": 157,
+        "patternDecimal": 158,
+        "patternId": 159,
+        "patternInstant": 160,
+        "patternInteger": 161,
+        "patternMarkdown": 162,
+        "patternOid": 163,
+        "patternPositiveInt": 164,
+        "patternString": 165,
+        "patternTime": 166,
+        "patternUnsignedInt": 167,
+        "patternUri": 168,
+        "patternUrl": 169,
+        "patternUuid": 170,
+        "patternAddress": 171,
+        "patternAge": 172,
+        "patternAnnotation": 173,
+        "patternAttachment": 174,
+        "patternCodeableConcept": 175,
+        "patternCodeableReference": 176,
+        "patternCoding": 177,
+        "patternContactPoint": 178,
+        "patternCount": 179,
+        "patternDistance": 180,
+        "patternDuration": 181,
+        "patternHumanName": 182,
+        "patternIdentifier": 183,
+        "patternMoney": 184,
+        "patternPeriod": 185,
+        "patternQuantity": 186,
+        "patternRange": 187,
+        "patternRatio": 188,
+        "patternRatioRange": 189,
+        "patternReference": 190,
+        "patternSampledData": 191,
+        "patternSignature": 192,
+        "patternTiming": 193,
+        "patternContactDetail": 194,
+        "patternContributor": 195,
+        "patternDataRequirement": 196,
+        "patternExpression": 197,
+        "patternParameterDefinition": 198,
+        "patternRelatedArtifact": 199,
+        "patternTriggerDefinition": 200,
+        "patternUsageContext": 201,
+        "patternDosage": 202
       }
     },
     {
@@ -53124,7 +53124,7 @@
         "valueTriggerDefinition": 257,
         "valueUsageContext": 258,
         "valueDosage": 259,
-        "value[x]": 260
+        "value": 260
       }
     },
     {
@@ -53401,58 +53401,58 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 209,
-        "boolean": 210,
-        "canonical": 211,
-        "code": 212,
-        "date": 213,
-        "dateTime": 214,
-        "decimal": 215,
-        "id": 216,
-        "instant": 217,
-        "integer": 218,
-        "markdown": 219,
-        "oid": 220,
-        "positiveInt": 221,
-        "string": 222,
-        "time": 223,
-        "unsignedInt": 224,
-        "uri": 225,
-        "url": 226,
-        "uuid": 227,
-        "Address": 228,
-        "Age": 229,
-        "Annotation": 230,
-        "Attachment": 231,
-        "CodeableConcept": 232,
-        "CodeableReference": 233,
-        "Coding": 234,
-        "ContactPoint": 235,
-        "Count": 236,
-        "Distance": 237,
-        "Duration": 238,
-        "HumanName": 239,
-        "Identifier": 240,
-        "Money": 241,
-        "Period": 242,
-        "Quantity": 243,
-        "Range": 244,
-        "Ratio": 245,
-        "RatioRange": 246,
-        "Reference": 247,
-        "SampledData": 248,
-        "Signature": 249,
-        "Timing": 250,
-        "ContactDetail": 251,
-        "Contributor": 252,
-        "DataRequirement": 253,
-        "Expression": 254,
-        "ParameterDefinition": 255,
-        "RelatedArtifact": 256,
-        "TriggerDefinition": 257,
-        "UsageContext": 258,
-        "Dosage": 259
+      "fields": {
+        "valueBase64Binary": 209,
+        "valueBoolean": 210,
+        "valueCanonical": 211,
+        "valueCode": 212,
+        "valueDate": 213,
+        "valueDateTime": 214,
+        "valueDecimal": 215,
+        "valueId": 216,
+        "valueInstant": 217,
+        "valueInteger": 218,
+        "valueMarkdown": 219,
+        "valueOid": 220,
+        "valuePositiveInt": 221,
+        "valueString": 222,
+        "valueTime": 223,
+        "valueUnsignedInt": 224,
+        "valueUri": 225,
+        "valueUrl": 226,
+        "valueUuid": 227,
+        "valueAddress": 228,
+        "valueAge": 229,
+        "valueAnnotation": 230,
+        "valueAttachment": 231,
+        "valueCodeableConcept": 232,
+        "valueCodeableReference": 233,
+        "valueCoding": 234,
+        "valueContactPoint": 235,
+        "valueCount": 236,
+        "valueDistance": 237,
+        "valueDuration": 238,
+        "valueHumanName": 239,
+        "valueIdentifier": 240,
+        "valueMoney": 241,
+        "valuePeriod": 242,
+        "valueQuantity": 243,
+        "valueRange": 244,
+        "valueRatio": 245,
+        "valueRatioRange": 246,
+        "valueReference": 247,
+        "valueSampledData": 248,
+        "valueSignature": 249,
+        "valueTiming": 250,
+        "valueContactDetail": 251,
+        "valueContributor": 252,
+        "valueDataRequirement": 253,
+        "valueExpression": 254,
+        "valueParameterDefinition": 255,
+        "valueRelatedArtifact": 256,
+        "valueTriggerDefinition": 257,
+        "valueUsageContext": 258,
+        "valueDosage": 259
       }
     },
     null,
@@ -53504,16 +53504,16 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 262,
-        "dateTime": 263,
-        "instant": 264,
-        "time": 265,
-        "decimal": 266,
-        "integer": 267,
-        "positiveInt": 268,
-        "unsignedInt": 269,
-        "Quantity": 270
+      "fields": {
+        "minValueDate": 262,
+        "minValueDateTime": 263,
+        "minValueInstant": 264,
+        "minValueTime": 265,
+        "minValueDecimal": 266,
+        "minValueInteger": 267,
+        "minValuePositiveInt": 268,
+        "minValueUnsignedInt": 269,
+        "minValueQuantity": 270
       }
     },
     null,
@@ -53565,16 +53565,16 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "date": 273,
-        "dateTime": 274,
-        "instant": 275,
-        "time": 276,
-        "decimal": 277,
-        "integer": 278,
-        "positiveInt": 279,
-        "unsignedInt": 280,
-        "Quantity": 281
+      "fields": {
+        "maxValueDate": 273,
+        "maxValueDateTime": 274,
+        "maxValueInstant": 275,
+        "maxValueTime": 276,
+        "maxValueDecimal": 277,
+        "maxValueInteger": 278,
+        "maxValuePositiveInt": 279,
+        "maxValueUnsignedInt": 280,
+        "maxValueQuantity": 281
       }
     },
     {
@@ -53858,7 +53858,7 @@
         "valueTriggerDefinition": 53,
         "valueUsageContext": 54,
         "valueDosage": 55,
-        "value[x]": 56
+        "value": 56
       }
     },
     {
@@ -54135,58 +54135,58 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "base64Binary": 5,
-        "boolean": 6,
-        "canonical": 7,
-        "code": 8,
-        "date": 9,
-        "dateTime": 10,
-        "decimal": 11,
-        "id": 12,
-        "instant": 13,
-        "integer": 14,
-        "markdown": 15,
-        "oid": 16,
-        "positiveInt": 17,
-        "string": 18,
-        "time": 19,
-        "unsignedInt": 20,
-        "uri": 21,
-        "url": 22,
-        "uuid": 23,
-        "Address": 24,
-        "Age": 25,
-        "Annotation": 26,
-        "Attachment": 27,
-        "CodeableConcept": 28,
-        "CodeableReference": 29,
-        "Coding": 30,
-        "ContactPoint": 31,
-        "Count": 32,
-        "Distance": 33,
-        "Duration": 34,
-        "HumanName": 35,
-        "Identifier": 36,
-        "Money": 37,
-        "Period": 38,
-        "Quantity": 39,
-        "Range": 40,
-        "Ratio": 41,
-        "RatioRange": 42,
-        "Reference": 43,
-        "SampledData": 44,
-        "Signature": 45,
-        "Timing": 46,
-        "ContactDetail": 47,
-        "Contributor": 48,
-        "DataRequirement": 49,
-        "Expression": 50,
-        "ParameterDefinition": 51,
-        "RelatedArtifact": 52,
-        "TriggerDefinition": 53,
-        "UsageContext": 54,
-        "Dosage": 55
+      "fields": {
+        "valueBase64Binary": 5,
+        "valueBoolean": 6,
+        "valueCanonical": 7,
+        "valueCode": 8,
+        "valueDate": 9,
+        "valueDateTime": 10,
+        "valueDecimal": 11,
+        "valueId": 12,
+        "valueInstant": 13,
+        "valueInteger": 14,
+        "valueMarkdown": 15,
+        "valueOid": 16,
+        "valuePositiveInt": 17,
+        "valueString": 18,
+        "valueTime": 19,
+        "valueUnsignedInt": 20,
+        "valueUri": 21,
+        "valueUrl": 22,
+        "valueUuid": 23,
+        "valueAddress": 24,
+        "valueAge": 25,
+        "valueAnnotation": 26,
+        "valueAttachment": 27,
+        "valueCodeableConcept": 28,
+        "valueCodeableReference": 29,
+        "valueCoding": 30,
+        "valueContactPoint": 31,
+        "valueCount": 32,
+        "valueDistance": 33,
+        "valueDuration": 34,
+        "valueHumanName": 35,
+        "valueIdentifier": 36,
+        "valueMoney": 37,
+        "valuePeriod": 38,
+        "valueQuantity": 39,
+        "valueRange": 40,
+        "valueRatio": 41,
+        "valueRatioRange": 42,
+        "valueReference": 43,
+        "valueSampledData": 44,
+        "valueSignature": 45,
+        "valueTiming": 46,
+        "valueContactDetail": 47,
+        "valueContributor": 48,
+        "valueDataRequirement": 49,
+        "valueExpression": 50,
+        "valueParameterDefinition": 51,
+        "valueRelatedArtifact": 52,
+        "valueTriggerDefinition": 53,
+        "valueUsageContext": 54,
+        "valueDosage": 55
       }
     }
   ],
@@ -54588,7 +54588,7 @@
         "modifierExtension": 3,
         "ageRange": 5,
         "ageCodeableConcept": 6,
-        "age[x]": 7,
+        "age": 7,
         "gender": 8,
         "race": 9,
         "physiologicalCondition": 10
@@ -54623,9 +54623,9 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Range": 5,
-        "CodeableConcept": 6
+      "fields": {
+        "ageRange": 5,
+        "ageCodeableConcept": 6
       }
     },
     {
@@ -55211,7 +55211,7 @@
         "boundsDuration": 9,
         "boundsRange": 10,
         "boundsPeriod": 11,
-        "bounds[x]": 12,
+        "bounds": 12,
         "count": 13,
         "countMax": 14,
         "duration": 15,
@@ -55257,10 +55257,10 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Duration": 9,
-        "Range": 10,
-        "Period": 11
+      "fields": {
+        "boundsDuration": 9,
+        "boundsRange": 10,
+        "boundsPeriod": 11
       }
     },
     {
@@ -55352,7 +55352,7 @@
         "timingReference": 7,
         "timingDate": 8,
         "timingDateTime": 9,
-        "timing[x]": 10,
+        "timing": 10,
         "data": 11,
         "condition": 12
       }
@@ -55401,11 +55401,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "Timing": 6,
-        "Reference": 7,
-        "date": 8,
-        "dateTime": 9
+      "fields": {
+        "timingTiming": 6,
+        "timingReference": 7,
+        "timingDate": 8,
+        "timingDateTime": 9
       }
     },
     {
@@ -55431,7 +55431,7 @@
         "valueQuantity": 6,
         "valueRange": 7,
         "valueReference": 8,
-        "value[x]": 9
+        "value": 9
       }
     },
     {
@@ -55473,11 +55473,11 @@
     {
       "_type_": "typechoice",
       "cardinality": "single",
-      "types": {
-        "CodeableConcept": 5,
-        "Quantity": 6,
-        "Range": 7,
-        "Reference": 8
+      "fields": {
+        "valueCodeableConcept": 5,
+        "valueQuantity": 6,
+        "valueRange": 7,
+        "valueReference": 8
       }
     }
   ]
