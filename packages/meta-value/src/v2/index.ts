@@ -1,6 +1,5 @@
 import { MetaNode, MetaV2Compiled } from "@iguhealth/codegen";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import {
@@ -9,12 +8,14 @@ import {
   Location,
   TypeInfo,
 } from "../interface.js";
+import { descendLoc } from "../loc.js";
 import {
   FHIRPathPrimitive,
   RawPrimitive,
   isArray,
   isFPPrimitive,
   isObject,
+  isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
 import _r4Meta from "./generated/r4.json" with { type: "json" };
@@ -103,10 +104,6 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   }
 }
 
-export function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
-}
-
 class MetaValueV2Singular<T> implements IMetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
   private _meta: MetaNode;
@@ -152,6 +149,8 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     const info = getMeta(this._fhirVersion, this._base, this._meta, field);
     if (!info) return undefined;
 
+    console.log(info.meta);
+
     switch (true) {
       case isPrimitiveType(info.meta.type): {
         const value = (this._value as any)?.[field];
@@ -165,7 +164,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             [
               ...new Array(Math.max(value?.length ?? 0, element?.length ?? 0)),
             ].map((_z, i) => toFPPrimitive(value?.[i], element?.[i])),
-            [...this._location, field],
+            descendLoc(this, field),
           );
         } else {
           return new MetaValueV2Singular(
@@ -173,7 +172,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             toFPPrimitive(value, element),
-            [...this._location, field],
+            descendLoc(this, field),
           );
         }
       }
@@ -184,7 +183,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             (this._value as any)?.[field] ?? [],
-            [...this._location, field],
+            descendLoc(this, field),
           );
         } else {
           return new MetaValueV2Singular(
@@ -192,7 +191,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             (this._value as any)?.[field],
-            [...this._location, field],
+            descendLoc(this, field),
           );
         }
       }

@@ -3,6 +3,7 @@ import { expect, test } from "@jest/globals";
 import { Patient } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
+import { flatten } from "../utilities";
 import { metaValue } from "./index";
 
 test("Simple Type test", async () => {
@@ -24,3 +25,111 @@ test("Simple Type test", async () => {
   expect(value?.meta()?.type).toEqual("http://hl7.org/fhirpath/System.String");
   expect(value?.getValue()).toEqual("test");
 });
+
+test("Simple Type test", async () => {
+  const patient: Patient = {
+    id: "123",
+    resourceType: "Patient",
+    identifier: [{ system: "mrn", value: "123" }],
+    name: [{ given: ["bob"] }],
+    deceasedBoolean: true,
+  } as Patient;
+  const myValue = await metaValue({ fhirVersion: R4 }, patient);
+  expect(myValue?.descend("name")?.getValue()).toEqual([{ given: ["bob"] }]);
+  expect(myValue?.descend("name")?.meta()?.type).toEqual("HumanName");
+  expect(myValue?.descend("identifier")?.meta()?.type).toEqual("Identifier");
+  expect(myValue?.descend("id")?.meta()?.type).toEqual(
+    "http://hl7.org/fhirpath/System.String",
+  );
+  expect(myValue?.descend("deceased")?.getValue()).toEqual(true);
+  expect(myValue?.descend("deceased")?.meta()?.type).toEqual("boolean");
+
+  //   let output: (string | undefined)[] = [];
+  //   const v = await descend(myValue, "identifier");
+  //   if (v && v.isArray()) {
+  //     output = await Promise.all(
+  //       v.toArray().map(async (v) => (await descend(v, "system"))?.meta()?.type),
+  //     );
+  //   }
+  //   expect(output).toEqual(["uri"]);
+});
+
+// test("ConceptMap test", async () => {
+//   const cm: ConceptMap = {
+//     resourceType: "ConceptMap",
+//     status: "final",
+//     group: [
+//       {
+//         unmapped: {
+//           mode: "other-map",
+//           url: "test",
+//         },
+//         element: [
+//           {
+//             target: [
+//               {
+//                 equivalence: "equal",
+//                 dependsOn: [
+//                   { property: "system", value: "http://snomed.info/sct" },
+//                 ],
+//                 product: [
+//                   {
+//                     property: "code",
+//                     system: "http://snomed.info/sct",
+//                     value: "123",
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+//   } as ConceptMap;
+//   const myValue = flatten(
+//     await metaValue(meta(R4, "ConceptMap" as uri), cm),
+//   )[0];
+
+//   //ConceptMap.group.element.target.product.property
+//   let cur = flatten(await descend(myValue, "group"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "element"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "target"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "product"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "property"))[0];
+//   expect(cur?.meta()?.type).toEqual("uri");
+
+//   // Test unmapped
+//   cur = flatten(await descend(myValue, "group"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "unmapped"))[0];
+//   expect(cur?.meta()?.type).toEqual("BackboneElement");
+//   cur = flatten(await descend(cur, "url"))[0];
+//   expect(cur?.meta()?.type).toEqual("canonical");
+// });
+
+// test("Location test", async () => {
+//   const patient: Patient = {
+//     id: "123",
+//     resourceType: "Patient",
+//     identifier: [{ system: "mrn", value: "123" }],
+//     name: [{ given: ["bob", "frank"] }],
+//     deceasedBoolean: true,
+//   } as Patient;
+//   const myValue = flatten(
+//     await metaValue(meta(R4, "Patient" as uri), patient),
+//   )[0];
+//   let cur = flatten(await descend(myValue, "name"));
+//   cur = flatten(await descend(cur[0], "given"));
+//   expect(cur.map((v) => v.location())).toEqual([
+//     ["name", 0, "given", 0],
+//     ["name", 0, "given", 1],
+//   ]);
+
+//   cur = flatten(await descend(myValue, "identifier"));
+//   cur = flatten(await descend(cur[0], "system"));
+//   expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
+// });
