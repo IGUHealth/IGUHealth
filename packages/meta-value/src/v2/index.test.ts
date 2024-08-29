@@ -1,6 +1,10 @@
 import { expect, test } from "@jest/globals";
 
-import { ConceptMap, Patient } from "@iguhealth/fhir-types/r4/types";
+import {
+  ConceptMap,
+  Patient,
+  Practitioner,
+} from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { flatten } from "../utilities";
@@ -107,25 +111,106 @@ test("ConceptMap test", async () => {
   expect(cur?.meta()?.type).toEqual("canonical");
 });
 
-// test("Location test", async () => {
-//   const patient: Patient = {
-//     id: "123",
-//     resourceType: "Patient",
-//     identifier: [{ system: "mrn", value: "123" }],
-//     name: [{ given: ["bob", "frank"] }],
-//     deceasedBoolean: true,
-//   } as Patient;
-//   const myValue = flatten(
-//     await metaValue(meta(R4, "Patient" as uri), patient),
-//   )[0];
-//   let cur = flatten(await descend(myValue, "name"));
-//   cur = flatten(await descend(cur[0], "given"));
-//   expect(cur.map((v) => v.location())).toEqual([
-//     ["name", 0, "given", 0],
-//     ["name", 0, "given", 1],
-//   ]);
+test("Location test", async () => {
+  const patient: Patient = {
+    id: "123",
+    resourceType: "Patient",
+    identifier: [{ system: "mrn", value: "123" }],
+    name: [{ given: ["bob", "frank"] }],
+    deceasedBoolean: true,
+  } as Patient;
 
-//   cur = flatten(await descend(myValue, "identifier"));
-//   cur = flatten(await descend(cur[0], "system"));
-//   expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
-// });
+  const myValue = await metaValue({ fhirVersion: R4 }, patient);
+  let cur = flatten(await myValue?.descend("name"));
+  cur = flatten(cur[0]?.descend("given"));
+  expect(cur.map((v) => v.location())).toEqual([
+    ["name", 0, "given", 0],
+    ["name", 0, "given", 1],
+  ]);
+
+  cur = flatten(myValue?.descend("identifier"));
+  cur = flatten(cur[0]?.descend("system"));
+  expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
+});
+
+test("typechoice", async () => {
+  const practitioner: Practitioner = {
+    extension: [{ url: "test", valueReference: { reference: "urn:oid:2" } }],
+    resourceType: "Practitioner",
+    name: [{ given: ["Bob"] }],
+  } as Practitioner;
+  const myValue = await metaValue({ fhirVersion: R4 }, practitioner);
+
+  let cur = flatten(myValue?.descend("extension"));
+  cur = flatten(cur[0].descend("value"));
+
+  expect(cur[0].meta()?.type).toEqual("Reference");
+
+  cur = flatten(myValue?.descend("extension"));
+  cur = flatten(cur[0].descend("valueReference"));
+  expect(cur[0].meta()?.type).toEqual("Reference");
+});
+
+function getValue(loc: (string | number)[] = [], obj: any) {
+  let cur: any = obj;
+  for (const l of loc) {
+    cur = cur[l];
+  }
+  return cur;
+}
+
+test("Location test primitive extensions", async () => {
+  const practitioner = await metaValue(
+    { fhirVersion: R4 },
+    {
+      id: "123",
+      resourceType: "Patient",
+      identifier: [{ system: "mrn", value: "123" }],
+      deceasedBoolean: true,
+      name: [
+        {
+          given: ["Bob"],
+          _given: [
+            { extension: [{ url: "https://given.com", valueString: "given" }] },
+          ],
+        },
+      ],
+      _deceasedBoolean: {
+        extension: [{ url: "https://test.com", valueString: "boolean" }],
+      },
+    },
+  );
+
+  let cur = flatten(practitioner?.descend("deceased"));
+  cur = flatten(cur[0].descend("extension"));
+  cur = flatten(cur[0].descend("value"));
+  expect(cur[0].location()).toEqual([
+    "_deceasedBoolean",
+    "extension",
+    0,
+    "valueString",
+  ]);
+  expect(cur[0].getValue()).toEqual("boolean");
+  expect(getValue(cur[0].location(), practitioner?.getValue())).toEqual(
+    "boolean",
+  );
+
+  cur = flatten(practitioner?.descend("name"));
+  cur = flatten(cur[0].descend("given"));
+  cur = flatten(cur[0].descend("extension"));
+  cur = flatten(cur[0].descend("value"));
+
+  expect(cur[0].location()).toEqual([
+    "name",
+    0,
+    "_given",
+    0,
+    "extension",
+    0,
+    "valueString",
+  ]);
+  expect(cur[0].getValue()).toEqual("given");
+  expect(getValue(cur[0].location(), practitioner?.getValue())).toEqual(
+    "given",
+  );
+});
