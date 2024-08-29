@@ -1,6 +1,5 @@
-import { MetaNode, MetaV2Compiled } from "@iguhealth/codegen";
+import { MetaNode, MetaV2Compiled, TypeNode } from "@iguhealth/codegen";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import {
@@ -9,12 +8,14 @@ import {
   Location,
   TypeInfo,
 } from "../interface.js";
+import { descendLoc } from "../loc.js";
 import {
   FHIRPathPrimitive,
   RawPrimitive,
   isArray,
   isFPPrimitive,
   isObject,
+  isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
 import _r4Meta from "./generated/r4.json" with { type: "json" };
@@ -37,7 +38,7 @@ function getGlobalMeta(fhirVersion: FHIR_VERSION): MetaV2Compiled {
 function getMeta(
   fhirVersion: FHIR_VERSION,
   base: string,
-  meta: MetaNode,
+  meta: TypeNode,
   field: string,
 ): { base: string; meta: MetaNode } | undefined {
   const globalMeta = getGlobalMeta(fhirVersion);
@@ -46,9 +47,12 @@ function getMeta(
       return { base, meta: globalMeta[base][meta.properties?.[field]] };
     }
     default: {
-      const index = globalMeta[meta.type][0]?.properties?.[field];
+      const index = (globalMeta[meta.type][0] as TypeNode | undefined)
+        ?.properties?.[field];
       if (!index)
-        throw new Error(`Could not find index for ${field} in ${meta.type}`);
+        throw new Error(
+          `Could not find index for '${field}' in '${meta.type}'`,
+        );
 
       return { base: meta.type, meta: globalMeta[meta.type][index] };
     }
@@ -57,7 +61,7 @@ function getMeta(
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
   private _value: Array<MetaValueV2Singular<T>>;
-  private _meta: MetaNode;
+  private _meta: TypeNode;
   private _fhirVersion: FHIR_VERSION;
   private _base: string;
 
@@ -66,7 +70,7 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   constructor(
     fhirVersion: FHIR_VERSION,
     base: string,
-    meta: MetaNode,
+    meta: TypeNode,
     value: Array<T>,
     location: Location,
   ) {
@@ -103,13 +107,9 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   }
 }
 
-export function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
-}
-
 class MetaValueV2Singular<T> implements IMetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
-  private _meta: MetaNode;
+  private _meta: TypeNode;
   private _fhirVersion: FHIR_VERSION;
   private _base: string;
 
@@ -118,7 +118,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
   constructor(
     fhirVersion: FHIR_VERSION,
     base: string,
-    meta: MetaNode,
+    meta: TypeNode,
     value: T,
     location: Location,
   ) {
@@ -153,7 +153,15 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     if (!info) return undefined;
 
     switch (true) {
-      case isPrimitiveType(info.meta.type): {
+      case info.meta._type_ === "typechoice": {
+        for (const field of Object.keys(info.meta.fields)) {
+          if ((this._value as any)?.[field] !== undefined) {
+            return this.descend(field);
+          }
+        }
+        return undefined;
+      }
+      case isPrimitiveType((info.meta as TypeNode).type): {
         const value = (this._value as any)?.[field];
         const element = (this._value as any)?.[`_${field}`];
 
@@ -165,7 +173,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             [
               ...new Array(Math.max(value?.length ?? 0, element?.length ?? 0)),
             ].map((_z, i) => toFPPrimitive(value?.[i], element?.[i])),
-            [...this._location, field],
+            descendLoc(this, field),
           );
         } else {
           return new MetaValueV2Singular(
@@ -173,7 +181,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             toFPPrimitive(value, element),
-            [...this._location, field],
+            descendLoc(this, field),
           );
         }
       }
@@ -184,7 +192,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             (this._value as any)?.[field] ?? [],
-            [...this._location, field],
+            descendLoc(this, field),
           );
         } else {
           return new MetaValueV2Singular(
@@ -192,7 +200,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             info.base,
             info.meta,
             (this._value as any)?.[field],
-            [...this._location, field],
+            descendLoc(this, field),
           );
         }
       }
@@ -230,7 +238,7 @@ export function metaValue<T>(
         return new MetaValueV2Array(
           meta.fhirVersion,
           meta.type,
-          getGlobalMeta(meta.fhirVersion)[meta.type][0],
+          getGlobalMeta(meta.fhirVersion)[meta.type][0] as TypeNode,
           value as NonNullable<T>[],
           location ?? [],
         );
@@ -238,7 +246,7 @@ export function metaValue<T>(
         return new MetaValueV2Singular(
           meta.fhirVersion,
           meta.type,
-          getGlobalMeta(meta.fhirVersion)[meta.type][0],
+          getGlobalMeta(meta.fhirVersion)[meta.type][0] as TypeNode,
           value as NonNullable<T>,
           location ?? [],
         );

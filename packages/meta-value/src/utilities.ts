@@ -1,3 +1,4 @@
+import { primitiveTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import { Element } from "@iguhealth/fhir-types/r4/types";
 
 import { IMetaValue, IMetaValueArray } from "./interface.js";
@@ -7,6 +8,9 @@ export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   _type_: "primitive";
   value: T;
 };
+export function isPrimitiveType(type: string) {
+  return primitiveTypes.has(type);
+}
 
 export function isFPPrimitive(
   v: unknown,
