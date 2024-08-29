@@ -13,15 +13,13 @@ interface SingularNode {
   cardinality: "array" | "single";
   properties?: Record<string, number>;
 }
-
-type MetaNode = SingularNode;
+export type MetaNode = SingularNode;
+export interface MetaV2Compiled {
+  [key: string]: Array<MetaNode>;
+}
 
 function determineIsTypeChoice(element: ElementDefinition): boolean {
   return (element.type ?? []).length > 1;
-}
-
-interface MetaV2Compiled {
-  [key: string]: Array<MetaNode>;
 }
 
 type ElementPath = string & { _elementPathBrand: unknown };

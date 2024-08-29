@@ -20,6 +20,9 @@
   "author": "iguhealth",
   "license": "ISC",
   "devDependencies": {
+    "@babel/plugin-syntax-import-attributes": "^7.24.7",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-typescript": "^7.24.7",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/codegen": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
@@ -37,6 +40,8 @@
   "exports": {
     ".": "./lib/v1/index.js",
     "./v1": "./lib/v1/index.js",
+    "./v2": "./lib/v2/index.js",
+    "./utilities": "./lib/utilities.js",
     "./interface": "./lib/interface.js"
   }
 }

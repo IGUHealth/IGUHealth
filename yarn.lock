@@ -9103,6 +9103,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/meta-value@workspace:packages/meta-value"
   dependencies:
+    "@babel/plugin-syntax-import-attributes": "npm:^7.24.7"
+    "@babel/preset-env": "npm:^7.25.4"
+    "@babel/preset-typescript": "npm:^7.24.7"
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
