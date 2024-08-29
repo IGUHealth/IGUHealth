@@ -150,11 +150,14 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     const info = getMeta(this._fhirVersion, this._base, this._meta, field);
     if (!info) return undefined;
 
-    console.log(info.meta);
-
     switch (true) {
       case info.meta._type_ === "typechoice": {
-        throw new Error("Not implemented");
+        for (const field of Object.keys(info.meta.fields)) {
+          if ((this._value as any)?.[field] !== undefined) {
+            return this.descend(field);
+          }
+        }
+        return undefined;
       }
       case isPrimitiveType((info.meta as TypeNode).type): {
         const value = (this._value as any)?.[field];

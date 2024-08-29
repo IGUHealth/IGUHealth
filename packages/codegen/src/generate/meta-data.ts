@@ -10,7 +10,7 @@ import { traversalBottomUp } from "../sdTraversal.js";
 export interface TypeChoiceNode {
   _type_: "typechoice";
   cardinality: "array" | "single";
-  fields?: Record<string, number>;
+  fields: Record<string, number>;
 }
 export interface TypeNode {
   _type_: "meta";

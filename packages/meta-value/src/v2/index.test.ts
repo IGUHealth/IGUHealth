@@ -44,14 +44,11 @@ test("Simple Type test", async () => {
   expect(myValue?.descend("deceased")?.getValue()).toEqual(true);
   expect(myValue?.descend("deceased")?.meta()?.type).toEqual("boolean");
 
-  //   let output: (string | undefined)[] = [];
-  //   const v = await descend(myValue, "identifier");
-  //   if (v && v.isArray()) {
-  //     output = await Promise.all(
-  //       v.toArray().map(async (v) => (await descend(v, "system"))?.meta()?.type),
-  //     );
-  //   }
-  //   expect(output).toEqual(["uri"]);
+  expect(
+    flatten(myValue?.descend("identifier")).map(
+      (v) => v.descend("system")?.meta()?.type,
+    ),
+  ).toEqual(["uri"]);
 });
 
 // test("ConceptMap test", async () => {
