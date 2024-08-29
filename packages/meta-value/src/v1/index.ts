@@ -1,50 +1,25 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 
-import { IMetaValue, IMetaValueArray } from "../interface.js";
-import { TypeMeta, deriveNextMetaInformation, initializeMeta } from "./meta.js";
+import { IMetaValue, IMetaValueArray, Location } from "../interface.js";
+import {
+  FHIRPathPrimitive,
+  RawPrimitive,
+  isArray,
+  isFPPrimitive,
+  isObject,
+  isRawPrimitive,
+  toFPPrimitive,
+} from "../utilities.js";
+import { deriveNextMetaInformation, initializeMeta } from "./meta.js";
+import type { TypeMeta } from "./meta.js";
 
 type Element = r4.Element | r4b.Element;
 type uri = r4.uri | r4b.uri;
-type Location = (string | number)[];
 
 export { TypeMeta };
 type Meta = { location: Location; type: TypeMeta | undefined };
 export type PartialMeta = { location?: Location; type?: Partial<TypeMeta> };
-
-type RawPrimitive = string | number | boolean | undefined;
-type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
-  _type_: "primitive";
-  value: T;
-};
-
-function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
-  return isObject(v) && v._type_ === "primitive";
-}
-
-function toFPPrimitive<T extends RawPrimitive>(
-  value: T,
-  element?: Element,
-): FHIRPathPrimitive<T> {
-  return { ...element, value, _type_: "primitive" };
-}
-
-function isRawPrimitive(v: unknown): v is RawPrimitive {
-  return (
-    typeof v === "string" ||
-    typeof v === "number" ||
-    typeof v === "boolean" ||
-    v === undefined
-  );
-}
-
-function isObject(value: unknown): value is { [key: string]: unknown } {
-  return value !== null && typeof value === "object";
-}
-
-function isArray<T>(v: T | T[]): v is T[] {
-  return Array.isArray(v);
-}
 
 function getField<T extends { [key: string]: unknown }>(
   value: T,
@@ -152,25 +127,6 @@ export async function descend<T>(
   return undefined;
 }
 
-export function flatten<T>(
-  node: IMetaValue<T> | IMetaValue<T[]> | undefined,
-): IMetaValue<T>[] {
-  switch (true) {
-    case node === undefined: {
-      return [];
-    }
-    case node?.isArray(): {
-      return node.toArray();
-    }
-    case node && node.isArray() === false: {
-      return [node as IMetaValue<T>];
-    }
-    default: {
-      throw new Error("Should not reach here");
-    }
-  }
-}
-
 class MetaValueArrayImpl<T> implements IMetaValueArray<T> {
   private value: Array<MetaValueSingular<T>>;
   private _meta: Meta;
@@ -202,6 +158,9 @@ class MetaValueArrayImpl<T> implements IMetaValueArray<T> {
   }
   location(): Location {
     return this._meta.location;
+  }
+  descend(field: string): IMetaValue<unknown> | undefined {
+    throw new Error("Not implemented");
   }
 }
 
@@ -235,5 +194,8 @@ class MetaValueSingular<T> implements IMetaValue<T> {
   }
   location(): Location {
     return this._meta.location;
+  }
+  descend(field: string): IMetaValue<unknown> | undefined {
+    throw new Error("Not Implemented");
   }
 }

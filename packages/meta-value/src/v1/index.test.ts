@@ -18,7 +18,8 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/lib/versions";
 
-import { PartialMeta, descend, flatten, metaValue } from "./index";
+import { flatten } from "../utilities.js";
+import { PartialMeta, descend, metaValue } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
   fhirVersion: R4,

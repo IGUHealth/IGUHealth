@@ -14,6 +14,23 @@ type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
 type StructureDefinition = r4.StructureDefinition | r4b.StructureDefinition;
 type uri = r4.uri | r4b.uri;
 
+export interface TypeMeta extends TypeInfo {
+  sd: StructureDefinition;
+  elementIndex: number;
+  resolveTypeToCanonical: (
+    fhirVersion: FHIR_VERSION,
+    type: uri,
+  ) => Promise<r4.canonical | undefined>;
+  resolveCanonical: <
+    Version extends FHIR_VERSION,
+    Type extends AllResourceTypes,
+  >(
+    fhirVersion: Version,
+    type: Type,
+    url: r4.canonical,
+  ) => Promise<Resource<Version, Type> | undefined>;
+}
+
 async function getSD<T extends FHIR_VERSION>(
   fhirVersion: T,
   resolveCanonical: TypeMeta["resolveCanonical"] | undefined,
@@ -42,23 +59,6 @@ export async function initializeMeta(
   }
 
   return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
-}
-
-export interface TypeMeta extends TypeInfo {
-  sd: StructureDefinition;
-  elementIndex: number;
-  resolveTypeToCanonical: (
-    fhirVersion: FHIR_VERSION,
-    type: uri,
-  ) => Promise<r4.canonical | undefined>;
-  resolveCanonical: <
-    Version extends FHIR_VERSION,
-    Type extends AllResourceTypes,
-  >(
-    fhirVersion: Version,
-    type: Type,
-    url: r4.canonical,
-  ) => Promise<Resource<Version, Type> | undefined>;
 }
 
 function isResourceOrComplexType(type: string): boolean {
