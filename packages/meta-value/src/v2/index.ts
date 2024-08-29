@@ -50,7 +50,9 @@ function getMeta(
       const index = (globalMeta[meta.type][0] as TypeNode | undefined)
         ?.properties?.[field];
       if (!index)
-        throw new Error(`Could not find index for ${field} in ${meta.type}`);
+        throw new Error(
+          `Could not find index for '${field}' in '${meta.type}'`,
+        );
 
       return { base: meta.type, meta: globalMeta[meta.type][index] };
     }

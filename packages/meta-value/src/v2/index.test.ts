@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { Patient } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { ConceptMap, Patient } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { flatten } from "../utilities";
@@ -51,62 +51,61 @@ test("Simple Type test", async () => {
   ).toEqual(["uri"]);
 });
 
-// test("ConceptMap test", async () => {
-//   const cm: ConceptMap = {
-//     resourceType: "ConceptMap",
-//     status: "final",
-//     group: [
-//       {
-//         unmapped: {
-//           mode: "other-map",
-//           url: "test",
-//         },
-//         element: [
-//           {
-//             target: [
-//               {
-//                 equivalence: "equal",
-//                 dependsOn: [
-//                   { property: "system", value: "http://snomed.info/sct" },
-//                 ],
-//                 product: [
-//                   {
-//                     property: "code",
-//                     system: "http://snomed.info/sct",
-//                     value: "123",
-//                   },
-//                 ],
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ],
-//   } as ConceptMap;
-//   const myValue = flatten(
-//     await metaValue(meta(R4, "ConceptMap" as uri), cm),
-//   )[0];
+test("ConceptMap test", async () => {
+  const cm: ConceptMap = {
+    resourceType: "ConceptMap",
+    status: "final",
+    group: [
+      {
+        unmapped: {
+          mode: "other-map",
+          url: "test",
+        },
+        element: [
+          {
+            target: [
+              {
+                equivalence: "equal",
+                dependsOn: [
+                  { property: "system", value: "http://snomed.info/sct" },
+                ],
+                product: [
+                  {
+                    property: "code",
+                    system: "http://snomed.info/sct",
+                    value: "123",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  } as ConceptMap;
 
-//   //ConceptMap.group.element.target.product.property
-//   let cur = flatten(await descend(myValue, "group"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "element"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "target"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "product"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "property"))[0];
-//   expect(cur?.meta()?.type).toEqual("uri");
+  const myValue = await metaValue({ fhirVersion: R4 }, cm);
 
-//   // Test unmapped
-//   cur = flatten(await descend(myValue, "group"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "unmapped"))[0];
-//   expect(cur?.meta()?.type).toEqual("BackboneElement");
-//   cur = flatten(await descend(cur, "url"))[0];
-//   expect(cur?.meta()?.type).toEqual("canonical");
-// });
+  //ConceptMap.group.element.target.product.property
+  let cur = flatten(myValue?.descend("group"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("element"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("target"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("product"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("property"))[0];
+  expect(cur?.meta()?.type).toEqual("uri");
+
+  // Test unmapped
+  cur = flatten(myValue?.descend("group"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("unmapped"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(cur.descend("url"))[0];
+  expect(cur?.meta()?.type).toEqual("canonical");
+});
 
 // test("Location test", async () => {
 //   const patient: Patient = {
