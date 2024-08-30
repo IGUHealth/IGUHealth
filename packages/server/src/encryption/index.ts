@@ -51,7 +51,7 @@ export async function encryptValue<T extends object>(
       const encryptExtensionValue: [Extension, string][] = jsonpointer
         .get(valueToEncrypt, toJSONPath(encryptExt))
         .map((ext: Extension, i: number) => [
-          ext as Extension,
+          ext,
           toJSONPath([...encryptExt, i, "valueString"]),
         ])
         .filter(([ext]: [Extension, string]) => ext.url === ENCRYPTION_URL);
