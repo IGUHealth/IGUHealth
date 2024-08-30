@@ -10,7 +10,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { flatten } from "../utilities";
 import { metaValue } from "./index";
 
-test("Simple Type test", async () => {
+test("Simple Type test1", async () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -30,7 +30,7 @@ test("Simple Type test", async () => {
   expect(value?.getValue()).toEqual("test");
 });
 
-test("Simple Type test", async () => {
+test("Simple Type test2", async () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -147,7 +147,7 @@ test("typechoice", async () => {
   expect(cur[0].meta()?.type).toEqual("Reference");
 
   cur = flatten(myValue?.descend("extension"));
-  cur = flatten(cur[0].descend("valueReference"));
+  cur = flatten(cur[0].descend("value"));
   expect(cur[0].meta()?.type).toEqual("Reference");
 });
 

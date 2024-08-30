@@ -33,6 +33,7 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/jwt": "workspace:^",
     "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-essentials": "^8.2.9",

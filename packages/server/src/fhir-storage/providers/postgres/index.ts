@@ -609,11 +609,7 @@ async function indexResource<
         searchParameter.expression,
         resource,
         {
-          meta: {
-            fhirVersion,
-            resolveCanonical: ctx.resolveCanonical,
-            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-          },
+          fhirVersion
         },
       );
 

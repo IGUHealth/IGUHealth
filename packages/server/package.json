@@ -70,6 +70,7 @@
     "ioredis": "5.4.1",
     "jose": "^5.7.0",
     "json-schema-to-typescript": "^15.0.1",
+    "jsonpointer": "^5.0.1",
     "jwks-rsa": "^3.1.0",
     "kafkajs": "^2.2.4",
     "koa": "^2.15.3",

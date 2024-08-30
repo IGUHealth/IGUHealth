@@ -62,12 +62,8 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
     parameter.searchParameter.expression,
     resource,
     {
-      meta: {
-        fhirVersion,
-        type: resource.resourceType as uri,
-        resolveCanonical: ctx.resolveCanonical,
-        resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-      },
+      fhirVersion,
+      type: resource.resourceType as uri,
     },
   );
   const searchType = parameter.searchParameter.type as SEARCH_TYPE;

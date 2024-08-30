@@ -144,6 +144,9 @@ class MetaValueArrayImpl<T> implements IMetaValueArray<T> {
     });
     this._meta = meta;
   }
+  keys(): (string | number)[] {
+    throw new Error("Method not allowed on arrays");
+  }
   getValue(): Array<T> {
     return this.value.map((v) => v.getValue());
   }
@@ -178,6 +181,10 @@ class MetaValueSingular<T> implements IMetaValue<T> {
     }
 
     this._meta = meta;
+  }
+  keys() {
+    if (isObject(this._value)) return Object.keys(this._value);
+    return [];
   }
   get internalValue() {
     return this._value;

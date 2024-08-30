@@ -52,12 +52,8 @@ export async function buildTransactionTopologicalGraph<
         "$this.descendants().ofType(Reference)",
         entry.resource,
         {
-          meta: {
-            fhirVersion,
-            type: entry.resource.resourceType as uri,
-            resolveCanonical: ctx.resolveCanonical,
-            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-          },
+          fhirVersion,
+          type: entry.resource.resourceType as uri,
         },
       );
 

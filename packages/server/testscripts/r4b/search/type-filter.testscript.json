@@ -7,7 +7,11 @@
     {
       "id": "q-response",
       "meta": {
-        "tag": [{ "code": "type-test" }]
+        "tag": [
+          {
+            "code": "type-test"
+          }
+        ]
       },
       "url": "https://iguhealth.com/PREPARE",
       "title": "TEST QUESTIONNAIRE",
@@ -18,7 +22,11 @@
     {
       "id": "qr-response",
       "meta": {
-        "tag": [{ "code": "type-test" }]
+        "tag": [
+          {
+            "code": "type-test"
+          }
+        ]
       },
       "status": "in-progress",
       "resourceType": "QuestionnaireResponse",
@@ -39,7 +47,6 @@
       }
     }
   ],
-
   "test": [
     {
       "id": "type-filtering",
@@ -78,7 +85,7 @@
         },
         {
           "assert": {
-            "expression": "Bundle.entry.resource.resourceType",
+            "expression": "Bundle.entry.resource.type().type",
             "operator": "equals",
             "value": "QuestionnaireResponse"
           }
@@ -94,7 +101,7 @@
         },
         {
           "assert": {
-            "expression": "Bundle.entry.resource.resourceType",
+            "expression": "Bundle.entry.resource.type().type",
             "operator": "equals",
             "value": "Questionnaire"
           }

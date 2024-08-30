@@ -16,7 +16,11 @@
           },
           "resource": {
             "meta": {
-              "tag": [{ "code": "batch-test" }]
+              "tag": [
+                {
+                  "code": "batch-test"
+                }
+              ]
             },
             "resourceType": "Patient"
           }
@@ -28,7 +32,11 @@
           },
           "resource": {
             "meta": {
-              "tag": [{ "code": "batch-test" }]
+              "tag": [
+                {
+                  "code": "batch-test"
+                }
+              ]
             },
             "resourceType": "Practitioner"
           }
@@ -68,14 +76,14 @@
         },
         {
           "assert": {
-            "expression": "Bundle.entry[0].resource.resourceType",
+            "expression": "Bundle.entry[0].resource.type().type",
             "operator": "equals",
             "value": "Patient"
           }
         },
         {
           "assert": {
-            "expression": "Bundle.entry[1].resource.resourceType",
+            "expression": "Bundle.entry[1].resource.type().type",
             "operator": "equals",
             "value": "Practitioner"
           }
