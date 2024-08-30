@@ -715,6 +715,8 @@ test("descendants", async () => {
       },
       metaOptions("Patient"),
     ),
+    // Shown twice because primitives have .value property
+    // Possbily revisit if descent shouldn't default to descend into primitives .value.
   ).toEqual([
     {
       system: "mrn",
@@ -727,8 +729,43 @@ test("descendants", async () => {
     false,
     "mrn",
     "123",
-    "bob",
     "jameson",
+    "bob",
+    false,
+    "mrn",
+    "123",
+    "jameson",
+    "bob",
+  ]);
+
+  expect(
+    (
+      await evaluateWithMeta(
+        "Patient.descendants()",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedBoolean: false,
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
+    ).map((v) => v.meta()?.type),
+    // Shown twice because primitives have .value property
+    // Possbily revisit if descent shouldn't default to descend into primitives .value.
+  ).toEqual([
+    "Identifier",
+    "HumanName",
+    "boolean",
+    "uri",
+    "string",
+    "string",
+    "string",
+    "http://hl7.org/fhirpath/System.Boolean",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
   ]);
 
   expect(
@@ -759,7 +796,7 @@ test("descendants", async () => {
       },
       metaOptions("Patient"),
     ),
-  ).toEqual(["bob", "jameson", "123"]);
+  ).toEqual(["123", "jameson", "bob"]);
 });
 
 test("descendants with type filter", async () => {
