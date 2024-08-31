@@ -122,7 +122,7 @@ jobs:
         run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b
 
       - name: Jest tests
-        run: yarn workspaces foreach -A run test
+        run: yarn test
         timeout-minutes: 10
 
       - name: Upload coverage to Codecov

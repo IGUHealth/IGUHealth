@@ -48,5 +48,5 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - run: yarn workspaces foreach -A -pt --topological-dev run publish
+      - run: yarn publish
         timeout-minutes: 10

@@ -2,7 +2,7 @@
 
 corepack enable
 yarn install
-yarn workspaces foreach -A -pt --topological-dev run build
+yarn build
 
 # Setup default .env for server.
 if [ ! -f ./packages/server/.env ]; then
