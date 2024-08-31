@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch",
-    "@types/node": "^22.5.0",
+    "@types/node": "^22.5.1",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
     "eslint": "^8.57.0",

@@ -8,7 +8,7 @@
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
-    "@types/react": "^18.3.4",
+    "@types/react": "^18.3.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -24,12 +24,12 @@
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.2",
-    "postcss": "^8.4.41",
+    "postcss": "^8.4.42",
     "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.0",
-    "rollup": "^4.21.0",
+    "rollup": "^4.21.2",
     "tailwindcss": "^3.4.10",
-    "tslib": "^2.6.3",
+    "tslib": "^2.7.0",
     "typescript": "5.5.4"
   }
 }
