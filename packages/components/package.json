@@ -68,7 +68,7 @@
   "dependencies": {
     "@codemirror/lang-markdown": "^6.2.5",
     "@codemirror/merge": "^6.6.2",
-    "@headlessui/react": "^2.1.2",
+    "@headlessui/react": "^2.1.3",
     "@heroicons/react": "^2.1.5",
     "@iguhealth/client": "workspace:^",
     "@iguhealth/fhir-patch-building": "workspace:^",

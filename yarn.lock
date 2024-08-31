@@ -8635,9 +8635,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "@headlessui/react@npm:2.1.2"
+"@headlessui/react@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@headlessui/react@npm:2.1.3"
   dependencies:
     "@floating-ui/react": "npm:^0.26.16"
     "@react-aria/focus": "npm:^3.17.1"
@@ -8646,7 +8646,7 @@ __metadata:
   peerDependencies:
     react: ^18
     react-dom: ^18
-  checksum: 10/b3f4f370dc16c1164022ee66b0acf0ae66f6a5ae00cfcf4616559d717765f7e41fe2b3a3f48c1fe5b7a262d4985b6182d766e4f52eec2685d9696d9f38e5642d
+  checksum: 10/8cb723ef690fd1fb42c3ec8872071881c6c856d7ca31c75f53bde32f4a314a3dd8186defca786bc089fce50e2b8cbd4390dd5b3971273c5c4515064199befca8
   languageName: node
   linkType: hard
 
@@ -8738,7 +8738,7 @@ __metadata:
     "@codemirror/lang-javascript": "npm:^6.2.2"
     "@codemirror/lang-json": "npm:^6.0.1"
     "@codemirror/view": "npm:^6.26.3"
-    "@headlessui/react": "npm:^2.1.2"
+    "@headlessui/react": "npm:^2.1.3"
     "@heroicons/react": "npm:^2.1.5"
     "@iguhealth/client": "workspace:^"
     "@iguhealth/components": "workspace:^"
@@ -8871,7 +8871,7 @@ __metadata:
     "@codemirror/merge": "npm:^6.6.2"
     "@codemirror/state": "npm:^6.4.1"
     "@codemirror/view": "npm:^6.26.3"
-    "@headlessui/react": "npm:^2.1.2"
+    "@headlessui/react": "npm:^2.1.3"
     "@heroicons/react": "npm:^2.1.5"
     "@iguhealth/client": "workspace:^"
     "@iguhealth/fhir-patch-building": "workspace:^"
