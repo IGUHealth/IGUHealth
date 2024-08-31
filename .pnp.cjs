@@ -18988,7 +18988,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@sendgrid/client", "npm:8.1.3"],\
           ["@sendgrid/helpers", "npm:8.0.0"],\
-          ["axios", "npm:1.6.8"]\
+          ["axios", "npm:1.7.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -25266,10 +25266,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["axios", [\
-      ["npm:1.6.8", {\
-        "packageLocation": "./.yarn/cache/axios-npm-1.6.8-85cf1e7152-3f9a79eaf1.zip/node_modules/axios/",\
+      ["npm:1.7.4", {\
+        "packageLocation": "./.yarn/cache/axios-npm-1.7.4-cc1c89ddba-7a1429be1e.zip/node_modules/axios/",\
         "packageDependencies": [\
-          ["axios", "npm:1.6.8"],\
+          ["axios", "npm:1.7.4"],\
           ["follow-redirects", "virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.15.6"],\
           ["form-data", "npm:4.0.0"],\
           ["proxy-from-env", "npm:1.1.0"]\
