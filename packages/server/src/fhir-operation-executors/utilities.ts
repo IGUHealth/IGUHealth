@@ -146,11 +146,11 @@ export function validateInvocationContext(
   if (request.level === "instance" || request.level === "type") {
     if (operation.resource?.includes("Resource" as code)) {
       return;
-    } else if (!operation.resource?.includes(request.resourceType as code))
+    } else if (!operation.resource?.includes(request.resource as code))
       return outcomeError(
         "invalid",
         `Invalid resourcetype on invocation request '${
-          request.resourceType
+          request.resource
         }' expected one of '${operation.resource?.join(", ")}'`,
       );
   }

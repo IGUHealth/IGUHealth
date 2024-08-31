@@ -8,6 +8,8 @@ import {
 import {
   FHIRRequest,
   FHIRResponse,
+  R4BConditinalUpdateRequest,
+  R4ConditinalUpdateRequest,
   R4InstanceHistoryResponse,
   R4SystemHistoryResponse,
   R4SystemSearchResponse,
@@ -134,7 +136,7 @@ export function findSource<T>(
           "not-supported",
           `No source found with support for operation '${
             request.type
-          }' for type '${(request as r4.Resource).resourceType}'`,
+          }' for type '${(request as R4BConditinalUpdateRequest).resource}'`,
         ),
       );
     if (found.length > 1 && found[0].score === found[1].score) {
@@ -142,7 +144,7 @@ export function findSource<T>(
         outcomeError(
           "invalid",
           `Conflicting sources found for request '${request.type}' for type '${
-            (request as r4.Resource).resourceType
+            (request as R4BConditinalUpdateRequest).resource
           }'`,
         ),
       );
@@ -164,7 +166,7 @@ function createRouterMiddleware<
         throw new OperationError(
           outcomeError(
             "not-supported",
-            `No source found with support for operation '${context.request.type}' for level '${context.request.level}' and  type '${context.request.level === "type" || context.request.level === "instance" ? context.request.resourceType : "none"}'`,
+            `No source found with support for operation '${context.request.type}' for level '${context.request.level}' and  type '${context.request.level === "type" || context.request.level === "instance" ? context.request.resource : "none"}'`,
           ),
         );
       }
@@ -356,7 +358,7 @@ function createRouterMiddleware<
                 "not-supported",
                 `No source found with support for operation '${
                   context.request.type
-                }' for type '${(context.request as r4.Resource).resourceType}'`,
+                }' for type '${(context.request as R4ConditinalUpdateRequest).resource}'`,
               ),
             );
           const source = sources[0];

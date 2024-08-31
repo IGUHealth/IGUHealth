@@ -53,7 +53,7 @@ const PatientAccessPolicy: AccessPolicyV2 = {
       target: {
         expression: {
           language: "text/fhirpath" as code,
-          expression: "%request.resourceType = 'Patient'",
+          expression: "%request.resource = 'Patient'",
         },
       },
       combineBehavior: "any" as code,
@@ -90,7 +90,7 @@ test("Evaluate patient access controls", async () => {
           type: "read-request",
           fhirVersion: R4,
           level: "instance",
-          resourceType: "Patient",
+          resource: "Patient",
           id: "123" as id,
         },
       },
@@ -116,7 +116,7 @@ test("Evaluate patient access controls", async () => {
           type: "read-request",
           fhirVersion: R4,
           level: "instance",
-          resourceType: "Patient",
+          resource: "Patient",
           id: "not-id" as id,
         },
       },

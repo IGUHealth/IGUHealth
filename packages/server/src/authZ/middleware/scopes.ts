@@ -49,7 +49,7 @@ function fitsResourceType(
 ): boolean {
   if (scope.scope === "all") return true;
   if (request.level === "type" || request.level === "instance") {
-    return scope.resourceType === request.resourceType;
+    return scope.resourceType === request.resource;
   }
   return false;
 }

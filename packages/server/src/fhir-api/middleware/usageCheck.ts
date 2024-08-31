@@ -72,7 +72,7 @@ async function checkTenantUsage(
         fhirRequest.fhirVersion,
       );
       const typeLimitation = limitations.find(
-        (limitation) => limitation.resource_type === fhirRequest.resourceType,
+        (limitation) => limitation.resource_type === fhirRequest.resource,
       );
 
       // Check if the resource type has a limitation
@@ -81,14 +81,14 @@ async function checkTenantUsage(
           pg,
           tenant,
           fhirRequest.fhirVersion,
-          fhirRequest.resourceType,
+          fhirRequest.resource,
         );
 
         if (resourceOfTypeTotal >= typeLimitation.value) {
           throw new OperationError(
             outcomeError(
               "exception",
-              `Resource type limit of '${typeLimitation.value}' exceeded for ${fhirRequest.resourceType} `,
+              `Resource type limit of '${typeLimitation.value}' exceeded for ${fhirRequest.resource} `,
             ),
           );
         }
