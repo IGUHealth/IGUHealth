@@ -1448,7 +1448,7 @@ function createPostgresMiddleware<
                 context.ctx,
                 context.request.fhirVersion,
                 // Set the id for the request body to ensure that the resource is updated correctly.
-                // Should be pased on the request.id and request.resourceType
+                // Should be pased on the request.id and request.resource
                 {
                   ...context.request.body,
                   id: context.request.id,
