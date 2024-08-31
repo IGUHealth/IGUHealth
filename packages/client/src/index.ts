@@ -89,7 +89,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "search-request",
       level: "type",
-      resourceType: type,
+      resource: type,
       parameters: parsedParameters,
     } as FHIRRequest);
     if (response.type !== "search-response")
@@ -110,7 +110,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "create-request",
       level: "type",
-      resourceType: resource.resourceType,
+      resource: resource.resourceType,
       body: resource,
     } as FHIRRequest);
     if (response.type !== "create-response")
@@ -137,7 +137,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "update-request",
       level: "type",
-      resourceType,
+      resource: resourceType,
       parameters: parsedParameters,
       body: resource,
     } as FHIRRequest);
@@ -158,7 +158,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "update-request",
       level: "instance",
-      resourceType,
+      resource: resourceType,
       id,
       body: resource,
     } as FHIRRequest);
@@ -177,7 +177,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "patch-request",
       level: "instance",
-      resourceType: resourceType,
+      resource: resourceType,
       id: id,
       body: patches,
     } as FHIRRequest);
@@ -195,7 +195,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "read-request",
       level: "instance",
-      resourceType: resourceType,
+      resource: resourceType,
       id: id,
     } as FHIRRequest);
     if (response.type !== "read-response")
@@ -213,7 +213,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "vread-request",
       level: "instance",
-      resourceType: resourceType,
+      resource: resourceType,
       id: id,
       versionId: versionId,
     } as FHIRRequest);
@@ -234,7 +234,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "delete-request",
       level: "instance",
-      resourceType: resourceType,
+      resource: resourceType,
       id: id,
     } as FHIRRequest);
     if (response.type !== "delete-response")
@@ -259,7 +259,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "delete-request",
       level: "type",
-      resourceType: resourceType,
+      resource: resourceType,
       parameters: parsedParameters,
     } as FHIRRequest);
     if (response.type !== "delete-response")
@@ -326,7 +326,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "history-request",
       level: "type",
-      resourceType: resourceType,
+      resource: resourceType,
       parameters: parsedParameters,
     } as FHIRRequest);
     if (response.type !== "history-response")
@@ -353,7 +353,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       fhirVersion,
       type: "history-request",
       level: "instance",
-      resourceType: resourceType,
+      resource: resourceType,
       id: id as id,
       parameters: parsedParameters,
     } as FHIRRequest);
@@ -409,7 +409,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         fhirVersion,
         type: "invoke-request",
         level: "type",
-        resourceType,
+        resource: resourceType,
         operation: op,
         body: input,
       } as FHIRRequest);
@@ -422,7 +422,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "invoke-request",
       level: "type",
       operation: op.code,
-      resourceType,
+      resource: resourceType,
       body: op.parseToParameters("in", input) as Parameters,
     } as FHIRRequest);
 
@@ -450,7 +450,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         type: "invoke-request",
         level: "instance",
         operation: op,
-        resourceType,
+        resource: resourceType,
         id,
         body: input,
       } as FHIRRequest);
@@ -463,7 +463,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "invoke-request",
       level: "instance",
       operation: op.code,
-      resourceType,
+      resource: resourceType,
       id,
       body: op.parseToParameters("in", input) as Parameters,
     } as FHIRRequest);

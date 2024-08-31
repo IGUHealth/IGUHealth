@@ -84,7 +84,7 @@ export const ResourceValidateInvoke = InlineOperation(
     return validateResource(
       ctx,
       request.fhirVersion,
-      (request as R4TypeInteraction | R4BTypeInteraction).resourceType,
+      (request as R4TypeInteraction | R4BTypeInteraction).resource,
       input,
     );
   },

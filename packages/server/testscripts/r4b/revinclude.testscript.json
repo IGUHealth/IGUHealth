@@ -18,9 +18,17 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "revinclude-test" }]
+              "tag": [
+                {
+                  "code": "revinclude-test"
+                }
+              ]
             },
-            "generalPractitioner": [{ "reference": "local_practitioner" }]
+            "generalPractitioner": [
+              {
+                "reference": "local_practitioner"
+              }
+            ]
           }
         },
         {
@@ -32,9 +40,19 @@
           "resource": {
             "resourceType": "Practitioner",
             "meta": {
-              "tag": [{ "code": "revinclude-test" }]
+              "tag": [
+                {
+                  "code": "revinclude-test"
+                }
+              ]
             },
-            "name": [{ "given": ["Bob"] }]
+            "name": [
+              {
+                "given": [
+                  "Bob"
+                ]
+              }
+            ]
           }
         },
         {
@@ -44,7 +62,11 @@
           },
           "resource": {
             "meta": {
-              "tag": [{ "code": "revinclude-test" }]
+              "tag": [
+                {
+                  "code": "revinclude-test"
+                }
+              ]
             },
             "status": "final",
             "code": {
@@ -67,7 +89,11 @@
           },
           "resource": {
             "meta": {
-              "tag": [{ "code": "revinclude-test" }]
+              "tag": [
+                {
+                  "code": "revinclude-test"
+                }
+              ]
             },
             "status": "final",
             "code": {
@@ -146,13 +172,13 @@
         },
         {
           "assert": {
-            "expression": "Bundle.entry[1].resource.resourceType",
+            "expression": "Bundle.entry[1].resource.type().type",
             "value": "Observation"
           }
         },
         {
           "assert": {
-            "expression": "Bundle.entry[2].resource.resourceType",
+            "expression": "Bundle.entry[2].resource.type().type",
             "value": "Observation"
           }
         },

@@ -102,7 +102,7 @@ async function toHTTPRequest(
 
     case "create-request": {
       return {
-        url: new URL(request.resourceType, FHIRUrl).href,
+        url: new URL(request.resource, FHIRUrl).href,
         method: "POST",
         body: JSON.stringify(request.body),
         headers,
@@ -112,7 +112,7 @@ async function toHTTPRequest(
       switch (request.level) {
         case "instance": {
           return {
-            url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
+            url: new URL(`${request.resource}/${request.id}`, FHIRUrl).href,
             method: "PUT",
             body: JSON.stringify(request.body),
             headers,
@@ -122,7 +122,7 @@ async function toHTTPRequest(
           const queryString = parametersToQueryString(request.parameters);
           return {
             url: new URL(
-              `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+              `${request.resource}${queryString ? `?${queryString}` : ""}`,
               FHIRUrl,
             ).href,
             method: "PUT",
@@ -137,7 +137,7 @@ async function toHTTPRequest(
     }
     case "patch-request": {
       return {
-        url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
+        url: new URL(`${request.resource}/${request.id}`, FHIRUrl).href,
         method: "PATCH",
         body: JSON.stringify(request.body),
         headers,
@@ -145,7 +145,7 @@ async function toHTTPRequest(
     }
     case "read-request": {
       return {
-        url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
+        url: new URL(`${request.resource}/${request.id}`, FHIRUrl).href,
         method: "GET",
         headers,
       };
@@ -153,7 +153,7 @@ async function toHTTPRequest(
     case "vread-request": {
       return {
         url: new URL(
-          `${request.resourceType}/${request.id}/_history/${request.versionId}`,
+          `${request.resource}/${request.id}/_history/${request.versionId}`,
           FHIRUrl,
         ).href,
         method: "GET",
@@ -164,7 +164,7 @@ async function toHTTPRequest(
       switch (request.level) {
         case "instance": {
           return {
-            url: new URL(`${request.resourceType}/${request.id}`, FHIRUrl).href,
+            url: new URL(`${request.resource}/${request.id}`, FHIRUrl).href,
             method: "DELETE",
             headers,
           };
@@ -173,7 +173,7 @@ async function toHTTPRequest(
           const queryString = parametersToQueryString(request.parameters);
           return {
             url: new URL(
-              `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+              `${request.resource}${queryString ? `?${queryString}` : ""}`,
               FHIRUrl,
             ).href,
             method: "DELETE",
@@ -198,14 +198,13 @@ async function toHTTPRequest(
       switch (request.level) {
         case "instance": {
           historyUrl = new URL(
-            `${request.resourceType}/${request.id}/_history`,
+            `${request.resource}/${request.id}/_history`,
             FHIRUrl,
           ).href;
           break;
         }
         case "type": {
-          historyUrl = new URL(`${request.resourceType}/_history`, FHIRUrl)
-            .href;
+          historyUrl = new URL(`${request.resource}/_history`, FHIRUrl).href;
           break;
         }
         case "system": {
@@ -237,7 +236,7 @@ async function toHTTPRequest(
       switch (request.level) {
         case "type":
           searchURL = new URL(
-            `${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            `${request.resource}${queryString ? `?${queryString}` : ""}`,
             FHIRUrl,
           ).href;
           break;
@@ -261,13 +260,13 @@ async function toHTTPRequest(
       switch (request.level) {
         case "instance":
           invokeURL = new URL(
-            `${request.resourceType}/${request.id}/$${request.operation}`,
+            `${request.resource}/${request.id}/$${request.operation}`,
             FHIRUrl,
           ).href;
           break;
         case "type":
           invokeURL = new URL(
-            `${request.resourceType}/$${request.operation}`,
+            `${request.resource}/$${request.operation}`,
             FHIRUrl,
           ).href;
           break;
@@ -380,7 +379,7 @@ async function httpResponseToFHIRResponse(
             type: "invoke-response",
             operation: request.operation,
             level: "type",
-            resourceType: request.resourceType,
+            resource: request.resource,
             body: parameters,
           } as FHIRResponse;
         }
@@ -390,7 +389,7 @@ async function httpResponseToFHIRResponse(
             type: "invoke-response",
             operation: request.operation,
             level: "instance",
-            resourceType: request.resourceType,
+            resource: request.resource,
             id: request.id,
             body: parameters,
           } as FHIRResponse;
@@ -406,7 +405,7 @@ async function httpResponseToFHIRResponse(
         fhirVersion: request.fhirVersion,
         level: "instance",
         type: "read-response",
-        resourceType: request.resourceType,
+        resource: request.resource,
         id: request.id,
         body: resource,
       } as FHIRResponse;
@@ -420,7 +419,7 @@ async function httpResponseToFHIRResponse(
         fhirVersion: request.fhirVersion,
         level: "instance",
         type: "vread-response",
-        resourceType: request.resourceType,
+        resource: request.resource,
         id: request.id,
         versionId: request.versionId,
         body: vresource,
@@ -437,7 +436,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "update-response",
             level: "instance",
-            resourceType: request.resourceType,
+            resource: request.resource,
             id: request.id,
             body: uresource,
           } as FHIRResponse;
@@ -449,7 +448,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "update-response",
             level: "instance",
-            resourceType: request.resourceType,
+            resource: request.resource,
             id: parts[parts.length - 1] as id,
             body: uresource,
           } as FHIRResponse;
@@ -467,7 +466,7 @@ async function httpResponseToFHIRResponse(
         fhirVersion: request.fhirVersion,
         type: "patch-response",
         level: "instance",
-        resourceType: request.resourceType,
+        resource: request.resource,
         id: request.id,
         body: presource,
       } as FHIRResponse;
@@ -480,7 +479,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "delete-response",
             level: "instance",
-            resourceType: request.resourceType,
+            resource: request.resource,
             id: request.id,
           } as FHIRResponse;
         }
@@ -489,7 +488,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "delete-response",
             level: "type",
-            resourceType: request.resourceType,
+            resource: request.resource,
             parameters: request.parameters,
           } as FHIRResponse;
         }
@@ -524,7 +523,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "history-response",
             level: "type",
-            resourceType: request.resourceType,
+            resource: request.resource,
             body: bundle,
           } as FHIRResponse;
         }
@@ -533,7 +532,7 @@ async function httpResponseToFHIRResponse(
             fhirVersion: request.fhirVersion,
             type: "history-response",
             level: "instance",
-            resourceType: request.resourceType,
+            resource: request.resource,
             id: request.id,
             body: bundle,
           } as FHIRResponse;
@@ -550,7 +549,7 @@ async function httpResponseToFHIRResponse(
         fhirVersion: request.fhirVersion,
         type: "create-response",
         level: "type",
-        resourceType: request.resourceType,
+        resource: request.resource,
         body: resource,
       } as FHIRResponse;
     }
@@ -575,7 +574,7 @@ async function httpResponseToFHIRResponse(
             type: "search-response",
             level: "type",
             parameters: request.parameters,
-            resourceType: request.resourceType,
+            resource: request.resource,
             body: bundle,
           } as FHIRResponse;
         }

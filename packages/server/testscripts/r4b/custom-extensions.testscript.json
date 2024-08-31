@@ -8,17 +8,31 @@
       "id": "patient1",
       "resourceType": "Patient",
       "meta": {
-        "tag": [{ "code": "custom-extension-test" }]
+        "tag": [
+          {
+            "code": "custom-extension-test"
+          }
+        ]
       }
     },
     {
       "id": "patient2",
       "resourceType": "Patient",
       "meta": {
-        "tag": [{ "code": "custom-extension-test" }],
+        "tag": [
+          {
+            "code": "custom-extension-test"
+          }
+        ],
         "extension": [
-          { "url": "https://test.com", "valueString": "test" },
-          { "url": "https://iguhealth.app/author", "valueString": "test" },
+          {
+            "url": "https://test.com",
+            "valueString": "test"
+          },
+          {
+            "url": "https://iguhealth.app/author",
+            "valueString": "test"
+          },
           {
             "url": "https://iguhealth.app/version-sequence",
             "valueInteger": 1
@@ -69,7 +83,7 @@
         {
           "assert": {
             "label": "Confirm expression extensions",
-            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/version-sequence').valueInteger",
+            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/version-sequence').value",
             "operator": "greaterThan",
             "value": "0"
           }
@@ -77,7 +91,7 @@
         {
           "assert": {
             "label": "Confirm expression extensions",
-            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/author').valueReference.reference",
+            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/author').value.reference",
             "operator": "contains",
             "value": "ClientApplication"
           }

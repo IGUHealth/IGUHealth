@@ -301,7 +301,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "invoke-request",
-            resourceType: operation.resource ?? target.resourceType,
+            resource: operation.resource ?? target.resourceType,
             id: target.id,
             operation: op as code,
             body: parameters,
@@ -312,7 +312,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "type",
             type: "invoke-request",
-            resourceType: operation.resource,
+            resource: operation.resource,
             operation: op as code,
             body: parameters,
           } as FHIRRequest;
@@ -340,7 +340,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         fhirVersion: state.version,
         level: "instance",
         type: "read-request",
-        resourceType:
+        resource:
           operation.resource ??
           (target?.resourceType as unknown as ResourceType<Version>),
         id: target?.id as id,
@@ -356,7 +356,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         fhirVersion: state.version,
         level: "type",
         type: "create-request",
-        resourceType: operation.resource ?? target.resourceType,
+        resource: operation.resource ?? target.resourceType,
         body: target,
       } as FHIRRequest;
     }
@@ -374,7 +374,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         fhirVersion: state.version,
         level: "instance",
         type: "patch-request",
-        resourceType:
+        resource:
           operation.resource ??
           (target?.resourceType as unknown as ResourceType<Version>),
         id: target?.id as id,
@@ -391,7 +391,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         fhirVersion: state.version,
         level: "instance",
         type: "vread-request",
-        resourceType: operation.resource ?? target?.resourceType,
+        resource: operation.resource ?? target?.resourceType,
         id: target?.id as id,
         versionId: getFixtureResource(state, operation.targetId)?.meta
           ?.versionId as id,
@@ -419,7 +419,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "type",
             type: "update-request",
-            resourceType: operation.resource,
+            resource: operation.resource,
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params),
             ),
@@ -432,7 +432,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "update-request",
-            resourceType:
+            resource:
               operation.resource ??
               (target?.resourceType as unknown as ResourceType<Version>),
             id: target?.id as id,
@@ -457,7 +457,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "delete-request",
-            resourceType: operation.resource ?? target?.resourceType,
+            resource: operation.resource ?? target?.resourceType,
             id: target?.id as id,
           } as FHIRRequest;
         }
@@ -466,7 +466,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "type",
             type: "delete-request",
-            resourceType: operation.resource,
+            resource: operation.resource,
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
@@ -496,7 +496,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
           fhirVersion: state.version,
           level: "type",
           type: "search-request",
-          resourceType: operation.resource,
+          resource: operation.resource,
           parameters: parseQuery(
             await evaluateVariables(state, pointer, operation.params ?? ""),
           ),
@@ -571,7 +571,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "history-request",
-            resourceType:
+            resource:
               operation.resource ??
               (target?.resourceType as unknown as ResourceType<Version>),
             id: target?.id as id,
@@ -585,7 +585,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "type",
             type: "history-request",
-            resourceType: operation.resource,
+            resource: operation.resource,
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),

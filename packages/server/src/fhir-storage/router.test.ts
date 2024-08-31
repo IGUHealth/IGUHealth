@@ -119,7 +119,7 @@ test("Test routing priority", async () => {
             return (
               request.type === "search-request" &&
               request.level === "type" &&
-              request.resourceType === "Practitioner"
+              request.resource === "Practitioner"
             );
           },
         },

@@ -609,11 +609,7 @@ async function indexResource<
         searchParameter.expression,
         resource,
         {
-          meta: {
-            fhirVersion,
-            resolveCanonical: ctx.resolveCanonical,
-            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-          },
+          fhirVersion
         },
       );
 
@@ -799,13 +795,13 @@ function historyLevelFilter(
   switch (request.level) {
     case "instance": {
       return {
-        resource_type: request.resourceType,
+        resource_type: request.resource,
         id: request.id,
       };
     }
     case "type": {
       return {
-        resource_type: request.resourceType,
+        resource_type: request.resource,
       };
     }
     case "system": {
@@ -1125,7 +1121,7 @@ async function conditionalDelete(
             fhirVersion: searchRequest.fhirVersion,
             type: "delete-response",
             level: "type",
-            resourceType: searchRequest.resourceType,
+            resource: searchRequest.resource,
           } as FHIRResponse;
         }
         default: {
@@ -1158,14 +1154,14 @@ function createPostgresMiddleware<
           const resource = await getResource(
             context.ctx,
             context.request.fhirVersion,
-            context.request.resourceType,
+            context.request.resource,
             context.request.id,
           );
           if (!resource) {
             throw new OperationError(
               outcomeError(
                 "not-found",
-                `'${context.request.resourceType}' with id '${context.request.id}' was not found`,
+                `'${context.request.resource}' with id '${context.request.id}' was not found`,
               ),
             );
           }
@@ -1177,7 +1173,7 @@ function createPostgresMiddleware<
               fhirVersion: context.request.fhirVersion,
               level: "instance",
               type: "read-response",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               id: context.request.id,
               body: resource,
             } as FHIRResponse,
@@ -1187,7 +1183,7 @@ function createPostgresMiddleware<
           const resource = await getVersionedResource(
             context.ctx,
             context.request.fhirVersion,
-            context.request.resourceType,
+            context.request.resource,
             context.request.id,
             context.request.versionId,
           );
@@ -1200,7 +1196,7 @@ function createPostgresMiddleware<
               fhirVersion: context.request.fhirVersion,
               level: "instance",
               type: "vread-response",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               id: context.request.id,
               versionId: context.request.versionId,
               body: resource,
@@ -1245,7 +1241,7 @@ function createPostgresMiddleware<
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "type",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   body: {
                     total: result.total as unsignedInt | undefined,
                     resourceType: "Bundle",
@@ -1274,7 +1270,7 @@ function createPostgresMiddleware<
             response: {
               fhirVersion: R4,
               level: "type",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               type: "create-response",
               body: await createResource(
                 context.ctx,
@@ -1289,7 +1285,7 @@ function createPostgresMiddleware<
           const savedResource = await patchResource(
             context.ctx,
             context.request.fhirVersion,
-            context.request.resourceType,
+            context.request.resource,
             context.request.id,
             context.request.body as Operation[],
           );
@@ -1301,7 +1297,7 @@ function createPostgresMiddleware<
             response: {
               fhirVersion: R4,
               level: "instance",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               id: context.request.id,
               type: "patch-response",
               body: savedResource,
@@ -1320,7 +1316,7 @@ function createPostgresMiddleware<
                     fhirVersion: request.fhirVersion,
                     type: "search-request",
                     level: "type",
-                    resourceType: request.resourceType,
+                    resource: request.resource,
                     // Filter out _sort, _total and _count as not needed and setting count by default to be 2.
                     parameters: [
                       ...request.parameters.filter(
@@ -1368,7 +1364,7 @@ function createPostgresMiddleware<
                           response: {
                             fhirVersion: request.fhirVersion,
                             level: "instance",
-                            resourceType: resource.resourceType,
+                            resource: resource.resourceType,
                             id: resource.id,
                             type: "update-response",
                             created: created,
@@ -1388,7 +1384,7 @@ function createPostgresMiddleware<
                           response: {
                             fhirVersion: request.fhirVersion,
                             level: "instance",
-                            resourceType: resource.resourceType,
+                            resource: resource.resourceType,
                             id: resource.id,
                             type: "update-response",
                             body: resource,
@@ -1425,7 +1421,7 @@ function createPostgresMiddleware<
                         response: {
                           fhirVersion: request.fhirVersion,
                           level: "instance",
-                          resourceType: resource.resourceType,
+                          resource: resource.resourceType,
                           id: resource.id,
                           created,
                           type: "update-response",
@@ -1452,7 +1448,7 @@ function createPostgresMiddleware<
                 context.ctx,
                 context.request.fhirVersion,
                 // Set the id for the request body to ensure that the resource is updated correctly.
-                // Should be pased on the request.id and request.resourceType
+                // Should be pased on the request.id and request.resource
                 {
                   ...context.request.body,
                   id: context.request.id,
@@ -1466,7 +1462,7 @@ function createPostgresMiddleware<
                 response: {
                   fhirVersion: context.request.fhirVersion,
                   level: "instance",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   id: context.request.id,
                   type: "update-response",
                   created: created,
@@ -1487,7 +1483,7 @@ function createPostgresMiddleware<
               await deleteResource(
                 context.ctx,
                 context.request.fhirVersion,
-                context.request.resourceType,
+                context.request.resource,
                 context.request.id,
               );
 
@@ -1499,7 +1495,7 @@ function createPostgresMiddleware<
                   fhirVersion: context.request.fhirVersion,
                   type: "delete-response",
                   level: "instance",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   id: context.request.id,
                 } as FHIRResponse,
               };
@@ -1513,7 +1509,7 @@ function createPostgresMiddleware<
                   type: "search-request",
                   fhirVersion: context.request.fhirVersion,
                   level: "type",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   parameters: context.request.parameters,
                 } as R4BTypeSearchRequest | R4TypeSearchRequest),
               };
@@ -1557,7 +1553,7 @@ function createPostgresMiddleware<
                   fhirVersion: context.request.fhirVersion,
                   type: "history-response",
                   level: "instance",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   id: context.request.id,
                   body: {
                     resourceType: "Bundle",
@@ -1576,7 +1572,7 @@ function createPostgresMiddleware<
                   fhirVersion: context.request.fhirVersion,
                   type: "history-response",
                   level: "type",
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   body: {
                     resourceType: "Bundle",
                     type: "history",

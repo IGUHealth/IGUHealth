@@ -1,7 +1,8 @@
 import { Reference, Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import * as metaUtils from "@iguhealth/meta-value/utilities";
-import * as metaValueV1 from "@iguhealth/meta-value/v1";
+import * as metaValueV2 from "@iguhealth/meta-value/v2";
 
 import { parse } from "./parser.js";
 
@@ -9,8 +10,8 @@ import { parse } from "./parser.js";
 type AST = any;
 
 export type Options = {
+  fhirVersion?: FHIR_VERSION;
   variables?: Record<string, unknown> | ((v: string) => unknown);
-  meta?: Partial<metaValueV1.TypeMeta>;
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -19,7 +20,7 @@ function flatten<T>(arr: T[][]): T[] {
 
 async function getVariableValue(
   name: string,
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   let value;
   if (options?.variables instanceof Function) {
@@ -29,7 +30,7 @@ async function getVariableValue(
   }
 
   return metaUtils.flatten(
-    await metaValueV1.metaValue({ type: options?.meta }, value),
+    metaValueV2.metaValue({ fhirVersion: options.fhirVersion }, value),
   );
 }
 
@@ -54,7 +55,7 @@ const fp_functions: Record<
   (
     ast: AST,
     context: IMetaValue<unknown>[],
-    options?: Options,
+    options: Options,
   ) => Promise<IMetaValue<unknown>[]>
 > = {
   // [EXISTENCE FUNCTIONS]
@@ -62,29 +63,32 @@ const fp_functions: Record<
   async exists(ast, context, options) {
     if (ast.next.length === 1) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "boolean" as uri },
           (await _evaluate(ast.next[0], context, options)).length > 0,
         ),
       );
     }
     return metaUtils.flatten(
-      await metaValueV1.metaValue({ type: options?.meta }, context.length > 0),
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
+        context.length > 0,
+      ),
     );
   },
   // exists([criteria : expression]) : Boolean
   async empty(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.length === 0,
       ),
     );
   },
   async all(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         flatten(
           await Promise.all(
             context.map((v) => _evaluate(ast.next[0], [v], options)),
@@ -97,32 +101,32 @@ const fp_functions: Record<
   },
   async allTrue(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.reduce((acc, v) => v.getValue() === true && acc, true),
       ),
     );
   },
   async anyTrue(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.reduce((acc, v) => v.getValue() === true || acc, false),
       ),
     );
   },
   async allFalse(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.reduce((acc, v) => v.getValue() === false && acc, true),
       ),
     );
   },
   async anyFalse(ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.reduce((acc, v) => v.getValue() === false || acc, false),
       ),
     );
@@ -130,8 +134,8 @@ const fp_functions: Record<
   async subsetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.reduce(
           (acc, v1) =>
             acc &&
@@ -147,8 +151,8 @@ const fp_functions: Record<
   async supersetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         otherSet.reduce(
           (acc, v1) =>
             acc &&
@@ -162,7 +166,10 @@ const fp_functions: Record<
   },
   async count(_ast, context, options) {
     return metaUtils.flatten(
-      await metaValueV1.metaValue({ type: options?.meta }, context.length),
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "integer" as uri },
+        context.length,
+      ),
     );
   },
   async distinct(_ast, context) {
@@ -186,8 +193,8 @@ const fp_functions: Record<
   async isDistinct(ast, context, options) {
     const distinct = await fp_functions.distinct(undefined, context, options);
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         context.length === distinct.length,
       ),
     );
@@ -216,16 +223,12 @@ const fp_functions: Record<
     const children = flatten(
       await Promise.all(
         context.map(async (node) => {
-          const v = node.getValue();
-          const keys = Object.keys(v || {});
-
           const children = flatten(
             await Promise.all(
-              keys.map(async (k) =>
-                metaUtils.flatten(await metaValueV1.descend(node, k)),
-              ),
+              node.keys().map(async (k) => metaUtils.flatten(node.descend(k))),
             ),
-          );
+          ).filter((v) => v !== undefined);
+
           return children;
         }),
       ),
@@ -237,7 +240,7 @@ const fp_functions: Record<
    * Returns a collection with all descendant nodes of all items in the input collection.
    */
   async descendants(_ast, context, options) {
-    return evaluateWithMeta("repeat(children())", context, options);
+    return _evaluate(compileAST("repeat(children())"), context, options);
   },
   async select(ast, context, options) {
     const selection = ast.next[0];
@@ -306,10 +309,28 @@ const fp_functions: Record<
     const replace = replaceEval[0].getValue();
 
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: context[0].meta() },
+      await metaValueV2.metaValue(
+        context[0].meta(),
         value.replace(find, replace),
       ),
+    );
+  },
+
+  async type(ast, context, options) {
+    return flatten(
+      context.map((c) => {
+        const meta = c.meta();
+        return metaUtils.flatten(
+          metaValueV2.metaValue(
+            { fhirVersion: options.fhirVersion },
+            //  { name: string, type: TypeSpecifier, isOneBased: Boolean }
+            {
+              name: c.location()?.pop(),
+              type: meta?.type,
+            },
+          ),
+        );
+      }),
     );
   },
 };
@@ -317,7 +338,7 @@ const fp_functions: Record<
 async function evaluateInvocation(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Index":
@@ -327,13 +348,15 @@ async function evaluateInvocation(
     case "This":
       return context;
     case "Identifier": {
-      return (
+      const res = (
         await Promise.all(
           context.map(async (v) =>
-            metaUtils.flatten(await metaValueV1.descend(v, ast.value.value)),
+            metaUtils.flatten(v.descend(ast.value.value)),
           ),
         )
       ).flat();
+
+      return res;
     }
     case "Function": {
       const fp_func = fp_functions[ast.value.value.value];
@@ -349,7 +372,7 @@ async function evaluateInvocation(
 async function _evaluateTermStart(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Invocation": {
@@ -363,7 +386,10 @@ async function _evaluateTermStart(
     }
     case "Literal": {
       return metaUtils.flatten(
-        await metaValueV1.metaValue({ type: options?.meta }, ast.value.value),
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion },
+          ast.value.value,
+        ),
       );
     }
     case "Variable": {
@@ -380,7 +406,7 @@ async function _evaluateTermStart(
 async function evaluateProperty(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   switch (ast.type) {
     case "Invocation": {
@@ -403,7 +429,7 @@ async function evaluateProperty(
 async function evaluateSingular(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   let start = await _evaluateTermStart(ast, context, options);
   if (ast.next) {
@@ -449,7 +475,7 @@ export class InvalidOperandError extends Error {
 type EvaledOperation = (
   left: IMetaValue<unknown>[],
   right: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ) => Promise<IMetaValue<unknown>[]>;
 
 function op_prevaled(
@@ -457,7 +483,7 @@ function op_prevaled(
 ): (
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ) => Promise<IMetaValue<unknown>[]> {
   return async (ast, context, options) => {
     const left = await _evaluate(ast.left, context, options);
@@ -509,21 +535,21 @@ const fp_operations: Record<
   (
     ast: AST,
     context: IMetaValue<unknown>[],
-    options?: Options,
+    options: Options,
   ) => Promise<IMetaValue<unknown>[]>
 > = {
   "+": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "decimal" as uri },
           left[0].getValue() + right[0].getValue(),
         ),
       );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "string" as uri },
           left[0].getValue() + right[0].getValue(),
         ),
       );
@@ -547,12 +573,13 @@ const fp_operations: Record<
         "The 'is' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
+
     return (
       await Promise.all(
-        context.map(async (c) => {
+        left.map(async (c) => {
           return metaUtils.flatten(
-            await metaValueV1.metaValue(
-              { type: { ...options?.meta, type: "boolean" as uri } },
+            await metaValueV2.metaValue(
+              { fhirVersion: options.fhirVersion, type: "boolean" as uri },
               isType(c, typeIdentifier),
             ),
           );
@@ -563,8 +590,8 @@ const fp_operations: Record<
   "-": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "decimal" as uri },
           left[0].getValue() - right[0].getValue(),
         ),
       );
@@ -575,8 +602,8 @@ const fp_operations: Record<
   "*": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "decimal" as uri },
           left[0].getValue() * right[0].getValue(),
         ),
       );
@@ -587,8 +614,8 @@ const fp_operations: Record<
   "/": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: options?.meta },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "decimal" as uri },
           left[0].getValue() / right[0].getValue(),
         ),
       );
@@ -602,8 +629,8 @@ const fp_operations: Record<
   and: op_prevaled(async (left, right, options) => {
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
       return metaUtils.flatten(
-        await metaValueV1.metaValue(
-          { type: { ...options?.meta, type: "boolean" as uri } },
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "boolean" as uri },
           left[0].getValue() && right[0].getValue(),
         ),
       );
@@ -612,8 +639,8 @@ const fp_operations: Record<
   }),
   "=": op_prevaled(async (left, right, options) =>
     metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: options?.meta },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         equalityCheck(left, right),
       ),
     ),
@@ -621,8 +648,8 @@ const fp_operations: Record<
   "!=": op_prevaled(async (left, right, options) => {
     const equality = equalityCheck(left, right);
     return metaUtils.flatten(
-      await metaValueV1.metaValue(
-        { type: { ...options?.meta, type: "boolean" as uri } },
+      await metaValueV2.metaValue(
+        { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         equality === false,
       ),
     );
@@ -632,7 +659,7 @@ const fp_operations: Record<
 async function evaluateOperation(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   const operator = fp_operations[ast.operator];
   if (operator) return operator(ast, context, options);
@@ -642,7 +669,7 @@ async function evaluateOperation(
 async function _evaluate(
   ast: AST,
   context: IMetaValue<unknown>[],
-  options?: Options,
+  options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Operation": {
@@ -665,20 +692,28 @@ function nonNullable(v: unknown): v is NonNullable<unknown> {
 
 const cachedAST: Record<string, AST> = {};
 
-export async function evaluateWithMeta(
-  expression: string,
-  ctx: unknown,
-  options?: Options,
-): Promise<IMetaValue<NonNullable<unknown>>[]> {
+function compileAST(expression: string) {
   if (!cachedAST[expression]) {
     const ast = parse(expression);
     cachedAST[expression] = ast;
   }
+
+  return cachedAST[expression];
+}
+
+export async function evaluateWithMeta(
+  expression: string,
+  ctx: unknown,
+  options: Options & { type?: uri } = { fhirVersion: R4 },
+): Promise<IMetaValue<NonNullable<unknown>>[]> {
   return (
     await _evaluate(
-      cachedAST[expression],
+      compileAST(expression),
       metaUtils.flatten(
-        await metaValueV1.metaValue({ type: options?.meta }, ctx),
+        metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: options.type },
+          ctx,
+        ),
       ),
       options,
     )
@@ -690,7 +725,7 @@ export async function evaluateWithMeta(
 export async function evaluate(
   expression: string,
   ctx: unknown,
-  options?: Options,
+  options?: Options & { type?: uri },
 ): Promise<NonNullable<unknown>[]> {
   return (await evaluateWithMeta(expression, ctx, options)).map((v) =>
     v.getValue(),

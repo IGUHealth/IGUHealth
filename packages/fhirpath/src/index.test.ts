@@ -4,7 +4,11 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
+  CarePlan,
+  Element,
   OperationDefinition,
+  Patient,
+  Practitioner,
   StructureDefinition,
   canonical,
   uri,
@@ -18,39 +22,9 @@ import {
 
 import { evaluate, evaluateWithMeta } from "./index";
 
-const sds: StructureDefinition[] = loadArtifacts({
-  fhirVersion: R4,
-  loadDevelopmentPackages: true,
-  resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
-});
-
-async function resolveTypeToCanonical(
-  _fhirVersion: FHIR_VERSION,
-  type: uri,
-): Promise<canonical | undefined> {
-  const foundSD = sds.find((sd) => sd.type === type);
-  return foundSD?.url as canonical;
-}
-
-async function resolveCanonical<
-  Version extends FHIR_VERSION,
-  Type extends AllResourceTypes,
->(
-  fhirVersion: Version,
-  type: Type,
-  url: canonical,
-): Promise<Resource<Version, Type> | undefined> {
-  const foundSD = sds.find((sd) => sd.url === url);
-  return foundSD as Resource<Version, Type> | undefined;
-}
-
 const metaOptions = (startingType: string) => ({
-  meta: {
-    type: startingType as uri,
-    resolveCanonical,
-    resolveTypeToCanonical,
-  },
+  fhirVersion: R4,
+  type: startingType as uri,
 });
 
 test("Eval tests", async () => {
@@ -90,7 +64,7 @@ test("PrimitiveExtensions", async () => {
   expect(await evaluate("%nonexistant", {})).toEqual([]);
   expect(
     await evaluate(
-      "%hello.test.extension.valueBoolean",
+      "%hello.test.extension.value",
       {},
       {
         variables: {
@@ -131,27 +105,16 @@ test("PrimitiveExtensions array", async () => {
 });
 
 test("typechoices", async () => {
-  const options = {
-    variables: {
-      hello: [
-        {
-          testInteger: [4, undefined, 5],
-          _testInteger: [
-            { id: "id1", extension: [{ valueBoolean: true }] },
-            { id: "id2" },
-            { id: "id3" },
-          ],
-        },
-        { testString: "3" },
-      ],
-    },
+  const patient: Patient = {
+    resourceType: "Patient",
+    multipleBirthBoolean: true,
+    _multipleBirthBoolean: {
+      id: "id1",
+      extension: [{ url: "test.com", valueBoolean: true }],
+    } as Element,
   };
-  expect(await evaluate("%hello.test", {}, options)).toEqual([4, 5, "3"]);
-  expect(await evaluate("%hello.test.id", {}, options)).toEqual([
-    "id1",
-    "id2",
-    "id3",
-  ]);
+  expect(await evaluate("$this.multipleBirth", patient)).toEqual([true]);
+  expect(await evaluate("$this.multipleBirth.id", patient)).toEqual(["id1"]);
 });
 
 test("Test all operations", async () => {
@@ -561,11 +524,11 @@ test("union operation", async () => {
 test("resolve with is operation", async () => {
   expect(
     await evaluate(
-      "CarePlan.subject.where(resolve is Patient)",
+      "CarePlan.subject.where(resolve() is Patient)",
       {
         resourceType: "CarePlan",
-        subject: [{ reference: "Patient/123" }],
-      },
+        subject: { reference: "Patient/123" },
+      } as CarePlan,
       metaOptions("CarePlan"),
     ),
   ).toEqual([{ reference: "Patient/123" }]);
@@ -678,22 +641,27 @@ test("test reference finding", async () => {
   expect(
     (
       await evaluateWithMeta(
-        "CarePlan.subject.where(resolve is Patient)",
+        "CarePlan.subject.where(resolve() is Patient)",
         {
           resourceType: "CarePlan",
-          subject: [
-            { reference: "Patient/123" },
-            { reference: "Practitioner/123" },
-            { reference: "Patient/4" },
-          ],
-        },
+          subject: { reference: "Patient/123" },
+        } as CarePlan,
         metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
-  ).toEqual([
-    ["subject", 0],
-    ["subject", 2],
-  ]);
+  ).toEqual([["subject"]]);
+  expect(
+    (
+      await evaluateWithMeta(
+        "CarePlan.subject.where(resolve() is Practitioner)",
+        {
+          resourceType: "CarePlan",
+          subject: { reference: "Patient/123" },
+        } as CarePlan,
+        metaOptions("CarePlan"),
+      )
+    ).map((v) => v.location()),
+  ).toEqual([]);
 });
 
 test("children", async () => {
@@ -702,20 +670,11 @@ test("children", async () => {
       "CarePlan.children()",
       {
         resourceType: "CarePlan",
-        subject: [
-          { reference: "Patient/123" },
-          { reference: "Practitioner/123" },
-          { reference: "Patient/4" },
-        ],
+        subject: { reference: "Patient/123" },
       },
       metaOptions("CarePlan"),
     ),
-  ).toEqual([
-    "CarePlan",
-    { reference: "Patient/123" },
-    { reference: "Practitioner/123" },
-    { reference: "Patient/4" },
-  ]);
+  ).toEqual([{ reference: "Patient/123" }]);
 
   expect(
     (
@@ -723,16 +682,12 @@ test("children", async () => {
         "CarePlan.children()",
         {
           resourceType: "CarePlan",
-          subject: [
-            { reference: "Patient/123" },
-            { reference: "Practitioner/123" },
-            { reference: "Patient/4" },
-          ],
+          subject: { reference: "Patient/123" },
         },
         metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
-  ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
+  ).toEqual([["subject"]]);
 
   expect(
     (
@@ -740,20 +695,12 @@ test("children", async () => {
         "CarePlan.children().ofType(Reference)",
         {
           resourceType: "CarePlan",
-          subject: [
-            { reference: "Patient/123" },
-            { reference: "Practitioner/123" },
-            { reference: "Patient/4" },
-          ],
+          subject: { reference: "Patient/123" },
         },
         metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
-  ).toEqual([
-    ["subject", 0],
-    ["subject", 1],
-    ["subject", 2],
-  ]);
+  ).toEqual([["subject"]]);
 });
 
 test("descendants", async () => {
@@ -768,21 +715,57 @@ test("descendants", async () => {
       },
       metaOptions("Patient"),
     ),
+    // Shown twice because primitives have .value property
+    // Possbily revisit if descent shouldn't default to descend into primitives .value.
   ).toEqual([
-    "Patient",
+    {
+      system: "mrn",
+      value: "123",
+    },
     {
       family: "jameson",
       given: ["bob"],
     },
     false,
-    {
-      system: "mrn",
-      value: "123",
-    },
-    "bob",
-    "jameson",
     "mrn",
     "123",
+    "jameson",
+    "bob",
+    false,
+    "mrn",
+    "123",
+    "jameson",
+    "bob",
+  ]);
+
+  expect(
+    (
+      await evaluateWithMeta(
+        "Patient.descendants()",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedBoolean: false,
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
+    ).map((v) => v.meta()?.type),
+    // Shown twice because primitives have .value property
+    // Possbily revisit if descent shouldn't default to descend into primitives .value.
+  ).toEqual([
+    "Identifier",
+    "HumanName",
+    "boolean",
+    "uri",
+    "string",
+    "string",
+    "string",
+    "http://hl7.org/fhirpath/System.Boolean",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
+    "http://hl7.org/fhirpath/System.String",
   ]);
 
   expect(
@@ -813,7 +796,7 @@ test("descendants", async () => {
       },
       metaOptions("Patient"),
     ),
-  ).toEqual(["bob", "jameson", "123"]);
+  ).toEqual(["123", "jameson", "bob"]);
 });
 
 test("descendants with type filter", async () => {
@@ -826,7 +809,7 @@ test("descendants with type filter", async () => {
         ],
         resourceType: "Practitioner",
         name: [{ given: ["Bob"] }],
-      },
+      } as Practitioner,
       metaOptions("Practitioner"),
     ),
   ).toEqual([{ reference: "urn:oid:2" }]);
@@ -901,7 +884,7 @@ test("QR testing for authored", async () => {
   expect(
     (
       await evaluateWithMeta(
-        "QuestionnaireResponse.author",
+        "QuestionnaireResponse.authored",
         {
           resourceType: "QuestionnaireResponse",
           authored: "2024-06-27T04:22:10-05:00",
@@ -919,4 +902,18 @@ test("Replace function test", async () => {
     {},
   );
   expect(result).toEqual(["Hello, Universe!"]);
+});
+
+test("Type function", async () => {
+  expect(
+    await evaluate(
+      "QuestionnaireResponse.authored.type().type",
+      {
+        resourceType: "QuestionnaireResponse",
+        authored: "2024-06-27T04:22:10-05:00",
+        status: "in-progress",
+      },
+      metaOptions("QuestionnaireResponse"),
+    ),
+  ).toEqual(["dateTime"]);
 });

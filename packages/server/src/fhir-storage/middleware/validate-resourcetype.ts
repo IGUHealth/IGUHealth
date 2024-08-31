@@ -23,11 +23,11 @@ export default function validateResourceTypesAllowedMiddleware<State, CTX>(
         ),
       );
     }
-    if (!typesAllowed.includes(context.request.resourceType)) {
+    if (!typesAllowed.includes(context.request.resource)) {
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Resource type '${context.request.resourceType}' is not supported in this middleware.`,
+          `Resource type '${context.request.resource}' is not supported in this middleware.`,
         ),
       );
     }

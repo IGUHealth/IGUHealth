@@ -1,5 +1,7 @@
 import jsonpatch, { Operation } from "fast-json-patch";
+import jsonpointer from "jsonpointer";
 
+import { Extension } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -7,26 +9,15 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { EncryptionProvider } from "./provider/interface.js";
 import { AWSKMSProvider } from "./provider/kms.js";
 
-function toFP(loc: (string | number)[] | undefined) {
-  if (!loc)
-    throw new OperationError(outcomeError("invalid", "Location is undefined."));
-  let FP = "$this";
-  for (const field of loc) {
-    if (typeof field === "string") FP = `${FP}.${field}`;
-    else FP = `${FP}[${field}]`;
-  }
-  return FP;
-}
-
 export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
 function toJSONPath(loc: (string | number)[] | undefined) {
   if (!loc)
     throw new OperationError(outcomeError("invalid", "Location is undefined."));
-  return loc.join("/");
+  return `/${loc.join("/")}`;
 }
 
-export async function encryptValue<T>(
+export async function encryptValue<T extends object>(
   ctx: IGUHealthServerCTX,
   valueToEncrypt: T,
 ): Promise<T> {
@@ -47,21 +38,30 @@ export async function encryptValue<T>(
   );
   const operations = await Promise.all(
     encryptionLocations.map(async (value): Promise<Operation[]> => {
-      const encryptExtensionValue = await evaluateWithMeta(
-        `${toFP(value.location())}.extension.where(url=%extUrl).value`,
-        valueToEncrypt,
-        {
-          variables: {
-            extUrl: ENCRYPTION_URL,
-          },
-        },
-      );
+      const location = value.location();
+      if (!location)
+        throw new OperationError(
+          outcomeError("invalid", "Location is undefined."),
+        );
+      const encryptExt = [
+        ...location.slice(0, -1),
+        `_${location[location.length - 1]}`,
+        "extension",
+      ];
+      const encryptExtensionValue: [Extension, string][] = jsonpointer
+        .get(valueToEncrypt, toJSONPath(encryptExt))
+        .map((ext: Extension, i: number) => [
+          ext,
+          toJSONPath([...encryptExt, i, "valueString"]),
+        ])
+        .filter(([ext]: [Extension, string]) => ext.url === ENCRYPTION_URL);
+
       if (encryptExtensionValue.length < 1) {
         throw new OperationError(
           outcomeError(
             "invalid",
             "Could not find extension at location to encrypt.",
-            [toFP(value.location())],
+            [value.location()?.join("/") ?? ""],
           ),
         );
       }
@@ -70,7 +70,7 @@ export async function encryptValue<T>(
           outcomeError(
             "invalid",
             "Error multiple encryption extensions found at location.",
-            [toFP(value.location())],
+            [value.location()?.join("/") ?? ""],
           ),
         );
       }
@@ -78,25 +78,26 @@ export async function encryptValue<T>(
       if (typeof value.getValue() !== "string") {
         throw new OperationError(
           outcomeError("invalid", "Cannot encrypt a non string value.", [
-            toFP(value.location()),
+            value.location()?.join("/") ?? "",
           ]),
         );
       }
 
-      if (encryptExtensionValue[0].getValue() !== value.getValue()) {
+      if (encryptExtensionValue[0][0].valueString !== value.getValue()) {
         const encryptedValue = await encryptionProvider.encrypt(
           { workspace: ctx.tenant },
           value.getValue() as string,
         );
+
         return [
           {
             op: "replace",
-            path: `/${toJSONPath(value.location())}`,
+            path: toJSONPath(value.location()),
             value: encryptedValue,
           },
           {
             op: "replace",
-            path: `/${toJSONPath(encryptExtensionValue[0].location())}`,
+            path: encryptExtensionValue[0][1],
             value: encryptedValue,
           },
         ];

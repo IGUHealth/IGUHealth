@@ -19,12 +19,12 @@ import {
 } from "./utilities.js";
 
 export interface R4BInstanceInteraction extends Request<R4B, "instance"> {
-  resourceType: ResourceType;
+  resource: ResourceType;
   id: id;
 }
 
 export interface R4BTypeInteraction extends Request<R4B, "type"> {
-  resourceType: ResourceType;
+  resource: ResourceType;
 }
 
 export interface R4BSystemInteraction extends Request<R4B, "system"> {}

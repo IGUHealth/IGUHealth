@@ -259,7 +259,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "create-request",
               level: "type",
-              resourceType: urlPieces[0] as r4.ResourceType,
+              resource: urlPieces[0] as r4.ResourceType,
               body: request.body as r4.Resource,
             };
           }
@@ -268,7 +268,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "create-request",
               level: "type",
-              resourceType: urlPieces[0] as r4b.ResourceType,
+              resource: urlPieces[0] as r4b.ResourceType,
               body: request.body as r4b.Resource,
             };
           }
@@ -287,7 +287,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "update-request",
               level: "type",
-              resourceType: resourceType as r4.ResourceType,
+              resource: resourceType as r4.ResourceType,
               body: request.body as r4.Resource,
               parameters: parseUrl(request.url),
             };
@@ -297,7 +297,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "update-request",
               level: "type",
-              resourceType: resourceType as r4b.ResourceType,
+              resource: resourceType as r4b.ResourceType,
               body: request.body as r4b.Resource,
               parameters: parseUrl(request.url),
             };
@@ -323,7 +323,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "delete-request",
               level: "type",
-              resourceType: resourceType as r4.ResourceType,
+              resource: resourceType as r4.ResourceType,
               parameters: parseUrl(request.url),
             };
           }
@@ -332,7 +332,7 @@ function parseRequest1NonEmpty(
               fhirVersion,
               type: "delete-request",
               level: "type",
-              resourceType: resourceType as r4b.ResourceType,
+              resource: resourceType as r4b.ResourceType,
               parameters: parseUrl(request.url),
             };
           }
@@ -375,7 +375,7 @@ function parseRequest1NonEmpty(
                   fhirVersion,
                   type: "search-request",
                   level: "type",
-                  resourceType: resourceType as r4.ResourceType,
+                  resource: resourceType as r4.ResourceType,
                   parameters: parseUrl(request.url),
                 };
               }
@@ -384,7 +384,7 @@ function parseRequest1NonEmpty(
                   fhirVersion,
                   type: "search-request",
                   level: "type",
-                  resourceType: resourceType as r4b.ResourceType,
+                  resource: resourceType as r4b.ResourceType,
                   parameters: parseUrl(request.url),
                 };
               }
@@ -444,7 +444,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "invoke-request",
                   level: "type",
-                  resourceType: resourceType as r4.ResourceType,
+                  resource: resourceType as r4.ResourceType,
                   operation: urlPieces[1].slice(1) as r4.code,
                   body: request.body as r4.Parameters,
                 };
@@ -454,7 +454,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "invoke-request",
                   level: "type",
-                  resourceType: resourceType as r4b.ResourceType,
+                  resource: resourceType as r4b.ResourceType,
                   operation: urlPieces[1].slice(1) as r4b.code,
                   body: request.body as r4b.Parameters,
                 };
@@ -510,7 +510,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "history-request",
                   level: "type",
-                  resourceType: urlPieces[0] as r4.ResourceType,
+                  resource: urlPieces[0] as r4.ResourceType,
                   parameters: parseUrl(request.url),
                 };
               }
@@ -519,7 +519,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "history-request",
                   level: "type",
-                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  resource: urlPieces[0] as r4b.ResourceType,
                   parameters: parseUrl(request.url),
                 };
               }
@@ -540,7 +540,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "read-request",
                   level: "instance",
-                  resourceType: urlPieces[0] as r4.ResourceType,
+                  resource: urlPieces[0] as r4.ResourceType,
                   id: urlPieces[1] as r4b.id,
                 };
               }
@@ -549,7 +549,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   fhirVersion,
                   type: "read-request",
                   level: "instance",
-                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  resource: urlPieces[0] as r4b.ResourceType,
                   id: urlPieces[1] as r4b.id,
                 };
               }
@@ -577,7 +577,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "update-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4.ResourceType,
+              resource: urlPieces[0] as r4.ResourceType,
               id: urlPieces[1] as r4.id,
               body: request.body as r4.Resource,
             };
@@ -587,7 +587,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "update-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4b.ResourceType,
+              resource: urlPieces[0] as r4b.ResourceType,
               id: urlPieces[1] as r4b.id,
               body: request.body as r4b.Resource,
             };
@@ -606,7 +606,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "patch-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4.ResourceType,
+              resource: urlPieces[0] as r4.ResourceType,
               id: urlPieces[1] as r4.id,
               body: request.body as object,
             };
@@ -616,7 +616,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "patch-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4b.ResourceType,
+              resource: urlPieces[0] as r4b.ResourceType,
               id: urlPieces[1] as r4b.id,
               body: request.body as object,
             };
@@ -635,7 +635,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "delete-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4.ResourceType,
+              resource: urlPieces[0] as r4.ResourceType,
               id: urlPieces[1] as r4.id,
             };
           }
@@ -644,7 +644,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               fhirVersion,
               type: "delete-request",
               level: "instance",
-              resourceType: urlPieces[0] as r4b.ResourceType,
+              resource: urlPieces[0] as r4b.ResourceType,
               id: urlPieces[1] as r4b.id,
             };
           }
@@ -684,7 +684,7 @@ function parseRequest3(
                   fhirVersion,
                   type: "invoke-request",
                   level: "instance",
-                  resourceType: urlPieces[0] as r4.ResourceType,
+                  resource: urlPieces[0] as r4.ResourceType,
                   id: urlPieces[1] as r4.id,
                   operation: urlPieces[2].slice(1) as r4.code,
                   body: request.body as r4.Parameters,
@@ -695,7 +695,7 @@ function parseRequest3(
                   fhirVersion,
                   type: "invoke-request",
                   level: "instance",
-                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  resource: urlPieces[0] as r4b.ResourceType,
                   id: urlPieces[1] as r4b.id,
                   operation: urlPieces[2].slice(1) as r4b.code,
                   body: request.body as r4b.Parameters,
@@ -737,7 +737,7 @@ function parseRequest3(
                 fhirVersion,
                 type: "history-request",
                 level: "instance",
-                resourceType: urlPieces[0] as r4.ResourceType,
+                resource: urlPieces[0] as r4.ResourceType,
                 id: urlPieces[1] as r4.id,
                 parameters: parseUrl(request.url),
               };
@@ -747,7 +747,7 @@ function parseRequest3(
                 fhirVersion,
                 type: "history-request",
                 level: "instance",
-                resourceType: urlPieces[0] as r4b.ResourceType,
+                resource: urlPieces[0] as r4b.ResourceType,
                 id: urlPieces[1] as r4.id,
                 parameters: parseUrl(request.url),
               };
@@ -788,7 +788,7 @@ function parseRequest4(
           fhirVersion,
           type: "vread-request",
           level: "instance",
-          resourceType: urlPieces[0] as r4.ResourceType,
+          resource: urlPieces[0] as r4.ResourceType,
           id: urlPieces[1] as r4.id,
           versionId: urlPieces[3],
         };
@@ -798,7 +798,7 @@ function parseRequest4(
           fhirVersion,
           type: "vread-request",
           level: "instance",
-          resourceType: urlPieces[0] as r4b.ResourceType,
+          resource: urlPieces[0] as r4b.ResourceType,
           id: urlPieces[1] as r4b.id,
           versionId: urlPieces[3],
         };

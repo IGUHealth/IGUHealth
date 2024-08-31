@@ -77,7 +77,7 @@ function validateFHIRResourceTypeAccess(
       if (policyAccess.fhir?.resourceType?.includes("Any" as code)) return true;
 
       return (policyAccess.fhir?.resourceType ?? []).includes(
-        request.resourceType as code,
+        request.resource as code,
       );
     }
   }

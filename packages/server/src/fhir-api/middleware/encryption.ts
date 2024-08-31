@@ -12,8 +12,8 @@ function createEncryptionMiddleware<State>(
       return next(context);
     }
     if (
-      "resourceType" in context.request &&
-      resourceTypesToEncrypt.includes(context.request.resourceType)
+      "resource" in context.request &&
+      resourceTypesToEncrypt.includes(context.request.resource)
     ) {
       switch (context.request.type) {
         case "create-request":

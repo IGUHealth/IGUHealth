@@ -381,7 +381,7 @@ function processSubscription(
           historyPoll = await client.history_type(
             {},
             fhirVersion,
-            request.resourceType,
+            request.resource,
             [
               {
                 name: "_since-version",

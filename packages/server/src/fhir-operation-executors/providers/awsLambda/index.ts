@@ -297,7 +297,7 @@ async function createPayload(
       level: request.level,
       resourceType:
         request.level === "type" || request.level === "instance"
-          ? request.resourceType
+          ? request.resource
           : undefined,
       id: request.level === "instance" ? request.id : undefined,
     },
@@ -459,7 +459,7 @@ function createExecutor(
                         type: "invoke-response",
                         level: context.request.level,
                         body: outputParameters,
-                        resourceType: context.request.resourceType,
+                        resource: context.request.resource,
                         id: context.request.id,
                       },
                     };
@@ -471,7 +471,7 @@ function createExecutor(
                         fhirVersion: context.request.fhirVersion,
                         operation: context.request.operation,
                         type: "invoke-response",
-                        resourceType: context.request.resourceType,
+                        resource: context.request.resource,
                         level: context.request.level,
                         body: outputParameters,
                       },

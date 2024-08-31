@@ -14,6 +14,7 @@ export interface IMetaValue<T> {
   isArray(): this is IMetaValueArray<T>;
   location(): Location | undefined;
   descend(field: string | number): IMetaValue<unknown> | undefined;
+  keys(): (string | number)[];
 }
 
 export interface IMetaValueArray<T> extends IMetaValue<T[]> {

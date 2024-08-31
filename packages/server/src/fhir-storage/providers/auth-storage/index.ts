@@ -147,8 +147,8 @@ function updateUserTableMiddleware<
   return async (context, next) => {
     // Skip and run other middleware if not membership.
     if (
-      !("resourceType" in context.request) ||
-      "Membership" !== context.request.resourceType
+      !("resource" in context.request) ||
+      "Membership" !== context.request.resource
     ) {
       return next(context);
     }

@@ -195,7 +195,7 @@ function createMemoryMiddleware<
                 getResourceType(
                   context.state.data,
                   context.request.fhirVersion,
-                  context.request.resourceType,
+                  context.request.resource,
                 ),
               );
               // : ((resourceTypes.length > 0
@@ -263,7 +263,7 @@ function createMemoryMiddleware<
                 ...context,
                 response: {
                   fhirVersion: context.request.fhirVersion,
-                  resourceType: context.request.resourceType,
+                  resource: context.request.resource,
                   level: "type",
                   parameters: context.request.parameters,
                   type: "search-response",
@@ -298,7 +298,7 @@ function createMemoryMiddleware<
               fhirVersion: context.request.fhirVersion,
               level: "instance",
               type: "update-response",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               id: resource.id,
               body: resource as Resource<
                 typeof context.request.fhirVersion,
@@ -324,7 +324,7 @@ function createMemoryMiddleware<
               fhirVersion: context.request.fhirVersion,
               level: "type",
               type: "create-response",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               body: resource as Resource<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
@@ -335,11 +335,11 @@ function createMemoryMiddleware<
         case "read-request": {
           const resource =
             context.state.data[context.request.fhirVersion][
-              context.request.resourceType
+              context.request.resource
             ]?.[context.request.id];
           if (!resource) {
             throw new Error(
-              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
+              `Not found resource of type '${context.request.resource}' with id '${context.request.id}'`,
             );
           }
           return {
@@ -348,7 +348,7 @@ function createMemoryMiddleware<
               fhirVersion: context.request.fhirVersion,
               level: "instance",
               type: "read-response",
-              resourceType: context.request.resourceType,
+              resource: context.request.resource,
               id: context.request.id,
               body: resource as Resource<
                 typeof context.request.fhirVersion,

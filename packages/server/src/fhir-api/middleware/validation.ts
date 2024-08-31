@@ -15,9 +15,9 @@ function getResourceTypeToValidate(
 ): ResourceType<FHIR_VERSION> {
   switch (request.type) {
     case "create-request":
-      return request.resourceType;
+      return request.resource;
     case "update-request":
-      return request.resourceType;
+      return request.resource;
     case "invoke-request":
       return request.body.resourceType;
     case "transaction-request":

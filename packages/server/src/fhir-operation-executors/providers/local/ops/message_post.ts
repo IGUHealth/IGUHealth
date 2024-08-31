@@ -71,7 +71,7 @@ export const IguhealthMessagePostInvoke = InlineOperation(
   async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     switch (request.level) {
       case "instance": {
-        switch (request.resourceType) {
+        switch (request.resource) {
           case "MessageTopic": {
             const topicAndBroker = await ctx.client.search_type(
               ctx,
