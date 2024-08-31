@@ -8702,6 +8702,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/access-control@workspace:packages/access-control"
   dependencies:
+    "@babel/plugin-syntax-import-attributes": "npm:^7.24.7"
+    "@babel/preset-env": "npm:^7.25.4"
+    "@babel/preset-typescript": "npm:^7.24.7"
     "@iguhealth/client": "workspace:^"
     "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
@@ -9308,6 +9311,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/x-fhir-query@workspace:packages/x-fhir-query"
   dependencies:
+    "@babel/plugin-syntax-import-attributes": "npm:^7.24.7"
+    "@babel/preset-env": "npm:^7.25.4"
+    "@babel/preset-typescript": "npm:^7.24.7"
     "@iguhealth/fhirpath": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"

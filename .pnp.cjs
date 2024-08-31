@@ -15445,6 +15445,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/access-control/",\
         "packageDependencies": [\
           ["@iguhealth/access-control", "workspace:packages/access-control"],\
+          ["@babel/plugin-syntax-import-attributes", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.24.7"],\
+          ["@babel/preset-env", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.25.4"],\
+          ["@babel/preset-typescript", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.24.7"],\
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
@@ -16182,6 +16185,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/x-fhir-query/",\
         "packageDependencies": [\
           ["@iguhealth/x-fhir-query", "workspace:packages/x-fhir-query"],\
+          ["@babel/plugin-syntax-import-attributes", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.24.7"],\
+          ["@babel/preset-env", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.25.4"],\
+          ["@babel/preset-typescript", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.24.7"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
