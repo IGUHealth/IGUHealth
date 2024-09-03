@@ -186,7 +186,15 @@ class FPParser extends EmbeddedActionsParser {
       {
         ALT: (): TermAST => this.SUBRULE(this.externalConstant),
       },
-      // TODO PAREN EXPRESSION
+      {
+        ALT: (): TermAST => {
+          this.CONSUME(LEFT_PARAN);
+          const expression = this.SUBRULE(this.expression);
+          this.CONSUME(RIGHT_PARAN);
+
+          return expression;
+        },
+      },
     ]);
   });
 

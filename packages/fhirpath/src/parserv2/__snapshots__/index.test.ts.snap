@@ -40,7 +40,7 @@ exports[`Nested access ops 1`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;
 
@@ -189,9 +189,9 @@ exports[`parserv2 primitive test 1`] = `
         ],
         "type": "expression",
       },
-      "type": "Operation",
+      "type": "operation",
     },
-    "type": "Operation",
+    "type": "operation",
   },
   "operator": "=",
   "right": {
@@ -204,7 +204,7 @@ exports[`parserv2 primitive test 1`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;
 
@@ -231,7 +231,7 @@ exports[`parserv2 primitive test 2`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;
 
@@ -258,7 +258,7 @@ exports[`parserv2 primitive test 3`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;
 
@@ -285,7 +285,7 @@ exports[`parserv2 primitive test 4`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;
 
@@ -314,6 +314,6 @@ exports[`variables 1`] = `
     ],
     "type": "expression",
   },
-  "type": "Operation",
+  "type": "operation",
 }
 `;

@@ -57,7 +57,7 @@ export type LiteralAST =
   | DateTimeAST
   | TimeAST;
 
-export type TermAST = InvocationAST | LiteralAST | VariableAST;
+export type TermAST = ExpressionAST | InvocationAST | LiteralAST | VariableAST;
 
 export type OperationAST = {
   type: "operation";
