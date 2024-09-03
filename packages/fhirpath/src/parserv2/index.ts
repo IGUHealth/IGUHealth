@@ -376,6 +376,7 @@ export default function parse(expression: string): ExpressionAST {
   const ast = parser.expression();
 
   if (parser.errors.length > 0) {
+    console.log(JSON.stringify(lexResult, undefined, 2));
     console.error(ast, parser.errors);
     throw new Error(`Failed to parse expression '${expression}'`);
   }

@@ -184,6 +184,665 @@ exports[`paren 1`] = `
 }
 `;
 
+exports[`parser v1 tests 1`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "this",
+      },
+      {
+        "type": "identifier",
+        "value": "test",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "type": "this",
+      },
+      {
+        "type": "identifier",
+        "value": "test2",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 2`] = `
+{
+  "left": {
+    "left": {
+      "expression": [
+        {
+          "type": "this",
+        },
+        {
+          "type": "identifier",
+          "value": "test",
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "+",
+    "right": {
+      "expression": [
+        {
+          "type": "this",
+        },
+        {
+          "type": "identifier",
+          "value": "test2",
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "operator": "-",
+  "right": {
+    "expression": [
+      {
+        "literalType": "number",
+        "type": "literal",
+        "value": 14,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 3`] = `
+{
+  "left": {
+    "left": {
+      "left": {
+        "left": {
+          "left": {
+            "expression": [
+              {
+                "literalType": "number",
+                "type": "literal",
+                "value": 45,
+              },
+            ],
+            "type": "expression",
+          },
+          "operator": "<",
+          "right": {
+            "left": {
+              "left": {
+                "left": {
+                  "expression": [
+                    {
+                      "type": "this",
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "test",
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "that",
+                    },
+                  ],
+                  "type": "expression",
+                },
+                "operator": "*",
+                "right": {
+                  "expression": [
+                    {
+                      "type": "this",
+                    },
+                    {
+                      "type": "identifier",
+                      "value": "test2",
+                    },
+                  ],
+                  "type": "expression",
+                },
+                "type": "operation",
+              },
+              "operator": "/",
+              "right": {
+                "expression": [
+                  {
+                    "literalType": "number",
+                    "type": "literal",
+                    "value": 14,
+                  },
+                ],
+                "type": "expression",
+              },
+              "type": "operation",
+            },
+            "operator": "|",
+            "right": {
+              "expression": [
+                {
+                  "literalType": "string",
+                  "type": "literal",
+                  "value": "test",
+                },
+              ],
+              "type": "expression",
+            },
+            "type": "operation",
+          },
+          "type": "operation",
+        },
+        "operator": "in",
+        "right": {
+          "expression": [
+            {
+              "literalType": "string",
+              "type": "literal",
+              "value": "hello",
+            },
+          ],
+          "type": "expression",
+        },
+        "type": "operation",
+      },
+      "operator": "and",
+      "right": {
+        "left": {
+          "expression": [
+            {
+              "type": "identifier",
+              "value": "x",
+            },
+          ],
+          "type": "expression",
+        },
+        "operator": "!=",
+        "right": {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 12,
+            },
+          ],
+          "type": "expression",
+        },
+        "type": "operation",
+      },
+      "type": "operation",
+    },
+    "operator": "and",
+    "right": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 45,
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "operator": "implies",
+  "right": {
+    "expression": [
+      {
+        "literalType": "number",
+        "type": "literal",
+        "value": 23,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 4`] = `
+{
+  "left": {
+    "left": {
+      "expression": [
+        {
+          "type": "identifier",
+          "value": "test",
+        },
+        {
+          "type": "identifier",
+          "value": "HELLO",
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "-",
+    "right": {
+      "expression": [
+        {
+          "type": "identifier",
+          "value": "WORLD_IDENTIFIER",
+        },
+        {
+          "type": "identifier",
+          "value": "deliniated",
+        },
+        {
+          "type": "identifier",
+          "value": "strange",
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "operator": "-",
+  "right": {
+    "expression": [
+      {
+        "type": "identifier",
+        "value": "synt",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 5`] = `
+{
+  "expression": [
+    {
+      "type": "this",
+    },
+    {
+      "type": "identifier",
+      "value": "test",
+    },
+    {
+      "functionName": "where",
+      "parameters": [
+        {
+          "left": {
+            "left": {
+              "expression": [
+                {
+                  "type": "identifier",
+                  "value": "value",
+                },
+              ],
+              "type": "expression",
+            },
+            "operator": "!=",
+            "right": {
+              "expression": [
+                {
+                  "literalType": "string",
+                  "type": "literal",
+                  "value": "test",
+                },
+              ],
+              "type": "expression",
+            },
+            "type": "operation",
+          },
+          "operator": "and",
+          "right": {
+            "left": {
+              "left": {
+                "expression": [
+                  {
+                    "type": "identifier",
+                    "value": "value",
+                  },
+                ],
+                "type": "expression",
+              },
+              "operator": "/",
+              "right": {
+                "expression": [
+                  {
+                    "literalType": "number",
+                    "type": "literal",
+                    "value": 11,
+                  },
+                ],
+                "type": "expression",
+              },
+              "type": "operation",
+            },
+            "operator": "=",
+            "right": {
+              "expression": [
+                {
+                  "literalType": "number",
+                  "type": "literal",
+                  "value": 12,
+                },
+              ],
+              "type": "expression",
+            },
+            "type": "operation",
+          },
+          "type": "operation",
+        },
+        {
+          "left": {
+            "expression": [
+              {
+                "type": "index",
+              },
+            ],
+            "type": "expression",
+          },
+          "operator": "!=",
+          "right": {
+            "left": {
+              "expression": [
+                {
+                  "type": "total",
+                },
+              ],
+              "type": "expression",
+            },
+            "operator": "+",
+            "right": {
+              "expression": [
+                {
+                  "type": "variable",
+                  "value": "testing",
+                },
+              ],
+              "type": "expression",
+            },
+            "type": "operation",
+          },
+          "type": "operation",
+        },
+      ],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`parser v1 tests 6`] = `
+{
+  "expression": [
+    {
+      "literalType": "string",
+      "type": "literal",
+      "value": "testing",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`parser v1 tests 7`] = `
+{
+  "left": {
+    "left": {
+      "left": {
+        "expression": [
+          {
+            "literalType": "boolean",
+            "type": "literal",
+            "value": true,
+          },
+        ],
+        "type": "expression",
+      },
+      "operator": "!=",
+      "right": {
+        "expression": [
+          {
+            "literalType": "boolean",
+            "type": "literal",
+            "value": false,
+          },
+        ],
+        "type": "expression",
+      },
+      "type": "operation",
+    },
+    "operator": "and",
+    "right": {
+      "left": {
+        "expression": [
+          {
+            "literalType": "time",
+            "type": "literal",
+            "value": "04:00",
+          },
+        ],
+        "type": "expression",
+      },
+      "operator": "=",
+      "right": {
+        "expression": [
+          {
+            "literalType": "time",
+            "type": "literal",
+            "value": "04:00",
+          },
+        ],
+        "type": "expression",
+      },
+      "type": "operation",
+    },
+    "type": "operation",
+  },
+  "operator": "and",
+  "right": {
+    "left": {
+      "left": {
+        "expression": [
+          {
+            "literalType": "datetime",
+            "type": "literal",
+            "value": "1980-01-01",
+          },
+        ],
+        "type": "expression",
+      },
+      "operator": "!=",
+      "right": {
+        "expression": [
+          {
+            "literalType": "datetime",
+            "type": "literal",
+            "value": "1980-01-01T00:00:00Z",
+          },
+        ],
+        "type": "expression",
+      },
+      "type": "operation",
+    },
+    "operator": "=",
+    "right": {
+      "expression": [
+        {
+          "literalType": "datetime",
+          "type": "literal",
+          "value": "1980-01-01T00:00:00-05:00",
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 8`] = `
+{
+  "left": {
+    "left": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 45,
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "-",
+    "right": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 55.23,
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "literalType": "number",
+        "type": "literal",
+        "value": 0.23,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 9`] = `
+{
+  "expression": [
+    {
+      "type": "identifier",
+      "value": "this",
+    },
+    {
+      "index": {
+        "left": {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 45,
+            },
+          ],
+          "type": "expression",
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "expression": [
+              {
+                "literalType": "number",
+                "type": "literal",
+                "value": 15,
+              },
+            ],
+            "type": "expression",
+          },
+          "operator": "*",
+          "right": {
+            "expression": [
+              {
+                "literalType": "number",
+                "type": "literal",
+                "value": 3,
+              },
+            ],
+            "type": "expression",
+          },
+          "type": "operation",
+        },
+        "type": "operation",
+      },
+      "type": "indexed",
+    },
+    {
+      "type": "identifier",
+      "value": "hello",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`parser v1 tests 10`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "this",
+      },
+      {
+        "type": "identifier",
+        "value": "test",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "left": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 2,
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "*",
+    "right": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 4,
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`parser v1 tests 11`] = `
+{
+  "expression": [
+    {
+      "literalType": "boolean",
+      "type": "literal",
+      "value": true,
+    },
+    {
+      "functionName": "anyTrue",
+      "parameters": [],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
 exports[`parserv2 primitive test 1`] = `
 {
   "left": {

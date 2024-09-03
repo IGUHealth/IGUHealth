@@ -111,7 +111,7 @@ export const PLURAL_DATETIME_PRECISION = chevrotain.createToken({
 });
 
 const DATE_FORMAT = "[0-9][0-9][0-9][0-9](-[0-9][0-9](-[0-9][0-9])?)?";
-const TIME_FORMAT = "[0-9][0-9](:[0-9][0-9](:[0-9][0-9](.[0-9]+)?)?)?";
+const TIME_FORMAT = "[0-9][0-9](:[0-9][0-9](:[0-9][0-9](\\.[0-9]+)?)?)?";
 const TIMEZONE_FORMAT = "(Z|(\\+|-)[0-9][0-9]:[0-9][0-9])";
 
 export const TIME = chevrotain.createToken({
@@ -129,6 +129,9 @@ export const DATETIME = chevrotain.createToken({
   pattern: new RegExp(`@${DATE_FORMAT}(T${TIME_FORMAT}(${TIMEZONE_FORMAT})?)?`),
 });
 
+console.log(
+  new RegExp(`@${DATE_FORMAT}(T${TIME_FORMAT}(${TIMEZONE_FORMAT})?)?`),
+);
 export const THIS = chevrotain.createToken({
   name: "THIS",
   pattern: /\$this/,
