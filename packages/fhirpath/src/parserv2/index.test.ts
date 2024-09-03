@@ -27,3 +27,7 @@ test("functions", () => {
   expect(parse("hello(45, 32)")).toMatchSnapshot();
   expect(parse("%deep.test(45,32)")).toMatchSnapshot();
 });
+
+test("paren", () => {
+  expect(parse("($this.test)[$total]")).toMatchSnapshot();
+});

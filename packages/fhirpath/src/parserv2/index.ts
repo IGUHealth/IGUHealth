@@ -101,10 +101,10 @@ class FPParser extends EmbeddedActionsParser {
 
   private indexAccess = this.RULE("indexExpression", (): IndexedAST => {
     this.CONSUME(LEFT_BRACKET);
-    const expression = this.SUBRULE(this.expression);
+    const index = this.SUBRULE(this.expression);
     this.CONSUME(RIGHT_BRACKET);
 
-    return { type: "indexed", expression };
+    return { type: "indexed", index };
   });
 
   private operation<T extends ExpressionAST>(

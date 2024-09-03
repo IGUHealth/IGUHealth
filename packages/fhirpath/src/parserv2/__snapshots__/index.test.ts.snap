@@ -153,6 +153,37 @@ exports[`functions 4`] = `
 }
 `;
 
+exports[`paren 1`] = `
+{
+  "expression": [
+    {
+      "expression": [
+        {
+          "type": "this",
+        },
+        {
+          "type": "identifier",
+          "value": "test",
+        },
+      ],
+      "type": "expression",
+    },
+    {
+      "index": {
+        "expression": [
+          {
+            "type": "total",
+          },
+        ],
+        "type": "expression",
+      },
+      "type": "indexed",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
 exports[`parserv2 primitive test 1`] = `
 {
   "left": {

@@ -21,7 +21,7 @@ export type InvocationAST =
 
 export type IndexedAST = {
   type: "indexed";
-  expression: ExpressionAST;
+  index: ExpressionAST;
 };
 
 export type NullAST = { type: "literal"; literalType: "null"; value: null };
