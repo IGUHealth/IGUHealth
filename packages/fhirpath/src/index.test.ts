@@ -1,24 +1,14 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
-import { fileURLToPath } from "url";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   CarePlan,
   Element,
   OperationDefinition,
   Patient,
   Practitioner,
-  StructureDefinition,
-  canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  R4,
-  Resource,
-} from "@iguhealth/fhir-types/lib/versions";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { evaluate, evaluateWithMeta } from "./index";
 

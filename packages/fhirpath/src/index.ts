@@ -4,10 +4,16 @@ import { IMetaValue } from "@iguhealth/meta-value/interface";
 import * as metaUtils from "@iguhealth/meta-value/utilities";
 import * as metaValueV2 from "@iguhealth/meta-value/v2";
 
-import { parse } from "./parser.js";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AST = any;
+import parse from "./parserv2/index.js";
+import {
+  ExpressionAST,
+  FunctionAST,
+  IndexedAST,
+  InvocationAST,
+  OperationAST,
+  SingularExpression,
+  TermAST,
+} from "./parserv2/types.js";
 
 export type Options = {
   fhirVersion?: FHIR_VERSION;
@@ -41,19 +47,24 @@ function assert(assertion: boolean, message?: string) {
 }
 
 // Problem is you can't distinguish an identifier vs typeidentifier so just check to confirm singular and only identifier present.
-function expressionToTypeIdentifier(ast: AST) {
-  if (ast.type !== "Expression") return;
-  if (ast.value?.type !== "Singular") return;
-  if (ast.value?.next !== undefined) return;
-  if (ast.value?.value?.type !== "Invocation") return;
-  if (ast.value?.value?.value?.type !== "Identifier") return;
-  return ast.value.value.value.value;
+function expressionToTypeIdentifier(ast: ExpressionAST): string | undefined {
+  switch (ast.type) {
+    case "expression": {
+      if (ast.expression[0].type === "identifier") {
+        return ast.expression[0].value;
+      }
+      return undefined;
+    }
+    default: {
+      return undefined;
+    }
+  }
 }
 
 const fp_functions: Record<
   string,
   (
-    ast: AST,
+    ast: FunctionAST,
     context: IMetaValue<unknown>[],
     options: Options,
   ) => Promise<IMetaValue<unknown>[]>
@@ -61,11 +72,11 @@ const fp_functions: Record<
   // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
   async exists(ast, context, options) {
-    if (ast.next.length === 1) {
+    if (ast.parameters.length === 1) {
       return metaUtils.flatten(
         await metaValueV2.metaValue(
           { fhirVersion: options.fhirVersion, type: "boolean" as uri },
-          (await _evaluate(ast.next[0], context, options)).length > 0,
+          (await _evaluate(ast.parameters[0], context, options)).length > 0,
         ),
       );
     }
@@ -91,7 +102,7 @@ const fp_functions: Record<
         { fhirVersion: options.fhirVersion, type: "boolean" as uri },
         flatten(
           await Promise.all(
-            context.map((v) => _evaluate(ast.next[0], [v], options)),
+            context.map((v) => _evaluate(ast.parameters[0], [v], options)),
           ),
         )
           .map((v) => v.getValue())
@@ -132,7 +143,7 @@ const fp_functions: Record<
     );
   },
   async subsetOf(ast, context, options) {
-    const otherSet = await _evaluate(ast.next[0], context, options);
+    const otherSet = await _evaluate(ast.parameters[0], context, options);
     return metaUtils.flatten(
       await metaValueV2.metaValue(
         { fhirVersion: options.fhirVersion, type: "boolean" as uri },
@@ -149,7 +160,7 @@ const fp_functions: Record<
   },
   // Conceptionally this is the opposite of subsetOf.
   async supersetOf(ast, context, options) {
-    const otherSet = await _evaluate(ast.next[0], context, options);
+    const otherSet = await _evaluate(ast.parameters[0], context, options);
     return metaUtils.flatten(
       await metaValueV2.metaValue(
         { fhirVersion: options.fhirVersion, type: "boolean" as uri },
@@ -191,7 +202,11 @@ const fp_functions: Record<
     return Object.values(map);
   },
   async isDistinct(ast, context, options) {
-    const distinct = await fp_functions.distinct(undefined, context, options);
+    const distinct = await fp_functions.distinct(
+      { type: "function", functionName: "distinct", parameters: [] },
+      context,
+      options,
+    );
     return metaUtils.flatten(
       await metaValueV2.metaValue(
         { fhirVersion: options.fhirVersion, type: "boolean" as uri },
@@ -201,7 +216,7 @@ const fp_functions: Record<
   },
   // [FILTER FUNCTIONS]
   async where(ast, context, options) {
-    const criteria = ast.next[0];
+    const criteria = ast.parameters[0];
     const result: IMetaValue<unknown>[] = [];
     for (const v of context) {
       const evaluation = await _evaluate(criteria, [v], options);
@@ -243,7 +258,7 @@ const fp_functions: Record<
     return _evaluate(compileAST("repeat(children())"), context, options);
   },
   async select(ast, context, options) {
-    const selection = ast.next[0];
+    const selection = ast.parameters[0];
     return flatten(
       await Promise.all(
         context.map((v) => {
@@ -253,7 +268,7 @@ const fp_functions: Record<
     );
   },
   async repeat(ast, context, options) {
-    const projection = ast.next[0];
+    const projection = ast.parameters[0];
     let endResult: IMetaValue<unknown>[] = [];
     let cur = context;
     while (cur.length !== 0) {
@@ -264,8 +279,9 @@ const fp_functions: Record<
   },
   // Type Functions
   async ofType(ast, context) {
-    const parameters = ast.next;
+    const parameters = ast.parameters;
     const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
+    if (!typeIdentifier) throw new Error("Invalid Type identifier");
     return filterByType(typeIdentifier, context);
   },
   async as(ast, context) {
@@ -273,8 +289,9 @@ const fp_functions: Record<
       context.length <= 1,
       "as function must have a length of 1 for context.",
     );
-    const parameters = ast.next;
+    const parameters = ast.parameters;
     const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
+    if (!typeIdentifier) throw new Error("Invalid Type identifier");
     return filterByType(typeIdentifier, context);
   },
   async resolve(ast, context) {
@@ -283,7 +300,7 @@ const fp_functions: Record<
   },
 
   async replace(ast, context, options) {
-    if (ast.next.length !== 2) {
+    if (ast.parameters.length !== 2) {
       throw new Error("Replace function must have two arguments");
     }
     if (context.length !== 1) {
@@ -294,7 +311,7 @@ const fp_functions: Record<
     }
     const value = context[0].getValue();
 
-    const [findAST, replaceAST] = ast.next;
+    const [findAST, replaceAST] = ast.parameters;
     const findEval = await _evaluate(findAST, context, options);
     const replaceEval = await _evaluate(replaceAST, context, options);
     if (
@@ -336,84 +353,103 @@ const fp_functions: Record<
 };
 
 async function evaluateInvocation(
-  ast: AST,
+  ast: InvocationAST,
   context: IMetaValue<unknown>[],
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
-  switch (ast.value.type) {
-    case "Index":
+  switch (ast.type) {
+    case "index":
       throw new Error("Not implemented");
-    case "Total":
+    case "total":
       throw new Error("Not implemented");
-    case "This":
+    case "this":
       return context;
-    case "Identifier": {
+    case "identifier": {
       const res = (
         await Promise.all(
-          context.map(async (v) =>
-            metaUtils.flatten(v.descend(ast.value.value)),
-          ),
+          context.map(async (v) => metaUtils.flatten(v.descend(ast.value))),
         )
       ).flat();
 
       return res;
     }
-    case "Function": {
-      const fp_func = fp_functions[ast.value.value.value];
+    case "function": {
+      const fp_func = fp_functions[ast.functionName];
       if (!fp_func)
-        throw new Error("Unknown function '" + ast.value.value.value + "'");
-      return fp_func(ast.value, context, options);
+        throw new Error("Unknown function '" + ast.functionName + "'");
+      return fp_func(ast, context, options);
     }
-    default:
-      throw new Error("Unknown invocation type: '" + ast.value.type + "'");
+    default: {
+      // @ts-ignore
+      throw new Error("Unknown invocation type: '" + ast.type + "'");
+    }
   }
 }
 
-async function _evaluateTermStart(
-  ast: AST,
-  context: IMetaValue<unknown>[],
-  options: Options,
-): Promise<IMetaValue<unknown>[]> {
-  switch (ast.value.type) {
-    case "Invocation": {
-      // Special code handling for start with typeidentifier
-      if (ast.value.value.type === "Identifier") {
-        const typeIdentifier = ast?.value?.value?.value;
-        const result = filterByType(typeIdentifier, context);
-        if (result.length > 0) return result;
-      }
-      return evaluateInvocation(ast.value, context, options);
-    }
-    case "Literal": {
-      return metaUtils.flatten(
-        await metaValueV2.metaValue(
-          { fhirVersion: options.fhirVersion },
-          ast.value.value,
-        ),
-      );
-    }
-    case "Variable": {
-      return getVariableValue(ast.value.value.value, options);
-    }
-    case "Expression": {
-      return _evaluate(ast.value, context, options);
-    }
-    default:
-      throw new Error("Unknown term type: '" + ast.value.type + "'");
-  }
-}
-
-async function evaluateProperty(
-  ast: AST,
+async function evaluateTerm(
+  ast: TermAST,
   context: IMetaValue<unknown>[],
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   switch (ast.type) {
-    case "Invocation": {
+    case "function": {
+      const fp_func = fp_functions[ast.functionName];
+      if (!fp_func)
+        throw new Error("Unknown function '" + ast.functionName + "'");
+      return fp_func(ast, context, options);
+    }
+    case "expression":
+    case "operation": {
+      return _evaluate(ast, context, options);
+    }
+
+    case "literal": {
+      return metaUtils.flatten(
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion },
+          ast.value,
+        ),
+      );
+    }
+    case "variable": {
+      return getVariableValue(ast.value, options);
+    }
+    case "identifier": {
+      // Special handling for type identifier at start for example Patient.name
+      const typeIdentifier = ast.value;
+      const result = filterByType(typeIdentifier, context);
+      if (result.length > 0) return result;
+      else {
+        return evaluateInvocation(ast, context, options);
+      }
+    }
+    case "index":
+    case "this":
+    case "total": {
       return evaluateInvocation(ast, context, options);
     }
-    case "Indexed": {
-      const indexed = await _evaluate(ast.value, context, options);
+    default: {
+      // @ts-ignore
+      throw new Error("Unknown term type: '" + ast.type + "'");
+    }
+  }
+}
+
+async function evaluateProperty(
+  ast: InvocationAST | IndexedAST,
+  context: IMetaValue<unknown>[],
+  options: Options,
+): Promise<IMetaValue<unknown>[]> {
+  switch (ast.type) {
+    case "identifier":
+    case "this":
+    case "total":
+    case "function":
+    case "index": {
+      return evaluateInvocation(ast, context, options);
+    }
+    case "indexed": {
+      const indexed = await _evaluate(ast.index, context, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
       if (!typeChecking("number", indexed))
@@ -421,22 +457,28 @@ async function evaluateProperty(
       const value = context[indexed[0].getValue()];
       return value !== undefined ? [value] : [];
     }
-    default:
+    default: {
+      // @ts-ignore
       throw new Error("Unknown term type: '" + ast.type + "'");
+    }
   }
 }
 
 async function evaluateSingular(
-  ast: AST,
+  ast: SingularExpression,
   context: IMetaValue<unknown>[],
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
-  let start = await _evaluateTermStart(ast, context, options);
-  if (ast.next) {
-    for (const next of ast.next) {
-      start = await evaluateProperty(next, start, options);
-    }
+  let start = await evaluateTerm(ast.expression[0], context, options);
+
+  for (const next of ast.expression.slice(1)) {
+    start = await evaluateProperty(
+      next as InvocationAST | IndexedAST,
+      start,
+      options,
+    );
   }
+
   return start;
 }
 
@@ -481,7 +523,7 @@ type EvaledOperation = (
 function op_prevaled(
   operation_function: EvaledOperation,
 ): (
-  ast: AST,
+  ast: OperationAST,
   context: IMetaValue<unknown>[],
   options: Options,
 ) => Promise<IMetaValue<unknown>[]> {
@@ -533,7 +575,7 @@ function filterByType<T>(type: string, context: IMetaValue<T>[]) {
 const fp_operations: Record<
   string,
   (
-    ast: AST,
+    ast: OperationAST,
     context: IMetaValue<unknown>[],
     options: Options,
   ) => Promise<IMetaValue<unknown>[]>
@@ -564,6 +606,7 @@ const fp_operations: Record<
         "The 'as' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
+    if (!typeIdentifier) throw new Error("Invalid Type identifier");
     return filterByType(typeIdentifier, left);
   },
   is: async (ast, context, options) => {
@@ -573,6 +616,7 @@ const fp_operations: Record<
         "The 'is' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
+    if (!typeIdentifier) throw new Error("Invalid Type identifier");
 
     return (
       await Promise.all(
@@ -657,7 +701,7 @@ const fp_operations: Record<
 };
 
 async function evaluateOperation(
-  ast: AST,
+  ast: OperationAST,
   context: IMetaValue<unknown>[],
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
@@ -667,19 +711,21 @@ async function evaluateOperation(
 }
 
 async function _evaluate(
-  ast: AST,
+  ast: ExpressionAST,
   context: IMetaValue<unknown>[],
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
-  switch (ast.value.type) {
-    case "Operation": {
-      return evaluateOperation(ast.value, context, options);
+  switch (ast.type) {
+    case "operation": {
+      return evaluateOperation(ast, context, options);
     }
-    case "Singular": {
-      return evaluateSingular(ast.value, context, options);
+    case "expression": {
+      return evaluateSingular(ast, context, options);
     }
-    default:
-      throw new Error("Invalid AST Expression Node '" + ast.value.type + "'");
+    default: {
+      // @ts-ignore
+      throw new Error("Invalid AST Expression Node '" + ast.type + "'");
+    }
   }
 }
 
@@ -690,9 +736,9 @@ function nonNullable(v: unknown): v is NonNullable<unknown> {
   return v !== undefined && v !== null;
 }
 
-const cachedAST: Record<string, AST> = {};
+const cachedAST: Record<string, ExpressionAST> = {};
 
-function compileAST(expression: string) {
+function compileAST(expression: string): ExpressionAST {
   if (!cachedAST[expression]) {
     const ast = parse(expression);
     cachedAST[expression] = ast;
@@ -706,19 +752,17 @@ export async function evaluateWithMeta(
   ctx: unknown,
   options: Options & { type?: uri } = { fhirVersion: R4 },
 ): Promise<IMetaValue<NonNullable<unknown>>[]> {
-  return (
-    await _evaluate(
-      compileAST(expression),
-      metaUtils.flatten(
-        metaValueV2.metaValue(
-          { fhirVersion: options.fhirVersion, type: options.type },
-          ctx,
-        ),
-      ),
-      options,
-    )
-  ).filter((v: IMetaValue<unknown>): v is IMetaValue<NonNullable<unknown>> =>
-    nonNullable(v.getValue()),
+  const ast = compileAST(expression);
+  const context = metaUtils.flatten(
+    metaValueV2.metaValue(
+      { fhirVersion: options.fhirVersion, type: options.type },
+      ctx,
+    ),
+  );
+
+  return (await _evaluate(ast, context, options)).filter(
+    (v: IMetaValue<unknown>): v is IMetaValue<NonNullable<unknown>> =>
+      nonNullable(v.getValue()),
   );
 }
 

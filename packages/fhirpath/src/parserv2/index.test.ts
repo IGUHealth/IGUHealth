@@ -43,7 +43,7 @@ test("parser v1 tests", () => {
 
   // Deliniated identifiers testing
   expect(
-    parse("test.`HELLO-WORLD_IDENTIFIER`.deliniated.`strange-synt`"),
+    parse("test.`HELLO-WORLD IDENTIFIER`.deliniated.`strange-synt`"),
   ).toMatchSnapshot();
 
   // expect(parse("45days - 12years")).toMatchSnapshot();
@@ -67,4 +67,20 @@ test("parser v1 tests", () => {
   expect(parse("$this.test + 2 * 4")).toMatchSnapshot();
 
   expect(parse("true.anyTrue()")).toMatchSnapshot();
+});
+
+test("Union tests", () => {
+  expect(parse("ValueSet.and.test")).toMatchSnapshot();
+
+  expect(
+    parse(
+      "ValueSet.expansion.contains.code | ValueSet.compose.include.concept.code",
+    ),
+  ).toMatchSnapshot();
+});
+
+test("As tests", () => {
+  expect(
+    parse("Condition.abatement.as(Age) | Condition.abatement.as(Range)"),
+  ).toMatchSnapshot();
 });

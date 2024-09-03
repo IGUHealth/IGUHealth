@@ -1,5 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`As tests 1`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "identifier",
+        "value": "Condition",
+      },
+      {
+        "type": "identifier",
+        "value": "abatement",
+      },
+      {
+        "functionName": "as",
+        "parameters": [
+          {
+            "expression": [
+              {
+                "type": "identifier",
+                "value": "Age",
+              },
+            ],
+            "type": "expression",
+          },
+        ],
+        "type": "function",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "|",
+  "right": {
+    "expression": [
+      {
+        "type": "identifier",
+        "value": "Condition",
+      },
+      {
+        "type": "identifier",
+        "value": "abatement",
+      },
+      {
+        "functionName": "as",
+        "parameters": [
+          {
+            "expression": [
+              {
+                "type": "identifier",
+                "value": "Range",
+              },
+            ],
+            "type": "expression",
+          },
+        ],
+        "type": "function",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
 exports[`Nested access 1`] = `
 {
   "expression": [
@@ -36,6 +99,79 @@ exports[`Nested access ops 1`] = `
         "literalType": "number",
         "type": "literal",
         "value": 45,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "operation",
+}
+`;
+
+exports[`Union tests 1`] = `
+{
+  "expression": [
+    {
+      "type": "identifier",
+      "value": "ValueSet",
+    },
+    {
+      "type": "identifier",
+      "value": "and",
+    },
+    {
+      "type": "identifier",
+      "value": "test",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`Union tests 2`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "identifier",
+        "value": "ValueSet",
+      },
+      {
+        "type": "identifier",
+        "value": "expansion",
+      },
+      {
+        "type": "identifier",
+        "value": "contains",
+      },
+      {
+        "type": "identifier",
+        "value": "code",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "|",
+  "right": {
+    "expression": [
+      {
+        "type": "identifier",
+        "value": "ValueSet",
+      },
+      {
+        "type": "identifier",
+        "value": "compose",
+      },
+      {
+        "type": "identifier",
+        "value": "include",
+      },
+      {
+        "type": "identifier",
+        "value": "concept",
+      },
+      {
+        "type": "identifier",
+        "value": "code",
       },
     ],
     "type": "expression",
@@ -408,51 +544,25 @@ exports[`parser v1 tests 3`] = `
 
 exports[`parser v1 tests 4`] = `
 {
-  "left": {
-    "left": {
-      "expression": [
-        {
-          "type": "identifier",
-          "value": "test",
-        },
-        {
-          "type": "identifier",
-          "value": "HELLO",
-        },
-      ],
-      "type": "expression",
+  "expression": [
+    {
+      "type": "identifier",
+      "value": "test",
     },
-    "operator": "-",
-    "right": {
-      "expression": [
-        {
-          "type": "identifier",
-          "value": "WORLD_IDENTIFIER",
-        },
-        {
-          "type": "identifier",
-          "value": "deliniated",
-        },
-        {
-          "type": "identifier",
-          "value": "strange",
-        },
-      ],
-      "type": "expression",
+    {
+      "type": "identifier",
+      "value": "HELLO-WORLD IDENTIFIER",
     },
-    "type": "operation",
-  },
-  "operator": "-",
-  "right": {
-    "expression": [
-      {
-        "type": "identifier",
-        "value": "synt",
-      },
-    ],
-    "type": "expression",
-  },
-  "type": "operation",
+    {
+      "type": "identifier",
+      "value": "deliniated",
+    },
+    {
+      "type": "identifier",
+      "value": "strange-synt",
+    },
+  ],
+  "type": "expression",
 }
 `;
 
