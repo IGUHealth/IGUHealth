@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmbeddedActionsParser, ParserMethod, TokenType } from "chevrotain";
 
 import FPLexer, {
@@ -45,8 +44,6 @@ import {
   VariableAST,
 } from "./types.js";
 
-type Expression = any;
-
 class FPParser extends EmbeddedActionsParser {
   constructor() {
     super(allTokens);
@@ -73,7 +70,7 @@ class FPParser extends EmbeddedActionsParser {
   private expressionInner = this.RULE(
     "expressionInner",
     (): Array<InvocationAST | IndexedAST> => {
-      const properties: any[] = [];
+      const properties: Array<InvocationAST | IndexedAST> = [];
       this.MANY(() =>
         this.OR([
           {
@@ -113,15 +110,15 @@ class FPParser extends EmbeddedActionsParser {
   private operation<T extends ExpressionAST>(
     operatorToken: TokenType,
     nested: ParserMethod<[], T>,
-  ): OperationAST {
-    let operationAST: Expression = this.SUBRULE1(nested);
+  ): ExpressionAST {
+    let operationAST: ExpressionAST = this.SUBRULE1(nested);
 
     this.MANY(() => {
       const operator = this.CONSUME2(operatorToken);
       const rightSide = this.SUBRULE2(nested);
 
       operationAST = {
-        type: "Operation",
+        type: "operation",
         operator: operator.image as OperationAST["operator"],
         left: operationAST,
         right: rightSide,
@@ -131,44 +128,53 @@ class FPParser extends EmbeddedActionsParser {
     return operationAST;
   }
 
-  private impliesOperation = this.RULE("impliesOperation", () => {
-    return this.operation(IMPLIES_OPERATION, this.orOperation);
-  });
+  private impliesOperation = this.RULE(
+    "impliesOperation",
+    (): ExpressionAST => {
+      return this.operation(IMPLIES_OPERATION, this.orOperation);
+    },
+  );
 
-  private orOperation = this.RULE("orOperation", () => {
+  private orOperation = this.RULE("orOperation", (): ExpressionAST => {
     return this.operation(OR_OPERATION, this.andOperation);
   });
 
-  private andOperation = this.RULE("andOperation", () => {
+  private andOperation = this.RULE("andOperation", (): ExpressionAST => {
     return this.operation(AND_OPERATION, this.membershipOperation);
   });
 
-  private membershipOperation = this.RULE("membershipOperation", () => {
-    return this.operation(MEMBERSHIP_OPERATION, this.equalityOperation);
-  });
+  private membershipOperation = this.RULE(
+    "membershipOperation",
+    (): ExpressionAST => {
+      return this.operation(MEMBERSHIP_OPERATION, this.equalityOperation);
+    },
+  );
 
-  private equalityOperation = this.RULE("equalityOperation", () => {
-    return this.operation(EQUALITY_OPERATION, this.unionOperation);
-  });
+  private equalityOperation = this.RULE(
+    "equalityOperation",
+    (): ExpressionAST => {
+      return this.operation(EQUALITY_OPERATION, this.unionOperation);
+    },
+  );
 
-  private unionOperation = this.RULE("unionOperation", () => {
+  private unionOperation = this.RULE("unionOperation", (): ExpressionAST => {
     return this.operation(UNION_OPERATION, this.typeOperation);
   });
 
-  private typeOperation = this.RULE("typeOperation", () => {
+  private typeOperation = this.RULE("typeOperation", (): ExpressionAST => {
     return this.operation(TYPE_OPERATION, this.additiveOperation);
   });
 
   private additiveOperation = this.RULE(
     "additiveOperation",
-    (): OperationAST => {
+    (): ExpressionAST => {
       return this.operation(ADDITIVE_OPERATION, this.multiplicativeOperation);
     },
   );
 
   private multiplicativeOperation = this.RULE(
     "multiplicativeOperation",
-    (): OperationAST | Expression => {
+    (): ExpressionAST => {
       return this.operation(MULTIPLICATIVE_OPERATION, this._expression);
     },
   );
@@ -333,7 +339,7 @@ class FPParser extends EmbeddedActionsParser {
   private _function = this.RULE("function", (): FunctionAST => {
     const functionName = this.SUBRULE(this.identifier);
     this.CONSUME(LEFT_PARAN);
-    const parameters: Expression[] = [];
+    const parameters: ExpressionAST[] = [];
     this.MANY_SEP({
       SEP: COMMA,
       DEF: () => {
@@ -353,7 +359,7 @@ class FPParser extends EmbeddedActionsParser {
 
 // reuse the same parser instance.
 const parser = new FPParser();
-export default function parse(expression: string): any {
+export default function parse(expression: string): ExpressionAST {
   const lexResult = FPLexer.tokenize(expression);
   // setting a new input will RESET the parser instance's state.
   parser.input = lexResult.tokens;
