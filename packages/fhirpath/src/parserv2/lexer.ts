@@ -25,7 +25,7 @@ export const OR_OPERATION = chevrotain.createToken({
 });
 // // And Operation
 export const AND_OPERATION = chevrotain.createToken({
-  name: "OrOperation",
+  name: "AndOperation",
   pattern: /and/,
   longer_alt: IDENTIFIER,
 });
@@ -129,9 +129,6 @@ export const DATETIME = chevrotain.createToken({
   pattern: new RegExp(`@${DATE_FORMAT}(T${TIME_FORMAT}(${TIMEZONE_FORMAT})?)?`),
 });
 
-console.log(
-  new RegExp(`@${DATE_FORMAT}(T${TIME_FORMAT}(${TIMEZONE_FORMAT})?)?`),
-);
 export const THIS = chevrotain.createToken({
   name: "THIS",
   pattern: /\$this/,
@@ -179,6 +176,7 @@ export const DOT = chevrotain.createToken({
 
 // note we are placing WhiteSpace first as it is very common thus it will speed up the lexer.
 export const allTokens = [
+  DELIMINATED_IDENTIFIER,
   WHITESPACE,
   COMMA,
   PERCENTAGE,

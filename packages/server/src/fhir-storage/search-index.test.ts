@@ -5,9 +5,9 @@ import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import * as r4Sets from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import {
+  StructureDefinition,
   canonical,
   code,
-  StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/lib/generated/r4b/sets";

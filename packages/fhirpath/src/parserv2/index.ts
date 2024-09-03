@@ -7,6 +7,7 @@ import FPLexer, {
   COMMA,
   DATE,
   DATETIME,
+  DATETIME_PRECISION,
   DELIMINATED_IDENTIFIER,
   DOT,
   EQUALITY_OPERATION,
@@ -21,6 +22,7 @@ import FPLexer, {
   NUMBER,
   OR_OPERATION,
   PERCENTAGE,
+  PLURAL_DATETIME_PRECISION,
   RIGHT_BRACKET,
   RIGHT_PARAN,
   STRING,
@@ -292,6 +294,82 @@ class FPParser extends EmbeddedActionsParser {
           return {
             type: "identifier",
             value: deliminatedIdentifier.image.slice(1, -1),
+          };
+        },
+      },
+      // Handle keywords being used as identifier.
+      {
+        ALT: (): IdentifierAST => {
+          const impliesOperator = this.CONSUME2(IMPLIES_OPERATION);
+          return {
+            type: "identifier",
+            value: impliesOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const orOperator = this.CONSUME2(OR_OPERATION);
+          return {
+            type: "identifier",
+            value: orOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const andOperator = this.CONSUME2(AND_OPERATION);
+          return {
+            type: "identifier",
+            value: andOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const memOperator = this.CONSUME2(MEMBERSHIP_OPERATION);
+          return {
+            type: "identifier",
+            value: memOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const typeOperator = this.CONSUME2(TYPE_OPERATION);
+          return {
+            type: "identifier",
+            value: typeOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const multOperator = this.CONSUME2(MULTIPLICATIVE_OPERATION);
+
+          return {
+            type: "identifier",
+            value: multOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const multOperator = this.CONSUME2(DATETIME_PRECISION);
+
+          return {
+            type: "identifier",
+            value: multOperator.image,
+          };
+        },
+      },
+      {
+        ALT: (): IdentifierAST => {
+          const multOperator = this.CONSUME2(PLURAL_DATETIME_PRECISION);
+
+          return {
+            type: "identifier",
+            value: multOperator.image,
           };
         },
       },

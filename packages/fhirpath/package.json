@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
-    "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser.ts --cache src/grammar.pegjs",
+    "generate": "peggy -o src/parser.ts --cache src/grammar.pegjs",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "peggy": "^4.0.3",
     "ts-jest": "^29.2.5",
     "ts-pegjs": "^4.2.1",
+    "tsx": "^4.19.0",
     "typescript": "5.5.4"
   },
   "files": [
