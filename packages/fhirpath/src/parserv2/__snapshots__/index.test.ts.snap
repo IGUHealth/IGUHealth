@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Nested access 1`] = `
+{
+  "expression": [
+    {
+      "type": "this",
+    },
+    {
+      "type": "identifier",
+      "value": "test",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`Nested access ops 1`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "this",
+      },
+      {
+        "type": "identifier",
+        "value": "test",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "!=",
+  "right": {
+    "expression": [
+      {
+        "literalType": "number",
+        "type": "literal",
+        "value": 45,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`functions 1`] = `
+{
+  "expression": [
+    {
+      "functionName": "hello",
+      "parameters": [],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`functions 2`] = `
+{
+  "expression": [
+    {
+      "functionName": "hello",
+      "parameters": [
+        {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 45,
+            },
+          ],
+          "type": "expression",
+        },
+      ],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`functions 3`] = `
+{
+  "expression": [
+    {
+      "functionName": "hello",
+      "parameters": [
+        {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 45,
+            },
+          ],
+          "type": "expression",
+        },
+        {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 32,
+            },
+          ],
+          "type": "expression",
+        },
+      ],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`functions 4`] = `
+{
+  "expression": [
+    {
+      "type": "variable",
+      "value": "deep",
+    },
+    {
+      "functionName": "test",
+      "parameters": [
+        {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 45,
+            },
+          ],
+          "type": "expression",
+        },
+        {
+          "expression": [
+            {
+              "literalType": "number",
+              "type": "literal",
+              "value": 32,
+            },
+          ],
+          "type": "expression",
+        },
+      ],
+      "type": "function",
+    },
+  ],
+  "type": "expression",
+}
+`;
+
+exports[`parserv2 primitive test 1`] = `
+{
+  "left": {
+    "left": {
+      "expression": [
+        {
+          "literalType": "number",
+          "type": "literal",
+          "value": 45.5,
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "+",
+    "right": {
+      "left": {
+        "expression": [
+          {
+            "literalType": "number",
+            "type": "literal",
+            "value": 2,
+          },
+        ],
+        "type": "expression",
+      },
+      "operator": "*",
+      "right": {
+        "expression": [
+          {
+            "literalType": "number",
+            "type": "literal",
+            "value": 5,
+          },
+        ],
+        "type": "expression",
+      },
+      "type": "Operation",
+    },
+    "type": "Operation",
+  },
+  "operator": "=",
+  "right": {
+    "expression": [
+      {
+        "literalType": "number",
+        "type": "literal",
+        "value": 27,
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`parserv2 primitive test 2`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "literalType": "string",
+        "type": "literal",
+        "value": "hello",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "literalType": "string",
+        "type": "literal",
+        "value": "wolrd",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`parserv2 primitive test 3`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "literalType": "datetime",
+        "type": "literal",
+        "value": "1980",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "literalType": "time",
+        "type": "literal",
+        "value": "12:00",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`parserv2 primitive test 4`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "literalType": "datetime",
+        "type": "literal",
+        "value": "1980T12:00Z",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "literalType": "time",
+        "type": "literal",
+        "value": "12:00",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`variables 1`] = `
+{
+  "left": {
+    "expression": [
+      {
+        "type": "variable",
+        "value": "hello",
+      },
+      {
+        "type": "identifier",
+        "value": "test",
+      },
+    ],
+    "type": "expression",
+  },
+  "operator": "+",
+  "right": {
+    "expression": [
+      {
+        "type": "variable",
+        "value": "myint_test",
+      },
+    ],
+    "type": "expression",
+  },
+  "type": "Operation",
+}
+`;

@@ -17,12 +17,14 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
-    "@iguhealth/meta-value": "workspace:^"
+    "@iguhealth/meta-value": "workspace:^",
+    "chevrotain": "^11.0.3"
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-typescript": "^7.24.7",
+    "@chevrotain/types": "^11.0.3",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
