@@ -33,6 +33,18 @@ expression
 _singular_expression = term:term next:expression_inner?
 { return buildNode("Expression", buildNode("Singular", term, next)) }
 
+expression_inner
+        = invocation_expression
+        / indexed_expression
+
+invocation_expression
+      = '.' invocation:invocation next:(expression_inner)*    //invocationExpression
+{ return [invocation, ...next.flat()]; }
+
+indexed_expression
+        = '[' expression:(expression) ']' next:(expression_inner)*                   //indexerExpression
+{ return [buildNode("Indexed", expression), ...next.flat()] }
+
 // #01 . (path/function invocation)
 // #02 [] (indexer)
 // #03 unary + and -
@@ -65,21 +77,6 @@ additive_operation = head:multiplication_operation WS tail:($('+' / '-' / '&') W
 { return buildBinaryExpression(head, tail)}
 multiplication_operation = head:_singular_expression WS tail:($('*' / '/' / 'div' / 'mod') WS _singular_expression WS)*
 { return buildBinaryExpression(head, tail)}
-
-
-
-
-expression_inner
-        = invocation_expression
-        / indexed_expression
-
-invocation_expression
-      = '.' invocation:invocation next:(expression_inner)*    //invocationExpression
-{ return [invocation, ...next.flat()]; }
-
-indexed_expression
-        = '[' expression:(expression) ']' next:(expression_inner)*                   //indexerExpression
-{ return [buildNode("Indexed", expression), ...next.flat()] }
 
 term
         = literal                                               //literalTerm
