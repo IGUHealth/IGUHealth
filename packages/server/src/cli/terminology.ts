@@ -163,12 +163,20 @@ export function terminologyCommands(command: Command) {
     .command("load")
     .description("Load external codesystems into DB")
     .requiredOption("-s, --system <system...>", "System to load.")
+    .option("-d, --delete", "Delete existing data.", false)
     .action(async (options) => {
       const pg = createPGPool();
-      await Promise.all(
-        options.system.map(async (system: string) => {
-          await loadTerminology(pg, system);
-        }),
-      );
+      db.serializable(pg, async (tx) => {
+        if (options.delete) {
+          await db.deletes("terminology_systems", {}).run(tx);
+          await db.deletes("terminology_codes", {}).run(tx);
+          await db.deletes("terminology_edge", {}).run(tx);
+        }
+        await Promise.all(
+          options.system.map(async (system: string) => {
+            await loadTerminology(tx, system);
+          }),
+        );
+      });
     });
 }
