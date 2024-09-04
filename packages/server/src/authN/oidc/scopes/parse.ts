@@ -97,6 +97,7 @@ function parsePermissions(methods: string): {
       let loc = -1;
       const order = ["c", "r", "u", "d", "s"];
       for (const method of methods.split("")) {
+        // ----------------------------------------------------------------------------------------
         // See above verifying ordering is correct so as to disallow dus which is out of order.
         if (order.indexOf(method) < loc) {
           throw new OIDCError({
@@ -105,6 +106,7 @@ function parsePermissions(methods: string): {
           });
         }
         loc = order.indexOf(method);
+        // ----------------------------------------------------------------------------------------
 
         switch (method) {
           /**
