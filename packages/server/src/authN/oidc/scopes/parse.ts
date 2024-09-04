@@ -99,7 +99,7 @@ function parsePermissions(methods: string): {
       for (const method of methods.split("")) {
         // ----------------------------------------------------------------------------------------
         // See above verifying ordering is correct so as to disallow dus which is out of order.
-        if (order.indexOf(method) < loc) {
+        if (order.indexOf(method) <= loc) {
           throw new OIDCError({
             error: "invalid_scope",
             error_description: `Invalid scope access type methods: '${methods}' not supported.`,
