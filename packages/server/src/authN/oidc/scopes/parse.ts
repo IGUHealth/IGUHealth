@@ -57,6 +57,7 @@ function parsePermissions(methods: string): {
   search: boolean;
 } {
   switch (methods) {
+    // Perm v1 which are conveted to v2 scopes.
     case "*": {
       return {
         create: true,
