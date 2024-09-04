@@ -56,77 +56,110 @@ function parsePermissions(methods: string): {
   delete: boolean;
   search: boolean;
 } {
-  if (methods === "*") {
-    return {
-      create: true,
-      read: true,
-      update: true,
-      delete: true,
-      search: true,
-    };
-  }
+  switch (methods) {
+    case "*": {
+      return {
+        create: true,
+        read: true,
+        update: true,
+        delete: true,
+        search: true,
+      };
+    }
+    case "write": {
+      return {
+        create: true,
+        update: true,
+        delete: true,
+        read: false,
+        search: false,
+      };
+    }
+    case "read": {
+      return {
+        read: true,
+        search: true,
+        create: false,
+        update: false,
+        delete: false,
+      };
+    }
+    default: {
+      const methodsObj = {
+        create: false,
+        read: false,
+        update: false,
+        delete: false,
+        search: false,
+      };
+      // Scope requests with undefined or out of order interactions MAY be ignored, replaced with server default scopes, or rejected.
+      // per [https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-fhir-resources].
+      let loc = -1;
+      const order = ["c", "r", "u", "d", "s"];
+      for (const method of methods.split("")) {
+        // See above verifying ordering is correct so as to disallow dus which is out of order.
+        if (order.indexOf(method) < loc) {
+          throw new OIDCError({
+            error: "invalid_scope",
+            error_description: `Invalid scope access type methods: '${methods}' not supported.`,
+          });
+        }
+        loc = order.indexOf(method);
 
-  const methodsObj = {
-    create: false,
-    read: false,
-    update: false,
-    delete: false,
-    search: false,
-  };
-  for (const method of methods.split("")) {
-    switch (method) {
-      /**
-       * Type level create
-       */
-      case "c": {
-        methodsObj.create = true;
-        break;
+        switch (method) {
+          /**
+           * Type level create
+           */
+          case "c": {
+            methodsObj.create = true;
+            break;
+          }
+          /**
+           * Instance level read
+           * Instance level vread
+           * Instance level history
+           */
+          case "r": {
+            methodsObj.read = true;
+            break;
+          }
+          /**
+           * Instance level update Note that some servers allow for an update operation to create a new instance,
+           * and this is allowed by the update scope
+           * Instance level patch
+           */
+          case "u": {
+            methodsObj.update = true;
+            break;
+          }
+          /**
+           * Instance level delete
+           */
+          case "d": {
+            methodsObj.delete = true;
+            break;
+          }
+          /**
+           * Type level search
+           * Type level history
+           * System level search
+           * System level history
+           */
+          case "s": {
+            methodsObj.search = true;
+            break;
+          }
+          default: {
+            throw new OIDCError({
+              error: "invalid_scope",
+              error_description: `Invalid scope access type methods: '${methods}' not supported.`,
+            });
+          }
+        }
       }
-      /**
-       * Instance level read
-       * Instance level vread
-       * Instance level history
-       */
-      case "r": {
-        methodsObj.read = true;
-        break;
-      }
-      /**
-       * Instance level update Note that some servers allow for an update operation to create a new instance,
-       * and this is allowed by the update scope
-       * Instance level patch
-       */
-      case "u": {
-        methodsObj.update = true;
-        break;
-      }
-      /**
-       * Instance level delete
-       */
-      case "d": {
-        methodsObj.delete = true;
-        break;
-      }
-      /**
-       * Type level search
-       * Type level history
-       * System level search
-       * System level history
-       */
-      case "s": {
-        methodsObj.search = true;
-        break;
-      }
-      default: {
-        throw new OIDCError({
-          error: "invalid_scope",
-          error_description: `Invalid scope access type methods: '${methods}' not supported.`,
-        });
-      }
+      return methodsObj;
     }
   }
-
-  return methodsObj;
 }
 
 function isOIDCScope(
