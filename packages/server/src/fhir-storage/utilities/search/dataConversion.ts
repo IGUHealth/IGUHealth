@@ -279,9 +279,9 @@ async function toDateRange(
     case "Timing": {
       const events = (
         await Promise.all(
-          flatten(value).map(async (v) => flatten(await descend(v, "event"))),
+          flatten(value).map(async (v) => flatten(await v.descend("event"))),
         )
-      ).flat();
+      ).flat() as unknown as IMetaValue<NonNullable<unknown>>[];
 
       return (await Promise.all(events.map(toDateRange))).flat();
     }
