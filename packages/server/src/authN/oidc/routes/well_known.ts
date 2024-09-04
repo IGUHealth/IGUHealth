@@ -308,6 +308,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         "client-public",
         "authorize-post",
         "permission-offline",
+        "permission-v1",
         "permission-v2",
         "permission-user",
       ],

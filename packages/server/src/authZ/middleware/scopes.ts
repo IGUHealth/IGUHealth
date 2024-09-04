@@ -95,9 +95,8 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
       case "patch-request":
       case "history-request":
       case "search-request": {
-        const scopes = context.ctx.user.scope;
         const smartScope = getHighestValueScopeForRequest(
-          scopes ?? [],
+          context.ctx.user.scope ?? [],
           context.request,
         );
 
