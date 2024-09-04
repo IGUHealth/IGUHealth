@@ -30,7 +30,7 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-webpack5-compiler-babel"),
     getAbsolutePath("@storybook/addon-mdx-gfm"),
     getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-mdx-gfm")
+    getAbsolutePath("@storybook/addon-mdx-gfm"),
   ],
 
   framework: {
@@ -38,10 +38,31 @@ const config: StorybookConfig = {
     options: {},
   },
 
+  async babel(config, { configType }) {
+    return {
+      sourceType: "unambiguous",
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            targets: {
+              chrome: 100,
+              safari: 15,
+              firefox: 91,
+            },
+          },
+        ],
+        "@babel/preset-typescript",
+        "@babel/preset-react",
+      ],
+      plugins: ["@babel/plugin-syntax-import-attributes"],
+    };
+  },
+
   docs: {},
 
   typescript: {
-    reactDocgen: "react-docgen-typescript"
-  }
+    reactDocgen: "react-docgen-typescript",
+  },
 };
 export default config;

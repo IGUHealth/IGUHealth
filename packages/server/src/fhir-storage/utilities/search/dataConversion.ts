@@ -26,7 +26,6 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { flatten } from "@iguhealth/meta-value/utilities";
-import { descend } from "@iguhealth/meta-value/v1";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getDecimalPrecision } from "./parameters.js";
@@ -91,9 +90,9 @@ async function toTokenParameters(
     case "CodeableConcept": {
       const codings = (
         await Promise.all(
-          flatten(value).map(async (v) => flatten(await descend(v, "coding"))),
+          flatten(value).map(async (v) => flatten(await v.descend("coding"))),
         )
-      ).flat();
+      ).flat() as unknown as IMetaValue<NonNullable<unknown>>[];
       return (await Promise.all(codings.map(toTokenParameters))).flat();
     }
     case "Identifier": {
