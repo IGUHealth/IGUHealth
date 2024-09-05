@@ -122,6 +122,14 @@
       "resourceType": "StructureDefinition"
     },
     {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/accesspolicy-effect.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy-v2/accesspolicy-effect.json",
+      "resourceType": "ValueSet"
+    },
+    {
       "filename": "definitions/iguhealth/terminology/access-policy-v2/accesspolicy-engine.json",
       "resourceType": "CodeSystem"
     },

@@ -1,4 +1,3 @@
-import { basicSetup } from "codemirror";
 import React from "react";
 
 import { Expression, code } from "@iguhealth/fhir-types/r4/types";
@@ -9,7 +8,7 @@ import { EditableProps } from "../types";
 
 export type FHIRExpressionEditableProps = EditableProps<Expression>;
 
-const extensions = [basicSetup, fp()];
+const extensions = [fp()];
 
 export function FHIRExpressionEditable(props: FHIRExpressionEditableProps) {
   return (
