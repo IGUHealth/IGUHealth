@@ -1,30 +1,27 @@
+/**
+ * Policy Decision Point
+ * --------------------------------
+ * Evaluate the policy against the context and return a decision.
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FHIRRequest } from "@iguhealth/client/lib/types";
 import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
   AccessPolicyV2Rule,
   AccessPolicyV2RuleTarget,
   Expression,
-  Membership,
   OperationOutcome,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
-import { AccessTokenPayload } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
-
-type Role = "admin" | "owner" | "member";
-
-export interface PolicyContext {
-  user: { claims: AccessTokenPayload<Role>; membership: Membership };
-  request: FHIRRequest;
-}
+import { PolicyContext } from "./pip.js";
 
 const PERMISSION_LEVELS = {
   deny: <const>-1,
@@ -32,8 +29,8 @@ const PERMISSION_LEVELS = {
   permit: <const>1,
 };
 
-async function evaluateExpression(
-  context: PolicyContext,
+async function evaluateExpression<Role>(
+  context: PolicyContext<Role>,
   loc: pt.Loc<AccessPolicyV2, Expression | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<boolean> {
@@ -82,8 +79,8 @@ async function evaluateExpression(
   }
 }
 
-async function evaluateConditon(
-  context: PolicyContext,
+async function evaluateConditon<Role>(
+  context: PolicyContext<Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<(typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]> {
@@ -98,8 +95,8 @@ async function evaluateConditon(
   return (evaluation ? PERMISSION_LEVELS[effect] : -(PERMISSION_LEVELS[effect])) as (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS];
 }
 
-async function shouldEvaluateRule(
-  context: PolicyContext,
+async function shouldEvaluateRule<Role>(
+  context: PolicyContext<Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
   policy: AccessPolicyV2): Promise<boolean> {
   const target = pt.get(loc, policy);
@@ -108,8 +105,8 @@ async function shouldEvaluateRule(
   return evaluateExpression(context, pt.descend(loc, "expression"), policy);
 }
 
-async function evaluateAccessPolicyRule(
-  context: PolicyContext,
+async function evaluateAccessPolicyRule<Role>(
+  context: PolicyContext<Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<{
@@ -195,8 +192,8 @@ async function evaluateAccessPolicyRule(
  * @param request  The FHIR request being made.
  * @returns boolean as to whether or not a user is being granted access.
  */
-export async function evaluate (
-  context: PolicyContext,
+export async function evaluate<Role> (
+  context: PolicyContext<Role>,
   accessPolicy: AccessPolicyV2,
 ): Promise<OperationOutcome> {
   const loc = pt.pointer("AccessPolicyV2", accessPolicy.id as id);

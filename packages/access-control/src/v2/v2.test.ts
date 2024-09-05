@@ -1,17 +1,14 @@
 import { expect, test } from "@jest/globals";
 
-import {
-  AccessPolicyV2,
-  code,
-  id,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { code, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
-import * as v2 from "./v2.js";
+import * as v2 from "./index.js";
 
-function getContext(): v2.PolicyContext {
+function getContext(): v2.pip.PolicyContext<any> {
   return {
+    variables: {},
     user: {
       claims: {
         iss: "https://iguhealth.test" as Issuer,
@@ -40,7 +37,7 @@ function getContext(): v2.PolicyContext {
 
 test("Simple conditional check", async () => {
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -68,7 +65,7 @@ test("Simple conditional check", async () => {
     resourceType: "OperationOutcome",
   });
 
-  const res = await v2.evaluate(getContext(), {
+  const res = await v2.pdp.evaluate(getContext(), {
     name: "Request Check",
     resourceType: "AccessPolicyV2",
     engine: "rule-engine" as code,
@@ -100,7 +97,7 @@ test("Simple conditional check", async () => {
 
 test("Simple Or Logic", async () => {
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -147,7 +144,7 @@ test("Simple Or Logic", async () => {
 
 test("Simple And Logic", async () => {
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -194,7 +191,7 @@ test("Simple And Logic", async () => {
 
 test("Simple Target Logic", async () => {
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -245,7 +242,7 @@ test("Simple Target Logic", async () => {
   });
 
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -298,7 +295,7 @@ test("Simple Target Logic", async () => {
 
 test("Test Rule Effect Log", async () => {
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,
@@ -350,7 +347,7 @@ test("Test Rule Effect Log", async () => {
   });
 
   expect(
-    v2.evaluate(getContext(), {
+    v2.pdp.evaluate(getContext(), {
       name: "Request Check",
       resourceType: "AccessPolicyV2",
       engine: "rule-engine" as code,

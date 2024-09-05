@@ -8,10 +8,11 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
-import * as v2 from "./v2.js";
+import * as v2 from "./index.js";
 
-function getContext(): v2.PolicyContext {
+function getContext(): v2.pip.PolicyContext<any> {
   return {
+    variables: {},
     user: {
       claims: {
         iss: "https://iguhealth.test" as Issuer,
@@ -83,7 +84,7 @@ test("Evaluate patient access controls", async () => {
   const context = getContext();
 
   expect(
-    await v2.evaluate(
+    await v2.pdp.evaluate(
       {
         ...context,
         request: {
@@ -109,7 +110,7 @@ test("Evaluate patient access controls", async () => {
   });
 
   expect(
-    await v2.evaluate(
+    await v2.pdp.evaluate(
       {
         ...context,
         request: {
