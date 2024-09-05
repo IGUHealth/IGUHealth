@@ -1,11 +1,12 @@
 {
   "name": "@iguhealth/lang-fp",
   "version": "0.1.0",
-  "description": "EXAMPLE language support for CodeMirror",
+  "description": "FHIRPath language support for CodeMirror",
   "scripts": {
     "lezer": "lezer-generator src/syntax.grammar -o src/syntax.grammar.js",
     "prepare": "yarn lezer && rollup -c",
-    "build": "yarn prepare"
+    "build": "yarn prepare",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "type": "module",
   "main": "lib/index.cjs",
