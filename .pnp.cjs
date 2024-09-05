@@ -12766,7 +12766,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/autocomplete", "virtual:53c647eed0b8f3ec0c2b403b34af71d1bf8d881db989fc88a8710dbaf2a0652693ff5fcf02293b427f4e20dd258b71ffc13f0c48d485e928945892035042bdf3#npm:6.9.1"],\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@types/codemirror__language", null],\
           ["@types/codemirror__state", null],\
@@ -12793,7 +12793,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/commands", "npm:6.3.3"],\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"]\
         ],\
         "linkType": "HARD"\
@@ -12834,7 +12834,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/lang-javascript", "npm:6.2.1"],\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@lezer/css", "npm:1.1.3"],\
           ["@lezer/html", "npm:1.3.6"]\
@@ -12851,7 +12851,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/lint", "npm:6.4.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@lezer/javascript", "npm:1.4.7"]\
         ],\
@@ -12865,7 +12865,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/lint", "npm:6.4.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@lezer/javascript", "npm:1.4.7"]\
         ],\
@@ -12892,7 +12892,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/lang-html", "npm:6.4.6"],\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@lezer/markdown", "npm:1.1.0"]\
         ],\
@@ -12905,7 +12905,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/common", "npm:1.2.1"],\
           ["@lezer/highlight", "npm:1.1.6"],\
           ["@lezer/lr", "npm:1.3.10"],\
@@ -12920,7 +12920,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@codemirror/lint", "npm:6.4.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["crelt", "npm:1.0.6"]\
         ],\
         "linkType": "HARD"\
@@ -12933,7 +12933,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/merge", "npm:6.7.0"],\
           ["@codemirror/language", "npm:6.9.1"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["@lezer/highlight", "npm:1.1.6"],\
           ["style-mod", "npm:4.1.0"]\
         ],\
@@ -12946,7 +12946,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@codemirror/search", "npm:6.5.2"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"],\
+          ["@codemirror/view", "npm:6.33.0"],\
           ["crelt", "npm:1.0.6"]\
         ],\
         "linkType": "HARD"\
@@ -12962,16 +12962,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@codemirror/view", [\
-      ["npm:6.26.3", {\
-        "packageLocation": "./.yarn/cache/@codemirror-view-npm-6.26.3-a1f18d8881-fa7cb5aa37.zip/node_modules/@codemirror/view/",\
-        "packageDependencies": [\
-          ["@codemirror/view", "npm:6.26.3"],\
-          ["@codemirror/state", "npm:6.4.1"],\
-          ["style-mod", "npm:4.1.0"],\
-          ["w3c-keyname", "npm:2.2.8"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:6.33.0", {\
         "packageLocation": "./.yarn/cache/@codemirror-view-npm-6.33.0-32d1a77fad-240f1b5ed6.zip/node_modules/@codemirror/view/",\
         "packageDependencies": [\
@@ -15882,6 +15872,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
+          ["@iguhealth/lang-fp", "workspace:packages/lang-fp-codemirror"],\
           ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:26.0.1"],\
           ["@rollup/plugin-json", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:6.1.0"],\
           ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
@@ -15958,6 +15949,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
+          ["@iguhealth/lang-fp", "workspace:packages/lang-fp-codemirror"],\
           ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:26.0.1"],\
           ["@rollup/plugin-json", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:6.1.0"],\
           ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
@@ -27489,7 +27481,7 @@ const RAW_RUNTIME_STATE =
           ["@codemirror/lint", "npm:6.4.1"],\
           ["@codemirror/search", "npm:6.5.2"],\
           ["@codemirror/state", "npm:6.4.1"],\
-          ["@codemirror/view", "npm:6.26.3"]\
+          ["@codemirror/view", "npm:6.33.0"]\
         ],\
         "linkType": "HARD"\
       }]\

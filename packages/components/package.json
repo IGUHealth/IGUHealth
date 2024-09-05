@@ -76,6 +76,7 @@
     "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
+    "@iguhealth/lang-fp": "workspace:^",
     "@storybook/test": "^8.2.9",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",

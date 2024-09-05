@@ -7208,18 +7208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0":
-  version: 6.26.3
-  resolution: "@codemirror/view@npm:6.26.3"
-  dependencies:
-    "@codemirror/state": "npm:^6.4.0"
-    style-mod: "npm:^4.1.0"
-    w3c-keyname: "npm:^2.2.4"
-  checksum: 10/fa7cb5aa37db2d252ffd7cdbfb858b23a525ce9835648070b3c99eaaa361f686fa1997576bb258b7c34b6d6bd7a251a2294158e952239616102f783da1025fe4
-  languageName: node
-  linkType: hard
-
-"@codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.33.0":
+"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.33.0":
   version: 6.33.0
   resolution: "@codemirror/view@npm:6.33.0"
   dependencies:
@@ -9102,6 +9091,7 @@ __metadata:
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
+    "@iguhealth/lang-fp": "workspace:^"
     "@rollup/plugin-commonjs": "npm:^26.0.1"
     "@rollup/plugin-json": "npm:^6.1.0"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
@@ -9342,7 +9332,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/lang-fp@workspace:packages/lang-fp-codemirror":
+"@iguhealth/lang-fp@workspace:^, @iguhealth/lang-fp@workspace:packages/lang-fp-codemirror":
   version: 0.0.0-use.local
   resolution: "@iguhealth/lang-fp@workspace:packages/lang-fp-codemirror"
   dependencies:
