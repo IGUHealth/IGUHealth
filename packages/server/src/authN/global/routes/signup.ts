@@ -19,9 +19,7 @@ import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
 
 async function alreadyOwner(pg: db.Queryable, email: string): Promise<boolean> {
-  const userOwner = await db
-    .select("users", { email, email_verified: true, role: "owner" })
-    .run(pg);
+  const userOwner = await db.select("users", { email, role: "owner" }).run(pg);
 
   return userOwner.length > 0;
 }
