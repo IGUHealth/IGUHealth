@@ -1,0 +1,33 @@
+{
+  "name": "@iguhealth/lang-fp",
+  "version": "0.1.0",
+  "description": "EXAMPLE language support for CodeMirror",
+  "scripts": {
+    "lezer": "lezer-generator src/syntax.grammar -o src/syntax.grammar.js",
+    "prepare": "yarn lezer && rollup -c",
+    "build": "yarn prepare"
+  },
+  "type": "module",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
+  "exports": {
+    "import": "./lib/index.js",
+    "require": "./lib/index.cjs"
+  },
+  "types": "lib/index.d.ts",
+  "sideEffects": false,
+  "dependencies": {
+    "@codemirror/language": "^6.0.0",
+    "@lezer/highlight": "^1.0.0",
+    "@lezer/lr": "^1.0.0"
+  },
+  "devDependencies": {
+    "@lezer/generator": "^1.0.0",
+    "mocha": "^9.0.1",
+    "rollup": "^2.60.2",
+    "rollup-plugin-dts": "^4.0.1",
+    "rollup-plugin-ts": "^3.0.2",
+    "typescript": "^4.3.4"
+  },
+  "license": "MIT"
+}
