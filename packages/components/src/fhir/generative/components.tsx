@@ -9,6 +9,7 @@ import {
   Coding,
   ContactDetail,
   ContactPoint,
+  Expression,
   HumanName,
   Identifier,
   Meta,
@@ -121,6 +122,11 @@ export const TypeComponents: Record<string, TypeComponent> = {
       {...deriveSharedProps<ContactPoint>(props)}
       fhirVersion={props.fhirVersion}
       client={props.client}
+    />
+  ),
+  Expression: (props) => (
+    <ComplexTypes.FHIRExpressionEditable
+      {...deriveSharedProps<Expression>(props)}
     />
   ),
   HumanName: (props) => (

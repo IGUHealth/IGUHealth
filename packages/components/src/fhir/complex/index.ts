@@ -7,6 +7,7 @@ import { FHIRCodingEditable } from "./Coding";
 import { FHIRCodingReadOnly } from "./CodingReadOnly";
 import { FHIRContactDetailEditable } from "./ContactDetail";
 import { FHIRContactPointEditable } from "./ContactPoint";
+import { FHIRExpressionEditable } from "./Expression";
 import { FHIRHumanNameEditable } from "./HumanName";
 import { FHIRHumanNameReadOnly } from "./HumanNameReadOnly";
 import { FHIRIdentifierEditable } from "./Identifier";
@@ -22,6 +23,7 @@ import { FHIRReferenceReadOnly } from "./ReferenceReadOnly";
 import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
 
 export {
+  FHIRExpressionEditable,
   FHIRAddressEditable,
   FHIRIdentifierEditable,
   FHIRHumanNameEditable,
