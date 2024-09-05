@@ -1,13 +1,14 @@
 import React from "react";
 import validator from "validator";
 import * as db from "zapatos/db";
+import { users } from "zapatos/schema";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
@@ -18,10 +19,60 @@ import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEm
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
 
-async function alreadyOwner(pg: db.Queryable, email: string): Promise<boolean> {
+async function findExistingOwner(
+  pg: db.Queryable,
+  email: string,
+): Promise<users.JSONSelectable | undefined> {
   const userOwner = await db.select("users", { email, role: "owner" }).run(pg);
+  return userOwner[0];
+}
 
-  return userOwner.length > 0;
+async function createOrRetrieveUser(
+  ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
+  email: string,
+): Promise<User> {
+  const existingOwner = await findExistingOwner(ctx.db, email);
+  if (existingOwner) {
+    return existingOwner;
+  } else {
+    const user = await FHIRTransaction(
+      ctx,
+      db.IsolationLevel.Serializable,
+      async (ctx) => {
+        const tenant = await tenants.create(ctx, {});
+
+        const membership = await ctx.client.create(
+          asRoot({
+            ...ctx,
+            tenant: tenant.id as TenantId,
+          }),
+          R4,
+          userToMembership({
+            role: "owner",
+            tenant: tenant.id,
+            email: email,
+          }),
+        );
+
+        const user: User[] = await db
+          .select(
+            "users",
+            { fhir_user_id: membership.id },
+            { columns: USER_QUERY_COLS },
+          )
+          .run(ctx.db);
+
+        if (!user[0]) {
+          throw new OperationError(
+            outcomeError("not-found", "User not found."),
+          );
+        }
+        return user[0];
+      },
+    );
+
+    return user;
+  }
 }
 
 export const signupGET = (): GlobalAuthRouteHandler => async (ctx) => {
@@ -64,49 +115,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     throw new OperationError(outcomeError("invalid", "Email is not valid."));
   }
 
-  if (await alreadyOwner(ctx.state.iguhealth.db, email)) {
-    throw new OperationError(
-      outcomeError(
-        "invalid",
-        "Email is already registered as an owner for a tenant.",
-      ),
-    );
-  }
-
-  const [user, tenant] = await FHIRTransaction(
-    ctx.state.iguhealth,
-    db.IsolationLevel.Serializable,
-    async (ctx) => {
-      const tenant = await tenants.create(ctx, {});
-
-      const membership = await ctx.client.create(
-        asRoot({
-          ...ctx,
-          tenant: tenant.id as TenantId,
-        }),
-        R4,
-        userToMembership({
-          role: "owner",
-          tenant: tenant.id,
-          email: email,
-        }),
-      );
-
-      const user: User[] = await db
-        .select(
-          "users",
-          { fhir_user_id: membership.id },
-          { columns: USER_QUERY_COLS },
-        )
-        .run(ctx.db);
-
-      if (!user[0]) {
-        throw new OperationError(outcomeError("not-found", "User not found."));
-      }
-
-      return [user[0], tenant];
-    },
-  );
+  const user = await createOrRetrieveUser(ctx.state.iguhealth, email);
 
   // Alert system admin of new user.
   await sendAlertEmail(
@@ -117,7 +126,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   await sendPasswordResetEmail(
     ctx.router,
-    { ...ctx.state.iguhealth, tenant: tenant.id as TenantId },
+    { ...ctx.state.iguhealth, tenant: user.tenant as TenantId },
     user,
   );
 
