@@ -63,7 +63,7 @@ async function gateCheckSingleOwner(ctx: IGUHealthServerCTX) {
     },
   ]);
 
-  if (owners.resources.length === 0) {
+  if (owners.resources.length !== 1) {
     throw new OperationError(
       outcomeError(
         "invariant",
