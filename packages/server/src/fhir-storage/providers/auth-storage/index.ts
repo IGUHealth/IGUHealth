@@ -118,6 +118,10 @@ function setInTransactionMiddleware<
   };
 }
 
+/**
+ * Creates middleware to limit ownership edits to just owners.
+ * @returns MiddlewareAsyncChain
+ */
 function limitOwnershipEdits<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
@@ -148,12 +152,22 @@ function limitOwnershipEdits<
         }
         return res;
       }
+
       case "delete-response": {
         await gateCheckSingleOwner(context.ctx);
         return res;
       }
-      default: {
+      case "error-response":
+      case "vread-response":
+      case "history-response":
+      case "read-response":
+      case "search-response": {
         return res;
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invariant", "Invalid response type."),
+        );
       }
     }
   };
