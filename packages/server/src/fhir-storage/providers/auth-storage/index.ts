@@ -214,6 +214,7 @@ function updateUserTableMiddleware<
           }
         }
       }
+      case "patch-request":
       case "update-request": {
         switch (context.request.level) {
           case "instance": {
