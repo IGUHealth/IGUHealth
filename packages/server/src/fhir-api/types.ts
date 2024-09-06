@@ -155,7 +155,7 @@ function rootClaims(
     aud: clientApp.id as id,
     [CUSTOM_CLAIMS.RESOURCE_ID]: clientApp.id as id,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: clientApp.resourceType,
-    [CUSTOM_CLAIMS.ROLE]: "admin",
+    [CUSTOM_CLAIMS.ROLE]: "owner",
     [CUSTOM_CLAIMS.TENANT]: tenant,
   };
 }

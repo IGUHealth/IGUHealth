@@ -63,7 +63,7 @@ async function gateCheckSingleOwner(ctx: IGUHealthServerCTX) {
     },
   ]);
 
-  if (owners.resources.length === 0) {
+  if (owners.resources.length !== 1) {
     throw new OperationError(
       outcomeError(
         "invariant",
@@ -115,6 +115,61 @@ function setInTransactionMiddleware<
         return res;
       },
     );
+  };
+}
+
+/**
+ * Creates middleware to limit ownership edits to just owners.
+ * @returns MiddlewareAsyncChain
+ */
+function limitOwnershipEdits<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends IGUHealthServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    const res = await next(context);
+    const response = res.response;
+    switch (response?.type) {
+      case "create-response":
+      case "update-response":
+      case "patch-response": {
+        if (
+          response.body.resourceType === "Membership" &&
+          response.body.role === "owner"
+        ) {
+          if (
+            context.ctx.user.payload["https://iguhealth.app/role"] !== "owner"
+          ) {
+            throw new OperationError(
+              outcomeError(
+                "forbidden",
+                "Only owners can create or update owners.",
+              ),
+            );
+          }
+        }
+        return res;
+      }
+
+      case "delete-response": {
+        await gateCheckSingleOwner(context.ctx);
+        return res;
+      }
+      case "error-response":
+      case "vread-response":
+      case "history-response":
+      case "read-response":
+      case "search-response": {
+        return res;
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invariant", "Invalid response type."),
+        );
+      }
+    }
   };
 }
 
@@ -294,6 +349,7 @@ function createAuthMiddleware<
     customValidationMembershipMiddleware(),
     setInTransactionMiddleware(),
     updateUserTableMiddleware(),
+    limitOwnershipEdits(),
     validateOwnershipMiddleware(),
     async (context) => {
       return {
