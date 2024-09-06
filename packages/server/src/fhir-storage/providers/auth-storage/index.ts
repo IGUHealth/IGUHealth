@@ -118,6 +118,47 @@ function setInTransactionMiddleware<
   };
 }
 
+function limitOwnershipEdits<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends IGUHealthServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    const res = await next(context);
+    const response = res.response;
+    switch (response?.type) {
+      case "create-response":
+      case "update-response":
+      case "patch-response": {
+        if (
+          response.body.resourceType === "Membership" &&
+          response.body.role === "owner"
+        ) {
+          if (
+            context.ctx.user.payload["https://iguhealth.app/role"] !== "owner"
+          ) {
+            throw new OperationError(
+              outcomeError(
+                "forbidden",
+                "Only owners can create or update owners.",
+              ),
+            );
+          }
+        }
+        return res;
+      }
+      case "delete-response": {
+        await gateCheckSingleOwner(context.ctx);
+        return res;
+      }
+      default: {
+        return res;
+      }
+    }
+  };
+}
+
 function customValidationMembershipMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
@@ -214,7 +255,6 @@ function updateUserTableMiddleware<
           }
         }
       }
-      case "patch-request":
       case "update-request": {
         switch (context.request.level) {
           case "instance": {
@@ -295,6 +335,7 @@ function createAuthMiddleware<
     customValidationMembershipMiddleware(),
     setInTransactionMiddleware(),
     updateUserTableMiddleware(),
+    limitOwnershipEdits(),
     validateOwnershipMiddleware(),
     async (context) => {
       return {
