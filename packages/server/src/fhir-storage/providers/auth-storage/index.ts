@@ -193,6 +193,56 @@ function customValidationMembershipMiddleware<
   };
 }
 
+function setEmailVerified<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends IGUHealthServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    switch (context.request.type) {
+      case "create-request": {
+        if (context.request.body.resourceType === "Membership") {
+          context.request.body.emailVerified = false;
+        }
+        return next(context);
+      }
+      case "update-request": {
+        const membership = context.request.body;
+        if (membership.resourceType === "Membership") {
+          const existingUser = await db
+            .selectOne("users", {
+              fhir_user_id: membership.id as string,
+            })
+            .run(context.ctx.db);
+
+          if (!existingUser)
+            throw new OperationError(
+              outcomeFatal("not-found", "User not found."),
+            );
+
+          context.request.body = {
+            ...membership,
+            emailVerified: determineEmailUpdate(
+              membershipToUser(membership),
+              existingUser,
+            ),
+          } as Membership;
+        }
+        return next(context);
+      }
+      case "patch-request": {
+        throw new OperationError(
+          outcomeError("not-supported", "Patch not supported."),
+        );
+      }
+      default: {
+        return next(context);
+      }
+    }
+  };
+}
+
 function updateUserTableMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
@@ -211,15 +261,12 @@ function updateUserTableMiddleware<
     switch (context.request.type) {
       case "create-request": {
         const res = await next(context);
-
         const membership = (res.response as R4CreateResponse)?.body;
         if (membership.resourceType !== "Membership") {
           throw new OperationError(
             outcomeError("invariant", "Invalid resource type."),
           );
         }
-
-        membership.emailVerified = false;
 
         try {
           await users.create(
@@ -270,61 +317,38 @@ function updateUserTableMiddleware<
         }
       }
       case "update-request": {
-        switch (context.request.level) {
-          case "instance": {
-            const res = await next(context);
-            const membership = (res.response as R4UpdateResponse)
-              .body as Membership;
+        const res = await next(context);
+        const membership = (res.response as R4UpdateResponse)
+          .body as Membership;
 
-            const existingUser = await db
-              .selectOne("users", {
-                fhir_user_id: membership.id as string,
-              })
-              .run(context.ctx.db);
+        const existingUser = await db
+          .selectOne("users", {
+            fhir_user_id: membership.id as string,
+          })
+          .run(context.ctx.db);
 
-            if (!existingUser)
-              throw new OperationError(
-                outcomeFatal("not-found", "User not found."),
-              );
+        if (!existingUser)
+          throw new OperationError(
+            outcomeFatal("not-found", "User not found."),
+          );
 
-            context.request.body = {
-              ...(context.request.body as Membership),
-              emailVerified: determineEmailUpdate(
-                membershipToUser(membership),
-                existingUser,
-              ),
-            } as Membership;
+        if (!(res.response as R4UpdateResponse)?.body)
+          throw new OperationError(
+            outcomeFatal("invariant", "Response body not found."),
+          );
 
-            if (!(res.response as R4UpdateResponse)?.body)
-              throw new OperationError(
-                outcomeFatal("invariant", "Response body not found."),
-              );
+        await users.update(
+          context.ctx.db,
+          context.ctx.tenant,
+          existingUser.id,
+          membershipToUser(membership),
+        );
 
-            await users.update(
-              context.ctx.db,
-              context.ctx.tenant,
-              existingUser.id,
-              membershipToUser(membership),
-            );
-
-            return res;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                "Only instance level update is supported for auth types.",
-              ),
-            );
-          }
-        }
+        return res;
       }
-      case "read-request": {
-        return next(context);
-      }
-      case "search-request": {
-        return next(context);
-      }
+
+      case "read-request":
+      case "search-request":
       case "history-request": {
         return next(context);
       }
@@ -348,6 +372,7 @@ function createAuthMiddleware<
     validateOperationsAllowed(AUTH_METHODS_ALLOWED),
     customValidationMembershipMiddleware(),
     setInTransactionMiddleware(),
+    setEmailVerified(),
     updateUserTableMiddleware(),
     limitOwnershipEdits(),
     validateOwnershipMiddleware(),
