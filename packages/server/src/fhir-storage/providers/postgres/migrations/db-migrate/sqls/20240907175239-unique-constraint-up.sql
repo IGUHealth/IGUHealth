@@ -2,4 +2,5 @@ ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE NULLS NOT DISTINCT (tenant,
 
 CREATE UNIQUE INDEX owner_unique_idx ON users (email)
 WHERE
-    role = 'owner';
+    role = 'owner'
+    AND email_verified = true;
