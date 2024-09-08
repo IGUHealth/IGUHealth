@@ -54,7 +54,7 @@ async function sessionLogin(
       );
     }
 
-    return await ctx.state.oidc.sessionLogin(ctx, "email-password", {
+    return ctx.state.oidc.sessionLogin(ctx, "email-password", {
       email,
       password,
     });
