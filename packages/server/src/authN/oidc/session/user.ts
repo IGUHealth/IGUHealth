@@ -44,12 +44,12 @@ export async function sessionLogin<Method extends keyof users.LoginParameters>(
   ctx: Parameters<OIDCRouteHandler>[0],
   method: Method,
   credentials: users.LoginParameters[Method],
-): Promise<users.User | undefined> {
+): Promise<{ user: users.User | undefined; errors: users.LoginErrors[] }> {
   if (!ctx.session) {
     throw new Error("Session not found in context.");
   }
 
-  const user = await users.login(
+  const { user, errors } = await users.login(
     ctx.state.iguhealth.db,
     ctx.state.iguhealth.tenant,
     method,
@@ -58,12 +58,11 @@ export async function sessionLogin<Method extends keyof users.LoginParameters>(
 
   if (!user) {
     ctx.session[USER_SESSION_KEY] = undefined;
-    return undefined;
+  } else {
+    ctx.session[USER_SESSION_KEY] = serializeUser(user);
   }
 
-  ctx.session[USER_SESSION_KEY] = serializeUser(user);
-
-  return user;
+  return { user, errors };
 }
 
 /**

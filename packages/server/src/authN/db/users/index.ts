@@ -42,12 +42,13 @@ export async function getTenantClaims(
   return [{ id: user.tenant as TenantId, userRole: user.role }];
 }
 
+export type LoginErrors = "invalid-credentials" | "email-not-verified";
 export async function login<T extends keyof LoginParameters>(
   pg: db.Queryable,
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
-): Promise<User | undefined> {
+): Promise<{user:User | undefined, errors: LoginErrors[]}> {
   switch (type) {
     case "email-password": {
       const where: s.users.Whereable = {
@@ -57,24 +58,29 @@ export async function login<T extends keyof LoginParameters>(
         password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
       };
 
-      const user: User[] = await db
+      const usersFound: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
         .run(pg);
 
       // Sanity check should never happen given unique check on email.
-      if (user.length > 1)
+      if (usersFound.length > 1)
         throw new Error(
           "Multiple users found with the same email and password",
         );
 
-      if(user[0]?.email_verified === false) {
-        throw new OperationError(outcomeError("forbidden", "Email not verified."));
-      }
+      const user = usersFound[0];
 
-      return user[0];
+      if(user?.email_verified === false) {
+        return {user: undefined, errors: ["email-not-verified"]};
+      }
+      if(!user){
+        return { user, errors: ["invalid-credentials"] };
+      }
+      return { user: user, errors: [] };
     }
-    default:
-      return;
+    default: {
+      throw new Error("Invalid login method.");
+    }
   }
 }
 
