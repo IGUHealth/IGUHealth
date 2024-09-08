@@ -62,7 +62,6 @@ export function determineEmailUpdate(
   current: s.users.JSONSelectable,
 ): s.users.Updatable["email_verified"] {
   // If email has changed.
-  console.log("update:", update, "current:", current);
   if (update.email !== current.email) return false;
   if ("email_verified" in update) return update.email_verified;
 

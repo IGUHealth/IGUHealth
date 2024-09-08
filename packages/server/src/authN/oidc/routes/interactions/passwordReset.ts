@@ -191,8 +191,6 @@ export function passwordResetPOST(): OIDCRouteHandler {
           },
         );
 
-        console.log("Update:", update, userToMembership(update));
-
         await ctx.state.iguhealth.client.update(
           asRoot({
             ...fhirContext,

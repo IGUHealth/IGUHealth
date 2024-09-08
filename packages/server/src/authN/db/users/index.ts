@@ -144,7 +144,6 @@ export async function update(
         where,
       )
       .run(tx);
-    console.log(updatedUser);
     return updatedUser[0];
   });
 }
