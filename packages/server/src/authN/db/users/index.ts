@@ -43,12 +43,16 @@ export async function getTenantClaims(
 }
 
 export type LoginErrors = "invalid-credentials" | "email-not-verified";
+type SuccessfulLogin = { type: "successful", user: User } 
+type FailedLogin = { type: "failed", errors: LoginErrors[] }
+export type LoginResult = SuccessfulLogin | FailedLogin;
+
 export async function login<T extends keyof LoginParameters>(
   pg: db.Queryable,
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
-): Promise<{user:User | undefined, errors: LoginErrors[]}> {
+): Promise<LoginResult> {
   switch (type) {
     case "email-password": {
       const where: s.users.Whereable = {
@@ -71,12 +75,12 @@ export async function login<T extends keyof LoginParameters>(
       const user = usersFound[0];
 
       if(user?.email_verified === false) {
-        return {user: undefined, errors: ["email-not-verified"]};
+        return { type: "failed", errors: ["email-not-verified"]};
       }
       if(!user){
-        return { user, errors: ["invalid-credentials"] };
+        return { type: "failed", errors: ["invalid-credentials"] };
       }
-      return { user: user, errors: [] };
+      return { type: "successful", user: user };
     }
     default: {
       throw new Error("Invalid login method.");

@@ -4,7 +4,11 @@ import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
-import type { LoginErrors, User } from "../../../db/users/index.js";
+import type {
+  LoginErrors,
+  LoginResult,
+  User,
+} from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 
@@ -43,7 +47,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 async function login(
   ctx: Parameters<OIDCRouteHandler>[0],
-): Promise<{ user: User | undefined; errors: LoginErrors[] }> {
+): Promise<LoginResult> {
   const body = ctx.request.body;
   if (isRecord(body)) {
     const email = body.email;
@@ -60,7 +64,7 @@ async function login(
     });
   }
 
-  return { user: undefined, errors: ["invalid-credentials"] };
+  return { type: "failed", errors: ["invalid-credentials"] };
 }
 
 function errorToDescription(error: LoginErrors): string {
@@ -86,8 +90,8 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
 
   const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
 
-  const { user, errors } = await login(ctx);
-  if (errors.length !== 0 || !user) {
+  const result = await login(ctx);
+  if (result.type === "failed") {
     ctx.status = 401;
     ctx.body = views.renderString(
       React.createElement(Login, {
@@ -96,7 +100,7 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
         action: loginRoute,
         signupURL,
         forgotPasswordURL,
-        errors: [errorToDescription(errors[0])],
+        errors: [errorToDescription(result.errors[0])],
       }),
     );
   } else {
