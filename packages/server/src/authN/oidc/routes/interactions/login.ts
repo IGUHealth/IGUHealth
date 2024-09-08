@@ -66,10 +66,10 @@ async function login(
 function errorToDescription(error: LoginErrors): string {
   switch (error) {
     case "invalid-credentials": {
-      return "Invalid email or password.";
+      return "Your email or password is not valid.";
     }
     case "email-not-verified": {
-      return "Email not verified.";
+      return "Your email is not verified. Reset your password to verify your email address.";
     }
     default: {
       return "Unknown error.";

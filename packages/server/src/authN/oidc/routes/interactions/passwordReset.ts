@@ -180,9 +180,12 @@ export function passwordResetPOST(): OIDCRouteHandler {
           authorizationCode.user_id,
           {
             password: body.password,
+            // Password reset goes through email so we can assume email is verified.
             email_verified: true,
           },
         );
+
+        console.log("Update:", update, userToMembership(update));
 
         await ctx.state.iguhealth.client.update(
           asRoot({
