@@ -224,7 +224,7 @@ function setEmailVerified<
           context.request.body = {
             ...membership,
             emailVerified: determineEmailUpdate(
-              membershipToUser(membership),
+              { email: membership.email },
               existingUser,
             ),
           } as Membership;

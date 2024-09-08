@@ -51,6 +51,7 @@ async function createOrRetrieveUser(
             role: "owner",
             tenant: tenant.id,
             email: email,
+            email_verified: false,
           }),
         );
 

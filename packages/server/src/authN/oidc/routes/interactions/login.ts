@@ -4,7 +4,7 @@ import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
-import type { User } from "../../../db/users/index.js";
+import type { LoginErrors, LoginResult } from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 
@@ -41,9 +41,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object";
 }
 
-async function sessionLogin(
+async function login(
   ctx: Parameters<OIDCRouteHandler>[0],
-): Promise<User | undefined> {
+): Promise<LoginResult> {
   const body = ctx.request.body;
   if (isRecord(body)) {
     const email = body.email;
@@ -54,13 +54,27 @@ async function sessionLogin(
       );
     }
 
-    return await ctx.state.oidc.sessionLogin(ctx, "email-password", {
+    return ctx.state.oidc.sessionLogin(ctx, "email-password", {
       email,
       password,
     });
   }
 
-  return undefined;
+  return { type: "failed", errors: ["invalid-credentials"] };
+}
+
+function errorToDescription(error: LoginErrors): string {
+  switch (error) {
+    case "invalid-credentials": {
+      return "Your email or password is not valid.";
+    }
+    case "email-not-verified": {
+      return "Your email is not verified. Reset your password to verify your email address.";
+    }
+    default: {
+      return "Unknown error.";
+    }
+  }
 }
 
 export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
@@ -72,17 +86,8 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
 
   const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
 
-  const user = await sessionLogin(ctx);
-
-  if (user !== undefined) {
-    const authorize_route = ctx.router.url(
-      OIDC_ROUTES.AUTHORIZE_GET,
-      { tenant: ctx.state.iguhealth.tenant },
-      { query: ctx.state.oidc.parameters },
-    );
-    if (authorize_route instanceof Error) throw authorize_route;
-    ctx.redirect(authorize_route);
-  } else {
+  const result = await login(ctx);
+  if (result.type === "failed") {
     ctx.status = 401;
     ctx.body = views.renderString(
       React.createElement(Login, {
@@ -91,12 +96,18 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
         action: loginRoute,
         signupURL,
         forgotPasswordURL,
-        errors: ["Invalid email or password. Please try again."],
+        errors: [errorToDescription(result.errors[0])],
       }),
     );
+  } else {
+    const authorize_route = ctx.router.url(
+      OIDC_ROUTES.AUTHORIZE_GET,
+      { tenant: ctx.state.iguhealth.tenant },
+      { query: ctx.state.oidc.parameters },
+    );
+    if (authorize_route instanceof Error) throw authorize_route;
+    ctx.redirect(authorize_route);
   }
-
-  await next();
 };
 
 export const loginGET = (): OIDCRouteHandler => async (ctx) => {

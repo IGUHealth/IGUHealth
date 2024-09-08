@@ -11,6 +11,7 @@ export function userToMembership(
   user: Partial<s.users.JSONSelectable> & { email: string },
 ): Membership {
   const member: Membership = {
+    id: user.fhir_user_id as id,
     resourceType: "Membership",
     emailVerified: user.email_verified ? user.email_verified : false,
     email: user.email,
@@ -21,10 +22,6 @@ export function userToMembership(
     role: (user.role ? user.role : "member") as code,
   };
 
-  if (user.id) {
-    member.id = user.id as id;
-  }
-
   return member;
 }
 
@@ -32,11 +29,10 @@ export function membershipToUser(user: Membership): s.users.Insertable {
   const fhir_user_id = user.id;
   const fhir_user_versionid = user.meta?.versionId;
 
-  console.log(user);
-
   if (!fhir_user_id) {
     throw new OperationError(outcomeFatal("exception", "User id not found"));
   }
+
   if (!fhir_user_versionid) {
     throw new OperationError(
       outcomeFatal("exception", "User versionId not found"),
@@ -62,11 +58,11 @@ export function membershipToUser(user: Membership): s.users.Insertable {
  * @returns whether email is verified.
  */
 export function determineEmailUpdate(
-  update: s.users.Updatable,
+  update: Pick<s.users.Updatable, "email" | "email_verified">,
   current: s.users.JSONSelectable,
 ): s.users.Updatable["email_verified"] {
   // If email has changed.
-  if (update.email && update.email !== current.email) return false;
+  if (update.email !== current.email) return false;
   if ("email_verified" in update) return update.email_verified;
 
   return current.email_verified;
