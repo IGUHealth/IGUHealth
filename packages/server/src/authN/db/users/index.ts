@@ -67,6 +67,10 @@ export async function login<T extends keyof LoginParameters>(
           "Multiple users found with the same email and password",
         );
 
+      if(user[0]?.email_verified === false) {
+        throw new OperationError(outcomeError("forbidden", "Email not verified."));
+      }
+
       return user[0];
     }
     default:
