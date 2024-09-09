@@ -18,7 +18,6 @@ import * as views from "../../../../views/index.js";
 import * as codes from "../../../db/code/index.js";
 import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
-import * as GLOBAL from "../../../global/constants.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { OIDCRouteHandler } from "../../index.js";
