@@ -33,6 +33,7 @@ import ResourceEditorComponent, {
   AdditionalContent,
 } from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
+import { getErrorMessage } from "../../utilities";
 
 const extensions = [
   basicSetup,
@@ -212,14 +213,7 @@ const InvocationModal = ({
                           return `Invocation succeeded`;
                         },
                         error: (error) => {
-                          console.log(error);
-                          const message = (
-                            error.operationOutcome as OperationOutcome
-                          ).issue
-                            .map((issue) => issue.diagnostics)
-                            .join("\n");
-
-                          return message;
+                          return getErrorMessage(error);
                         },
                       });
                     } catch (e) {

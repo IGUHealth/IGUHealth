@@ -17,6 +17,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
+import { getErrorMessage } from "../../utilities";
 import MessageTopicView from "./MessageTopic";
 import OperationDefinitionView from "./OperationDefinition";
 
@@ -63,14 +64,7 @@ function ResourceEditorTabs() {
             success: (success) =>
               `Updated ${(success as Resource).resourceType}`,
             error: (error) => {
-              if ("response" in error) {
-                const message = (error.response.body as OperationOutcome).issue
-                  .map((issue) => issue.diagnostics)
-                  .join("\n");
-
-                return message;
-              }
-              return "Unknown Error";
+              return getErrorMessage(error);
             },
           }).then((value) =>
             navigate(
@@ -103,11 +97,7 @@ function ResourceEditorTabs() {
           loading: "Deleting Resource",
           success: () => `Deleted ${resourceType}`,
           error: (error) => {
-            const message = (error.operationOutcome as OperationOutcome).issue
-              .map((issue) => issue.diagnostics)
-              .join("\n");
-
-            return message;
+            return getErrorMessage(error);
           },
         }).then(() =>
           navigate(

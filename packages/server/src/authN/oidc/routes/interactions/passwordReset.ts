@@ -173,71 +173,96 @@ export function passwordResetPOST(): OIDCRouteHandler {
       );
       return;
     }
-
-    await FHIRTransaction(
-      ctx.state.iguhealth,
-      db.IsolationLevel.Serializable,
-      async (fhirContext) => {
-        if (!body.code) {
-          throw new OperationError(outcomeError("invalid", "Code not found."));
-        }
-        const authorizationCode = await getAuthorizationCode(
-          fhirContext.db,
-          fhirContext.tenant,
-          body.code,
-        );
-        const email = (authorizationCode.meta as Record<string, string>)?.email;
-        const user = await users.get(
-          fhirContext.db,
-          fhirContext.tenant,
-          authorizationCode.user_id,
-        );
-
-        if (user?.email !== email) {
-          throw new OperationError(
-            outcomeError("invalid", "Email does not match the user."),
+    try {
+      await FHIRTransaction(
+        ctx.state.iguhealth,
+        db.IsolationLevel.Serializable,
+        async (fhirContext) => {
+          if (!body.code) {
+            throw new OperationError(
+              outcomeError("invalid", "Code not found."),
+            );
+          }
+          const authorizationCode = await getAuthorizationCode(
+            fhirContext.db,
+            fhirContext.tenant,
+            body.code,
           );
-        }
+          const email = (authorizationCode.meta as Record<string, string>)
+            ?.email;
+          const user = await users.get(
+            fhirContext.db,
+            fhirContext.tenant,
+            authorizationCode.user_id,
+          );
 
-        const update = await users.update(
-          fhirContext.db,
-          fhirContext.tenant,
-          authorizationCode.user_id,
-          {
-            email,
-            password: body.password,
-            // Password reset goes through email so we can assume email is verified.
-            email_verified: true,
-          },
+          if (user?.email !== email) {
+            throw new OperationError(
+              outcomeError("invalid", "Email does not match the user."),
+            );
+          }
+
+          const update = await users.update(
+            fhirContext.db,
+            fhirContext.tenant,
+            authorizationCode.user_id,
+            {
+              email,
+              password: body.password,
+              // Password reset goes through email so we can assume email is verified.
+              email_verified: true,
+            },
+          );
+
+          await ctx.state.iguhealth.client.update(
+            asRoot({
+              ...fhirContext,
+              tenant: update.tenant as TenantId,
+            }),
+            R4,
+            "Membership",
+            update.fhir_user_id as id,
+            userToMembership(update),
+          );
+
+          await codes.remove(fhirContext.db, fhirContext.tenant, {
+            code: body.code,
+          });
+        },
+      );
+
+      const loginRoute = ctx.router.url(
+        GLOBAL.ROUTES.LOGIN_GET,
+        {
+          tenant: ctx.state.iguhealth.tenant,
+        },
+        { query: { message: "Password reset. Please login." } },
+      );
+
+      if (loginRoute instanceof Error) throw loginRoute;
+      ctx.redirect(loginRoute);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (
+        db.isDatabaseError(
+          error,
+          "IntegrityConstraintViolation_UniqueViolation",
+        )
+      ) {
+        throw new OperationError(
+          outcomeError(
+            "transient",
+            "User with this email is already the owner of a tenant.",
+          ),
         );
-
-        await ctx.state.iguhealth.client.update(
-          asRoot({
-            ...fhirContext,
-            tenant: update.tenant as TenantId,
-          }),
-          R4,
-          "Membership",
-          update.fhir_user_id as id,
-          userToMembership(update),
+      } else if (db.isDatabaseError(error)) {
+        throw new OperationError(
+          outcomeError("transient", "Database error. Please try again."),
         );
-
-        await codes.remove(fhirContext.db, fhirContext.tenant, {
-          code: body.code,
-        });
-      },
-    );
-
-    const loginRoute = ctx.router.url(
-      GLOBAL.ROUTES.LOGIN_GET,
-      {
-        tenant: ctx.state.iguhealth.tenant,
-      },
-      { query: { message: "Password reset. Please login." } },
-    );
-
-    if (loginRoute instanceof Error) throw loginRoute;
-    ctx.redirect(loginRoute);
+      } else {
+        throw error;
+      }
+    }
   };
 }
 
