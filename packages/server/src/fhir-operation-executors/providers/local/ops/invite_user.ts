@@ -14,7 +14,7 @@ import {
 
 import * as codes from "../../../../authN/db/code/index.js";
 import * as users from "../../../../authN/db/users/index.js";
-import { createPasswordResetCode } from "../../../../authN/oidc/utilities/createPasswordCode.js";
+import { createPasswordResetCode } from "../../../../authN/oidc/utilities/createPasswordResetCode.js";
 import {
   EmailTemplate,
   EmailTemplateButton,

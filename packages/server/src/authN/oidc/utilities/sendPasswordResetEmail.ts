@@ -12,7 +12,7 @@ import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import * as codes from "../../db/code/index.js";
 import type { User } from "../../db/users/index.js";
 import { OIDC_ROUTES } from "../constants.js";
-import { createPasswordResetCode } from "./createPasswordCode.js";
+import { createPasswordResetCode } from "./createPasswordResetCode.js";
 
 /**
  * Check if a password reset should be sent.
