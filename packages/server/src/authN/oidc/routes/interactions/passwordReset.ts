@@ -160,6 +160,8 @@ export function passwordResetPOST(): OIDCRouteHandler {
     }
 
     const authorizationCode = res[0];
+    const email = (authorizationCode.meta as Record<string, string> | undefined)
+      ?.email;
 
     if (!authorizationCode || authorizationCode.is_expired) {
       throw new OperationError(
@@ -174,17 +176,12 @@ export function passwordResetPOST(): OIDCRouteHandler {
       ctx.state.iguhealth,
       db.IsolationLevel.Serializable,
       async (fhirContext) => {
-        const existingUser = await users.get(
-          fhirContext.db,
-          fhirContext.tenant,
-          authorizationCode.user_id,
-        );
         const update = await users.update(
           fhirContext.db,
           fhirContext.tenant,
           authorizationCode.user_id,
           {
-            ...existingUser,
+            email,
             password: body.password,
             // Password reset goes through email so we can assume email is verified.
             email_verified: true,
