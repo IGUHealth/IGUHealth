@@ -3,7 +3,7 @@ import { generatePath, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { Button, Input, Toaster } from "@iguhealth/components";
-import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";

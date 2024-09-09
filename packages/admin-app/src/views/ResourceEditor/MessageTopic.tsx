@@ -10,12 +10,7 @@ import {
   Tabs,
   Toaster,
 } from "@iguhealth/components";
-import {
-  MessageTopic,
-  OperationOutcome,
-  ResourceType,
-  id,
-} from "@iguhealth/fhir-types/r4/types";
+import { MessageTopic, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthMessagePost } from "@iguhealth/generated-ops/lib/r4/ops";
 

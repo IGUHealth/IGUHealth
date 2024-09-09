@@ -22,7 +22,6 @@ import {
   AuditEvent,
   Extension,
   OperationDefinition,
-  OperationOutcome,
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";

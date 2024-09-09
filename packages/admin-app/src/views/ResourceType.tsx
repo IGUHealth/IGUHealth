@@ -12,12 +12,7 @@ import {
   Modal,
   Toaster,
 } from "@iguhealth/components";
-import {
-  OperationOutcome,
-  Reference,
-  code,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
+import { Reference, code, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   R4,

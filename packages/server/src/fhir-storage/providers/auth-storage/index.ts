@@ -343,7 +343,8 @@ function updateUserTableMiddleware<
             existingUser.id,
             membershipToUser(membership),
           );
-          // @ts-ignore
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           context.ctx.logger.error(error);
           if (
