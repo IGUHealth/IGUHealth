@@ -7,7 +7,6 @@ import {
   Bundle,
   MessageTopic,
   OperationDefinition,
-  OperationOutcome,
   Resource,
   ResourceType,
   StructureDefinition,
