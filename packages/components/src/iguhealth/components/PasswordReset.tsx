@@ -2,7 +2,6 @@ import React from "react";
 
 import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 
-import { OperationOutcomeIssueDisplay } from "../../fhir/resources/OperationOutcome";
 import { Container } from "./Container";
 
 export type PasswordResetProps = {
@@ -24,20 +23,21 @@ export const PasswordResetForm = ({
 }: PasswordResetProps) => {
   return (
     <Container logo={logo} title={title}>
+      <div>
+        {error?.issue?.map((issue) => {
+          return (
+            <div
+              key={issue.diagnostics || issue.code}
+              className="text-sm text-red-600 dark:text-red-400"
+            >
+              {issue.diagnostics || issue.code}
+            </div>
+          );
+        })}
+      </div>
       <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
         {header}
       </h1>
-      {error && (
-        <div className="spacing-y-2">
-          {error?.issue?.map((issue) => (
-            <OperationOutcomeIssueDisplay
-              key={issue.diagnostics || issue.code}
-              hideCode={true}
-              issue={issue}
-            />
-          ))}
-        </div>
-      )}
       <form className="space-y-4 md:space-y-6" action={action} method="POST">
         <input type="hidden" name="code" id="code" value={code} />
         <div>

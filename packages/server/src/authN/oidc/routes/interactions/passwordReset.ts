@@ -18,8 +18,8 @@ import * as views from "../../../../views/index.js";
 import * as codes from "../../../db/code/index.js";
 import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
-import * as GLOBAL from "../../../global/constants.js";
 import { OIDC_ROUTES } from "../../constants.js";
+import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { OIDCRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
@@ -74,7 +74,7 @@ export function passwordResetGET(): OIDCRouteHandler {
       React.createElement(PasswordResetForm, {
         logo: "/public/img/logo.svg",
         title: "IGUHealth",
-        header: "Reset Password",
+        header: "Set your password",
         action: passwordResetPostUrl,
         code: authorizationCodeSearch[0].code,
       }),
@@ -131,7 +131,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: outcomeError("invalid", "You must enter a password"),
@@ -146,7 +146,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: outcomeError(
@@ -165,7 +165,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: passwordValidStrength,
@@ -230,17 +230,13 @@ export function passwordResetPOST(): OIDCRouteHandler {
           });
         },
       );
+      const AdminAppURL = adminApp.redirectURL(ctx.state.iguhealth.tenant);
+      if (!AdminAppURL)
+        throw new OperationError(
+          outcomeFatal("invariant", "Admin app URL not found for tenant."),
+        );
 
-      const loginRoute = ctx.router.url(
-        GLOBAL.ROUTES.LOGIN_GET,
-        {
-          tenant: ctx.state.iguhealth.tenant,
-        },
-        { query: { message: "Password reset. Please login." } },
-      );
-
-      if (loginRoute instanceof Error) throw loginRoute;
-      ctx.redirect(loginRoute);
+      ctx.redirect(AdminAppURL);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (
@@ -278,7 +274,7 @@ export const passwordResetInitiateGet = (): OIDCRouteHandler => async (ctx) => {
   ctx.body = views.renderString(
     React.createElement(EmailForm, {
       logo: "/public/img/logo.svg",
-      header: "Password Reset",
+      header: "Email Verification",
       action: passwordResetInitiatePostURL,
     }),
   );
