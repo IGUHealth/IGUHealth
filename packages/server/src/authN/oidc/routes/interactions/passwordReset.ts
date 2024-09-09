@@ -74,7 +74,7 @@ export function passwordResetGET(): OIDCRouteHandler {
       React.createElement(PasswordResetForm, {
         logo: "/public/img/logo.svg",
         title: "IGUHealth",
-        header: "Reset Password",
+        header: "Set your password",
         action: passwordResetPostUrl,
         code: authorizationCodeSearch[0].code,
       }),
@@ -131,7 +131,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: outcomeError("invalid", "You must enter a password"),
@@ -146,7 +146,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: outcomeError(
@@ -165,7 +165,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
-          header: "Reset Password",
+          header: "Set your password",
           action: passwordResetPostUrl,
           code: body.code,
           error: passwordValidStrength,
