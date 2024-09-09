@@ -22,6 +22,7 @@ import {
 import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 
 import { getClient } from "../db/client";
+import { getErrorMessage } from "../utilities";
 
 function InviteModal({
   refresh,
@@ -85,22 +86,25 @@ function InviteModal({
                 return;
               }
 
-              client
-                .invoke_type(IguhealthInviteUser.Op, {}, R4, "Membership", {
-                  role,
-                  email,
-                  accessPolicy: accessPolicyRef,
-                })
-                .then((output) => {
-                  Toaster.success(output.issue?.[0]?.diagnostics ?? "");
-                  refresh();
-                  setOpen(false);
-                })
-                .catch((e) => {
-                  Toaster.error(
-                    e?.operationOutcome?.issue?.[0]?.diagnostics ?? "",
-                  );
-                });
+              Toaster.promise(
+                client
+                  .invoke_type(IguhealthInviteUser.Op, {}, R4, "Membership", {
+                    role,
+                    email,
+                    accessPolicy: accessPolicyRef,
+                  })
+                  .then(() => {
+                    refresh();
+                    setOpen(false);
+                  }),
+                {
+                  loading: "Uploading Bundle",
+                  success: () => `Bundle was uploaded`,
+                  error: (error) => {
+                    return getErrorMessage(error);
+                  },
+                },
+              );
             }}
           >
             Send

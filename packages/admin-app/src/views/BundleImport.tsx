@@ -3,10 +3,11 @@ import { generatePath, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { Button, Input, Toaster } from "@iguhealth/components";
-import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";
+import { getErrorMessage } from "../utilities";
 
 const getData = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -73,12 +74,7 @@ export default function BatchImportView() {
                   loading: "Uploading Bundle",
                   success: () => `Bundle was uploaded`,
                   error: (error) => {
-                    const message = (
-                      error.operationOutcome as OperationOutcome
-                    ).issue
-                      .map((issue) => issue.diagnostics)
-                      .join("\n");
-                    return message;
+                    return getErrorMessage(error);
                   },
                 }).then(() => {
                   navigate(generatePath("/", {}));

@@ -336,13 +336,35 @@ function updateUserTableMiddleware<
           throw new OperationError(
             outcomeFatal("invariant", "Response body not found."),
           );
+        try {
+          await users.update(
+            context.ctx.db,
+            context.ctx.tenant,
+            existingUser.id,
+            membershipToUser(membership),
+          );
 
-        await users.update(
-          context.ctx.db,
-          context.ctx.tenant,
-          existingUser.id,
-          membershipToUser(membership),
-        );
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          context.ctx.logger.error(error);
+          if (
+            db.isDatabaseError(
+              error,
+              "IntegrityConstraintViolation_UniqueViolation",
+            )
+          ) {
+            throw new OperationError(
+              outcomeError(
+                "invariant",
+                "Failed to update user email is not unique.",
+              ),
+            );
+          } else {
+            throw new OperationError(
+              outcomeError("invariant", "Failed to update user."),
+            );
+          }
+        }
 
         return res;
       }

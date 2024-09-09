@@ -10,12 +10,7 @@ import {
   Tabs,
   Toaster,
 } from "@iguhealth/components";
-import {
-  MessageTopic,
-  OperationOutcome,
-  ResourceType,
-  id,
-} from "@iguhealth/fhir-types/r4/types";
+import { MessageTopic, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthMessagePost } from "@iguhealth/generated-ops/lib/r4/ops";
 
@@ -23,6 +18,7 @@ import ResourceEditorComponent, {
   AdditionalContent,
 } from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
+import { getErrorMessage } from "../../utilities";
 
 interface MessageTopicEditorProps extends AdditionalContent {
   resource: MessageTopic | undefined;
@@ -90,14 +86,7 @@ const SendMessageTopicModal = ({
                           return `Invocation succeeded`;
                         },
                         error: (error) => {
-                          console.log(error);
-                          const message = (
-                            error.operationOutcome as OperationOutcome
-                          ).issue
-                            .map((issue) => issue.diagnostics)
-                            .join("\n");
-
-                          return message;
+                          return getErrorMessage(error);
                         },
                       });
                     } catch (e) {
