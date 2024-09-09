@@ -7,8 +7,6 @@ export function getErrorMessage(error: any): string {
       .map((issue) => issue.diagnostics)
       .join("\n");
 
-    console.log("MESSAGE:", message, error);
-
     return message;
   }
   return "Unknown Error";
