@@ -82,6 +82,34 @@ export function passwordResetGET(): OIDCRouteHandler {
   };
 }
 
+async function getAuthorizationCode(
+  pg: db.Queryable,
+  tenant: TenantId,
+  code: string,
+): Promise<codes.AuthorizationCode> {
+  const res = await codes.search(pg, tenant, {
+    type: "password_reset",
+    code: code,
+  });
+
+  if (res.length !== 1) {
+    throw new OperationError(outcomeError("invalid", "Code not found."));
+  }
+
+  const authorizationCode = res[0];
+
+  if (!authorizationCode || authorizationCode.is_expired) {
+    throw new OperationError(
+      outcomeError(
+        "invalid",
+        "Your code has expired. Please request a new one.",
+      ),
+    );
+  }
+
+  return authorizationCode;
+}
+
 export function passwordResetPOST(): OIDCRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
@@ -146,45 +174,37 @@ export function passwordResetPOST(): OIDCRouteHandler {
       return;
     }
 
-    const res = await codes.search(
-      ctx.state.iguhealth.db,
-      ctx.state.iguhealth.tenant,
-      {
-        type: "password_reset",
-        code: body.code,
-      },
-    );
-
-    if (res.length !== 1) {
-      throw new OperationError(outcomeError("invalid", "Code not found."));
-    }
-
-    const authorizationCode = res[0];
-
-    if (!authorizationCode || authorizationCode.is_expired) {
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          "Your code has expired. Please request a new one.",
-        ),
-      );
-    }
-
     await FHIRTransaction(
       ctx.state.iguhealth,
       db.IsolationLevel.Serializable,
       async (fhirContext) => {
-        const existingUser = await users.get(
+        if (!body.code) {
+          throw new OperationError(outcomeError("invalid", "Code not found."));
+        }
+        const authorizationCode = await getAuthorizationCode(
+          fhirContext.db,
+          fhirContext.tenant,
+          body.code,
+        );
+        const email = (authorizationCode.meta as Record<string, string>)?.email;
+        const user = await users.get(
           fhirContext.db,
           fhirContext.tenant,
           authorizationCode.user_id,
         );
+
+        if (user?.email !== email) {
+          throw new OperationError(
+            outcomeError("invalid", "Email does not match the user."),
+          );
+        }
+
         const update = await users.update(
           fhirContext.db,
           fhirContext.tenant,
           authorizationCode.user_id,
           {
-            ...existingUser,
+            email,
             password: body.password,
             // Password reset goes through email so we can assume email is verified.
             email_verified: true,

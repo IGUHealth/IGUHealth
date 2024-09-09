@@ -12,6 +12,7 @@ import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import * as codes from "../../db/code/index.js";
 import type { User } from "../../db/users/index.js";
 import { OIDC_ROUTES } from "../constants.js";
+import { createPasswordResetCode } from "./createPasswordResetCode.js";
 
 /**
  * Check if a password reset should be sent.
@@ -52,11 +53,7 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await codes.create(ctx.db, ctx.tenant, {
-    type: "password_reset",
-    user_id: user.id,
-    expires_in: "15 minutes",
-  });
+  const code = await createPasswordResetCode(ctx.db, ctx.tenant, user);
 
   const emailVerificationURL = router.url(
     OIDC_ROUTES.PASSWORD_RESET_VERIFY_GET,

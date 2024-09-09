@@ -12,8 +12,8 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import * as codes from "../../../../authN/db/code/index.js";
 import * as users from "../../../../authN/db/users/index.js";
+import { createPasswordResetCode } from "../../../../authN/oidc/utilities/createPasswordResetCode.js";
 import {
   EmailTemplate,
   EmailTemplateButton,
@@ -79,12 +79,8 @@ export const IguhealthInviteUserInvoke = InlineOperation(
         if (!user[0]) {
           throw new OperationError(outcomeError("not-found", "User not found"));
         }
-        const code = await codes.create(ctx.db, ctx.tenant, {
-          type: "password_reset",
-          user_id: user[0].id,
-          expires_in: "15 minutes",
-        });
 
+        const code = await createPasswordResetCode(ctx.db, ctx.tenant, user[0]);
         return [user, code];
       },
     );
