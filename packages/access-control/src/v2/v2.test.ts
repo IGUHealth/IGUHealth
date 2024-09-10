@@ -1,15 +1,20 @@
 import { expect, test } from "@jest/globals";
 
+import createHTTPClient from "@iguhealth/client/http";
 import { code, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
 import * as v2 from "./index.js";
 
-function getContext(): v2.pip.PolicyContext<any> {
+function getContext(): v2.pip.PolicyContext<{}, string> {
   return {
-    variables: {},
-    user: {
+    clientCTX: {},
+    client: createHTTPClient({
+      url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+    }),
+    attributes: {},
+    environment: {
       claims: {
         iss: "https://iguhealth.test" as Issuer,
         aud: "iguhealth",
@@ -25,12 +30,12 @@ function getContext(): v2.pip.PolicyContext<any> {
         role: "admin" as code,
         resourceType: "Membership",
       },
-    },
-    request: {
-      fhirVersion: R4,
-      level: "system",
-      type: "search-request",
-      parameters: [],
+      request: {
+        fhirVersion: R4,
+        level: "system",
+        type: "search-request",
+        parameters: [],
+      },
     },
   };
 }
@@ -47,7 +52,7 @@ test("Simple conditional check", async () => {
           condition: {
             expression: {
               language: "text/fhirpath" as code,
-              expression: "%user.claims.role = 'admin'",
+              expression: "%claims.role = 'admin'",
             },
           },
         },
@@ -75,7 +80,7 @@ test("Simple conditional check", async () => {
         condition: {
           expression: {
             language: "text/fhirpath" as code,
-            expression: "%user.claims.`https://iguhealth.app/role` = 'admin'",
+            expression: "%claims.`https://iguhealth.app/role` = 'admin'",
           },
         },
       },
@@ -120,8 +125,7 @@ test("Simple Or Logic", async () => {
               condition: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'admin'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
                 },
               },
             },
@@ -167,8 +171,7 @@ test("Simple And Logic", async () => {
               condition: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'admin'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
                 },
               },
             },
@@ -205,8 +208,7 @@ test("Simple Target Logic", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'owner'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {
@@ -256,8 +258,7 @@ test("Simple Target Logic", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'admin'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
                 },
               },
               condition: {
@@ -309,8 +310,7 @@ test("Test Rule Effect Log", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'owner'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {
@@ -361,8 +361,7 @@ test("Test Rule Effect Log", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression:
-                    "%user.claims.`https://iguhealth.app/role` = 'owner'",
+                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {

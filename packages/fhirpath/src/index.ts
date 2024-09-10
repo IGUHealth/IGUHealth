@@ -17,7 +17,7 @@ import {
 
 export type Options = {
   fhirVersion?: FHIR_VERSION;
-  variables?: Record<string, unknown> | ((v: string) => unknown);
+  variables?: Record<string, unknown> | ((v: string) => Promise<unknown>);
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -30,7 +30,7 @@ async function getVariableValue(
 ): Promise<IMetaValue<unknown>[]> {
   let value;
   if (options?.variables instanceof Function) {
-    value = options.variables(name);
+    value = await options.variables(name);
   } else if (options?.variables instanceof Object) {
     value = options.variables[name];
   }

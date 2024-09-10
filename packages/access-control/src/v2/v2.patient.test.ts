@@ -1,5 +1,6 @@
 import { expect, test } from "@jest/globals";
 
+import createHTTPClient from "@iguhealth/client/lib/http";
 import {
   AccessPolicyV2,
   code,
@@ -10,10 +11,14 @@ import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
 import * as v2 from "./index.js";
 
-function getContext(): v2.pip.PolicyContext<any> {
+function getContext(): v2.pip.PolicyContext<{}, string> {
   return {
-    variables: {},
-    user: {
+    clientCTX: {},
+    client: createHTTPClient({
+      url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+    }),
+    attributes: {},
+    environment: {
       claims: {
         iss: "https://iguhealth.test" as Issuer,
         aud: "iguhealth",
@@ -32,12 +37,12 @@ function getContext(): v2.pip.PolicyContext<any> {
           reference: "Patient/123",
         },
       },
-    },
-    request: {
-      fhirVersion: R4,
-      level: "system",
-      type: "search-request",
-      parameters: [],
+      request: {
+        fhirVersion: R4,
+        level: "system",
+        type: "search-request",
+        parameters: [],
+      },
     },
   };
 }
@@ -71,7 +76,7 @@ const PatientAccessPolicy: AccessPolicyV2 = {
             expression: {
               language: "text/fhirpath" as code,
               expression:
-                "%request.id = %user.membership.link.reference.replace('Patient/', '')",
+                "%request.id = %membership.link.reference.replace('Patient/', '')",
             },
           },
         },
@@ -87,12 +92,15 @@ test("Evaluate patient access controls", async () => {
     await v2.pdp.evaluate(
       {
         ...context,
-        request: {
-          type: "read-request",
-          fhirVersion: R4,
-          level: "instance",
-          resource: "Patient",
-          id: "123" as id,
+        environment: {
+          ...context.environment,
+          request: {
+            type: "read-request",
+            fhirVersion: R4,
+            level: "instance",
+            resource: "Patient",
+            id: "123" as id,
+          },
         },
       },
       PatientAccessPolicy,
@@ -113,12 +121,15 @@ test("Evaluate patient access controls", async () => {
     await v2.pdp.evaluate(
       {
         ...context,
-        request: {
-          type: "read-request",
-          fhirVersion: R4,
-          level: "instance",
-          resource: "Patient",
-          id: "not-id" as id,
+        environment: {
+          ...context.environment,
+          request: {
+            type: "read-request",
+            fhirVersion: R4,
+            level: "instance",
+            resource: "Patient",
+            id: "not-id" as id,
+          },
         },
       },
       PatientAccessPolicy,

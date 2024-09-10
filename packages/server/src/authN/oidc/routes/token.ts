@@ -4,7 +4,12 @@ import crypto from "node:crypto";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { ClientApplication, code, id } from "@iguhealth/fhir-types/r4/types";
+import {
+  ClientApplication,
+  canonical,
+  code,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { getSigningKey } from "@iguhealth/jwt/certifications";
 import { createToken } from "@iguhealth/jwt/token";
@@ -169,7 +174,7 @@ async function getIDTokenPayload(
       user.fhir_user_id as id,
     );
     if (membership?.link) {
-      idTokenPayload.fhirUser = membership.link.reference;
+      idTokenPayload.fhirUser = membership.link.reference as canonical;
     }
   }
 
