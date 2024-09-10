@@ -1,4 +1,4 @@
-import { EditorView, minimalSetup } from "codemirror";
+import { minimalSetup } from "codemirror";
 import React from "react";
 
 import { Expression, code } from "@iguhealth/fhir-types/r4/types";
