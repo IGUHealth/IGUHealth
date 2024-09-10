@@ -48699,8 +48699,9 @@
         "name": 3,
         "description": 4,
         "engine": 5,
-        "rule": 6,
-        "target": 16
+        "attribute": 6,
+        "rule": 11,
+        "target": 21
       },
       "cardinality": "array"
     },
@@ -48733,13 +48734,46 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "name": 7,
-        "description": 8,
-        "combineBehavior": 9,
-        "effect": 10,
-        "target": 11,
-        "condition": 13,
-        "rule": 6
+        "attributeId": 7,
+        "operation": 8
+      },
+      "cardinality": "array"
+    },
+    {
+      "_type_": "type",
+      "type": "id",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "complex",
+      "type": "BackboneElement",
+      "properties": {
+        "type": 9,
+        "params": 10
+      },
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "code",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "Expression",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "complex",
+      "type": "BackboneElement",
+      "properties": {
+        "name": 12,
+        "description": 13,
+        "combineBehavior": 14,
+        "effect": 15,
+        "target": 16,
+        "condition": 18,
+        "rule": 11
       },
       "cardinality": "array"
     },
@@ -48767,7 +48801,7 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "expression": 12
+        "expression": 17
       },
       "cardinality": "single"
     },
@@ -48780,7 +48814,7 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "expression": 14
+        "expression": 19
       },
       "cardinality": "single"
     },
@@ -48794,7 +48828,7 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "link": 17
+        "link": 22
       },
       "cardinality": "array"
     },

@@ -44872,6 +44872,34 @@ resourceType: "VisionPrescription"
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
 }
 
+export interface AccessPolicyV2AttributeOperation {
+  /** 
+   * The operation to retrieve the attribute.
+   */
+  type: code;
+  /** 
+   * The operation to retrieve the attribute.
+   */
+  _type?: Element
+  /** 
+   * The operation to retrieve the attribute.
+   */
+  params?: Expression;
+}
+export interface AccessPolicyV2Attribute {
+  /** 
+   * The id of the attribute referenced using %attributeId in expressions.
+   */
+  attributeId: id;
+  /** 
+   * The id of the attribute referenced using %attributeId in expressions.
+   */
+  _attributeId?: Element
+  /** 
+   * The operation to retrieve the attribute.
+   */
+  operation?: AccessPolicyV2AttributeOperation;
+}
 export interface AccessPolicyV2RuleTarget {
   /** 
    * Determine whether to evaluate the rule.
@@ -44970,6 +44998,10 @@ resourceType: "AccessPolicyV2"
    * The type of evaluation that is performed to determine if access is granted or denied.
    */
   _engine?: Element
+  /** 
+   * Attributes to use for the policy evaluation.
+   */
+  attribute?: Array<AccessPolicyV2Attribute>;
   /** 
    * The rules that govern how the access policy is applied.
    */

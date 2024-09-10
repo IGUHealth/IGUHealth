@@ -27,6 +27,9 @@ export function FHIRExpressionEditable({
             height: "100%",
             width: "100%",
           },
+          "&.cm-focused": {
+            outline: "0px",
+          },
         }}
         onChange={(expression) => {
           onChange?.call(undefined, {
