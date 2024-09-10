@@ -130,6 +130,70 @@
                 }
             },
             {
+                "id": "AccessPolicyV2.attribute",
+                "path": "AccessPolicyV2.attribute",
+                "definition": "Attributes to use for the policy evaluation.",
+                "short": "Attributes to use for the policy evaluation.",
+                "type": [
+                    {
+                        "code": "BackboneElement"
+                    }
+                ],
+                "min": 0,
+                "max": "*"
+            },
+            {
+                "id": "AccessPolicyV2.attribute.attributeId",
+                "path": "AccessPolicyV2.attribute.attributeId",
+                "definition": "The id of the attribute referenced using %attributeId in expressions.",
+                "short": "The id of the attribute referenced using %attributeId in expressions.",
+                "type": [
+                    {
+                        "code": "id"
+                    }
+                ],
+                "min": 1,
+                "max": "1"
+            },
+            {
+                "id": "AccessPolicyV2.attribute.operation",
+                "path": "AccessPolicyV2.attribute.operation",
+                "definition": "The operation to retrieve the attribute.",
+                "short": "The operation to retrieve the attribute.",
+                "type": [
+                    {
+                        "code": "BackboneElement"
+                    }
+                ]
+            },
+            {
+                "id": "AccessPolicyV2.attribute.operation.type",
+                "path": "AccessPolicyV2.attribute.operation.type",
+                "definition": "The operation to retrieve the attribute.",
+                "short": "The operation to retrieve the attribute.",
+                "type": [
+                    {
+                        "code": "Coding"
+                    }
+                ],
+                "binding": {
+                    "strength": "extensible",
+                    "description": "The allowable operation code types.",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyAttributeOperationTypes|4.0.1"
+                }
+            },
+            {
+                "id": "AccessPolicyV2.attribute.operation.params",
+                "path": "AccessPolicyV2.attribute.operation.params",
+                "definition": "The operation to retrieve the attribute.",
+                "short": "The operation to retrieve the attribute.",
+                "type": [
+                    {
+                        "code": "Expression"
+                    }
+                ]
+            },
+            {
                 "id": "AccessPolicyV2.rule",
                 "path": "AccessPolicyV2.rule",
                 "definition": "The rules that govern how the access policy is applied.",
