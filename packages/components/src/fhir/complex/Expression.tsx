@@ -1,4 +1,4 @@
-import { minimalSetup } from "codemirror";
+import { EditorView, minimalSetup } from "codemirror";
 import React from "react";
 
 import { Expression, code } from "@iguhealth/fhir-types/r4/types";
@@ -26,6 +26,9 @@ export function FHIRExpressionEditable({
           "&": {
             height: "100%",
             width: "100%",
+          },
+          "&.cm-focused": {
+            outline: "0px",
           },
         }}
         onChange={(expression) => {

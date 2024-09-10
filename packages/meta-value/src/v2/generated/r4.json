@@ -48751,17 +48751,17 @@
         "type": 9,
         "params": 10
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
-      "type": "Coding",
-      "cardinality": "array"
+      "type": "code",
+      "cardinality": "single"
     },
     {
       "_type_": "type",
       "type": "Expression",
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "complex",

@@ -23,6 +23,7 @@ import {
   date,
   dateTime,
   decimal,
+  id,
   integer,
   uri,
   url,
@@ -65,7 +66,9 @@ export const TypeComponents: Record<string, TypeComponent> = {
       {...deriveSharedProps<string>(props)}
     />
   ),
-
+  id: (props) => (
+    <Primitives.FHIRIdEditable {...deriveSharedProps<id>(props)} />
+  ),
   string: (props) => (
     <Primitives.FHIRStringEditable {...deriveSharedProps<string>(props)} />
   ),

@@ -44876,7 +44876,11 @@ export interface AccessPolicyV2AttributeOperation {
   /** 
    * The operation to retrieve the attribute.
    */
-  type?: Coding;
+  type: code;
+  /** 
+   * The operation to retrieve the attribute.
+   */
+  _type?: Element
   /** 
    * The operation to retrieve the attribute.
    */
