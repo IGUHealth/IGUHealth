@@ -6,6 +6,7 @@ import {
   Membership,
   OperationDefinition,
   Reference,
+  canonical,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 
@@ -50,7 +51,7 @@ export interface IGUHealthCustomClaims<role> {
 }
 
 export interface SMARTPayload {
-  fhirUser?: string;
+  fhirUser?: canonical;
   patient?: id;
   encounter?: id;
   fhirContext?: Reference[];

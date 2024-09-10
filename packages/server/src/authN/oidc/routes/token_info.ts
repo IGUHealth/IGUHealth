@@ -3,7 +3,7 @@ import { jwtVerify } from "jose";
 import { JWSInvalid } from "jose/errors";
 import { user_role } from "zapatos/schema";
 
-import { Reference, id } from "@iguhealth/fhir-types/r4/types";
+import { Reference, canonical, id } from "@iguhealth/fhir-types/r4/types";
 import { getSigningKey } from "@iguhealth/jwt/certifications";
 import {
   ALGORITHMS,
@@ -110,7 +110,7 @@ type TokenInfoResponse = {
   /**
    * SMART Claims for fhirUser.
    */
-  fhirUser?: string;
+  fhirUser?: canonical;
 
   patient?: id;
   encounter?: id;
