@@ -582,6 +582,7 @@ async function createWorker(
           cache,
           tenant: tenant,
           user: {
+            resource: WORKER_APP,
             payload,
           },
         };

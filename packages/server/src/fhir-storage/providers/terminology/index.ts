@@ -33,7 +33,7 @@ function createTerminologyMiddleware<
     validateOperationsAllowed(TERMINOLOGY_METHODS_ALLOWED),
     async (context) => {
       const response = await context.state.fhirDB.request(
-        asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
+        await asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
         context.request,
       );
 

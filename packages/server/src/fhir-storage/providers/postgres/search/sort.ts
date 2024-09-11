@@ -59,7 +59,7 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
           direction = "descending";
         }
         const searchParameter = await ctx.client.search_type(
-          asRoot(ctx),
+          await asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           [

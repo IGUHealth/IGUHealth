@@ -85,8 +85,8 @@ export namespace KoaExtensions {
 
   export type IGUHealthServices = {
     allowSignup?: boolean;
-    __user__?: AccessTokenPayload<s.user_role>;
-    __access_token__?: AccessToken<s.user_role>;
+    __user__: AccessTokenPayload<s.user_role>;
+    __access_token__: AccessToken<s.user_role>;
     corsNonce: string;
     iguhealth: MakeOptional<IGUHealthServerCTX, "user" | "tenant">;
   };
@@ -106,7 +106,7 @@ export namespace KoaExtensions {
 export interface UserContext {
   payload: AccessTokenPayload<s.user_role>;
   accessToken?: JWT<AccessTokenPayload<s.user_role>>;
-  resource?: Membership | ClientApplication | OperationDefinition | null;
+  resource: Membership | ClientApplication | OperationDefinition;
   accessPolicies?: AccessPolicy[];
   scope?: Scope[];
 }
@@ -144,7 +144,7 @@ export interface IGUHealthServerCTX {
   ) => Promise<Resource<FHIRVersion, Type> | undefined>;
 }
 
-function rootClaims(
+function createRootClaims(
   tenant: TenantId,
   clientApp: ClientApplication,
 ): AccessTokenPayload<s.user_role> {
@@ -166,14 +166,17 @@ function rootClaims(
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asRoot(
+export async function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
-): IGUHealthServerCTX {
+): Promise<IGUHealthServerCTX> {
+  const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
+
   return {
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      payload: rootClaims(ctx.tenant, SYSTEM_APP),
+      resource: SYSTEM_APP,
+      payload: rootClaims,
     },
   };
 }

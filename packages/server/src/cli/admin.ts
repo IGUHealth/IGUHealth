@@ -91,7 +91,7 @@ async function createTenant(
       const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
       const membership: Membership = await ctx.client.create(
-        asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+        await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
         R4,
         await getMembership(options),
       );
@@ -161,7 +161,7 @@ function clientAppCommands(command: Command) {
       };
 
       const transaction = await services.client.transaction(
-        asRoot({ ...services, tenant: options.tenant }),
+        await asRoot({ ...services, tenant: options.tenant }),
         R4,
         {
           resourceType: "Bundle",
