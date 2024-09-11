@@ -183,12 +183,11 @@ async function findResourceAndAccessPolicies<
 }
 
 /**
- * Middleware to associate the user and access policies with the request.
- * Middlware uses JWT iss and sub to find the contextual user resource and _revinclude to find the access policies.
+ * Retrieve the user resource and access policies.
  *
  * @param context IGUHealthServerCTX
- * @param next Next chain in middleware.
- * @returns IGUHealthServerCTX with user resource and access policies attached.
+ * @param user User AccessToken Claims.
+ * @returns User resource and access policy
  */
 async function userResourceAndAccessPolicies(
   context: IGUHealthServerCTX,
@@ -216,7 +215,7 @@ async function userResourceAndAccessPolicies(
 }
 
 /**
- * Move the user JWT to the IGUHealth context
+ * Move the user JWT to the IGUHealth context and retrieve access policies.
  * @param ctx Koa Context
  * @param next Next Middleware
  */
