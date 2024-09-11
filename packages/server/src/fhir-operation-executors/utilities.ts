@@ -59,7 +59,7 @@ export async function getOperationCode(
   operation: OperationDefinition,
 ): Promise<string | undefined> {
   const code = await evaluate(
-    "$this.extension.where(url=%codeUrl).valueString",
+    "$this.extension.where(url=%codeUrl).value",
     operation,
     {
       variables: {
