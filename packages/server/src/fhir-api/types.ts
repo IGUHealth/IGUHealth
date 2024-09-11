@@ -20,7 +20,6 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { createToken, getSigningKey } from "@iguhealth/jwt";
 import {
   AccessToken,
   AccessTokenPayload,

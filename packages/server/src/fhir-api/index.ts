@@ -6,7 +6,6 @@ import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 
-import { createAssociateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import {
   createInjectScopesMiddleware,
