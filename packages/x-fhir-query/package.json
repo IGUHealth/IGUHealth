@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/x-fhir-query",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
