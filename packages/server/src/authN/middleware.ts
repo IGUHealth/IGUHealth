@@ -150,9 +150,7 @@ async function findResourceAndAccessPolicies<
       accessPolicies: [],
     };
 
-  console.time("root");
   const context = await asRoot(ctx);
-  console.timeEnd("root");
 
   const usersAndAccessPolicies = (await ctx.client.search_type(
     context,
@@ -232,12 +230,10 @@ export const associateUserToIGUHealth: Koa.Middleware<
     );
   }
 
-  console.time("ASSOCIATE_USER");
   const { resource, accessPolicies } = await userResourceAndAccessPolicies(
     await asRoot(ctx.state.iguhealth),
     ctx.state.__user__,
   );
-  console.timeEnd("ASSOCIATE_USER");
 
   if (!resource) {
     throw new OperationError(
