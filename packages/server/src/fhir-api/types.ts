@@ -106,7 +106,7 @@ export namespace KoaExtensions {
 
 export interface UserContext {
   payload: AccessTokenPayload<s.user_role>;
-  accessToken: JWT<AccessTokenPayload<s.user_role>>;
+  accessToken?: JWT<AccessTokenPayload<s.user_role>>;
   resource: Membership | ClientApplication | OperationDefinition;
   accessPolicies?: AccessPolicy[];
   scope?: Scope[];
@@ -171,18 +171,11 @@ export async function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
 ): Promise<IGUHealthServerCTX> {
   const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
-  const accessToken = await createToken({
-    signingKey: await getSigningKey(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-    ),
-    payload: rootClaims,
-  });
+
   return {
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      accessToken,
       resource: SYSTEM_APP,
       payload: rootClaims,
     },

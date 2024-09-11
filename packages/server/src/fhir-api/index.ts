@@ -121,7 +121,6 @@ export function getRedisClient(): Redis {
 function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
-      createAssociateUserMiddleware(),
       createCheckTenantUsageMiddleware(),
       createValidationMiddleware(),
       createCapabilitiesMiddleware(),

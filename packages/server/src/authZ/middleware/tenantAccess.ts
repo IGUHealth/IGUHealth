@@ -17,7 +17,7 @@ import { KoaExtensions } from "../../fhir-api/types.js";
  * @param ctx Parameterized Context with FHIR Services
  * @param next Koa Next function.
  */
-export async function verifyAndAssociateUserFHIRContext<
+export async function verifyUserHasAccessToTenant<
   State extends KoaExtensions.IGUHealth,
   Context extends KoaExtensions.KoaIGUHealthContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {

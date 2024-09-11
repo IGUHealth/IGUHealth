@@ -36,7 +36,7 @@ import { WORKER_APP } from "./authN/oidc/hardcodedClients/worker-app.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
-import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
+import { verifyUserHasAccessToTenant } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
@@ -254,7 +254,7 @@ export default async function createServer(): Promise<
             process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
         }),
     authN.associateUserToIGUHealth,
-    verifyAndAssociateUserFHIRContext,
+    verifyUserHasAccessToTenant,
   ];
 
   const globalAuth = await createGlobalAuthRouter("/auth", {

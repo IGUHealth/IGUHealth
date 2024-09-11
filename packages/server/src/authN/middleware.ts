@@ -3,8 +3,8 @@ import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 import * as s from "zapatos/schema";
 
-import { code, id } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { AccessPolicy, code, id } from "@iguhealth/fhir-types/r4/types";
+import { R4, Resource } from "@iguhealth/fhir-types/versions";
 import { getJWKS, getSigningKey } from "@iguhealth/jwt/certifications";
 import { createToken } from "@iguhealth/jwt/token";
 import {
@@ -14,15 +14,24 @@ import {
   Subject,
   TenantId,
 } from "@iguhealth/jwt/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions, asRoot } from "../fhir-api/types.js";
+import {
+  IGUHealthServerCTX,
+  KoaExtensions,
+  asRoot,
+} from "../fhir-api/types.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
   getBasicHeaderCredentials,
 } from "./oidc/client_credentials_verification.js";
 import { getIssuer } from "./oidc/constants.js";
+import getHardCodedClients from "./oidc/hardcodedClients/index.js";
 
 async function createLocalJWTSecret(
   certLocation: string,
@@ -118,6 +127,96 @@ export async function createValidateUserJWTMiddleware<T, C>({
   }) as unknown as Middleware<T, C>;
 }
 
+async function findResourceAndAccessPolicies<
+  Type extends "Membership" | "OperationDefinition" | "ClientApplication",
+>(
+  ctx: IGUHealthServerCTX,
+  resourceType: Type,
+  id: id,
+): Promise<{
+  resource?: Resource<R4, Type>;
+  accessPolicies: AccessPolicy[];
+}> {
+  const clients = getHardCodedClients();
+
+  // For hardcoded clients access check is needed
+  // IE iguhealth system app and worker app.
+  const hardCodedClient = clients.find(
+    (client) => client.id === id && resourceType === client.resourceType,
+  );
+  if (hardCodedClient)
+    return {
+      resource: hardCodedClient as Resource<R4, Type>,
+      accessPolicies: [],
+    };
+
+  console.time("root");
+  const context = await asRoot(ctx);
+  console.timeEnd("root");
+
+  const usersAndAccessPolicies = (await ctx.client.search_type(
+    context,
+    R4,
+    resourceType,
+    [
+      {
+        name: "_id",
+        value: [id],
+      },
+      { name: "_revinclude", value: ["AccessPolicy:link"] },
+    ],
+  )) as {
+    total?: number;
+    resources: (Resource<R4, Type> | AccessPolicy)[];
+  };
+
+  const resource = usersAndAccessPolicies.resources.filter(
+    (r): r is Resource<R4, Type> => r.resourceType === resourceType,
+  );
+
+  const accessPolicies = usersAndAccessPolicies.resources.filter(
+    (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
+  );
+
+  return {
+    resource: resource[0],
+    accessPolicies,
+  };
+}
+
+/**
+ * Middleware to associate the user and access policies with the request.
+ * Middlware uses JWT iss and sub to find the contextual user resource and _revinclude to find the access policies.
+ *
+ * @param context IGUHealthServerCTX
+ * @param next Next chain in middleware.
+ * @returns IGUHealthServerCTX with user resource and access policies attached.
+ */
+async function userResourceAndAccessPolicies(
+  context: IGUHealthServerCTX,
+  user: AccessTokenPayload<s.user_role>,
+): Promise<ReturnType<typeof findResourceAndAccessPolicies>> {
+  switch (user[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
+    case "Membership":
+    case "ClientApplication":
+    case "OperationDefinition": {
+      return findResourceAndAccessPolicies(
+        await asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
+        user[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        user[CUSTOM_CLAIMS.RESOURCE_ID],
+      );
+    }
+
+    default:
+      throw new OperationError(
+        outcomeFatal(
+          "invalid",
+          `Invalid resource type set on JWT '${user[CUSTOM_CLAIMS.RESOURCE_TYPE]}'`,
+        ),
+      );
+  }
+}
+
 /**
  * Move the user JWT to the IGUHealth context
  * @param ctx Koa Context
@@ -133,12 +232,22 @@ export const associateUserToIGUHealth: Koa.Middleware<
     );
   }
 
+  console.time("ASSOCIATE_USER");
+  const { resource, accessPolicies } = await userResourceAndAccessPolicies(
+    await asRoot(ctx.state.iguhealth),
+    ctx.state.__user__,
+  );
+  console.timeEnd("ASSOCIATE_USER");
+
+  if (!resource) {
+    throw new OperationError(
+      outcomeError("security", "User resource not found."),
+    );
+  }
+
   ctx.state.iguhealth.user = {
-    resource: {
-      resourceType: "Membership",
-      email: ctx.state.__user__.sub,
-      role: ctx.state.__user__[CUSTOM_CLAIMS.ROLE] as code,
-    },
+    resource,
+    accessPolicies,
     payload: ctx.state.__user__,
     accessToken: ctx.state.__access_token__,
   };
