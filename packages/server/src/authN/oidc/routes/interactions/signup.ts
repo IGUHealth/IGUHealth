@@ -55,7 +55,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     await sendPasswordResetEmail(ctx.router, ctx.state.iguhealth, existingUser);
   } else {
     const membership = await ctx.state.iguhealth.client.create(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       {
         resourceType: "Membership",

@@ -71,6 +71,7 @@ export const testServices: IGUHealthServerCTX = {
           }
         : false,
   }),
+  // @ts-ignore
   user: {
     payload: {
       iss: "test",

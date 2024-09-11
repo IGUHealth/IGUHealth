@@ -20,6 +20,7 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
+import { createToken, getSigningKey } from "@iguhealth/jwt";
 import {
   AccessToken,
   AccessTokenPayload,
@@ -85,8 +86,8 @@ export namespace KoaExtensions {
 
   export type IGUHealthServices = {
     allowSignup?: boolean;
-    __user__?: AccessTokenPayload<s.user_role>;
-    __access_token__?: AccessToken<s.user_role>;
+    __user__: AccessTokenPayload<s.user_role>;
+    __access_token__: AccessToken<s.user_role>;
     corsNonce: string;
     iguhealth: MakeOptional<IGUHealthServerCTX, "user" | "tenant">;
   };
@@ -105,8 +106,8 @@ export namespace KoaExtensions {
 
 export interface UserContext {
   payload: AccessTokenPayload<s.user_role>;
-  accessToken?: JWT<AccessTokenPayload<s.user_role>>;
-  resource?: Membership | ClientApplication | OperationDefinition | null;
+  accessToken: JWT<AccessTokenPayload<s.user_role>>;
+  resource: Membership | ClientApplication | OperationDefinition;
   accessPolicies?: AccessPolicy[];
   scope?: Scope[];
 }
@@ -144,7 +145,7 @@ export interface IGUHealthServerCTX {
   ) => Promise<Resource<FHIRVersion, Type> | undefined>;
 }
 
-function rootClaims(
+function createRootClaims(
   tenant: TenantId,
   clientApp: ClientApplication,
 ): AccessTokenPayload<s.user_role> {
@@ -166,14 +167,24 @@ function rootClaims(
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asRoot(
+export async function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
-): IGUHealthServerCTX {
+): Promise<IGUHealthServerCTX> {
+  const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
+  const accessToken = await createToken({
+    signingKey: await getSigningKey(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    ),
+    payload: rootClaims,
+  });
   return {
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      payload: rootClaims(ctx.tenant, SYSTEM_APP),
+      accessToken,
+      resource: SYSTEM_APP,
+      payload: rootClaims,
     },
   };
 }

@@ -582,6 +582,14 @@ async function createWorker(
           cache,
           tenant: tenant,
           user: {
+            resource: WORKER_APP,
+            accessToken: await createToken({
+              signingKey: await getSigningKey(
+                process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+                process.env.AUTH_LOCAL_SIGNING_KEY,
+              ),
+              payload,
+            }),
             payload,
           },
         };

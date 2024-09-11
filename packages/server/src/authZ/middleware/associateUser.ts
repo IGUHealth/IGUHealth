@@ -1,5 +1,5 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { AccessPolicy, id } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicy, code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, Resource, ResourceType } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
@@ -29,7 +29,7 @@ async function findResourceAndAccessPolicies<Type extends ResourceType<R4>>(
     };
 
   const usersAndAccessPolicies = (await ctx.client.search_type(
-    asRoot(ctx),
+    await asRoot(ctx),
     R4,
     resourceType,
     [
@@ -75,20 +75,28 @@ export function createAssociateUserMiddleware<T>(): MiddlewareAsyncChain<
       case "Membership":
       case "ClientApplication":
       case "OperationDefinition": {
-        const { resource, accessPolicies } =
-          await findResourceAndAccessPolicies(
-            context.ctx,
-            context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-            context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-          );
+        // console.time("retrieval of policies" + JSON.stringify(context.request));
+        // const { resource, accessPolicies } =
+        //   await findResourceAndAccessPolicies(
+        //     context.ctx,
+        //     context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        //     context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        //   );
+        // console.timeEnd(
+        //   "retrieval of policies" + JSON.stringify(context.request),
+        // );
         return next({
           ...context,
           ctx: {
             ...context.ctx,
             user: {
               ...context.ctx.user,
-              resource: resource ?? null,
-              accessPolicies: accessPolicies ?? null,
+              resource: {
+                email: "random",
+                role: "owner" as code,
+                resourceType: "Membership",
+              }, //resource ?? null,
+              accessPolicies: [],
             },
           },
         });

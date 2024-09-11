@@ -373,7 +373,7 @@ export function tokenPost<
 
             return createTokenResponse({
               user,
-              ctx: asRoot(fhirContext),
+              ctx: await asRoot(fhirContext),
               clientApplication,
               launchParameters,
             });
@@ -453,7 +453,7 @@ export function tokenPost<
 
             return createTokenResponse({
               user,
-              ctx: asRoot(fhirContext),
+              ctx: await asRoot(fhirContext),
               clientApplication,
               launchParameters,
             });

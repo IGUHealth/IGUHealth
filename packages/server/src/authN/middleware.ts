@@ -64,7 +64,7 @@ export async function verifyBasicAuth<
     }
 
     const clientApplication = await ctx.state.iguhealth.client.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,
@@ -134,6 +134,11 @@ export const associateUserToIGUHealth: Koa.Middleware<
   }
 
   ctx.state.iguhealth.user = {
+    resource: {
+      resourceType: "Membership",
+      email: ctx.state.__user__.sub,
+      role: ctx.state.__user__[CUSTOM_CLAIMS.ROLE] as code,
+    },
     payload: ctx.state.__user__,
     accessToken: ctx.state.__access_token__,
   };
