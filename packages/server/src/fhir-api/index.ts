@@ -14,6 +14,7 @@ import {
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 import {
   CodeSystemLookupInvoke,
+  EvaluatePolicyInvoke,
   IguhealthDeleteRefreshTokenInvoke,
   IguhealthDeleteScopeInvoke,
   IguhealthInviteUserInvoke,
@@ -166,6 +167,7 @@ export function createClient(): {
     IguhealthListScopesInvoke,
     IguhealthListRefreshTokensInvoke,
     IguhealthDeleteRefreshTokenInvoke,
+    EvaluatePolicyInvoke,
   ]);
   const client = createFHIRClient([
     // OP INVOCATION

@@ -19,22 +19,24 @@ function getContext(): v2.pip.PolicyContext<{}, string> {
     }),
     attributes: {},
     environment: {
-      claims: {
-        iss: "https://iguhealth.test" as Issuer,
-        aud: "iguhealth",
-        sub: "public-user" as Subject,
-        scope: "user/*.*",
-        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-        [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
-        [CUSTOM_CLAIMS.TENANT]: "my-tenant" as TenantId,
-        [CUSTOM_CLAIMS.ROLE]: "admin",
-      },
-      membership: {
-        email: "test-user@gmail.com",
-        role: "admin" as code,
-        resourceType: "Membership",
-        link: {
-          reference: "Patient/123",
+      user: {
+        payload: {
+          iss: "https://iguhealth.test" as Issuer,
+          aud: "iguhealth",
+          sub: "public-user" as Subject,
+          scope: "user/*.*",
+          [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+          [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
+          [CUSTOM_CLAIMS.TENANT]: "my-tenant" as TenantId,
+          [CUSTOM_CLAIMS.ROLE]: "admin",
+        },
+        resource: {
+          email: "test-user@gmail.com",
+          role: "admin" as code,
+          resourceType: "Membership",
+          link: {
+            reference: "Patient/123",
+          },
         },
       },
       request: {
@@ -76,7 +78,7 @@ const PatientAccessPolicy: AccessPolicyV2 = {
             expression: {
               language: "text/fhirpath" as code,
               expression:
-                "%request.id = %membership.link.reference.replace('Patient/', '')",
+                "%request.id = %user.resource.link.reference.replace('Patient/', '')",
             },
           },
         },

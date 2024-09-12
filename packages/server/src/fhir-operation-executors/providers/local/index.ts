@@ -11,3 +11,4 @@ export * from "./ops/message_post.js";
 export * from "./ops/resource_validate.js";
 export * from "./ops/snapshot.js";
 export * from "./ops/usage_statistics.js";
+export * from "./ops/evaluate-policy.js";
