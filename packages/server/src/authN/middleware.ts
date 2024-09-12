@@ -32,6 +32,7 @@ import {
 } from "./oidc/client_credentials_verification.js";
 import { getIssuer } from "./oidc/constants.js";
 import getHardCodedClients from "./oidc/hardcodedClients/index.js";
+import { PUBLIC_APP } from "./oidc/hardcodedClients/public-app.js";
 
 async function createLocalJWTSecret(
   certLocation: string,
@@ -264,8 +265,8 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
     aud: "iguhealth",
     sub: "public-user" as Subject,
     scope: "user/*.*",
-    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-    [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: PUBLIC_APP.resourceType,
+    [CUSTOM_CLAIMS.RESOURCE_ID]: PUBLIC_APP.id as id,
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",
   };
