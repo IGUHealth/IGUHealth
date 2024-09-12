@@ -1,0 +1,184 @@
+{
+    "id": "policy-tests-simple",
+    "resourceType": "TestScript",
+    "title": "Simple Policy tests",
+    "description": "Tests basic logic on policy engine.",
+    "contained": [
+        {
+            "resourceType": "AccessPolicyV2",
+            "engine": "rule-engine",
+            "id": "patient-access-policy",
+            "name": "Patient Access Policy",
+            "description": "Policy for patient access.",
+            "meta": {
+                "tag": [
+                    {
+                        "code": "policy-tests-simple"
+                    }
+                ]
+            },
+            "rule": [
+                {
+                    "name": "Patient access",
+                    "target": {
+                        "expression": {
+                            "language": "text/fhirpath",
+                            "expression": "%request.resource = 'Patient'"
+                        }
+                    },
+                    "combineBehavior": "any",
+                    "rule": [
+                        {
+                            "name": "Allow user to only read their Patient resource",
+                            "target": {
+                                "expression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%request.type = 'search-request'"
+                                }
+                            },
+                            "condition": {
+                                "expression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%request.resource = 'Patient'"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "policy-parameters-1",
+            "resourceType": "Parameters",
+            "parameter": [
+                {
+                    "name": "request",
+                    "resource": {
+                        "resourceType": "Bundle",
+                        "type": "batch",
+                        "entry": [
+                            {
+                                "request": {
+                                    "method": "GET",
+                                    "url": "Patient"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "policy-parameters-2",
+            "resourceType": "Parameters",
+            "parameter": [
+                {
+                    "name": "request",
+                    "resource": {
+                        "resourceType": "Bundle",
+                        "type": "batch",
+                        "entry": [
+                            {
+                                "request": {
+                                    "method": "GET",
+                                    "url": "Practitioner"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "fixture": [
+        {
+            "id": "patient-access-policy",
+            "resource": {
+                "reference": "#patient-access-policy"
+            }
+        },
+        {
+            "id": "policy-parameters-1",
+            "resource": {
+                "reference": "#policy-parameters-1"
+            }
+        },
+        {
+            "id": "policy-parameters-2",
+            "resource": {
+                "reference": "#policy-parameters-2"
+            }
+        }
+    ],
+    "test": [
+        {
+            "id": "patient-policy-tests",
+            "name": "Patient policy tests.",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "sourceId": "patient-access-policy",
+                        "responseId": "patient-access-policy-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "resource": "AccessPolicyV2"
+                    }
+                },
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "invoke"
+                        },
+                        "targetId": "patient-access-policy-response",
+                        "url": "evaluate-policy",
+                        "sourceId": "policy-parameters-1"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "OperationOutcome.issue.code",
+                        "value": "informational"
+                    }
+                },
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "invoke"
+                        },
+                        "targetId": "patient-access-policy-response",
+                        "url": "evaluate-policy",
+                        "sourceId": "policy-parameters-2"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "OperationOutcome.issue.code",
+                        "value": "forbidden"
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "params": "_tag=policy-tests-simple",
+                    "description": "Delete data created during test."
+                }
+            }
+        ]
+    }
+}
