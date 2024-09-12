@@ -18,15 +18,17 @@ export const ResourceValidateInvoke = InlineOperation(
 
     const result = await accessPolicyV2.pdp.evaluate(
       {
+        clientCTX: ctx,
+        client: ctx.client,
         environment: {
-          claims: ctx.user.payload,
-          membership: ctx.user.resource,
+          user: ctx.user,
+          request: httpRequestToFHIRRequest(request.fhirVersion, {
+            url,
+            method,
+            body,
+          }),
         },
-        request: httpRequestToFHIRRequest(request.fhirVersion, {
-          url: url,
-          method: method,
-          body: input.request.entry?.[0]?.resource,
-        }),
+        attributes: {},
       },
       input.policy,
     );
