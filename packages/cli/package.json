@@ -22,14 +22,14 @@
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/testscript-runner": "workspace:^",
     "@inquirer/prompts": "^5.3.8",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.5.4",
     "commander": "^12.1.0",
     "pino": "^9.3.2",
     "pino-pretty": "^11.2.2"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
   "scripts": {
     "build": "tsc && node executable.js ./lib/iguhealth.js && chmod +x ./lib/iguhealth.js",
