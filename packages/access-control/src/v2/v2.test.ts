@@ -15,20 +15,22 @@ function getContext(): v2.pip.PolicyContext<{}, string> {
     }),
     attributes: {},
     environment: {
-      claims: {
-        iss: "https://iguhealth.test" as Issuer,
-        aud: "iguhealth",
-        sub: "public-user" as Subject,
-        scope: "user/*.*",
-        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-        [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
-        [CUSTOM_CLAIMS.TENANT]: "my-tenant" as TenantId,
-        [CUSTOM_CLAIMS.ROLE]: "admin",
-      },
-      membership: {
-        email: "test-user@gmail.com",
-        role: "admin" as code,
-        resourceType: "Membership",
+      user: {
+        payload: {
+          iss: "https://iguhealth.test" as Issuer,
+          aud: "iguhealth",
+          sub: "public-user" as Subject,
+          scope: "user/*.*",
+          [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+          [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
+          [CUSTOM_CLAIMS.TENANT]: "my-tenant" as TenantId,
+          [CUSTOM_CLAIMS.ROLE]: "admin",
+        },
+        resource: {
+          email: "test-user@gmail.com",
+          role: "admin" as code,
+          resourceType: "Membership",
+        },
       },
       request: {
         fhirVersion: R4,
@@ -52,7 +54,7 @@ test("Simple conditional check", async () => {
           condition: {
             expression: {
               language: "text/fhirpath" as code,
-              expression: "%claims.role = 'admin'",
+              expression: "%user.payload.role = 'admin'",
             },
           },
         },
@@ -80,7 +82,7 @@ test("Simple conditional check", async () => {
         condition: {
           expression: {
             language: "text/fhirpath" as code,
-            expression: "%claims.`https://iguhealth.app/role` = 'admin'",
+            expression: "%user.payload.`https://iguhealth.app/role` = 'admin'",
           },
         },
       },
@@ -125,7 +127,8 @@ test("Simple Or Logic", async () => {
               condition: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'admin'",
                 },
               },
             },
@@ -171,7 +174,8 @@ test("Simple And Logic", async () => {
               condition: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'admin'",
                 },
               },
             },
@@ -208,7 +212,8 @@ test("Simple Target Logic", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {
@@ -258,7 +263,8 @@ test("Simple Target Logic", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'admin'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'admin'",
                 },
               },
               condition: {
@@ -310,7 +316,8 @@ test("Test Rule Effect Log", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {
@@ -361,7 +368,8 @@ test("Test Rule Effect Log", async () => {
               target: {
                 expression: {
                   language: "text/fhirpath" as code,
-                  expression: "%claims.`https://iguhealth.app/role` = 'owner'",
+                  expression:
+                    "%user.payload.`https://iguhealth.app/role` = 'owner'",
                 },
               },
               condition: {

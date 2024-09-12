@@ -12,8 +12,10 @@ import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
   AccessPolicyV2Attribute,
+  ClientApplication,
   Expression,
   Membership,
+  OperationDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
@@ -26,8 +28,10 @@ export interface PolicyContext<CTX, Role> {
   client: FHIRClientAsync<CTX>;
   environment: {
     request: FHIRRequest;
-    claims: AccessTokenPayload<Role>;
-    membership: Membership;
+    user: {
+      payload: AccessTokenPayload<Role>;
+      resource: Membership | ClientApplication | OperationDefinition;
+    };
   };
   attributes: {
     [key: string]: FHIRResponse;
@@ -163,7 +167,13 @@ async function processAttribute<CTX>(
 
 type PiPResult<CTX, Role> = {
   context: PolicyContext<CTX, Role>;
-  attribute: FHIRResponse | FHIRRequest | Membership | AccessTokenPayload<Role>;
+  attribute:
+    | FHIRRequest
+    | {
+        payload: AccessTokenPayload<Role>;
+        resource: OperationDefinition | ClientApplication | Membership;
+      }
+    | FHIRResponse;
 };
 
 async function retrieveAttribute<CTX, Role>(
