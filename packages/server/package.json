@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "@aws-crypto/client-node": "^4.0.1",
-    "@aws-sdk/client-lambda": "^3.637.0",
-    "@aws-sdk/client-resource-groups-tagging-api": "^3.637.0",
+    "@aws-sdk/client-lambda": "^3.650.0",
+    "@aws-sdk/client-resource-groups-tagging-api": "^3.650.0",
     "@dagrejs/graphlib": "^2.2.4",
     "@iguhealth/access-control": "workspace:^",
     "@iguhealth/artifacts": "workspace:^",
@@ -107,8 +107,8 @@
     "@types/koa-static": "^4.0.4",
     "@types/koa__cors": "^5.0.0",
     "@types/koa__router": "^12.0.4",
-    "@types/node": "^22.5.1",
-    "@types/pg": "^8.11.8",
+    "@types/node": "^22.5.4",
+    "@types/pg": "^8.11.9",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "10.0.0",
@@ -124,7 +124,7 @@
     "tailwindcss": "^3.4.10",
     "ts-jest": "^29.2.5",
     "tsx": "4.11.2",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
   "files": [
     "public/**",
