@@ -216,11 +216,6 @@ function setEmailVerified<
             })
             .run(context.ctx.db);
 
-          if (!existingUser)
-            throw new OperationError(
-              outcomeFatal("not-found", "User not found."),
-            );
-
           context.request.body = {
             ...membership,
             emailVerified: determineEmailUpdate(
@@ -327,22 +322,26 @@ function updateUserTableMiddleware<
           })
           .run(context.ctx.db);
 
-        if (!existingUser)
-          throw new OperationError(
-            outcomeFatal("not-found", "User not found."),
-          );
-
         if (!(res.response as R4UpdateResponse)?.body)
           throw new OperationError(
             outcomeFatal("invariant", "Response body not found."),
           );
         try {
-          await users.update(
-            context.ctx.db,
-            context.ctx.tenant,
-            existingUser.id,
-            membershipToUser(membership),
-          );
+          // Update on create.
+          if (!existingUser) {
+            await users.create(
+              context.ctx.db,
+              context.ctx.tenant,
+              membershipToUser(membership),
+            );
+          } else {
+            await users.update(
+              context.ctx.db,
+              context.ctx.tenant,
+              existingUser.id,
+              membershipToUser(membership),
+            );
+          }
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

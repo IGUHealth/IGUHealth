@@ -5219,7 +5219,7 @@ export namespace IguhealthEncrypt {
   } as fhirTypes.OperationDefinition);
 }
 export namespace IguhealthEvaluatePolicy {
-  export type Input = { request: fhirTypes.Bundle };
+  export type Input = { user?: fhirTypes.Reference; request: fhirTypes.Bundle };
   export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
@@ -5239,6 +5239,15 @@ export namespace IguhealthEvaluatePolicy {
     instance: true,
     resource: ["AccessPolicyV2"],
     parameter: [
+      {
+        name: "user",
+        use: "in",
+        min: 0,
+        max: "1",
+        documentation:
+          "The user to evaluate the policy against. Defaults to logged in user if not present.",
+        type: "Reference",
+      },
       {
         name: "request",
         use: "in",

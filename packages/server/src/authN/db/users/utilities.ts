@@ -59,9 +59,10 @@ export function membershipToUser(user: Membership): s.users.Insertable {
  */
 export function determineEmailUpdate(
   update: Pick<s.users.Updatable, "email" | "email_verified">,
-  current: s.users.JSONSelectable,
+  current: s.users.JSONSelectable | undefined,
 ): s.users.Updatable["email_verified"] {
   // If email has changed.
+  if (!current) return false;
   if (update.email !== current.email) return false;
   if ("email_verified" in update) return update.email_verified;
 
