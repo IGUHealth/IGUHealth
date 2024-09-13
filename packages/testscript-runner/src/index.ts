@@ -524,7 +524,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         throw new OperationError(
           outcomeFatal(
             "invalid",
-            "Batch request must be a bundle and a of type batch.",
+            `Batch request must be a bundle and a of type batch. Found instead '${batch.resourceType}' of type '${"type" in batch ? batch.type : "invalid"}'`,
           ),
         );
       }

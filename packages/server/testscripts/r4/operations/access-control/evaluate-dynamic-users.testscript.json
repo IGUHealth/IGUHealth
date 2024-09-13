@@ -1,0 +1,274 @@
+{
+    "id": "policy-tests-dynamic-users",
+    "resourceType": "TestScript",
+    "title": "Test different users",
+    "description": "Tests basic logic on policy engine with various users.",
+    "contained": [
+        {
+            "id": "setup",
+            "resourceType": "Bundle",
+            "type": "batch",
+            "entry": [
+                {
+                    "request": {
+                        "method": "PUT",
+                        "url": "Membership/mem1"
+                    },
+                    "resource": {
+                        "id": "mem1",
+                        "meta": {
+                            "tag": [
+                                {
+                                    "code": "policy-tests-dynamic-users"
+                                }
+                            ]
+                        },
+                        "role": "member",
+                        "email": "user@iguhealth.app",
+                        "resourceType": "Membership"
+                    }
+                },
+                {
+                    "request": {
+                        "method": "PUT",
+                        "url": "Membership/mem2"
+                    },
+                    "resource": {
+                        "id": "mem2",
+                        "meta": {
+                            "tag": [
+                                {
+                                    "code": "policy-tests-dynamic-users"
+                                }
+                            ]
+                        },
+                        "role": "admin",
+                        "email": "admin@iguhealth.app",
+                        "resourceType": "Membership"
+                    }
+                }
+            ]
+        },
+        {
+            "resourceType": "AccessPolicyV2",
+            "engine": "rule-engine",
+            "id": "patient-access-policy",
+            "name": "Patient Access Policy",
+            "description": "Policy for patient access.",
+            "meta": {
+                "tag": [
+                    {
+                        "code": "policy-tests-dynamic-users"
+                    }
+                ]
+            },
+            "rule": [
+                {
+                    "name": "Patient access",
+                    "target": {
+                        "expression": {
+                            "language": "text/fhirpath",
+                            "expression": "%request.resource = 'Patient'"
+                        }
+                    },
+                    "combineBehavior": "any",
+                    "rule": [
+                        {
+                            "name": "Allow user to only read their Patient resource",
+                            "target": {
+                                "expression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%request.type = 'search-request'"
+                                }
+                            },
+                            "condition": {
+                                "expression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%request.resource = 'Patient' and %user.resource.role = 'admin'"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "policy-parameters-member",
+            "resourceType": "Parameters",
+            "parameter": [
+                {
+                    "name": "user",
+                    "valueReference": {
+                        "reference": "Membership/mem1"
+                    }
+                },
+                {
+                    "name": "request",
+                    "resource": {
+                        "resourceType": "Bundle",
+                        "type": "batch",
+                        "entry": [
+                            {
+                                "request": {
+                                    "method": "GET",
+                                    "url": "Patient"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "policy-parameters-admin",
+            "resourceType": "Parameters",
+            "parameter": [
+                {
+                    "name": "user",
+                    "valueReference": {
+                        "reference": "Membership/mem2"
+                    }
+                },
+                {
+                    "name": "request",
+                    "resource": {
+                        "resourceType": "Bundle",
+                        "type": "batch",
+                        "entry": [
+                            {
+                                "request": {
+                                    "method": "GET",
+                                    "url": "Patient"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "fixture": [
+        {
+            "id": "setup",
+            "resource": {
+                "reference": "#setup"
+            }
+        },
+        {
+            "id": "patient-access-policy",
+            "resource": {
+                "reference": "#patient-access-policy"
+            }
+        },
+        {
+            "id": "policy-parameters-member",
+            "resource": {
+                "reference": "#policy-parameters-member"
+            }
+        },
+        {
+            "id": "policy-parameters-admin",
+            "resource": {
+                "reference": "#policy-parameters-admin"
+            }
+        }
+    ],
+    "test": [
+        {
+            "id": "patient-policy-tests",
+            "name": "Patient policy tests.",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "batch"
+                        },
+                        "sourceId": "setup",
+                        "responseId": "setup-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "resource": "Bundle"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "Bundle.entry[0].response.location",
+                        "value": "Membership/mem1"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "Bundle.entry[1].response.location",
+                        "value": "Membership/mem2"
+                    }
+                },
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "sourceId": "patient-access-policy",
+                        "responseId": "patient-access-policy-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "resource": "AccessPolicyV2"
+                    }
+                },
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "invoke"
+                        },
+                        "targetId": "patient-access-policy-response",
+                        "url": "evaluate-policy",
+                        "sourceId": "policy-parameters-member"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "OperationOutcome.issue.code",
+                        "value": "forbidden"
+                    }
+                },
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "invoke"
+                        },
+                        "targetId": "patient-access-policy-response",
+                        "url": "evaluate-policy",
+                        "sourceId": "policy-parameters-admin"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "OperationOutcome.issue.code",
+                        "value": "informational"
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "params": "_tag=policy-tests-dynamic-users",
+                    "description": "Delete data created during test."
+                }
+            }
+        ]
+    }
+}

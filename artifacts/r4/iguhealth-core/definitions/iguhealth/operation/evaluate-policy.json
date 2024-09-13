@@ -18,6 +18,14 @@
     ],
     "parameter": [
         {
+            "name": "user",
+            "use": "in",
+            "min": 0,
+            "max": "1",
+            "documentation": "The user to evaluate the policy against. Defaults to logged in user if not present.",
+            "type": "Reference"
+        },
+        {
             "name": "request",
             "use": "in",
             "min": 1,
