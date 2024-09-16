@@ -63,6 +63,181 @@ exports[`As tests 1`] = `
 }
 `;
 
+exports[`Complex or statement 1`] = `
+{
+  "left": {
+    "left": {
+      "expression": [
+        {
+          "type": "variable",
+          "value": "request",
+        },
+        {
+          "type": "identifier",
+          "value": "parameters",
+        },
+        {
+          "functionName": "where",
+          "parameters": [
+            {
+              "left": {
+                "expression": [
+                  {
+                    "type": "identifier",
+                    "value": "name",
+                  },
+                ],
+                "type": "expression",
+              },
+              "operator": "=",
+              "right": {
+                "expression": [
+                  {
+                    "literalType": "string",
+                    "type": "literal",
+                    "value": "patient",
+                  },
+                ],
+                "type": "expression",
+              },
+              "type": "operation",
+            },
+          ],
+          "type": "function",
+        },
+        {
+          "type": "identifier",
+          "value": "value",
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "=",
+    "right": {
+      "expression": [
+        {
+          "type": "variable",
+          "value": "user",
+        },
+        {
+          "type": "identifier",
+          "value": "resource",
+        },
+        {
+          "type": "identifier",
+          "value": "link",
+        },
+        {
+          "type": "identifier",
+          "value": "reference",
+        },
+        {
+          "functionName": "replace",
+          "parameters": [
+            {
+              "expression": [
+                {
+                  "literalType": "string",
+                  "type": "literal",
+                  "value": "Patient/",
+                },
+              ],
+              "type": "expression",
+            },
+            {
+              "expression": [
+                {
+                  "literalType": "string",
+                  "type": "literal",
+                  "value": "",
+                },
+              ],
+              "type": "expression",
+            },
+          ],
+          "type": "function",
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "operator": "or",
+  "right": {
+    "left": {
+      "expression": [
+        {
+          "type": "variable",
+          "value": "request",
+        },
+        {
+          "type": "identifier",
+          "value": "parameters",
+        },
+        {
+          "functionName": "where",
+          "parameters": [
+            {
+              "left": {
+                "expression": [
+                  {
+                    "type": "identifier",
+                    "value": "name",
+                  },
+                ],
+                "type": "expression",
+              },
+              "operator": "=",
+              "right": {
+                "expression": [
+                  {
+                    "literalType": "string",
+                    "type": "literal",
+                    "value": "patient",
+                  },
+                ],
+                "type": "expression",
+              },
+              "type": "operation",
+            },
+          ],
+          "type": "function",
+        },
+        {
+          "type": "identifier",
+          "value": "value",
+        },
+      ],
+      "type": "expression",
+    },
+    "operator": "=",
+    "right": {
+      "expression": [
+        {
+          "type": "variable",
+          "value": "user",
+        },
+        {
+          "type": "identifier",
+          "value": "resource",
+        },
+        {
+          "type": "identifier",
+          "value": "link",
+        },
+        {
+          "type": "identifier",
+          "value": "reference",
+        },
+      ],
+      "type": "expression",
+    },
+    "type": "operation",
+  },
+  "type": "operation",
+}
+`;
+
 exports[`Nested access 1`] = `
 {
   "expression": [

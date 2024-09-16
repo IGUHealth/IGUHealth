@@ -681,6 +681,17 @@ const fp_operations: Record<
     }
     throw new InvalidOperandError([left[0], right[0]], "/");
   }),
+  or: op_prevaled(async (left, right, options) => {
+    if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
+      return metaUtils.flatten(
+        await metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "boolean" as uri },
+          left[0].getValue() || right[0].getValue(),
+        ),
+      );
+    }
+    throw new InvalidOperandError([left[0], right[0]], "/");
+  }),
   "=": op_prevaled(async (left, right, options) =>
     metaUtils.flatten(
       await metaValueV2.metaValue(
