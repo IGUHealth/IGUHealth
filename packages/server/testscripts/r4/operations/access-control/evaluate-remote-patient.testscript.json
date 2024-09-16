@@ -222,9 +222,15 @@
             },
             "attribute": [
                 {
-                    "attributeId": "patient"
+                    "attributeId": "patient",
+                    "operation": {
+                        "type": "read",
+                        "path": {
+                            "expression": "%user.resource.link"
+                        }
+                    }
                 }
-            ]
+            ],
             "rule": [
                 {
                     "name": "Allow user to only read their Patient resource",
