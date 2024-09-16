@@ -226,6 +226,7 @@
                     "operation": {
                         "type": "read",
                         "path": {
+                            "language": "text/fhirpath",
                             "expression": "%user.resource.link"
                         }
                     }
