@@ -6,7 +6,7 @@
  * Pull in contextual information to be used in policy evaluation
  * */
 
-import { FHIRClient, FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as pt from "@iguhealth/fhir-pointer";
 import {
@@ -18,7 +18,7 @@ import {
   OperationDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
 import { AccessTokenPayload } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -63,7 +63,7 @@ function findVariable(
 async function evaluateExpression<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
-  loc: pt.Loc<AccessPolicyV2, Expression, any>,
+  loc: pt.Loc<AccessPolicyV2, Expression | undefined, any>,
 ): Promise<NonNullable<unknown>[]> {
   const expression = pt.get(loc, policy);
   if (!expression) {
@@ -102,9 +102,8 @@ async function evaluateExpression<CTX, Role>(
   }
 }
 
-async function processAttribute<CTX>(
-  clientContext: CTX,
-  client: FHIRClient<CTX>,
+async function processAttribute<CTX, Role>(
+  policyContext: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Attribute | undefined, any>,
 ): Promise<FHIRResponse> {
@@ -117,17 +116,42 @@ async function processAttribute<CTX>(
     case attribute.operation !== undefined: {
       switch (attribute.operation.type) {
         case "read": {
-          return client.request(clientContext, {
+          const path = await evaluateExpression(
+            policyContext,
+            policy,
+            pt.descend(pt.descend(loc, "operation"), "path"),
+          );
+
+          if (typeof path[0] !== "string") {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                `Invalid access policy attribute operation at '${loc}'. Path expression must evaluate to a string.`,
+              ),
+            );
+          }
+
+          const [type, id] = path[0].split("/");
+          if (!type || !id) {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                `Invalid access policy attribute operation at '${loc}'. Path expression must evaluate to a string of [Type]/[id].`,
+              ),
+            );
+          }
+
+          return policyContext.client.request(policyContext.clientCTX, {
             fhirVersion: R4,
             level: "instance",
             type: "read-request",
-            resource: "Patient",
-            id: "123" as id,
+            resource: type as ResourceType<R4>,
+            id: id as id,
           });
         }
 
         case "search-system": {
-          return client.request(clientContext, {
+          return policyContext.client.request(policyContext.clientCTX, {
             fhirVersion: R4,
             level: "system",
             type: "search-request",
@@ -136,11 +160,26 @@ async function processAttribute<CTX>(
         }
 
         case "search-type": {
-          return client.request(clientContext, {
+          const path = await evaluateExpression(
+            policyContext,
+            policy,
+            pt.descend(pt.descend(loc, "operation"), "path"),
+          );
+
+          if (typeof path[0] !== "string") {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                `Invalid access policy attribute operation at '${loc}'. Path expression must evaluate to a string.`,
+              ),
+            );
+          }
+
+          return policyContext.client.request(policyContext.clientCTX, {
             fhirVersion: R4,
             level: "type",
             type: "search-request",
-            resource: "Patient",
+            resource: path[0] as ResourceType<R4>,
             parameters: [],
           });
         }
@@ -187,12 +226,7 @@ async function retrieveAttribute<CTX, Role>(
   }
 
   if (!policyContext.attributes[attribute.attributeId]) {
-    const result = await processAttribute(
-      policyContext.clientCTX,
-      policyContext.client,
-      policy,
-      loc,
-    );
+    const result = await processAttribute(policyContext, policy, loc);
     policyContext.attributes[attribute.attributeId] = result;
   }
 
