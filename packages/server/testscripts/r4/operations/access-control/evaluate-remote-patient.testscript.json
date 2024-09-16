@@ -1,8 +1,8 @@
 {
-    "id": "policy-tests-retrieval",
+    "id": "policy-tests-retrieval-remote",
     "resourceType": "TestScript",
-    "title": "Test different users",
-    "description": "Tests basic logic on policy engine with various users.",
+    "title": "RemoteTestRetrieval",
+    "description": "Tests remote retrieval on policy.",
     "contained": [
         {
             "id": "setup",
@@ -21,7 +21,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         }
@@ -38,7 +38,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -63,7 +63,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -97,7 +97,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         }
@@ -114,7 +114,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -139,7 +139,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -172,7 +172,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -194,7 +194,7 @@
                         "meta": {
                             "tag": [
                                 {
-                                    "code": "policy-tests-retrieval"
+                                    "code": "policy-tests-retrieval-remote"
                                 }
                             ]
                         },
@@ -216,7 +216,7 @@
             "meta": {
                 "tag": [
                     {
-                        "code": "policy-tests-retrieval"
+                        "code": "policy-tests-retrieval-remote"
                     }
                 ]
             },
@@ -523,7 +523,7 @@
                         "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
                         "code": "delete"
                     },
-                    "params": "_tag=policy-tests-retrieval",
+                    "params": "_tag=policy-tests-retrieval-remote",
                     "description": "Delete data created during test."
                 }
             }
