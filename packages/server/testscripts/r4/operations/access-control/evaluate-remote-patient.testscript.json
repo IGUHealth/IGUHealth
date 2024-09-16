@@ -164,10 +164,10 @@
                 {
                     "request": {
                         "method": "PUT",
-                        "url": "Membership/mem1"
+                        "url": "Membership/mem1Remote"
                     },
                     "resource": {
-                        "id": "mem1",
+                        "id": "mem1Remote",
                         "resourceType": "Membership",
                         "meta": {
                             "tag": [
@@ -180,16 +180,16 @@
                             "reference": "patient1"
                         },
                         "role": "member",
-                        "email": "user@iguhealth.app"
+                        "email": "user1remote@iguhealth.app"
                     }
                 },
                 {
                     "request": {
                         "method": "PUT",
-                        "url": "Membership/mem2"
+                        "url": "Membership/mem2Remote"
                     },
                     "resource": {
-                        "id": "mem2",
+                        "id": "mem2Remote",
                         "resourceType": "Membership",
                         "meta": {
                             "tag": [
@@ -202,7 +202,7 @@
                             "reference": "patient2"
                         },
                         "role": "member",
-                        "email": "user2@iguhealth.app"
+                        "email": "user2remote@iguhealth.app"
                     }
                 }
             ]
@@ -257,7 +257,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem1"
+                        "reference": "Membership/mem1Remote"
                     }
                 },
                 {
@@ -284,7 +284,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem1"
+                        "reference": "Membership/mem1Remote"
                     }
                 },
                 {
@@ -311,7 +311,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem2"
+                        "reference": "Membership/mem2Remote"
                     }
                 },
                 {
@@ -338,7 +338,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem2"
+                        "reference": "Membership/mem2Remote"
                     }
                 },
                 {
@@ -420,13 +420,13 @@
                 {
                     "assert": {
                         "expression": "Bundle.entry[6].response.location",
-                        "value": "Membership/mem1"
+                        "value": "Membership/mem1Remote"
                     }
                 },
                 {
                     "assert": {
                         "expression": "Bundle.entry[7].response.location",
-                        "value": "Membership/mem2"
+                        "value": "Membership/mem2Remote"
                     }
                 },
                 {
