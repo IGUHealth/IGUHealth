@@ -140,7 +140,7 @@
                     }
                 ],
                 "min": 0,
-                "max": "*"
+                "max": "15"
             },
             {
                 "id": "AccessPolicyV2.attribute.attributeId",

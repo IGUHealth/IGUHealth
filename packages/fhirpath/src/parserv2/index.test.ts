@@ -84,3 +84,11 @@ test("As tests", () => {
     parse("Condition.abatement.as(Age) | Condition.abatement.as(Range)"),
   ).toMatchSnapshot();
 });
+
+test("Complex or statement", () => {
+  expect(
+    parse(
+      "%request.parameters.where(name='patient').value = %user.resource.link.reference.replace('Patient/', '') or %request.parameters.where(name='patient').value = %user.resource.link.reference",
+    ),
+  ).toMatchSnapshot();
+});
