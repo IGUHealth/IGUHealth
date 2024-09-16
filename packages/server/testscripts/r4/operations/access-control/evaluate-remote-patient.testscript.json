@@ -227,7 +227,7 @@
                         "type": "read",
                         "path": {
                             "language": "text/fhirpath",
-                            "expression": "%user.resource.link"
+                            "expression": "%user.resource.link.reference"
                         }
                     }
                 }
