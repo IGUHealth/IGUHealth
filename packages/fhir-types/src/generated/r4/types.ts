@@ -44884,6 +44884,10 @@ export interface AccessPolicyV2AttributeOperation {
   /** 
    * The operation to retrieve the attribute.
    */
+  path?: Expression;
+  /** 
+   * The operation to retrieve the attribute.
+   */
   params?: Expression;
 }
 export interface AccessPolicyV2Attribute {
