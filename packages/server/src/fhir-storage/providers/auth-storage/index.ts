@@ -106,7 +106,7 @@ function setInTransactionMiddleware<
   return async (context, next) => {
     return FHIRTransaction(
       context.ctx,
-      db.IsolationLevel.Serializable,
+      db.IsolationLevel.RepeatableRead,
       async (ctx) => {
         const res = await next({
           ...context,
