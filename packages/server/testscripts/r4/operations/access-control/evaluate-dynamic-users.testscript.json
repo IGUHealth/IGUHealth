@@ -12,10 +12,10 @@
                 {
                     "request": {
                         "method": "PUT",
-                        "url": "Membership/mem1"
+                        "url": "Membership/dynamicMem1"
                     },
                     "resource": {
-                        "id": "mem1",
+                        "id": "dynamicMem1",
                         "meta": {
                             "tag": [
                                 {
@@ -24,17 +24,17 @@
                             ]
                         },
                         "role": "member",
-                        "email": "user@iguhealth.app",
+                        "email": "dynamicUser@iguhealth.app",
                         "resourceType": "Membership"
                     }
                 },
                 {
                     "request": {
                         "method": "PUT",
-                        "url": "Membership/mem2"
+                        "url": "Membership/dynamic2Mem"
                     },
                     "resource": {
-                        "id": "mem2",
+                        "id": "dynamic2Mem",
                         "meta": {
                             "tag": [
                                 {
@@ -43,7 +43,7 @@
                             ]
                         },
                         "role": "admin",
-                        "email": "admin@iguhealth.app",
+                        "email": "dynamicAdmin@iguhealth.app",
                         "resourceType": "Membership"
                     }
                 }
@@ -99,7 +99,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem1"
+                        "reference": "Membership/dynamicMem1"
                     }
                 },
                 {
@@ -126,7 +126,7 @@
                 {
                     "name": "user",
                     "valueReference": {
-                        "reference": "Membership/mem2"
+                        "reference": "Membership/dynamic2Mem"
                     }
                 },
                 {
@@ -196,13 +196,13 @@
                 {
                     "assert": {
                         "expression": "Bundle.entry[0].response.location",
-                        "value": "Membership/mem1"
+                        "value": "Membership/dynamicMem1"
                     }
                 },
                 {
                     "assert": {
                         "expression": "Bundle.entry[1].response.location",
-                        "value": "Membership/mem2"
+                        "value": "Membership/dynamic2Mem"
                     }
                 },
                 {
