@@ -50,7 +50,7 @@ export async function evaluateExpression<CTX, Role>(
         },
       });
 
-      if (result.length !== 1 || typeof result[0] !== "boolean") {
+      if (result.length !== 1) {
         throw new OperationError(
           outcomeFatal(
             "exception",
