@@ -11,11 +11,9 @@ import {
   AccessPolicyV2,
   AccessPolicyV2Rule,
   AccessPolicyV2RuleTarget,
-  Expression,
   OperationOutcome,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import * as fp from "@iguhealth/fhirpath";
 import {
   OperationError,
   outcomeError,
@@ -23,7 +21,9 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import pip, { PolicyContext } from "./pip.js";
+import pip from "./pip.js";
+import { PolicyContext, Result } from "./types.js";
+import { evaluateExpression } from "./utilities.js";
 
 const PERMISSION_LEVELS = {
   deny: <const>-1,
@@ -31,66 +31,17 @@ const PERMISSION_LEVELS = {
   permit: <const>1,
 };
 
-type Result<CTX, Role, Result> = {
-  context: PolicyContext<CTX, Role>;
-  result: Result;
-};
-
-async function evaluateExpression<CTX, Role>(
-  policyContext: PolicyContext<CTX, Role>,
-  loc: pt.Loc<AccessPolicyV2, Expression | undefined, any>,
+const resolveVariable = async <CTX, Role, Context extends PolicyContext<CTX, Role>>(
+  context: Context,
   policy: AccessPolicyV2,
-): Promise<Result<CTX, Role, boolean>> {
-  let nextPolicyContext = policyContext;
-  const expression = pt.get(loc, policy);
-  if (!expression)
-    throw new OperationError(
-      outcomeFatal(
-        "exception",
-        `Invalid access policy expression at '${loc}'.`,
-      ),
-    );
-
-  switch (expression.language) {
-    case "text/fhirpath": {
-      if (!expression.expression) {
-        throw new OperationError(
-          outcomeFatal(
-            "exception",
-            `Invalid access policy expression at '${loc}'.`,
-          ),
-        );
-      }
-
-      const result = await fp.evaluate(expression.expression, undefined, {
-        variables: async (variableId) => {
-          const res = await pip(nextPolicyContext, policy, variableId as id);
-          nextPolicyContext = res.context;
-          return res.attribute;
-        },
-      });
-
-      if (result.length !== 1 || typeof result[0] !== "boolean") {
-        throw new OperationError(
-          outcomeFatal(
-            "exception",
-            `Invalid access policy expression at '${loc}'.`,
-          ),
-        );
-      }
-
-      return { context: nextPolicyContext, result: result[0] };
-    }
-    default: {
-      throw new OperationError(
-        outcomeFatal(
-          "exception",
-          `Invalid access policy expression language '${expression.language}' at ${loc}.`,
-        ),
-      );
-    }
-  }
-}
+  variableId: id,
+) => {
+  const res = await pip(context, policy, variableId);
+  return {
+    context: res.context as Context,
+    value: res.attribute,
+  };
+};
 
 async function evaluateConditon<CTX, Role>(
   context: PolicyContext<CTX, Role>,
@@ -104,13 +55,14 @@ async function evaluateConditon<CTX, Role>(
     (rule?.effect as unknown as "permit" | "deny" | undefined) ?? "permit";
   const evaluation = await evaluateExpression(
     context,
-    pt.descend(pt.descend(loc, "condition"), "expression"),
     policy,
+    pt.descend(pt.descend(loc, "condition"), "expression"),
+    resolveVariable
   );
   return {
     context: evaluation.context,
     result:
-      evaluation.result === true
+      evaluation.result[0] === true
         ? PERMISSION_LEVELS[effect]
         : (-PERMISSION_LEVELS[
             effect
@@ -122,15 +74,16 @@ async function shouldEvaluateRule<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<Result<CTX, Role, boolean>> {
+): Promise<Result<CTX, Role, unknown[]>> {
   const target = pt.get(loc, policy);
   if (target?.expression === undefined)
-    return { context: policyContext, result: true };
+    return { context: policyContext, result: [true] };
 
   return evaluateExpression(
-    policyContext,
-    pt.descend(loc, "expression"),
+    policyContext,    
     policy,
+    pt.descend(loc, "expression"),
+    resolveVariable
   );
 }
 
@@ -160,7 +113,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
 
   context = shouldEvaluate.context;
 
-  if (shouldEvaluate.result === false) {
+  if (shouldEvaluate.result[0] !== true) {
     return {
       context,
       result: PERMISSION_LEVELS.undetermined,
@@ -204,7 +157,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
           };
         }
         case "any": {
-          let context = policyContext
+          let context = policyContext;
           for (let i = 0; i < (rule.rule ?? []).length; i++) {
             const childRuleLoc = pt.descend(pt.descend(loc, "rule"), i);
             const childResult = await evaluateAccessPolicyRule(

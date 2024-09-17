@@ -11,7 +11,7 @@ import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
 import * as v2 from "./index.js";
 
-function getContext(): v2.pip.PolicyContext<{}, string> {
+function getContext(): v2.PolicyContext<{}, string> {
   return {
     clientCTX: {},
     client: createHTTPClient({

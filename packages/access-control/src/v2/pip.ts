@@ -6,37 +6,22 @@
  * Pull in contextual information to be used in policy evaluation
  * */
 
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
   AccessPolicyV2Attribute,
   ClientApplication,
-  Expression,
   Membership,
   OperationDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
-import * as fp from "@iguhealth/fhirpath";
 import { AccessTokenPayload } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-export interface PolicyContext<CTX, Role> {
-  clientCTX: CTX;
-  client: FHIRClientAsync<CTX>;
-  environment: {
-    request: FHIRRequest;
-    user: {
-      payload: AccessTokenPayload<Role>;
-      resource: Membership | ClientApplication | OperationDefinition;
-    };
-  };
-  attributes: {
-    [key: string]: FHIRResponse;
-  };
-}
+import { PolicyContext } from "./types.js";
+import { evaluateExpression } from "./utilities.js";
 
 /**
  * Search AccessPolicy for variable location.
@@ -60,47 +45,20 @@ function findVariable(
   return undefined;
 }
 
-async function evaluateExpression<CTX, Role>(
-  policyContext: PolicyContext<CTX, Role>,
-  policy: AccessPolicyV2,
-  loc: pt.Loc<AccessPolicyV2, Expression | undefined, any>,
-): Promise<NonNullable<unknown>[]> {
-  const expression = pt.get(loc, policy);
-  if (!expression) {
-    throw new OperationError(
-      outcomeError(
-        "exception",
-        `Invalid access policy expression at '${loc}'.`,
-      ),
-    );
-  }
-
-  switch (expression.language) {
-    case "text/fhirpath": {
-      if (!expression.expression) {
-        throw new OperationError(
-          outcomeError(
-            "exception",
-            `Invalid access policy expression at '${loc}'.`,
-          ),
-        );
-      }
-      const result = await fp.evaluate(expression.expression, undefined, {
-        variables: policyContext.environment,
-      });
-
-      return result;
-    }
-    default: {
-      throw new OperationError(
-        outcomeError(
-          "exception",
-          `Invalid access policy expression at '${loc}'.`,
-        ),
-      );
-    }
-  }
-}
+const resolveVariable = async <
+  CTX,
+  Role,
+  Context extends PolicyContext<CTX, Role>,
+>(
+  context: Context,
+  _policy: AccessPolicyV2,
+  variableId: id,
+) => {
+  return {
+    context,
+    value: context.environment[variableId as keyof typeof context.environment],
+  };
+};
 
 async function processAttribute<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
@@ -116,13 +74,14 @@ async function processAttribute<CTX, Role>(
     case attribute.operation !== undefined: {
       switch (attribute.operation.type) {
         case "read": {
-          const path = await evaluateExpression(
+          const res = await evaluateExpression(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
+            resolveVariable,
           );
 
-          if (typeof path[0] !== "string") {
+          if (typeof res.result[0] !== "string") {
             throw new OperationError(
               outcomeError(
                 "exception",
@@ -131,7 +90,7 @@ async function processAttribute<CTX, Role>(
             );
           }
 
-          const [type, id] = path[0].split("/");
+          const [type, id] = res.result[0].split("/");
           if (!type || !id) {
             throw new OperationError(
               outcomeError(
@@ -160,13 +119,14 @@ async function processAttribute<CTX, Role>(
         }
 
         case "search-type": {
-          const path = await evaluateExpression(
+          const res = await evaluateExpression(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
+            resolveVariable,
           );
 
-          if (typeof path[0] !== "string") {
+          if (typeof res.result[0] !== "string") {
             throw new OperationError(
               outcomeError(
                 "exception",
@@ -179,7 +139,7 @@ async function processAttribute<CTX, Role>(
             fhirVersion: R4,
             level: "type",
             type: "search-request",
-            resource: path[0] as ResourceType<R4>,
+            resource: res.result[0] as ResourceType<R4>,
             parameters: [],
           });
         }
