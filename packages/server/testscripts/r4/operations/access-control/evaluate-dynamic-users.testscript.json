@@ -24,7 +24,7 @@
                             ]
                         },
                         "role": "member",
-                        "email": "user@iguhealth.app",
+                        "email": "dynamicUser@iguhealth.app",
                         "resourceType": "Membership"
                     }
                 },
@@ -43,7 +43,7 @@
                             ]
                         },
                         "role": "admin",
-                        "email": "admin@iguhealth.app",
+                        "email": "dynamicAdmin@iguhealth.app",
                         "resourceType": "Membership"
                     }
                 }

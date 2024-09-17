@@ -180,7 +180,7 @@
                             "reference": "patient1"
                         },
                         "role": "member",
-                        "email": "user@iguhealth.app"
+                        "email": "userPatient@iguhealth.app"
                     }
                 },
                 {
@@ -202,7 +202,7 @@
                             "reference": "patient2"
                         },
                         "role": "member",
-                        "email": "user2@iguhealth.app"
+                        "email": "userPatient2@iguhealth.app"
                     }
                 }
             ]
