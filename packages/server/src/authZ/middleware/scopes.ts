@@ -1,3 +1,4 @@
+import * as v2AccessControl from "@iguhealth/access-control/v2";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import {
@@ -8,6 +9,7 @@ import {
 
 import * as parseScopes from "../../authN/oidc/scopes/parse.js";
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { generatePatientScopePolicy } from "./patient-scopes.js";
 
 /**
  * Note that request types like patch and update-request will be treated as update. Same with read vread and history + search.
@@ -109,8 +111,38 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
         switch (smartScope.level) {
           case "patient": {
             switch (context.request.type) {
+              case "read-request": {
+                const patientPolicy = await generatePatientScopePolicy(
+                  smartScope,
+                  context.request,
+                );
+
+                const evaluation = await v2AccessControl.pdp.evaluate(
+                  {
+                    clientCTX: context.ctx,
+                    client: context.ctx.client,
+                    environment: {
+                      request: context.request,
+                      user: context.ctx.user,
+                    },
+                    attributes: {},
+                  },
+                  patientPolicy,
+                );
+
+                // If operationoutcome returns either an error or fatal issue, throw an error.
+                // It means authorization was not successful.
+                if (
+                  evaluation.issue?.find(
+                    (issue) => issue.code === "error" || issue.code === "fatal",
+                  )
+                ) {
+                  throw new OperationError(evaluation);
+                }
+
+                return next(context);
+              }
               case "create-request":
-              case "read-request":
               case "update-request":
               case "delete-request":
               case "search-request":
