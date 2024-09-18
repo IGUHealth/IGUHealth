@@ -120,7 +120,7 @@ export async function generatePatientScopePolicy(
               expression: {
                 language: "text/fhirpath",
                 expression:
-                  "%resourceFilter.body.entry.resource.where(id = %user.payload.patient).exists()",
+                  "%resourceFilter.body.entry.resource.where(id = %request.id).exists()",
               },
             },
           },
