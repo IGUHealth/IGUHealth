@@ -40,7 +40,12 @@ function requestTypeToScope(
       return "search";
     }
     default: {
-      throw new Error("Not implemented");
+      throw new OperationError(
+        outcomeFatal(
+          "exception",
+          `Invalid request type '${request.type}' for smart scopes.`,
+        ),
+      );
     }
   }
 }
@@ -88,85 +93,101 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
   IGUHealthServerCTX
 > {
   return async (context, next) => {
-    const smartScope = getHighestValueScopeForRequest(
-      context.ctx.user.scope ?? [],
-      context.request,
-    );
+    switch (context.request.type) {
+      case "capabilities-request":
+      case "transaction-request":
+      case "batch-request":
+      case "invoke-request": {
+        // Note for invoke-request will need to implement custom scopes (SMART does not have a scope for invocation of operations).
+        // Batch and transaction hit authorization again per request in Bundle.
+        // Capabilities should always be allowed as public.
 
-    if (!smartScope) {
-      throw new OperationError(
-        outcomeError("forbidden", "No approved scopes found"),
-      );
-    }
-
-    switch (smartScope.level) {
-      // Already established that the user has access to the resource type.
-      // because of existant of the smartScope so pass allong to authorization.
-      case "patient": {
-        switch (context.request.type) {
-          case "read-request": {
-            const patientPolicy = await generatePatientScopePolicy(
-              smartScope,
-              context.request,
-            );
-
-            const evaluation = await v2AccessControl.pdp.evaluate(
-              {
-                clientCTX: await asRoot(context.ctx),
-                client: context.ctx.client,
-                environment: {
-                  request: context.request,
-                  user: context.ctx.user,
-                },
-                attributes: {},
-              },
-              patientPolicy,
-            );
-
-            // If operationoutcome returns either an error or fatal issue, throw an error.
-            // It means authorization was not successful.
-            if (
-              evaluation.issue?.find(
-                (issue) =>
-                  issue.severity === "error" || issue.severity === "fatal",
-              )
-            ) {
-              throw new OperationError(evaluation);
-            }
-
-            return next(context);
-          }
-          case "create-request":
-          case "update-request":
-          case "delete-request":
-          case "search-request":
-          default: {
-            throw new OperationError(outcomeError("forbidden", "Forbidden"));
-          }
-        }
-      }
-      case "user":
-      case "system": {
-        switch (context.request.type) {
-          case "create-request":
-          case "read-request":
-          case "update-request":
-          case "delete-request":
-          case "vread-request":
-          case "patch-request":
-          case "history-request":
-          case "search-request": {
-            return next(context);
-          }
-          default: {
-            throw new OperationError(
-              outcomeFatal("invalid", "Invalid request.type"),
-            );
-          }
-        }
+        return next(context);
       }
       default: {
-        throw new OperationError(outcomeFatal("invalid", "invalid scope"));
+        const smartScope = getHighestValueScopeForRequest(
+          context.ctx.user.scope ?? [],
+          context.request,
+        );
+
+        if (!smartScope) {
+          throw new OperationError(
+            outcomeError("forbidden", "No approved scopes found"),
+          );
+        }
+
+        switch (smartScope.level) {
+          // Already established that the user has access to the resource type.
+          // because of existant of the smartScope so pass allong to authorization.
+          case "patient": {
+            switch (context.request.type) {
+              case "read-request": {
+                const patientPolicy = await generatePatientScopePolicy(
+                  smartScope,
+                  context.request,
+                );
+
+                const evaluation = await v2AccessControl.pdp.evaluate(
+                  {
+                    clientCTX: await asRoot(context.ctx),
+                    client: context.ctx.client,
+                    environment: {
+                      request: context.request,
+                      user: context.ctx.user,
+                    },
+                    attributes: {},
+                  },
+                  patientPolicy,
+                );
+
+                // If operationoutcome returns either an error or fatal issue, throw an error.
+                // It means authorization was not successful.
+                if (
+                  evaluation.issue?.find(
+                    (issue) =>
+                      issue.severity === "error" || issue.severity === "fatal",
+                  )
+                ) {
+                  throw new OperationError(evaluation);
+                }
+
+                return next(context);
+              }
+              case "create-request":
+              case "update-request":
+              case "delete-request":
+              case "search-request":
+              default: {
+                throw new OperationError(
+                  outcomeError("forbidden", "Forbidden"),
+                );
+              }
+            }
+          }
+          case "user":
+          case "system": {
+            switch (context.request.type) {
+              case "create-request":
+              case "read-request":
+              case "update-request":
+              case "delete-request":
+              case "vread-request":
+              case "patch-request":
+              case "history-request":
+              case "search-request": {
+                return next(context);
+              }
+              default: {
+                throw new OperationError(
+                  outcomeFatal("invalid", "Invalid request.type"),
+                );
+              }
+            }
+          }
+          default: {
+            throw new OperationError(outcomeFatal("invalid", "invalid scope"));
+          }
+        }
       }
     }
   };
