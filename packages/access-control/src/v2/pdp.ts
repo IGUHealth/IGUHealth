@@ -61,8 +61,6 @@ async function evaluateConditon<CTX, Role>(
     resolveVariable
   );
 
-  console.log("condition", evaluation, context.attributes)
-
   return {
     context: evaluation.context,
     result:

@@ -88,7 +88,6 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
   IGUHealthServerCTX
 > {
   return async (context, next) => {
-    console.log(context.request);
     const smartScope = getHighestValueScopeForRequest(
       context.ctx.user.scope ?? [],
       context.request,
@@ -122,14 +121,6 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                 attributes: {},
               },
               patientPolicy,
-            );
-
-            console.log(
-              evaluation,
-              evaluation.issue?.find(
-                (issue) =>
-                  issue.severity === "error" || issue.severity === "fatal",
-              ),
             );
 
             // If operationoutcome returns either an error or fatal issue, throw an error.
