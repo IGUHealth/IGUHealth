@@ -8932,6 +8932,7 @@ __metadata:
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
+    "@iguhealth/x-fhir-query": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     jest: "npm:^29.7.0"

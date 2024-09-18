@@ -15,7 +15,8 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/jwt": "workspace:^",
-    "@iguhealth/operation-outcomes": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^",
+    "@iguhealth/x-fhir-query": "workspace:^"
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.25.6",

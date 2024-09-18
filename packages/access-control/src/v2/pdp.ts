@@ -53,16 +53,18 @@ async function evaluateConditon<CTX, Role>(
   const rule = pt.get(loc, policy);
   const effect: "permit" | "deny" =
     (rule?.effect as unknown as "permit" | "deny" | undefined) ?? "permit";
+
   const evaluation = await evaluateExpression(
     context,
     policy,
     pt.descend(pt.descend(loc, "condition"), "expression"),
     resolveVariable
   );
+
   return {
     context: evaluation.context,
     result:
-      evaluation.result[0] === true
+      evaluation.result === true
         ? PERMISSION_LEVELS[effect]
         : (-PERMISSION_LEVELS[
             effect
@@ -74,17 +76,24 @@ async function shouldEvaluateRule<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<Result<CTX, Role, unknown[]>> {
+): Promise<Result<CTX, Role, boolean>> {
   const target = pt.get(loc, policy);
   if (target?.expression === undefined)
-    return { context: policyContext, result: [true] };
+    return { context: policyContext, result: true };
 
-  return evaluateExpression(
+  const res =  await evaluateExpression(
     policyContext,    
     policy,
     pt.descend(loc, "expression"),
     resolveVariable
   );
+  if(typeof res.result !== "boolean"){
+    throw new OperationError(
+      outcomeFatal("exception", `Invalid access policy target at '${loc}'.`),
+    );
+  }
+
+  return res as Result<CTX, Role, boolean>
 }
 
 async function evaluateAccessPolicyRule<CTX, Role>(
@@ -113,7 +122,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
 
   context = shouldEvaluate.context;
 
-  if (shouldEvaluate.result[0] !== true) {
+  if (shouldEvaluate.result !== true) {
     return {
       context,
       result: PERMISSION_LEVELS.undetermined,

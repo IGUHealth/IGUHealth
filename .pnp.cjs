@@ -15700,6 +15700,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@iguhealth/x-fhir-query", "workspace:packages/x-fhir-query"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
