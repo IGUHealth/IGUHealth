@@ -1,5 +1,5 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import { AccessPolicyV2, Patient, code } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicyV2, code } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   outcomeError,
