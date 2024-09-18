@@ -86,6 +86,7 @@
     "react-hot-toast": "^2.4.1"
   },
   "files": [
+    "src/**",
     "dist/**",
     "README.md"
   ]
