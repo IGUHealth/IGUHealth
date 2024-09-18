@@ -122,7 +122,8 @@
 //             condition: {
 //               expression: {
 //                 language: "text/fhirpath",
-//                 expression: "%resourceFilter.result",
+//                 expression:
+//                   "%resourceFilter.body.entry.resource.where(id = %user.",
 //               },
 //             },
 //           },

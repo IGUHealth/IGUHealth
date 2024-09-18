@@ -6,6 +6,7 @@
  * Pull in contextual information to be used in policy evaluation
  * */
 
+import { parseQuery } from "@iguhealth/client/lib/url";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as pt from "@iguhealth/fhir-pointer";
 import {
@@ -74,14 +75,14 @@ async function processAttribute<CTX, Role>(
     case attribute.operation !== undefined: {
       switch (attribute.operation.type) {
         case "read": {
-          const res = await evaluateExpression(
+          const path = await evaluateExpression(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
             resolveVariable,
           );
 
-          if (typeof res.result[0] !== "string") {
+          if (typeof path.result !== "string") {
             throw new OperationError(
               outcomeError(
                 "exception",
@@ -90,7 +91,7 @@ async function processAttribute<CTX, Role>(
             );
           }
 
-          const [type, id] = res.result[0].split("/");
+          const [type, id] = path.result.split("/");
           if (!type || !id) {
             throw new OperationError(
               outcomeError(
@@ -110,23 +111,57 @@ async function processAttribute<CTX, Role>(
         }
 
         case "search-system": {
+          const parameters =
+            (await evaluateExpression(
+              policyContext,
+              policy,
+              pt.descend(pt.descend(loc, "operation"), "params"),
+              resolveVariable,
+            )) ?? "";
+
+          if (typeof parameters.result !== "string") {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                `Invalid access policy attribute operation at '${loc}'. Parameters expression must evaluate to a string.`,
+              ),
+            );
+          }
+
           return policyContext.client.request(policyContext.clientCTX, {
             fhirVersion: R4,
             level: "system",
             type: "search-request",
-            parameters: [],
+            parameters: parseQuery(parameters.result),
           });
         }
 
         case "search-type": {
-          const res = await evaluateExpression(
+          const path = await evaluateExpression(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
             resolveVariable,
           );
 
-          if (typeof res.result[0] !== "string") {
+          const parameters =
+            (await evaluateExpression(
+              policyContext,
+              policy,
+              pt.descend(pt.descend(loc, "operation"), "params"),
+              resolveVariable,
+            )) ?? "";
+
+          if (typeof parameters.result !== "string") {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                `Invalid access policy attribute operation at '${loc}'. Parameters expression must evaluate to a string.`,
+              ),
+            );
+          }
+
+          if (typeof path.result !== "string") {
             throw new OperationError(
               outcomeError(
                 "exception",
@@ -139,8 +174,8 @@ async function processAttribute<CTX, Role>(
             fhirVersion: R4,
             level: "type",
             type: "search-request",
-            resource: res.result[0] as ResourceType<R4>,
-            parameters: [],
+            resource: path.result as ResourceType<R4>,
+            parameters: parseQuery(parameters.result),
           });
         }
         default: {
