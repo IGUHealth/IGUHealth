@@ -121,6 +121,8 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
           // because of existant of the smartScope so pass allong to authorization.
           case "patient": {
             switch (context.request.type) {
+              case "delete-request":
+              case "search-request":
               case "read-request": {
                 const patientPolicy = await generatePatientScopePolicy(
                   smartScope,
@@ -140,6 +142,11 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                   patientPolicy,
                 );
 
+                // context.ctx.logger.info({
+                //   policy: patientPolicy,
+                //   request: context.request,
+                // });
+
                 // If operationoutcome returns either an error or fatal issue, throw an error.
                 // It means authorization was not successful.
                 if (
@@ -155,8 +162,6 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
               }
               case "create-request":
               case "update-request":
-              case "delete-request":
-              case "search-request":
               default: {
                 throw new OperationError(
                   outcomeError("forbidden", "Forbidden"),
