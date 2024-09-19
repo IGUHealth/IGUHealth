@@ -61,7 +61,8 @@ const patientCompartments: Record<string, string[] | undefined> = {
   MolecularSequence: ["patient"],
   NutritionOrder: ["patient"],
   Observation: ["subject", "performer"],
-  Patient: ["link"],
+  // Modified to include the _id parameter for patient.
+  Patient: ["_id", "link"],
   Person: ["patient"],
   Procedure: ["patient", "performer"],
   Provenance: ["patient"],
