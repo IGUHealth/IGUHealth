@@ -142,10 +142,10 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                   patientPolicy,
                 );
 
-                context.ctx.logger.info({
-                  policy: patientPolicy,
-                  request: context.request,
-                });
+                // context.ctx.logger.info({
+                //   policy: patientPolicy,
+                //   request: context.request,
+                // });
 
                 // If operationoutcome returns either an error or fatal issue, throw an error.
                 // It means authorization was not successful.
