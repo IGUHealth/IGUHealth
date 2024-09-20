@@ -98,7 +98,9 @@ function getResourceFilter(
       ? ["_id"]
       : patientCompartments[request.resource];
   if (!params) {
-    throw new OperationError(outcomeFatal("exception", "Invalid resource"));
+    throw new OperationError(
+      outcomeFatal("exception", "Invalid resource for patient scopes."),
+    );
   }
   return {
     attributeId: id as id,
