@@ -25,14 +25,14 @@ function flatten<T>(arr: T[][]): T[] {
 }
 
 async function getVariableValue(
-  name: string,
+  variableId: string,
   options: Options,
 ): Promise<IMetaValue<unknown>[]> {
   let value;
   if (options?.variables instanceof Function) {
-    value = await options.variables(name);
+    value = await options.variables(variableId);
   } else if (options?.variables instanceof Object) {
-    value = options.variables[name];
+    value = options.variables[variableId];
   }
 
   return metaUtils.flatten(
@@ -220,7 +220,10 @@ const fp_functions: Record<
     const result: IMetaValue<unknown>[] = [];
     for (const v of context) {
       const evaluation = await _evaluate(criteria, [v], options);
-      assert(evaluation.length === 1, "result must be one");
+      assert(
+        evaluation.length === 1,
+        "where clause evaluation must evaluate to a single boolean.",
+      );
       if (!typeChecking("boolean", evaluation)) {
         throw new Error("Where clause criteria must evaluate to a boolean");
       }
@@ -572,6 +575,41 @@ function filterByType<T>(type: string, context: IMetaValue<T>[]) {
   });
 }
 
+/**
+ * Check for membership of value in collection.
+ * Used for both in and contains (reversed).
+ * @param options FP Options
+ * @param collection Collection to check for membership
+ * @param value Value to check if exists in collection
+ * @returns MetaValue boolean value.
+ */
+function membershipCheck(
+  options: Options,
+  collection: IMetaValue<unknown>[],
+  value: IMetaValue<unknown>[],
+): IMetaValue<boolean>[] {
+  if (value.length !== 1) {
+    throw new Error("Membership check value must be a single value");
+  }
+
+  for (const colValue of collection) {
+    if (equalityCheck(value, [colValue])) {
+      return metaUtils.flatten(
+        metaValueV2.metaValue(
+          { fhirVersion: options.fhirVersion, type: "boolean" as uri },
+          true,
+        ),
+      );
+    }
+  }
+  return metaUtils.flatten(
+    metaValueV2.metaValue(
+      { fhirVersion: options.fhirVersion, type: "boolean" as uri },
+      false,
+    ),
+  );
+}
+
 const fp_operations: Record<
   string,
   (
@@ -580,6 +618,12 @@ const fp_operations: Record<
     options: Options,
   ) => Promise<IMetaValue<unknown>[]>
 > = {
+  contains: op_prevaled(async (left, right, options) => {
+    return membershipCheck(options, left, right);
+  }),
+  in: op_prevaled(async (left, right, options) => {
+    return membershipCheck(options, right, left);
+  }),
   "+": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return metaUtils.flatten(

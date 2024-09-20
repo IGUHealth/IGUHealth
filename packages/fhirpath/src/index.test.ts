@@ -42,7 +42,7 @@ test("Variable tests", async () => {
       "%hello.test",
       {},
       {
-        variables: (name: string) => {
+        variables: async (name: string) => {
           return [{ test: 4 }, { test: 3 }];
         },
       },
@@ -906,4 +906,93 @@ test("Type function", async () => {
       metaOptions("QuestionnaireResponse"),
     ),
   ).toEqual(["dateTime"]);
+});
+
+test("Membership", async () => {
+  expect(
+    await evaluate("%collection contains 'Test'", undefined, {
+      variables: {
+        collection: ["Test", "Test2"],
+      },
+    }),
+  ).toEqual([true]);
+
+  expect(
+    await evaluate("%collection contains 'Z'", undefined, {
+      variables: {
+        collection: ["Test"],
+      },
+    }),
+  ).toEqual([false]);
+
+  expect(
+    await evaluate("'Test' in %collection", undefined, {
+      variables: {
+        collection: ["Test"],
+      },
+    }),
+  ).toEqual([true]);
+
+  expect(
+    await evaluate("'Z' in %collection", undefined, {
+      variables: {
+        collection: ["Test"],
+      },
+    }),
+  ).toEqual([false]);
+});
+
+test("Test derive type information from variables", async () => {
+  expect(
+    await evaluate("%patient.ofType(Patient)", undefined, {
+      variables: {
+        patient: {
+          resourceType: "Patient",
+          name: [{ given: ["Bob"], family: "Jameson" }],
+        },
+      },
+    }),
+  ).toEqual([
+    {
+      resourceType: "Patient",
+      name: [{ given: ["Bob"], family: "Jameson" }],
+    },
+  ]);
+
+  expect(
+    await evaluate("%patient.ofType(Practitioner)", undefined, {
+      variables: {
+        patient: {
+          resourceType: "Patient",
+          name: [{ given: ["Bob"], family: "Jameson" }],
+        },
+      },
+    }),
+  ).toEqual([]);
+});
+
+test("Complex variable type filter eval", async () => {
+  expect(
+    await evaluate(
+      "%request.body.select(Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient)",
+      undefined,
+      {
+        variables: {
+          request: {
+            body: {
+              id: "z2-160orppsqv6EIG44JyL",
+              class: {
+                code: "IMP",
+                system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                display: "inpatient encounter",
+              },
+              status: "planned",
+              subject: { reference: "Patient/noO83wMVGPs2LDH2Dqd0KB" },
+              resourceType: "Encounter",
+            },
+          },
+        },
+      },
+    ),
+  ).toEqual([{ reference: "Patient/noO83wMVGPs2LDH2Dqd0KB" }]);
 });

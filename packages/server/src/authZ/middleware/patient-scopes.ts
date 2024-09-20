@@ -1,5 +1,6 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { AccessPolicyV2, code, id } from "@iguhealth/fhir-types/r4/types";
+import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -7,6 +8,8 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { SMARTResourceScope } from "../../authN/oidc/scopes/parse.js";
+import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
+import { searchResources } from "../../fhir-storage/utilities/search/parameters.js";
 
 // Pulled from patient compartments definition here: [https://hl7.org/fhir/R4/compartmentdefinition-patient.html].
 const patientCompartments: Record<string, string[] | undefined> = {
@@ -61,8 +64,7 @@ const patientCompartments: Record<string, string[] | undefined> = {
   MolecularSequence: ["patient"],
   NutritionOrder: ["patient"],
   Observation: ["subject", "performer"],
-  // Modified to include the _id parameter for patient.
-  Patient: ["_id", "link"],
+  Patient: ["link"],
   Person: ["patient"],
   Procedure: ["patient", "performer"],
   Provenance: ["patient"],
@@ -86,7 +88,12 @@ function getResourceFilter(
   if (!("resource" in request)) {
     throw new OperationError(outcomeFatal("exception", "Invalid request"));
   }
-  const params = patientCompartments[request.resource];
+
+  // Use _id parameter for patient.
+  const params =
+    request.resource === "Patient"
+      ? ["_id"]
+      : patientCompartments[request.resource];
   if (!params) {
     throw new OperationError(outcomeFatal("exception", "Invalid resource"));
   }
@@ -107,6 +114,7 @@ function getResourceFilter(
 }
 
 export async function generatePatientScopePolicy(
+  ctx: IGUHealthServerCTX,
   scope: SMARTResourceScope,
   request: FHIRRequest,
 ): Promise<AccessPolicyV2> {
@@ -143,12 +151,57 @@ export async function generatePatientScopePolicy(
     }
     case "update-request":
     case "create-request": {
-      throw new OperationError(
-        outcomeError(
-          "forbidden",
-          "Update and create requests are not supported for patient access.",
-        ),
+      const params = patientCompartments[request.resource];
+      if (!params) {
+        throw new OperationError(outcomeFatal("exception", "Invalid resource"));
+      }
+      const searchParameters = await ctx.client.search_type(
+        await asRoot(ctx),
+        request.fhirVersion,
+        "SearchParameter",
+        [
+          {
+            name: "base",
+            value: searchResources([request.resource] as AllResourceTypes[]),
+          },
+          { name: "code", value: params },
+        ],
       );
+
+      return {
+        name: "Patient Scope access",
+        engine: "rule-engine" as code,
+        resourceType: "AccessPolicyV2",
+        rule: [
+          {
+            name: "Access",
+            target: {
+              expression: {
+                language: "text/fhirpath",
+                expression:
+                  "%request.type = 'update-request' or %request.type = 'create-request'",
+              },
+            },
+            condition: {
+              expression: {
+                language: "text/fhirpath",
+                expression: searchParameters.resources
+                  .filter((param) => param.expression !== undefined)
+                  .map((searchParameter) => {
+                    if (!searchParameter.expression) {
+                      throw new OperationError(
+                        outcomeFatal("exception", "Invalid search parameter"),
+                      );
+                    }
+                    // Run projection from search parameters and check that user patient is in the references.
+                    return `('Patient/' + %user.payload.patient) in (%request.body.select(${searchParameter.expression}).ofType(Reference).reference)`;
+                  })
+                  .join(" or "),
+              },
+            },
+          },
+        ],
+      } as AccessPolicyV2;
     }
     case "delete-request": {
       return {
