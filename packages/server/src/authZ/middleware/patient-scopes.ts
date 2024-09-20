@@ -38,9 +38,9 @@ const patientCompartments: Record<string, string[] | undefined> = {
   DetectedIssue: ["patient"],
   DeviceRequest: ["subject", "performer"],
   DeviceUseStatement: ["subject"],
-  DiagnosticReport: ["subject"],
+  DiagnosticReport: ["subject", "patient"],
   DocumentManifest: ["subject", "author", "recipient"],
-  DocumentReference: ["subject", "author"],
+  DocumentReference: ["subject", "author", "patient"],
   Encounter: ["patient"],
   EnrollmentRequest: ["subject"],
   EpisodeOfCare: ["patient"],
@@ -59,12 +59,12 @@ const patientCompartments: Record<string, string[] | undefined> = {
   Media: ["subject"],
   MedicationAdministration: ["patient", "performer", "subject"],
   MedicationDispense: ["subject", "patient", "receiver"],
-  MedicationRequest: ["subject"],
+  MedicationRequest: ["subject", "patient"],
   MedicationStatement: ["subject"],
   MolecularSequence: ["patient"],
   NutritionOrder: ["patient"],
-  Observation: ["subject", "performer"],
-  Patient: ["link"],
+  Observation: ["subject", "performer", "patient"],
+  Patient: ["link", "_id"],
   Person: ["patient"],
   Procedure: ["patient", "performer"],
   Provenance: ["patient"],
@@ -79,6 +79,9 @@ const patientCompartments: Record<string, string[] | undefined> = {
   SupplyDelivery: ["patient"],
   SupplyRequest: ["subject"],
   VisionPrescription: ["patient"],
+
+  // Added Resources from outside of the Patient compartment definition.
+  Device: ["patient"],
 };
 
 function getResourceFilter(
