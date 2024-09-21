@@ -1,4 +1,5 @@
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
+import { id } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 
 import { OIDCError } from "../middleware/oauth_error_handling.js";
@@ -186,6 +187,24 @@ function validateSmartResourceLevel(
   level: string,
 ): level is "user" | "system" | "patient" {
   return ["user", "system", "patient"].includes(level);
+}
+
+/**
+ * Launch scopes are parsed into sep rec without launch/ prefix
+ * This converts them back to query parameters for the redirect.
+ * @param launchScopes The launch scopes to derive query parameters.
+ * @returns
+ */
+export function launchScopesToQuery(
+  launchScopes: Record<string, id> | undefined,
+): Record<string, string> {
+  return Object.entries(launchScopes ?? {}).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [`launch/${key}`]: value,
+    }),
+    {},
+  );
 }
 
 export function parseScopes(scopes: string): Scope[] {
