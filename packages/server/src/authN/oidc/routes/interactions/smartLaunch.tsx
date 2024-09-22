@@ -18,8 +18,9 @@ import {
 } from "@iguhealth/jwt/types";
 
 import { createTenantURL } from "../../../../fhir-api/constants.js";
+import { asRoot } from "../../../../fhir-api/types.js";
 import resolveStatic from "../../../../resolveStatic.js";
-import { getIssuer } from "../../constants.js";
+import { OIDC_ROUTES, getIssuer } from "../../constants.js";
 import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
@@ -80,7 +81,8 @@ export async function launchView<Version extends FHIR_VERSION>(
     ),
     payload: {
       sub: ctx.state.oidc.user?.id as Subject,
-      scope: `user/${resourceType}.rs user/SearchParameter.rs`,
+      // So for a user to select a patient, they must have the user/Patient.s scope.
+      scope: `${ctx.state.oidc.parameters.scope ?? ""} user/SearchParameter.rs`,
       iss: getIssuer(ctx.state.iguhealth.tenant),
       aud: SYSTEM_APP.id as string,
       [CUSTOM_CLAIMS.ROLE]: ctx.state.oidc.user?.role as user_role,
@@ -129,6 +131,30 @@ export async function launchView<Version extends FHIR_VERSION>(
   );
 }
 
+async function derivePatientFromMembership(
+  ctx: Parameters<OIDCRouteHandler>[0],
+  scope: parseScopes.LaunchTypeScope,
+): Promise<Record<string, id> | undefined> {
+  const userId = ctx.state.oidc.user?.fhir_user_id as id | undefined;
+
+  if (scope.launchType === "patient" && userId) {
+    const membership = await ctx.state.iguhealth.client.read(
+      await asRoot(ctx.state.iguhealth),
+      R4,
+      "Membership",
+      userId,
+    );
+
+    if (membership?.link?.reference?.startsWith("Patient/")) {
+      return {
+        [scope.launchType]: membership.link.reference?.split("/")[1] as id,
+      };
+    }
+  }
+
+  return undefined;
+}
+
 export function smartLaunch(): OIDCRouteHandler {
   return async (ctx) => {
     const client = ctx.state.oidc.client;
@@ -145,14 +171,42 @@ export function smartLaunch(): OIDCRouteHandler {
     );
 
     if (unResolvedLaunchParameters.length !== 0) {
-      ctx.status = 200;
-      ctx.body = await launchView(
+      // In the event a user is associated to a Patient
+      // Auto derive their patient as one linked via membership.
+
+      const userDerived = await derivePatientFromMembership(
         ctx,
-        R4,
-        capitalize(
-          unResolvedLaunchParameters[0].launchType,
-        ) as ResourceType<R4>,
+        unResolvedLaunchParameters[0],
       );
+      if (userDerived !== undefined) {
+        ctx.redirect(
+          ctx.router.url(
+            OIDC_ROUTES.AUTHORIZE_GET,
+            {
+              tenant: ctx.state.iguhealth.tenant,
+            },
+            {
+              query: {
+                ...ctx.state.oidc.parameters,
+                // Include the launch parameters derived from the user.
+                ...parseScopes.launchScopesToQuery({
+                  ...ctx.state.oidc.launch,
+                  ...userDerived,
+                }),
+              },
+            },
+          ) as string,
+        );
+      } else {
+        ctx.status = 200;
+        ctx.body = await launchView(
+          ctx,
+          R4,
+          capitalize(
+            unResolvedLaunchParameters[0].launchType,
+          ) as ResourceType<R4>,
+        );
+      }
     } else {
       const redirectUrl = ctx.state.oidc.parameters.redirect_uri;
       if (isInvalidRedirectUrl(redirectUrl, client)) {

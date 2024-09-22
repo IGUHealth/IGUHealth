@@ -112,7 +112,10 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
 
         if (!smartScope) {
           throw new OperationError(
-            outcomeError("forbidden", "No approved scopes found"),
+            outcomeError(
+              "forbidden",
+              `No approved scopes found for request ${context.request.type}`,
+            ),
           );
         }
 

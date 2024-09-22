@@ -28,6 +28,7 @@ export function parseScopesMiddleware(): Koa.Middleware<
         outcomeError("invalid", "Request must have scope."),
       );
     }
+
     try {
       ctx.state.oidc.scopes = parseScopes(scopeString);
     } catch (e) {
