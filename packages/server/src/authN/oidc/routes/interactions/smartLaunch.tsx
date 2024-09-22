@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/server";
 import { user_role } from "zapatos/schema";
 
-import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
