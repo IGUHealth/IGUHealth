@@ -40,7 +40,8 @@ export function isPermitted(outcome: OperationOutcome): boolean {
   return (
     outcome.issue.find(
       (v) => v.severity === "error" || v.severity === "fatal",
-    ) === undefined
+      // Enforce that the outcome has at least one issue. This must be non error and non fatal.
+    ) === undefined && outcome.issue.length > 0
   );
 }
 
