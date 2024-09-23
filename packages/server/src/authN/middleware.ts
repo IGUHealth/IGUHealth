@@ -3,7 +3,7 @@ import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 import * as s from "zapatos/schema";
 
-import { AccessPolicy, code, id } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicyV2, code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, Resource } from "@iguhealth/fhir-types/versions";
 import { getJWKS, getSigningKey } from "@iguhealth/jwt/certifications";
 import { createToken } from "@iguhealth/jwt/token";
@@ -136,7 +136,7 @@ async function findResourceAndAccessPolicies<
   id: id,
 ): Promise<{
   resource?: Resource<R4, Type>;
-  accessPolicies: AccessPolicy[];
+  accessPolicies: AccessPolicyV2[];
 }> {
   const clients = getHardCodedClients();
 
@@ -162,11 +162,11 @@ async function findResourceAndAccessPolicies<
         name: "_id",
         value: [id],
       },
-      { name: "_revinclude", value: ["AccessPolicy:link"] },
+      { name: "_revinclude", value: ["AccessPolicyV2:link"] },
     ],
   )) as {
     total?: number;
-    resources: (Resource<R4, Type> | AccessPolicy)[];
+    resources: (Resource<R4, Type> | AccessPolicyV2)[];
   };
 
   const resource = usersAndAccessPolicies.resources.filter(
@@ -174,7 +174,7 @@ async function findResourceAndAccessPolicies<
   );
 
   const accessPolicies = usersAndAccessPolicies.resources.filter(
-    (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
+    (r): r is AccessPolicyV2 => r.resourceType === "AccessPolicyV2",
   );
 
   return {

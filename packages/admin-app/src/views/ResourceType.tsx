@@ -55,8 +55,8 @@ function InviteModal({
         onChange={setRole}
       />
       <FHIRReferenceEditable
-        label="AccessPolicy"
-        resourceTypesAllowed={["AccessPolicy"]}
+        label="AccessPolicyV2"
+        resourceTypesAllowed={["AccessPolicyV2"]}
         fhirVersion={R4}
         client={client}
         value={accessPolicyRef}

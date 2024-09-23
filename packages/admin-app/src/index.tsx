@@ -299,11 +299,11 @@ function Root() {
                 Membership
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "AccessPolicy"}
+                active={matches[0].params.resourceType === "AccessPolicyV2"}
                 onClick={() => {
                   navigate(
                     generatePath("/resources/:resourceType", {
-                      resourceType: "AccessPolicy",
+                      resourceType: "AccessPolicyV2",
                     }),
                   );
                 }}
@@ -363,7 +363,7 @@ function Root() {
                       match.params.resourceType !== "QuestionnaireResponse" &&
                       match.params.resourceType !== "AuditEvent" &&
                       match.params.resourceType !== "Membership" &&
-                      match.params.resourceType !== "AccessPolicy" &&
+                      match.params.resourceType !== "AccessPolicyV2" &&
                       match.params.resourceType !== "MessageTopic" &&
                       match.params.resourceType !== "MessageBroker" &&
                       match.params.resourceType !== "ClientApplication",

@@ -47,7 +47,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
           const accessPolicy = await ctx.client.read(
             ctx,
             R4,
-            "AccessPolicy",
+            "AccessPolicyV2",
             accessPolicyId as id,
           );
 
@@ -55,7 +55,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
             await ctx.client.update(
               ctx,
               R4,
-              "AccessPolicy",
+              "AccessPolicyV2",
               accessPolicy.id as id,
               {
                 ...accessPolicy,

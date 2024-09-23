@@ -25,7 +25,7 @@ import { PolicyContext } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
 
 /**
- * Search AccessPolicy for variable location.
+ * Search AccessPolicyV2 for variable location.
  * @param policy AccessPolicyV2 - policy to search for variable.
  */
 function findVariable(
