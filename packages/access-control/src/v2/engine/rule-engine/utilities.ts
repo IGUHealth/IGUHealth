@@ -6,7 +6,7 @@ import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import xFhirQuery from "@iguhealth/x-fhir-query";
 
-import { PolicyContext, Result } from "./types.js";
+import { PolicyContext, Result } from "../types.js";
 
 export async function evaluateExpression<CTX, Role>(
   context: PolicyContext<CTX, Role>,

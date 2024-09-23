@@ -1,4 +1,4 @@
-import * as v2AccessControl from "@iguhealth/access-control/v2";
+import v2AccessControl from "@iguhealth/access-control/v2";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import {
@@ -135,7 +135,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                   context.request,
                 );
 
-                const evaluation = await v2AccessControl.pdp.evaluate(
+                const evaluation = await v2AccessControl(
                   {
                     clientCTX: await asRoot(context.ctx),
                     client: context.ctx.client,
