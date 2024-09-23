@@ -9,8 +9,14 @@
   "publisher": "IGUHealth",
   "description": "What/Who is associated with a given access policy.",
   "code": "link",
-  "base": ["AccessPolicy"],
+  "base": [
+    "AccessPolicy"
+  ],
   "type": "reference",
   "expression": "AccessPolicy.target.link",
-  "target": ["User", "OperationDefinition"]
+  "target": [
+    "Membership",
+    "OperationDefinition",
+    "ClientApplication"
+  ]
 }

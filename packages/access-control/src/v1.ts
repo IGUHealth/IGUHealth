@@ -143,7 +143,7 @@ function validateFHIRMethodAccess(
  * @param request  The FHIR request being made.
  * @returns boolean as to whether or not a user is being granted access.
  */
-function evaluateAccessPolicy(
+function evaluateAccessPolicies(
   policies: AccessPolicy[],
   request: FHIRRequest,
 ): boolean {
@@ -178,7 +178,7 @@ function evaluateAccessPolicy(
 }
 
 /**
- * Evaluates a users access to request. If super admin bypasses accesspolicy evaluation.
+ * Evaluates a users access to request. If super admin bypasses accesspolicyv2 evaluation.
  * Else access based on policies associated to a user.
  * @param ctx Server context.
  * @param request  The FHIR request being made.
@@ -196,5 +196,5 @@ export default function evaluatePolicy<
     user[CUSTOM_CLAIMS.ROLE] === "owner"
   )
     return true;
-  return evaluateAccessPolicy(accessPolicies, request);
+  return evaluateAccessPolicies(accessPolicies, request);
 }

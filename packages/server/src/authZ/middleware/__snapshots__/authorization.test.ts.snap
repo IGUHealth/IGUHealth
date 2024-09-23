@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Authorization test for read access on resource based on type and method 1`] = `
+{
+  "issue": [
+    {
+      "code": "forbidden",
+      "diagnostics": "Access Denied.",
+      "expression": [
+        "/rule/0",
+      ],
+      "extension": [
+        {
+          "url": "https://iguhealth.app/AccessPolicy/policy-extension",
+          "valueReference": {
+            "reference": "AccessPolicyV2/test-policy",
+          },
+        },
+      ],
+      "severity": "error",
+    },
+  ],
+  "resourceType": "OperationOutcome",
+}
+`;

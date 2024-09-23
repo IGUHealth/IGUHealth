@@ -6,7 +6,7 @@ import * as s from "zapatos/schema";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
-  AccessPolicy,
+  AccessPolicyV2,
   ClientApplication,
   Membership,
   OperationDefinition,
@@ -107,7 +107,7 @@ export interface UserContext {
   payload: AccessTokenPayload<s.user_role>;
   accessToken?: JWT<AccessTokenPayload<s.user_role>>;
   resource: Membership | ClientApplication | OperationDefinition;
-  accessPolicies?: AccessPolicy[];
+  accessPolicies?: AccessPolicyV2[];
   scope?: Scope[];
 }
 

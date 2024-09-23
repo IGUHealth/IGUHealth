@@ -145,7 +145,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                     },
                     attributes: {},
                   },
-                  patientPolicy,
+                  [patientPolicy],
                 );
 
                 // context.ctx.logger.info({

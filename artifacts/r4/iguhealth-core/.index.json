@@ -38,6 +38,18 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "definitions/iguhealth/searchParameter/access-policy-v2/engine.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/access-policy-v2/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/access-policy-v2/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "definitions/iguhealth/searchParameter/access-policy/code.json",
       "resourceType": "SearchParameter"
     },

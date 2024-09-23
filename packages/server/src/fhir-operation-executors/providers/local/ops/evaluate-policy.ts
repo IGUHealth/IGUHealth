@@ -108,7 +108,7 @@ export const EvaluatePolicyInvoke = InlineOperation(
             },
             attributes: {},
           },
-          policy,
+          [policy],
         );
 
         return result;

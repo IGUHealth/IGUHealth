@@ -205,7 +205,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
 }
 
 /**
- * Evaluates a users access to request. If super admin bypasses accesspolicy evaluation.
+ * Evaluates a users access to request. If super admin bypasses accesspolicyv2 evaluation.
  * Else access based on policies associated to a user.
  * @param ctx Server context.
  * @param request  The FHIR request being made.

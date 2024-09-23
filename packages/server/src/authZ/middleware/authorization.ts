@@ -1,6 +1,8 @@
-import evaluateAccessPolicy from "@iguhealth/access-control/v1";
+import evaluateV2AccessPolicy, {
+  isPermitted,
+} from "@iguhealth/access-control/v2";
 import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { OperationError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 
@@ -15,17 +17,27 @@ function createAuthorizationMiddleware<T>(): MiddlewareAsyncChain<
   IGUHealthServerCTX
 > {
   return async (context, next) => {
-    if (
-      evaluateAccessPolicy(
-        context.ctx.user.payload,
-        context.ctx.user.accessPolicies ?? [],
-        context.request,
-      )
-    ) {
+    const result = await evaluateV2AccessPolicy(
+      {
+        clientCTX: context.ctx,
+        client: context.ctx.client,
+        environment: {
+          request: context.request,
+          user: {
+            payload: context.ctx.user.payload,
+            resource: context.ctx.user.resource,
+          },
+        },
+        attributes: {},
+      },
+      context.ctx.user.accessPolicies ?? [],
+    );
+
+    if (isPermitted(result)) {
       return next(context);
     }
 
-    throw new OperationError(outcomeError("forbidden", "access-denied"));
+    throw new OperationError(result);
   };
 }
 
