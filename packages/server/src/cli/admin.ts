@@ -4,7 +4,7 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import {
-  AccessPolicy,
+  AccessPolicyV2,
   Bundle,
   ClientApplication,
   Membership,
@@ -171,9 +171,8 @@ function clientAppCommands(command: Command) {
               request: { method: "POST", url: "AccessPolicy" },
               resource: {
                 name: "Admin Access",
-                code: "admin-access",
-                type: "full-access",
-                resourceType: "AccessPolicy",
+                engine: "full-access",
+                resourceType: "AccessPolicyV2",
                 target: [
                   {
                     link: {
@@ -181,7 +180,7 @@ function clientAppCommands(command: Command) {
                     },
                   },
                 ],
-              } as AccessPolicy,
+              } as AccessPolicyV2,
             },
             {
               fullUrl: "clientapp",
