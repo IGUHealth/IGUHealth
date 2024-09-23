@@ -13,5 +13,5 @@
         "AccessPolicyV2"
     ],
     "type": "token",
-    "expression": "AccessPolicyV2.type"
+    "expression": "AccessPolicyV2.engine"
 }
