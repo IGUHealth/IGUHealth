@@ -3,7 +3,11 @@ import {
   OperationOutcome,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  issueError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import * as fullAccessEngine from "./engine/full-access/index.js";
 import * as ruleEngine from "./engine/rule-engine/index.js";
@@ -71,6 +75,9 @@ export default async function evaluatePolicies<CTX, Role>(
 
   return {
     resourceType: "OperationOutcome",
-    issue: issues,
+    issue: [
+      issueError("forbidden", "No policy has granted access to your request"),
+      ...issues,
+    ],
   };
 }
