@@ -61,7 +61,7 @@ export default async function evaluatePolicies<CTX, Role>(
         extension: [
           {
             url: "https://iguhealth.app/AccessPolicy/policy-extension" as id,
-            valueReference: { reference: accessPolicy.id },
+            valueReference: { reference: `AccessPolicyV2/${accessPolicy.id}` },
           },
         ],
       })),

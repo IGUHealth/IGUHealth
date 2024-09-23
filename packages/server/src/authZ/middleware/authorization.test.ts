@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import {
-  AccessPolicy,
+  AccessPolicyV2,
   Patient,
   code,
   id,
@@ -22,19 +22,29 @@ test("Authorization test for read access on resource based on type and method", 
       ...testServices.user,
       accessPolicies: [
         {
-          resourceType: "AccessPolicy",
-          type: "fhir-rest" as code,
+          id: "test-policy" as id,
+          resourceType: "AccessPolicyV2",
+          engine: "rule-engine" as code,
           name: "test-policy",
           code: "test-policy" as code,
-          access: [
+          rule: [
             {
-              fhir: {
-                method: "read",
-                resourceType: ["Patient"],
+              name: "test-rule",
+              target: {
+                expression: {
+                  expression: "true",
+                  language: "text/fhirpath" as code,
+                },
+              },
+              condition: {
+                expression: {
+                  expression: "%request.type = 'read-request'",
+                  language: "text/fhirpath" as code,
+                },
               },
             },
           ],
-        } as AccessPolicy,
+        } as AccessPolicyV2,
       ],
     },
   };
@@ -103,15 +113,5 @@ test("Authorization test for read access on resource based on type and method", 
       // @ts-ignore
       throw e.operationOutcome;
     }
-  }).rejects.toEqual({
-    issue: [
-      {
-        severity: "error",
-        code: "forbidden",
-        diagnostics: "access-denied",
-        expression: undefined,
-      },
-    ],
-    resourceType: "OperationOutcome",
-  });
+  }).rejects.toMatchSnapshot();
 });
