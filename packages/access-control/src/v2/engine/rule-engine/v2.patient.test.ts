@@ -9,9 +9,10 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, Issuer, Subject, TenantId } from "@iguhealth/jwt";
 
+import { PolicyContext } from "../types.js";
 import * as v2 from "./index.js";
 
-function getContext(): v2.PolicyContext<{}, string> {
+function getContext(): PolicyContext<{}, string> {
   return {
     clientCTX: {},
     client: createHTTPClient({

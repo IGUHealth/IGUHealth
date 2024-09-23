@@ -1,6 +1,6 @@
 import * as s from "zapatos/schema";
 
-import * as accessPolicyV2 from "@iguhealth/access-control/v2";
+import accessPolicyV2 from "@iguhealth/access-control/v2";
 import {
   ClientApplication,
   Membership,
@@ -94,7 +94,7 @@ export const EvaluatePolicyInvoke = InlineOperation(
           );
         }
 
-        const result = await accessPolicyV2.pdp.evaluate(
+        const result = await accessPolicyV2(
           {
             clientCTX: ctx,
             client: ctx.client,

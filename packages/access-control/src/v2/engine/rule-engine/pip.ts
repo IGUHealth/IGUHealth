@@ -21,7 +21,7 @@ import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { PolicyContext } from "./types.js";
+import { PolicyContext } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
 
 /**

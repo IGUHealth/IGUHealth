@@ -22,7 +22,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import pip from "./pip.js";
-import { PolicyContext, Result } from "./types.js";
+import { PolicyContext, Result } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
 
 const PERMISSION_LEVELS = {
