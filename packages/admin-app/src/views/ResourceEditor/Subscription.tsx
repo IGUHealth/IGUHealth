@@ -27,11 +27,11 @@ function ChannelParameters({
   channel,
   resource,
   onChange,
-}: {
+}: Readonly<{
   channel: code | undefined;
   resource: Subscription | undefined;
   onChange: React.Dispatch<React.SetStateAction<ConcreteType | undefined>>;
-}) {
+}>) {
   switch (channel) {
     case "rest-hook":
     case "message": {
@@ -59,7 +59,7 @@ function ChannelParameters({
             </div>
             <div className="space-y-1">
               {resource?.channel.header?.map((header, index) => (
-                <div className="relative">
+                <div key={index} className="relative">
                   <Input
                     value={header}
                     onChange={(e) => {
@@ -169,10 +169,10 @@ function ChannelParameters({
 function SimpleSubscriptionView({
   resource,
   onChange,
-}: {
+}: Readonly<{
   resource: Subscription | undefined;
   onChange: React.Dispatch<React.SetStateAction<ConcreteType | undefined>>;
-}) {
+}>) {
   const client = useRecoilValue(getClient);
   const [channel, setChannel] = useState<
     Subscription["channel"]["type"] | undefined
@@ -285,7 +285,7 @@ export default function SubscriptionView({
   actions,
   structureDefinition,
   onChange,
-}: SubscriptionEditorProps) {
+}: Readonly<SubscriptionEditorProps>) {
   return (
     <ResourceEditorComponent
       id={id as id}
