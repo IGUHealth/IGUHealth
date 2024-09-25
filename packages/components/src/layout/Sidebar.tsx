@@ -21,7 +21,7 @@ export function SideBarItem({
     <li {...props}>
       <div
         className={classNames(
-          "cursor-pointer flex items-center p-1 group rounded-lg group",
+          "cursor-pointer flex items-center p-1 px-2 group rounded-lg group",
           {
             "text-slate-800 hover:bg-gray-200": !active,
             "text-blue-800 bg-blue-100 ": active,
