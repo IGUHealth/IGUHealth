@@ -97,8 +97,7 @@ function getLambdaFunctionName(
   ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,
 ) {
-  const environment = "dev";
-  return `${environment}:${ctx.tenant}:${operation.operationDefinition.id}`;
+  return `${ctx.environment}:${ctx.tenant}:${operation.operationDefinition.id}`;
 }
 
 async function createPayload<I, O>(

@@ -28,6 +28,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
   const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
+    environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
     logger,
     lock: new RedisLock(redis),

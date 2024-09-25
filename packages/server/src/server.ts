@@ -192,6 +192,7 @@ export default async function createServer(): Promise<
   const redis = getRedisClient();
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+    environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
     logger,
     lock: new RedisLock(redis),

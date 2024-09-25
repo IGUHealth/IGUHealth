@@ -16,9 +16,15 @@
     "REDIS_PORT",
     "SESSION_COOKIE_SECRETS",
     "AUTH_LOCAL_CERTIFICATION_LOCATION",
-    "AUTH_LOCAL_SIGNING_KEY"
+    "AUTH_LOCAL_SIGNING_KEY",
+    "IGUHEALTH_ENVIRONMENT"
   ],
   "properties": {
+    "IGUHEALTH_ENVIRONMENT": {
+      "description": "The environment the server is running in",
+      "type": "string",
+      "default": "development"
+    },
     "SESSION_COOKIE_SECRETS": {
       "type": "string",
       "description": "Secret used to sign session cookies",
@@ -52,7 +58,10 @@
     },
     "FHIR_DATABASE_SSL": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Whether Postgres connection is SSL",
       "default": "false"
     },
@@ -69,23 +78,23 @@
     },
     "REDIS_SSL": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Whether Redis connection is SSL",
       "default": "false"
     },
-
     "FHIR_DELETE_CONDITIONAL_LIMIT": {
       "type": "string",
       "pattern": "[0-9]{3}",
       "description": "Maximum total number of records to delete in a single conditional delete operation",
       "default": "20"
     },
-
     "API_URL": {
       "type": "string",
       "description": "Current url where API is hosted from (used in operation execution clients)."
     },
-
     "AWS_REGION": {
       "type": "string",
       "description": "AWS Region where you want lambdas to be executed from."
@@ -106,32 +115,37 @@
       "type": "string",
       "description": "ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages)."
     },
-
     "AUTH_PUBLIC_ACCESS": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Sets the server to allow full public access when set to true.",
       "default": "false"
     },
-
     "AUTH_ALLOW_GLOBAL_SIGNUP": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Sets whether to allow global signup for users.",
       "default": "false"
     },
     "AUTH_ALLOW_TENANT_SIGNUP": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Sets whether to allow tenant signup for users.",
       "default": "false"
     },
-
     "AUTH_ISSUER": {
       "type": "string",
       "description": "The issuer of the tokens"
     },
-
     "AUTH_LOCAL_CERTIFICATION_LOCATION": {
       "type": "string",
       "description": "Location for local certifications for IGUHEALTH ISSUER"
@@ -140,11 +154,11 @@
       "type": "string",
       "description": "The signing key used to generate new local tokens"
     },
-    
-
     "EMAIL_PROVIDER": {
       "type": "string",
-      "enum": ["sendgrid"],
+      "enum": [
+        "sendgrid"
+      ],
       "description": "Set the email provider."
     },
     "EMAIL_SENDGRID_API_KEY": {
@@ -155,10 +169,11 @@
       "type": "string",
       "description": "Set the email from address."
     },
-
     "ENCRYPTION_TYPE": {
       "type": "string",
-      "enum": ["aws"],
+      "enum": [
+        "aws"
+      ],
       "description": "The type of encryption (used to encrypt user secrets)"
     },
     "AWS_KMS_ACCESS_KEY_ID": {
@@ -183,7 +198,6 @@
       "description": "Postgres transaction entry limit",
       "default": "20"
     },
-
     "SENTRY_SERVER_DSN": {
       "type": "string",
       "description": "Sentry DSN URL for monitoring errors and performance."
@@ -207,7 +221,10 @@
     },
     "PROXY": {
       "type": "string",
-      "enum": ["true", "false"],
+      "enum": [
+        "true",
+        "false"
+      ],
       "description": "Whether behind proxy and server should use X-Forwarded-For header.",
       "default": "false"
     },
