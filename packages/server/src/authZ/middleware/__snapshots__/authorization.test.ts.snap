@@ -5,6 +5,12 @@ exports[`Authorization test for read access on resource based on type and method
   "issue": [
     {
       "code": "forbidden",
+      "diagnostics": "No policy has granted access to your request",
+      "expression": undefined,
+      "severity": "error",
+    },
+    {
+      "code": "forbidden",
       "diagnostics": "Access Denied.",
       "expression": [
         "/rule/0",
