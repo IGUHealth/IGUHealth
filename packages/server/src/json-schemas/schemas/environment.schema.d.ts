@@ -7,6 +7,10 @@
 
 export interface IGUHealthEnvironment {
   /**
+   * The environment the server is running in
+   */
+  IGUHEALTH_ENVIRONMENT: string;
+  /**
    * Secret used to sign session cookies
    */
   SESSION_COOKIE_SECRETS: string;

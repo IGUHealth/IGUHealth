@@ -129,6 +129,7 @@ function tenantCommands(command: Command) {
     .action(async (options) => {
       const redis = getRedisClient();
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+        environment: process.env.IGUHEALTH_ENVIRONMENT,
         db: createPGPool(),
         lock: new RedisLock(redis),
         cache: new RedisCache(redis),
@@ -152,6 +153,7 @@ function clientAppCommands(command: Command) {
     .action(async (options) => {
       const redis = getRedisClient();
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+        environment: process.env.IGUHEALTH_ENVIRONMENT,
         db: createPGPool(),
         lock: new RedisLock(redis),
         cache: new RedisCache(redis),

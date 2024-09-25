@@ -112,6 +112,7 @@ export interface UserContext {
 }
 
 export interface IGUHealthServerCTX {
+  environment: string;
   // Server Information
   tenant: TenantId;
   user: UserContext;
