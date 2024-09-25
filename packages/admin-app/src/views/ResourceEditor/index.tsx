@@ -10,6 +10,7 @@ import {
   Resource,
   ResourceType,
   StructureDefinition,
+  Subscription,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
@@ -19,6 +20,7 @@ import { getClient } from "../../db/client";
 import { getErrorMessage } from "../../utilities";
 import MessageTopicView from "./MessageTopic";
 import OperationDefinitionView from "./OperationDefinition";
+import SubscriptionView from "./Subscription";
 
 function ResourceEditorTabs() {
   const client = useRecoilValue(getClient);
@@ -156,6 +158,17 @@ function ResourceEditorTabs() {
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource as OperationDefinition}
+          structureDefinition={structureDefinition}
+          onChange={setResource}
+        />
+      );
+    case "Subscription":
+      return (
+        <SubscriptionView
+          id={id as id}
+          resourceType={resourceType as ResourceType}
+          actions={actions}
+          resource={resource as Subscription}
           structureDefinition={structureDefinition}
           onChange={setResource}
         />

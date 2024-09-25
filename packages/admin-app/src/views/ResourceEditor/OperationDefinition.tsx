@@ -197,7 +197,7 @@ function OperationCodeEditor({
           }}
         />
       </div>
-      <div className="flex justify-start py-2 px-1 space-x-4">
+      <div className="flex justify-start py-2 space-x-4">
         <Modal
           modalTitle={`Deploy ${operation?.code}`}
           ModalContent={(setOpen) => (

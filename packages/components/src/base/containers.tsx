@@ -33,10 +33,20 @@ export const DisplayIssues = ({ issues }: { issues: string[] }) => {
 
 interface LabelProps extends HTMLProps<HTMLLabelElement> {
   label?: string;
+  required?: boolean;
 }
 
 export const Label = (props: LabelProps) =>
-  props.label && <label {...props}>{props.label}</label>;
+  props.label && (
+    <label
+      {...props}
+      className={classNames(props.className, {
+        required: props.required,
+      })}
+    >
+      {props.label}
+    </label>
+  );
 
 export interface ContainerProps {
   children: React.ReactNode;
@@ -46,6 +56,7 @@ export interface ContainerProps {
   inlineLabel?: boolean;
   hideBorder?: boolean;
   labelProps?: HTMLProps<HTMLLabelElement>;
+  required?: boolean;
   inputContainerClass?: string;
 }
 
@@ -53,6 +64,7 @@ export const InputContainer = ({
   children,
   issues = [],
   label,
+  required,
   inlineLabel = false,
   hideBorder = false,
   disabled = false,
@@ -68,6 +80,7 @@ export const InputContainer = ({
     <Label
       {...labelProps}
       label={label}
+      required={required}
       className={classNames("mr-1", labelProps?.className)}
     />
 

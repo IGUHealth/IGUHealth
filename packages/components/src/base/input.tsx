@@ -27,10 +27,12 @@ export const Input = (props: InputProps) => {
     hideBorder = false,
     issues = [],
     icon,
+    required,
     ...inputProps
   } = props;
   return (
     <InputContainer
+      required={required}
       hideBorder={hideBorder}
       disabled={inputProps.disabled}
       label={label}
