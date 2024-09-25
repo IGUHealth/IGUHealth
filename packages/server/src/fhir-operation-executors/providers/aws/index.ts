@@ -4,6 +4,7 @@ import {
   InvokeCommand,
   InvokeCommandOutput,
   LambdaClient,
+  ResourceConflictException,
   UpdateFunctionCodeCommand,
   UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
@@ -16,6 +17,7 @@ import AdmZip from "adm-zip";
 import { R4InvokeRequest, R4InvokeResponse } from "@iguhealth/client/lib/types";
 import {
   OperationDefinition,
+  OperationOutcome,
   Parameters,
 } from "@iguhealth/fhir-types/r4/types";
 import { Operation } from "@iguhealth/operation-execution";
@@ -24,16 +26,16 @@ import {
   outcome,
   outcomeError,
   outcomeFatal,
+  outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import logAuditEvent, {
   MINOR_FAILURE,
   createAuditEvent,
-} from "../../fhir-logging/auditEvents.js";
-import { getOpCTX } from "../../fhir-operation-executors/utilities.js";
-import { CustomCodeExecutor } from "./interface.js";
-import { Payload } from "./types.js";
+} from "../../../fhir-logging/auditEvents.js";
+import { getOpCTX, validateInvocationContext } from "../../utilities.js";
+import { CustomCodeExecutor, Payload } from "../interface.js";
 
 function getLambdaTags(
   ctx: IGUHealthServerCTX,
@@ -97,7 +99,7 @@ function getLambdaFunctionName(
   ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,
 ) {
-  return `${ctx.environment}:${ctx.tenant}:${operation.operationDefinition.id}`;
+  return `${ctx.environment}-${ctx.tenant}-${operation.operationDefinition.id}`;
 }
 
 async function createPayload<I, O>(
@@ -147,16 +149,45 @@ function parseOutput(
   }
 }
 
-function createZipFile(code: string | Buffer): Buffer {
-  const zip = new AdmZip();
-  let buffer: Buffer;
-  if (typeof code === "string") {
-    buffer = Buffer.alloc(code.length, code);
-  } else {
-    buffer = code;
-  }
+// Used within lambda code for setup.
+async function handler<I>(event: Payload<I>) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const userHandler = require("./user");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const client = await import("@iguhealth/client/http");
+  // Pass in token here and instantiate client. Later.
 
-  zip.addFile("index.js", buffer, "executable");
+  const HTTPClient = client.default({
+    getAccessToken: async function () {
+      return event.ctx.SEC_TOKEN;
+    },
+    url: event.ctx.API_URL,
+  });
+
+  const ctx = {
+    tenant: event.ctx.tenant,
+    level: event.ctx.level,
+    resourceType: event.ctx.resourceType,
+    id: event.ctx.id,
+    client: HTTPClient,
+  };
+
+  const output = await userHandler.handler(ctx, event.input);
+  return output;
+}
+
+function createZipFile(code: string): Buffer {
+  const setupCode = `exports.handler = ${handler.toString()}`;
+
+  const zip = new AdmZip();
+
+  zip.addFile("user.js", Buffer.alloc(code.length, code), "usercode");
+  zip.addFile(
+    "index.js",
+    Buffer.alloc(setupCode.length, setupCode),
+    "executable",
+  );
+
   return zip.toBuffer();
 }
 
@@ -165,13 +196,19 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
   private taggingClient: ResourceGroupsTaggingAPI;
   private layers: string[];
   private role: string;
-  constructor(
-    AWS_REGION: string,
-    AWS_ACCESS_KEY_ID: string,
-    AWS_ACCESS_KEY_SECRET: string,
-    layers: string[],
-    role: string,
-  ) {
+  constructor({
+    AWS_REGION,
+    AWS_ACCESS_KEY_ID,
+    AWS_ACCESS_KEY_SECRET,
+    AWS_LAMBDA_LAYERS,
+    AWS_ROLE,
+  }: {
+    AWS_REGION: string;
+    AWS_ACCESS_KEY_ID: string;
+    AWS_ACCESS_KEY_SECRET: string;
+    AWS_LAMBDA_LAYERS: string[];
+    AWS_ROLE: string;
+  }) {
     this.lambdaClient = new LambdaClient({
       region: AWS_REGION,
       credentials: {
@@ -186,16 +223,16 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         secretAccessKey: AWS_ACCESS_KEY_SECRET,
       },
     });
-    this.layers = layers;
-    this.role = role;
+    this.layers = AWS_LAMBDA_LAYERS;
+    this.role = AWS_ROLE;
   }
 
   async deploy<I, O>(
     ctx: IGUHealthServerCTX,
     operation: Operation<I, O>,
     environment: Record<string, string>,
-    code: string | Buffer,
-  ): Promise<boolean> {
+    code: string,
+  ): Promise<OperationOutcome> {
     const lambdaName = getLambdaFunctionName(ctx, operation);
 
     // Confirm lambda does not exist when lock taken.
@@ -210,26 +247,61 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
     // If lambda exists means misaligned versions so delete existing lambda to replace with new.
     if (existingLambda) {
       try {
-        await Promise.all([
-          await this.lambdaClient.send(
-            new UpdateFunctionCodeCommand({
-              FunctionName: existingLambda.Configuration?.FunctionArn,
-              ZipFile: zip,
-            }),
-          ),
-          // Update the environment variables.
-          await this.lambdaClient.send(
-            new UpdateFunctionConfigurationCommand({
-              FunctionName: existingLambda.Configuration?.FunctionArn,
-              Environment: {
-                Variables: environment,
-              },
-            }),
-          ),
-        ]);
-        return true;
-      } catch {
-        return false;
+        // Update the environment variables.
+        await this.lambdaClient.send(
+          new UpdateFunctionConfigurationCommand({
+            FunctionName: existingLambda.Configuration?.FunctionArn,
+            Environment: {
+              Variables: environment,
+            },
+          }),
+        );
+        let lambda = await getLambda(
+          { lambda: this.lambdaClient, tagging: this.taggingClient },
+          ctx,
+          operation,
+        );
+        // Waiting for state transition.
+        while (lambda?.Configuration?.LastUpdateStatus === "InProgress") {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          lambda = await getLambda(
+            { lambda: this.lambdaClient, tagging: this.taggingClient },
+            ctx,
+            operation,
+          );
+        }
+
+        if (lambda?.Configuration?.LastUpdateStatus !== "Successful") {
+          throw new OperationError(
+            outcomeError(
+              "exception",
+              "Failed to update environment variables.",
+            ),
+          );
+        }
+
+        // Update function code.
+        await this.lambdaClient.send(
+          new UpdateFunctionCodeCommand({
+            FunctionName: existingLambda.Configuration?.FunctionArn,
+            ZipFile: zip,
+          }),
+        );
+
+        return outcomeInfo("informational", "Deployment was successful.");
+      } catch (err) {
+        ctx.logger.error(err);
+        if (err instanceof OperationError) {
+          return err.operationOutcome;
+        }
+        if (err instanceof ResourceConflictException) {
+          return outcomeError(
+            "exception",
+            "Failed to update function. An Update is already in progress.",
+          );
+        }
+
+        return outcomeInfo("exception", "Failed to update lambda function.");
       }
     } else {
       const createFunction = new CreateFunctionCommand({
@@ -248,10 +320,14 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         },
       });
       try {
-        const _response = await this.lambdaClient.send(createFunction);
-        return true;
-      } catch {
-        return false;
+        await this.lambdaClient.send(createFunction);
+        return outcomeInfo("informational", "Deployment was successful.");
+      } catch (err) {
+        ctx.logger.error(err);
+        if (err instanceof OperationError) {
+          return err.operationOutcome;
+        }
+        return outcomeError("exception", "Deployment failed.");
       }
     }
   }
@@ -261,6 +337,16 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
     operation: Operation<I, O>,
     request: R4InvokeRequest,
   ): Promise<R4InvokeResponse> {
+    const invocationContextOperation = validateInvocationContext(
+      operation.operationDefinition,
+      request,
+    );
+
+    if (invocationContextOperation)
+      throw new OperationError(invocationContextOperation);
+
+    const payload = await createPayload(ctx, operation, request);
+
     const lambda = await getLambda(
       { lambda: this.lambdaClient, tagging: this.taggingClient },
       ctx,
@@ -275,8 +361,14 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         ),
       );
     }
-
-    const payload = await createPayload(ctx, operation, request);
+    if (lambda?.Configuration?.LastUpdateStatus !== "Successful") {
+      throw new OperationError(
+        outcomeError(
+          "exception",
+          "Lambda is not ready to be executed either wait or redeploy.",
+        ),
+      );
+    }
 
     const response = await this.lambdaClient.send(
       new InvokeCommand({
@@ -284,6 +376,7 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         Payload: Buffer.from(JSON.stringify(payload)),
       }),
     );
+
     const output = parseOutput(response);
 
     if (response.FunctionError) {

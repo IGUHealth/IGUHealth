@@ -11,7 +11,7 @@ import {
   createInjectScopesMiddleware,
   createValidateScopesMiddleware,
 } from "../authZ/middleware/scopes.js";
-import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
+import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
   CodeSystemLookupInvoke,
   EvaluatePolicyInvoke,
@@ -28,6 +28,8 @@ import {
   ValueSetValidateInvoke,
 } from "../fhir-operation-executors/providers/local/index.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/middleware.js";
+import { createDeployOperation } from "../fhir-operation-executors/providers/local/ops/deploy-operation.js";
+import createOperationExecutioner from "../fhir-operation-executors/providers/middleware.js";
 import {
   AUTH_METHODS_ALLOWED,
   AUTH_RESOURCETYPES,
@@ -147,14 +149,16 @@ export function createClient(): {
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
   });
-  const lambdaSource = AWSLambdaExecutioner({
+  const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
     AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
     AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+    AWS_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+    AWS_LAMBDA_LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
+  const lambdaSource = createOperationExecutioner(executioner);
   const inlineSource = InlineExecutioner([
+    createDeployOperation(executioner),
     StructureDefinitionSnapshotInvoke,
     ResourceValidateInvoke,
     ValueSetExpandInvoke,
