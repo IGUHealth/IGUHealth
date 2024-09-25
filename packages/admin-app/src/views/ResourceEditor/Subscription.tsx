@@ -107,7 +107,7 @@ function ChannelParameters({
             <div className="mt-1">
               <span
                 className="flex items-center cursor-pointer text-xs hover:text-blue-600 text-blue-500"
-                onClick={(e) => {
+                onClick={() => {
                   onChange({
                     ...resource,
                     resourceType: "Subscription",
