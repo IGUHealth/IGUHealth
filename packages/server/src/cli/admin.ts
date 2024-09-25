@@ -168,7 +168,7 @@ function clientAppCommands(command: Command) {
           type: "transaction",
           entry: [
             {
-              request: { method: "POST", url: "AccessPolicy" },
+              request: { method: "POST", url: "AccessPolicyV2" },
               resource: {
                 name: "Admin Access",
                 engine: "full-access",
