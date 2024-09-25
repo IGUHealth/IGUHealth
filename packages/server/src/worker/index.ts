@@ -470,13 +470,15 @@ function processSubscription(
             payload.push(entry.resource as Resource<R4, AllResourceTypes>);
           }
         }
-        await handleSubscriptionPayload(
-          client,
-          ctx,
-          fhirVersion,
-          subscription,
-          payload,
-        );
+        if (payload.length > 0) {
+          await handleSubscriptionPayload(
+            client,
+            ctx,
+            fhirVersion,
+            subscription,
+            payload,
+          );
+        }
         await ctx.cache.set(
           ctx,
           `${subscription.id}_latest`,
