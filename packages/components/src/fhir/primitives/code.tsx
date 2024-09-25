@@ -42,6 +42,7 @@ export const FHIRCodeEditable = ({
   client,
   open = false,
   system,
+  required,
   filter,
 }: FHIRCodeEditableProps) => {
   const [options, setOptions] = React.useState<Option[]>([]);
@@ -58,6 +59,7 @@ export const FHIRCodeEditable = ({
   }, [system, client]);
   return (
     <Select
+      required={required}
       value={value}
       onChange={(option) =>
         option

@@ -13,6 +13,7 @@ export interface SelectProps {
   issue?: string;
   label?: string;
   open?: boolean;
+  required?: boolean;
 }
 
 export const Select = ({
@@ -22,6 +23,7 @@ export const Select = ({
   issue,
   open = false,
   onChange,
+  required,
 }: SelectProps) => {
   const [query, setQuery] = useState("");
 
@@ -50,7 +52,11 @@ export const Select = ({
     >
       <div className="relative">
         <div className="flex flex-col flex-grow">
-          <Label label={label} className={classNames("mr-1 ")} />
+          <Label
+            required={required}
+            label={label}
+            className={classNames("mr-1 ")}
+          />
           <div className="relative">
             <Combobox.Input
               className={classNames(

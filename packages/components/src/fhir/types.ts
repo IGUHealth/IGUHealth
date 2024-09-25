@@ -19,6 +19,7 @@ export type EditableProps<T> = {
   /**
    * Label string.
    */
+  required?: boolean;
   label?: string;
 };
 

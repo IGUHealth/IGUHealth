@@ -135,7 +135,7 @@ const SendMessageTopicModal = ({
   );
 };
 
-export default function OperationDefinitionView({
+export default function MessageTopicView({
   id,
   resourceType,
   resource,

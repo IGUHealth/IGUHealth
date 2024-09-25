@@ -7,6 +7,7 @@ import * as s from "zapatos/schema";
 import { AsynchronousClient } from "@iguhealth/client";
 import createHTTPClient from "@iguhealth/client/http";
 import {
+  Bundle,
   BundleEntry,
   Parameters,
   Subscription,
@@ -193,6 +194,7 @@ async function handleSubscriptionPayload(
           outcomeError("invalid", "Subscription contained invalid operation"),
         );
       }
+
       const operationDefinition = await resolveOperationDefinition(
         client,
         services,
@@ -200,12 +202,22 @@ async function handleSubscriptionPayload(
         operation,
       );
 
-      await client.invoke_system(operationDefinition.code, {}, fhirVersion, {
-        resourceType: "Parameters",
-        parameter: payload.map((resource) => ({
-          name: "payload",
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "searchset" as code,
+        entry: payload.map((resource) => ({
           resource: resource as Resource<R4, AllResourceTypes>,
         })),
+      };
+
+      await client.invoke_system(operationDefinition.code, {}, fhirVersion, {
+        resourceType: "Parameters",
+        parameter: [
+          {
+            name: "input",
+            resource: bundle,
+          },
+        ],
       } as Parameters);
 
       return;
