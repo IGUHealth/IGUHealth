@@ -214,7 +214,7 @@ function Root() {
               </div>
             }
           >
-            <SideBar.SideBarItemGroup className="mt-8" label="Configuration">
+            <SideBar.SideBarItemGroup label="Configuration">
               <SideBar.SideBarItem
                 active={
                   matches[0].params.resourceType === "OperationDefinition"
@@ -242,7 +242,7 @@ function Root() {
                 Subscriptions
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            <SideBar.SideBarItemGroup className="mt-8" label="UI">
+            <SideBar.SideBarItemGroup label="UI">
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
@@ -270,7 +270,7 @@ function Root() {
                 Questionnaire Responses
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            <SideBar.SideBarItemGroup className="mt-8" label="Monitoring">
+            <SideBar.SideBarItemGroup label="Monitoring">
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "AuditEvent"}
                 onClick={() => {
@@ -285,7 +285,7 @@ function Root() {
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
 
-            <SideBar.SideBarItemGroup className="mt-8" label="Security">
+            <SideBar.SideBarItemGroup label="Security">
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Membership"}
                 onClick={() => {
@@ -323,7 +323,7 @@ function Root() {
                 Client Applications
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            <SideBar.SideBarItemGroup className="mt-8" label="Messaging">
+            <SideBar.SideBarItemGroup label="Messaging">
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "MessageBroker"}
                 onClick={() => {
@@ -349,7 +349,7 @@ function Root() {
                 Message Topics
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            <SideBar.SideBarItemGroup label="Data" className="mt-8">
+            <SideBar.SideBarItemGroup label="Data">
               <SideBar.SideBarItem
                 active={
                   matches.find((match) => match.id === "resources") !==
@@ -376,7 +376,7 @@ function Root() {
                 All Resources
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            <SideBar.SideBarItemGroup className="mt-8" label="Import">
+            <SideBar.SideBarItemGroup label="Import">
               <SideBar.SideBarItem
                 active={
                   matches.find((match) => match.id === "bundle-import") !==
@@ -390,7 +390,7 @@ function Root() {
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
             {/* Used because want to maintain a margin of at least 8 when shrinking. */}
-            <div className="mb-8" />
+            <div />
             <SideBar.SideBarItemGroup className="mt-auto" label="User">
               <SideBar.SideBarItem
                 logo={<Cog6ToothIcon />}
