@@ -47,6 +47,16 @@ const extensions = [
   ]),
 ];
 
+function getOperationCode(operation: OperationDefinition | undefined): string {
+  const code: string =
+    operation?.extension?.find(
+      (e) =>
+        e.url ===
+        "https://iguhealth.github.io/fhir-operation-definition/operation-code",
+    )?.valueString ?? "";
+  return code;
+}
+
 const DeployModal = ({
   operation,
   setOpen,
@@ -55,107 +65,109 @@ const DeployModal = ({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const client = useRecoilValue(getClient);
-  const [parameters, setParameters] = useState("{}");
+  const [environment, setEnvironment] = useState("[]");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 
   return (
-    <Tabs
-      tabs={[
-        {
-          id: "input",
-          title: "Input",
-          content: (
-            <div className="flex flex-col h-56 w-full">
-              <div className="flex flex-1 border overflow-auto">
-                <CodeMirror
-                  extensions={[basicSetup, json()]}
-                  value={parameters}
-                  theme={{
-                    "&": {
-                      height: "100%",
-                      width: "100%",
-                    },
-                  }}
-                  onChange={(value) => {
-                    setParameters(value);
-                  }}
-                />
+    <div>
+      <Tabs
+        tabs={[
+          {
+            id: "environment",
+            title: "Environment Variables",
+            content: (
+              <div className="flex flex-col h-56 w-full">
+                <div className="flex flex-1 border overflow-auto">
+                  <CodeMirror
+                    extensions={[basicSetup, json()]}
+                    value={environment}
+                    theme={{
+                      "&": {
+                        height: "100%",
+                        width: "100%",
+                      },
+                    }}
+                    onChange={(value) => {
+                      setEnvironment(value);
+                    }}
+                  />
+                </div>
               </div>
+            ),
+          },
+          {
+            id: "output",
+            title: "Output",
+            content: (
+              <div className="flex flex-col h-56 w-full">
+                <div className="flex flex-1 border  overflow-auto">
+                  <CodeMirror
+                    readOnly
+                    extensions={[basicSetup, json()]}
+                    value={JSON.stringify(output, null, 2)}
+                    theme={{
+                      "&": {
+                        height: "100%",
+                        width: "100%",
+                      },
+                    }}
+                  />
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      />
+      <div className="mt-1 flex justify-end px-2">
+        <Button
+          className="mr-1"
+          buttonType="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            try {
+              if (!operation) {
+                throw new Error("Must have operation to trigger invocation");
+              }
+              const invocation = client.invoke_instance(
+                IguhealthDeployOperation.Op,
+                {},
+                R4,
+                "OperationDefinition",
+                operation.id as id,
+                {
+                  code: getOperationCode(operation),
+                  environment: JSON.parse(environment),
+                },
+              );
 
-              <div className="mt-1 flex justify-end">
-                <Button
-                  className="mr-1"
-                  buttonType="primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    try {
-                      if (!operation) {
-                        throw new Error(
-                          "Must have operation to trigger invocation",
-                        );
-                      }
-                      const invocation = client.invoke_instance(
-                        IguhealthDeployOperation.Op,
-                        {},
-                        R4,
-                        "OperationDefinition",
-                        operation.id as id,
-                        JSON.parse(parameters),
-                      );
-
-                      Toaster.promise(invocation, {
-                        loading: "Invocation",
-                        success: (success) => {
-                          setOutput(success);
-                          return `Invocation succeeded`;
-                        },
-                        error: (error) => {
-                          return getErrorMessage(error);
-                        },
-                      });
-                    } catch (e) {
-                      Toaster.error(`${e}`);
-                    }
-                  }}
-                >
-                  Send
-                </Button>
-                <Button
-                  buttonType="secondary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpen(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ),
-        },
-        {
-          id: "output",
-          title: "Output",
-          content: (
-            <div className="flex flex-col h-56 w-full">
-              <div className="flex flex-1 border  overflow-auto">
-                <CodeMirror
-                  readOnly
-                  extensions={[basicSetup, json()]}
-                  value={JSON.stringify(output, null, 2)}
-                  theme={{
-                    "&": {
-                      height: "100%",
-                      width: "100%",
-                    },
-                  }}
-                />
-              </div>
-            </div>
-          ),
-        },
-      ]}
-    />
+              Toaster.promise(invocation, {
+                loading: "Invocation",
+                success: (success) => {
+                  setOutput(success);
+                  return `Invocation succeeded`;
+                },
+                error: (error) => {
+                  return getErrorMessage(error);
+                },
+              });
+            } catch (e) {
+              Toaster.error(`${e}`);
+            }
+          }}
+        >
+          Send
+        </Button>
+        <Button
+          buttonType="secondary"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -290,100 +302,99 @@ const InvocationModal = ({
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 
   return (
-    <Tabs
-      tabs={[
-        {
-          id: "input",
-          title: "Input",
-          content: (
-            <div className="flex flex-col h-56 w-full">
-              <div className="flex flex-1 border overflow-auto">
-                <CodeMirror
-                  extensions={[basicSetup, json()]}
-                  value={parameters}
-                  theme={{
-                    "&": {
-                      height: "100%",
-                      width: "100%",
-                    },
-                  }}
-                  onChange={(value) => {
-                    setParameters(value);
-                  }}
-                />
+    <div>
+      <Tabs
+        tabs={[
+          {
+            id: "input",
+            title: "Input",
+            content: (
+              <div className="flex flex-col h-56 w-full">
+                <div className="flex flex-1 border overflow-auto">
+                  <CodeMirror
+                    extensions={[basicSetup, json()]}
+                    value={parameters}
+                    theme={{
+                      "&": {
+                        height: "100%",
+                        width: "100%",
+                      },
+                    }}
+                    onChange={(value) => {
+                      setParameters(value);
+                    }}
+                  />
+                </div>
               </div>
-
-              <div className="mt-1 flex justify-end">
-                <Button
-                  className="mr-1"
-                  buttonType="primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    try {
-                      if (!operation) {
-                        throw new Error(
-                          "Must have operation to trigger invocation",
-                        );
-                      }
-                      const invocation = client.invoke_system(
-                        new Operation(operation),
-                        {},
-                        R4,
-                        JSON.parse(parameters),
-                      );
-                      Toaster.promise(invocation, {
-                        loading: "Invocation",
-                        success: (success) => {
-                          setOutput(success);
-                          return `Invocation succeeded`;
-                        },
-                        error: (error) => {
-                          return getErrorMessage(error);
-                        },
-                      });
-                    } catch (e) {
-                      Toaster.error(`${e}`);
-                    }
-                  }}
-                >
-                  Send
-                </Button>
-                <Button
-                  buttonType="secondary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpen(false);
-                  }}
-                >
-                  Cancel
-                </Button>
+            ),
+          },
+          {
+            id: "output",
+            title: "Output",
+            content: (
+              <div className="flex flex-col h-56 w-full">
+                <div className="flex flex-1 border  overflow-auto">
+                  <CodeMirror
+                    readOnly
+                    extensions={[basicSetup, json()]}
+                    value={JSON.stringify(output, null, 2)}
+                    theme={{
+                      "&": {
+                        height: "100%",
+                        width: "100%",
+                      },
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ),
-        },
-        {
-          id: "output",
-          title: "Output",
-          content: (
-            <div className="flex flex-col h-56 w-full">
-              <div className="flex flex-1 border  overflow-auto">
-                <CodeMirror
-                  readOnly
-                  extensions={[basicSetup, json()]}
-                  value={JSON.stringify(output, null, 2)}
-                  theme={{
-                    "&": {
-                      height: "100%",
-                      width: "100%",
-                    },
-                  }}
-                />
-              </div>
-            </div>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+        ]}
+      />
+      <div className="mt-1 flex justify-end px-2">
+        <Button
+          className="mr-1"
+          buttonType="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            try {
+              if (!operation) {
+                throw new Error("Must have operation to trigger invocation");
+              }
+              const invocation = client.invoke_system(
+                new Operation(operation),
+                {},
+                R4,
+                JSON.parse(parameters),
+              );
+              Toaster.promise(invocation, {
+                loading: "Invocation",
+                success: (success) => {
+                  setOutput(success);
+                  return `Invocation succeeded`;
+                },
+                error: (error) => {
+                  return getErrorMessage(error);
+                },
+              });
+            } catch (e) {
+              Toaster.error(`${e}`);
+            }
+          }}
+        >
+          Send
+        </Button>
+        <Button
+          buttonType="secondary"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
   );
 };
 
@@ -395,18 +406,7 @@ export default function OperationDefinitionView({
   structureDefinition,
   onChange,
 }: OperationEditorProps) {
-  const code: string =
-    resource?.extension?.find(
-      (e) =>
-        e.url ===
-        "https://iguhealth.github.io/fhir-operation-definition/operation-code",
-    ) !== undefined
-      ? resource?.extension?.filter(
-          (e) =>
-            e.url ===
-            "https://iguhealth.github.io/fhir-operation-definition/operation-code",
-        )[0].valueString || ""
-      : "";
+  const code: string = getOperationCode(resource);
   return (
     <ResourceEditorComponent
       id={id as id}
