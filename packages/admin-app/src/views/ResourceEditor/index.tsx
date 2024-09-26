@@ -4,6 +4,8 @@ import { useRecoilValue } from "recoil";
 
 import { Toaster } from "@iguhealth/components";
 import {
+  AccessPolicy,
+  AccessPolicyV2,
   Bundle,
   MessageTopic,
   OperationDefinition,
@@ -18,6 +20,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
 import { getErrorMessage } from "../../utilities";
+import AccessPolicyView from "./AccessPolicy";
 import MessageTopicView from "./MessageTopic";
 import OperationDefinitionView from "./OperationDefinition";
 import SubscriptionView from "./Subscription";
@@ -169,6 +172,17 @@ function ResourceEditorTabs() {
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource as Subscription}
+          structureDefinition={structureDefinition}
+          onChange={setResource}
+        />
+      );
+    case "AccessPolicyV2":
+      return (
+        <AccessPolicyView
+          id={id as id}
+          resourceType={resourceType as ResourceType}
+          actions={actions}
+          resource={resource as AccessPolicyV2}
           structureDefinition={structureDefinition}
           onChange={setResource}
         />
