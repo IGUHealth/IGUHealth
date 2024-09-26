@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil";
 
 import { Toaster } from "@iguhealth/components";
 import {
-  AccessPolicy,
   AccessPolicyV2,
   Bundle,
   MessageTopic,
