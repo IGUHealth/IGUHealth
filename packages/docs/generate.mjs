@@ -132,6 +132,8 @@ async function generateFHIRDocumentation() {
     .filter((r) => r.resourceType === "StructureDefinition")
     .filter((r) => r.kind === "resource");
 
+  console.log(r4StructureDefinitions);
+
   for (const structureDefinition of r4StructureDefinitions) {
     const pathName = `./docs/documentation/Data_Model/R4/${structureDefinition.name}.mdx`;
     const content = await processStructureDefinition(
