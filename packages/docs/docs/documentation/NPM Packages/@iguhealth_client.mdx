@@ -90,7 +90,7 @@ export interface FHIRClientAsync<CTX> {
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-    resource: Value
+    resource: Value,
   ): Promise<Value>;
   update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,

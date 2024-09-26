@@ -8,8 +8,9 @@ import { R4, R4B } from "@iguhealth/fhir-types/versions";
 const r4Artifacts = ["StructureDefinition", "SearchParameter"]
   .map((resourceType) =>
     loadArtifacts({
+      loadDevelopmentPackages: true,
       resourceType: resourceType,
-      packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
+      packageLocation: path.join(fileURLToPath(import.meta.url), "."),
       silence: false,
       fhirVersion: R4,
     }),
@@ -19,6 +20,7 @@ const r4Artifacts = ["StructureDefinition", "SearchParameter"]
 const r4bArtifacts = ["StructureDefinition", "SearchParameter"]
   .map((resourceType) =>
     loadArtifacts({
+      loadDevelopmentPackages: true,
       resourceType: resourceType,
       packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
       silence: false,
