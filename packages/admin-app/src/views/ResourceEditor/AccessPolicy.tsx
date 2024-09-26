@@ -6,14 +6,19 @@ import { useRecoilValue } from "recoil";
 import {
   Button,
   CodeMirror,
+  FHIRCodeEditable,
+  FHIRReferenceEditable,
   Modal,
   Tabs,
   Toaster,
 } from "@iguhealth/components";
 import {
   AccessPolicyV2,
+  Reference,
   ResourceType,
+  code,
   id,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthEvaluatePolicy } from "@iguhealth/generated-ops/lib/r4/ops";
@@ -39,6 +44,8 @@ const AccessPolicyInvoke = ({
   const client = useRecoilValue(getClient);
   const [parameters, setParameters] = useState("{}");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
+  const [userReference, setUserReference] = useState<Reference | undefined>();
+  const [requestType, setRequestType] = useState<code | undefined>();
 
   return (
     <div>
@@ -49,20 +56,35 @@ const AccessPolicyInvoke = ({
             title: "Input",
             content: (
               <div className="flex flex-col h-56 w-full">
-                <div className="flex flex-1 border overflow-auto">
-                  <CodeMirror
-                    extensions={[basicSetup, json()]}
-                    value={parameters}
-                    theme={{
-                      "&": {
-                        height: "100%",
-                        width: "100%",
-                      },
-                    }}
-                    onChange={(value) => {
-                      setParameters(value);
-                    }}
-                  />
+                <div className="flex flex-col flex-1 overflow-auto flex-grow space-y-1 px-1">
+                  <div>
+                    <FHIRReferenceEditable
+                      label="User"
+                      resourceTypesAllowed={["Membership"]}
+                      fhirVersion={R4}
+                      client={client}
+                      value={userReference}
+                      onChange={(ref) => {
+                        if (ref) {
+                          setUserReference(ref);
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col flex-1">
+                    <div>
+                      <span> Request </span>
+                    </div>
+                    <FHIRCodeEditable
+                      client={client}
+                      fhirVersion={R4}
+                      system={
+                        "http://hl7.org/fhir/ValueSet/http-operations" as uri
+                      }
+                      value={requestType}
+                      onChange={(code) => setRequestType(code)}
+                    />
+                  </div>
                 </div>
               </div>
             ),
@@ -103,7 +125,21 @@ const AccessPolicyInvoke = ({
                 R4,
                 "AccessPolicyV2",
                 accessPolicy?.id as id,
-                JSON.parse(parameters),
+                {
+                  user: userReference,
+                  request: {
+                    resourceType: "Bundle",
+                    type: "batch" as code,
+                    entry: [
+                      {
+                        request: {
+                          method: requestType as code,
+                          url: "Patient" as uri,
+                        },
+                      },
+                    ],
+                  },
+                },
               );
               Toaster.promise(invocation, {
                 loading: "Invocation",
