@@ -8,6 +8,7 @@ import {
   CodeMirror,
   FHIRCodeEditable,
   FHIRReferenceEditable,
+  FHIRUriEditable,
   Modal,
   Tabs,
   Toaster,
@@ -42,10 +43,11 @@ const AccessPolicyInvoke = ({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const client = useRecoilValue(getClient);
-  const [parameters, setParameters] = useState("{}");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
   const [userReference, setUserReference] = useState<Reference | undefined>();
   const [requestType, setRequestType] = useState<code | undefined>();
+  const [requestURL, setRequestURL] = useState<uri | undefined>();
+  const [body, setBody] = useState<string | undefined>();
 
   return (
     <div>
@@ -56,7 +58,7 @@ const AccessPolicyInvoke = ({
             title: "Input",
             content: (
               <div className="flex flex-col h-56 w-full">
-                <div className="flex flex-col flex-1 overflow-auto flex-grow space-y-1 px-1">
+                <div className="flex flex-col flex-1 overflow-auto flex-grow space-y-2 px-1">
                   <div>
                     <FHIRReferenceEditable
                       label="User"
@@ -71,11 +73,9 @@ const AccessPolicyInvoke = ({
                       }}
                     />
                   </div>
-                  <div className="flex flex-col flex-1">
-                    <div>
-                      <span> Request </span>
-                    </div>
+                  <div className="flex flex-col flex-1 space-y-1">
                     <FHIRCodeEditable
+                      label="Request"
                       client={client}
                       fhirVersion={R4}
                       system={
@@ -84,6 +84,27 @@ const AccessPolicyInvoke = ({
                       value={requestType}
                       onChange={(code) => setRequestType(code)}
                     />
+                    <FHIRUriEditable
+                      label="URL"
+                      value={requestURL}
+                      onChange={(url) => setRequestURL(url)}
+                    />
+                    <div>
+                      <label>Body</label>
+                      <CodeMirror
+                        extensions={[basicSetup, json()]}
+                        value={body}
+                        theme={{
+                          "&": {
+                            height: "100%",
+                            width: "100%",
+                          },
+                        }}
+                        onChange={(value) => {
+                          setBody(value);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -133,9 +154,17 @@ const AccessPolicyInvoke = ({
                     entry: [
                       {
                         request: {
-                          method: requestType as code,
-                          url: "Patient" as uri,
+                          method: requestType?.toUpperCase() as code,
+                          url: requestURL as uri,
                         },
+                        resource: (() => {
+                          try {
+                            const resource = JSON.parse(body as string);
+                            return resource;
+                          } catch {
+                            return undefined;
+                          }
+                        })(),
                       },
                     ],
                   },
