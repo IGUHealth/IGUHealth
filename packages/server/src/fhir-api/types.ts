@@ -8,6 +8,7 @@ import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   AccessPolicyV2,
   ClientApplication,
+  IdentityProvider,
   Membership,
   OperationDefinition,
   canonical,
@@ -60,6 +61,7 @@ export namespace KoaExtensions {
       ) => Promise<boolean>;
       user?: User;
       client?: ClientApplication;
+      identityProviders?: IdentityProvider[];
       parameters: {
         client_id?: string;
         client_secret?: string;

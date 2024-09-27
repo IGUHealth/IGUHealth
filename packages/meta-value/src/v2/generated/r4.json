@@ -49052,8 +49052,9 @@
         "id": 1,
         "meta": 2,
         "name": 3,
-        "accessType": 4,
-        "oidc": 5
+        "status": 4,
+        "accessType": 5,
+        "oidc": 6
       },
       "cardinality": "array"
     },
@@ -49078,14 +49079,19 @@
       "cardinality": "single"
     },
     {
+      "_type_": "type",
+      "type": "code",
+      "cardinality": "single"
+    },
+    {
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "authorization_endpoint": 6,
-        "token_endpoint": 7,
-        "userinfo_endpoint": 8,
-        "scopes": 9,
-        "client": 10
+        "authorization_endpoint": 7,
+        "token_endpoint": 8,
+        "userinfo_endpoint": 9,
+        "scopes": 10,
+        "client": 11
       },
       "cardinality": "single"
     },
@@ -49113,8 +49119,8 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "clientId": 11,
-        "secret": 12
+        "clientId": 12,
+        "secret": 13
       },
       "cardinality": "single"
     },
