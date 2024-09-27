@@ -49044,6 +49044,92 @@
       "cardinality": "single"
     }
   ],
+  "IdentityProvider": [
+    {
+      "_type_": "complex",
+      "type": "IdentityProvider",
+      "properties": {
+        "id": 1,
+        "meta": 2,
+        "name": 3,
+        "accessType": 4,
+        "oidc": 5
+      },
+      "cardinality": "array"
+    },
+    {
+      "_type_": "type",
+      "type": "http://hl7.org/fhirpath/System.String",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "Meta",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "code",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "complex",
+      "type": "BackboneElement",
+      "properties": {
+        "authorization_endpoint": 6,
+        "token_endpoint": 8,
+        "userinfo_endpoint": 9,
+        "scopes": 10,
+        "client": 11
+      },
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "single"
+    },
+    null,
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "array"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "array"
+    },
+    {
+      "_type_": "complex",
+      "type": "BackboneElement",
+      "properties": {
+        "id": 12,
+        "secret": 13
+      },
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
+      "cardinality": "single"
+    }
+  ],
   "Membership": [
     {
       "_type_": "complex",
