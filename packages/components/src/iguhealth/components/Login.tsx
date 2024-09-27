@@ -2,6 +2,12 @@ import React from "react";
 
 import { Container } from "./Container";
 
+export type IdentityProvider = {
+  url: string;
+  title: string;
+  logo?: string;
+};
+
 export type LoginProps = {
   email?: string;
   title?: string;
@@ -12,11 +18,13 @@ export type LoginProps = {
   signupURL?: string;
   hidePassword?: boolean;
   forgotPasswordURL?: string;
+  federatedProviders?: IdentityProvider[];
 };
 
 export const Login = ({
   email,
   title = "IGUHealth",
+  federatedProviders,
   errors,
   messages,
   logo,
@@ -134,5 +142,22 @@ export const Login = ({
         </p>
       )}
     </form>
+    {federatedProviders && (
+      <div className="mt-4">
+        {federatedProviders.map((provider) => (
+          <a
+            href={provider.url}
+            className="space-x-2 flex content-center justify-center text-white bg-slate-600 hover:bg-slate-700 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+          >
+            {provider.logo && (
+              <div className="flex flex-col justify-center">
+                <img src={provider.logo} className="block w-4 h-4" />
+              </div>
+            )}
+            <div>Sign in with {provider.title}</div>
+          </a>
+        ))}
+      </div>
+    )}
   </Container>
 );
