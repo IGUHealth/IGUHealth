@@ -4387,6 +4387,7 @@ export type ResourceMap = {
   AccessPolicyV2: AccessPolicyV2;
   AccessPolicy: AccessPolicy;
   ClientApplication: ClientApplication;
+  IdentityProvider: IdentityProvider;
   Membership: Membership;
   MessageBroker: MessageBroker;
   MessageTopic: MessageTopic;
@@ -45222,6 +45223,94 @@ resourceType: "ClientApplication"
    * URL string that points to a human-readable privacy policy document that describes how the deployment organization collects, uses, retains, and discloses personal data.
    */
   _policyUri?: Element
+}
+
+export interface IdentityProviderOidcClient {
+  /** 
+   * Registered clients id.
+   */
+  id: string;
+  /** 
+   * Registered clients id.
+   */
+  _id?: Element
+  /** 
+   * Registered clients secret.
+   */
+  secret: string;
+  /** 
+   * Registered clients secret.
+   */
+  _secret?: Element
+}
+export interface IdentityProviderOidc {
+  /** 
+   * OIDC authorization endpoint.
+   */
+  authorization_endpoint: string;
+  /** 
+   * OIDC authorization endpoint.
+   */
+  _authorization_endpoint?: Element
+  /** 
+   * OIDC token endpoint.
+   */
+  token_endpoint: string;
+  /** 
+   * OIDC token endpoint.
+   */
+  _token_endpoint?: Element
+  /** 
+   * The OIDC user info endpoint.
+   */
+  userinfo_endpoint?: Array<string>;
+  /** 
+   * The OIDC user info endpoint.
+   */
+  _userinfo_endpoint?: Array<Element>
+  /** 
+   * Scopes to send to the OIDC provider.
+   */
+  scopes?: Array<string>;
+  /** 
+   * Scopes to send to the OIDC provider.
+   */
+  _scopes?: Array<Element>
+  /** 
+   * Registered client for the OIDC provider.
+   */
+  client: IdentityProviderOidcClient;
+}
+export interface IdentityProvider {
+resourceType: "IdentityProvider"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /** 
+   * The name of the external identity provider.
+   */
+  name: string;
+  /** 
+   * The name of the external identity provider.
+   */
+  _name?: Element
+  /** 
+   * Method for connecting to external identity provider.
+   */
+  accessType: code;
+  /** 
+   * Method for connecting to external identity provider.
+   */
+  _accessType?: Element
+  /** 
+   * OIDC connection configuration for the identity provider.
+   */
+  oidc?: IdentityProviderOidc;
 }
 
 export interface Membership {

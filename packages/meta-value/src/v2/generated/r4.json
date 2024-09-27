@@ -49082,10 +49082,10 @@
       "type": "BackboneElement",
       "properties": {
         "authorization_endpoint": 6,
-        "token_endpoint": 8,
-        "userinfo_endpoint": 9,
-        "scopes": 10,
-        "client": 11
+        "token_endpoint": 7,
+        "userinfo_endpoint": 8,
+        "scopes": 9,
+        "client": 10
       },
       "cardinality": "single"
     },
@@ -49094,7 +49094,6 @@
       "type": "string",
       "cardinality": "single"
     },
-    null,
     {
       "_type_": "type",
       "type": "string",
@@ -49114,8 +49113,8 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "id": 12,
-        "secret": 13
+        "id": 11,
+        "secret": 12
       },
       "cardinality": "single"
     },
