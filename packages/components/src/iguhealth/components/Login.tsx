@@ -143,7 +143,7 @@ export const Login = ({
       )}
     </form>
     {federatedProviders && (
-      <div className="mt-4">
+      <div className="mt-4 space-y-2">
         {federatedProviders.map((provider) => (
           <a
             href={provider.url}
