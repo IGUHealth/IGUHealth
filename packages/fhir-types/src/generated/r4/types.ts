@@ -45300,6 +45300,14 @@ resourceType: "IdentityProvider"
    */
   _name?: Element
   /** 
+   * The status of the identity provider.
+   */
+  status: code;
+  /** 
+   * The status of the identity provider.
+   */
+  _status?: Element
+  /** 
    * Method for connecting to external identity provider.
    */
   accessType: code;

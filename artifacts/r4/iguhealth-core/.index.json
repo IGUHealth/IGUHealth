@@ -78,6 +78,18 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "definitions/iguhealth/searchParameter/identity-provider/accessType.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/identity-provider/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/identity-provider/status.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "definitions/iguhealth/searchParameter/membership/email.json",
       "resourceType": "SearchParameter"
     },
@@ -275,6 +287,14 @@
     },
     {
       "filename": "definitions/iguhealth/terminology/identity-provider/accessType.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/identity-provider/status.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/identity-provider/status.json",
       "resourceType": "ValueSet"
     }
   ]
