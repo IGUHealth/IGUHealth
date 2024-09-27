@@ -125,10 +125,29 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
       action: loginRoute,
       signupURL,
       forgotPasswordURL,
-      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => ({
-        title: idp.name,
-        url: idp.oidc?.authorization_endpoint ?? "",
-      })),
+      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => {
+        const authorizationURL = new URL(
+          idp.oidc?.authorization_endpoint ?? "",
+        );
+        authorizationURL.searchParams.append("response_type", "code");
+        authorizationURL.searchParams.append(
+          "client_id",
+          idp.oidc?.client.clientId ?? "",
+        );
+        authorizationURL.searchParams.append(
+          "redirect_uri",
+          "http://localhost:3000/w/elfkkzgsxzxlkzt2zk857/oidc/federated/okta/callback",
+        );
+        authorizationURL.searchParams.append(
+          "scope",
+          idp.oidc?.scopes?.join(" ") ?? "",
+        );
+
+        return {
+          title: idp.name,
+          url: authorizationURL.href,
+        };
+      }),
     }),
   );
 };
