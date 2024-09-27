@@ -130,6 +130,10 @@
       "resourceType": "StructureDefinition"
     },
     {
+      "filename": "definitions/iguhealth/structuredefinition/identity-provider.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "definitions/iguhealth/structuredefinition/membership.json",
       "resourceType": "StructureDefinition"
     },
@@ -264,6 +268,14 @@
     {
       "filename": "definitions/iguhealth/terminology/external/iso-4217-codesystem.json",
       "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/identity-provider/accessType.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/identity-provider/accessType.json",
+      "resourceType": "ValueSet"
     }
   ]
 }
