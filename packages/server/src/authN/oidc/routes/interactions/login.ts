@@ -125,6 +125,10 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
       action: loginRoute,
       signupURL,
       forgotPasswordURL,
+      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => ({
+        title: idp.name,
+        url: idp.oidc?.authorization_endpoint ?? "",
+      })),
     }),
   );
 };
