@@ -49102,7 +49102,7 @@
     {
       "_type_": "type",
       "type": "string",
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -49113,7 +49113,7 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "id": 11,
+        "clientId": 11,
         "secret": 12
       },
       "cardinality": "single"

@@ -45229,11 +45229,11 @@ export interface IdentityProviderOidcClient {
   /** 
    * Registered clients id.
    */
-  id: string;
+  clientId: string;
   /** 
    * Registered clients id.
    */
-  _id?: Element
+  _clientId?: Element
   /** 
    * Registered clients secret.
    */
@@ -45263,11 +45263,11 @@ export interface IdentityProviderOidc {
   /** 
    * The OIDC user info endpoint.
    */
-  userinfo_endpoint?: Array<string>;
+  userinfo_endpoint?: string;
   /** 
    * The OIDC user info endpoint.
    */
-  _userinfo_endpoint?: Array<Element>
+  _userinfo_endpoint?: Element
   /** 
    * Scopes to send to the OIDC provider.
    */
