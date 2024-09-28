@@ -35,20 +35,28 @@ export async function isAuthenticated(
   return ctx.state.oidc.user !== undefined;
 }
 
+export function sessionSetUserLogin(
+  ctx: Parameters<OIDCRouteHandler>[0],
+  user: users.User | undefined,
+) {
+  if (!ctx.session) {
+    throw new Error("Session not found in context.");
+  }
+  ctx.session[USER_SESSION_KEY] = user ? serializeUser(user) : undefined;
+}
+
 /**
  * Log in the user and set the loggedin session key.
  * @param ctx Koa context
  * @returns True if the user is logged in. False otherwise.
  */
-export async function sessionLogin<Method extends keyof users.LoginParameters>(
+export async function sessionCredentialsLogin<
+  Method extends keyof users.LoginParameters,
+>(
   ctx: Parameters<OIDCRouteHandler>[0],
   method: Method,
   credentials: users.LoginParameters[Method],
 ): Promise<users.LoginResult> {
-  if (!ctx.session) {
-    throw new Error("Session not found in context.");
-  }
-
   const result = await users.login(
     ctx.state.iguhealth.db,
     ctx.state.iguhealth.tenant,
@@ -57,9 +65,9 @@ export async function sessionLogin<Method extends keyof users.LoginParameters>(
   );
 
   if (result.type === "failed") {
-    ctx.session[USER_SESSION_KEY] = undefined;
+    sessionSetUserLogin(ctx, undefined);
   } else {
-    ctx.session[USER_SESSION_KEY] = serializeUser(result.user);
+    sessionSetUserLogin(ctx, result.user);
   }
 
   return result;

@@ -210,7 +210,7 @@ declare module 'zapatos/schema' {
       type: code_type;
       /**
       * **authorization_code.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -290,7 +290,7 @@ declare module 'zapatos/schema' {
       type: code_type;
       /**
       * **authorization_code.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -370,7 +370,7 @@ declare module 'zapatos/schema' {
       type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_code.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
@@ -450,7 +450,7 @@ declare module 'zapatos/schema' {
       type: code_type | db.Parameter<code_type> | db.SQLFragment;
       /**
       * **authorization_code.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string | db.Parameter<string> | db.SQLFragment;
@@ -530,7 +530,7 @@ declare module 'zapatos/schema' {
       type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment>;
       /**
       * **authorization_code.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
@@ -575,7 +575,7 @@ declare module 'zapatos/schema' {
       tenant: string;
       /**
       * **authorization_scopes.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -607,7 +607,7 @@ declare module 'zapatos/schema' {
       tenant: string;
       /**
       * **authorization_scopes.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -639,7 +639,7 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_scopes.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
@@ -671,7 +671,7 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **authorization_scopes.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string | db.Parameter<string> | db.SQLFragment;
@@ -703,7 +703,7 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **authorization_scopes.user_id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
@@ -6851,7 +6851,7 @@ declare module 'zapatos/schema' {
       first_name: string | null;
       /**
       * **users.id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id: string;
@@ -6943,7 +6943,7 @@ declare module 'zapatos/schema' {
       first_name: string | null;
       /**
       * **users.id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id: string;
@@ -7035,7 +7035,7 @@ declare module 'zapatos/schema' {
       first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
@@ -7127,7 +7127,7 @@ declare module 'zapatos/schema' {
       first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
@@ -7219,7 +7219,7 @@ declare module 'zapatos/schema' {
       first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.id**
-      * - `uuid` in database
+      * - `text` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;

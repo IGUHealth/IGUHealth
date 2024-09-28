@@ -186,6 +186,19 @@
                 "max": "1"
             },
             {
+                "id": "IdentityProvider.oidc.jwks_uri",
+                "path": "IdentityProvider.oidc.jwks_uri",
+                "definition": "If included will verify id token based on this jwks keys.",
+                "short": "If included will verify id token based on this jwks keys.",
+                "type": [
+                    {
+                        "code": "string"
+                    }
+                ],
+                "min": 0,
+                "max": "1"
+            },
+            {
                 "id": "IdentityProvider.oidc.scopes",
                 "path": "IdentityProvider.oidc.scopes",
                 "definition": "Scopes to send to the OIDC provider.",

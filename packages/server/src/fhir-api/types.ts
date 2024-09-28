@@ -35,7 +35,10 @@ import { getIssuer } from "../authN/oidc/constants.js";
 import { SYSTEM_APP } from "../authN/oidc/hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
 import { Scope } from "../authN/oidc/scopes/parse.js";
-import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
+import {
+  sessionCredentialsLogin,
+  sessionLogout,
+} from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
@@ -54,7 +57,7 @@ export namespace KoaExtensions {
 
   export type OIDC = {
     oidc: {
-      sessionLogin: typeof sessionLogin;
+      sessionLogin: typeof sessionCredentialsLogin;
       sessionLogout: typeof sessionLogout;
       isAuthenticated: (
         ctx: Parameters<OIDCRouteHandler>[0],

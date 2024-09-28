@@ -77,7 +77,7 @@ function errorToDescription(error: LoginErrors): string {
   }
 }
 
-export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
+export const loginPOST = (): OIDCRouteHandler => async (ctx) => {
   const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
     tenant: ctx.state.iguhealth.tenant,
   });
@@ -125,10 +125,30 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
       action: loginRoute,
       signupURL,
       forgotPasswordURL,
-      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => ({
-        title: idp.name,
-        url: idp.oidc?.authorization_endpoint ?? "",
-      })),
+      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => {
+        return {
+          title: idp.name,
+          url: new URL(
+            ctx.router.url(
+              OIDC_ROUTES.FEDERATED_INITIATE,
+              {
+                tenant: ctx.state.iguhealth.tenant,
+                identityProvider: idp.id,
+              },
+              {
+                query: {
+                  redirect_to: ctx.router.url(
+                    OIDC_ROUTES.AUTHORIZE_GET,
+                    { tenant: ctx.state.iguhealth.tenant },
+                    { query: ctx.state.oidc.parameters },
+                  ),
+                },
+              },
+            ) as string,
+            process.env.API_URL,
+          ).href,
+        };
+      }),
     }),
   );
 };
