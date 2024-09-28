@@ -94,6 +94,10 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "definitions/iguhealth/searchParameter/membership/federation.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "definitions/iguhealth/searchParameter/membership/link.json",
       "resourceType": "SearchParameter"
     },
