@@ -45269,6 +45269,14 @@ export interface IdentityProviderOidc {
    */
   _userinfo_endpoint?: Element
   /** 
+   * If included will verify id token based on this jwks keys.
+   */
+  jwks_uri?: string;
+  /** 
+   * If included will verify id token based on this jwks keys.
+   */
+  _jwks_uri?: Element
+  /** 
    * Scopes to send to the OIDC provider.
    */
   scopes?: Array<string>;
@@ -45363,6 +45371,10 @@ resourceType: "Membership"
    * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
   _role?: Element
+  /** 
+   * Is Users email address verified.
+   */
+  federated?: Reference;
 }
 
 export interface MessageBrokerSecurity {

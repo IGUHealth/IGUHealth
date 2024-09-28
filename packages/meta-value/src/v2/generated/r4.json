@@ -49090,9 +49090,15 @@
         "authorization_endpoint": 7,
         "token_endpoint": 8,
         "userinfo_endpoint": 9,
-        "scopes": 10,
-        "client": 11
+        "jwks_uri": 10,
+        "scopes": 11,
+        "client": 12
       },
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "string",
       "cardinality": "single"
     },
     {
@@ -49119,8 +49125,8 @@
       "_type_": "complex",
       "type": "BackboneElement",
       "properties": {
-        "clientId": 12,
-        "secret": 13
+        "clientId": 13,
+        "secret": 14
       },
       "cardinality": "single"
     },
@@ -49146,7 +49152,8 @@
         "email": 4,
         "emailVerified": 5,
         "name": 6,
-        "role": 7
+        "role": 7,
+        "federated": 8
       },
       "cardinality": "array"
     },
@@ -49183,6 +49190,11 @@
     {
       "_type_": "type",
       "type": "code",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "Reference",
       "cardinality": "single"
     }
   ],

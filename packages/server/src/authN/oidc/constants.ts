@@ -27,6 +27,9 @@ export const OIDC_ROUTES = {
   OIDC_DISCOVERY: "tenant-oidc-discovery",
   WELL_KNOWN_SMART: "tenant-oidc-well-known-smart",
   SMART_LAUNCH_GET: "tenant-oidc-smart-launch-get",
+  // Federation
+  FEDERATED_INITIATE: "tenant-oidc-federated-INITIATE",
+  FEDERATED_CALLBACK: "tenant-oidc-federated-callback",
 };
 
 export function getIssuer(tenant: TenantId): Issuer {

@@ -3,7 +3,7 @@ import { OIDCRouteHandler } from "../index.js";
 import {
   deserializeUser,
   isAuthenticated,
-  sessionLogin,
+  sessionCredentialsLogin,
   sessionLogout,
 } from "./index.js";
 
@@ -12,7 +12,7 @@ export function createSessionInjectMethodsMiddleware(): OIDCRouteHandler {
     ctx.state.oidc = {
       ...ctx.state.oidc,
       isAuthenticated,
-      sessionLogin,
+      sessionLogin: sessionCredentialsLogin,
       sessionLogout,
       user: await deserializeUser(ctx),
     };

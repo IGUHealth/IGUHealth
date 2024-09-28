@@ -11,6 +11,8 @@ import { identityProvidersInject } from "./middleware/inject-idps.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import { parseScopesMiddleware } from "./middleware/parse_scopes.js";
+import { federatedCallback } from "./routes/federated/callback.js";
+import { federatedInitiate } from "./routes/federated/initiate.js";
 import * as routes from "./routes/index.js";
 import {
   createSessionInjectMethodsMiddleware,
@@ -224,6 +226,18 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     createSessionValidateAuthentication(),
 
     routes.scopePOST(),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES.FEDERATED_CALLBACK,
+    "/federated/:identityProvider/callback",
+    federatedCallback(),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES.FEDERATED_INITIATE,
+    "/federated/:identityProvider/initiate",
+    federatedInitiate(),
   );
 
   return managementRouter;
