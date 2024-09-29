@@ -74,6 +74,17 @@ export function federatedCallback(): OIDCRouteHandler {
       const payload = await res.json();
       const idToken = payload.id_token;
 
+      console.log(payload);
+
+      if (!idToken) {
+        throw new OperationError(
+          outcomeError(
+            "exception",
+            "Failed to exchange code for token with IdP",
+          ),
+        );
+      }
+
       // If JWKS than verify the signature of the idToken.
       if (idpProvider.oidc?.jwks_uri) {
         const { payload } = await jose.jwtVerify(
@@ -121,6 +132,7 @@ export function federatedCallback(): OIDCRouteHandler {
       if (e instanceof OperationError) {
         throw e;
       } else {
+        ctx.state.iguhealth.logger.error(e);
         throw new OperationError(
           outcomeError(
             "exception",
