@@ -1,14 +1,16 @@
 import { randomBytes } from "crypto";
 
-import { id } from "@iguhealth/fhir-types/r4/types";
+import { IdentityProvider, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
+import { convertChallenge } from "../token.js";
 
 type InitiateInfo = {
+  code_verifier?: string;
   state: string;
   redirect_to: string;
 };
@@ -31,9 +33,10 @@ export function getSessionInfo(
 
 function setSessionInfo(
   ctx: Parameters<OIDCRouteHandler>[0],
-  idpId: id,
+  idpProvider: IdentityProvider,
 ): InitiateInfo {
   const state = randomBytes(12).toString("hex");
+
   if (!ctx.session) {
     throw new OperationError(outcomeError("exception", "Session not found"));
   }
@@ -43,12 +46,17 @@ function setSessionInfo(
     );
   }
 
-  const info = {
+  const info: InitiateInfo = {
     state,
     redirect_to: ctx.query["redirect_to"],
   };
 
-  ctx.session[`initiate_${idpId}`] = JSON.stringify(info);
+  if (idpProvider.oidc?.pkce?.enabled) {
+    const code_verifier = randomBytes(16).toString("hex");
+    info.code_verifier = code_verifier;
+  }
+
+  ctx.session[`initiate_${idpProvider.id}`] = JSON.stringify(info);
 
   return info;
 }
@@ -93,9 +101,27 @@ export function federatedInitiate(): OIDCRouteHandler {
       idpProvider.oidc?.scopes?.join(" ") ?? "",
     );
 
-    const { state } = setSessionInfo(ctx, idpProvider.id as id);
+    const { state, code_verifier } = setSessionInfo(ctx, idpProvider);
 
     authorizationURL.searchParams.append("state", state);
+
+    if (idpProvider.oidc?.pkce?.enabled && code_verifier) {
+      if (!idpProvider.oidc?.pkce?.code_challenge_method) {
+        throw new OperationError(
+          outcomeError("exception", "Code challenge method not found"),
+        );
+      }
+      const code_challenge = convertChallenge(
+        idpProvider.oidc?.pkce?.code_challenge_method as "S256" | "plain",
+        code_verifier,
+      );
+
+      authorizationURL.searchParams.append("code_challenge", code_challenge);
+      authorizationURL.searchParams.append(
+        "code_challenge_method",
+        idpProvider.oidc?.pkce?.code_challenge_method,
+      );
+    }
 
     ctx.redirect(authorizationURL.href);
   };
