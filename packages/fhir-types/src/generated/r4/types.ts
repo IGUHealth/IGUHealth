@@ -45237,11 +45237,29 @@ export interface IdentityProviderOidcClient {
   /** 
    * Registered clients secret.
    */
-  secret: string;
+  secret?: string;
   /** 
    * Registered clients secret.
    */
   _secret?: Element
+}
+export interface IdentityProviderOidcPkce {
+  /** 
+   * PKCE code challenge method.
+   */
+  code_challenge_method?: string;
+  /** 
+   * PKCE code challenge method.
+   */
+  _code_challenge_method?: Element
+  /** 
+   * PKCE enabled.
+   */
+  enabled?: boolean;
+  /** 
+   * PKCE enabled.
+   */
+  _enabled?: Element
 }
 export interface IdentityProviderOidc {
   /** 
@@ -45288,6 +45306,10 @@ export interface IdentityProviderOidc {
    * Registered client for the OIDC provider.
    */
   client: IdentityProviderOidcClient;
+  /** 
+   * PKCE Configuration
+   */
+  pkce?: IdentityProviderOidcPkce;
 }
 export interface IdentityProvider {
 resourceType: "IdentityProvider"
