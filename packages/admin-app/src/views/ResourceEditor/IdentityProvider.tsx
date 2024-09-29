@@ -20,7 +20,7 @@ interface IdentityProviderEditorProps extends AdditionalContent {
   onChange: NonNullable<AdditionalContent["onChange"]>;
 }
 
-function RegistrationInformation({ id }: { id: id }) {
+function RegistrationInformation({ id }: Readonly<{ id: id }>) {
   const client = useRecoilValue(getClient);
   const [registrationInformation, setRegistrationInformation] = useState<
     IguhealthIdpRegistrationInfo.Output | undefined
@@ -65,7 +65,12 @@ function RegistrationInformation({ id }: { id: id }) {
         </p>
         <div className="space-y-1">
           {(registrationInformation?.information ?? []).map((info) => (
-            <Input readOnly label={info.name} value={info.value} />
+            <Input
+              key={info.name}
+              readOnly
+              label={info.name}
+              value={info.value}
+            />
           ))}
         </div>
       </div>
@@ -80,7 +85,7 @@ export default function IdentityProviderView({
   actions,
   structureDefinition,
   onChange,
-}: IdentityProviderEditorProps) {
+}: Readonly<IdentityProviderEditorProps>) {
   return (
     <ResourceEditorComponent
       id={id}
