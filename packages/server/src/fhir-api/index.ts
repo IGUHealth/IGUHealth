@@ -29,6 +29,7 @@ import {
 } from "../fhir-operation-executors/providers/local/index.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/middleware.js";
 import { createDeployOperation } from "../fhir-operation-executors/providers/local/ops/deploy-operation.js";
+import { IdentityProviderRegistrationInvoke } from "../fhir-operation-executors/providers/local/ops/identity_provider/registration-info.js";
 import createOperationExecutioner from "../fhir-operation-executors/providers/middleware.js";
 import {
   AUTH_METHODS_ALLOWED,
@@ -172,6 +173,7 @@ export function createClient(): {
     IguhealthListRefreshTokensInvoke,
     IguhealthDeleteRefreshTokenInvoke,
     EvaluatePolicyInvoke,
+    IdentityProviderRegistrationInvoke,
   ]);
   const client = createFHIRClient([
     // OP INVOCATION

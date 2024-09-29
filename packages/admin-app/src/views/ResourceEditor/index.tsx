@@ -6,6 +6,7 @@ import { Toaster } from "@iguhealth/components";
 import {
   AccessPolicyV2,
   Bundle,
+  IdentityProvider,
   MessageTopic,
   OperationDefinition,
   Resource,
@@ -20,6 +21,7 @@ import ResourceEditorComponent from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
 import { getErrorMessage } from "../../utilities";
 import AccessPolicyView from "./AccessPolicy";
+import IdentityProviderView from "./IdentityProvider";
 import MessageTopicView from "./MessageTopic";
 import OperationDefinitionView from "./OperationDefinition";
 import SubscriptionView from "./Subscription";
@@ -186,6 +188,18 @@ function ResourceEditorTabs() {
           onChange={setResource}
         />
       );
+    case "IdentityProvider": {
+      return (
+        <IdentityProviderView
+          id={id as id}
+          resourceType={resourceType as ResourceType}
+          actions={actions}
+          resource={resource as IdentityProvider}
+          structureDefinition={structureDefinition}
+          onChange={setResource}
+        />
+      );
+    }
     default:
       return (
         <ResourceEditorComponent
