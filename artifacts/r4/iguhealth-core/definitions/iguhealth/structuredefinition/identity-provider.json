@@ -270,9 +270,13 @@
                 "short": "PKCE code challenge method.",
                 "type": [
                     {
-                        "code": "string"
+                        "code": "code"
                     }
                 ],
+                "binding": {
+                    "strength": "required",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/IdentityProviderPKCEChallengeMethod|4.0.1"
+                },
                 "min": 0,
                 "max": "1"
             },

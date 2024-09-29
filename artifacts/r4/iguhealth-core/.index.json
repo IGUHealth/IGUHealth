@@ -294,6 +294,14 @@
       "resourceType": "ValueSet"
     },
     {
+      "filename": "definitions/iguhealth/terminology/identity-provider/pkce-challenge-method.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/identity-provider/pkce-challenge-method.json",
+      "resourceType": "ValueSet"
+    },
+    {
       "filename": "definitions/iguhealth/terminology/identity-provider/status.json",
       "resourceType": "CodeSystem"
     },
