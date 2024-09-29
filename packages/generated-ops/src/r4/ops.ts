@@ -5314,6 +5314,56 @@ export namespace IguhealthEvaluatePolicy {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthIdpRegistrationInfo {
+  export type Input = Record<string, never>;
+  export type Output = {
+    information?: Array<{ name: fhirTypes.string; value: fhirTypes.string }>;
+  };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-idp-registration-info",
+    url: "https://iguhealth.app/OperationDefinition/identity-provider-registration-info",
+    version: "4.0.1",
+    name: "IdentityProviderRegistrationInformation",
+    status: "draft",
+    kind: "operation",
+    publisher: "IGUHealth",
+    description: "Get the registration information for an identity provider.",
+    code: "registration-info",
+    system: false,
+    type: false,
+    instance: true,
+    resource: ["IdentityProvider"],
+    parameter: [
+      {
+        name: "information",
+        use: "out",
+        min: 0,
+        max: "*",
+        documentation: "IdentityProviders registration information.",
+        part: [
+          {
+            name: "name",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "The name of the property.",
+            type: "string",
+          },
+          {
+            name: "value",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "the value of the property.",
+            type: "string",
+          },
+        ],
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
 export namespace IguhealthInviteUser {
   export type Input = {
     email: fhirTypes.string;
