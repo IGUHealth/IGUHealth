@@ -322,6 +322,18 @@ function Root() {
               >
                 Client Applications
               </SideBar.SideBarItem>
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "IdentityProvider"}
+                onClick={() => {
+                  navigate(
+                    generatePath("/resources/:resourceType", {
+                      resourceType: "IdentityProvider",
+                    }),
+                  );
+                }}
+              >
+                Identity Providers
+              </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Messaging">
               <SideBar.SideBarItem
@@ -366,7 +378,8 @@ function Root() {
                       match.params.resourceType !== "AccessPolicyV2" &&
                       match.params.resourceType !== "MessageTopic" &&
                       match.params.resourceType !== "MessageBroker" &&
-                      match.params.resourceType !== "ClientApplication",
+                      match.params.resourceType !== "ClientApplication" &&
+                      match.params.resourceType !== "IdentityProvider",
                   ) !== undefined
                 }
                 onClick={() => {
