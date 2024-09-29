@@ -172,6 +172,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/interaction/login",
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+    identityProvidersInject(),
     routes.loginPOST(),
   );
 
