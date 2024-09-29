@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-validation",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
