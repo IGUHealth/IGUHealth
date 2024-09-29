@@ -43,8 +43,11 @@ import OAuth2TokenBodySchema from "../schemas/oauth2_token_body.schema.json" wit
 import * as parseScopes from "../scopes/parse.js";
 import { ResolvedLaunchParameters } from "./interactions/smartLaunch.js";
 
-function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
-  switch (code.pkce_code_challenge_method) {
+export function convertChallenge(
+  challenge_method: "S256" | "plain",
+  verifier: string,
+): string {
+  switch (challenge_method) {
     case "S256": {
       const code_challenge_hashed = crypto
         .createHash("sha256")
@@ -53,6 +56,28 @@ function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
         .replace(/\+/g, "-")
         .replace(/\//g, "_")
         .replace(/=+$/, "");
+
+      return code_challenge_hashed;
+    }
+    case "plain": {
+      return verifier;
+    }
+    default: {
+      throw new OIDCError({
+        error: "invalid_request",
+        error_description: "Plain code challenge is not supported",
+      });
+    }
+  }
+}
+
+function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
+  switch (code.pkce_code_challenge_method) {
+    case "S256": {
+      const code_challenge_hashed = convertChallenge(
+        code.pkce_code_challenge_method,
+        verifier,
+      );
 
       return code.pkce_code_challenge === code_challenge_hashed;
     }

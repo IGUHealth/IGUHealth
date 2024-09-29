@@ -247,7 +247,50 @@
                         "code": "string"
                     }
                 ],
-                "min": 1,
+                "min": 0,
+                "max": "1"
+            },
+            {
+                "id": "IdentityProvider.oidc.pkce",
+                "path": "IdentityProvider.oidc.pkce",
+                "definition": "PKCE Configuration",
+                "short": "PKCE Configuration",
+                "type": [
+                    {
+                        "code": "BackboneElement"
+                    }
+                ],
+                "min": 0,
+                "max": "1"
+            },
+            {
+                "id": "IdentityProvider.oidc.pkce.code_challenge_method",
+                "path": "IdentityProvider.oidc.pkce.code_challenge_method",
+                "definition": "PKCE code challenge method.",
+                "short": "PKCE code challenge method.",
+                "type": [
+                    {
+                        "code": "code"
+                    }
+                ],
+                "binding": {
+                    "strength": "required",
+                    "valueSet": "https://iguhealth.app/fhir/ValueSet/IdentityProviderPKCEChallengeMethod|4.0.1"
+                },
+                "min": 0,
+                "max": "1"
+            },
+            {
+                "id": "IdentityProvider.oidc.pkce.enabled",
+                "path": "IdentityProvider.oidc.pkce.enabled",
+                "definition": "PKCE enabled.",
+                "short": "PKCE enabled.",
+                "type": [
+                    {
+                        "code": "boolean"
+                    }
+                ],
+                "min": 0,
                 "max": "1"
             }
         ]

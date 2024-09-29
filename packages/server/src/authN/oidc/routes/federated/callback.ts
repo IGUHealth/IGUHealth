@@ -27,7 +27,14 @@ export function federatedCallback(): OIDCRouteHandler {
       );
     }
 
+    const initialState = getSessionInfo(ctx, idpProvider.id as id);
     const code = ctx.query["code"];
+    const state = ctx.query["state"];
+
+    if (state !== initialState?.state) {
+      throw new OperationError(outcomeError("exception", "Invalid state"));
+    }
+
     if (!idpProvider.oidc?.token_endpoint) {
       throw new OperationError(
         outcomeError("exception", "Token endpoint not found"),
@@ -37,24 +44,32 @@ export function federatedCallback(): OIDCRouteHandler {
       throw new OperationError(outcomeError("exception", "Code not found"));
     }
     try {
+      const tokenBody: Record<string, string> = {
+        grant_type: "authorization_code",
+        code,
+        client_id: idpProvider.oidc?.client.clientId,
+        redirect_uri: new URL(
+          ctx.router.url(OIDC_ROUTES.FEDERATED_CALLBACK, {
+            tenant: ctx.state.iguhealth.tenant,
+            identityProvider: idpProvider.id,
+          }) as string,
+          process.env.API_URL,
+        ).href,
+      };
+
+      if (idpProvider.oidc?.client.secret) {
+        tokenBody.client_secret = idpProvider.oidc?.client.secret;
+      }
+      if (initialState?.code_verifier) {
+        tokenBody.code_verifier = initialState.code_verifier;
+      }
+
       const res = await fetch(idpProvider.oidc?.token_endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({
-          grant_type: "authorization_code",
-          code,
-          client_id: idpProvider.oidc?.client.clientId,
-          client_secret: idpProvider.oidc?.client.secret,
-          redirect_uri: new URL(
-            ctx.router.url(OIDC_ROUTES.FEDERATED_CALLBACK, {
-              tenant: ctx.state.iguhealth.tenant,
-              identityProvider: idpProvider.id,
-            }) as string,
-            process.env.API_URL,
-          ).href,
-        }),
+        body: new URLSearchParams(tokenBody),
       });
       const payload = await res.json();
       const idToken = payload.id_token;
@@ -93,10 +108,8 @@ export function federatedCallback(): OIDCRouteHandler {
 
         if (user[0] !== undefined) {
           sessionSetUserLogin(ctx, user[0]);
-          const state = getSessionInfo(ctx, idpProvider.id as id);
-          console.log("state:", state, state?.redirect_to);
-          if (state?.redirect_to) {
-            ctx.redirect(state.redirect_to);
+          if (initialState?.redirect_to) {
+            ctx.redirect(initialState.redirect_to);
           }
         } else {
           throw new OperationError(

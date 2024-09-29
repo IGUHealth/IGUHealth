@@ -49092,7 +49092,8 @@
         "userinfo_endpoint": 9,
         "jwks_uri": 10,
         "scopes": 11,
-        "client": 12
+        "client": 12,
+        "pkce": 15
       },
       "cardinality": "single"
     },
@@ -49138,6 +49139,25 @@
     {
       "_type_": "type",
       "type": "string",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "complex",
+      "type": "BackboneElement",
+      "properties": {
+        "code_challenge_method": 16,
+        "enabled": 17
+      },
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "code",
+      "cardinality": "single"
+    },
+    {
+      "_type_": "type",
+      "type": "boolean",
       "cardinality": "single"
     }
   ],
