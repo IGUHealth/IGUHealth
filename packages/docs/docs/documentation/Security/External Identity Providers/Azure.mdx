@@ -1,0 +1,36 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Azure
+To register Azure as an IDP for IGUHealth you need to create an application in Azure AD and configure the application to work with IGUHealth.
+The following are the setup instructions for Azure AD.
+## Setup
+
+1. Go to the Azure portal and navigate to Azure App registrations.
+<img src={useBaseUrl('/img/azure_idp_reg.png')} />
+2. Click on new registration.
+3. For Redirect URL select type Web. 
+4. Click Registration
+5. On the application screen click endpoints and copy the openid connect meta document url.
+<img src={useBaseUrl('/img/azure_idp_endpoints.png')} />
+6. Create a client secret by clicking `Client credentials: Add a certificate or secret`
+7. Copy the value of the client secret. We will use this later.
+8. Go to the meta document url.
+9. Go to your iguhealth tenant.
+10. Create a new IdentityProvider resource.
+11. Set status to active, set access type to oidc.
+12. Fill in the following values from step 8.
+    * authorization_endpoint
+    * token_endpoint
+    * userinfo_endpoint
+    * jwks_uri 
+13. Fill in the clientid and secret from the azure application you registered in step 4.
+14. Add the following scopes: 
+    * openid 
+    * profile 
+    * email
+15. From actions on the IdentityProvider resource click create.
+16. Click the registration information tab and copy the `Redirect URL`.
+17. Go back to the Azure application and create a redirect URI for the web platform with value from step 13.
+18. Log out and test the azure login.
+<img src={useBaseUrl('/img/azure_idp_login.png')} />
+

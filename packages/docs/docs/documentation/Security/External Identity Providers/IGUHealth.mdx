@@ -1,0 +1,43 @@
+---
+sidebar_position: 2
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# IGUHealth
+
+You can use an external IGUHealth deployment as an identity provider for your application. 
+The following are the setup instructions for setting up IGUHealth as an external IDP.
+
+## Setup
+
+1. Go to the Admin app of the external IDP IGUHealth tenant and select Client Applications from the left sidebar under security.
+2. Click on new and fill in the following parameters:
+   - Name: \<user provided value\>
+   - Grant Type: Authorization code
+   - Response Types: Token
+<img src={useBaseUrl('/img/iguhealth_idp_client.png')} />
+3. Click create
+4. Make a note of the id of the newly registered client.
+5. Go to your IGUHealth tenant admin app and create an IdentityProvider resource.
+6. Set the status to active, set access type to oidc.
+7. Go to the Settings tab in the external IDP IGUHealth tenant.
+<img src={useBaseUrl('/img/iguhealth_idp_settings.png')} />
+8. For your IDP Resource fill in 
+    - Authorization Endpoint: Copy from step 7
+    - Token Endpoint: Copy from step 7
+9. Copy the discovery document URL from the external IDP IGUHealth tenant.
+10. Go to the url and copy the JWKS uri into the IdentityProvider resource.
+11. Add the following scopes: 
+    * openid 
+    * profile 
+    * email
+12. Fill in the clientID with the value from step 4.
+13. For PKCE settings, set the following:
+    - Code Challenge Method: S256
+    - Enabled: checked
+14. Click create
+15. Go to the registration information tab and copy the `Redirect URL`.
+16. Paste redirect URL in the client application from step 3.
+17. Log out and test the IGUHealth login.
+<img src={useBaseUrl('/img/iguhealth_idp_login.png')} />

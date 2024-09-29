@@ -1,0 +1,38 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Okta
+To register Okta as an IDP for IGUHealth you need to create an application in Okta and configure the application to work with IGUHealth.
+The following are the setup instructions for setting up Okta as an external IDP.
+## Setup
+
+1. Go to the Okta portal and navigate to Applications.
+2. Click on Create App Integration.
+<img src={useBaseUrl('/img/okta_idp_registration.png')} />
+3. For sign on method select OIDC - OpenID Connect.
+4. For application type select web application.
+5. Click client credentials
+6. Set Assignments for the app in Okta
+7. Click save.
+8. Make a note of the client id.
+9. Copy the client secret.
+10. On the sidebar go to Security/API
+11. Select your authorization server.
+12. Open the Metadata URI.
+13. Go to your IGUHealth tenant.
+14. Create a new IdentityProvider resource.
+<img src={useBaseUrl('/img/okta_idp_identityprovider.png')} />
+15. Set status to active, set access type to oidc.
+16. Fill in the following values pulled from the metadata URI in step 12.
+    * authorization_endpoint
+    * token_endpoint
+    * jwks_uri
+17. Fill in the following scopes:
+    * openid
+    * profile
+    * email
+17. Fill in the clientid and secret from the Okta application you registered in step 7.
+18. From actions on the IdentityProvider resource click create.
+19. Go to the registration tab and copy the redirect URL.
+20. In Okta go to the application you created select edit on the general section and add the redirect URI from step 20.
+21. Log out and test the Okta login.
+<img src={useBaseUrl('/img/okta_idp_login.png')} />
