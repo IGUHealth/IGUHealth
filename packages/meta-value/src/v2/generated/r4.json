@@ -49152,7 +49152,7 @@
     },
     {
       "_type_": "type",
-      "type": "string",
+      "type": "code",
       "cardinality": "single"
     },
     {

@@ -45247,7 +45247,7 @@ export interface IdentityProviderOidcPkce {
   /** 
    * PKCE code challenge method.
    */
-  code_challenge_method?: string;
+  code_challenge_method?: code;
   /** 
    * PKCE code challenge method.
    */
