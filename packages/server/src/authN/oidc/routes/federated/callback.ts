@@ -2,6 +2,7 @@ import * as jose from "jose";
 
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
@@ -10,6 +11,16 @@ import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { sessionSetUserLogin } from "../../session/user.js";
 import { getSessionInfo } from "./initiate.js";
+
+function deriveID(tenantId: TenantId, sub: string) {
+  // "+" "/" and "=" symbols must be replaced.
+  // 1234567890abcdefghijklmnopqrstuvwxyz is default character set for nanoid.
+  return btoa(`${tenantId}-${sub}`)
+    .replace("=", "-")
+    .replace("/", "-")
+    .replace("+", "-")
+    .toLowerCase();
+}
 
 export function federatedCallback(): OIDCRouteHandler {
   return async (ctx) => {
@@ -73,8 +84,6 @@ export function federatedCallback(): OIDCRouteHandler {
       });
       const payload = await res.json();
       const idToken = payload.id_token;
-
-      console.log(payload);
 
       if (!idToken) {
         throw new OperationError(
