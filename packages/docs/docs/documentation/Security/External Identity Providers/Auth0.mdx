@@ -1,0 +1,28 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Auth0
+To register Auth0 as an IDP for IGUHealth you need to create an application in Auth0 and configure the application to work with IGUHealth.
+The following are the setup instructions for setting up Auth0 as an external IDP.
+## Setup
+
+1. Go to Auth0 and create an application.
+2. Select web application then user session as backend and backend as other backend technology.
+3. Copy the client id and client secret.
+<img src={useBaseUrl('/img/auth0_idp_registration.png')} />
+4. Go to your tenant and create an IdentityProvider resource.
+5. Set the status to active, set access type to oidc.
+6. Set the following properties:
+   * Authorization Endpoint: `https://<auth0-domain>/authorize`
+   * Token_endpoint: `https://<auth0-domain>/oauth/token`
+   * Jwks_uri: `https://<auth0-domain>/.well-known/jwks.json`
+   * Client Id: Copy from step 3
+   * Client Secret: Copy from step 3
+7. Add the following scopes:
+    * openid
+    * profile
+    * email
+8. From actions on the IdentityProvider resource click create.
+9. Go to the registration information tab and copy the `Redirect URL`.
+10. Go back to the Auth0 application and add the redirect URI from step 9 in the allowed callback URLs.
+11. Log out and test the Auth0 login.
+<img src={useBaseUrl('/img/auth0_idp_login.png')} />
