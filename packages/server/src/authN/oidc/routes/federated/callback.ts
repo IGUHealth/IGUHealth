@@ -11,6 +11,16 @@ import { OIDCRouteHandler } from "../../index.js";
 import { sessionSetUserLogin } from "../../session/user.js";
 import { getSessionInfo } from "./initiate.js";
 
+function deriveID(idpId: id, sub: string) {
+  // "+" "/" and "=" symbols must be replaced.
+  // 1234567890abcdefghijklmnopqrstuvwxyz is default character set for nanoid.
+  return btoa(`${idpId}|${sub}`)
+    .replaceAll("=", "_")
+    .replaceAll("/", "_")
+    .replaceAll("+", "_")
+    .toLowerCase();
+}
+
 export function federatedCallback(): OIDCRouteHandler {
   return async (ctx) => {
     const idpId = ctx.params["identityProvider"];
@@ -74,8 +84,6 @@ export function federatedCallback(): OIDCRouteHandler {
       const payload = await res.json();
       const idToken = payload.id_token;
 
-      console.log(payload);
-
       if (!idToken) {
         throw new OperationError(
           outcomeError(
@@ -91,7 +99,8 @@ export function federatedCallback(): OIDCRouteHandler {
           idToken,
           jose.createRemoteJWKSet(new URL(idpProvider.oidc?.jwks_uri)),
         );
-        const id = idpProvider.id + "-" + payload.sub;
+
+        const id = deriveID(idpProvider.id as id, payload.sub as string);
 
         const membership = await ctx.state.iguhealth.client.update(
           await asRoot(ctx.state.iguhealth),
