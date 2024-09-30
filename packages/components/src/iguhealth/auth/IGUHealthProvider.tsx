@@ -1,7 +1,9 @@
 import React, { useEffect, useReducer, useRef } from "react";
 
+import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { TenantId } from "@iguhealth/jwt/types";
 
+import { OperationOutcomeIssueDisplay } from "../../fhir/resources/OperationOutcome";
 import IGUHealthContext, {
   AccessTokenResponse,
   IGUHealthContextState,
@@ -348,7 +350,17 @@ export function IGUHealthProvider({
 
   return (
     <IGUHealthContext.Provider value={state}>
-      {children}
+      {state.error ? (
+        <OperationOutcomeIssueDisplay
+          issue={{
+            severity: "error" as code,
+            code: state.error.code as code,
+            diagnostics: state.error.description,
+          }}
+        />
+      ) : (
+        children
+      )}
     </IGUHealthContext.Provider>
   );
 }
