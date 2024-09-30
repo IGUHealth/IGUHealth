@@ -324,5 +324,5 @@ function scopeToString(scope: Scope): string {
 }
 
 export function toString(scopes: Scope[]): string {
-  return scopes.map(scopeToString).sort().join(" ");
+  return scopes.map(scopeToString).join(" ");
 }
