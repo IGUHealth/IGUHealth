@@ -2,7 +2,6 @@ import * as jose from "jose";
 
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
@@ -12,13 +11,13 @@ import { OIDCRouteHandler } from "../../index.js";
 import { sessionSetUserLogin } from "../../session/user.js";
 import { getSessionInfo } from "./initiate.js";
 
-function deriveID(tenantId: TenantId, sub: string) {
+function deriveID(idpId: id, sub: string) {
   // "+" "/" and "=" symbols must be replaced.
   // 1234567890abcdefghijklmnopqrstuvwxyz is default character set for nanoid.
-  return btoa(`${tenantId}-${sub}`)
-    .replace("=", "-")
-    .replace("/", "-")
-    .replace("+", "-")
+  return btoa(`${idpId}-${sub}`)
+    .replaceAll("=", "_")
+    .replaceAll("/", "_")
+    .replaceAll("+", "_")
     .toLowerCase();
 }
 
@@ -100,7 +99,8 @@ export function federatedCallback(): OIDCRouteHandler {
           idToken,
           jose.createRemoteJWKSet(new URL(idpProvider.oidc?.jwks_uri)),
         );
-        const id = idpProvider.id + "-" + payload.sub;
+
+        const id = deriveID(idpProvider.id as id, payload.sub as string);
 
         const membership = await ctx.state.iguhealth.client.update(
           await asRoot(ctx.state.iguhealth),
