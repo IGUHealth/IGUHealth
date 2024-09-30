@@ -11,6 +11,7 @@ import { identityProvidersInject } from "./middleware/inject-idps.js";
 import { injectClientCredentialsMiddleware } from "./middleware/inject_client_credentials.js";
 import { OAuthErrorHandlingMiddleware } from "./middleware/oauth_error_handling.js";
 import { parseScopesMiddleware } from "./middleware/parse_scopes.js";
+import { verifyUserScopes } from "./middleware/verify_user_scopes.js";
 import { federatedCallback } from "./routes/federated/callback.js";
 import { federatedInitiate } from "./routes/federated/initiate.js";
 import * as routes from "./routes/index.js";
@@ -162,7 +163,9 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     "/interaction/login",
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+
     parseScopesMiddleware(),
+
     identityProvidersInject(),
     routes.loginGET(),
   );
@@ -182,7 +185,9 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+
     parseScopesMiddleware(),
+    verifyUserScopes(),
 
     createSessionValidateAuthentication(),
 
@@ -196,7 +201,9 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+
     parseScopesMiddleware(),
+    verifyUserScopes(),
 
     createSessionValidateAuthentication(),
 
@@ -210,7 +217,9 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+
     parseScopesMiddleware(),
+
     createSessionValidateAuthentication(),
     routes.smartLaunch(),
   );
@@ -222,7 +231,9 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     OAuthErrorHandlingMiddleware(),
     createValidateInjectOIDCParameters(AUTHORIZE_PARAMETERS),
     clientInjectFHIRMiddleware(),
+
     parseScopesMiddleware(),
+    verifyUserScopes(),
 
     createSessionValidateAuthentication(),
 
