@@ -1212,6 +1212,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_date_idx';
     export interface Selectable {
       /**
+      * **r4_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1273,6 +1285,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_date_idx.created_at**
       * - `timestamptz` in database
@@ -1336,6 +1360,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1398,6 +1434,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1459,6 +1507,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_date_idx.created_at**
       * - `timestamptz` in database
@@ -1535,6 +1595,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_number_idx';
     export interface Selectable {
       /**
+      * **r4_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1590,6 +1662,18 @@ declare module 'zapatos/schema' {
       value: db.NumericString;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_number_idx.created_at**
       * - `timestamptz` in database
@@ -1647,6 +1731,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1703,6 +1799,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1758,6 +1866,18 @@ declare module 'zapatos/schema' {
       value: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_number_idx.created_at**
       * - `timestamptz` in database
@@ -1827,6 +1947,18 @@ declare module 'zapatos/schema' {
   export namespace r4_quantity_idx {
     export type Table = 'r4_quantity_idx';
     export interface Selectable {
+      /**
+      * **r4_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -1914,6 +2046,18 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
+      * **r4_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -1999,6 +2143,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface Whereable {
+      /**
+      * **r4_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -2086,6 +2242,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2171,6 +2339,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -2271,6 +2451,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_reference_idx';
     export interface Selectable {
       /**
+      * **r4_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2338,6 +2530,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_reference_idx.created_at**
       * - `timestamptz` in database
@@ -2407,6 +2611,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2475,6 +2691,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2542,6 +2770,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_reference_idx.created_at**
       * - `timestamptz` in database
@@ -2624,6 +2864,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_string_idx';
     export interface Selectable {
       /**
+      * **r4_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2679,6 +2931,18 @@ declare module 'zapatos/schema' {
       value: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_string_idx.created_at**
       * - `timestamptz` in database
@@ -2736,6 +3000,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2792,6 +3068,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2847,6 +3135,18 @@ declare module 'zapatos/schema' {
       value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_string_idx.created_at**
       * - `timestamptz` in database
@@ -2917,6 +3217,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_token_idx';
     export interface Selectable {
       /**
+      * **r4_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2978,6 +3290,18 @@ declare module 'zapatos/schema' {
       value: string | null;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_token_idx.created_at**
       * - `timestamptz` in database
@@ -3041,6 +3365,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3103,6 +3439,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3164,6 +3512,18 @@ declare module 'zapatos/schema' {
       value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_token_idx.created_at**
       * - `timestamptz` in database
@@ -3240,6 +3600,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4_uri_idx';
     export interface Selectable {
       /**
+      * **r4_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3295,6 +3667,18 @@ declare module 'zapatos/schema' {
       value: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4_uri_idx.created_at**
       * - `timestamptz` in database
@@ -3352,6 +3736,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3408,6 +3804,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3463,6 +3871,18 @@ declare module 'zapatos/schema' {
       value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_uri_idx.created_at**
       * - `timestamptz` in database
@@ -3533,6 +3953,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_date_idx';
     export interface Selectable {
       /**
+      * **r4b_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3594,6 +4026,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_date_idx.created_at**
       * - `timestamptz` in database
@@ -3657,6 +4101,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3719,6 +4175,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_date_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3780,6 +4248,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_date_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_date_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_date_idx.created_at**
       * - `timestamptz` in database
@@ -3856,6 +4336,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_number_idx';
     export interface Selectable {
       /**
+      * **r4b_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -3911,6 +4403,18 @@ declare module 'zapatos/schema' {
       value: db.NumericString;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_number_idx.created_at**
       * - `timestamptz` in database
@@ -3968,6 +4472,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4024,6 +4540,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4079,6 +4607,18 @@ declare module 'zapatos/schema' {
       value: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_number_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_number_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_number_idx.created_at**
       * - `timestamptz` in database
@@ -4148,6 +4688,18 @@ declare module 'zapatos/schema' {
   export namespace r4b_quantity_idx {
     export type Table = 'r4b_quantity_idx';
     export interface Selectable {
+      /**
+      * **r4b_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -4235,6 +4787,18 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
+      * **r4b_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4320,6 +4884,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface Whereable {
+      /**
+      * **r4b_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -4407,6 +4983,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4492,6 +5080,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_quantity_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_quantity_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_quantity_idx.created_at**
       * - `timestamptz` in database
@@ -4592,6 +5192,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_reference_idx';
     export interface Selectable {
       /**
+      * **r4b_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4659,6 +5271,18 @@ declare module 'zapatos/schema' {
       tenant: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_reference_idx.created_at**
       * - `timestamptz` in database
@@ -4728,6 +5352,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4796,6 +5432,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -4863,6 +5511,18 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_reference_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_reference_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_reference_idx.created_at**
       * - `timestamptz` in database
@@ -4945,6 +5605,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_string_idx';
     export interface Selectable {
       /**
+      * **r4b_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5000,6 +5672,18 @@ declare module 'zapatos/schema' {
       value: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_string_idx.created_at**
       * - `timestamptz` in database
@@ -5057,6 +5741,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5113,6 +5809,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5168,6 +5876,18 @@ declare module 'zapatos/schema' {
       value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_string_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_string_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_string_idx.created_at**
       * - `timestamptz` in database
@@ -5238,6 +5958,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_token_idx';
     export interface Selectable {
       /**
+      * **r4b_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5299,6 +6031,18 @@ declare module 'zapatos/schema' {
       value: string | null;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_token_idx.created_at**
       * - `timestamptz` in database
@@ -5362,6 +6106,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5424,6 +6180,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5485,6 +6253,18 @@ declare module 'zapatos/schema' {
       value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_token_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_token_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_token_idx.created_at**
       * - `timestamptz` in database
@@ -5561,6 +6341,18 @@ declare module 'zapatos/schema' {
     export type Table = 'r4b_uri_idx';
     export interface Selectable {
       /**
+      * **r4b_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
+      /**
       * **r4b_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5616,6 +6408,18 @@ declare module 'zapatos/schema' {
       value: string;
     }
     export interface JSONSelectable {
+      /**
+      * **r4b_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx: number | null;
+      /**
+      * **r4b_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx: number | null;
       /**
       * **r4b_uri_idx.created_at**
       * - `timestamptz` in database
@@ -5673,6 +6477,18 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **r4b_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **r4b_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **r4b_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5729,6 +6545,18 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
+      * **r4b_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **r4b_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **r4b_uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -5784,6 +6612,18 @@ declare module 'zapatos/schema' {
       value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **r4b_uri_idx.composite_chunk_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_chunk_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **r4b_uri_idx.composite_id_idx**
+      * - `int2` in database
+      * - Nullable, no default
+      */
+      composite_id_idx?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_uri_idx.created_at**
       * - `timestamptz` in database
