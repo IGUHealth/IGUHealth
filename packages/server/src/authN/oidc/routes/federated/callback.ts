@@ -14,7 +14,7 @@ import { getSessionInfo } from "./initiate.js";
 function deriveID(idpId: id, sub: string) {
   // "+" "/" and "=" symbols must be replaced.
   // 1234567890abcdefghijklmnopqrstuvwxyz is default character set for nanoid.
-  return btoa(`${idpId}-${sub}`)
+  return btoa(`${idpId}|${sub}`)
     .replaceAll("=", "_")
     .replaceAll("/", "_")
     .replaceAll("+", "_")
