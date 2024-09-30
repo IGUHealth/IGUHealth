@@ -5,8 +5,8 @@ const ERROR_REGEX = /[?&]error=[^&]+/;
 export const hasAuthQueryParams = (
   searchParams = window.location.search,
 ): boolean =>
-  (CODE_REGEX.test(searchParams) || ERROR_REGEX.test(searchParams)) &&
-  STATE_REGEX.test(searchParams);
+  (CODE_REGEX.test(searchParams) && STATE_REGEX.test(searchParams)) ||
+  ERROR_REGEX.test(searchParams);
 
 /**
  * https://tools.ietf.org/html/rfc4648#section-5

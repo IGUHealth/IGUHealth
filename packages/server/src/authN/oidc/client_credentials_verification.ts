@@ -79,7 +79,7 @@ export async function createClientCredentialToken(
     [CUSTOM_CLAIMS.ROLE]: "member",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
     [CUSTOM_CLAIMS.RESOURCE_ID]: client.id as id,
-    scope: "system/*.*",
+    scope: client.scope ?? "",
     sub: client.id as string as Subject,
   };
 

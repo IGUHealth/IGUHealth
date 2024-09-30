@@ -300,30 +300,29 @@ export function parseScopes(scopes: string): Scope[] {
     });
 }
 
+function scopeToString(scope: Scope): string {
+  switch (scope.type) {
+    case "online_access":
+    case "offline_access":
+    case "openid":
+    case "profile":
+    case "fhirUser":
+    case "email": {
+      return scope.type;
+    }
+
+    case "launch-type": {
+      return `launch/${scope.launchType}`;
+    }
+    case "launch": {
+      return `launch`;
+    }
+    case "smart-resource": {
+      return `${scope.level}/${scope.scope === "all" ? "*" : scope.resourceType}.${scope.permissions.create ? "c" : ""}${scope.permissions.read ? "r" : ""}${scope.permissions.update ? "u" : ""}${scope.permissions.delete ? "d" : ""}${scope.permissions.search ? "s" : ""}`;
+    }
+  }
+}
+
 export function toString(scopes: Scope[]): string {
-  return scopes
-    .reduce((scopeString, scope: Scope) => {
-      switch (scope.type) {
-        case "online_access":
-        case "offline_access":
-        case "openid":
-        case "profile":
-        case "email": {
-          return `${scopeString} ${scope.type}`;
-        }
-        case "fhirUser": {
-          return `${scopeString} fhirUser`;
-        }
-        case "launch-type": {
-          return `${scopeString} launch/${scope.launchType}`;
-        }
-        case "launch": {
-          return `${scopeString} launch`;
-        }
-        case "smart-resource": {
-          return `${scopeString} ${scope.level}/${scope.scope === "all" ? "*" : scope.resourceType}.${scope.permissions.create ? "c" : ""}${scope.permissions.read ? "r" : ""}${scope.permissions.update ? "u" : ""}${scope.permissions.delete ? "d" : ""}${scope.permissions.search ? "s" : ""}`;
-        }
-      }
-    }, "")
-    .slice(1);
+  return scopes.map(scopeToString).join(" ");
 }

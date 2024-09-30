@@ -14,6 +14,7 @@ export function ADMIN_APP(): ClientApplication | undefined {
         redirectUri: [process.env.ADMIN_APP_REDIRECT_URI],
         name: "Admin Application",
         responseTypes: "code" as code,
+        scope: "offline_access openid email profile fhirUser user/*.*",
       } as ClientApplication)
     : undefined;
 }
