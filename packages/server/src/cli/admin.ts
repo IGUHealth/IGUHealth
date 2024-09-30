@@ -193,6 +193,7 @@ function clientAppCommands(command: Command) {
                 grantType: ["client_credentials"],
                 resourceType: "ClientApplication",
                 responseTypes: "token",
+                scope: "system/*.*",
               } as ClientApplication,
             },
           ],
