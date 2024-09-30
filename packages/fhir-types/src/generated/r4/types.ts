@@ -45198,11 +45198,11 @@ resourceType: "ClientApplication"
   /** 
    * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
    */
-  scope?: string;
+  scope?: Array<string>;
   /** 
    * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
    */
-  _scope?: Element
+  _scope?: Array<Element>
   /** 
    * Array of strings representing ways to contact people responsible for this client, typically email addresses.
    */

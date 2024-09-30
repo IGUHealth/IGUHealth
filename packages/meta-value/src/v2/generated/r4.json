@@ -49026,7 +49026,7 @@
     {
       "_type_": "type",
       "type": "string",
-      "cardinality": "single"
+      "cardinality": "array"
     },
     {
       "_type_": "type",
