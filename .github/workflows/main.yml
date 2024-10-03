@@ -101,20 +101,24 @@ jobs:
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
 
       - name: Create Test environment.
+        env:
+          CLIENT_ID: test-client
+          CLIENT_SECRET: mysecret
         run: |
           yarn workspace @iguhealth/server cli admin tenant create -i test-system -t team -e test@iguhealth.app -p testing
-          yarn workspace @iguhealth/server cli admin client-app create -t test-system -i test-client -s mysecret
+          yarn workspace @iguhealth/server cli admin client-app create -t test-system -i $CLIENT_ID -s $CLIENT_SECRET
           yarn workspace @iguhealth/server iguhealth config add-tenant \
            --name my-tenant \
            --r4-url http://localhost:3000/w/test-system/api/v1/fhir/r4 \
            --r4b-url http://localhost:3000/w/test-system/api/v1/fhir/r4b \
            --oidc http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration \
            --auth client_credentials \
-           --client-id test-client \
-           --client-secret mysecret
+           --client-id $CLIENT_ID \
+           --client-secret $CLIENT_SECRET
 
       - name: Start server
         run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
+
       - name: R4 TestScripts
         run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4
 
@@ -124,6 +128,16 @@ jobs:
       - name: Jest tests
         run: yarn test
         timeout-minutes: 10
+
+      - name: Performance Test
+        env:
+          FHIR_R4_URL: http://localhost:3000/w/test-system/api/v1/fhir/r4
+          OIDC_WELL_KNOWN_URL: http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
+          CLIENT_ID: performance-testing
+          CLIENT_SECRET: mysecret
+        run: |
+          yarn workspace @iguhealth/server cli admin client-app create -t test-system -i $CLIENT_ID -s $CLIENT_SECRET
+          yarn workspace @iguhealth/performance-testing artillery run scripts/scripts.yaml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
