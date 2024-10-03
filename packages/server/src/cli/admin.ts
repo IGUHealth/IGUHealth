@@ -149,6 +149,7 @@ function clientAppCommands(command: Command) {
     .command("create")
     .description("Create a new clientapp.")
     .requiredOption("-t, --tenant <tenant>", "Id for tenant")
+    .requiredOption("-i, --id <id>", "Id for client app")
     .requiredOption("-s, --secret <secret>", "Secret for client app")
     .action(async (options) => {
       const redis = getRedisClient();
@@ -186,8 +187,12 @@ function clientAppCommands(command: Command) {
             },
             {
               fullUrl: "clientapp",
-              request: { method: "POST", url: "ClientApplication" },
+              request: {
+                method: "PUT",
+                url: `ClientApplication/${options.id}`,
+              },
               resource: {
+                id: options.id,
                 name: "Tester",
                 secret: options.secret,
                 grantType: ["client_credentials"],
