@@ -1,0 +1,13 @@
+{
+    "name": "@iguhealth/performance-testing",
+    "homepage": "https://iguhealth.app",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/IGUHealth/IGUHealth.git"
+    },
+    "description": "IGUHealth performance tests",
+    "type": "module",
+    "dependencies": {
+        "artillery": "^2.0.20"
+    }
+}
