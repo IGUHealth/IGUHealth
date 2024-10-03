@@ -24,6 +24,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import * as fp from "@iguhealth/fhirpath";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { flatten } from "@iguhealth/meta-value/utilities";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -151,40 +152,7 @@ function toURIParameters(value: IMetaValue<NonNullable<unknown>>): string[] {
   }
 }
 
-function toReferenceLocal(value: IMetaValue<NonNullable<unknown>>): Array<{
-  reference: Reference;
-  resourceType?: ResourceType<FHIR_VERSION>;
-  id?: id;
-  url?: canonical | uri;
-}> {
-  switch (value.meta()?.type) {
-    case "Reference": {
-      const reference: Reference = value.getValue() as Reference;
-      const [resourceType, id] = reference.reference?.split("/") || [];
-      if (resourceTypes.has(resourceType) && id) {
-        return [
-          {
-            reference: reference,
-            resourceType: resourceType as ResourceType<FHIR_VERSION>,
-            id: id as id,
-          },
-        ];
-      } else {
-        // Need to determine how to handle identifier style references.
-        return [];
-        //return [{ reference: reference }];
-      }
-    }
-
-    case "uri":
-    case "canonical":
-    default: {
-      return [];
-    }
-  }
-}
-
-export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
+export type ResolveCanonical = <FHIRVersion extends FHIR_VERSION>(
   fhirVersion: FHIRVersion,
   types: ResourceType<FHIRVersion>[],
   url: canonical,
@@ -194,7 +162,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
   value: IMetaValue<NonNullable<unknown>>,
-  resolveCanonical?: ResolveRemoteCanonical,
+  resolveCanonical?: ResolveCanonical,
 ): Promise<
   Array<{
     reference: Reference;
@@ -371,6 +339,49 @@ function toQuantityRange(
   }
 }
 
+async function toCompositeParameters<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  parameter: Resource<Version, "SearchParameter">,
+  value: IMetaValue<NonNullable<unknown>>,
+  resolveCanonical: ResolveCanonical,
+): Promise<ADataConversion<"composite">> {
+  const result = await Promise.all(
+    (parameter.component ?? []).map(async (part) => {
+      const compositeParameter = (await resolveCanonical(
+        fhirVersion,
+        ["SearchParameter"] as ResourceType<Version>[],
+        part.definition,
+      )) as Resource<Version, "SearchParameter"> | undefined;
+
+      if (!compositeParameter) {
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `Composite search parameter '${part.definition}' not found.`,
+          ),
+        );
+      }
+
+      const componentEvaluation = await fp.evaluateWithMeta(
+        part.expression,
+        value,
+      );
+
+      return {
+        parameter: compositeParameter,
+        result: await dataConversion(
+          fhirVersion,
+          compositeParameter,
+          componentEvaluation,
+          resolveCanonical,
+        ),
+      };
+    }),
+  );
+
+  return result;
+}
+
 export type SEARCH_TYPE =
   | "number"
   | "date"
@@ -391,20 +402,48 @@ type DATA_CONVERSION = {
   quantity: Awaited<ReturnType<typeof toQuantityRange>>[number];
   uri: Awaited<ReturnType<typeof toURIParameters>>[number];
 
-  /**
-   * Not supporting composite or special in memory index.
-   */
-  composite: never;
+  composite: {
+    parameter: Resource<FHIR_VERSION, "SearchParameter">;
+    result: Awaited<ReturnType<typeof dataConversion>>;
+  }[];
+
   special: never;
 };
 
 export type ADataConversion<T extends SEARCH_TYPE> = DATA_CONVERSION[T];
 
-export async function dataConversionLocal<T extends SEARCH_TYPE>(
-  type: T,
+export default async function dataConversion<
+  Version extends FHIR_VERSION,
+  T extends SEARCH_TYPE,
+>(
+  fhirVersion: Version,
+  parameter: Resource<FHIR_VERSION, "SearchParameter">,
   evaluation: IMetaValue<NonNullable<unknown>>[],
+  resolveRemoteCanonical?: ResolveCanonical,
 ): Promise<ADataConversion<T>[]> {
+  const type = parameter.type as unknown as T;
   switch (type) {
+    case "composite": {
+      if (!resolveRemoteCanonical) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `Must have resolve present for composite search parameter '${parameter.name}'`,
+          ),
+        );
+      }
+      return (await Promise.all(
+        evaluation.map(
+          (v): Promise<ADataConversion<"composite">> =>
+            toCompositeParameters(
+              fhirVersion,
+              parameter,
+              v,
+              resolveRemoteCanonical,
+            ),
+        ),
+      )) as ADataConversion<typeof type>[];
+    }
     case "number": {
       return evaluation.map((e) => e.getValue()) as ADataConversion<
         typeof type
@@ -436,43 +475,6 @@ export async function dataConversionLocal<T extends SEARCH_TYPE>(
       ).flat() as ADataConversion<typeof type>[];
     }
     case "reference": {
-      return evaluation.map(toReferenceLocal).flat() as ADataConversion<
-        typeof type
-      >[];
-    }
-    case "composite":
-    case "special":
-    default: {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Memory search does not support '${type}' yet.`,
-        ),
-      );
-    }
-  }
-}
-
-export default async function dataConversion<
-  Version extends FHIR_VERSION,
-  T extends SEARCH_TYPE,
->(
-  fhirVersion: Version,
-  parameter: Resource<FHIR_VERSION, "SearchParameter">,
-  type: T,
-  evaluation: IMetaValue<NonNullable<unknown>>[],
-  resolveRemoteCanonical?: ResolveRemoteCanonical,
-): Promise<ADataConversion<T>[]> {
-  switch (type) {
-    case "number":
-    case "string":
-    case "token":
-    case "uri":
-    case "quantity":
-    case "date": {
-      return dataConversionLocal(type, evaluation);
-    }
-    case "reference": {
       return (
         await Promise.all(
           evaluation.map((v) =>
@@ -486,7 +488,6 @@ export default async function dataConversion<
         )
       ).flat() as ADataConversion<typeof type>[];
     }
-    case "composite":
     case "special":
     default: {
       throw new OperationError(

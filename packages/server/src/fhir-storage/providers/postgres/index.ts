@@ -1,7 +1,7 @@
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 import * as db from "zapatos/db";
-import type * as s from "zapatos/schema";
+import * as s from "zapatos/schema";
 
 import { FHIRClient } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
@@ -52,7 +52,11 @@ import {
 } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { asRoot, IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import { param_types_supported } from "./constants.js";
+import {
+  SEARCH_TABLE_TYPES,
+  search_table_types,
+  search_types_supported,
+} from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
 import {
@@ -77,7 +81,7 @@ async function getAllParametersForResource<
   const parameters = [
     {
       name: "type",
-      value: param_types_supported,
+      value: search_types_supported,
     },
     {
       name: "base",
@@ -95,23 +99,38 @@ async function getAllParametersForResource<
   ).resources;
 }
 
-async function indexSearchParameter<
-  CTX extends IGUHealthServerCTX,
+type Insertables = {
+  quantity: s.r4b_quantity_idx.Insertable | s.r4_quantity_idx.Insertable;
+  date: s.r4b_date_idx.Insertable | s.r4_date_idx.Insertable;
+  reference: s.r4b_reference_idx.Insertable | s.r4_reference_idx.Insertable;
+  uri: s.r4b_uri_idx.Insertable | s.r4_uri_idx.Insertable;
+  token: s.r4b_token_idx.Insertable | s.r4_token_idx.Insertable;
+  number: s.r4b_number_idx.Insertable | s.r4_number_idx.Insertable;
+  string: s.r4b_string_idx.Insertable | s.r4_string_idx.Insertable;
+};
+
+async function toInsertableIndex<
   Version extends FHIR_VERSION,
+  Type extends SEARCH_TABLE_TYPES,
 >(
-  ctx: CTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
+  type: Type,
   parameter: Resource<Version, "SearchParameter">,
   resource: Resource<Version, AllResourceTypes> & {
     id: id;
     meta: { versionId: id };
   },
   evaluation: IMetaValue<NonNullable<unknown>>[],
-) {
-  switch (parameter.type) {
+): Promise<Insertables[Type][]> {
+  switch (type) {
     case "quantity": {
-      const quantity_indexes = (
-        await dataConversion(fhirVersion, parameter, "quantity", evaluation)
+      return (
+        await dataConversion<Version, "quantity">(
+          fhirVersion,
+          parameter,
+          evaluation,
+        )
       ).map(
         (
           value,
@@ -131,7 +150,207 @@ async function indexSearchParameter<
           end_system: value.end?.system,
           end_code: value.end?.code,
         }),
+      ) as Insertables[Type][];
+    }
+    case "date": {
+      return (
+        await dataConversion<Version, "date">(
+          fhirVersion,
+          parameter,
+          evaluation,
+        )
+      )
+        .flat()
+        .map((value): s.r4_date_idx.Insertable | s.r4b_date_idx.Insertable => ({
+          tenant: ctx.tenant,
+          r_id: resource.id,
+          resource_type: resource.resourceType,
+          r_version_id: parseInt(resource.meta.versionId),
+          parameter_name: parameter.name,
+          parameter_url: parameter.url,
+          start_date: value.start as unknown as Date,
+          end_date: value.end as unknown as Date,
+        })) as Insertables[Type][];
+    }
+    case "reference": {
+      const references = (
+        await dataConversion<Version, "reference">(
+          fhirVersion,
+          parameter,
+          evaluation,
+          createResolverRemoteCanonical(ctx.client, ctx),
+        )
+      ).flat();
+
+      return references
+        .filter(({ reference }) => {
+          if (!reference.reference) {
+            ctx.logger.warn("Cannot index logical reference.");
+            return false;
+          }
+          return true;
+        })
+        .map(
+          ({
+            reference,
+            resourceType,
+            id,
+          }):
+            | s.r4_reference_idx.Insertable
+            | s.r4b_reference_idx.Insertable => {
+            if (!resourceType || !id) {
+              throw new OperationError(
+                outcomeError(
+                  "exception",
+                  "Resource type or id not found when indexing the resource.",
+                ),
+              );
+            }
+            return {
+              tenant: ctx.tenant,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              reference: reference as db.JSONValue,
+              reference_type: resourceType,
+              reference_id: id,
+            };
+          },
+        ) as Insertables[Type][];
+    }
+    case "uri": {
+      return (
+        await dataConversion<Version, "uri">(fhirVersion, parameter, evaluation)
+      )
+        .flat()
+        .map((value): s.r4_uri_idx.Insertable | s.r4b_uri_idx.Insertable => ({
+          tenant: ctx.tenant,
+          r_id: resource.id,
+          resource_type: resource.resourceType,
+          r_version_id: parseInt(resource.meta.versionId),
+          parameter_name: parameter.name,
+          parameter_url: parameter.url,
+          value,
+        })) as Insertables[Type][];
+    }
+    case "token": {
+      return (
+        await dataConversion<Version, "token">(
+          fhirVersion,
+          parameter,
+          evaluation,
+        )
+      )
+        .flat()
+        .map(
+          (value): s.r4_token_idx.Insertable | s.r4b_token_idx.Insertable => ({
+            tenant: ctx.tenant,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            system: value.system,
+            value: value.code,
+          }),
+        ) as Insertables[Type][];
+    }
+    case "number": {
+      return (
+        await dataConversion<Version, "number">(
+          fhirVersion,
+          parameter,
+          evaluation,
+        )
+      ).map(
+        (value): s.r4_number_idx.Insertable | s.r4b_number_idx.Insertable => {
+          if (typeof value !== "number")
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Failed to index number. Value found is not a number.",
+              ),
+            );
+          return {
+            tenant: ctx.tenant,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            value,
+          };
+        },
+      ) as Insertables[Type][];
+    }
+
+    case "string": {
+      return (
+        await dataConversion<Version, "string">(
+          fhirVersion,
+          parameter,
+          evaluation,
+        )
+      )
+        .flat()
+        .map(
+          (
+            value,
+          ): s.r4_string_idx.Insertable | s.r4b_string_idx.Insertable => ({
+            tenant: ctx.tenant,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            value,
+          }),
+        ) as Insertables[Type][];
+    }
+
+    default: {
+      throw new Error();
+    }
+  }
+}
+
+async function indexSearchParameter<
+  CTX extends IGUHealthServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  parameter: Resource<Version, "SearchParameter">,
+  resource: Resource<Version, AllResourceTypes> & {
+    id: id;
+    meta: { versionId: id };
+  },
+  evaluation: IMetaValue<NonNullable<unknown>>[],
+) {
+  switch (parameter.type) {
+    case "composite": {
+      const _composite_indexes = await dataConversion<Version, "composite">(
+        fhirVersion,
+        parameter,
+        evaluation,
+        (fhirVersion, types, url) =>
+          ctx.resolveCanonical(fhirVersion, types[0], url),
       );
+
+      return;
+    }
+    case "quantity": {
+      const quantity_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "quantity",
+        parameter,
+        resource,
+        evaluation,
+      );
+
       switch (fhirVersion) {
         case R4: {
           await db
@@ -166,20 +385,15 @@ async function indexSearchParameter<
       }
     }
     case "date": {
-      const date_indexes = (
-        await dataConversion(fhirVersion, parameter, "date", evaluation)
-      )
-        .flat()
-        .map((value): s.r4_date_idx.Insertable | s.r4b_date_idx.Insertable => ({
-          tenant: ctx.tenant,
-          r_id: resource.id,
-          resource_type: resource.resourceType,
-          r_version_id: parseInt(resource.meta.versionId),
-          parameter_name: parameter.name,
-          parameter_url: parameter.url,
-          start_date: value.start as unknown as Date,
-          end_date: value.end as unknown as Date,
-        }));
+      const date_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "date",
+        parameter,
+        resource,
+        evaluation,
+      );
+
       switch (fhirVersion) {
         case R4: {
           await db
@@ -219,53 +433,14 @@ async function indexSearchParameter<
     }
 
     case "reference": {
-      const references = (
-        await dataConversion(
-          fhirVersion,
-          parameter,
-          "reference",
-          evaluation,
-          createResolverRemoteCanonical(ctx.client, ctx),
-        )
-      ).flat();
-
-      const reference_indexes = references
-        .filter(({ reference }) => {
-          if (!reference.reference) {
-            ctx.logger.warn("Cannot index logical reference.");
-            return false;
-          }
-          return true;
-        })
-        .map(
-          ({
-            reference,
-            resourceType,
-            id,
-          }):
-            | s.r4_reference_idx.Insertable
-            | s.r4b_reference_idx.Insertable => {
-            if (!resourceType || !id) {
-              throw new OperationError(
-                outcomeError(
-                  "exception",
-                  "Resource type or id not found when indexing the resource.",
-                ),
-              );
-            }
-            return {
-              tenant: ctx.tenant,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              reference: reference as db.JSONValue,
-              reference_type: resourceType,
-              reference_id: id,
-            };
-          },
-        );
+      const reference_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "reference",
+        parameter,
+        resource,
+        evaluation,
+      );
 
       switch (fhirVersion) {
         case R4: {
@@ -308,19 +483,14 @@ async function indexSearchParameter<
       }
     }
     case "uri": {
-      const uri_indexes = (
-        await dataConversion(fhirVersion, parameter, "uri", evaluation)
-      )
-        .flat()
-        .map((value): s.r4_uri_idx.Insertable | s.r4b_uri_idx.Insertable => ({
-          tenant: ctx.tenant,
-          r_id: resource.id,
-          resource_type: resource.resourceType,
-          r_version_id: parseInt(resource.meta.versionId),
-          parameter_name: parameter.name,
-          parameter_url: parameter.url,
-          value,
-        }));
+      const uri_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "uri",
+        parameter,
+        resource,
+        evaluation,
+      );
 
       switch (fhirVersion) {
         case R4: {
@@ -361,22 +531,15 @@ async function indexSearchParameter<
       }
     }
     case "token": {
-      const token_indexes = (
-        await dataConversion(fhirVersion, parameter, "token", evaluation)
-      )
-        .flat()
-        .map(
-          (value): s.r4_token_idx.Insertable | s.r4b_token_idx.Insertable => ({
-            tenant: ctx.tenant,
-            r_id: resource.id,
-            resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
-            parameter_name: parameter.name,
-            parameter_url: parameter.url,
-            system: value.system,
-            value: value.code,
-          }),
-        );
+      const token_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "token",
+        parameter,
+        resource,
+        evaluation,
+      );
+
       switch (fhirVersion) {
         case R4: {
           await db
@@ -417,28 +580,15 @@ async function indexSearchParameter<
       }
     }
     case "number": {
-      const number_indexes = (
-        await dataConversion(fhirVersion, parameter, "number", evaluation)
-      ).map(
-        (value): s.r4_number_idx.Insertable | s.r4b_number_idx.Insertable => {
-          if (typeof value !== "number")
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "Failed to index number. Value found is not a number.",
-              ),
-            );
-          return {
-            tenant: ctx.tenant,
-            r_id: resource.id,
-            resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
-            parameter_name: parameter.name,
-            parameter_url: parameter.url,
-            value,
-          };
-        },
+      const number_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "number",
+        parameter,
+        resource,
+        evaluation,
       );
+
       switch (fhirVersion) {
         case R4: {
           await db
@@ -478,23 +628,15 @@ async function indexSearchParameter<
     }
 
     case "string": {
-      const string_indexes = (
-        await dataConversion(fhirVersion, parameter, "string", evaluation)
-      )
-        .flat()
-        .map(
-          (
-            value,
-          ): s.r4_string_idx.Insertable | s.r4b_string_idx.Insertable => ({
-            tenant: ctx.tenant,
-            r_id: resource.id,
-            resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
-            parameter_name: parameter.name,
-            parameter_url: parameter.url,
-            value,
-          }),
-        );
+      const string_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "string",
+        parameter,
+        resource,
+        evaluation,
+      );
+
       switch (fhirVersion) {
         case R4: {
           await db
@@ -550,7 +692,7 @@ async function removeIndices<Version extends FHIR_VERSION>(
   resource: Resource<Version, AllResourceTypes>,
 ) {
   await Promise.all(
-    param_types_supported.map((type) => {
+    search_table_types.map((type) => {
       return db.sql<
         | s.r4_number_idx.SQL
         | s.r4_string_idx.SQL
@@ -609,7 +751,7 @@ async function indexResource<
         searchParameter.expression,
         resource,
         {
-          fhirVersion
+          fhirVersion,
         },
       );
 
@@ -621,6 +763,7 @@ async function indexResource<
           ),
         );
       }
+
       return indexSearchParameter(
         ctx,
         fhirVersion,

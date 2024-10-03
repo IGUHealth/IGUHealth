@@ -1,4 +1,6 @@
-type SUPPORTED_SEARCH_TYPES =
+type SEARCH_TYPES_SUPPORTED = SEARCH_TABLE_TYPES | "composite";
+
+export type SEARCH_TABLE_TYPES =
   | "number"
   | "date"
   | "string"
@@ -7,8 +9,7 @@ type SUPPORTED_SEARCH_TYPES =
   | "quantity"
   | "uri";
 
-// Composite,  Special
-export const param_types_supported: SUPPORTED_SEARCH_TYPES[] = [
+export const search_table_types: SEARCH_TABLE_TYPES[] = [
   "quantity",
   "date",
   "string",
@@ -18,11 +19,20 @@ export const param_types_supported: SUPPORTED_SEARCH_TYPES[] = [
   "reference",
 ];
 
-// | "composite"
+// composite is a special type that is not a table type.
+export const search_types_supported: SEARCH_TYPES_SUPPORTED[] = [
+  ...search_table_types,
+  "composite",
+];
+
 // | "special";
+
+export function isSearchTableType(type: string): type is SEARCH_TABLE_TYPES {
+  return search_table_types.includes(type as SEARCH_TABLE_TYPES);
+}
 
 export function isSupportedSearchType(
   type: string,
-): type is SUPPORTED_SEARCH_TYPES {
-  return param_types_supported.includes(type as SUPPORTED_SEARCH_TYPES);
+): type is SEARCH_TYPES_SUPPORTED {
+  return search_types_supported.includes(type as SEARCH_TYPES_SUPPORTED);
 }

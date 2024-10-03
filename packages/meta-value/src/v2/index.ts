@@ -431,7 +431,7 @@ export function metaValue<T>(
     }
     case value instanceof MetaValueV2Array ||
       value instanceof MetaValueV2Singular: {
-      throw new Error("Cannot create a MetaValue from another MetaValue");
+      return value;
     }
     default: {
       // Assign a type automatically if the value is a resourceType
