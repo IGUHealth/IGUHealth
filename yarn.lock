@@ -36577,7 +36577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^7.2.3, protobufjs@npm:^7.2.4, protobufjs@npm:^7.2.5":
+"protobufjs@npm:*, protobufjs@npm:^7.2.3, protobufjs@npm:^7.2.4, protobufjs@npm:^7.2.5":
   version: 7.4.0
   resolution: "protobufjs@npm:7.4.0"
   dependencies:

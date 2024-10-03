@@ -30,7 +30,7 @@ export async function generateAuthToken(context, events, done) {
     body: new URLSearchParams({
       grant_type: "client_credentials",
     }),
-    ...configureAuthHeader(tenant),
+    ...configureAuthHeader(CLIENT_ID, CLIENT_SECRET),
   });
 
   const accessTokenResponse = await response.json();
@@ -43,5 +43,6 @@ export async function generateAuthToken(context, events, done) {
   }
 
   context.vars.sharedToken = accessTokenResponse.access_token;
-  return done();
+
+  return;
 }

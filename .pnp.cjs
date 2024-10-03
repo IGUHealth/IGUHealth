@@ -741,7 +741,8 @@ const RAW_RUNTIME_STATE =
       ["npm:2.1.1", {\
         "packageLocation": "./.yarn/cache/@artilleryio-sketches-js-npm-2.1.1-d0b879c436-11c1d26511.zip/node_modules/@artilleryio/sketches-js/",\
         "packageDependencies": [\
-          ["@artilleryio/sketches-js", "npm:2.1.1"]\
+          ["@artilleryio/sketches-js", "npm:2.1.1"],\
+          ["protobufjs", "npm:7.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\

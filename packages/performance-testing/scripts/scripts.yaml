@@ -1,5 +1,5 @@
 config:
-  target: "{{ $env.FHIR_URL }}"
+  target: "{{ $env.FHIR_R4_URL }}"
   processor: "../helpers.mjs"
   phases:
     - arrivalCount: 10
