@@ -15,8 +15,8 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import {
-  isSupportedSearchType,
-  param_types_supported,
+  isSearchTableType,
+  search_table_types,
 } from "../../providers/postgres/constants.js";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
@@ -72,7 +72,7 @@ export function searchParameterToTableName<
   fhirVersion: Version,
   searchparameter_type: Type,
 ): `${Version extends R4 ? "r4" : "r4b"}_${Type}_idx` {
-  if (isSupportedSearchType(searchparameter_type)) {
+  if (isSearchTableType(searchparameter_type)) {
     switch (fhirVersion) {
       case R4B: {
         return `r4b_${searchparameter_type}_idx` as `${Version extends "4.0" ? "r4" : "r4b"}_${Type}_idx`;
@@ -237,7 +237,7 @@ export async function findSearchParameter<
     { name: "code", value: [code] },
     {
       name: "type",
-      value: param_types_supported,
+      value: search_table_types,
     },
     {
       name: "base",

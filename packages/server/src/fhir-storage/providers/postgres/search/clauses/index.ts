@@ -9,7 +9,7 @@ import {
   SearchParameterResource,
   searchParameterToTableName,
 } from "../../../../utilities/search/parameters.js";
-import { isSupportedSearchType } from "../../constants.js";
+import { isSearchTableType } from "../../constants.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";
@@ -44,7 +44,7 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
   const searchParameter = parameter.searchParameter;
   const parameterType = searchParameter.type as string;
 
-  if (!isSupportedSearchType(parameterType)) {
+  if (!isSearchTableType(parameterType)) {
     throw new OperationError(
       outcomeError(
         "not-supported",

@@ -14,7 +14,7 @@ import {
   searchParameterToTableName,
   searchResources,
 } from "../../../utilities/search/parameters.js";
-import { isSupportedSearchType, param_types_supported } from "../constants.js";
+import { isSearchTableType, search_table_types } from "../constants.js";
 
 type SORT_DIRECTION = "ascending" | "descending";
 
@@ -66,7 +66,8 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
             { name: "code", value: [paramName] },
             {
               name: "type",
-              value: param_types_supported,
+              // Don't include composite parameters
+              value: search_table_types,
             },
             {
               name: "base",
@@ -95,7 +96,7 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
   const sortQueries = db.mapWithSeparator(
     sortInformation.map(({ direction, parameter }, sortOrder: number) => {
       const parameterType = parameter.type as string;
-      if (!isSupportedSearchType(parameterType)) {
+      if (!isSearchTableType(parameterType)) {
         throw new OperationError(
           outcomeError(
             "not-supported",
