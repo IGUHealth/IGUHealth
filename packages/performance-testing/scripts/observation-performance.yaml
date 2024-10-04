@@ -2,7 +2,7 @@ config:
   target: "{{ $env.FHIR_R4_URL }}"
   processor: "../helpers.mjs"
   phases:
-    - arrivalRate: 67
+    - arrivalRate: 140
       duration: 30
 
 before:
