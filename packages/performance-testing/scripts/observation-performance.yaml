@@ -2,7 +2,7 @@ config:
   target: "{{ $env.FHIR_R4_URL }}"
   processor: "../helpers.mjs"
   phases:
-    - arrivalRate: 67
+    - arrivalRate: 140
       duration: 30
 
 before:
@@ -93,25 +93,3 @@ scenarios:
                   },
                 ],
             }
-      # - post:
-      #     headers:
-      #       Authorization: "Bearer {{ sharedToken }}"
-      #       Content-Type: "application/fhir+json"
-      #     url: "/Observation"
-      #     json:
-      #       {
-      #         "code":
-      #           {
-      #             "coding":
-      #               [
-      #                 {
-      #                   "code": "15074-8",
-      #                   "system": "http://loinc.org",
-      #                   "display": "Glucose [Moles/volume] in Blood",
-      #                 },
-      #               ],
-      #           },
-      #         "status": "final",
-      #         "subject": { "reference": "Patient/noO83wMVGPs2LDH2Dqd0KB" },
-      #         "resourceType": "Observation",
-      #       }
