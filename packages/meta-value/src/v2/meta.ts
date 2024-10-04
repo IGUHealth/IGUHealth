@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ElementNode,
-  MetaNode,
   MetaV2Compiled,
 } from "@iguhealth/codegen/generate/meta-data";
 import _r4Meta from "./generated/r4.json" with { type: "json" };

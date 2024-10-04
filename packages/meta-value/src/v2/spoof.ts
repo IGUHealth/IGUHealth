@@ -6,7 +6,7 @@ import {
   TypeInfo,
 } from "../interface.js";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { getMeta, getStartingMeta } from "./meta.js";
+import { getMeta } from "./meta.js";
 import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 
 export class SpoofMetaValueV2 implements IMetaValue<undefined> {

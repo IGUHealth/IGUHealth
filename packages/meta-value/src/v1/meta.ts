@@ -181,6 +181,7 @@ export async function deriveNextMetaInformation(
         resolveTypeToCanonical: meta.resolveTypeToCanonical,
         sd: meta.sd,
         type,
+        cardinality: nextElement.max === "1" ? "single" : "array",
         elementIndex: referenceElementIndex,
       };
     } else {
@@ -208,6 +209,7 @@ export async function deriveNextMetaInformation(
           resolveTypeToCanonical: meta.resolveTypeToCanonical,
           sd: sd,
           type: type,
+          cardinality: nextElement.max === "1" ? "single" : "array",
           elementIndex: 0,
         };
       }
@@ -218,6 +220,7 @@ export async function deriveNextMetaInformation(
         resolveTypeToCanonical: meta.resolveTypeToCanonical,
         sd: meta.sd,
         type,
+        cardinality: nextElement.max === "1" ? "single" : "array",
         elementIndex: index,
       };
     }
