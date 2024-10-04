@@ -12,7 +12,7 @@ import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 export class SpoofMetaValueV2 implements IMetaValue<undefined> {
   private _fhirVersion: FHIR_VERSION;
   private _base: uri;
-  private _meta: ElementNode | undefined;
+  private _meta: ElementNode;
 
   constructor(fhirVersion: FHIR_VERSION, base: uri, meta: ElementNode) {
     this._fhirVersion = fhirVersion;
@@ -22,7 +22,11 @@ export class SpoofMetaValueV2 implements IMetaValue<undefined> {
   }
 
   meta(): TypeInfo | undefined {
-    throw new Error("Method not implemented.");
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   getValue(): undefined {
     throw new Error("Method not implemented.");

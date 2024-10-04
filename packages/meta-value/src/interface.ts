@@ -6,6 +6,7 @@ export type Location = (string | number)[];
 export interface TypeInfo {
   fhirVersion: FHIR_VERSION;
   type: r4.uri;
+  cardinality: "single" | "array";
 }
 
 export interface IMetaValue<T> {

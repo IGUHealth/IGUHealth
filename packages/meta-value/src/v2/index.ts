@@ -62,7 +62,11 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
     return true;
   }
   meta(): TypeInfo | undefined {
-    return { type: this._meta.type, fhirVersion: this._fhirVersion };
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   location(): Location {
     return this._location;
@@ -123,7 +127,11 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     return [];
   }
   meta(): TypeInfo | undefined {
-    return { type: this._meta.type, fhirVersion: this._fhirVersion };
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   isArray(): this is MetaValueV2Array<T> {
     return false;
