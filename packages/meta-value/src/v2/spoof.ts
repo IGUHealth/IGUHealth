@@ -1,0 +1,68 @@
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import {
+  IMetaValue,
+  IMetaValueArray,
+  Location,
+  TypeInfo,
+} from "../interface.js";
+import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { getMeta, getStartingMeta } from "./meta.js";
+import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
+
+export class SpoofMetaValueV2 implements IMetaValue<undefined> {
+  private _fhirVersion: FHIR_VERSION;
+  private _base: uri;
+  private _meta: ElementNode | undefined;
+
+  constructor(fhirVersion: FHIR_VERSION, base: uri, meta: ElementNode) {
+    this._fhirVersion = fhirVersion;
+    this._base = base;
+    this._meta = meta;
+    this._base = base;
+  }
+
+  meta(): TypeInfo | undefined {
+    throw new Error("Method not implemented.");
+  }
+  getValue(): undefined {
+    throw new Error("Method not implemented.");
+  }
+  isArray(): this is IMetaValueArray<undefined> {
+    throw new Error("Method not implemented.");
+  }
+  location(): Location | undefined {
+    throw new Error("Method not implemented.");
+  }
+  descend(field: string | number): IMetaValue<unknown> | undefined {
+    if (!this._meta) {
+      return undefined;
+    }
+
+    if (typeof field === "number") {
+      if (this._meta.cardinality === "single") return undefined;
+      return new SpoofMetaValueV2(this._fhirVersion, this._base, {
+        ...this._meta,
+        cardinality: "single",
+      });
+    }
+
+    const nextMeta = getMeta(
+      this._fhirVersion,
+      this._base,
+      this._meta,
+      {},
+      field.toString(),
+    );
+
+    if (!nextMeta?.meta) return undefined;
+
+    return new SpoofMetaValueV2(
+      this._fhirVersion,
+      nextMeta.base as uri,
+      nextMeta.meta,
+    );
+  }
+  keys(): (string | number)[] {
+    throw new Error("Method not implemented.");
+  }
+}
