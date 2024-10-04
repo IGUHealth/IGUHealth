@@ -137,7 +137,7 @@ jobs:
           CLIENT_SECRET: mysecret
         run: |
           yarn workspace @iguhealth/server cli admin client-app create -t test-system -i $CLIENT_ID -s $CLIENT_SECRET
-          yarn workspace @iguhealth/performance-testing artillery run scripts/scripts.yaml
+          yarn workspace @iguhealth/performance-testing artillery run scripts/observation-performance.yaml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
