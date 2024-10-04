@@ -374,7 +374,11 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
 
   if (process.env.LOG_SQL) {
     const v = searchSQL.compile();
-    ctx.logger.info(v.text);
+    let text = v.text;
+    v.values.forEach((v, i) => {
+      text = text.replace(`$${i + 1}`, typeof v === "string" ? `'${v}'` : v);
+    });
+    ctx.logger.info(text);
   }
 
   const result = await searchSQL.run(ctx.db);
