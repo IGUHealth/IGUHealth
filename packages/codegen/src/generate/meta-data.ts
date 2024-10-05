@@ -192,7 +192,9 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
       } else {
         const index = indices[element.path as ElementPath];
         metaInfo[index] = createSingularNode(
-          element,
+          // if index is zero set cardinality to 1
+          // as it is the root element.
+          index === 0 ? { ...element, max: "1" } : element,
           index === 0
             ? ({ code: element.path } as ElementDefinitionType)
             : (element.type?.[0] as ElementDefinitionType),

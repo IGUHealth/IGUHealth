@@ -9,7 +9,7 @@
         "implicitRules": 3,
         "language": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -57,7 +57,7 @@
         "guarantor": 23,
         "partOf": 30
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -285,7 +285,7 @@
         "transform": 58,
         "dynamicValue": 59
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -669,7 +669,7 @@
         "referenceDocument": 39,
         "study": 40
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -918,7 +918,7 @@
         "note": 23,
         "reaction": 24
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -1145,7 +1145,7 @@
         "participant": 29,
         "requestedPeriod": 38
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -1370,7 +1370,7 @@
         "participantStatus": 15,
         "comment": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -1478,7 +1478,7 @@
         "source": 37,
         "entity": 44
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -1860,7 +1860,7 @@
         "created": 12,
         "author": 13
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -1941,7 +1941,7 @@
         "securityContext": 6,
         "data": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -2004,7 +2004,7 @@
         "manipulation": 31,
         "storage": 37
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -2291,7 +2291,7 @@
         "image": 15,
         "patient": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -2391,7 +2391,7 @@
         "entry": 15,
         "signature": 47
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -2711,7 +2711,7 @@
         "messaging": 105,
         "document": 123
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -3509,7 +3509,7 @@
         "activity": 30,
         "note": 59
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -3873,7 +3873,7 @@
         "telecom": 27,
         "note": 28
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -4052,7 +4052,7 @@
         "additionalClassification": 20,
         "relatedEntry": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -4232,7 +4232,7 @@
         "note": 38,
         "supportingInformation": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -4481,7 +4481,7 @@
         "applicability": 30,
         "propertyGroup": 37
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -4790,7 +4790,7 @@
         "item": 94,
         "total": 148
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -5734,7 +5734,7 @@
         "insurance": 126,
         "error": 135
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -6595,7 +6595,7 @@
         "supportingInfo": 38,
         "note": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -6851,7 +6851,7 @@
         "property": 40,
         "concept": 48
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -7278,7 +7278,7 @@
         "payload": 30,
         "note": 35
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -7502,7 +7502,7 @@
         "reasonReference": 33,
         "note": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -7716,7 +7716,7 @@
         "search": 21,
         "resource": 22
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -7896,7 +7896,7 @@
         "event": 33,
         "section": 40
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -8232,7 +8232,7 @@
         "target": 25,
         "group": 26
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -8636,7 +8636,7 @@
         "evidence": 30,
         "note": 36
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -8873,7 +8873,7 @@
         "verification": 25,
         "provision": 32
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -9246,7 +9246,7 @@
         "rule": 177,
         "legallyBinding": 182
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -10391,7 +10391,7 @@
         "subrogation": 41,
         "contract": 42
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -10658,7 +10658,7 @@
         "insurance": 27,
         "item": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -10988,7 +10988,7 @@
         "form": 52,
         "error": 53
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -11355,7 +11355,7 @@
         "reference": 24,
         "mitigation": 25
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -11571,7 +11571,7 @@
         "safety": 64,
         "parent": 65
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -11976,7 +11976,7 @@
         "parentDevice": 56,
         "material": 57
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -12366,7 +12366,7 @@
         "measurementPeriod": 17,
         "calibration": 18
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -12535,7 +12535,7 @@
         "note": 36,
         "relevantHistory": 37
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -12769,7 +12769,7 @@
         "bodySite": 20,
         "note": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -12913,7 +12913,7 @@
         "conclusionCode": 30,
         "presentedForm": 31
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -13107,7 +13107,7 @@
         "content": 19,
         "related": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -13272,7 +13272,7 @@
         "content": 28,
         "context": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -13535,7 +13535,7 @@
         "extension": 7,
         "modifierExtension": 8
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -13625,7 +13625,7 @@
         "effectEstimate": 53,
         "certainty": 70
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -14128,7 +14128,7 @@
         "serviceProvider": 71,
         "partOf": 72
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -14569,7 +14569,7 @@
         "address": 18,
         "header": 19
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -14688,7 +14688,7 @@
         "candidate": 14,
         "coverage": 15
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -14788,7 +14788,7 @@
         "organization": 15,
         "requestProvider": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -14897,7 +14897,7 @@
         "team": 30,
         "account": 31
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -15112,7 +15112,7 @@
         "relatedArtifact": 35,
         "trigger": 36
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -15340,7 +15340,7 @@
         "exposureVariant": 35,
         "outcome": 36
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -15564,7 +15564,7 @@
         "type": 34,
         "characteristic": 35
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -15847,7 +15847,7 @@
         "process": 50,
         "workflow": 85
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -16392,7 +16392,7 @@
         "benefitPeriod": 237,
         "benefitBalance": 238
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -17961,7 +17961,7 @@
         "note": 25,
         "condition": 26
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -18185,7 +18185,7 @@
         "encounter": 15,
         "author": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -18298,7 +18298,7 @@
         "outcomeCode": 29,
         "outcomeReference": 30
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -18502,7 +18502,7 @@
         "profile": 22,
         "link": 23
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -18795,7 +18795,7 @@
         "characteristic": 17,
         "member": 25
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -19005,7 +19005,7 @@
         "result": 22,
         "dataRequirement": 23
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -19165,7 +19165,7 @@
         "availabilityExceptions": 48,
         "endpoint": 49
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -19470,7 +19470,7 @@
         "description": 27,
         "series": 28
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -19823,7 +19823,7 @@
         "reaction": 47,
         "protocolApplied": 54
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -20206,7 +20206,7 @@
         "doseNumber": 20,
         "seriesDoses": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -20339,7 +20339,7 @@
         "authority": 12,
         "recommendation": 13
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -20571,7 +20571,7 @@
         "definition": 38,
         "manifest": 79
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -21195,7 +21195,7 @@
         "coverage": 28,
         "plan": 46
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -21698,7 +21698,7 @@
         "paymentTerms": 41,
         "note": 42
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -21979,7 +21979,7 @@
         "dataRequirement": 38,
         "content": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -22197,7 +22197,7 @@
         "author": 10,
         "item": 11
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -22314,7 +22314,7 @@
         "entry": 20,
         "emptyReason": 28
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -22497,7 +22497,7 @@
         "availabilityExceptions": 37,
         "endpoint": 38
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -22762,7 +22762,7 @@
         "group": 48,
         "supplementalData": 75
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -23246,7 +23246,7 @@
         "group": 18,
         "evaluatedResource": 55
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -23608,7 +23608,7 @@
         "content": 29,
         "note": 30
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -23786,7 +23786,7 @@
         "ingredient": 15,
         "batch": 22
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -23975,7 +23975,7 @@
         "dosage": 31,
         "eventHistory": 41
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -24248,7 +24248,7 @@
         "detectedIssue": 43,
         "eventHistory": 44
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -24529,7 +24529,7 @@
         "regulatory": 87,
         "kinetics": 109
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -25284,7 +25284,7 @@
         "detectedIssue": 59,
         "eventHistory": 60
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -25653,7 +25653,7 @@
         "note": 24,
         "dosage": 25
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -25821,7 +25821,7 @@
         "manufacturingBusinessOperation": 44,
         "specialDesignation": 54
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -26223,7 +26223,7 @@
         "regulator": 31,
         "procedure": 32
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -26459,7 +26459,7 @@
         "otherTherapy": 14,
         "population": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -26595,7 +26595,7 @@
         "undesirableEffect": 21,
         "population": 22
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -26738,7 +26738,7 @@
         "specifiedSubstance": 13,
         "substance": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27015,7 +27015,7 @@
         "incidence": 18,
         "management": 19
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27143,7 +27143,7 @@
         "physicalCharacteristics": 14,
         "otherCharacteristics": 15
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27244,7 +27244,7 @@
         "batchIdentifier": 16,
         "packageItem": 22
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27473,7 +27473,7 @@
         "characteristics": 14,
         "routeOfAdministration": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27734,7 +27734,7 @@
         "frequencyOfOccurrence": 12,
         "population": 13
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -27840,7 +27840,7 @@
         "allowedResponse": 38,
         "graph": 44
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -28107,7 +28107,7 @@
         "focus": 39,
         "definition": 40
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -28370,7 +28370,7 @@
         "pointer": 81,
         "structureVariant": 82
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -28992,7 +28992,7 @@
         "usage": 20,
         "uniqueId": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -29181,7 +29181,7 @@
         "enteralFormula": 51,
         "note": 70
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -29632,7 +29632,7 @@
         "derivedFrom": 40,
         "component": 41
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -29952,7 +29952,7 @@
         "abnormalCodedValueSet": 38,
         "criticalCodedValueSet": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -30212,7 +30212,7 @@
         "parameter": 33,
         "overload": 58
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -30578,7 +30578,7 @@
         "modifierExtension": 8,
         "issue": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -30706,7 +30706,7 @@
         "contact": 17,
         "endpoint": 25
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -30869,7 +30869,7 @@
         "telecom": 19,
         "endpoint": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -30983,7 +30983,7 @@
         "language": 4,
         "parameter": 5
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -31131,7 +31131,7 @@
         "managingOrganization": 38,
         "link": 39
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -31412,7 +31412,7 @@
         "amount": 19,
         "paymentStatus": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -31544,7 +31544,7 @@
         "formCode": 35,
         "processNote": 36
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -31798,7 +31798,7 @@
         "active": 17,
         "link": 18
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -31968,7 +31968,7 @@
         "goal": 38,
         "action": 55
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -32624,7 +32624,7 @@
         "qualification": 17,
         "communication": 25
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -32789,7 +32789,7 @@
         "availabilityExceptions": 33,
         "endpoint": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -33020,7 +33020,7 @@
         "usedReference": 46,
         "usedCode": 47
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -33303,7 +33303,7 @@
         "entity": 24,
         "signature": 31
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -33513,7 +33513,7 @@
         "code": 29,
         "item": 30
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -33929,7 +33929,7 @@
         "source": 18,
         "item": 19
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -34139,7 +34139,7 @@
         "period": 19,
         "communication": 20
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -34306,7 +34306,7 @@
         "note": 25,
         "action": 26
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -34696,7 +34696,7 @@
         "exposureAlternative": 41,
         "outcome": 42
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -34959,7 +34959,7 @@
         "variableType": 40,
         "characteristic": 41
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -35315,7 +35315,7 @@
         "arm": 31,
         "objective": 38
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -35570,7 +35570,7 @@
         "actualArm": 15,
         "consent": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -35684,7 +35684,7 @@
         "mitigation": 33,
         "note": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -35922,7 +35922,7 @@
         "riskEstimate": 44,
         "certainty": 62
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -36362,7 +36362,7 @@
         "planningHorizon": 15,
         "comment": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -36485,7 +36485,7 @@
         "chain": 33,
         "component": 34
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -36737,7 +36737,7 @@
         "patientInstruction": 40,
         "relevantHistory": 41
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -36981,7 +36981,7 @@
         "overbooked": 18,
         "comment": 19
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -37106,7 +37106,7 @@
         "condition": 46,
         "note": 47
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -37408,7 +37408,7 @@
         "collection": 13,
         "typeTested": 14
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -37734,7 +37734,7 @@
         "snapshot": 46,
         "differential": 51
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -38072,7 +38072,7 @@
         "import": 32,
         "group": 33
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -38691,7 +38691,7 @@
         "error": 14,
         "channel": 15
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -38834,7 +38834,7 @@
         "instance": 14,
         "ingredient": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -39004,7 +39004,7 @@
         "oligoNucleotideType": 12,
         "subunit": 13
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -39242,7 +39242,7 @@
         "monomerSet": 13,
         "repeat": 26
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -39573,7 +39573,7 @@
         "disulfideLinkage": 11,
         "subunit": 12
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -39723,7 +39723,7 @@
         "classification": 24,
         "target": 32
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -40010,7 +40010,7 @@
         "organism": 25,
         "partDescription": 57
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -40409,7 +40409,7 @@
         "protein": 113,
         "sourceMaterial": 114
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -41115,7 +41115,7 @@
         "destination": 23,
         "receiver": 24
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -41281,7 +41281,7 @@
         "deliverFrom": 27,
         "deliverTo": 28
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -41488,7 +41488,7 @@
         "input": 44,
         "output": 50
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -41928,7 +41928,7 @@
         "translation": 78,
         "closure": 83
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -42467,7 +42467,7 @@
         "test": 46,
         "teardown": 58
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -42889,7 +42889,7 @@
         "test": 137,
         "teardown": 149
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -43853,7 +43853,7 @@
         "compose": 25,
         "expansion": 59
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -44373,7 +44373,7 @@
         "attestation": 31,
         "validator": 43
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -44676,7 +44676,7 @@
         "prescriber": 15,
         "lensSpecification": 16
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45032,7 +45032,7 @@
         "id": 1,
         "extension": 2
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45054,7 +45054,7 @@
         "extension": 2,
         "modifierExtension": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45081,7 +45081,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45108,7 +45108,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45135,7 +45135,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45162,7 +45162,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45189,7 +45189,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45216,7 +45216,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45243,7 +45243,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45270,7 +45270,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45297,7 +45297,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45324,7 +45324,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45351,7 +45351,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45378,7 +45378,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45405,7 +45405,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45432,7 +45432,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45459,7 +45459,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45486,7 +45486,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45513,7 +45513,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45540,7 +45540,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45567,7 +45567,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45594,7 +45594,7 @@
         "extension": 2,
         "value": 3
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45630,7 +45630,7 @@
         "country": 11,
         "period": 12
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45706,7 +45706,7 @@
         "system": 6,
         "code": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45755,7 +45755,7 @@
         "time": 4,
         "text": 5
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45802,7 +45802,7 @@
         "title": 9,
         "creation": 10
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45865,7 +45865,7 @@
         "coding": 3,
         "text": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45901,7 +45901,7 @@
         "display": 6,
         "userSelected": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45949,7 +45949,7 @@
         "name": 3,
         "telecom": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -45985,7 +45985,7 @@
         "rank": 6,
         "period": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46034,7 +46034,7 @@
         "name": 4,
         "contact": 5
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46075,7 +46075,7 @@
         "system": 6,
         "code": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46129,7 +46129,7 @@
         "limit": 20,
         "sort": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46298,7 +46298,7 @@
         "system": 6,
         "code": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46358,7 +46358,7 @@
         "maxDosePerAdministration": 20,
         "maxDosePerLifetime": 21
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46496,7 +46496,7 @@
         "system": 6,
         "code": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -46577,7 +46577,7 @@
         "binding": 71,
         "mapping": 77
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47294,7 +47294,7 @@
         "expression": 6,
         "reference": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47342,7 +47342,7 @@
         "url": 3,
         "value": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47431,7 +47431,7 @@
         "suffix": 8,
         "period": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47493,7 +47493,7 @@
         "period": 7,
         "assigner": 8
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47550,7 +47550,7 @@
         "dateRange": 7,
         "restoreDate": 8
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47607,7 +47607,7 @@
         "security": 7,
         "tag": 8
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47660,7 +47660,7 @@
         "value": 3,
         "currency": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47693,7 +47693,7 @@
         "status": 3,
         "div": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47731,7 +47731,7 @@
         "type": 8,
         "profile": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47789,7 +47789,7 @@
         "start": 3,
         "end": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47825,7 +47825,7 @@
         "race": 6,
         "physiologicalCondition": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47886,7 +47886,7 @@
         "image": 13,
         "scoring": 14
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -47972,7 +47972,7 @@
         "period": 6,
         "specialPrecautionsForStorage": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48023,7 +48023,7 @@
         "system": 6,
         "code": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48071,7 +48071,7 @@
         "low": 3,
         "high": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48104,7 +48104,7 @@
         "numerator": 3,
         "denominator": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48139,7 +48139,7 @@
         "identifier": 5,
         "display": 6
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48187,7 +48187,7 @@
         "document": 8,
         "resource": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48250,7 +48250,7 @@
         "dimensions": 8,
         "data": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48313,7 +48313,7 @@
         "sigFormat": 8,
         "data": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48374,7 +48374,7 @@
         "amountText": 6,
         "referenceRange": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48454,7 +48454,7 @@
         "repeat": 5,
         "code": 23
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48608,7 +48608,7 @@
         "data": 6,
         "condition": 7
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48661,7 +48661,7 @@
         "code": 3,
         "value": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48703,7 +48703,7 @@
         "rule": 12,
         "target": 22
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48858,7 +48858,7 @@
         "target": 7,
         "access": 9
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -48971,7 +48971,7 @@
         "tosUri": 13,
         "policyUri": 14
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -49056,7 +49056,7 @@
         "accessType": 5,
         "oidc": 6
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -49175,7 +49175,7 @@
         "role": 7,
         "federated": 8
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -49230,7 +49230,7 @@
         "type": 5,
         "security": 6
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
@@ -49293,7 +49293,7 @@
         "topicId": 3,
         "broker": 4
       },
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",
