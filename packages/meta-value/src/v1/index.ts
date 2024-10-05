@@ -150,6 +150,9 @@ class MetaValueArrayImpl<T> implements IMetaValueArray<T> {
   getValue(): Array<T> {
     return this.value.map((v) => v.getValue());
   }
+  isType(type: string): boolean {
+    throw new Error("Method not implemented.");
+  }
   toArray(): Array<MetaValueSingular<T>> {
     return this.value;
   }
@@ -195,6 +198,9 @@ class MetaValueSingular<T> implements IMetaValue<T> {
   }
   meta(): TypeMeta | undefined {
     return this._meta.type;
+  }
+  isType(type: string): boolean {
+    throw new Error("Method not implemented.");
   }
   isArray(): this is MetaValueArrayImpl<T> {
     return false;

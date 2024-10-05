@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 import {
-  ElementNode,
-  MetaNode,
-  MetaV2Compiled,
-} from "@iguhealth/codegen/generate/meta-data";
-import { Element, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+  Resource as R4Resource,
+  Element,
+  Reference,
+  uri,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 
 import {
   IMetaValue,
@@ -23,101 +24,7 @@ import {
   isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
-import _r4Meta from "./generated/r4.json" with { type: "json" };
-import _r4bMeta from "./generated/r4b.json" with { type: "json" };
-
-const R4_META: MetaV2Compiled = _r4Meta as unknown as MetaV2Compiled;
-const R4B_META: MetaV2Compiled = _r4bMeta as unknown as MetaV2Compiled;
-
-function getGlobalMeta(fhirVersion: FHIR_VERSION): MetaV2Compiled {
-  switch (fhirVersion) {
-    case R4:
-      return R4_META;
-    case R4B:
-      return R4B_META;
-    default:
-      throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
-  }
-}
-
-function getStartingMeta(
-  fhirVersion: FHIR_VERSION,
-  type: uri,
-): ElementNode | undefined {
-  return getGlobalMeta(fhirVersion)[type]?.[0] as ElementNode | undefined;
-}
-
-function getMeta<T>(
-  fhirVersion: FHIR_VERSION,
-  base: string,
-  meta: ElementNode,
-  value: T | FHIRPrimitive<RawPrimitive>,
-  field: string,
-): { base: string; meta?: MetaNode; field: string } | undefined {
-  const globalMeta = getGlobalMeta(fhirVersion);
-
-  const nextMeta = globalMeta[base][meta.properties?.[field] ?? -1];
-
-  switch (true) {
-    case nextMeta === undefined: {
-      return undefined;
-    }
-    case nextMeta._type_ === "type": {
-      // Special handling for Bundle.entry.resource which is abstract Resource;
-      // Descend into the resourceType field to get the actual type.
-      if (nextMeta.type === "Resource" || nextMeta.type === "DomainResource") {
-        const type =
-          isObject(value) && isObject(value?.[field])
-            ? (value?.[field]?.resourceType as uri)
-            : nextMeta.type;
-
-        return {
-          field,
-          base: type,
-          meta: {
-            ...(getStartingMeta(fhirVersion, type) as ElementNode),
-            cardinality: nextMeta.cardinality,
-          },
-        };
-      } else {
-        return {
-          field,
-          base: nextMeta.type,
-          meta: {
-            ...(getStartingMeta(fhirVersion, nextMeta.type) as ElementNode),
-            cardinality: nextMeta.cardinality,
-          },
-        };
-      }
-    }
-    case nextMeta._type_ === "typechoice": {
-      for (const typeChoiceField of Object.keys(nextMeta.fields)) {
-        if ((value as any)?.[typeChoiceField] !== undefined) {
-          const typeChoiceMeta = getStartingMeta(
-            fhirVersion,
-            nextMeta.fields[typeChoiceField],
-          ) as ElementNode;
-          return {
-            field: typeChoiceField,
-            base: typeChoiceMeta.type,
-            meta: {
-              ...typeChoiceMeta,
-              cardinality: nextMeta.cardinality,
-            },
-          };
-        }
-      }
-      return undefined;
-    }
-    case nextMeta._type_ === "complex": {
-      return { base, meta: nextMeta, field };
-    }
-    default: {
-      // @ts-ignore
-      throw new Error(`Unknown meta type: ${nextMeta._type_}`);
-    }
-  }
-}
+import { getResolvedMeta, getStartingMeta } from "./meta.js";
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
   private _value: Array<MetaValueV2Singular<T>>;
@@ -153,6 +60,20 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   getValue(): Array<T> {
     return this._value.map((v) => v.getValue());
   }
+  isType(type: string): boolean {
+    if (this.meta()?.type === "Reference" && type !== "Reference") {
+      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+    }
+
+    if (this.meta()?.type) {
+      return this.meta()?.type === type;
+    }
+
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
+  }
   toArray(): Array<MetaValueV2Singular<T>> {
     return this._value;
   }
@@ -160,7 +81,11 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
     return true;
   }
   meta(): TypeInfo | undefined {
-    return { type: this._meta.type, fhirVersion: this._fhirVersion };
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   location(): Location {
     return this._location;
@@ -221,16 +146,34 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     return [];
   }
   meta(): TypeInfo | undefined {
-    return { type: this._meta.type, fhirVersion: this._fhirVersion };
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   isArray(): this is MetaValueV2Array<T> {
     return false;
+  }
+  isType(type: string): boolean {
+    if (this.meta()?.type === "Reference" && type !== "Reference") {
+      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+    }
+
+    if (this.meta()?.type) {
+      return this.meta()?.type === type;
+    }
+
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
   }
   location(): Location {
     return this._location;
   }
   descend(_field: string): IMetaValue<unknown> | undefined {
-    const nextMeta = getMeta(
+    const nextMeta = getResolvedMeta(
       this._fhirVersion,
       this._base,
       this._meta,
@@ -314,6 +257,12 @@ class NonMetaValue<T> implements IMetaValue<T> {
   }
   meta(): TypeInfo | undefined {
     return undefined;
+  }
+  isType(type: string): boolean {
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
   }
   keys() {
     if (isObject(this._value)) {

@@ -6,6 +6,7 @@ export type Location = (string | number)[];
 export interface TypeInfo {
   fhirVersion: FHIR_VERSION;
   type: r4.uri;
+  cardinality: "single" | "array";
 }
 
 export interface IMetaValue<T> {
@@ -14,6 +15,7 @@ export interface IMetaValue<T> {
   isArray(): this is IMetaValueArray<T>;
   location(): Location | undefined;
   descend(field: string | number): IMetaValue<unknown> | undefined;
+  isType(type: string): boolean;
   keys(): (string | number)[];
 }
 
