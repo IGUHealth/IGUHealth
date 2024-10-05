@@ -10,9 +10,9 @@ import { getResolvedMeta } from "./meta.js";
 import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 
 export class SpoofMetaValueV2 implements IMetaValue<undefined> {
-  private _fhirVersion: FHIR_VERSION;
-  private _base: uri;
-  private _meta: ElementNode;
+  private readonly _fhirVersion: FHIR_VERSION;
+  private readonly _base: uri;
+  private readonly _meta: ElementNode;
 
   constructor(fhirVersion: FHIR_VERSION, base: uri, meta: ElementNode) {
     this._fhirVersion = fhirVersion;
@@ -37,7 +37,7 @@ export class SpoofMetaValueV2 implements IMetaValue<undefined> {
   location(): Location | undefined {
     throw new Error("Method not implemented.");
   }
-  isType(type: string): boolean {
+  isType(_type: string): boolean {
     throw new Error("Method not implemented.");
   }
   descend(field: string | number): IMetaValue<unknown> | undefined {

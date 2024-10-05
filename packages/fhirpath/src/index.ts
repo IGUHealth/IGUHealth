@@ -1,4 +1,4 @@
-import { Reference, Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import * as metaUtils from "@iguhealth/meta-value/utilities";
