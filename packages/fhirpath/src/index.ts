@@ -553,16 +553,6 @@ const equalityCheck = (
   return left[0].getValue() === right[0].getValue();
 };
 
-function isType(v: IMetaValue<unknown>, type: string): boolean {
-  if (v.meta()?.type === "Reference" && type !== "Reference") {
-    return (v.getValue() as Reference).reference?.split("/")[0] === type;
-  }
-  if (v.meta()?.type) {
-    return v.meta()?.type === type;
-  }
-  return (v.getValue() as Resource | undefined)?.resourceType === type;
-}
-
 function filterByType<T>(type: string, context: IMetaValue<T>[]) {
   // Special handling for type 'Resource' and 'DomainResource' abstract types
   if (type === "Resource" || type === "DomainResource") {
@@ -571,7 +561,7 @@ function filterByType<T>(type: string, context: IMetaValue<T>[]) {
     );
   }
   return context.filter((v) => {
-    return isType(v, type);
+    return v.isType(type);
   });
 }
 
@@ -668,7 +658,7 @@ const fp_operations: Record<
           return metaUtils.flatten(
             await metaValueV2.metaValue(
               { fhirVersion: options.fhirVersion, type: "boolean" as uri },
-              isType(c, typeIdentifier),
+              c.isType(typeIdentifier),
             ),
           );
         }),

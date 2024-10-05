@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ElementNode,
+  MetaNode,
   MetaV2Compiled,
+  TypeChoiceNode,
+  TypeNode,
 } from "@iguhealth/codegen/generate/meta-data";
 import _r4Meta from "./generated/r4.json" with { type: "json" };
 import _r4bMeta from "./generated/r4b.json" with { type: "json" };
@@ -34,16 +37,54 @@ export function getStartingMeta(
   return getGlobalMeta(fhirVersion)[type]?.[0] as ElementNode | undefined;
 }
 
-export function getMeta<T>(
+export function getMeta(
+  fhirVersion: FHIR_VERSION,
+  base: string,
+  meta: ElementNode,
+  field: string,
+): MetaNode {
+  const globalMeta = getGlobalMeta(fhirVersion);
+  return globalMeta[base][meta.properties?.[field] ?? -1];
+}
+
+function resolveTypeNode(
+  fhirVersion: FHIR_VERSION,
+  meta: TypeNode | TypeChoiceNode,
+  type: uri,
+  field: string,
+) {
+  return {
+    field,
+    base: type,
+    meta: {
+      ...(getStartingMeta(fhirVersion, type) as ElementNode),
+      cardinality: meta.cardinality,
+    },
+  };
+}
+
+function resolveResourceType(
+  fhirVersion: FHIR_VERSION,
+  meta: TypeNode,
+  value: any,
+  field: string,
+) {
+  const type =
+    isObject(value) && isObject(value?.[field])
+      ? (value?.[field].resourceType as uri)
+      : meta.type;
+
+  return resolveTypeNode(fhirVersion, meta, type, field);
+}
+
+export function getResolvedMeta<T>(
   fhirVersion: FHIR_VERSION,
   base: string,
   meta: ElementNode,
   value: T | FHIRPrimitive<RawPrimitive>,
   field: string,
 ): { base: string; meta: ElementNode; field: string } | undefined {
-  const globalMeta = getGlobalMeta(fhirVersion);
-
-  const nextMeta = globalMeta[base][meta.properties?.[field] ?? -1];
+  const nextMeta = getMeta(fhirVersion, base, meta, field);
 
   switch (true) {
     case nextMeta === undefined: {
@@ -53,45 +94,20 @@ export function getMeta<T>(
       // Special handling for Bundle.entry.resource which is abstract Resource;
       // Descend into the resourceType field to get the actual type.
       if (nextMeta.type === "Resource" || nextMeta.type === "DomainResource") {
-        const type =
-          isObject(value) && isObject(value?.[field])
-            ? (value?.[field]?.resourceType as uri)
-            : nextMeta.type;
-
-        return {
-          field,
-          base: type,
-          meta: {
-            ...(getStartingMeta(fhirVersion, type) as ElementNode),
-            cardinality: nextMeta.cardinality,
-          },
-        };
+        return resolveResourceType(fhirVersion, nextMeta, value, field);
       } else {
-        return {
-          field,
-          base: nextMeta.type,
-          meta: {
-            ...(getStartingMeta(fhirVersion, nextMeta.type) as ElementNode),
-            cardinality: nextMeta.cardinality,
-          },
-        };
+        return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
       }
     }
     case nextMeta._type_ === "typechoice": {
       for (const typeChoiceField of Object.keys(nextMeta.fields)) {
         if ((value as any)?.[typeChoiceField] !== undefined) {
-          const typeChoiceMeta = getStartingMeta(
+          return resolveTypeNode(
             fhirVersion,
+            nextMeta,
             nextMeta.fields[typeChoiceField],
-          ) as ElementNode;
-          return {
-            field: typeChoiceField,
-            base: typeChoiceMeta.type,
-            meta: {
-              ...typeChoiceMeta,
-              cardinality: nextMeta.cardinality,
-            },
-          };
+            typeChoiceField,
+          );
         }
       }
       return undefined;

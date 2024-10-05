@@ -6,7 +6,7 @@ import {
   TypeInfo,
 } from "../interface.js";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { getMeta } from "./meta.js";
+import { getResolvedMeta } from "./meta.js";
 import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 
 export class SpoofMetaValueV2 implements IMetaValue<undefined> {
@@ -37,6 +37,9 @@ export class SpoofMetaValueV2 implements IMetaValue<undefined> {
   location(): Location | undefined {
     throw new Error("Method not implemented.");
   }
+  isType(type: string): boolean {
+    throw new Error("Method not implemented.");
+  }
   descend(field: string | number): IMetaValue<unknown> | undefined {
     if (!this._meta) {
       return undefined;
@@ -50,7 +53,7 @@ export class SpoofMetaValueV2 implements IMetaValue<undefined> {
       });
     }
 
-    const nextMeta = getMeta(
+    const nextMeta = getResolvedMeta(
       this._fhirVersion,
       this._base,
       this._meta,

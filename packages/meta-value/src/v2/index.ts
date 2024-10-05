@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
-import { Element, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  Resource as R4Resource,
+  Element,
+  Reference,
+  uri,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 
 import {
@@ -19,7 +24,7 @@ import {
   isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
-import { getMeta, getStartingMeta } from "./meta.js";
+import { getResolvedMeta, getStartingMeta } from "./meta.js";
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
   private _value: Array<MetaValueV2Singular<T>>;
@@ -54,6 +59,20 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   }
   getValue(): Array<T> {
     return this._value.map((v) => v.getValue());
+  }
+  isType(type: string): boolean {
+    if (this.meta()?.type === "Reference" && type !== "Reference") {
+      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+    }
+
+    if (this.meta()?.type) {
+      return this.meta()?.type === type;
+    }
+
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
   }
   toArray(): Array<MetaValueV2Singular<T>> {
     return this._value;
@@ -136,11 +155,25 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
   isArray(): this is MetaValueV2Array<T> {
     return false;
   }
+  isType(type: string): boolean {
+    if (this.meta()?.type === "Reference" && type !== "Reference") {
+      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+    }
+
+    if (this.meta()?.type) {
+      return this.meta()?.type === type;
+    }
+
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
+  }
   location(): Location {
     return this._location;
   }
   descend(_field: string): IMetaValue<unknown> | undefined {
-    const nextMeta = getMeta(
+    const nextMeta = getResolvedMeta(
       this._fhirVersion,
       this._base,
       this._meta,
@@ -224,6 +257,12 @@ class NonMetaValue<T> implements IMetaValue<T> {
   }
   meta(): TypeInfo | undefined {
     return undefined;
+  }
+  isType(type: string): boolean {
+    return (
+      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
+      type
+    );
   }
   keys() {
     if (isObject(this._value)) {
