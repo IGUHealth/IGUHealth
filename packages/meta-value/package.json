@@ -41,6 +41,7 @@
     ".": "./lib/v1/index.js",
     "./v1": "./lib/v1/index.js",
     "./v2": "./lib/v2/index.js",
+    "./spoof": "./lib/v2/spoof.js",
     "./utilities": "./lib/utilities.js",
     "./interface": "./lib/interface.js"
   }

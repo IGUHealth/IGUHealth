@@ -1,4 +1,4 @@
-import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import { uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import * as metaUtils from "@iguhealth/meta-value/utilities";
@@ -554,15 +554,7 @@ const equalityCheck = (
 };
 
 function filterByType<T>(type: string, context: IMetaValue<T>[]) {
-  // Special handling for type 'Resource' and 'DomainResource' abstract types
-  if (type === "Resource" || type === "DomainResource") {
-    return context.filter(
-      (v) => (v.getValue() as Resource).resourceType !== undefined,
-    );
-  }
-  return context.filter((v) => {
-    return v.isType(type);
-  });
+  return context.map((v) => v.asType(type)).filter((v) => v !== undefined);
 }
 
 /**

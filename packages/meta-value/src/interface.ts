@@ -16,6 +16,7 @@ export interface IMetaValue<T> {
   location(): Location | undefined;
   descend(field: string | number): IMetaValue<unknown> | undefined;
   isType(type: string): boolean;
+  asType(type: string): IMetaValue<unknown> | undefined;
   keys(): (string | number)[];
 }
 
