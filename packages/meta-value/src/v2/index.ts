@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
 import {
-  Resource as R4Resource,
   Element,
+  Resource as R4Resource,
   Reference,
+  Resource,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
@@ -25,6 +26,7 @@ import {
   toFPPrimitive,
 } from "../utilities.js";
 import { getResolvedMeta, getStartingMeta } from "./meta.js";
+import { SpoofMetaValueV2 } from "./spoof.js";
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
   private _value: Array<MetaValueV2Singular<T>>;
@@ -60,19 +62,14 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
   getValue(): Array<T> {
     return this._value.map((v) => v.getValue());
   }
-  isType(type: string): boolean {
-    if (this.meta()?.type === "Reference" && type !== "Reference") {
-      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+  isType(_type: string): boolean {
+    throw new Error("Method not allowed on arrays.");
+  }
+  asType(type: string): IMetaValue<unknown> | undefined {
+    if (this.isType(type)) {
+      return this;
     }
-
-    if (this.meta()?.type) {
-      return this.meta()?.type === type;
-    }
-
-    return (
-      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
-      type
-    );
+    return undefined;
   }
   toArray(): Array<MetaValueV2Singular<T>> {
     return this._value;
@@ -155,19 +152,24 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
   isArray(): this is MetaValueV2Array<T> {
     return false;
   }
+  asType(type: string): IMetaValue<unknown> | undefined {
+    if (this.isType(type)) {
+      return this;
+    }
+    return undefined;
+  }
   isType(type: string): boolean {
-    if (this.meta()?.type === "Reference" && type !== "Reference") {
-      return (this.getValue() as Reference).reference?.split("/")[0] === type;
+    switch (true) {
+      case type === "Resource" || type === "DomainResource": {
+        return (this.getValue() as Resource).resourceType !== undefined;
+      }
+      case this.meta()?.type === "Reference" && type !== "Reference": {
+        return (this.getValue() as Reference).reference?.split("/")[0] === type;
+      }
+      default: {
+        return this.meta()?.type === type;
+      }
     }
-
-    if (this.meta()?.type) {
-      return this.meta()?.type === type;
-    }
-
-    return (
-      (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
-      type
-    );
   }
   location(): Location {
     return this._location;
@@ -259,6 +261,9 @@ class NonMetaValue<T> implements IMetaValue<T> {
     return undefined;
   }
   isType(type: string): boolean {
+    if (type === "Resource" || type === "DomainResource") {
+      return (this.getValue() as Resource).resourceType !== undefined;
+    }
     return (
       (this.getValue() as unknown as R4Resource | undefined)?.resourceType ===
       type
@@ -280,6 +285,12 @@ class NonMetaValue<T> implements IMetaValue<T> {
       });
     }
     return [this];
+  }
+  asType(type: string): IMetaValue<unknown> | undefined {
+    if (this.isType(type)) {
+      return this;
+    }
+    return undefined;
   }
   isArray(): this is IMetaValueArray<T> {
     return isArray(this._value);
@@ -378,7 +389,8 @@ export function metaValue<T>(
     case value === undefined: {
       return undefined;
     }
-    case value instanceof MetaValueV2Array ||
+    case value instanceof SpoofMetaValueV2 ||
+      value instanceof MetaValueV2Array ||
       value instanceof MetaValueV2Singular: {
       return value;
     }

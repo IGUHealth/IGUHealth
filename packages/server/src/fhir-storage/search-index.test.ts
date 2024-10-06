@@ -20,6 +20,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
+import spoof from "@iguhealth/meta-value/spoof";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -102,11 +103,7 @@ test.each(
             parameter.expression,
             resource,
             {
-              meta: {
-                fhirVersion: R4,
-                resolveCanonical,
-                resolveTypeToCanonical,
-              },
+              fhirVersion: R4,
             },
           );
           expect([parameter.expression, evalResult]).toMatchSnapshot();
@@ -149,11 +146,7 @@ test.each(
             parameter.expression,
             resource,
             {
-              meta: {
-                fhirVersion: R4B,
-                resolveCanonical,
-                resolveTypeToCanonical,
-              },
+              fhirVersion: R4B,
             },
           );
           expect([parameter.expression, evalResult]).toMatchSnapshot();
