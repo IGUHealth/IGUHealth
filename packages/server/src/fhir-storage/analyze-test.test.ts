@@ -11,7 +11,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
-import * as fhirpath from "@iguhealth/fhirpath";
+import analyze from "@iguhealth/fhirpath/analyze";
 import spoof from "@iguhealth/meta-value/spoof";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
@@ -49,11 +49,10 @@ const searchParameters = r4ArtifactResources.filter(
 
 test("R4 Testing spoof resourceType 'SearchParameter'", async () => {
   expect(
-    (
-      await fhirpath.evaluateWithMeta("id", spoof(R4, "Patient" as uri), {
-        fhirVersion: R4,
-      })
-    ).map((v) => ({ type: v.meta()?.type, cardinality: v.cardinality() })),
+    (await analyze(R4, "Patient" as uri, "id")).map((v) => ({
+      type: v.meta()?.type,
+      cardinality: v.cardinality(),
+    })),
   ).toEqual([
     { cardinality: "single", type: "http://hl7.org/fhirpath/System.String" },
   ]);
@@ -62,10 +61,10 @@ test("R4 Testing spoof resourceType 'SearchParameter'", async () => {
 test("OF type with or", async () => {
   expect(
     (
-      await fhirpath.evaluateWithMeta(
+      await analyze(
+        R4,
+        "Group" as uri,
         "(Group.characteristic.value.ofType(CodeableConcept)) | (Group.characteristic.value.ofType(boolean))",
-        spoof(R4, "Group" as uri),
-        { fhirVersion: R4 },
       )
     ).map((v) => ({ type: v.meta()?.type, cardinality: v.cardinality() })),
   ).toEqual([
@@ -80,24 +79,29 @@ test("OF type with or", async () => {
   ]);
 });
 
-test.each(searchParameters)(
-  `R4 Testing spoof resourceType '%s'`,
-  async (parameter) => {
-    for (const base of parameter.base ?? []) {
+test("Parameters", async () => {
+  const res = {};
+  for (const parameter of searchParameters) {
+    for (const base of parameter.base) {
       const value = spoof(R4, base as unknown as uri);
-      const evalResult = await fhirpath.evaluateWithMeta(
+      const evalResult = await analyze(
+        R4,
+        base as unknown as uri,
         parameter.expression as string,
-        value,
-        {
-          fhirVersion: R4,
-        },
       );
-      expect(
-        evalResult.map((v) => ({
-          type: v.meta()?.type,
-          cardinality: "cardinality" in v ? v.cardinality() : "unknown",
-        })),
-      ).toMatchSnapshot();
+
+      res[parameter.url] = {
+        ...res[parameter.url],
+        [base]: {
+          expression: parameter.expression,
+          result: evalResult.map((v) => ({
+            type: v.meta()?.type,
+            cardinality: "cardinality" in v ? v.cardinality() : "unknown",
+          })),
+        },
+      };
     }
-  },
-);
+  }
+
+  expect(res).toMatchSnapshot();
+});
