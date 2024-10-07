@@ -106,19 +106,38 @@ export async function generateSP1Table<Version extends FHIR_VERSION>(
     {},
   );
 
-  let sql = `CREATE TABLE IF NOT EXISTS ${parameterName(version)} ();\n`;
+  let sql = `
+CREATE TABLE IF NOT EXISTS ${parameterName(version)} (
+  r_id           TEXT        NOT NULL PRIMARY KEY,
+  r_version_id   SERIAL      NOT NULL,
+  tenant         TEXT        NOT NULL, 
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT sp1_fk_resource
+      FOREIGN KEY(r_version_id) 
+	REFERENCES resources(version_id),
+  CONSTRAINT sp1_fk_tenant
+      FOREIGN KEY(tenant) 
+	REFERENCES tenants(id)
+);
+`;
   for (const sp1Url of sp1Urls) {
     const parameter = parameterHash[sp1Url];
     switch (parameter.type) {
-      case "number":
-      case "date":
-      case "string":
-      case "token":
-      case "reference":
-      case "quantity":
-      case "uri":
-
-      case "composite":
+      case "number": {
+      }
+      case "date": {
+      }
+      case "string": {
+      }
+      case "token": {
+      }
+      case "reference": {
+      }
+      case "quantity": {
+      }
+      case "uri": {
+      }
       case "special":
       default: {
         throw new Error();
