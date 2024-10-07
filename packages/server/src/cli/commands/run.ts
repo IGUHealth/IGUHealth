@@ -3,9 +3,14 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import * as db from "zapatos/db";
+import * as generateSQL from "zapatos/generate";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
+import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
 // import { R4, R4B } from "@iguhealth/fhir-types/versions";
 // import { TenantId } from "@iguhealth/jwt/types";
 
@@ -14,6 +19,7 @@ import createServer from "../../server.js";
 import createWorker from "../../worker/index.js";
 import {
   generateSP1MetaInformationCode,
+  generateSP1SQLTable,
   generateSP1Sets,
 } from "../generate/sp1-parameters.js";
 
@@ -88,8 +94,30 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
 
   await dbmigrate.up();
 
-  const r4_set = await generateSP1Sets(R4);
-  const r4b_set = await generateSP1Sets(R4B);
+  const r4SearchParameters = loadArtifacts({
+    fhirVersion: R4,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4bSearchParameters = loadArtifacts({
+    fhirVersion: R4B,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4_set = await generateSP1Sets(R4, r4SearchParameters);
+  const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
 
   await generateSP1TablesAndSets(
     R4,
@@ -105,6 +133,37 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
     ),
     r4b_set,
   );
+
+  const r4SQL = await generateSP1SQLTable(R4, r4_set, r4SearchParameters);
+  const r4bSQL = await generateSP1SQLTable(R4B, r4b_set, r4bSearchParameters);
+
+  const pg = createPGPool();
+
+  await db.transaction(pg, db.IsolationLevel.Serializable, async (tx) => {
+    console.log(r4SQL);
+    await tx.query(r4SQL);
+    await tx.query(r4bSQL);
+  });
+
+  await generateSQL.generate({
+    db: {
+      user: process.env.FHIR_DATABASE_USERNAME,
+      password: process.env.FHIR_DATABASE_PASSWORD,
+      host: process.env.FHIR_DATABASE_HOST,
+      database: process.env.FHIR_DATABASE_NAME,
+      port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
+      ssl:
+        process.env.FHIR_DATABASE_SSL === "true"
+          ? {
+              // Self signed certificate CA is not used.
+              rejectUnauthorized: false,
+              host: process.env.FHIR_DATABASE_HOST,
+              port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
+            }
+          : false,
+    },
+    outDir: "src/fhir-storage/providers/postgres/generated",
+  });
 };
 
 export function runCommands(command: Command) {

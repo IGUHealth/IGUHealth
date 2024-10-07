@@ -93,14 +93,88 @@ export async function generateSP1MetaInformationCode<
   return generateTypeSet(name, searchParameterUrls);
 }
 
-export const generateSP1Sets = async (version: FHIR_VERSION) => {
-  const searchParameters = loadArtifacts({
-    fhirVersion: version as FHIR_VERSION,
-    resourceType: "SearchParameter",
-    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
-  }).filter((p) => p.expression !== undefined);
+function sqlSafeIdentifier(inputString: string) {
+  return inputString.replace(/[^a-zA-Z0-9_]/g, "_");
+}
 
+export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
+  version: Version,
+  sp1Urls: Readonly<Set<string>>,
+  searchParameters: Resource<Version, "SearchParameter">[],
+): Promise<string> {
+  const parameterHash = searchParameters.reduce(
+    (acc: Record<string, Resource<Version, "SearchParameter">>, parameter) => {
+      acc[parameter.url] = parameter;
+      return acc;
+    },
+    {},
+  );
+
+  let sql = `
+CREATE TABLE IF NOT EXISTS ${parameterName(version)} (
+  r_id           TEXT        NOT NULL PRIMARY KEY,
+  r_version_id   SERIAL      NOT NULL,
+  tenant         TEXT        NOT NULL, 
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT sp1_fk_resource
+      FOREIGN KEY(r_version_id) 
+	REFERENCES resources(version_id),
+  CONSTRAINT sp1_fk_tenant
+      FOREIGN KEY(tenant) 
+	REFERENCES tenants(id)
+);
+`;
+  for (const sp1Url of sp1Urls) {
+    const parameter = parameterHash[sp1Url];
+    switch (parameter.type) {
+      case "number": {
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} NUMERIC;`;
+        break;
+      }
+      case "date": {
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start TIMESTAMP WITH TIME ZONE;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end TIMESTAMP WITH TIME ZONE;`;
+        break;
+      }
+      case "reference": {
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_type TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_id TEXT;`;
+        break;
+      }
+      case "quantity": {
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_value NUMERIC;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_system TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_code TEXT;`;
+
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_value NUMERIC;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_system TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_code TEXT;`;
+        break;
+      }
+
+      case "string":
+      case "token":
+      case "uri": {
+        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
+        break;
+      }
+
+      default: {
+        throw new Error(
+          `Parameter type not supported to generate table: '${parameter.type}'`,
+        );
+      }
+    }
+  }
+
+  return sql;
+}
+
+export const generateSP1Sets = async <Version extends FHIR_VERSION>(
+  version: Version,
+  searchParameters: Resource<Version, "SearchParameter">[],
+) => {
   const set = await generateSP1MetaSets(version, searchParameters);
-
   return set;
 };
