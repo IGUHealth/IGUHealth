@@ -12,7 +12,6 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import analyze from "@iguhealth/fhirpath/analyze";
-import spoof from "@iguhealth/meta-value/spoof";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -83,7 +82,6 @@ test("Parameters", async () => {
   const res = {};
   for (const parameter of searchParameters) {
     for (const base of parameter.base) {
-      const value = spoof(R4, base as unknown as uri);
       const evalResult = await analyze(
         R4,
         base as unknown as uri,

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import db, { doNothing } from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
+import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
 
 async function createSystem(pg: db.Queryable, url: string) {
   return db
@@ -66,7 +66,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
   console.log(`Loading terminology '${system}'`);
   const root = path.join(
     fileURLToPath(import.meta.url),
-    "../../../external-codesystems",
+    "../../../../external-codesystems",
   );
   switch (system) {
     // Country codes
