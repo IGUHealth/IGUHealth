@@ -1,7 +1,3 @@
-import path from "path";
-import { fileURLToPath } from "url";
-
-import { loadArtifacts } from "@iguhealth/artifacts";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
