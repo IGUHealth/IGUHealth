@@ -66,7 +66,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
   console.log(`Loading terminology '${system}'`);
   const root = path.join(
     fileURLToPath(import.meta.url),
-    "../../../external-codesystems",
+    "../../../../external-codesystems",
   );
   switch (system) {
     // Country codes
