@@ -1,7 +1,7 @@
 import { uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
-import spoof from "@iguhealth/meta-value/spoof";
+import spoof, { SpoofMetaValueV2 } from "@iguhealth/meta-value/spoof";
 import * as metaUtils from "@iguhealth/meta-value/utilities";
 import * as metaValueV2 from "@iguhealth/meta-value/v2";
 
@@ -488,8 +488,10 @@ export default async function analyze(
   fhirVersion: FHIR_VERSION,
   type: uri,
   expression: string,
-) {
+): Promise<SpoofMetaValueV2<unknown>[]> {
   const ast = compileAST(expression);
   const value = spoof(fhirVersion, type);
-  return _evaluate(ast, [value], { fhirVersion });
+  return _evaluate(ast, [value], {
+    fhirVersion,
+  }) as unknown as SpoofMetaValueV2<unknown>[];
 }

@@ -177,6 +177,7 @@ export default function spoof(
   type: uri,
 ): IMetaValue<undefined> {
   const meta = getStartingMeta(fhirVersion, type);
+
   if (!meta) {
     throw new Error(`No meta found for ${type}`);
   }

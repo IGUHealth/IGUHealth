@@ -17342,6 +17342,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/components", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\

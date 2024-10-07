@@ -1,12 +1,8 @@
 import { Command } from "commander";
 import { glob } from "glob";
 import { compileFromFile } from "json-schema-to-typescript";
-import { exec } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
-import util from "node:util";
 import * as generateSQL from "zapatos/generate";
-
-const execPromise = util.promisify(exec);
 
 function generateReadme() {
   const schema = JSON.parse(

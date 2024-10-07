@@ -13,19 +13,19 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import * as tenants from "../authN/db/tenant.js";
-import * as users from "../authN/db/users/index.js";
-import RedisCache from "../cache/providers/redis.js";
+import * as tenants from "../../authN/db/tenant.js";
+import * as users from "../../authN/db/users/index.js";
+import RedisCache from "../../cache/providers/redis.js";
 import {
   createClient,
   createLogger,
   getRedisClient,
-} from "../fhir-api/index.js";
-import { IGUHealthServerCTX, asRoot } from "../fhir-api/types.js";
-import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
-import { FHIRTransaction } from "../fhir-storage/transactions.js";
-import { TerminologyProvider } from "../fhir-terminology/index.js";
-import RedisLock from "../synchronization/redis.lock.js";
+} from "../../fhir-api/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
+import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
+import { FHIRTransaction } from "../../fhir-storage/transactions.js";
+import { TerminologyProvider } from "../../fhir-terminology/index.js";
+import RedisLock from "../../synchronization/redis.lock.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,

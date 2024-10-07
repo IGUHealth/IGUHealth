@@ -35,6 +35,7 @@
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/cli": "workspace:^",
     "@iguhealth/client": "workspace:^",
+    "@iguhealth/codegen": "workspace:^",
     "@iguhealth/components": "workspace:^",
     "@iguhealth/fhir-validation": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",

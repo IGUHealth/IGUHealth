@@ -1,10 +1,10 @@
 import { program } from "commander";
 
 import loadEnv from "../env.js";
-import { adminCommands } from "./admin.js";
-import { generateCommands } from "./generate.js";
-import { runCommands, terminateServices } from "./run.js";
-import { terminologyCommands } from "./terminology.js";
+import { adminCommands } from "./commands/admin.js";
+import { generateCommands } from "./commands/generate.js";
+import { runCommands, terminateServices } from "./commands/run.js";
+import { terminologyCommands } from "./commands/terminology.js";
 
 loadEnv();
 
