@@ -2,7 +2,6 @@ import { Command } from "commander";
 import { glob } from "glob";
 import { compileFromFile } from "json-schema-to-typescript";
 import { readFileSync, writeFileSync } from "node:fs";
-import * as generateSQL from "zapatos/generate";
 
 function generateReadme() {
   const schema = JSON.parse(

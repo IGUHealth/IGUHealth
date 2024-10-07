@@ -3,8 +3,10 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import * as generateSQL from "zapatos/generate";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 // import { R4, R4B } from "@iguhealth/fhir-types/versions";
@@ -89,8 +91,20 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
 
   await dbmigrate.up();
 
-  const r4_set = await generateSP1Sets(R4);
-  const r4b_set = await generateSP1Sets(R4B);
+  const r4SearchParameters = loadArtifacts({
+    fhirVersion: R4,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter((p) => p.expression !== undefined);
+
+  const r4bSearchParameters = loadArtifacts({
+    fhirVersion: R4B,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter((p) => p.expression !== undefined);
+
+  const r4_set = await generateSP1Sets(R4, r4SearchParameters);
+  const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
 
   await generateSP1TablesAndSets(
     R4,

@@ -93,14 +93,46 @@ export async function generateSP1MetaInformationCode<
   return generateTypeSet(name, searchParameterUrls);
 }
 
-export const generateSP1Sets = async (version: FHIR_VERSION) => {
-  const searchParameters = loadArtifacts({
-    fhirVersion: version as FHIR_VERSION,
-    resourceType: "SearchParameter",
-    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
-  }).filter((p) => p.expression !== undefined);
+export async function generateSP1Table<Version extends FHIR_VERSION>(
+  version: Version,
+  sp1Urls: Readonly<Set<string>>,
+  searchParameters: Resource<Version, "SearchParameter">[],
+): Promise<string> {
+  const parameterHash = searchParameters.reduce(
+    (acc: Record<string, Resource<Version, "SearchParameter">>, parameter) => {
+      acc[parameter.url] = parameter;
+      return acc;
+    },
+    {},
+  );
 
+  let sql = `CREATE TABLE IF NOT EXISTS ${parameterName(version)} ();\n`;
+  for (const sp1Url of sp1Urls) {
+    const parameter = parameterHash[sp1Url];
+    switch (parameter.type) {
+      case "number":
+      case "date":
+      case "string":
+      case "token":
+      case "reference":
+      case "quantity":
+      case "uri":
+
+      case "composite":
+      case "special":
+      default: {
+        throw new Error();
+      }
+    }
+  }
+
+  return sql;
+}
+
+export const generateSP1Sets = async <Version extends FHIR_VERSION>(
+  version: Version,
+  searchParameters: Resource<Version, "SearchParameter">[],
+) => {
   const set = await generateSP1MetaSets(version, searchParameters);
-
   return set;
 };
