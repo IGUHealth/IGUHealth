@@ -64,15 +64,17 @@ function chainSQL<Version extends FHIR_VERSION>(
       return buildParameterSQL(
         ctx,
         fhirVersion,
-        {
-          type: "resource",
-          name: p.name,
-          searchParameter: p,
-          modifier: "missing",
-          value: ["false"],
-        },
+        [
+          {
+            type: "resource",
+            name: p.name,
+            searchParameter: p,
+            modifier: "missing",
+            value: ["false"],
+          },
+        ],
         ["r_id", "reference_id"],
-      );
+      ) as db.SQLFragment;
     });
     return db.sql`(${db.mapWithSeparator(res, db.sql` UNION `, (c) => c)})`;
   });
@@ -85,9 +87,9 @@ function chainSQL<Version extends FHIR_VERSION>(
       return buildParameterSQL(
         ctx,
         fhirVersion,
-        { ...parameter, searchParameter: p, chainedParameters: [] },
+        [{ ...parameter, searchParameter: p, chainedParameters: [] }],
         ["r_id"],
-      );
+      ) as db.SQLFragment;
     }),
     db.sql` UNION `,
     (c) => c,

@@ -1,7 +1,3 @@
-import path from "path";
-import { fileURLToPath } from "url";
-
-import { loadArtifacts } from "@iguhealth/artifacts";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
@@ -20,10 +16,10 @@ function generateTypeSet(name: string, sds: Readonly<Set<string>>) {
 function parameterName(version: FHIR_VERSION) {
   switch (version) {
     case R4: {
-      return "r4_sp1_parameters";
+      return "r4_sp1_idx";
     }
     case R4B: {
-      return "r4b_sp1_parameters";
+      return "r4b_sp1_idx";
     }
     default: {
       throw new Error(`Unsupported FHIR version: ${version}`);
