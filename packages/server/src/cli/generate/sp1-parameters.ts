@@ -16,10 +16,10 @@ function generateTypeSet(name: string, sds: Readonly<Set<string>>) {
 function parameterName(version: FHIR_VERSION) {
   switch (version) {
     case R4: {
-      return "r4_sp1_parameters";
+      return "r4_sp1_idx";
     }
     case R4B: {
-      return "r4b_sp1_parameters";
+      return "r4b_sp1_idx";
     }
     default: {
       throw new Error(`Unsupported FHIR version: ${version}`);
