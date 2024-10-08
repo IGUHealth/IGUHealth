@@ -48,6 +48,7 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
 
   const selects: db.SQLFragment[] = [];
 
+  console.log(parameters);
   const parameterType = parameters[0].searchParameter.type as string;
 
   if (!isSearchTableType(parameterType)) {
