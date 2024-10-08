@@ -7,7 +7,7 @@ import {
   R4SystemSearchRequest,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { id } from "@iguhealth/fhir-types/r4/types";
+import { code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -29,7 +29,7 @@ import {
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
-import { buildParameterSQL } from "./clauses/index.js";
+import { buildParameterSQL } from "./db_many_clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
 type FHIRSearchRequest =
@@ -85,7 +85,19 @@ function buildParametersSQL<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameters: SearchParameterResource[],
 ): db.SQLFragment[] {
-  return parameters.map((p) => buildParameterSQL(ctx, fhirVersion, p));
+  const groups = Object.groupBy(parameters, (p) => p.searchParameter.type);
+
+  const res = Object.keys(groups)
+    .map((searchType) => {
+      return buildParameterSQL(
+        ctx,
+        fhirVersion,
+        groups[searchType as code] ?? [],
+      );
+    })
+    .filter((v): v is db.SQLFragment => v !== undefined);
+
+  return res;
 }
 
 /**
