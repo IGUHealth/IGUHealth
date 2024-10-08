@@ -1,4 +1,4 @@
-export const r4_sp1_parameters: Set<string>  = new Set([
+export const r4_sp1_idx: Set<string>  = new Set([
   "http://hl7.org/fhir/SearchParameter/Resource-id",
   "http://hl7.org/fhir/SearchParameter/Resource-lastUpdated",
   "http://hl7.org/fhir/SearchParameter/Resource-source",
