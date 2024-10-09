@@ -69,6 +69,33 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
+// import { isSP1Date } from "./generated/sp1-parameters/r4.sp1parameters.js";
+
+// function stringCheck(value: string) {
+//   if (isSP1Date(value)) {
+//     const z = db.sql<s.r4_sp1_idx.SQL>`SELECT ${`${value}_start`} from ${"r4_sp1_idx"}`;
+//   }
+// }
+
+// async function indexSingularParameters<
+//   CTX extends IGUHealthServerCTX,
+//   Version extends FHIR_VERSION,
+// >(
+//   ctx: CTX,
+//   fhirVersion: Version,
+//   parameter: Resource<Version, "SearchParameter">[],
+//   resource: Resource<Version, AllResourceTypes> & {
+//     id: id;
+//     meta: { versionId: id };
+//   },
+//   evaluation: IMetaValue<NonNullable<unknown>>[],
+// ) {
+//   const insertableRow: s.r4_sp1_idx.Insertable | s.r4b_sp1_idx.Insertable = {
+//     r_id: resource.id,
+//     resource_type: resource.resourceType,
+//     tenant: ctx.tenant,
+//   };
+// }
 
 async function getAllParametersForResource<
   CTX extends IGUHealthServerCTX,
@@ -338,7 +365,6 @@ async function indexSearchParameter<
         (fhirVersion, types, url) =>
           ctx.resolveCanonical(fhirVersion, types[0], url),
       );
-
       return;
     }
     case "quantity": {
@@ -744,6 +770,7 @@ async function indexResource<
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,
   ]);
+
   await Promise.all(
     searchParameters.map(async (searchParameter) => {
       if (searchParameter.expression === undefined) return;

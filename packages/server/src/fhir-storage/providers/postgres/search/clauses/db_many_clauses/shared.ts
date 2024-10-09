@@ -3,8 +3,8 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
+import { SearchParameterResource } from "../../../../../utilities/search/parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
   | s.r4_date_idx.Whereable

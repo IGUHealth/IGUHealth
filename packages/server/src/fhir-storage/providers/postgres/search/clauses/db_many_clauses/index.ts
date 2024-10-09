@@ -4,13 +4,13 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,
-} from "../../../../utilities/search/parameters.js";
-import { intersect } from "../../../../utilities/sql.js";
-import { isSearchTableType } from "../../constants.js";
+} from "../../../../../utilities/search/parameters.js";
+import { intersect } from "../../../../../utilities/sql.js";
+import { isSearchTableType } from "../../../constants.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";
@@ -48,7 +48,6 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
 
   const selects: db.SQLFragment[] = [];
 
-  console.log(parameters);
   const parameterType = parameters[0].searchParameter.type as string;
 
   if (!isSearchTableType(parameterType)) {

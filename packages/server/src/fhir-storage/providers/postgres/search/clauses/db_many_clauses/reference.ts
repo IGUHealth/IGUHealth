@@ -4,12 +4,12 @@ import type * as s from "zapatos/schema";
 import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,
-} from "../../../../utilities/search/parameters.js";
-import * as sqlUtils from "../../../../utilities/sql.js";
+} from "../../../../../utilities/search/parameters.js";
+import * as sqlUtils from "../../../../../utilities/sql.js";
 import { buildParameterSQL } from "./index.js";
 import { missingModifier } from "./shared.js";
 
