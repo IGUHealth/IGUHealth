@@ -1,4 +1,14 @@
 // This code is generated do not edit
+
+import { uri } from "@iguhealth/fhir-types/r4/types";
+
+function sqlSafeIdentifier(url: string) {
+  // 63 byte limit so splitting the last piece.
+  const chunks = url.split("/");
+  const last = chunks[chunks.length - 1];
+  return last.replace(/[^a-zA-Z0-9_]/g, "_").toLowerCase();
+}
+
 export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Resource-id",
   "http://hl7.org/fhir/SearchParameter/Resource-lastUpdated",
@@ -1233,8 +1243,9 @@ const r4b_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/VisionPrescription-status",
 ]);
 
-export function isSP1Token(url: string): url is r4b_sp1_idx_token {
-  return r4b_sp1_idx_token_set.has(url);
+export function asSP1Token(url: uri): r4b_sp1_idx_token | undefined {
+  if (!r4b_sp1_idx_token_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_token;
 }
 
 export type r4b_sp1_idx_date =
@@ -1436,8 +1447,9 @@ const r4b_sp1_idx_date_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/VisionPrescription-datewritten",
 ]);
 
-export function isSP1Date(url: string): url is r4b_sp1_idx_date {
-  return r4b_sp1_idx_date_set.has(url);
+export function asSP1Date(url: uri): r4b_sp1_idx_date | undefined {
+  if (!r4b_sp1_idx_date_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_date;
 }
 
 export type r4b_sp1_idx_uri =
@@ -1499,8 +1511,9 @@ const r4b_sp1_idx_uri_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ValueSet-expansion",
 ]);
 
-export function isSP1Uri(url: string): url is r4b_sp1_idx_uri {
-  return r4b_sp1_idx_uri_set.has(url);
+export function asSP1Uri(url: uri): r4b_sp1_idx_uri | undefined {
+  if (!r4b_sp1_idx_uri_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_uri;
 }
 
 export type r4b_sp1_idx_string =
@@ -1686,8 +1699,9 @@ const r4b_sp1_idx_string_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/TestScript-title",
 ]);
 
-export function isSP1String(url: string): url is r4b_sp1_idx_string {
-  return r4b_sp1_idx_string_set.has(url);
+export function asSP1String(url: uri): r4b_sp1_idx_string | undefined {
+  if (!r4b_sp1_idx_string_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_string;
 }
 
 export type r4b_sp1_idx_reference =
@@ -2157,8 +2171,9 @@ const r4b_sp1_idx_reference_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/VisionPrescription-prescriber",
 ]);
 
-export function isSP1Reference(url: string): url is r4b_sp1_idx_reference {
-  return r4b_sp1_idx_reference_set.has(url);
+export function asSP1Reference(url: uri): r4b_sp1_idx_reference | undefined {
+  if (!r4b_sp1_idx_reference_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_reference;
 }
 
 export type r4b_sp1_idx_number =
@@ -2172,8 +2187,9 @@ const r4b_sp1_idx_number_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-window-start",
 ]);
 
-export function isSP1Number(url: string): url is r4b_sp1_idx_number {
-  return r4b_sp1_idx_number_set.has(url);
+export function asSP1Number(url: uri): r4b_sp1_idx_number | undefined {
+  if (!r4b_sp1_idx_number_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_number;
 }
 
 export type r4b_sp1_idx_quantity =
@@ -2197,6 +2213,7 @@ const r4b_sp1_idx_quantity_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Observation-value-quantity",
 ]);
 
-export function isSP1Quantity(url: string): url is r4b_sp1_idx_quantity {
-  return r4b_sp1_idx_quantity_set.has(url);
+export function asSP1Quantity(url: uri): r4b_sp1_idx_quantity | undefined {
+  if (!r4b_sp1_idx_quantity_set.has(url)) return undefined;
+  return sqlSafeIdentifier(url) as r4b_sp1_idx_quantity;
 }
