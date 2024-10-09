@@ -80,6 +80,14 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function sqlSafeIdentifier(url: string) {
+  // 63 byte limit so splitting the last piece.
+  const chunks = url.split("/");
+  const last = chunks[chunks.length - 1];
+
+  return last.replace(/[^a-zA-Z0-9_]/g, "_").toLowerCase();
+}
+
 export async function generateSP1TSCode<Version extends FHIR_VERSION>(
   version: Version,
   searchParameterUrls: Readonly<Set<string>>,
@@ -91,7 +99,11 @@ export async function generateSP1TSCode<Version extends FHIR_VERSION>(
   const name = getSp1Name(version);
   const parametersByType = Object.groupBy(searchParameters, (p) => p.type);
 
-  let code = `// This code is generated do not edit`;
+  let code = `// This code is generated do not edit\n 
+import { uri } from "@iguhealth/fhir-types/r4/types";
+
+export ${sqlSafeIdentifier.toString().replace("url", "url: string")}\n`;
+
   const fullSet = `export const ${name}: Set<string>  = new Set([${searchParameters
     .map((s) => s.url)
     .map((uri) => `\n  "${uri}",`)
@@ -118,20 +130,13 @@ export async function generateSP1TSCode<Version extends FHIR_VERSION>(
 
     code = `${code}\n ${SQLType}\n ${setOfTypeCode}`;
 
-    code = `${code}\n export function isSP1${capitalize(type)}(url: string): url is ${name}_${type} {
-    return ${name}_${type}_set.has(url);
+    code = `${code}\n export function asSP1${capitalize(type)}(url: uri): ${name}_${type} | undefined {
+    if(!${name}_${type}_set.has(url)) return undefined;
+    return sqlSafeIdentifier(url) as ${name}_${type};
     }\n`;
   }
 
   return prettier.format(code, { parser: "typescript" });
-}
-
-function sqlSafeIdentifier(inputString: string) {
-  // 63 byte limit so splitting the last piece.
-  const chunks = inputString.split("/");
-  const last = chunks[chunks.length - 1];
-
-  return last.replace(/[^a-zA-Z0-9_]/g, "_").toLowerCase();
 }
 
 export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
