@@ -3,8 +3,8 @@ import type * as s from "zapatos/schema";
 
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
+import { SearchParameterResource } from "../../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 
 export default function stringClauses(

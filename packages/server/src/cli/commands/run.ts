@@ -3,25 +3,18 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import * as db from "zapatos/db";
+
 import * as generateSQL from "zapatos/generate";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
 // import { R4, R4B } from "@iguhealth/fhir-types/versions";
 // import { TenantId } from "@iguhealth/jwt/types";
 
 // import syncArtifacts from "../fhir-storage/providers/postgres/migrations/syncArtifacts.js";
 import createServer from "../../server.js";
 import createWorker from "../../worker/index.js";
-import {
-  generateSP1MetaInformationCode,
-  generateSP1SQLTable,
-  generateSP1Sets,
-} from "../generate/sp1-parameters.js";
+import { generateSP1TSCode } from "../generate/sp1-parameters.js";
 
 interface DBMigrate {
   up: () => Promise<void>;
@@ -68,21 +61,6 @@ const both: Parameters<Command["action"]>[0] = async (options) => {
   };
 };
 
-const generateSP1TablesAndSets = async (
-  version: FHIR_VERSION,
-  output: string,
-  parameterURLSet: Set<string>,
-) => {
-  mkdirSync(path.join(output, ".."), { recursive: true });
-
-  const sp1ParameterCode = await generateSP1MetaInformationCode(
-    version,
-    parameterURLSet,
-  );
-
-  writeFileSync(output, sp1ParameterCode);
-};
-
 const migrate: Parameters<Command["action"]>[0] = async () => {
   const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
     cmdOptions: {
@@ -93,57 +71,6 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   });
 
   await dbmigrate.up();
-
-  const r4SearchParameters = loadArtifacts({
-    fhirVersion: R4,
-    resourceType: "SearchParameter",
-    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
-  }).filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4bSearchParameters = loadArtifacts({
-    fhirVersion: R4B,
-    resourceType: "SearchParameter",
-    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
-  }).filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4_set = await generateSP1Sets(R4, r4SearchParameters);
-  const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
-
-  await generateSP1TablesAndSets(
-    R4,
-    path.join(
-      "src/fhir-storage/providers/postgres/generated/sp1-parameters/r4.sp1parameters.ts",
-    ),
-    r4_set,
-  );
-  await generateSP1TablesAndSets(
-    R4B,
-    path.join(
-      "src/fhir-storage/providers/postgres/generated/sp1-parameters/r4b.sp1parameters.ts",
-    ),
-    r4b_set,
-  );
-
-  const r4SQL = await generateSP1SQLTable(R4, r4_set, r4SearchParameters);
-  const r4bSQL = await generateSP1SQLTable(R4B, r4b_set, r4bSearchParameters);
-
-  const pg = createPGPool();
-
-  await db.transaction(pg, db.IsolationLevel.Serializable, async (tx) => {
-    console.log(r4SQL);
-    await tx.query(r4SQL);
-    await tx.query(r4bSQL);
-  });
 
   await generateSQL.generate({
     db: {

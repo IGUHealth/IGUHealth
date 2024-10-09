@@ -6,12 +6,12 @@ import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   getDatePrecision,
   parseValuePrefix,
-} from "../../../../utilities/search/parameters.js";
+} from "../../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 
 function getValueRange(value: string): [string, string] {

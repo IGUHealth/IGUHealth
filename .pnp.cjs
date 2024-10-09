@@ -17419,6 +17419,7 @@ const RAW_RUNTIME_STATE =
           ["postcss", "npm:8.4.42"],\
           ["postcss-cli", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.0.0"],\
           ["postcss-import", "virtual:0f0af4424510760de9c3aca0d6376f160d5d68be7934d8a5c1537779ad4da6f0a2e3a8696e0b1f936ded20ef5690899e765b0bb2286d104d177f3fc8b44ab71f#npm:16.1.0"],\
+          ["prettier", "npm:3.3.3"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.3.1"],\
           ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\

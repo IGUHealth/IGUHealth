@@ -1,4 +1,4 @@
-import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { code, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
   R4,
@@ -6,14 +6,11 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import analyze from "@iguhealth/fhirpath/analyze";
+import * as prettier from "prettier";
 
-function generateTypeSet(name: string, sds: Readonly<Set<string>>) {
-  return `export const ${name}: Set<string>  = new Set([${[...sds]
-    .map((uri) => `\n  "${uri}",`)
-    .join("")}\n])\n`;
-}
-
-function parameterName(version: FHIR_VERSION) {
+export function getSp1Name(
+  version: FHIR_VERSION,
+): "r4_sp1_idx" | "r4b_sp1_idx" {
   switch (version) {
     case R4: {
       return "r4_sp1_idx";
@@ -79,18 +76,62 @@ async function generateSP1MetaSets<Version extends FHIR_VERSION>(
   return res;
 }
 
-export async function generateSP1MetaInformationCode<
-  Version extends FHIR_VERSION,
->(
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export async function generateSP1TSCode<Version extends FHIR_VERSION>(
   version: Version,
   searchParameterUrls: Readonly<Set<string>>,
+  allSearchParameters: Resource<Version, "SearchParameter">[],
 ): Promise<string> {
-  const name = parameterName(version);
-  return generateTypeSet(name, searchParameterUrls);
+  const searchParameters = allSearchParameters.filter((p) =>
+    searchParameterUrls.has(p.url),
+  );
+  const name = getSp1Name(version);
+  const parametersByType = Object.groupBy(searchParameters, (p) => p.type);
+
+  let code = `// This code is generated do not edit`;
+  const fullSet = `export const ${name}: Set<string>  = new Set([${searchParameters
+    .map((s) => s.url)
+    .map((uri) => `\n  "${uri}",`)
+    .join("")}\n])\n`;
+
+  code = `${code}\n ${fullSet}`;
+
+  for (const type of Object.keys(parametersByType)) {
+    const paramsOfType = parametersByType[type as code];
+    const tsSqlTypes = (paramsOfType ?? [])
+      .map((s) => s.url)
+      .map(sqlSafeIdentifier);
+
+    const SQLType = `export type ${name}_${type} = "${tsSqlTypes.join(
+      '" | "',
+    )}"\n`;
+
+    const setOfTypeCode = `const ${name}_${type}_set: Set<string>  = new Set([${(
+      paramsOfType ?? []
+    )
+      .map((s) => s.url)
+      .map((uri) => `\n  "${uri}",`)
+      .join("")}\n])\n`;
+
+    code = `${code}\n ${SQLType}\n ${setOfTypeCode}`;
+
+    code = `${code}\n export function isSP1${capitalize(type)}(url: string): url is ${name}_${type} {
+    return ${name}_${type}_set.has(url);
+    }\n`;
+  }
+
+  return prettier.format(code, { parser: "typescript" });
 }
 
 function sqlSafeIdentifier(inputString: string) {
-  return inputString.replace(/[^a-zA-Z0-9_]/g, "_");
+  // 63 byte limit so splitting the last piece.
+  const chunks = inputString.split("/");
+  const last = chunks[chunks.length - 1];
+
+  return last.replace(/[^a-zA-Z0-9_]/g, "_").toLowerCase();
 }
 
 export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
@@ -106,9 +147,16 @@ export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
     {},
   );
 
+  if (
+    sp1Urls.size !== new Set([...sp1Urls].map((s) => sqlSafeIdentifier(s))).size
+  ) {
+    throw new Error("Duplicate parameter names detected");
+  }
+
   let sql = `
-CREATE TABLE IF NOT EXISTS ${parameterName(version)} (
+CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
   r_id           TEXT        NOT NULL PRIMARY KEY,
+  resource_type  TEXT        NOT NULL,
   r_version_id   SERIAL      NOT NULL,
   tenant         TEXT        NOT NULL, 
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -125,34 +173,34 @@ CREATE TABLE IF NOT EXISTS ${parameterName(version)} (
     const parameter = parameterHash[sp1Url];
     switch (parameter.type) {
       case "number": {
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} NUMERIC;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} NUMERIC;`;
         break;
       }
       case "date": {
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start TIMESTAMP WITH TIME ZONE;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end TIMESTAMP WITH TIME ZONE;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start TIMESTAMP WITH TIME ZONE;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end TIMESTAMP WITH TIME ZONE;`;
         break;
       }
       case "reference": {
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_type TEXT;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_id TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_type TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_id TEXT;`;
         break;
       }
       case "quantity": {
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_value NUMERIC;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_system TEXT;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_code TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_value NUMERIC;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_system TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start_code TEXT;`;
 
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_value NUMERIC;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_system TEXT;`;
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_code TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_value NUMERIC;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_system TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_code TEXT;`;
         break;
       }
 
       case "string":
       case "token":
       case "uri": {
-        sql = `${sql} \n ALTER TABLE ${parameterName(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
         break;
       }
 

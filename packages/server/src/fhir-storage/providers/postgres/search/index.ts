@@ -29,7 +29,7 @@ import {
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
-import { buildParameterSQL } from "./db_many_clauses/index.js";
+import { buildParameterSQL } from "./clauses/db_many_clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
 type FHIRSearchRequest =
