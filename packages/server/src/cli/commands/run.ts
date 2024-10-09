@@ -1,12 +1,8 @@
 import { Command } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
-import { mkdirSync, writeFileSync } from "node:fs";
-import path from "node:path";
 
 import * as generateSQL from "zapatos/generate";
-
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 // import { R4, R4B } from "@iguhealth/fhir-types/versions";
 // import { TenantId } from "@iguhealth/jwt/types";
@@ -14,7 +10,6 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 // import syncArtifacts from "../fhir-storage/providers/postgres/migrations/syncArtifacts.js";
 import createServer from "../../server.js";
 import createWorker from "../../worker/index.js";
-import { generateSP1TSCode } from "../generate/sp1-parameters.js";
 
 interface DBMigrate {
   up: () => Promise<void>;
