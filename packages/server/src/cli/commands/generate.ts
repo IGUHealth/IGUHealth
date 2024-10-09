@@ -16,8 +16,6 @@ import {
   generateSP1Sets,
   generateSP1SQLTable,
 } from "../generate/sp1-parameters.js";
-import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
-import * as db from "zapatos/db";
 
 function generateReadme() {
   const schema = JSON.parse(
@@ -67,7 +65,9 @@ const writeSP1TSCode = async <Version extends FHIR_VERSION>(
   writeFileSync(output, sp1ParameterCode);
 };
 
-async function generateSP1() {
+const generateSP1Typescript: Parameters<Command["action"]>[0] = async (
+  options,
+) => {
   const r4SearchParameters = loadArtifacts({
     fhirVersion: R4,
     resourceType: "SearchParameter",
@@ -95,31 +95,64 @@ async function generateSP1() {
 
   await writeSP1TSCode(
     R4,
-    path.join(
-      "src/fhir-storage/providers/postgres/generated/sp1-parameters/r4.sp1parameters.ts",
-    ),
+    path.join(options.output, "r4.sp1parameters.ts"),
     r4_set,
     r4SearchParameters,
   );
 
   await writeSP1TSCode(
     R4B,
-    path.join(
-      "src/fhir-storage/providers/postgres/generated/sp1-parameters/r4b.sp1parameters.ts",
-    ),
+    path.join(options.output, "r4b.sp1parameters.ts"),
     r4b_set,
     r4bSearchParameters,
   );
+};
+
+const generateSP1SQL: Parameters<Command["action"]>[0] = async (options) => {
+  const r4SearchParameters = loadArtifacts({
+    fhirVersion: R4,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4bSearchParameters = loadArtifacts({
+    fhirVersion: R4B,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4_set = await generateSP1Sets(R4, r4SearchParameters);
+  const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
 
   const r4SQL = await generateSP1SQLTable(R4, r4_set, r4SearchParameters);
   const r4bSQL = await generateSP1SQLTable(R4B, r4b_set, r4bSearchParameters);
 
-  const pg = createPGPool();
+  writeFileSync(
+    options.output,
+    `-- R4 SP1 SQL \n ${r4SQL} \n-- R4B SP1 SQL \n${r4bSQL}`,
+  );
+};
 
-  await db.transaction(pg, db.IsolationLevel.Serializable, async (tx) => {
-    await tx.query(r4SQL);
-    await tx.query(r4bSQL);
-  });
+function sp1Commands(command: Command) {
+  command
+    .command("sql")
+    .requiredOption("-o, --output <output>", "Output for sql file")
+    .action(generateSP1SQL);
+
+  command
+    .command("typescript")
+    .requiredOption("-o, --output <output>", "Output for typescript file")
+    .action(generateSP1Typescript);
 }
 
 export function generateCommands(command: Command) {
@@ -135,10 +168,11 @@ export function generateCommands(command: Command) {
     )
     .action(generateTypes);
 
-  command
-    .command("sp1")
-    .description(
-      "Generate sp1 r4 and r4b code and sql tables from search parameters",
-    )
-    .action(generateSP1);
+  sp1Commands(
+    command
+      .command("sp1")
+      .description(
+        "Generate sp1 r4 and r4b code and sql tables from search parameters",
+      ),
+  );
 }
