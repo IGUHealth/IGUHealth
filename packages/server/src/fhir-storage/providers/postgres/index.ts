@@ -69,13 +69,14 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
-// import { isSP1Date } from "./generated/sp1-parameters/r4.sp1parameters.js";
+import { asSP1Date } from "./generated/sp1-parameters/r4.sp1parameters.js";
 
-// function stringCheck(value: string) {
-//   if (isSP1Date(value)) {
-//     const z = db.sql<s.r4_sp1_idx.SQL>`SELECT ${`${value}_start`} from ${"r4_sp1_idx"}`;
-//   }
-// }
+function stringCheck(value: uri) {
+  const col = asSP1Date(value);
+  if (col) {
+    const z = db.sql<s.r4_sp1_idx.SQL>`SELECT ${`${col}_start`} from ${"r4_sp1_idx"}`;
+  }
+}
 
 // async function indexSingularParameters<
 //   CTX extends IGUHealthServerCTX,
