@@ -102,7 +102,7 @@ export async function generateSP1TSCode<Version extends FHIR_VERSION>(
   let code = `// This code is generated do not edit\n 
 import { uri } from "@iguhealth/fhir-types/r4/types";
 
-${sqlSafeIdentifier.toString().replace("url", "url: string")}\n`;
+export ${sqlSafeIdentifier.toString().replace("url", "url: string")}\n`;
 
   const fullSet = `export const ${name}: Set<string>  = new Set([${searchParameters
     .map((s) => s.url)

@@ -2,7 +2,7 @@
 
 import { uri } from "@iguhealth/fhir-types/r4/types";
 
-function sqlSafeIdentifier(url: string) {
+export function sqlSafeIdentifier(url: string) {
   // 63 byte limit so splitting the last piece.
   const chunks = url.split("/");
   const last = chunks[chunks.length - 1];
