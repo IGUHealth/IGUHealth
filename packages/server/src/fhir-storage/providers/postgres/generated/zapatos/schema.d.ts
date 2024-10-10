@@ -9376,7 +9376,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id: number;
       /**
@@ -17364,7 +17364,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id: number;
       /**
@@ -25352,7 +25352,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -33340,9 +33340,9 @@ declare module 'zapatos/schema' {
       /**
       * **r4_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -41328,9 +41328,9 @@ declare module 'zapatos/schema' {
       /**
       * **r4_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -52106,7 +52106,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4b_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4b_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id: number;
       /**
@@ -60160,7 +60160,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4b_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4b_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id: number;
       /**
@@ -68214,7 +68214,7 @@ declare module 'zapatos/schema' {
       /**
       * **r4b_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4b_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
       r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -76268,9 +76268,9 @@ declare module 'zapatos/schema' {
       /**
       * **r4b_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4b_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -84322,9 +84322,9 @@ declare module 'zapatos/schema' {
       /**
       * **r4b_sp1_idx.r_version_id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('r4b_sp1_idx_r_version_id_seq'::regclass)`
+      * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database

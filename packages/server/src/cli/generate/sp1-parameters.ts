@@ -162,7 +162,7 @@ export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
 CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
   r_id           TEXT        NOT NULL PRIMARY KEY,
   resource_type  TEXT        NOT NULL,
-  r_version_id   SERIAL      NOT NULL,
+  r_version_id   INTEGER      NOT NULL,
   tenant         TEXT        NOT NULL, 
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
