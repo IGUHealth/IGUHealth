@@ -202,8 +202,13 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         break;
       }
 
+      case "token": {
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_system TEXT;`;
+        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_value TEXT;`;
+        break;
+      }
+
       case "string":
-      case "token":
       case "uri": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
         break;

@@ -69,34 +69,355 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
-import { asSP1Date } from "./generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4Sp1 from "./generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4bSp1 from "./generated/sp1-parameters/r4b.sp1parameters.js";
 
-function stringCheck(value: uri) {
-  const col = asSP1Date(value);
-  if (col) {
-    const z = db.sql<s.r4_sp1_idx.SQL>`SELECT ${`${col}_start`} from ${"r4_sp1_idx"}`;
+type Sp1Insertable<Version extends FHIR_VERSION> = Version extends R4
+  ? s.r4_sp1_idx.Insertable
+  : s.r4b_sp1_idx.Insertable;
+
+async function indexSingularParameter<
+  CTX extends IGUHealthServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  parameter: Resource<Version, "SearchParameter">,
+  resource: Resource<Version, AllResourceTypes> & {
+    id: id;
+    meta: { versionId: id };
+  },
+  evaluation: IMetaValue<NonNullable<unknown>>[],
+): Promise<Partial<Sp1Insertable<Version>>> {
+  if (evaluation.length > 1) {
+    throw new Error("Evaluation length is greater than 1");
+  }
+  if (evaluation.length === 0) {
+    return {};
+  }
+
+  switch (parameter.type) {
+    case "quantity": {
+      const data = await dataConversion<Version, "quantity">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1Quantity = r4Sp1.asSP1Quantity(parameter.url);
+          if (!sp1Quantity) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const start_col_system: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_system`;
+          const start_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_value`;
+          const start_col_code: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_code`;
+
+          const end_col_system: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_system`;
+          const end_col_code: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_code`;
+          const end_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_value`;
+
+          const quantityIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [start_col_system]: data[0].start?.system,
+            [start_col_value]: data[0].start?.value,
+            [start_col_code]: data[0].start?.code,
+            [end_col_system]: data[0].end?.system,
+            [end_col_value]: data[0].end?.value,
+            [end_col_code]: data[0].end?.code,
+          };
+
+          return quantityIndex;
+        }
+        case R4B: {
+          const sp1Quantity = r4bSp1.asSP1Quantity(parameter.url);
+          if (!sp1Quantity) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const start_col_system: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_system`;
+          const start_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_value`;
+          const start_col_code: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_start_code`;
+
+          const end_col_system: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_system`;
+          const end_col_code: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_code`;
+          const end_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Quantity}_end_value`;
+
+          const quantityIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [start_col_system]: data[0].start?.system,
+            [start_col_value]: data[0].start?.value,
+            [start_col_code]: data[0].start?.code,
+            [end_col_system]: data[0].end?.system,
+            [end_col_value]: data[0].end?.value,
+            [end_col_code]: data[0].end?.code,
+          };
+
+          return quantityIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+    case "date": {
+      const data = await dataConversion<Version, "date">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1Date = r4Sp1.asSP1Date(parameter.url);
+          if (!sp1Date) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const start_col_date: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Date}_start`;
+          const end_col_date: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Date}_end`;
+
+          const dateIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [start_col_date]: data[0].start,
+            [end_col_date]: data[0].end,
+          };
+
+          return dateIndex;
+        }
+        case R4B: {
+          const sp1Date = r4bSp1.asSP1Date(parameter.url);
+          if (!sp1Date) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+          const start_col_date: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Date}_start`;
+          const end_col_date: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Date}_end`;
+
+          const dateIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [start_col_date]: data[0].start,
+            [end_col_date]: data[0].end,
+          };
+
+          return dateIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+    case "reference": {
+      const data = await dataConversion<Version, "reference">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1Reference = r4Sp1.asSP1Reference(parameter.url);
+          if (!sp1Reference) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const type_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Reference}_type`;
+          const id_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Reference}_id`;
+
+          const referenceIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [type_col]: data[0].resourceType,
+            [id_col]: data[0].id,
+          };
+
+          return referenceIndex;
+        }
+        case R4B: {
+          const sp1Reference = r4bSp1.asSP1Reference(parameter.url);
+          if (!sp1Reference) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const type_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Reference}_type`;
+          const id_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Reference}_id`;
+
+          const referenceIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [type_col]: data[0].resourceType,
+            [id_col]: data[0].id,
+          };
+
+          return referenceIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+    case "uri": {
+      const data = await dataConversion<Version, "uri">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1URI = r4Sp1.asSP1Uri(parameter.url);
+          if (!sp1URI) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const uri_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1URI}`;
+
+          const uriIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [uri_col]: data[0],
+          };
+
+          return uriIndex;
+        }
+        case R4B: {
+          const sp1URI = r4bSp1.asSP1Uri(parameter.url);
+          if (!sp1URI) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const uri_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1URI}`;
+
+          const uriIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [uri_col]: data[0],
+          };
+
+          return uriIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+
+    case "token": {
+      const data = await dataConversion<Version, "token">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1Token = r4Sp1.asSP1Token(parameter.url);
+          if (!sp1Token) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const token_col_system: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Token}_system`;
+          const token_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Token}_value`;
+
+          const tokenIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [token_col_system]: data[0].system,
+            [token_col_value]: data[0].code,
+          };
+
+          return tokenIndex;
+        }
+        case R4B: {
+          const sp1Token = r4bSp1.asSP1Token(parameter.url);
+          if (!sp1Token) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const token_col_system: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Token}_system`;
+          const token_col_value: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Token}_value`;
+
+          const tokenIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [token_col_system]: data[0].system,
+            [token_col_value]: data[0].code,
+          };
+
+          return tokenIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+
+    case "number": {
+      const data = await dataConversion<Version, "number">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1Number = r4Sp1.asSP1Number(parameter.url);
+          if (!sp1Number) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const number_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Number}`;
+
+          const numberIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [number_col]: data[0],
+          };
+
+          return numberIndex;
+        }
+        case R4B: {
+          const sp1Number = r4bSp1.asSP1Number(parameter.url);
+          if (!sp1Number) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const number_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Number}`;
+
+          const numberIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [number_col]: data[0],
+          };
+
+          return numberIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+    case "string": {
+      const data = await dataConversion<Version, "string">(
+        fhirVersion,
+        parameter,
+        evaluation,
+      );
+      switch (fhirVersion) {
+        case R4: {
+          const sp1String = r4Sp1.asSP1String(parameter.url);
+          if (!sp1String) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const string_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1String}`;
+
+          const stringIndex: Partial<s.r4_sp1_idx.Insertable> = {
+            [string_col]: data[0],
+          };
+
+          return stringIndex;
+        }
+        case R4B: {
+          const sp1String = r4bSp1.asSP1String(parameter.url);
+          if (!sp1String) {
+            throw new Error("Failed to convert parameter url to column.");
+          }
+
+          const string_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1String}`;
+
+          const stringIndex: Partial<s.r4b_sp1_idx.Insertable> = {
+            [string_col]: data[0],
+          };
+
+          return stringIndex;
+        }
+        default: {
+          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+        }
+      }
+    }
+
+    default: {
+      throw new Error();
+    }
   }
 }
-
-// async function indexSingularParameters<
-//   CTX extends IGUHealthServerCTX,
-//   Version extends FHIR_VERSION,
-// >(
-//   ctx: CTX,
-//   fhirVersion: Version,
-//   parameter: Resource<Version, "SearchParameter">[],
-//   resource: Resource<Version, AllResourceTypes> & {
-//     id: id;
-//     meta: { versionId: id };
-//   },
-//   evaluation: IMetaValue<NonNullable<unknown>>[],
-// ) {
-//   const insertableRow: s.r4_sp1_idx.Insertable | s.r4b_sp1_idx.Insertable = {
-//     r_id: resource.id,
-//     resource_type: resource.resourceType,
-//     tenant: ctx.tenant,
-//   };
-// }
 
 async function getAllParametersForResource<
   CTX extends IGUHealthServerCTX,
