@@ -71,10 +71,79 @@ import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
 import * as r4Sp1 from "./generated/sp1-parameters/r4.sp1parameters.js";
 import * as r4bSp1 from "./generated/sp1-parameters/r4b.sp1parameters.js";
+import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
 
 type Sp1Insertable<Version extends FHIR_VERSION> = Version extends R4
   ? s.r4_sp1_idx.Insertable
   : s.r4b_sp1_idx.Insertable;
+
+async function indexSingularParameters<
+  CTX extends IGUHealthServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  parameters: Resource<Version, "SearchParameter">[],
+  resource: Resource<Version, AllResourceTypes> & {
+    id: id;
+    meta: { versionId: id };
+  },
+) {
+  let insertable: Sp1Insertable<Version> = {
+    tenant: ctx.tenant,
+    r_id: resource.id,
+    resource_type: resource.resourceType,
+    r_version_id: parseInt(resource.meta.versionId),
+  };
+  for (const parameter of parameters) {
+    const evaluation = await fhirpath.evaluateWithMeta(
+      parameter.expression as string,
+      resource,
+      {
+        fhirVersion,
+      },
+    );
+
+    const result = await indexSingularParameter(
+      ctx,
+      fhirVersion,
+      parameter,
+      evaluation,
+    );
+
+    insertable = {
+      ...insertable,
+      ...result,
+    };
+  }
+
+  switch (fhirVersion) {
+    case R4: {
+      await db
+        .upsert("r4_sp1_idx", [insertable], db.constraint("r4_sp1_idx_pkey"), {
+          updateColumns: db.doNothing,
+        })
+        .run(ctx.db);
+      return;
+    }
+    case R4B: {
+      await db
+        .upsert(
+          "r4b_sp1_idx",
+          [insertable],
+          db.constraint("r4b_sp1_idx_pkey"),
+          {
+            updateColumns: db.doNothing,
+          },
+        )
+        .run(ctx.db);
+      return;
+    }
+    default: {
+      throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+    }
+  }
+}
 
 async function indexSingularParameter<
   CTX extends IGUHealthServerCTX,
@@ -83,10 +152,6 @@ async function indexSingularParameter<
   ctx: CTX,
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
-  resource: Resource<Version, AllResourceTypes> & {
-    id: id;
-    meta: { versionId: id };
-  },
   evaluation: IMetaValue<NonNullable<unknown>>[],
 ): Promise<Partial<Sp1Insertable<Version>>> {
   if (evaluation.length > 1) {
@@ -176,8 +241,8 @@ async function indexSingularParameter<
           const end_col_date: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Date}_end`;
 
           const dateIndex: Partial<s.r4_sp1_idx.Insertable> = {
-            [start_col_date]: data[0].start,
-            [end_col_date]: data[0].end,
+            [start_col_date]: data[0]?.start,
+            [end_col_date]: data[0]?.end,
           };
 
           return dateIndex;
@@ -191,8 +256,8 @@ async function indexSingularParameter<
           const end_col_date: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Date}_end`;
 
           const dateIndex: Partial<s.r4b_sp1_idx.Insertable> = {
-            [start_col_date]: data[0].start,
-            [end_col_date]: data[0].end,
+            [start_col_date]: data[0]?.start,
+            [end_col_date]: data[0]?.end,
           };
 
           return dateIndex;
@@ -207,7 +272,9 @@ async function indexSingularParameter<
         fhirVersion,
         parameter,
         evaluation,
+        createResolverRemoteCanonical(ctx.client, ctx),
       );
+
       switch (fhirVersion) {
         case R4: {
           const sp1Reference = r4Sp1.asSP1Reference(parameter.url);
@@ -219,8 +286,8 @@ async function indexSingularParameter<
           const id_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Reference}_id`;
 
           const referenceIndex: Partial<s.r4_sp1_idx.Insertable> = {
-            [type_col]: data[0].resourceType,
-            [id_col]: data[0].id,
+            [type_col]: data[0]?.resourceType,
+            [id_col]: data[0]?.id,
           };
 
           return referenceIndex;
@@ -235,8 +302,8 @@ async function indexSingularParameter<
           const id_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Reference}_id`;
 
           const referenceIndex: Partial<s.r4b_sp1_idx.Insertable> = {
-            [type_col]: data[0].resourceType,
-            [id_col]: data[0].id,
+            [type_col]: data[0]?.resourceType,
+            [id_col]: data[0]?.id,
           };
 
           return referenceIndex;
@@ -304,8 +371,8 @@ async function indexSingularParameter<
           const token_col_value: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Token}_value`;
 
           const tokenIndex: Partial<s.r4_sp1_idx.Insertable> = {
-            [token_col_system]: data[0].system,
-            [token_col_value]: data[0].code,
+            [token_col_system]: data[0]?.system,
+            [token_col_value]: data[0]?.code,
           };
 
           return tokenIndex;
@@ -320,8 +387,8 @@ async function indexSingularParameter<
           const token_col_value: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Token}_value`;
 
           const tokenIndex: Partial<s.r4b_sp1_idx.Insertable> = {
-            [token_col_system]: data[0].system,
-            [token_col_value]: data[0].code,
+            [token_col_system]: data[0]?.system,
+            [token_col_value]: data[0]?.code,
           };
 
           return tokenIndex;
@@ -665,7 +732,7 @@ async function toInsertableIndex<
   }
 }
 
-async function indexSearchParameter<
+async function indexMultiSearchParameter<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
@@ -676,17 +743,24 @@ async function indexSearchParameter<
     id: id;
     meta: { versionId: id };
   },
-  evaluation: IMetaValue<NonNullable<unknown>>[],
 ) {
+  const evaluation = await fhirpath.evaluateWithMeta(
+    parameter.expression as string,
+    resource,
+    {
+      fhirVersion,
+    },
+  );
+
   switch (parameter.type) {
     case "composite": {
-      const _composite_indexes = await dataConversion<Version, "composite">(
-        fhirVersion,
-        parameter,
-        evaluation,
-        (fhirVersion, types, url) =>
-          ctx.resolveCanonical(fhirVersion, types[0], url),
-      );
+      // const _composite_indexes = await dataConversion<Version, "composite">(
+      //   fhirVersion,
+      //   parameter,
+      //   evaluation,
+      //   (fhirVersion, types, url) =>
+      //     ctx.resolveCanonical(fhirVersion, types[0], url),
+      // );
       return;
     }
     case "quantity": {
@@ -1061,6 +1135,13 @@ async function removeIndices<Version extends FHIR_VERSION>(
       }}`.run(ctx.db);
     }),
   );
+
+  // Delete from SP1 Table.
+  await db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+    DELETE FROM ${getSp1Name(fhirVersion)}
+    WHERE ${{
+      r_id: resource.id,
+    }}`.run(ctx.db);
 }
 
 function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
@@ -1088,39 +1169,36 @@ async function indexResource<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
+  if (!resourceIsValidForIndexing(fhirVersion, resource)) {
+    throw new OperationError(
+      outcomeFatal(
+        "exception",
+        "Resource id or versionId not found when indexing the resource.",
+      ),
+    );
+  }
+
   await removeIndices(ctx, fhirVersion, resource);
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,
   ]);
 
+  const sp1Parameters = searchParameters.filter((s) =>
+    fhirVersion === R4
+      ? r4Sp1.r4_sp1_idx.has(s.url)
+      : fhirVersion === R4B
+        ? r4bSp1.r4b_sp1_idx.has(s.url)
+        : false,
+  );
+
+  await indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource);
+
   await Promise.all(
-    searchParameters.map(async (searchParameter) => {
-      if (searchParameter.expression === undefined) return;
-      const evaluation = await fhirpath.evaluateWithMeta(
-        searchParameter.expression,
-        resource,
-        {
-          fhirVersion,
-        },
-      );
-
-      if (!resourceIsValidForIndexing(fhirVersion, resource)) {
-        throw new OperationError(
-          outcomeFatal(
-            "exception",
-            "Resource id or versionId not found when indexing the resource.",
-          ),
-        );
-      }
-
-      return indexSearchParameter(
-        ctx,
-        fhirVersion,
-        searchParameter,
-        resource,
-        evaluation,
-      );
-    }),
+    searchParameters
+      .filter((v) => v.expression !== undefined)
+      .map(async (searchParameter) =>
+        indexMultiSearchParameter(ctx, fhirVersion, searchParameter, resource),
+      ),
   );
 }
 

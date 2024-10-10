@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS r4_sp1_idx (
   r_id           TEXT        NOT NULL PRIMARY KEY,
   resource_type  TEXT        NOT NULL,
-  r_version_id   SERIAL      NOT NULL,
+  r_version_id   INTEGER      NOT NULL,
   tenant         TEXT        NOT NULL, 
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
@@ -1346,7 +1346,7 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
 CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
   r_id           TEXT        NOT NULL PRIMARY KEY,
   resource_type  TEXT        NOT NULL,
-  r_version_id   SERIAL      NOT NULL,
+  r_version_id   INTEGER      NOT NULL,
   tenant         TEXT        NOT NULL, 
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
