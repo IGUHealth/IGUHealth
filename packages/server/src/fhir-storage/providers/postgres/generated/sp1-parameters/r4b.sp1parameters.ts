@@ -14,7 +14,6 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Resource-lastUpdated",
   "http://hl7.org/fhir/SearchParameter/Resource-source",
   "http://hl7.org/fhir/SearchParameter/Account-name",
-  "http://hl7.org/fhir/SearchParameter/Account-owner",
   "http://hl7.org/fhir/SearchParameter/Account-period",
   "http://hl7.org/fhir/SearchParameter/Account-status",
   "http://hl7.org/fhir/SearchParameter/Account-type",
@@ -27,47 +26,30 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-title",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-url",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-version",
-  "http://hl7.org/fhir/SearchParameter/AdministrableProductDefinition-device",
   "http://hl7.org/fhir/SearchParameter/AdministrableProductDefinition-dose-form",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-actuality",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-date",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-event",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-location",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-recorder",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-seriousness",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-severity",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-subject",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-asserter",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-clinical-status",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-criticality",
   "http://hl7.org/fhir/SearchParameter/clinical-date",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-last-date",
-  "http://hl7.org/fhir/SearchParameter/clinical-patient",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-recorder",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-verification-status",
   "http://hl7.org/fhir/SearchParameter/Appointment-appointment-type",
   "http://hl7.org/fhir/SearchParameter/Appointment-date",
   "http://hl7.org/fhir/SearchParameter/Appointment-status",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-actor",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-appointment",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-location",
   "http://hl7.org/fhir/SearchParameter/AppointmentResponse-part-status",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-practitioner",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-action",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-date",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-outcome",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-site",
-  "http://hl7.org/fhir/SearchParameter/AuditEvent-source",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-type",
-  "http://hl7.org/fhir/SearchParameter/Basic-author",
   "http://hl7.org/fhir/SearchParameter/Basic-code",
   "http://hl7.org/fhir/SearchParameter/Basic-created",
-  "http://hl7.org/fhir/SearchParameter/Basic-patient",
-  "http://hl7.org/fhir/SearchParameter/Basic-subject",
   "http://hl7.org/fhir/SearchParameter/BodyStructure-location",
   "http://hl7.org/fhir/SearchParameter/BodyStructure-morphology",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-patient",
   "http://hl7.org/fhir/SearchParameter/Bundle-identifier",
   "http://hl7.org/fhir/SearchParameter/Bundle-timestamp",
   "http://hl7.org/fhir/SearchParameter/Bundle-type",
@@ -81,25 +63,15 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/conformance-title",
   "http://hl7.org/fhir/SearchParameter/conformance-url",
   "http://hl7.org/fhir/SearchParameter/conformance-version",
-  "http://hl7.org/fhir/SearchParameter/CarePlan-encounter",
   "http://hl7.org/fhir/SearchParameter/CarePlan-intent",
   "http://hl7.org/fhir/SearchParameter/CarePlan-status",
-  "http://hl7.org/fhir/SearchParameter/CarePlan-subject",
-  "http://hl7.org/fhir/SearchParameter/CareTeam-encounter",
   "http://hl7.org/fhir/SearchParameter/CareTeam-status",
-  "http://hl7.org/fhir/SearchParameter/CareTeam-subject",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-code",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-context",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-entered-date",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-enterer",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-factor-override",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-occurrence",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-patient",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-performing-organization",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-price-override",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-quantity",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-requesting-organization",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-subject",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-date",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-description",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-effective",
@@ -118,171 +90,96 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Citation-url",
   "http://hl7.org/fhir/SearchParameter/Citation-version",
   "http://hl7.org/fhir/SearchParameter/Claim-created",
-  "http://hl7.org/fhir/SearchParameter/Claim-enterer",
-  "http://hl7.org/fhir/SearchParameter/Claim-facility",
-  "http://hl7.org/fhir/SearchParameter/Claim-insurer",
-  "http://hl7.org/fhir/SearchParameter/Claim-patient",
-  "http://hl7.org/fhir/SearchParameter/Claim-payee",
   "http://hl7.org/fhir/SearchParameter/Claim-priority",
-  "http://hl7.org/fhir/SearchParameter/Claim-provider",
   "http://hl7.org/fhir/SearchParameter/Claim-status",
   "http://hl7.org/fhir/SearchParameter/Claim-use",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-created",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-disposition",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-insurer",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-outcome",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-patient",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-payment-date",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-request",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-requestor",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-status",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-use",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-assessor",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-encounter",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-previous",
   "http://hl7.org/fhir/SearchParameter/ClinicalImpression-status",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-subject",
   "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-contraindication",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-contraindication-reference",
   "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-effect",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-effect-reference",
   "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-indication",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-indication-reference",
   "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-interaction",
   "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-type",
   "http://hl7.org/fhir/SearchParameter/CodeSystem-content-mode",
-  "http://hl7.org/fhir/SearchParameter/CodeSystem-supplements",
   "http://hl7.org/fhir/SearchParameter/CodeSystem-system",
-  "http://hl7.org/fhir/SearchParameter/Communication-encounter",
-  "http://hl7.org/fhir/SearchParameter/Communication-patient",
   "http://hl7.org/fhir/SearchParameter/Communication-received",
-  "http://hl7.org/fhir/SearchParameter/Communication-sender",
   "http://hl7.org/fhir/SearchParameter/Communication-sent",
   "http://hl7.org/fhir/SearchParameter/Communication-status",
-  "http://hl7.org/fhir/SearchParameter/Communication-subject",
   "http://hl7.org/fhir/SearchParameter/CommunicationRequest-authored",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-encounter",
   "http://hl7.org/fhir/SearchParameter/CommunicationRequest-group-identifier",
   "http://hl7.org/fhir/SearchParameter/CommunicationRequest-occurrence",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-patient",
   "http://hl7.org/fhir/SearchParameter/CommunicationRequest-priority",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-sender",
   "http://hl7.org/fhir/SearchParameter/CommunicationRequest-status",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-subject",
   "http://hl7.org/fhir/SearchParameter/CompartmentDefinition-code",
   "http://hl7.org/fhir/SearchParameter/Composition-confidentiality",
   "http://hl7.org/fhir/SearchParameter/Composition-status",
-  "http://hl7.org/fhir/SearchParameter/Composition-subject",
   "http://hl7.org/fhir/SearchParameter/Composition-title",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-source",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-source-uri",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-target",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-target-uri",
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-age",
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-date",
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-string",
-  "http://hl7.org/fhir/SearchParameter/Condition-asserter",
   "http://hl7.org/fhir/SearchParameter/Condition-clinical-status",
-  "http://hl7.org/fhir/SearchParameter/Condition-encounter",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-age",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-date",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-info",
   "http://hl7.org/fhir/SearchParameter/Condition-recorded-date",
   "http://hl7.org/fhir/SearchParameter/Condition-severity",
-  "http://hl7.org/fhir/SearchParameter/Condition-subject",
   "http://hl7.org/fhir/SearchParameter/Condition-verification-status",
   "http://hl7.org/fhir/SearchParameter/Consent-period",
   "http://hl7.org/fhir/SearchParameter/Consent-scope",
-  "http://hl7.org/fhir/SearchParameter/Consent-source-reference",
   "http://hl7.org/fhir/SearchParameter/Consent-status",
   "http://hl7.org/fhir/SearchParameter/Contract-instantiates",
   "http://hl7.org/fhir/SearchParameter/Contract-issued",
   "http://hl7.org/fhir/SearchParameter/Contract-status",
   "http://hl7.org/fhir/SearchParameter/Contract-url",
-  "http://hl7.org/fhir/SearchParameter/Coverage-beneficiary",
   "http://hl7.org/fhir/SearchParameter/Coverage-dependent",
-  "http://hl7.org/fhir/SearchParameter/Coverage-patient",
-  "http://hl7.org/fhir/SearchParameter/Coverage-policy-holder",
   "http://hl7.org/fhir/SearchParameter/Coverage-status",
-  "http://hl7.org/fhir/SearchParameter/Coverage-subscriber",
   "http://hl7.org/fhir/SearchParameter/Coverage-type",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-created",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-enterer",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-facility",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-patient",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-provider",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-status",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-created",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-disposition",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-insurer",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-outcome",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-request",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-requestor",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-status",
-  "http://hl7.org/fhir/SearchParameter/DetectedIssue-author",
   "http://hl7.org/fhir/SearchParameter/DetectedIssue-code",
   "http://hl7.org/fhir/SearchParameter/DetectedIssue-identified",
-  "http://hl7.org/fhir/SearchParameter/Device-location",
   "http://hl7.org/fhir/SearchParameter/Device-manufacturer",
   "http://hl7.org/fhir/SearchParameter/Device-model",
-  "http://hl7.org/fhir/SearchParameter/Device-organization",
-  "http://hl7.org/fhir/SearchParameter/Device-patient",
   "http://hl7.org/fhir/SearchParameter/Device-status",
   "http://hl7.org/fhir/SearchParameter/Device-type",
   "http://hl7.org/fhir/SearchParameter/Device-url",
-  "http://hl7.org/fhir/SearchParameter/DeviceDefinition-parent",
   "http://hl7.org/fhir/SearchParameter/DeviceDefinition-type",
   "http://hl7.org/fhir/SearchParameter/DeviceMetric-category",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-parent",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-source",
   "http://hl7.org/fhir/SearchParameter/DeviceMetric-type",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-authored-on",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-device",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-event-date",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-group-identifier",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-intent",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-performer",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-requester",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-status",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/DeviceUseStatement-device",
-  "http://hl7.org/fhir/SearchParameter/DeviceUseStatement-subject",
   "http://hl7.org/fhir/SearchParameter/DiagnosticReport-issued",
   "http://hl7.org/fhir/SearchParameter/DiagnosticReport-status",
-  "http://hl7.org/fhir/SearchParameter/DiagnosticReport-subject",
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-created",
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-description",
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-source",
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-status",
-  "http://hl7.org/fhir/SearchParameter/DocumentManifest-subject",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-authenticator",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-custodian",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-date",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-description",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-facility",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-period",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-setting",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-status",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-subject",
   "http://hl7.org/fhir/SearchParameter/Encounter-class",
   "http://hl7.org/fhir/SearchParameter/Encounter-length",
-  "http://hl7.org/fhir/SearchParameter/Encounter-part-of",
-  "http://hl7.org/fhir/SearchParameter/Encounter-service-provider",
   "http://hl7.org/fhir/SearchParameter/Encounter-status",
-  "http://hl7.org/fhir/SearchParameter/Encounter-subject",
   "http://hl7.org/fhir/SearchParameter/Endpoint-connection-type",
   "http://hl7.org/fhir/SearchParameter/Endpoint-name",
-  "http://hl7.org/fhir/SearchParameter/Endpoint-organization",
   "http://hl7.org/fhir/SearchParameter/Endpoint-status",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentRequest-patient",
   "http://hl7.org/fhir/SearchParameter/EnrollmentRequest-status",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentResponse-request",
   "http://hl7.org/fhir/SearchParameter/EnrollmentResponse-status",
-  "http://hl7.org/fhir/SearchParameter/EpisodeOfCare-care-manager",
-  "http://hl7.org/fhir/SearchParameter/EpisodeOfCare-organization",
   "http://hl7.org/fhir/SearchParameter/EpisodeOfCare-status",
   "http://hl7.org/fhir/SearchParameter/EventDefinition-date",
   "http://hl7.org/fhir/SearchParameter/EventDefinition-description",
@@ -317,71 +214,41 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ExampleScenario-status",
   "http://hl7.org/fhir/SearchParameter/ExampleScenario-url",
   "http://hl7.org/fhir/SearchParameter/ExampleScenario-version",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-claim",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-created",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-disposition",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-enterer",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-facility",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-patient",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-payee",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-provider",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-status",
   "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-relationship",
   "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-sex",
   "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-status",
-  "http://hl7.org/fhir/SearchParameter/Flag-author",
-  "http://hl7.org/fhir/SearchParameter/Flag-subject",
   "http://hl7.org/fhir/SearchParameter/Goal-achievement-status",
   "http://hl7.org/fhir/SearchParameter/Goal-lifecycle-status",
   "http://hl7.org/fhir/SearchParameter/Goal-start-date",
-  "http://hl7.org/fhir/SearchParameter/Goal-subject",
   "http://hl7.org/fhir/SearchParameter/GraphDefinition-start",
   "http://hl7.org/fhir/SearchParameter/Group-actual",
   "http://hl7.org/fhir/SearchParameter/Group-code",
-  "http://hl7.org/fhir/SearchParameter/Group-managing-entity",
   "http://hl7.org/fhir/SearchParameter/Group-type",
-  "http://hl7.org/fhir/SearchParameter/GuidanceResponse-patient",
   "http://hl7.org/fhir/SearchParameter/GuidanceResponse-request",
-  "http://hl7.org/fhir/SearchParameter/GuidanceResponse-subject",
   "http://hl7.org/fhir/SearchParameter/HealthcareService-active",
   "http://hl7.org/fhir/SearchParameter/HealthcareService-name",
-  "http://hl7.org/fhir/SearchParameter/HealthcareService-organization",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-encounter",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-referrer",
   "http://hl7.org/fhir/SearchParameter/ImagingStudy-started",
   "http://hl7.org/fhir/SearchParameter/ImagingStudy-status",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-subject",
-  "http://hl7.org/fhir/SearchParameter/Immunization-location",
   "http://hl7.org/fhir/SearchParameter/Immunization-lot-number",
-  "http://hl7.org/fhir/SearchParameter/Immunization-manufacturer",
   "http://hl7.org/fhir/SearchParameter/Immunization-status",
   "http://hl7.org/fhir/SearchParameter/Immunization-status-reason",
   "http://hl7.org/fhir/SearchParameter/Immunization-vaccine-code",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-date",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-dose-status",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-immunization-event",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-patient",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-status",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-target-disease",
   "http://hl7.org/fhir/SearchParameter/ImmunizationRecommendation-date",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationRecommendation-patient",
   "http://hl7.org/fhir/SearchParameter/ImplementationGuide-experimental",
   "http://hl7.org/fhir/SearchParameter/Ingredient-identifier",
   "http://hl7.org/fhir/SearchParameter/Ingredient-role",
-  "http://hl7.org/fhir/SearchParameter/Ingredient-substance",
   "http://hl7.org/fhir/SearchParameter/Ingredient-substance-code",
-  "http://hl7.org/fhir/SearchParameter/Ingredient-substance-definition",
-  "http://hl7.org/fhir/SearchParameter/InsurancePlan-administered-by",
-  "http://hl7.org/fhir/SearchParameter/InsurancePlan-owned-by",
   "http://hl7.org/fhir/SearchParameter/InsurancePlan-phonetic",
   "http://hl7.org/fhir/SearchParameter/InsurancePlan-status",
-  "http://hl7.org/fhir/SearchParameter/Invoice-account",
   "http://hl7.org/fhir/SearchParameter/Invoice-date",
-  "http://hl7.org/fhir/SearchParameter/Invoice-issuer",
-  "http://hl7.org/fhir/SearchParameter/Invoice-patient",
-  "http://hl7.org/fhir/SearchParameter/Invoice-recipient",
   "http://hl7.org/fhir/SearchParameter/Invoice-status",
-  "http://hl7.org/fhir/SearchParameter/Invoice-subject",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalgross",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalnet",
   "http://hl7.org/fhir/SearchParameter/Invoice-type",
@@ -395,11 +262,8 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Library-type",
   "http://hl7.org/fhir/SearchParameter/Library-url",
   "http://hl7.org/fhir/SearchParameter/Library-version",
-  "http://hl7.org/fhir/SearchParameter/Linkage-author",
   "http://hl7.org/fhir/SearchParameter/List-empty-reason",
-  "http://hl7.org/fhir/SearchParameter/List-source",
   "http://hl7.org/fhir/SearchParameter/List-status",
-  "http://hl7.org/fhir/SearchParameter/List-subject",
   "http://hl7.org/fhir/SearchParameter/List-title",
   "http://hl7.org/fhir/SearchParameter/Location-address",
   "http://hl7.org/fhir/SearchParameter/Location-address-city",
@@ -408,8 +272,6 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Location-address-state",
   "http://hl7.org/fhir/SearchParameter/Location-address-use",
   "http://hl7.org/fhir/SearchParameter/Location-operational-status",
-  "http://hl7.org/fhir/SearchParameter/Location-organization",
-  "http://hl7.org/fhir/SearchParameter/Location-partof",
   "http://hl7.org/fhir/SearchParameter/Location-status",
   "http://hl7.org/fhir/SearchParameter/ManufacturedItemDefinition-dose-form",
   "http://hl7.org/fhir/SearchParameter/Measure-date",
@@ -422,74 +284,43 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Measure-url",
   "http://hl7.org/fhir/SearchParameter/Measure-version",
   "http://hl7.org/fhir/SearchParameter/MeasureReport-date",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-measure",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-patient",
   "http://hl7.org/fhir/SearchParameter/MeasureReport-period",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-reporter",
   "http://hl7.org/fhir/SearchParameter/MeasureReport-status",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-subject",
   "http://hl7.org/fhir/SearchParameter/Media-created",
-  "http://hl7.org/fhir/SearchParameter/Media-device",
-  "http://hl7.org/fhir/SearchParameter/Media-encounter",
   "http://hl7.org/fhir/SearchParameter/Media-modality",
-  "http://hl7.org/fhir/SearchParameter/Media-operator",
-  "http://hl7.org/fhir/SearchParameter/Media-patient",
   "http://hl7.org/fhir/SearchParameter/Media-site",
   "http://hl7.org/fhir/SearchParameter/Media-status",
-  "http://hl7.org/fhir/SearchParameter/Media-subject",
   "http://hl7.org/fhir/SearchParameter/Media-type",
   "http://hl7.org/fhir/SearchParameter/Media-view",
   "http://hl7.org/fhir/SearchParameter/Medication-expiration-date",
   "http://hl7.org/fhir/SearchParameter/Medication-form",
   "http://hl7.org/fhir/SearchParameter/Medication-lot-number",
-  "http://hl7.org/fhir/SearchParameter/Medication-manufacturer",
   "http://hl7.org/fhir/SearchParameter/Medication-status",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-context",
   "http://hl7.org/fhir/SearchParameter/MedicationAdministration-effective-time",
-  "http://hl7.org/fhir/SearchParameter/medications-medication",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-request",
   "http://hl7.org/fhir/SearchParameter/medications-status",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-subject",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-context",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-destination",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-subject",
   "http://hl7.org/fhir/SearchParameter/MedicationDispense-type",
   "http://hl7.org/fhir/SearchParameter/MedicationDispense-whenhandedover",
   "http://hl7.org/fhir/SearchParameter/MedicationDispense-whenprepared",
   "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-code",
   "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-doseform",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-manufacturer",
   "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-status",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-authoredon",
-  "http://hl7.org/fhir/SearchParameter/medications-encounter",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-dispenser",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performer",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performertype",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-intent",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-priority",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-subject",
   "http://hl7.org/fhir/SearchParameter/MedicationStatement-category",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-context",
   "http://hl7.org/fhir/SearchParameter/MedicationStatement-effective",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-source",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-subject",
   "http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-domain",
   "http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-status",
   "http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-type",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-category",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-event",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-author",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-code",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-enterer",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-event",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-response-id",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-responsible",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-sender",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-source",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-source-uri",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-chromosome",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-patient",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-referenceseqid",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-type",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-window-end",
@@ -500,55 +331,37 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-additive",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-datetime",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-formula",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-provider",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-status",
   "http://hl7.org/fhir/SearchParameter/NutritionProduct-status",
   "http://hl7.org/fhir/SearchParameter/Observation-data-absent-reason",
-  "http://hl7.org/fhir/SearchParameter/Observation-device",
   "http://hl7.org/fhir/SearchParameter/Observation-method",
-  "http://hl7.org/fhir/SearchParameter/Observation-specimen",
   "http://hl7.org/fhir/SearchParameter/Observation-status",
-  "http://hl7.org/fhir/SearchParameter/Observation-subject",
   "http://hl7.org/fhir/SearchParameter/Observation-value-concept",
   "http://hl7.org/fhir/SearchParameter/Observation-value-date",
   "http://hl7.org/fhir/SearchParameter/Observation-value-quantity",
   "http://hl7.org/fhir/SearchParameter/Observation-value-string",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-base",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-code",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-input-profile",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-instance",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-kind",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-output-profile",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-system",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-type",
   "http://hl7.org/fhir/SearchParameter/Organization-active",
-  "http://hl7.org/fhir/SearchParameter/Organization-partof",
   "http://hl7.org/fhir/SearchParameter/Organization-phonetic",
   "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-active",
   "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-date",
-  "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-participating-organization",
-  "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-primary-organization",
   "http://hl7.org/fhir/SearchParameter/PackagedProductDefinition-name",
   "http://hl7.org/fhir/SearchParameter/PackagedProductDefinition-status",
   "http://hl7.org/fhir/SearchParameter/Patient-active",
   "http://hl7.org/fhir/SearchParameter/individual-birthdate",
   "http://hl7.org/fhir/SearchParameter/Patient-death-date",
   "http://hl7.org/fhir/SearchParameter/individual-gender",
-  "http://hl7.org/fhir/SearchParameter/Patient-organization",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-created",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-payment-status",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-provider",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-request",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-response",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-status",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-created",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-disposition",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-outcome",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-payment-issuer",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-request",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-requestor",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-status",
-  "http://hl7.org/fhir/SearchParameter/Person-organization",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-date",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-description",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-effective",
@@ -562,13 +375,8 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Practitioner-active",
   "http://hl7.org/fhir/SearchParameter/PractitionerRole-active",
   "http://hl7.org/fhir/SearchParameter/PractitionerRole-date",
-  "http://hl7.org/fhir/SearchParameter/PractitionerRole-organization",
-  "http://hl7.org/fhir/SearchParameter/PractitionerRole-practitioner",
   "http://hl7.org/fhir/SearchParameter/Procedure-category",
-  "http://hl7.org/fhir/SearchParameter/Procedure-location",
   "http://hl7.org/fhir/SearchParameter/Procedure-status",
-  "http://hl7.org/fhir/SearchParameter/Procedure-subject",
-  "http://hl7.org/fhir/SearchParameter/Provenance-location",
   "http://hl7.org/fhir/SearchParameter/Provenance-recorded",
   "http://hl7.org/fhir/SearchParameter/Provenance-when",
   "http://hl7.org/fhir/SearchParameter/Questionnaire-date",
@@ -580,31 +388,19 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Questionnaire-title",
   "http://hl7.org/fhir/SearchParameter/Questionnaire-url",
   "http://hl7.org/fhir/SearchParameter/Questionnaire-version",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-author",
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-authored",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-encounter",
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-identifier",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-questionnaire",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-source",
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-status",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-subject",
   "http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-case",
   "http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-case-type",
-  "http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-holder",
   "http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-status",
   "http://hl7.org/fhir/SearchParameter/RelatedPerson-active",
-  "http://hl7.org/fhir/SearchParameter/RelatedPerson-patient",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-author",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-authored",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-code",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-encounter",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-group-identifier",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-intent",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-patient",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-priority",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-status",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-subject",
   "http://hl7.org/fhir/SearchParameter/ResearchDefinition-date",
   "http://hl7.org/fhir/SearchParameter/ResearchDefinition-description",
   "http://hl7.org/fhir/SearchParameter/ResearchDefinition-effective",
@@ -624,49 +420,33 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ResearchElementDefinition-url",
   "http://hl7.org/fhir/SearchParameter/ResearchElementDefinition-version",
   "http://hl7.org/fhir/SearchParameter/ResearchStudy-date",
-  "http://hl7.org/fhir/SearchParameter/ResearchStudy-principalinvestigator",
-  "http://hl7.org/fhir/SearchParameter/ResearchStudy-sponsor",
   "http://hl7.org/fhir/SearchParameter/ResearchStudy-status",
   "http://hl7.org/fhir/SearchParameter/ResearchStudy-title",
   "http://hl7.org/fhir/SearchParameter/ResearchSubject-date",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-individual",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-patient",
   "http://hl7.org/fhir/SearchParameter/ResearchSubject-status",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-study",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-condition",
   "http://hl7.org/fhir/SearchParameter/RiskAssessment-method",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-performer",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-subject",
   "http://hl7.org/fhir/SearchParameter/Schedule-active",
   "http://hl7.org/fhir/SearchParameter/Schedule-date",
   "http://hl7.org/fhir/SearchParameter/SearchParameter-code",
-  "http://hl7.org/fhir/SearchParameter/SearchParameter-derived-from",
   "http://hl7.org/fhir/SearchParameter/SearchParameter-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-authored",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-intent",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-occurrence",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-performer-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-priority",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-requester",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-requisition",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-status",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-subject",
   "http://hl7.org/fhir/SearchParameter/Slot-appointment-type",
-  "http://hl7.org/fhir/SearchParameter/Slot-schedule",
   "http://hl7.org/fhir/SearchParameter/Slot-start",
   "http://hl7.org/fhir/SearchParameter/Slot-status",
   "http://hl7.org/fhir/SearchParameter/Specimen-accession",
   "http://hl7.org/fhir/SearchParameter/Specimen-bodysite",
   "http://hl7.org/fhir/SearchParameter/Specimen-collected",
-  "http://hl7.org/fhir/SearchParameter/Specimen-collector",
-  "http://hl7.org/fhir/SearchParameter/Specimen-patient",
   "http://hl7.org/fhir/SearchParameter/Specimen-status",
-  "http://hl7.org/fhir/SearchParameter/Specimen-subject",
   "http://hl7.org/fhir/SearchParameter/Specimen-type",
   "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-identifier",
   "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-type",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-abstract",
-  "http://hl7.org/fhir/SearchParameter/StructureDefinition-base",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-derivation",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-experimental",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-kind",
@@ -684,31 +464,21 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Substance-status",
   "http://hl7.org/fhir/SearchParameter/SubstanceDefinition-domain",
   "http://hl7.org/fhir/SearchParameter/SupplyDelivery-status",
-  "http://hl7.org/fhir/SearchParameter/SupplyDelivery-supplier",
   "http://hl7.org/fhir/SearchParameter/SupplyRequest-category",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-requester",
   "http://hl7.org/fhir/SearchParameter/SupplyRequest-status",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-subject",
   "http://hl7.org/fhir/SearchParameter/Task-authored-on",
   "http://hl7.org/fhir/SearchParameter/Task-business-status",
   "http://hl7.org/fhir/SearchParameter/Task-code",
-  "http://hl7.org/fhir/SearchParameter/Task-encounter",
-  "http://hl7.org/fhir/SearchParameter/Task-focus",
   "http://hl7.org/fhir/SearchParameter/Task-group-identifier",
   "http://hl7.org/fhir/SearchParameter/Task-intent",
   "http://hl7.org/fhir/SearchParameter/Task-modified",
-  "http://hl7.org/fhir/SearchParameter/Task-owner",
-  "http://hl7.org/fhir/SearchParameter/Task-patient",
   "http://hl7.org/fhir/SearchParameter/Task-period",
   "http://hl7.org/fhir/SearchParameter/Task-priority",
-  "http://hl7.org/fhir/SearchParameter/Task-requester",
   "http://hl7.org/fhir/SearchParameter/Task-status",
-  "http://hl7.org/fhir/SearchParameter/Task-subject",
   "http://hl7.org/fhir/SearchParameter/TestReport-identifier",
   "http://hl7.org/fhir/SearchParameter/TestReport-issued",
   "http://hl7.org/fhir/SearchParameter/TestReport-result",
   "http://hl7.org/fhir/SearchParameter/TestReport-tester",
-  "http://hl7.org/fhir/SearchParameter/TestReport-testscript",
   "http://hl7.org/fhir/SearchParameter/TestScript-date",
   "http://hl7.org/fhir/SearchParameter/TestScript-description",
   "http://hl7.org/fhir/SearchParameter/TestScript-identifier",
@@ -720,7 +490,6 @@ export const r4b_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/TestScript-version",
   "http://hl7.org/fhir/SearchParameter/ValueSet-expansion",
   "http://hl7.org/fhir/SearchParameter/VisionPrescription-datewritten",
-  "http://hl7.org/fhir/SearchParameter/VisionPrescription-prescriber",
   "http://hl7.org/fhir/SearchParameter/VisionPrescription-status",
 ]);
 
@@ -1702,478 +1471,6 @@ const r4b_sp1_idx_string_set: Set<string> = new Set([
 export function asSP1String(url: uri): r4b_sp1_idx_string | undefined {
   if (!r4b_sp1_idx_string_set.has(url)) return undefined;
   return sqlSafeIdentifier(url) as r4b_sp1_idx_string;
-}
-
-export type r4b_sp1_idx_reference =
-  | "account_owner"
-  | "administrableproductdefinition_device"
-  | "adverseevent_location"
-  | "adverseevent_recorder"
-  | "adverseevent_subject"
-  | "allergyintolerance_asserter"
-  | "clinical_patient"
-  | "allergyintolerance_recorder"
-  | "appointmentresponse_actor"
-  | "appointmentresponse_appointment"
-  | "appointmentresponse_location"
-  | "appointmentresponse_patient"
-  | "appointmentresponse_practitioner"
-  | "auditevent_source"
-  | "basic_author"
-  | "basic_patient"
-  | "basic_subject"
-  | "bodystructure_patient"
-  | "careplan_encounter"
-  | "careplan_subject"
-  | "careteam_encounter"
-  | "careteam_subject"
-  | "chargeitem_context"
-  | "chargeitem_enterer"
-  | "chargeitem_patient"
-  | "chargeitem_performing_organization"
-  | "chargeitem_requesting_organization"
-  | "chargeitem_subject"
-  | "claim_enterer"
-  | "claim_facility"
-  | "claim_insurer"
-  | "claim_patient"
-  | "claim_payee"
-  | "claim_provider"
-  | "claimresponse_insurer"
-  | "claimresponse_patient"
-  | "claimresponse_request"
-  | "claimresponse_requestor"
-  | "clinicalimpression_assessor"
-  | "clinicalimpression_encounter"
-  | "clinicalimpression_previous"
-  | "clinicalimpression_subject"
-  | "clinicalusedefinition_contraindication_reference"
-  | "clinicalusedefinition_effect_reference"
-  | "clinicalusedefinition_indication_reference"
-  | "codesystem_supplements"
-  | "communication_encounter"
-  | "communication_patient"
-  | "communication_sender"
-  | "communication_subject"
-  | "communicationrequest_encounter"
-  | "communicationrequest_patient"
-  | "communicationrequest_requester"
-  | "communicationrequest_sender"
-  | "communicationrequest_subject"
-  | "composition_subject"
-  | "conceptmap_source"
-  | "conceptmap_source_uri"
-  | "conceptmap_target"
-  | "conceptmap_target_uri"
-  | "condition_asserter"
-  | "condition_encounter"
-  | "condition_subject"
-  | "consent_source_reference"
-  | "coverage_beneficiary"
-  | "coverage_patient"
-  | "coverage_policy_holder"
-  | "coverage_subscriber"
-  | "coverageeligibilityrequest_enterer"
-  | "coverageeligibilityrequest_facility"
-  | "coverageeligibilityrequest_patient"
-  | "coverageeligibilityrequest_provider"
-  | "coverageeligibilityresponse_insurer"
-  | "coverageeligibilityresponse_patient"
-  | "coverageeligibilityresponse_request"
-  | "coverageeligibilityresponse_requestor"
-  | "detectedissue_author"
-  | "device_location"
-  | "device_organization"
-  | "device_patient"
-  | "devicedefinition_parent"
-  | "devicemetric_parent"
-  | "devicemetric_source"
-  | "devicerequest_device"
-  | "devicerequest_performer"
-  | "devicerequest_requester"
-  | "devicerequest_subject"
-  | "deviceusestatement_device"
-  | "deviceusestatement_subject"
-  | "diagnosticreport_subject"
-  | "documentmanifest_subject"
-  | "documentreference_authenticator"
-  | "documentreference_custodian"
-  | "documentreference_subject"
-  | "encounter_part_of"
-  | "encounter_service_provider"
-  | "encounter_subject"
-  | "endpoint_organization"
-  | "enrollmentrequest_patient"
-  | "enrollmentrequest_subject"
-  | "enrollmentresponse_request"
-  | "episodeofcare_care_manager"
-  | "episodeofcare_organization"
-  | "explanationofbenefit_claim"
-  | "explanationofbenefit_enterer"
-  | "explanationofbenefit_facility"
-  | "explanationofbenefit_patient"
-  | "explanationofbenefit_payee"
-  | "explanationofbenefit_provider"
-  | "flag_author"
-  | "flag_subject"
-  | "goal_subject"
-  | "group_managing_entity"
-  | "guidanceresponse_patient"
-  | "guidanceresponse_subject"
-  | "healthcareservice_organization"
-  | "imagingstudy_encounter"
-  | "imagingstudy_referrer"
-  | "imagingstudy_subject"
-  | "immunization_location"
-  | "immunization_manufacturer"
-  | "immunizationevaluation_immunization_event"
-  | "immunizationevaluation_patient"
-  | "immunizationrecommendation_patient"
-  | "ingredient_substance"
-  | "ingredient_substance_definition"
-  | "insuranceplan_administered_by"
-  | "insuranceplan_owned_by"
-  | "invoice_account"
-  | "invoice_issuer"
-  | "invoice_patient"
-  | "invoice_recipient"
-  | "invoice_subject"
-  | "linkage_author"
-  | "list_source"
-  | "list_subject"
-  | "location_organization"
-  | "location_partof"
-  | "measurereport_measure"
-  | "measurereport_patient"
-  | "measurereport_reporter"
-  | "measurereport_subject"
-  | "media_device"
-  | "media_encounter"
-  | "media_operator"
-  | "media_patient"
-  | "media_subject"
-  | "medication_manufacturer"
-  | "medicationadministration_context"
-  | "medications_medication"
-  | "medicationadministration_request"
-  | "medicationadministration_subject"
-  | "medicationdispense_context"
-  | "medicationdispense_destination"
-  | "medicationdispense_subject"
-  | "medicationknowledge_manufacturer"
-  | "medications_encounter"
-  | "medicationrequest_intended_dispenser"
-  | "medicationrequest_intended_performer"
-  | "medicationrequest_requester"
-  | "medicationrequest_subject"
-  | "medicationstatement_context"
-  | "medicationstatement_source"
-  | "medicationstatement_subject"
-  | "messageheader_author"
-  | "messageheader_enterer"
-  | "messageheader_responsible"
-  | "messageheader_sender"
-  | "molecularsequence_patient"
-  | "nutritionorder_provider"
-  | "observation_device"
-  | "observation_specimen"
-  | "observation_subject"
-  | "operationdefinition_base"
-  | "operationdefinition_input_profile"
-  | "operationdefinition_output_profile"
-  | "organization_partof"
-  | "organizationaffiliation_participating_organization"
-  | "organizationaffiliation_primary_organization"
-  | "patient_organization"
-  | "paymentnotice_provider"
-  | "paymentnotice_request"
-  | "paymentnotice_response"
-  | "paymentreconciliation_payment_issuer"
-  | "paymentreconciliation_request"
-  | "paymentreconciliation_requestor"
-  | "person_organization"
-  | "practitionerrole_organization"
-  | "practitionerrole_practitioner"
-  | "procedure_location"
-  | "procedure_subject"
-  | "provenance_location"
-  | "questionnaireresponse_author"
-  | "questionnaireresponse_encounter"
-  | "questionnaireresponse_patient"
-  | "questionnaireresponse_questionnaire"
-  | "questionnaireresponse_source"
-  | "questionnaireresponse_subject"
-  | "regulatedauthorization_holder"
-  | "relatedperson_patient"
-  | "requestgroup_author"
-  | "requestgroup_encounter"
-  | "requestgroup_patient"
-  | "requestgroup_subject"
-  | "researchstudy_principalinvestigator"
-  | "researchstudy_sponsor"
-  | "researchsubject_individual"
-  | "researchsubject_patient"
-  | "researchsubject_study"
-  | "riskassessment_condition"
-  | "riskassessment_performer"
-  | "riskassessment_subject"
-  | "searchparameter_derived_from"
-  | "servicerequest_requester"
-  | "servicerequest_subject"
-  | "slot_schedule"
-  | "specimen_collector"
-  | "specimen_patient"
-  | "specimen_subject"
-  | "structuredefinition_base"
-  | "supplydelivery_supplier"
-  | "supplyrequest_requester"
-  | "supplyrequest_subject"
-  | "task_encounter"
-  | "task_focus"
-  | "task_owner"
-  | "task_patient"
-  | "task_requester"
-  | "task_subject"
-  | "testreport_testscript"
-  | "visionprescription_prescriber";
-
-const r4b_sp1_idx_reference_set: Set<string> = new Set([
-  "http://hl7.org/fhir/SearchParameter/Account-owner",
-  "http://hl7.org/fhir/SearchParameter/AdministrableProductDefinition-device",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-location",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-recorder",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-subject",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-asserter",
-  "http://hl7.org/fhir/SearchParameter/clinical-patient",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-recorder",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-actor",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-appointment",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-location",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/AppointmentResponse-practitioner",
-  "http://hl7.org/fhir/SearchParameter/AuditEvent-source",
-  "http://hl7.org/fhir/SearchParameter/Basic-author",
-  "http://hl7.org/fhir/SearchParameter/Basic-patient",
-  "http://hl7.org/fhir/SearchParameter/Basic-subject",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-patient",
-  "http://hl7.org/fhir/SearchParameter/CarePlan-encounter",
-  "http://hl7.org/fhir/SearchParameter/CarePlan-subject",
-  "http://hl7.org/fhir/SearchParameter/CareTeam-encounter",
-  "http://hl7.org/fhir/SearchParameter/CareTeam-subject",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-context",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-enterer",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-patient",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-performing-organization",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-requesting-organization",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-subject",
-  "http://hl7.org/fhir/SearchParameter/Claim-enterer",
-  "http://hl7.org/fhir/SearchParameter/Claim-facility",
-  "http://hl7.org/fhir/SearchParameter/Claim-insurer",
-  "http://hl7.org/fhir/SearchParameter/Claim-patient",
-  "http://hl7.org/fhir/SearchParameter/Claim-payee",
-  "http://hl7.org/fhir/SearchParameter/Claim-provider",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-insurer",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-request",
-  "http://hl7.org/fhir/SearchParameter/ClaimResponse-requestor",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-assessor",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-encounter",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-previous",
-  "http://hl7.org/fhir/SearchParameter/ClinicalImpression-subject",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-contraindication-reference",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-effect-reference",
-  "http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-indication-reference",
-  "http://hl7.org/fhir/SearchParameter/CodeSystem-supplements",
-  "http://hl7.org/fhir/SearchParameter/Communication-encounter",
-  "http://hl7.org/fhir/SearchParameter/Communication-patient",
-  "http://hl7.org/fhir/SearchParameter/Communication-sender",
-  "http://hl7.org/fhir/SearchParameter/Communication-subject",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-encounter",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-patient",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-sender",
-  "http://hl7.org/fhir/SearchParameter/CommunicationRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/Composition-subject",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-source",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-source-uri",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-target",
-  "http://hl7.org/fhir/SearchParameter/ConceptMap-target-uri",
-  "http://hl7.org/fhir/SearchParameter/Condition-asserter",
-  "http://hl7.org/fhir/SearchParameter/Condition-encounter",
-  "http://hl7.org/fhir/SearchParameter/Condition-subject",
-  "http://hl7.org/fhir/SearchParameter/Consent-source-reference",
-  "http://hl7.org/fhir/SearchParameter/Coverage-beneficiary",
-  "http://hl7.org/fhir/SearchParameter/Coverage-patient",
-  "http://hl7.org/fhir/SearchParameter/Coverage-policy-holder",
-  "http://hl7.org/fhir/SearchParameter/Coverage-subscriber",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-enterer",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-facility",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-patient",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-provider",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-insurer",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-request",
-  "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-requestor",
-  "http://hl7.org/fhir/SearchParameter/DetectedIssue-author",
-  "http://hl7.org/fhir/SearchParameter/Device-location",
-  "http://hl7.org/fhir/SearchParameter/Device-organization",
-  "http://hl7.org/fhir/SearchParameter/Device-patient",
-  "http://hl7.org/fhir/SearchParameter/DeviceDefinition-parent",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-parent",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-source",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-device",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-performer",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/DeviceRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/DeviceUseStatement-device",
-  "http://hl7.org/fhir/SearchParameter/DeviceUseStatement-subject",
-  "http://hl7.org/fhir/SearchParameter/DiagnosticReport-subject",
-  "http://hl7.org/fhir/SearchParameter/DocumentManifest-subject",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-authenticator",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-custodian",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-subject",
-  "http://hl7.org/fhir/SearchParameter/Encounter-part-of",
-  "http://hl7.org/fhir/SearchParameter/Encounter-service-provider",
-  "http://hl7.org/fhir/SearchParameter/Encounter-subject",
-  "http://hl7.org/fhir/SearchParameter/Endpoint-organization",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentRequest-patient",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/EnrollmentResponse-request",
-  "http://hl7.org/fhir/SearchParameter/EpisodeOfCare-care-manager",
-  "http://hl7.org/fhir/SearchParameter/EpisodeOfCare-organization",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-claim",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-enterer",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-facility",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-patient",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-payee",
-  "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-provider",
-  "http://hl7.org/fhir/SearchParameter/Flag-author",
-  "http://hl7.org/fhir/SearchParameter/Flag-subject",
-  "http://hl7.org/fhir/SearchParameter/Goal-subject",
-  "http://hl7.org/fhir/SearchParameter/Group-managing-entity",
-  "http://hl7.org/fhir/SearchParameter/GuidanceResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/GuidanceResponse-subject",
-  "http://hl7.org/fhir/SearchParameter/HealthcareService-organization",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-encounter",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-referrer",
-  "http://hl7.org/fhir/SearchParameter/ImagingStudy-subject",
-  "http://hl7.org/fhir/SearchParameter/Immunization-location",
-  "http://hl7.org/fhir/SearchParameter/Immunization-manufacturer",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-immunization-event",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-patient",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationRecommendation-patient",
-  "http://hl7.org/fhir/SearchParameter/Ingredient-substance",
-  "http://hl7.org/fhir/SearchParameter/Ingredient-substance-definition",
-  "http://hl7.org/fhir/SearchParameter/InsurancePlan-administered-by",
-  "http://hl7.org/fhir/SearchParameter/InsurancePlan-owned-by",
-  "http://hl7.org/fhir/SearchParameter/Invoice-account",
-  "http://hl7.org/fhir/SearchParameter/Invoice-issuer",
-  "http://hl7.org/fhir/SearchParameter/Invoice-patient",
-  "http://hl7.org/fhir/SearchParameter/Invoice-recipient",
-  "http://hl7.org/fhir/SearchParameter/Invoice-subject",
-  "http://hl7.org/fhir/SearchParameter/Linkage-author",
-  "http://hl7.org/fhir/SearchParameter/List-source",
-  "http://hl7.org/fhir/SearchParameter/List-subject",
-  "http://hl7.org/fhir/SearchParameter/Location-organization",
-  "http://hl7.org/fhir/SearchParameter/Location-partof",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-measure",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-patient",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-reporter",
-  "http://hl7.org/fhir/SearchParameter/MeasureReport-subject",
-  "http://hl7.org/fhir/SearchParameter/Media-device",
-  "http://hl7.org/fhir/SearchParameter/Media-encounter",
-  "http://hl7.org/fhir/SearchParameter/Media-operator",
-  "http://hl7.org/fhir/SearchParameter/Media-patient",
-  "http://hl7.org/fhir/SearchParameter/Media-subject",
-  "http://hl7.org/fhir/SearchParameter/Medication-manufacturer",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-context",
-  "http://hl7.org/fhir/SearchParameter/medications-medication",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-request",
-  "http://hl7.org/fhir/SearchParameter/MedicationAdministration-subject",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-context",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-destination",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-subject",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-manufacturer",
-  "http://hl7.org/fhir/SearchParameter/medications-encounter",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-dispenser",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performer",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-context",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-source",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-subject",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-author",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-enterer",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-responsible",
-  "http://hl7.org/fhir/SearchParameter/MessageHeader-sender",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-patient",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-provider",
-  "http://hl7.org/fhir/SearchParameter/Observation-device",
-  "http://hl7.org/fhir/SearchParameter/Observation-specimen",
-  "http://hl7.org/fhir/SearchParameter/Observation-subject",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-base",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-input-profile",
-  "http://hl7.org/fhir/SearchParameter/OperationDefinition-output-profile",
-  "http://hl7.org/fhir/SearchParameter/Organization-partof",
-  "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-participating-organization",
-  "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-primary-organization",
-  "http://hl7.org/fhir/SearchParameter/Patient-organization",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-provider",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-request",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-response",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-payment-issuer",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-request",
-  "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-requestor",
-  "http://hl7.org/fhir/SearchParameter/Person-organization",
-  "http://hl7.org/fhir/SearchParameter/PractitionerRole-organization",
-  "http://hl7.org/fhir/SearchParameter/PractitionerRole-practitioner",
-  "http://hl7.org/fhir/SearchParameter/Procedure-location",
-  "http://hl7.org/fhir/SearchParameter/Procedure-subject",
-  "http://hl7.org/fhir/SearchParameter/Provenance-location",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-author",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-encounter",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-patient",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-questionnaire",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-source",
-  "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-subject",
-  "http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-holder",
-  "http://hl7.org/fhir/SearchParameter/RelatedPerson-patient",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-author",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-encounter",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-patient",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-subject",
-  "http://hl7.org/fhir/SearchParameter/ResearchStudy-principalinvestigator",
-  "http://hl7.org/fhir/SearchParameter/ResearchStudy-sponsor",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-individual",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-patient",
-  "http://hl7.org/fhir/SearchParameter/ResearchSubject-study",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-condition",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-performer",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-subject",
-  "http://hl7.org/fhir/SearchParameter/SearchParameter-derived-from",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/Slot-schedule",
-  "http://hl7.org/fhir/SearchParameter/Specimen-collector",
-  "http://hl7.org/fhir/SearchParameter/Specimen-patient",
-  "http://hl7.org/fhir/SearchParameter/Specimen-subject",
-  "http://hl7.org/fhir/SearchParameter/StructureDefinition-base",
-  "http://hl7.org/fhir/SearchParameter/SupplyDelivery-supplier",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-requester",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-subject",
-  "http://hl7.org/fhir/SearchParameter/Task-encounter",
-  "http://hl7.org/fhir/SearchParameter/Task-focus",
-  "http://hl7.org/fhir/SearchParameter/Task-owner",
-  "http://hl7.org/fhir/SearchParameter/Task-patient",
-  "http://hl7.org/fhir/SearchParameter/Task-requester",
-  "http://hl7.org/fhir/SearchParameter/Task-subject",
-  "http://hl7.org/fhir/SearchParameter/TestReport-testscript",
-  "http://hl7.org/fhir/SearchParameter/VisionPrescription-prescriber",
-]);
-
-export function asSP1Reference(url: uri): r4b_sp1_idx_reference | undefined {
-  if (!r4b_sp1_idx_reference_set.has(url)) return undefined;
-  return sqlSafeIdentifier(url) as r4b_sp1_idx_reference;
 }
 
 export type r4b_sp1_idx_number =

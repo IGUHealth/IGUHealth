@@ -9,7 +9,11 @@ import {
   SearchParameterResource,
   parseValuePrefix,
 } from "../../../../../utilities/search/parameters.js";
-import { missingModifier } from "./shared.js";
+import {
+  getColumn,
+  missingModifier,
+  SEARCH_INDEX_WHEREABLE,
+} from "./shared.js";
 import { getDateRange } from "../utilities.js";
 
 export default function dateClauses(
@@ -17,14 +21,20 @@ export default function dateClauses(
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
+  const columnName = getColumn(
+    fhirVersion,
+    "date",
+    parameter.searchParameter.url,
+  );
+
   switch (parameter.modifier) {
     case "missing": {
-      return missingModifier(_ctx, parameter);
+      return missingModifier(fhirVersion, parameter);
     }
     default: {
       return db.conditions.or(
         ...parameter.value.map(
-          (parameterValue): s.r4_date_idx.Whereable | db.SQLFragment => {
+          (parameterValue): SEARCH_INDEX_WHEREABLE | db.SQLFragment => {
             const { prefix, value } = parseValuePrefix(parameterValue);
             const [startValueRange, endValueRange] = getDateRange(value);
 
@@ -32,42 +42,42 @@ export default function dateClauses(
               // the range of the search value fully contains the range of the target value
               case "eq":
               case undefined: {
-                return {
-                  start_date: db.sql`${db.self} <= ${db.param(endValueRange)}`,
-                  end_date: db.sql`${db.self} >= ${db.param(startValueRange)}`,
-                };
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+                 ${`${columnName}_start`} <= ${db.param(endValueRange)} AND 
+                  ${`${columnName}_end`} >= ${db.param(startValueRange)}
+                `;
               }
 
               //	the range of the search value does not fully contain the range of the target value
               case "ne": {
-                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
-              ${"start_date"} > ${db.param(endValueRange)} OR
-              ${"end_date"}   < ${db.param(startValueRange)}`;
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+              ${`${columnName}_start`} > ${db.param(endValueRange)} OR
+              ${`${columnName}_end`}   < ${db.param(startValueRange)}`;
               }
 
               // the range above the search value intersects (i.e. overlaps) with the range of the target value
               case "gt": {
-                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
-                ${"end_date"} > ${db.param(endValueRange)}`;
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+                ${`${columnName}_end`} > ${db.param(endValueRange)}`;
               }
 
               // the range below the search value intersects (i.e. overlaps) with the range of the target value
               case "lt": {
-                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
-                ${"start_date"} < ${db.param(startValueRange)}`;
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+                ${`${columnName}_start`} < ${db.param(startValueRange)}`;
               }
 
               //	the range above the search value intersects (i.e. overlaps) with the range of the target value,
               // or the range of the search value fully contains the range of the target value
               case "ge": {
-                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
-                ${"end_date"} >= ${db.param(startValueRange)}`;
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+                ${`${columnName}_end`} >= ${db.param(startValueRange)}`;
               }
 
               //the range below the search value intersects (i.e. overlaps) with the range of the target value or the range of the search value fully contains the range of the target value
               case "le": {
-                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
-                ${"start_date"} <= ${db.param(endValueRange)}`;
+                return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+                ${`${columnName}_start`} <= ${db.param(endValueRange)}`;
               }
 
               case "sa":

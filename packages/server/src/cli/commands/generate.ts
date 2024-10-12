@@ -15,6 +15,7 @@ import {
   generateSP1TSCode,
   generateSP1Sets,
   generateSP1SQLTable,
+  sp1Migration,
 } from "../generate/sp1-parameters.js";
 
 function generateReadme() {
@@ -143,11 +144,53 @@ const generateSP1SQL: Parameters<Command["action"]>[0] = async (options) => {
   );
 };
 
+const generateSQLMigration: Parameters<Command["action"]>[0] = async (
+  options,
+) => {
+  const r4SearchParameters = loadArtifacts({
+    fhirVersion: R4,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4bSearchParameters = loadArtifacts({
+    fhirVersion: R4B,
+    resourceType: "SearchParameter",
+    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  }).filter(
+    (p) =>
+      p.expression !== undefined &&
+      p.type !== "special" &&
+      p.type !== "composite",
+  );
+
+  const r4_set = await generateSP1Sets(R4, r4SearchParameters);
+  const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
+
+  const r4Migrations = sp1Migration(R4, r4_set, r4SearchParameters);
+  const r4bMigrations = sp1Migration(R4B, r4b_set, r4bSearchParameters);
+
+  writeFileSync(
+    options.output,
+    `-- R4 SP1 SQL Migrations \n ${r4Migrations} \n-- R4B SP1 SQL Migrations \n${r4bMigrations}`,
+  );
+};
+
 function sp1Commands(command: Command) {
   command
-    .command("sql")
-    .requiredOption("-o, --output <output>", "Output for sql file")
+    .command("schema")
+    .requiredOption("-o, --output <output>", "Output for sql schema file")
     .action(generateSP1SQL);
+
+  command
+    .command("migration")
+    .requiredOption("-o, --output <output>", "Output for sql migration file")
+    .action(generateSQLMigration);
 
   command
     .command("typescript")

@@ -36,7 +36,7 @@ const PARAMETER_CLAUSES: Record<
   reference: referenceClauses,
 };
 
-export function buildParameterSQL<Version extends FHIR_VERSION>(
+export function buildClausesManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameters: SearchParameterResource[],
@@ -65,7 +65,7 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
     const searchParameter = parameter.searchParameter;
 
     const condition = db.conditions.and(
-      { parameter_url: searchParameter.url, tenant: ctx.tenant },
+      { tenant: ctx.tenant, parameter_url: searchParameter.url },
       PARAMETER_CLAUSES[searchParameter.type](ctx, fhirVersion, parameter),
     );
 
