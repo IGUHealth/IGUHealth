@@ -10,8 +10,8 @@ import {
   searchParameterToTableName,
 } from "../../../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../../../utilities/sql.js";
-import { buildParameterSQL } from "./index.js";
 import { missingModifier } from "./shared.js";
+import buildParametersSQL from "../index.js";
 
 /*
  ** This function allows resolution based on canonical references.
@@ -61,7 +61,7 @@ function chainSQL<Version extends FHIR_VERSION>(
 
   const sqlCHAIN = referenceParameters.map((parameters) => {
     const res = parameters.map((p): db.SQLFragment => {
-      return buildParameterSQL(
+      return buildParametersSQL(
         ctx,
         fhirVersion,
         [
@@ -74,7 +74,7 @@ function chainSQL<Version extends FHIR_VERSION>(
           },
         ],
         ["r_id", "reference_id"],
-      ) as db.SQLFragment;
+      )[0];
     });
     return db.sql`(${db.mapWithSeparator(res, db.sql` UNION `, (c) => c)})`;
   });
@@ -84,12 +84,12 @@ function chainSQL<Version extends FHIR_VERSION>(
 
   const lastResult = db.sql`(${db.mapWithSeparator(
     lastParameters.map((p) => {
-      return buildParameterSQL(
+      return buildParametersSQL(
         ctx,
         fhirVersion,
-        [{ ...parameter, searchParameter: p, chainedParameters: [] }],
+        [{ ...parameter, searchParameter: p }],
         ["r_id"],
-      ) as db.SQLFragment;
+      )[0];
     }),
     db.sql` UNION `,
     (c) => c,

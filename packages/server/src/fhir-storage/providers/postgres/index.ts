@@ -92,7 +92,6 @@ async function indexSingularParameters<
   let insertable: Sp1Insertable<Version> = {
     tenant: ctx.tenant,
     r_id: resource.id,
-    resource_type: resource.resourceType,
     r_version_id: parseInt(resource.meta.versionId),
   };
   for (const parameter of parameters) {
@@ -261,52 +260,6 @@ async function indexSingularParameter<
           };
 
           return dateIndex;
-        }
-        default: {
-          throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
-        }
-      }
-    }
-    case "reference": {
-      const data = await dataConversion<Version, "reference">(
-        fhirVersion,
-        parameter,
-        evaluation,
-        createResolverRemoteCanonical(ctx.client, ctx),
-      );
-
-      switch (fhirVersion) {
-        case R4: {
-          const sp1Reference = r4Sp1.asSP1Reference(parameter.url);
-          if (!sp1Reference) {
-            throw new Error("Failed to convert parameter url to column.");
-          }
-
-          const type_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Reference}_type`;
-          const id_col: keyof Partial<s.r4_sp1_idx.Insertable> = `${sp1Reference}_id`;
-
-          const referenceIndex: Partial<s.r4_sp1_idx.Insertable> = {
-            [type_col]: data[0]?.resourceType,
-            [id_col]: data[0]?.id,
-          };
-
-          return referenceIndex;
-        }
-        case R4B: {
-          const sp1Reference = r4bSp1.asSP1Reference(parameter.url);
-          if (!sp1Reference) {
-            throw new Error("Failed to convert parameter url to column.");
-          }
-
-          const type_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Reference}_type`;
-          const id_col: keyof Partial<s.r4b_sp1_idx.Insertable> = `${sp1Reference}_id`;
-
-          const referenceIndex: Partial<s.r4b_sp1_idx.Insertable> = {
-            [type_col]: data[0]?.resourceType,
-            [id_col]: data[0]?.id,
-          };
-
-          return referenceIndex;
         }
         default: {
           throw new Error(`Unsupported FHIR version: ${fhirVersion}`);

@@ -7,7 +7,7 @@ import {
   R4SystemSearchRequest,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { code, id } from "@iguhealth/fhir-types/r4/types";
+import { id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -29,8 +29,9 @@ import {
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
-import { buildParameterSQL } from "./clauses/db_many_clauses/index.js";
+import buildParametersSQL from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
+import { toSQLString } from "../../log_sql.js";
 
 type FHIRSearchRequest =
   | R4SystemSearchRequest
@@ -78,26 +79,6 @@ async function fhirSearchRequesttoInteralRequest<
     fhirVersion: request.fhirVersion,
     parameters,
   };
-}
-
-function buildParametersSQL<Version extends FHIR_VERSION>(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: Version,
-  parameters: SearchParameterResource[],
-): db.SQLFragment[] {
-  const groups = Object.groupBy(parameters, (p) => p.searchParameter.type);
-
-  const res = Object.keys(groups)
-    .map((searchType) => {
-      return buildParameterSQL(
-        ctx,
-        fhirVersion,
-        groups[searchType as code] ?? [],
-      );
-    })
-    .filter((v): v is db.SQLFragment => v !== undefined);
-
-  return res;
 }
 
 /**
@@ -385,12 +366,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   const searchSQL = await deriveResourceSearchSQL(ctx, request);
 
   if (process.env.LOG_SQL) {
-    const v = searchSQL.compile();
-    let text = v.text;
-    v.values.forEach((v, i) => {
-      text = text.replace(`$${i + 1}`, typeof v === "string" ? `'${v}'` : v);
-    });
-    ctx.logger.info(text);
+    ctx.logger.info(toSQLString(searchSQL));
   }
 
   const result = await searchSQL.run(ctx.db);

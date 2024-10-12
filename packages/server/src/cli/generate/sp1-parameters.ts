@@ -1,3 +1,6 @@
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
+
 import { code, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
@@ -7,6 +10,9 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import analyze from "@iguhealth/fhirpath/analyze";
 import * as prettier from "prettier";
+import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
+import { getColumn } from "../../fhir-storage/providers/postgres/search/clauses/db_singular_clauses/shared.js";
+import { toSQLString } from "../../fhir-storage/providers/log_sql.js";
 
 export function getSp1Name(
   version: FHIR_VERSION,
@@ -58,18 +64,26 @@ async function generateSP1MetaSets<Version extends FHIR_VERSION>(
 ): Promise<Readonly<SP1_Tables>> {
   const res: SP1_Tables = new Set();
   for (const parameter of searchParameters) {
-    const cardinality = await getParameterCardinality(version, parameter);
-    switch (cardinality) {
-      case "unknown":
-      case "array": {
-        break;
-      }
-      case "single": {
-        res.add(parameter.url);
+    switch (parameter.type) {
+      // Skipping references as singular for now.
+      case "reference": {
         break;
       }
       default: {
-        throw new Error(`Unsupported cardinality: ${cardinality}`);
+        const cardinality = await getParameterCardinality(version, parameter);
+        switch (cardinality) {
+          case "unknown":
+          case "array": {
+            break;
+          }
+          case "single": {
+            res.add(parameter.url);
+            break;
+          }
+          default: {
+            throw new Error(`Unsupported cardinality: ${cardinality}`);
+          }
+        }
       }
     }
   }
@@ -160,12 +174,12 @@ export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
 
   let sql = `
 CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
-  r_id           TEXT        NOT NULL PRIMARY KEY,
-  resource_type  TEXT        NOT NULL,
-  r_version_id   INTEGER      NOT NULL,
-  tenant         TEXT        NOT NULL, 
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  r_id           TEXT         NOT NULL,
+  r_version_id   INTEGER      NOT NULL PRIMARY KEY,
+  tenant         TEXT         NOT NULL, 
+  created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
 
+  UNIQUE (tenant, r_id),
   CONSTRAINT sp1_fk_resource
       FOREIGN KEY(r_version_id) 
 	REFERENCES resources(version_id),
@@ -179,16 +193,26 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
     switch (parameter.type) {
       case "number": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} NUMERIC;`;
+
+        sql = `${sql} \n 
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)});`;
         break;
       }
       case "date": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_start TIMESTAMP WITH TIME ZONE;`;
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end TIMESTAMP WITH TIME ZONE;`;
-        break;
-      }
-      case "reference": {
-        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_type TEXT;`;
-        sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_id TEXT;`;
+
+        sql = `${sql} \n 
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start);
+        
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end);
+        `;
         break;
       }
       case "quantity": {
@@ -199,18 +223,59 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_value NUMERIC;`;
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_system TEXT;`;
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_code TEXT;`;
+
+        sql = `${sql} \n 
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_value
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_value);
+        
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_system
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_system);
+
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_code
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_code);
+
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_value
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_value);
+        
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_system
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_system);
+
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_code
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_code);
+        `;
         break;
       }
 
       case "token": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_system TEXT;`;
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_value TEXT;`;
+
+        sql = `${sql} \n 
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_system
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_system);
+
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_value
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_value);
+        `;
         break;
       }
 
       case "string":
       case "uri": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
+        sql = `${sql} \n 
+        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
+        ON ${getSp1Name(version)} 
+        USING btree (tenant, ${sqlSafeIdentifier(parameter.url)});`;
+
         break;
       }
 
@@ -222,6 +287,167 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
     }
   }
 
+  return sql;
+}
+
+export function sp1Migration<Version extends FHIR_VERSION>(
+  version: Version,
+  sp1Urls: Readonly<Set<string>>,
+  searchParameters: Resource<Version, "SearchParameter">[],
+) {
+  const tableName = getSp1Name(version);
+  const parameterHash = searchParameters.reduce(
+    (acc: Record<string, Resource<Version, "SearchParameter">>, parameter) => {
+      acc[parameter.url] = parameter;
+      return acc;
+    },
+    {},
+  );
+
+  if (
+    sp1Urls.size !== new Set([...sp1Urls].map((s) => sqlSafeIdentifier(s))).size
+  ) {
+    throw new Error("Duplicate parameter names detected");
+  }
+
+  let sql = "";
+  for (const sp1Url of sp1Urls) {
+    const parameter = parameterHash[sp1Url];
+
+    const whereable:
+      | s.r4_number_idx.Whereable
+      | s.r4b_number_idx.Whereable
+      | s.r4_date_idx.Whereable
+      | s.r4b_date_idx.Whereable
+      | s.r4_token_idx.Whereable
+      | s.r4b_token_idx.Whereable
+      | s.r4_quantity_idx.Whereable
+      | s.r4b_quantity_idx.Whereable
+      | s.r4_string_idx.Whereable
+      | s.r4b_string_idx.Whereable
+      | s.r4_uri_idx.Whereable
+      | s.r4b_uri_idx.Whereable = {
+      parameter_url: parameter.url,
+    };
+
+    switch (parameter.type) {
+      case "number": {
+        const manyTableName = searchParameterToTableName(version, "number");
+        const column = getColumn(version, "number", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET ${column} = EXCLUDED.${column};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+        break;
+      }
+      case "date": {
+        const manyTableName = searchParameterToTableName(version, "date");
+        const column = getColumn(version, "date", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_start`}, ${`${column}_end`})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"start_date"}, ${"end_date"}
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET
+        ${`${column}_start`} = EXCLUDED.${`${column}_start`}, 
+        ${`${column}_end`} = EXCLUDED.${`${column}_end`};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+        break;
+      }
+      case "quantity": {
+        const manyTableName = searchParameterToTableName(version, "quantity");
+        const column = getColumn(version, "quantity", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (
+          ${"tenant"},
+          ${"r_id"}, 
+          ${"r_version_id"}, 
+          ${`${column}_start_system`}, 
+          ${`${column}_start_code`}, 
+          ${`${column}_start_value`}, 
+          ${`${column}_end_system`},
+          ${`${column}_end_code`},
+          ${`${column}_end_value`}
+        )
+        ( SELECT 
+         ${"tenant"},
+         ${"r_id"}, 
+         ${"r_version_id"}, 
+         ${"start_system"}, 
+         ${"start_code"},
+         ${"start_value"},
+         ${"end_system"}, 
+         ${"end_code"},
+         ${"end_value"} 
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${`${column}_start_system`} = EXCLUDED.${`${column}_start_system`}, 
+        ${`${column}_start_code`} =   EXCLUDED.${`${column}_start_code`},
+        ${`${column}_start_value`} =  EXCLUDED.${`${column}_start_value`},
+        ${`${column}_end_system`} =   EXCLUDED.${`${column}_end_system`}, 
+        ${`${column}_end_code`} =     EXCLUDED.${`${column}_end_code`},
+        ${`${column}_end_value`} =    EXCLUDED.${`${column}_end_value`};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+
+        break;
+      }
+      case "token": {
+        const manyTableName = searchParameterToTableName(version, "token");
+        const column = getColumn(version, "token", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_system`}, ${`${column}_value`})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"system"}, ${"value"}
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${`${column}_system`} = EXCLUDED.${`${column}_system`}, 
+        ${`${column}_value`} = EXCLUDED.${`${column}_value`};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+
+        break;
+      }
+      case "string": {
+        const manyTableName = searchParameterToTableName(version, "string");
+        const column = getColumn(version, "string", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"})
+        DO UPDATE SET ${column} = EXCLUDED.${column};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+        break;
+      }
+      case "uri": {
+        const manyTableName = searchParameterToTableName(version, "uri");
+        const column = getColumn(version, "uri", parameter.url);
+        const numberSQL = db.sql`
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+          FROM ${manyTableName} 
+          WHERE ${whereable})
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET ${column} = EXCLUDED.${column};`;
+
+        sql = `${sql}\n ${toSQLString(numberSQL)}`;
+        break;
+      }
+      default: {
+        throw new Error(
+          `Parameter type not supported to generate table: '${parameter.type}'`,
+        );
+      }
+    }
+  }
   return sql;
 }
 
