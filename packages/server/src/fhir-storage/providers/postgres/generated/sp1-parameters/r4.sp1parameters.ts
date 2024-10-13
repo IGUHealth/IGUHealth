@@ -16,7 +16,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Account-name",
   "http://hl7.org/fhir/SearchParameter/Account-period",
   "http://hl7.org/fhir/SearchParameter/Account-status",
-  "http://hl7.org/fhir/SearchParameter/Account-type",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-date",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-description",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-effective",
@@ -28,15 +27,8 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-version",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-actuality",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-date",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-event",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-seriousness",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-severity",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-clinical-status",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-criticality",
-  "http://hl7.org/fhir/SearchParameter/clinical-date",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-last-date",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-verification-status",
-  "http://hl7.org/fhir/SearchParameter/Appointment-appointment-type",
   "http://hl7.org/fhir/SearchParameter/Appointment-date",
   "http://hl7.org/fhir/SearchParameter/Appointment-status",
   "http://hl7.org/fhir/SearchParameter/AppointmentResponse-part-status",
@@ -45,10 +37,7 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/AuditEvent-outcome",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-site",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-type",
-  "http://hl7.org/fhir/SearchParameter/Basic-code",
   "http://hl7.org/fhir/SearchParameter/Basic-created",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-location",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-morphology",
   "http://hl7.org/fhir/SearchParameter/Bundle-identifier",
   "http://hl7.org/fhir/SearchParameter/Bundle-timestamp",
   "http://hl7.org/fhir/SearchParameter/Bundle-type",
@@ -65,10 +54,8 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/CarePlan-intent",
   "http://hl7.org/fhir/SearchParameter/CarePlan-status",
   "http://hl7.org/fhir/SearchParameter/CareTeam-status",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-code",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-entered-date",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-factor-override",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-occurrence",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-price-override",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-quantity",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-date",
@@ -80,7 +67,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-url",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-version",
   "http://hl7.org/fhir/SearchParameter/Claim-created",
-  "http://hl7.org/fhir/SearchParameter/Claim-priority",
   "http://hl7.org/fhir/SearchParameter/Claim-status",
   "http://hl7.org/fhir/SearchParameter/Claim-use",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-created",
@@ -107,15 +93,11 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-age",
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-date",
   "http://hl7.org/fhir/SearchParameter/Condition-abatement-string",
-  "http://hl7.org/fhir/SearchParameter/Condition-clinical-status",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-age",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-date",
   "http://hl7.org/fhir/SearchParameter/Condition-onset-info",
   "http://hl7.org/fhir/SearchParameter/Condition-recorded-date",
-  "http://hl7.org/fhir/SearchParameter/Condition-severity",
-  "http://hl7.org/fhir/SearchParameter/Condition-verification-status",
   "http://hl7.org/fhir/SearchParameter/Consent-period",
-  "http://hl7.org/fhir/SearchParameter/Consent-scope",
   "http://hl7.org/fhir/SearchParameter/Consent-status",
   "http://hl7.org/fhir/SearchParameter/Contract-instantiates",
   "http://hl7.org/fhir/SearchParameter/Contract-issued",
@@ -123,23 +105,18 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Contract-url",
   "http://hl7.org/fhir/SearchParameter/Coverage-dependent",
   "http://hl7.org/fhir/SearchParameter/Coverage-status",
-  "http://hl7.org/fhir/SearchParameter/Coverage-type",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-created",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-status",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-created",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-disposition",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-outcome",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-status",
-  "http://hl7.org/fhir/SearchParameter/DetectedIssue-code",
   "http://hl7.org/fhir/SearchParameter/DetectedIssue-identified",
   "http://hl7.org/fhir/SearchParameter/Device-manufacturer",
   "http://hl7.org/fhir/SearchParameter/Device-model",
   "http://hl7.org/fhir/SearchParameter/Device-status",
-  "http://hl7.org/fhir/SearchParameter/Device-type",
   "http://hl7.org/fhir/SearchParameter/Device-url",
-  "http://hl7.org/fhir/SearchParameter/DeviceDefinition-type",
   "http://hl7.org/fhir/SearchParameter/DeviceMetric-category",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-type",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-authored-on",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-event-date",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-group-identifier",
@@ -153,9 +130,7 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-status",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-date",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-description",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-facility",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-period",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-setting",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-status",
   "http://hl7.org/fhir/SearchParameter/EffectEvidenceSynthesis-date",
   "http://hl7.org/fhir/SearchParameter/EffectEvidenceSynthesis-description",
@@ -211,15 +186,11 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-created",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-disposition",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-status",
-  "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-relationship",
-  "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-sex",
   "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-status",
-  "http://hl7.org/fhir/SearchParameter/Goal-achievement-status",
   "http://hl7.org/fhir/SearchParameter/Goal-lifecycle-status",
   "http://hl7.org/fhir/SearchParameter/Goal-start-date",
   "http://hl7.org/fhir/SearchParameter/GraphDefinition-start",
   "http://hl7.org/fhir/SearchParameter/Group-actual",
-  "http://hl7.org/fhir/SearchParameter/Group-code",
   "http://hl7.org/fhir/SearchParameter/Group-type",
   "http://hl7.org/fhir/SearchParameter/GuidanceResponse-request",
   "http://hl7.org/fhir/SearchParameter/HealthcareService-active",
@@ -228,12 +199,8 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ImagingStudy-status",
   "http://hl7.org/fhir/SearchParameter/Immunization-lot-number",
   "http://hl7.org/fhir/SearchParameter/Immunization-status",
-  "http://hl7.org/fhir/SearchParameter/Immunization-status-reason",
-  "http://hl7.org/fhir/SearchParameter/Immunization-vaccine-code",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-date",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-dose-status",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-status",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-target-disease",
   "http://hl7.org/fhir/SearchParameter/ImmunizationRecommendation-date",
   "http://hl7.org/fhir/SearchParameter/ImplementationGuide-experimental",
   "http://hl7.org/fhir/SearchParameter/InsurancePlan-phonetic",
@@ -242,7 +209,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Invoice-status",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalgross",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalnet",
-  "http://hl7.org/fhir/SearchParameter/Invoice-type",
   "http://hl7.org/fhir/SearchParameter/Library-date",
   "http://hl7.org/fhir/SearchParameter/Library-description",
   "http://hl7.org/fhir/SearchParameter/Library-effective",
@@ -250,13 +216,10 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Library-publisher",
   "http://hl7.org/fhir/SearchParameter/Library-status",
   "http://hl7.org/fhir/SearchParameter/Library-title",
-  "http://hl7.org/fhir/SearchParameter/Library-type",
   "http://hl7.org/fhir/SearchParameter/Library-url",
   "http://hl7.org/fhir/SearchParameter/Library-version",
-  "http://hl7.org/fhir/SearchParameter/List-empty-reason",
   "http://hl7.org/fhir/SearchParameter/List-status",
   "http://hl7.org/fhir/SearchParameter/List-title",
-  "http://hl7.org/fhir/SearchParameter/Location-address",
   "http://hl7.org/fhir/SearchParameter/Location-address-city",
   "http://hl7.org/fhir/SearchParameter/Location-address-country",
   "http://hl7.org/fhir/SearchParameter/Location-address-postalcode",
@@ -277,30 +240,19 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/MeasureReport-period",
   "http://hl7.org/fhir/SearchParameter/MeasureReport-status",
   "http://hl7.org/fhir/SearchParameter/Media-created",
-  "http://hl7.org/fhir/SearchParameter/Media-modality",
-  "http://hl7.org/fhir/SearchParameter/Media-site",
   "http://hl7.org/fhir/SearchParameter/Media-status",
-  "http://hl7.org/fhir/SearchParameter/Media-type",
-  "http://hl7.org/fhir/SearchParameter/Media-view",
   "http://hl7.org/fhir/SearchParameter/Medication-expiration-date",
-  "http://hl7.org/fhir/SearchParameter/Medication-form",
   "http://hl7.org/fhir/SearchParameter/Medication-lot-number",
   "http://hl7.org/fhir/SearchParameter/Medication-status",
   "http://hl7.org/fhir/SearchParameter/MedicationAdministration-effective-time",
   "http://hl7.org/fhir/SearchParameter/medications-status",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-type",
   "http://hl7.org/fhir/SearchParameter/MedicationDispense-whenhandedover",
   "http://hl7.org/fhir/SearchParameter/MedicationDispense-whenprepared",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-code",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-doseform",
   "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-status",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-authoredon",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performertype",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-intent",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-priority",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-category",
   "http://hl7.org/fhir/SearchParameter/MedicationStatement-effective",
-  "http://hl7.org/fhir/SearchParameter/MedicinalProductAuthorization-status",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-category",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-event",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-code",
@@ -308,24 +260,15 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/MessageHeader-response-id",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-source",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-source-uri",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-chromosome",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-referenceseqid",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-type",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-window-end",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-window-start",
   "http://hl7.org/fhir/SearchParameter/NamingSystem-kind",
   "http://hl7.org/fhir/SearchParameter/NamingSystem-responsible",
-  "http://hl7.org/fhir/SearchParameter/NamingSystem-type",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-additive",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-datetime",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-formula",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-status",
-  "http://hl7.org/fhir/SearchParameter/Observation-data-absent-reason",
-  "http://hl7.org/fhir/SearchParameter/Observation-method",
   "http://hl7.org/fhir/SearchParameter/Observation-status",
-  "http://hl7.org/fhir/SearchParameter/Observation-value-concept",
   "http://hl7.org/fhir/SearchParameter/Observation-value-date",
-  "http://hl7.org/fhir/SearchParameter/Observation-value-quantity",
   "http://hl7.org/fhir/SearchParameter/Observation-value-string",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-code",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-instance",
@@ -341,7 +284,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Patient-death-date",
   "http://hl7.org/fhir/SearchParameter/individual-gender",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-created",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-payment-status",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-status",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-created",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-disposition",
@@ -354,13 +296,11 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-publisher",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-status",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-title",
-  "http://hl7.org/fhir/SearchParameter/PlanDefinition-type",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-url",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-version",
   "http://hl7.org/fhir/SearchParameter/Practitioner-active",
   "http://hl7.org/fhir/SearchParameter/PractitionerRole-active",
   "http://hl7.org/fhir/SearchParameter/PractitionerRole-date",
-  "http://hl7.org/fhir/SearchParameter/Procedure-category",
   "http://hl7.org/fhir/SearchParameter/Procedure-status",
   "http://hl7.org/fhir/SearchParameter/Provenance-recorded",
   "http://hl7.org/fhir/SearchParameter/Provenance-when",
@@ -378,7 +318,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-status",
   "http://hl7.org/fhir/SearchParameter/RelatedPerson-active",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-authored",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-code",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-group-identifier",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-intent",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-priority",
@@ -406,7 +345,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ResearchStudy-title",
   "http://hl7.org/fhir/SearchParameter/ResearchSubject-date",
   "http://hl7.org/fhir/SearchParameter/ResearchSubject-status",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-method",
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-date",
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-description",
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-effective",
@@ -422,21 +360,15 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/SearchParameter-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-authored",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-intent",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-occurrence",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-performer-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-priority",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-requisition",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-status",
-  "http://hl7.org/fhir/SearchParameter/Slot-appointment-type",
   "http://hl7.org/fhir/SearchParameter/Slot-start",
   "http://hl7.org/fhir/SearchParameter/Slot-status",
   "http://hl7.org/fhir/SearchParameter/Specimen-accession",
-  "http://hl7.org/fhir/SearchParameter/Specimen-bodysite",
   "http://hl7.org/fhir/SearchParameter/Specimen-collected",
   "http://hl7.org/fhir/SearchParameter/Specimen-status",
-  "http://hl7.org/fhir/SearchParameter/Specimen-type",
   "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-identifier",
-  "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-type",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-abstract",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-derivation",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-experimental",
@@ -449,11 +381,8 @@ export const r4_sp1_idx: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Subscription-url",
   "http://hl7.org/fhir/SearchParameter/Substance-status",
   "http://hl7.org/fhir/SearchParameter/SupplyDelivery-status",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-category",
   "http://hl7.org/fhir/SearchParameter/SupplyRequest-status",
   "http://hl7.org/fhir/SearchParameter/Task-authored-on",
-  "http://hl7.org/fhir/SearchParameter/Task-business-status",
-  "http://hl7.org/fhir/SearchParameter/Task-code",
   "http://hl7.org/fhir/SearchParameter/Task-group-identifier",
   "http://hl7.org/fhir/SearchParameter/Task-intent",
   "http://hl7.org/fhir/SearchParameter/Task-modified",
@@ -486,7 +415,6 @@ export const r4_sp1_idx: Set<string> = new Set([
   "https://iguhealth.app/fhir/SearchParameter/IdentityProvider-name",
   "https://iguhealth.app/fhir/SearchParameter/IdentityProvider-status",
   "https://iguhealth.app/fhir/SearchParameter/Membership-email",
-  "https://iguhealth.app/fhir/SearchParameter/Membership-name",
   "https://iguhealth.app/fhir/SearchParameter/Membership-role",
   "https://iguhealth.app/fhir/SearchParameter/MessageBroker-host",
   "https://iguhealth.app/fhir/SearchParameter/MessageBroker-name",
@@ -497,26 +425,16 @@ export const r4_sp1_idx: Set<string> = new Set([
 export type r4_sp1_idx_token =
   | "resource_id"
   | "account_status"
-  | "account_type"
   | "activitydefinition_status"
   | "activitydefinition_version"
   | "adverseevent_actuality"
-  | "adverseevent_event"
-  | "adverseevent_seriousness"
-  | "adverseevent_severity"
-  | "allergyintolerance_clinical_status"
   | "allergyintolerance_criticality"
-  | "allergyintolerance_verification_status"
-  | "appointment_appointment_type"
   | "appointment_status"
   | "appointmentresponse_part_status"
   | "auditevent_action"
   | "auditevent_outcome"
   | "auditevent_site"
   | "auditevent_type"
-  | "basic_code"
-  | "bodystructure_location"
-  | "bodystructure_morphology"
   | "bundle_identifier"
   | "bundle_type"
   | "capabilitystatement_fhirversion"
@@ -525,10 +443,8 @@ export type r4_sp1_idx_token =
   | "careplan_intent"
   | "careplan_status"
   | "careteam_status"
-  | "chargeitem_code"
   | "chargeitemdefinition_status"
   | "chargeitemdefinition_version"
-  | "claim_priority"
   | "claim_status"
   | "claim_use"
   | "claimresponse_outcome"
@@ -543,30 +459,19 @@ export type r4_sp1_idx_token =
   | "compartmentdefinition_code"
   | "composition_confidentiality"
   | "composition_status"
-  | "condition_clinical_status"
-  | "condition_severity"
-  | "condition_verification_status"
-  | "consent_scope"
   | "consent_status"
   | "contract_status"
   | "coverage_status"
-  | "coverage_type"
   | "coverageeligibilityrequest_status"
   | "coverageeligibilityresponse_outcome"
   | "coverageeligibilityresponse_status"
-  | "detectedissue_code"
   | "device_status"
-  | "device_type"
-  | "devicedefinition_type"
   | "devicemetric_category"
-  | "devicemetric_type"
   | "devicerequest_group_identifier"
   | "devicerequest_intent"
   | "devicerequest_status"
   | "diagnosticreport_status"
   | "documentmanifest_status"
-  | "documentreference_facility"
-  | "documentreference_setting"
   | "documentreference_status"
   | "effectevidencesynthesis_status"
   | "effectevidencesynthesis_version"
@@ -586,32 +491,21 @@ export type r4_sp1_idx_token =
   | "examplescenario_status"
   | "examplescenario_version"
   | "explanationofbenefit_status"
-  | "familymemberhistory_relationship"
-  | "familymemberhistory_sex"
   | "familymemberhistory_status"
-  | "goal_achievement_status"
   | "goal_lifecycle_status"
   | "graphdefinition_start"
   | "group_actual"
-  | "group_code"
   | "group_type"
   | "guidanceresponse_request"
   | "healthcareservice_active"
   | "imagingstudy_status"
   | "immunization_status"
-  | "immunization_status_reason"
-  | "immunization_vaccine_code"
-  | "immunizationevaluation_dose_status"
   | "immunizationevaluation_status"
-  | "immunizationevaluation_target_disease"
   | "implementationguide_experimental"
   | "insuranceplan_status"
   | "invoice_status"
-  | "invoice_type"
   | "library_status"
-  | "library_type"
   | "library_version"
-  | "list_empty_reason"
   | "list_status"
   | "location_address_use"
   | "location_operational_status"
@@ -619,41 +513,22 @@ export type r4_sp1_idx_token =
   | "measure_status"
   | "measure_version"
   | "measurereport_status"
-  | "media_modality"
-  | "media_site"
   | "media_status"
-  | "media_type"
-  | "media_view"
-  | "medication_form"
   | "medication_lot_number"
   | "medication_status"
   | "medications_status"
-  | "medicationdispense_type"
-  | "medicationknowledge_code"
-  | "medicationknowledge_doseform"
   | "medicationknowledge_status"
-  | "medicationrequest_intended_performertype"
   | "medicationrequest_intent"
   | "medicationrequest_priority"
-  | "medicationstatement_category"
-  | "medicinalproductauthorization_status"
   | "messagedefinition_category"
   | "messagedefinition_event"
   | "messageheader_code"
   | "messageheader_event"
   | "messageheader_response_id"
-  | "molecularsequence_chromosome"
-  | "molecularsequence_referenceseqid"
   | "molecularsequence_type"
   | "namingsystem_kind"
-  | "namingsystem_type"
-  | "nutritionorder_additive"
-  | "nutritionorder_formula"
   | "nutritionorder_status"
-  | "observation_data_absent_reason"
-  | "observation_method"
   | "observation_status"
-  | "observation_value_concept"
   | "operationdefinition_code"
   | "operationdefinition_instance"
   | "operationdefinition_kind"
@@ -663,23 +538,19 @@ export type r4_sp1_idx_token =
   | "organizationaffiliation_active"
   | "patient_active"
   | "individual_gender"
-  | "paymentnotice_payment_status"
   | "paymentnotice_status"
   | "paymentreconciliation_outcome"
   | "paymentreconciliation_status"
   | "plandefinition_status"
-  | "plandefinition_type"
   | "plandefinition_version"
   | "practitioner_active"
   | "practitionerrole_active"
-  | "procedure_category"
   | "procedure_status"
   | "questionnaire_status"
   | "questionnaire_version"
   | "questionnaireresponse_identifier"
   | "questionnaireresponse_status"
   | "relatedperson_active"
-  | "requestgroup_code"
   | "requestgroup_group_identifier"
   | "requestgroup_intent"
   | "requestgroup_priority"
@@ -690,25 +561,19 @@ export type r4_sp1_idx_token =
   | "researchelementdefinition_version"
   | "researchstudy_status"
   | "researchsubject_status"
-  | "riskassessment_method"
   | "riskevidencesynthesis_status"
   | "riskevidencesynthesis_version"
   | "schedule_active"
   | "searchparameter_code"
   | "searchparameter_type"
   | "servicerequest_intent"
-  | "servicerequest_performer_type"
   | "servicerequest_priority"
   | "servicerequest_requisition"
   | "servicerequest_status"
-  | "slot_appointment_type"
   | "slot_status"
   | "specimen_accession"
-  | "specimen_bodysite"
   | "specimen_status"
-  | "specimen_type"
   | "specimendefinition_identifier"
-  | "specimendefinition_type"
   | "structuredefinition_abstract"
   | "structuredefinition_derivation"
   | "structuredefinition_experimental"
@@ -718,10 +583,7 @@ export type r4_sp1_idx_token =
   | "subscription_type"
   | "substance_status"
   | "supplydelivery_status"
-  | "supplyrequest_category"
   | "supplyrequest_status"
-  | "task_business_status"
-  | "task_code"
   | "task_group_identifier"
   | "task_intent"
   | "task_priority"
@@ -745,26 +607,16 @@ export type r4_sp1_idx_token =
 const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Resource-id",
   "http://hl7.org/fhir/SearchParameter/Account-status",
-  "http://hl7.org/fhir/SearchParameter/Account-type",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-status",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-version",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-actuality",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-event",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-seriousness",
-  "http://hl7.org/fhir/SearchParameter/AdverseEvent-severity",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-clinical-status",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-criticality",
-  "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-verification-status",
-  "http://hl7.org/fhir/SearchParameter/Appointment-appointment-type",
   "http://hl7.org/fhir/SearchParameter/Appointment-status",
   "http://hl7.org/fhir/SearchParameter/AppointmentResponse-part-status",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-action",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-outcome",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-site",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-type",
-  "http://hl7.org/fhir/SearchParameter/Basic-code",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-location",
-  "http://hl7.org/fhir/SearchParameter/BodyStructure-morphology",
   "http://hl7.org/fhir/SearchParameter/Bundle-identifier",
   "http://hl7.org/fhir/SearchParameter/Bundle-type",
   "http://hl7.org/fhir/SearchParameter/CapabilityStatement-fhirversion",
@@ -773,10 +625,8 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/CarePlan-intent",
   "http://hl7.org/fhir/SearchParameter/CarePlan-status",
   "http://hl7.org/fhir/SearchParameter/CareTeam-status",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-code",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-status",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-version",
-  "http://hl7.org/fhir/SearchParameter/Claim-priority",
   "http://hl7.org/fhir/SearchParameter/Claim-status",
   "http://hl7.org/fhir/SearchParameter/Claim-use",
   "http://hl7.org/fhir/SearchParameter/ClaimResponse-outcome",
@@ -791,30 +641,19 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/CompartmentDefinition-code",
   "http://hl7.org/fhir/SearchParameter/Composition-confidentiality",
   "http://hl7.org/fhir/SearchParameter/Composition-status",
-  "http://hl7.org/fhir/SearchParameter/Condition-clinical-status",
-  "http://hl7.org/fhir/SearchParameter/Condition-severity",
-  "http://hl7.org/fhir/SearchParameter/Condition-verification-status",
-  "http://hl7.org/fhir/SearchParameter/Consent-scope",
   "http://hl7.org/fhir/SearchParameter/Consent-status",
   "http://hl7.org/fhir/SearchParameter/Contract-status",
   "http://hl7.org/fhir/SearchParameter/Coverage-status",
-  "http://hl7.org/fhir/SearchParameter/Coverage-type",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityRequest-status",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-outcome",
   "http://hl7.org/fhir/SearchParameter/CoverageEligibilityResponse-status",
-  "http://hl7.org/fhir/SearchParameter/DetectedIssue-code",
   "http://hl7.org/fhir/SearchParameter/Device-status",
-  "http://hl7.org/fhir/SearchParameter/Device-type",
-  "http://hl7.org/fhir/SearchParameter/DeviceDefinition-type",
   "http://hl7.org/fhir/SearchParameter/DeviceMetric-category",
-  "http://hl7.org/fhir/SearchParameter/DeviceMetric-type",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-group-identifier",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-intent",
   "http://hl7.org/fhir/SearchParameter/DeviceRequest-status",
   "http://hl7.org/fhir/SearchParameter/DiagnosticReport-status",
   "http://hl7.org/fhir/SearchParameter/DocumentManifest-status",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-facility",
-  "http://hl7.org/fhir/SearchParameter/DocumentReference-setting",
   "http://hl7.org/fhir/SearchParameter/DocumentReference-status",
   "http://hl7.org/fhir/SearchParameter/EffectEvidenceSynthesis-status",
   "http://hl7.org/fhir/SearchParameter/EffectEvidenceSynthesis-version",
@@ -834,32 +673,21 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ExampleScenario-status",
   "http://hl7.org/fhir/SearchParameter/ExampleScenario-version",
   "http://hl7.org/fhir/SearchParameter/ExplanationOfBenefit-status",
-  "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-relationship",
-  "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-sex",
   "http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-status",
-  "http://hl7.org/fhir/SearchParameter/Goal-achievement-status",
   "http://hl7.org/fhir/SearchParameter/Goal-lifecycle-status",
   "http://hl7.org/fhir/SearchParameter/GraphDefinition-start",
   "http://hl7.org/fhir/SearchParameter/Group-actual",
-  "http://hl7.org/fhir/SearchParameter/Group-code",
   "http://hl7.org/fhir/SearchParameter/Group-type",
   "http://hl7.org/fhir/SearchParameter/GuidanceResponse-request",
   "http://hl7.org/fhir/SearchParameter/HealthcareService-active",
   "http://hl7.org/fhir/SearchParameter/ImagingStudy-status",
   "http://hl7.org/fhir/SearchParameter/Immunization-status",
-  "http://hl7.org/fhir/SearchParameter/Immunization-status-reason",
-  "http://hl7.org/fhir/SearchParameter/Immunization-vaccine-code",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-dose-status",
   "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-status",
-  "http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-target-disease",
   "http://hl7.org/fhir/SearchParameter/ImplementationGuide-experimental",
   "http://hl7.org/fhir/SearchParameter/InsurancePlan-status",
   "http://hl7.org/fhir/SearchParameter/Invoice-status",
-  "http://hl7.org/fhir/SearchParameter/Invoice-type",
   "http://hl7.org/fhir/SearchParameter/Library-status",
-  "http://hl7.org/fhir/SearchParameter/Library-type",
   "http://hl7.org/fhir/SearchParameter/Library-version",
-  "http://hl7.org/fhir/SearchParameter/List-empty-reason",
   "http://hl7.org/fhir/SearchParameter/List-status",
   "http://hl7.org/fhir/SearchParameter/Location-address-use",
   "http://hl7.org/fhir/SearchParameter/Location-operational-status",
@@ -867,41 +695,22 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Measure-status",
   "http://hl7.org/fhir/SearchParameter/Measure-version",
   "http://hl7.org/fhir/SearchParameter/MeasureReport-status",
-  "http://hl7.org/fhir/SearchParameter/Media-modality",
-  "http://hl7.org/fhir/SearchParameter/Media-site",
   "http://hl7.org/fhir/SearchParameter/Media-status",
-  "http://hl7.org/fhir/SearchParameter/Media-type",
-  "http://hl7.org/fhir/SearchParameter/Media-view",
-  "http://hl7.org/fhir/SearchParameter/Medication-form",
   "http://hl7.org/fhir/SearchParameter/Medication-lot-number",
   "http://hl7.org/fhir/SearchParameter/Medication-status",
   "http://hl7.org/fhir/SearchParameter/medications-status",
-  "http://hl7.org/fhir/SearchParameter/MedicationDispense-type",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-code",
-  "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-doseform",
   "http://hl7.org/fhir/SearchParameter/MedicationKnowledge-status",
-  "http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performertype",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-intent",
   "http://hl7.org/fhir/SearchParameter/MedicationRequest-priority",
-  "http://hl7.org/fhir/SearchParameter/MedicationStatement-category",
-  "http://hl7.org/fhir/SearchParameter/MedicinalProductAuthorization-status",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-category",
   "http://hl7.org/fhir/SearchParameter/MessageDefinition-event",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-code",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-event",
   "http://hl7.org/fhir/SearchParameter/MessageHeader-response-id",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-chromosome",
-  "http://hl7.org/fhir/SearchParameter/MolecularSequence-referenceseqid",
   "http://hl7.org/fhir/SearchParameter/MolecularSequence-type",
   "http://hl7.org/fhir/SearchParameter/NamingSystem-kind",
-  "http://hl7.org/fhir/SearchParameter/NamingSystem-type",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-additive",
-  "http://hl7.org/fhir/SearchParameter/NutritionOrder-formula",
   "http://hl7.org/fhir/SearchParameter/NutritionOrder-status",
-  "http://hl7.org/fhir/SearchParameter/Observation-data-absent-reason",
-  "http://hl7.org/fhir/SearchParameter/Observation-method",
   "http://hl7.org/fhir/SearchParameter/Observation-status",
-  "http://hl7.org/fhir/SearchParameter/Observation-value-concept",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-code",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-instance",
   "http://hl7.org/fhir/SearchParameter/OperationDefinition-kind",
@@ -911,23 +720,19 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/OrganizationAffiliation-active",
   "http://hl7.org/fhir/SearchParameter/Patient-active",
   "http://hl7.org/fhir/SearchParameter/individual-gender",
-  "http://hl7.org/fhir/SearchParameter/PaymentNotice-payment-status",
   "http://hl7.org/fhir/SearchParameter/PaymentNotice-status",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-outcome",
   "http://hl7.org/fhir/SearchParameter/PaymentReconciliation-status",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-status",
-  "http://hl7.org/fhir/SearchParameter/PlanDefinition-type",
   "http://hl7.org/fhir/SearchParameter/PlanDefinition-version",
   "http://hl7.org/fhir/SearchParameter/Practitioner-active",
   "http://hl7.org/fhir/SearchParameter/PractitionerRole-active",
-  "http://hl7.org/fhir/SearchParameter/Procedure-category",
   "http://hl7.org/fhir/SearchParameter/Procedure-status",
   "http://hl7.org/fhir/SearchParameter/Questionnaire-status",
   "http://hl7.org/fhir/SearchParameter/Questionnaire-version",
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-identifier",
   "http://hl7.org/fhir/SearchParameter/QuestionnaireResponse-status",
   "http://hl7.org/fhir/SearchParameter/RelatedPerson-active",
-  "http://hl7.org/fhir/SearchParameter/RequestGroup-code",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-group-identifier",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-intent",
   "http://hl7.org/fhir/SearchParameter/RequestGroup-priority",
@@ -938,25 +743,19 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ResearchElementDefinition-version",
   "http://hl7.org/fhir/SearchParameter/ResearchStudy-status",
   "http://hl7.org/fhir/SearchParameter/ResearchSubject-status",
-  "http://hl7.org/fhir/SearchParameter/RiskAssessment-method",
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-status",
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-version",
   "http://hl7.org/fhir/SearchParameter/Schedule-active",
   "http://hl7.org/fhir/SearchParameter/SearchParameter-code",
   "http://hl7.org/fhir/SearchParameter/SearchParameter-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-intent",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-performer-type",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-priority",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-requisition",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-status",
-  "http://hl7.org/fhir/SearchParameter/Slot-appointment-type",
   "http://hl7.org/fhir/SearchParameter/Slot-status",
   "http://hl7.org/fhir/SearchParameter/Specimen-accession",
-  "http://hl7.org/fhir/SearchParameter/Specimen-bodysite",
   "http://hl7.org/fhir/SearchParameter/Specimen-status",
-  "http://hl7.org/fhir/SearchParameter/Specimen-type",
   "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-identifier",
-  "http://hl7.org/fhir/SearchParameter/SpecimenDefinition-type",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-abstract",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-derivation",
   "http://hl7.org/fhir/SearchParameter/StructureDefinition-experimental",
@@ -966,10 +765,7 @@ const r4_sp1_idx_token_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Subscription-type",
   "http://hl7.org/fhir/SearchParameter/Substance-status",
   "http://hl7.org/fhir/SearchParameter/SupplyDelivery-status",
-  "http://hl7.org/fhir/SearchParameter/SupplyRequest-category",
   "http://hl7.org/fhir/SearchParameter/SupplyRequest-status",
-  "http://hl7.org/fhir/SearchParameter/Task-business-status",
-  "http://hl7.org/fhir/SearchParameter/Task-code",
   "http://hl7.org/fhir/SearchParameter/Task-group-identifier",
   "http://hl7.org/fhir/SearchParameter/Task-intent",
   "http://hl7.org/fhir/SearchParameter/Task-priority",
@@ -1002,7 +798,6 @@ export type r4_sp1_idx_date =
   | "activitydefinition_date"
   | "activitydefinition_effective"
   | "adverseevent_date"
-  | "clinical_date"
   | "allergyintolerance_last_date"
   | "appointment_date"
   | "auditevent_date"
@@ -1010,7 +805,6 @@ export type r4_sp1_idx_date =
   | "bundle_timestamp"
   | "conformance_date"
   | "chargeitem_entered_date"
-  | "chargeitem_occurrence"
   | "chargeitemdefinition_date"
   | "chargeitemdefinition_effective"
   | "claim_created"
@@ -1088,7 +882,6 @@ export type r4_sp1_idx_date =
   | "riskevidencesynthesis_effective"
   | "schedule_date"
   | "servicerequest_authored"
-  | "servicerequest_occurrence"
   | "slot_start"
   | "specimen_collected"
   | "task_authored_on"
@@ -1104,7 +897,6 @@ const r4_sp1_idx_date_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-date",
   "http://hl7.org/fhir/SearchParameter/ActivityDefinition-effective",
   "http://hl7.org/fhir/SearchParameter/AdverseEvent-date",
-  "http://hl7.org/fhir/SearchParameter/clinical-date",
   "http://hl7.org/fhir/SearchParameter/AllergyIntolerance-last-date",
   "http://hl7.org/fhir/SearchParameter/Appointment-date",
   "http://hl7.org/fhir/SearchParameter/AuditEvent-date",
@@ -1112,7 +904,6 @@ const r4_sp1_idx_date_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Bundle-timestamp",
   "http://hl7.org/fhir/SearchParameter/conformance-date",
   "http://hl7.org/fhir/SearchParameter/ChargeItem-entered-date",
-  "http://hl7.org/fhir/SearchParameter/ChargeItem-occurrence",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-date",
   "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-effective",
   "http://hl7.org/fhir/SearchParameter/Claim-created",
@@ -1190,7 +981,6 @@ const r4_sp1_idx_date_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-effective",
   "http://hl7.org/fhir/SearchParameter/Schedule-date",
   "http://hl7.org/fhir/SearchParameter/ServiceRequest-authored",
-  "http://hl7.org/fhir/SearchParameter/ServiceRequest-occurrence",
   "http://hl7.org/fhir/SearchParameter/Slot-start",
   "http://hl7.org/fhir/SearchParameter/Specimen-collected",
   "http://hl7.org/fhir/SearchParameter/Task-authored-on",
@@ -1322,7 +1112,6 @@ export type r4_sp1_idx_string =
   | "library_publisher"
   | "library_title"
   | "list_title"
-  | "location_address"
   | "location_address_city"
   | "location_address_country"
   | "location_address_postalcode"
@@ -1367,7 +1156,6 @@ export type r4_sp1_idx_string =
   | "accesspolicy_name"
   | "clientapplication_name"
   | "identityprovider_name"
-  | "membership_name"
   | "messagebroker_name";
 
 const r4_sp1_idx_string_set: Set<string> = new Set([
@@ -1422,7 +1210,6 @@ const r4_sp1_idx_string_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Library-publisher",
   "http://hl7.org/fhir/SearchParameter/Library-title",
   "http://hl7.org/fhir/SearchParameter/List-title",
-  "http://hl7.org/fhir/SearchParameter/Location-address",
   "http://hl7.org/fhir/SearchParameter/Location-address-city",
   "http://hl7.org/fhir/SearchParameter/Location-address-country",
   "http://hl7.org/fhir/SearchParameter/Location-address-postalcode",
@@ -1467,7 +1254,6 @@ const r4_sp1_idx_string_set: Set<string> = new Set([
   "https://iguhealth.app/fhir/SearchParameter/AccessPolicy-name",
   "https://iguhealth.app/fhir/SearchParameter/ClientApplication-name",
   "https://iguhealth.app/fhir/SearchParameter/IdentityProvider-name",
-  "https://iguhealth.app/fhir/SearchParameter/Membership-name",
   "https://iguhealth.app/fhir/SearchParameter/MessageBroker-name",
 ]);
 
@@ -1499,8 +1285,7 @@ export type r4_sp1_idx_quantity =
   | "condition_onset_age"
   | "encounter_length"
   | "invoice_totalgross"
-  | "invoice_totalnet"
-  | "observation_value_quantity";
+  | "invoice_totalnet";
 
 const r4_sp1_idx_quantity_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/ChargeItem-price-override",
@@ -1510,7 +1295,6 @@ const r4_sp1_idx_quantity_set: Set<string> = new Set([
   "http://hl7.org/fhir/SearchParameter/Encounter-length",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalgross",
   "http://hl7.org/fhir/SearchParameter/Invoice-totalnet",
-  "http://hl7.org/fhir/SearchParameter/Observation-value-quantity",
 ]);
 
 export function asSP1Quantity(url: uri): r4_sp1_idx_quantity | undefined {

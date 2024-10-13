@@ -69,17 +69,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, account_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS account_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS account_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_account_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, account_type_system);
-
-        CREATE INDEX r4_sp1_idx_account_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, account_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS activitydefinition_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS activitydefinition_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -171,50 +160,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, adverseevent_date_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_event_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_event_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_adverseevent_event_system
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_event_system);
-
-        CREATE INDEX r4_sp1_idx_adverseevent_event_value
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_event_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_seriousness_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_seriousness_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_adverseevent_seriousness_system
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_seriousness_system);
-
-        CREATE INDEX r4_sp1_idx_adverseevent_seriousness_value
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_seriousness_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_severity_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_severity_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_adverseevent_severity_system
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_severity_system);
-
-        CREATE INDEX r4_sp1_idx_adverseevent_severity_value
-        ON r4_sp1_idx 
-        USING btree (tenant, adverseevent_severity_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_clinical_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_clinical_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_allergyintolerance_clinical_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, allergyintolerance_clinical_status_system);
-
-        CREATE INDEX r4_sp1_idx_allergyintolerance_clinical_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, allergyintolerance_clinical_status_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_criticality_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_criticality_value TEXT; 
  
@@ -226,17 +171,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, allergyintolerance_criticality_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS clinical_date_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS clinical_date_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4_sp1_idx_clinical_date_start
-        ON r4_sp1_idx 
-        USING btree (tenant, clinical_date_start);
-        
-        CREATE INDEX r4_sp1_idx_clinical_date_end
-        ON r4_sp1_idx 
-        USING btree (tenant, clinical_date_end);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_last_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_last_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -247,28 +181,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_allergyintolerance_last_date_end
         ON r4_sp1_idx 
         USING btree (tenant, allergyintolerance_last_date_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_verification_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_verification_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_allergyintolerance_verification_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, allergyintolerance_verification_status_system);
-
-        CREATE INDEX r4_sp1_idx_allergyintolerance_verification_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, allergyintolerance_verification_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS appointment_appointment_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS appointment_appointment_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_appointment_appointment_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, appointment_appointment_type_system);
-
-        CREATE INDEX r4_sp1_idx_appointment_appointment_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, appointment_appointment_type_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS appointment_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS appointment_date_end TIMESTAMP WITH TIME ZONE; 
@@ -358,17 +270,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, auditevent_type_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS basic_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS basic_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_basic_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, basic_code_system);
-
-        CREATE INDEX r4_sp1_idx_basic_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, basic_code_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS basic_created_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS basic_created_end TIMESTAMP WITH TIME ZONE; 
  
@@ -379,28 +280,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_basic_created_end
         ON r4_sp1_idx 
         USING btree (tenant, basic_created_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_location_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_location_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_bodystructure_location_system
-        ON r4_sp1_idx 
-        USING btree (tenant, bodystructure_location_system);
-
-        CREATE INDEX r4_sp1_idx_bodystructure_location_value
-        ON r4_sp1_idx 
-        USING btree (tenant, bodystructure_location_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_morphology_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_morphology_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_bodystructure_morphology_system
-        ON r4_sp1_idx 
-        USING btree (tenant, bodystructure_morphology_system);
-
-        CREATE INDEX r4_sp1_idx_bodystructure_morphology_value
-        ON r4_sp1_idx 
-        USING btree (tenant, bodystructure_morphology_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bundle_identifier_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS bundle_identifier_value TEXT; 
@@ -542,17 +421,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, careteam_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_chargeitem_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, chargeitem_code_system);
-
-        CREATE INDEX r4_sp1_idx_chargeitem_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, chargeitem_code_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_entered_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_entered_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -569,17 +437,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_chargeitem_factor_override 
         ON r4_sp1_idx 
         USING btree (tenant, chargeitem_factor_override); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_occurrence_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_occurrence_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4_sp1_idx_chargeitem_occurrence_start
-        ON r4_sp1_idx 
-        USING btree (tenant, chargeitem_occurrence_start);
-        
-        CREATE INDEX r4_sp1_idx_chargeitem_occurrence_end
-        ON r4_sp1_idx 
-        USING btree (tenant, chargeitem_occurrence_end);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_value NUMERIC; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_code TEXT; 
@@ -716,17 +573,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_claim_created_end
         ON r4_sp1_idx 
         USING btree (tenant, claim_created_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS claim_priority_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS claim_priority_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_claim_priority_system
-        ON r4_sp1_idx 
-        USING btree (tenant, claim_priority_system);
-
-        CREATE INDEX r4_sp1_idx_claim_priority_value
-        ON r4_sp1_idx 
-        USING btree (tenant, claim_priority_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS claim_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS claim_status_value TEXT; 
@@ -1010,17 +856,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_condition_abatement_string 
         ON r4_sp1_idx 
         USING btree (tenant, condition_abatement_string); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_clinical_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_clinical_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_condition_clinical_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_clinical_status_system);
-
-        CREATE INDEX r4_sp1_idx_condition_clinical_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_clinical_status_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_value NUMERIC; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_code TEXT; 
@@ -1079,28 +914,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, condition_recorded_date_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_severity_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_severity_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_condition_severity_system
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_severity_system);
-
-        CREATE INDEX r4_sp1_idx_condition_severity_value
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_severity_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_verification_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS condition_verification_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_condition_verification_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_verification_status_system);
-
-        CREATE INDEX r4_sp1_idx_condition_verification_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, condition_verification_status_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_period_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_period_end TIMESTAMP WITH TIME ZONE; 
  
@@ -1111,17 +924,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_consent_period_end
         ON r4_sp1_idx 
         USING btree (tenant, consent_period_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_scope_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_scope_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_consent_scope_system
-        ON r4_sp1_idx 
-        USING btree (tenant, consent_scope_system);
-
-        CREATE INDEX r4_sp1_idx_consent_scope_value
-        ON r4_sp1_idx 
-        USING btree (tenant, consent_scope_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS consent_status_value TEXT; 
@@ -1181,17 +983,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_coverage_status_value
         ON r4_sp1_idx 
         USING btree (tenant, coverage_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS coverage_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS coverage_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_coverage_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, coverage_type_system);
-
-        CREATE INDEX r4_sp1_idx_coverage_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, coverage_type_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS coverageeligibilityrequest_created_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS coverageeligibilityrequest_created_end TIMESTAMP WITH TIME ZONE; 
@@ -1253,17 +1044,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, coverageeligibilityresponse_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_detectedissue_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, detectedissue_code_system);
-
-        CREATE INDEX r4_sp1_idx_detectedissue_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, detectedissue_code_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_identified_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_identified_end TIMESTAMP WITH TIME ZONE; 
  
@@ -1296,33 +1076,11 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, device_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS device_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS device_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_device_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, device_type_system);
-
-        CREATE INDEX r4_sp1_idx_device_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, device_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS device_url TEXT; 
  
         CREATE INDEX r4_sp1_idx_device_url 
         ON r4_sp1_idx 
         USING btree (tenant, device_url); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicedefinition_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicedefinition_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_devicedefinition_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, devicedefinition_type_system);
-
-        CREATE INDEX r4_sp1_idx_devicedefinition_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, devicedefinition_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_category_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_category_value TEXT; 
  
@@ -1333,17 +1091,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_devicemetric_category_value
         ON r4_sp1_idx 
         USING btree (tenant, devicemetric_category_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_devicemetric_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, devicemetric_type_system);
-
-        CREATE INDEX r4_sp1_idx_devicemetric_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, devicemetric_type_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicerequest_authored_on_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS devicerequest_authored_on_end TIMESTAMP WITH TIME ZONE; 
@@ -1470,17 +1217,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_documentreference_description 
         ON r4_sp1_idx 
         USING btree (tenant, documentreference_description); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_facility_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_facility_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_documentreference_facility_system
-        ON r4_sp1_idx 
-        USING btree (tenant, documentreference_facility_system);
-
-        CREATE INDEX r4_sp1_idx_documentreference_facility_value
-        ON r4_sp1_idx 
-        USING btree (tenant, documentreference_facility_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_period_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_period_end TIMESTAMP WITH TIME ZONE; 
  
@@ -1491,17 +1227,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_documentreference_period_end
         ON r4_sp1_idx 
         USING btree (tenant, documentreference_period_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_setting_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_setting_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_documentreference_setting_system
-        ON r4_sp1_idx 
-        USING btree (tenant, documentreference_setting_system);
-
-        CREATE INDEX r4_sp1_idx_documentreference_setting_value
-        ON r4_sp1_idx 
-        USING btree (tenant, documentreference_setting_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_status_value TEXT; 
@@ -1978,28 +1703,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, explanationofbenefit_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_relationship_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_relationship_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_familymemberhistory_relationship_system
-        ON r4_sp1_idx 
-        USING btree (tenant, familymemberhistory_relationship_system);
-
-        CREATE INDEX r4_sp1_idx_familymemberhistory_relationship_value
-        ON r4_sp1_idx 
-        USING btree (tenant, familymemberhistory_relationship_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_sex_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_sex_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_familymemberhistory_sex_system
-        ON r4_sp1_idx 
-        USING btree (tenant, familymemberhistory_sex_system);
-
-        CREATE INDEX r4_sp1_idx_familymemberhistory_sex_value
-        ON r4_sp1_idx 
-        USING btree (tenant, familymemberhistory_sex_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_status_value TEXT; 
  
@@ -2010,17 +1713,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_familymemberhistory_status_value
         ON r4_sp1_idx 
         USING btree (tenant, familymemberhistory_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS goal_achievement_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS goal_achievement_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_goal_achievement_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, goal_achievement_status_system);
-
-        CREATE INDEX r4_sp1_idx_goal_achievement_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, goal_achievement_status_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS goal_lifecycle_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS goal_lifecycle_status_value TEXT; 
@@ -2065,17 +1757,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_group_actual_value
         ON r4_sp1_idx 
         USING btree (tenant, group_actual_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS group_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS group_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_group_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, group_code_system);
-
-        CREATE INDEX r4_sp1_idx_group_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, group_code_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS group_type_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS group_type_value TEXT; 
@@ -2153,28 +1834,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, immunization_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunization_status_reason_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunization_status_reason_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_immunization_status_reason_system
-        ON r4_sp1_idx 
-        USING btree (tenant, immunization_status_reason_system);
-
-        CREATE INDEX r4_sp1_idx_immunization_status_reason_value
-        ON r4_sp1_idx 
-        USING btree (tenant, immunization_status_reason_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunization_vaccine_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunization_vaccine_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_immunization_vaccine_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, immunization_vaccine_code_system);
-
-        CREATE INDEX r4_sp1_idx_immunization_vaccine_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, immunization_vaccine_code_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -2186,17 +1845,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, immunizationevaluation_date_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_dose_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_dose_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_immunizationevaluation_dose_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, immunizationevaluation_dose_status_system);
-
-        CREATE INDEX r4_sp1_idx_immunizationevaluation_dose_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, immunizationevaluation_dose_status_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_status_value TEXT; 
  
@@ -2207,17 +1855,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_immunizationevaluation_status_value
         ON r4_sp1_idx 
         USING btree (tenant, immunizationevaluation_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_target_disease_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_target_disease_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_immunizationevaluation_target_disease_system
-        ON r4_sp1_idx 
-        USING btree (tenant, immunizationevaluation_target_disease_system);
-
-        CREATE INDEX r4_sp1_idx_immunizationevaluation_target_disease_value
-        ON r4_sp1_idx 
-        USING btree (tenant, immunizationevaluation_target_disease_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationrecommendation_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS immunizationrecommendation_date_end TIMESTAMP WITH TIME ZONE; 
@@ -2341,17 +1978,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, invoice_totalnet_end_code);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS invoice_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS invoice_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_invoice_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, invoice_type_system);
-
-        CREATE INDEX r4_sp1_idx_invoice_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, invoice_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS library_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS library_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -2405,17 +2031,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_library_title 
         ON r4_sp1_idx 
         USING btree (tenant, library_title); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS library_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS library_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_library_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, library_type_system);
-
-        CREATE INDEX r4_sp1_idx_library_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, library_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS library_url TEXT; 
  
         CREATE INDEX r4_sp1_idx_library_url 
@@ -2431,17 +2046,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_library_version_value
         ON r4_sp1_idx 
         USING btree (tenant, library_version_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS list_empty_reason_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS list_empty_reason_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_list_empty_reason_system
-        ON r4_sp1_idx 
-        USING btree (tenant, list_empty_reason_system);
-
-        CREATE INDEX r4_sp1_idx_list_empty_reason_value
-        ON r4_sp1_idx 
-        USING btree (tenant, list_empty_reason_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS list_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS list_status_value TEXT; 
@@ -2459,11 +2063,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_list_title 
         ON r4_sp1_idx 
         USING btree (tenant, list_title); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS location_address TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_location_address 
-        ON r4_sp1_idx 
-        USING btree (tenant, location_address); 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS location_address_city TEXT; 
  
         CREATE INDEX r4_sp1_idx_location_address_city 
@@ -2630,28 +2229,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, media_created_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_modality_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_modality_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_media_modality_system
-        ON r4_sp1_idx 
-        USING btree (tenant, media_modality_system);
-
-        CREATE INDEX r4_sp1_idx_media_modality_value
-        ON r4_sp1_idx 
-        USING btree (tenant, media_modality_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_site_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_site_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_media_site_system
-        ON r4_sp1_idx 
-        USING btree (tenant, media_site_system);
-
-        CREATE INDEX r4_sp1_idx_media_site_value
-        ON r4_sp1_idx 
-        USING btree (tenant, media_site_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_status_value TEXT; 
  
@@ -2663,28 +2240,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, media_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_media_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, media_type_system);
-
-        CREATE INDEX r4_sp1_idx_media_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, media_type_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_view_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS media_view_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_media_view_system
-        ON r4_sp1_idx 
-        USING btree (tenant, media_view_system);
-
-        CREATE INDEX r4_sp1_idx_media_view_value
-        ON r4_sp1_idx 
-        USING btree (tenant, media_view_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_expiration_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_expiration_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -2695,17 +2250,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_medication_expiration_date_end
         ON r4_sp1_idx 
         USING btree (tenant, medication_expiration_date_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_form_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_form_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medication_form_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medication_form_system);
-
-        CREATE INDEX r4_sp1_idx_medication_form_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medication_form_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_lot_number_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medication_lot_number_value TEXT; 
@@ -2751,17 +2295,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, medications_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicationdispense_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationdispense_type_system);
-
-        CREATE INDEX r4_sp1_idx_medicationdispense_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationdispense_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_whenhandedover_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_whenhandedover_end TIMESTAMP WITH TIME ZONE; 
  
@@ -2783,28 +2316,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_medicationdispense_whenprepared_end
         ON r4_sp1_idx 
         USING btree (tenant, medicationdispense_whenprepared_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicationknowledge_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationknowledge_code_system);
-
-        CREATE INDEX r4_sp1_idx_medicationknowledge_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationknowledge_code_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_doseform_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_doseform_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicationknowledge_doseform_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationknowledge_doseform_system);
-
-        CREATE INDEX r4_sp1_idx_medicationknowledge_doseform_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationknowledge_doseform_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_status_value TEXT; 
@@ -2828,17 +2339,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, medicationrequest_authoredon_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intended_performertype_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intended_performertype_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicationrequest_intended_performertype_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationrequest_intended_performertype_system);
-
-        CREATE INDEX r4_sp1_idx_medicationrequest_intended_performertype_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationrequest_intended_performertype_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intent_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intent_value TEXT; 
  
@@ -2861,17 +2361,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, medicationrequest_priority_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_category_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_category_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicationstatement_category_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationstatement_category_system);
-
-        CREATE INDEX r4_sp1_idx_medicationstatement_category_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicationstatement_category_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_effective_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_effective_end TIMESTAMP WITH TIME ZONE; 
  
@@ -2882,17 +2371,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_medicationstatement_effective_end
         ON r4_sp1_idx 
         USING btree (tenant, medicationstatement_effective_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductauthorization_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductauthorization_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_medicinalproductauthorization_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, medicinalproductauthorization_status_system);
-
-        CREATE INDEX r4_sp1_idx_medicinalproductauthorization_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, medicinalproductauthorization_status_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS messagedefinition_category_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS messagedefinition_category_value TEXT; 
@@ -2959,28 +2437,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_messageheader_source_uri 
         ON r4_sp1_idx 
         USING btree (tenant, messageheader_source_uri); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_chromosome_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_chromosome_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_molecularsequence_chromosome_system
-        ON r4_sp1_idx 
-        USING btree (tenant, molecularsequence_chromosome_system);
-
-        CREATE INDEX r4_sp1_idx_molecularsequence_chromosome_value
-        ON r4_sp1_idx 
-        USING btree (tenant, molecularsequence_chromosome_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_referenceseqid_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_referenceseqid_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_molecularsequence_referenceseqid_system
-        ON r4_sp1_idx 
-        USING btree (tenant, molecularsequence_referenceseqid_system);
-
-        CREATE INDEX r4_sp1_idx_molecularsequence_referenceseqid_value
-        ON r4_sp1_idx 
-        USING btree (tenant, molecularsequence_referenceseqid_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_type_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_type_value TEXT; 
  
@@ -3018,28 +2474,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_namingsystem_responsible 
         ON r4_sp1_idx 
         USING btree (tenant, namingsystem_responsible); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS namingsystem_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS namingsystem_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_namingsystem_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, namingsystem_type_system);
-
-        CREATE INDEX r4_sp1_idx_namingsystem_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, namingsystem_type_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_additive_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_additive_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_nutritionorder_additive_system
-        ON r4_sp1_idx 
-        USING btree (tenant, nutritionorder_additive_system);
-
-        CREATE INDEX r4_sp1_idx_nutritionorder_additive_value
-        ON r4_sp1_idx 
-        USING btree (tenant, nutritionorder_additive_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_datetime_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_datetime_end TIMESTAMP WITH TIME ZONE; 
  
@@ -3050,17 +2484,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_nutritionorder_datetime_end
         ON r4_sp1_idx 
         USING btree (tenant, nutritionorder_datetime_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_formula_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_formula_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_nutritionorder_formula_system
-        ON r4_sp1_idx 
-        USING btree (tenant, nutritionorder_formula_system);
-
-        CREATE INDEX r4_sp1_idx_nutritionorder_formula_value
-        ON r4_sp1_idx 
-        USING btree (tenant, nutritionorder_formula_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_status_value TEXT; 
@@ -3073,28 +2496,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, nutritionorder_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_data_absent_reason_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_data_absent_reason_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_observation_data_absent_reason_system
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_data_absent_reason_system);
-
-        CREATE INDEX r4_sp1_idx_observation_data_absent_reason_value
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_data_absent_reason_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_method_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_method_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_observation_method_system
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_method_system);
-
-        CREATE INDEX r4_sp1_idx_observation_method_value
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_method_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_status_value TEXT; 
  
@@ -3106,17 +2507,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, observation_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_concept_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_concept_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_observation_value_concept_system
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_concept_system);
-
-        CREATE INDEX r4_sp1_idx_observation_value_concept_value
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_concept_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -3127,37 +2517,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_observation_value_date_end
         ON r4_sp1_idx 
         USING btree (tenant, observation_value_date_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_value NUMERIC; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_code TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_value NUMERIC; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_code TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_start_value
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_value);
-        
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_start_system
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_system);
-
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_start_code
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_code);
-
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_end_value
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_value);
-        
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_end_system
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_system);
-
-        CREATE INDEX r4_sp1_idx_observation_value_quantity_end_code
-        ON r4_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_code);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_string TEXT; 
  
@@ -3312,17 +2671,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, paymentnotice_created_end);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_payment_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_payment_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_paymentnotice_payment_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, paymentnotice_payment_status_system);
-
-        CREATE INDEX r4_sp1_idx_paymentnotice_payment_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, paymentnotice_payment_status_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_status_value TEXT; 
  
@@ -3425,17 +2773,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_plandefinition_title 
         ON r4_sp1_idx 
         USING btree (tenant, plandefinition_title); 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_plandefinition_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, plandefinition_type_system);
-
-        CREATE INDEX r4_sp1_idx_plandefinition_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, plandefinition_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_url TEXT; 
  
         CREATE INDEX r4_sp1_idx_plandefinition_url 
@@ -3484,17 +2821,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_practitionerrole_date_end
         ON r4_sp1_idx 
         USING btree (tenant, practitionerrole_date_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS procedure_category_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS procedure_category_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_procedure_category_system
-        ON r4_sp1_idx 
-        USING btree (tenant, procedure_category_system);
-
-        CREATE INDEX r4_sp1_idx_procedure_category_value
-        ON r4_sp1_idx 
-        USING btree (tenant, procedure_category_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS procedure_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS procedure_status_value TEXT; 
@@ -3652,17 +2978,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_requestgroup_authored_end
         ON r4_sp1_idx 
         USING btree (tenant, requestgroup_authored_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_requestgroup_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, requestgroup_code_system);
-
-        CREATE INDEX r4_sp1_idx_requestgroup_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, requestgroup_code_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_group_identifier_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_group_identifier_value TEXT; 
@@ -3895,17 +3210,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, researchsubject_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS riskassessment_method_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS riskassessment_method_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_riskassessment_method_system
-        ON r4_sp1_idx 
-        USING btree (tenant, riskassessment_method_system);
-
-        CREATE INDEX r4_sp1_idx_riskassessment_method_value
-        ON r4_sp1_idx 
-        USING btree (tenant, riskassessment_method_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS riskevidencesynthesis_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS riskevidencesynthesis_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -4041,28 +3345,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, servicerequest_intent_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_occurrence_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_occurrence_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4_sp1_idx_servicerequest_occurrence_start
-        ON r4_sp1_idx 
-        USING btree (tenant, servicerequest_occurrence_start);
-        
-        CREATE INDEX r4_sp1_idx_servicerequest_occurrence_end
-        ON r4_sp1_idx 
-        USING btree (tenant, servicerequest_occurrence_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_performer_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_performer_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_servicerequest_performer_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, servicerequest_performer_type_system);
-
-        CREATE INDEX r4_sp1_idx_servicerequest_performer_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, servicerequest_performer_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_priority_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_priority_value TEXT; 
  
@@ -4095,17 +3377,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_servicerequest_status_value
         ON r4_sp1_idx 
         USING btree (tenant, servicerequest_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS slot_appointment_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS slot_appointment_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_slot_appointment_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, slot_appointment_type_system);
-
-        CREATE INDEX r4_sp1_idx_slot_appointment_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, slot_appointment_type_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS slot_start_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS slot_start_end TIMESTAMP WITH TIME ZONE; 
@@ -4140,17 +3411,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, specimen_accession_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_bodysite_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_bodysite_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_specimen_bodysite_system
-        ON r4_sp1_idx 
-        USING btree (tenant, specimen_bodysite_system);
-
-        CREATE INDEX r4_sp1_idx_specimen_bodysite_value
-        ON r4_sp1_idx 
-        USING btree (tenant, specimen_bodysite_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_collected_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_collected_end TIMESTAMP WITH TIME ZONE; 
  
@@ -4173,17 +3433,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, specimen_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimen_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_specimen_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, specimen_type_system);
-
-        CREATE INDEX r4_sp1_idx_specimen_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, specimen_type_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_identifier_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_identifier_value TEXT; 
  
@@ -4194,17 +3443,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_specimendefinition_identifier_value
         ON r4_sp1_idx 
         USING btree (tenant, specimendefinition_identifier_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_type_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_type_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_specimendefinition_type_system
-        ON r4_sp1_idx 
-        USING btree (tenant, specimendefinition_type_system);
-
-        CREATE INDEX r4_sp1_idx_specimendefinition_type_value
-        ON r4_sp1_idx 
-        USING btree (tenant, specimendefinition_type_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS structuredefinition_abstract_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS structuredefinition_abstract_value TEXT; 
@@ -4320,17 +3558,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, supplydelivery_status_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_category_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_category_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_supplyrequest_category_system
-        ON r4_sp1_idx 
-        USING btree (tenant, supplyrequest_category_system);
-
-        CREATE INDEX r4_sp1_idx_supplyrequest_category_value
-        ON r4_sp1_idx 
-        USING btree (tenant, supplyrequest_category_value);
-         
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_status_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_status_value TEXT; 
  
@@ -4352,28 +3579,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         CREATE INDEX r4_sp1_idx_task_authored_on_end
         ON r4_sp1_idx 
         USING btree (tenant, task_authored_on_end);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_business_status_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_business_status_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_task_business_status_system
-        ON r4_sp1_idx 
-        USING btree (tenant, task_business_status_system);
-
-        CREATE INDEX r4_sp1_idx_task_business_status_value
-        ON r4_sp1_idx 
-        USING btree (tenant, task_business_status_value);
-         
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_code_system TEXT; 
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_code_value TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_task_code_system
-        ON r4_sp1_idx 
-        USING btree (tenant, task_code_system);
-
-        CREATE INDEX r4_sp1_idx_task_code_value
-        ON r4_sp1_idx 
-        USING btree (tenant, task_code_value);
          
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_group_identifier_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS task_group_identifier_value TEXT; 
@@ -4661,11 +3866,6 @@ CREATE TABLE IF NOT EXISTS r4_sp1_idx (
         ON r4_sp1_idx 
         USING btree (tenant, membership_email_value);
          
- ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS membership_name TEXT; 
- 
-        CREATE INDEX r4_sp1_idx_membership_name 
-        ON r4_sp1_idx 
-        USING btree (tenant, membership_name); 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS membership_role_system TEXT; 
  ALTER TABLE r4_sp1_idx ADD COLUMN IF NOT EXISTS membership_role_value TEXT; 
  
@@ -4780,17 +3980,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, account_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS account_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS account_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_account_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, account_type_system);
-
-        CREATE INDEX r4b_sp1_idx_account_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, account_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS activitydefinition_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS activitydefinition_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -4860,17 +4049,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, activitydefinition_version_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS administrableproductdefinition_dose_form_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS administrableproductdefinition_dose_form_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_administrableproductdefinition_dose_form_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, administrableproductdefinition_dose_form_system);
-
-        CREATE INDEX r4b_sp1_idx_administrableproductdefinition_dose_form_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, administrableproductdefinition_dose_form_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_actuality_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_actuality_value TEXT; 
  
@@ -4893,50 +4071,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, adverseevent_date_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_event_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_event_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_adverseevent_event_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_event_system);
-
-        CREATE INDEX r4b_sp1_idx_adverseevent_event_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_event_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_seriousness_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_seriousness_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_adverseevent_seriousness_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_seriousness_system);
-
-        CREATE INDEX r4b_sp1_idx_adverseevent_seriousness_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_seriousness_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_severity_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS adverseevent_severity_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_adverseevent_severity_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_severity_system);
-
-        CREATE INDEX r4b_sp1_idx_adverseevent_severity_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, adverseevent_severity_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_clinical_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_clinical_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_allergyintolerance_clinical_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, allergyintolerance_clinical_status_system);
-
-        CREATE INDEX r4b_sp1_idx_allergyintolerance_clinical_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, allergyintolerance_clinical_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_criticality_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_criticality_value TEXT; 
  
@@ -4948,17 +4082,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, allergyintolerance_criticality_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinical_date_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinical_date_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4b_sp1_idx_clinical_date_start
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinical_date_start);
-        
-        CREATE INDEX r4b_sp1_idx_clinical_date_end
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinical_date_end);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_last_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_last_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -4969,28 +4092,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_allergyintolerance_last_date_end
         ON r4b_sp1_idx 
         USING btree (tenant, allergyintolerance_last_date_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_verification_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS allergyintolerance_verification_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_allergyintolerance_verification_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, allergyintolerance_verification_status_system);
-
-        CREATE INDEX r4b_sp1_idx_allergyintolerance_verification_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, allergyintolerance_verification_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS appointment_appointment_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS appointment_appointment_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_appointment_appointment_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, appointment_appointment_type_system);
-
-        CREATE INDEX r4b_sp1_idx_appointment_appointment_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, appointment_appointment_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS appointment_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS appointment_date_end TIMESTAMP WITH TIME ZONE; 
@@ -5080,17 +4181,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, auditevent_type_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS basic_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS basic_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_basic_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, basic_code_system);
-
-        CREATE INDEX r4b_sp1_idx_basic_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, basic_code_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS basic_created_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS basic_created_end TIMESTAMP WITH TIME ZONE; 
  
@@ -5101,28 +4191,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_basic_created_end
         ON r4b_sp1_idx 
         USING btree (tenant, basic_created_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_location_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_location_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_bodystructure_location_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, bodystructure_location_system);
-
-        CREATE INDEX r4b_sp1_idx_bodystructure_location_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, bodystructure_location_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_morphology_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bodystructure_morphology_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_bodystructure_morphology_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, bodystructure_morphology_system);
-
-        CREATE INDEX r4b_sp1_idx_bodystructure_morphology_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, bodystructure_morphology_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bundle_identifier_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS bundle_identifier_value TEXT; 
@@ -5264,17 +4332,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, careteam_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_chargeitem_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, chargeitem_code_system);
-
-        CREATE INDEX r4b_sp1_idx_chargeitem_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, chargeitem_code_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_entered_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_entered_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -5291,17 +4348,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_chargeitem_factor_override 
         ON r4b_sp1_idx 
         USING btree (tenant, chargeitem_factor_override); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_occurrence_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_occurrence_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4b_sp1_idx_chargeitem_occurrence_start
-        ON r4b_sp1_idx 
-        USING btree (tenant, chargeitem_occurrence_start);
-        
-        CREATE INDEX r4b_sp1_idx_chargeitem_occurrence_end
-        ON r4b_sp1_idx 
-        USING btree (tenant, chargeitem_occurrence_end);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_value NUMERIC; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS chargeitem_price_override_start_code TEXT; 
@@ -5508,17 +4554,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, claim_created_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS claim_priority_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS claim_priority_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_claim_priority_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, claim_priority_system);
-
-        CREATE INDEX r4b_sp1_idx_claim_priority_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, claim_priority_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS claim_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS claim_status_value TEXT; 
  
@@ -5611,50 +4646,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_clinicalimpression_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, clinicalimpression_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_contraindication_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_contraindication_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_contraindication_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_contraindication_system);
-
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_contraindication_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_contraindication_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_effect_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_effect_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_effect_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_effect_system);
-
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_effect_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_effect_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_indication_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_indication_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_indication_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_indication_system);
-
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_indication_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_indication_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_interaction_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_interaction_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_interaction_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_interaction_system);
-
-        CREATE INDEX r4b_sp1_idx_clinicalusedefinition_interaction_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, clinicalusedefinition_interaction_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_type_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS clinicalusedefinition_type_value TEXT; 
@@ -5856,17 +4847,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_condition_abatement_string 
         ON r4b_sp1_idx 
         USING btree (tenant, condition_abatement_string); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_clinical_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_clinical_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_condition_clinical_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_clinical_status_system);
-
-        CREATE INDEX r4b_sp1_idx_condition_clinical_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_clinical_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_value NUMERIC; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_onset_age_start_code TEXT; 
@@ -5925,28 +4905,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, condition_recorded_date_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_severity_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_severity_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_condition_severity_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_severity_system);
-
-        CREATE INDEX r4b_sp1_idx_condition_severity_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_severity_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_verification_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS condition_verification_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_condition_verification_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_verification_status_system);
-
-        CREATE INDEX r4b_sp1_idx_condition_verification_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, condition_verification_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_period_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_period_end TIMESTAMP WITH TIME ZONE; 
  
@@ -5957,17 +4915,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_consent_period_end
         ON r4b_sp1_idx 
         USING btree (tenant, consent_period_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_scope_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_scope_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_consent_scope_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, consent_scope_system);
-
-        CREATE INDEX r4b_sp1_idx_consent_scope_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, consent_scope_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS consent_status_value TEXT; 
@@ -6027,17 +4974,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_coverage_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, coverage_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS coverage_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS coverage_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_coverage_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, coverage_type_system);
-
-        CREATE INDEX r4b_sp1_idx_coverage_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, coverage_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS coverageeligibilityrequest_created_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS coverageeligibilityrequest_created_end TIMESTAMP WITH TIME ZONE; 
@@ -6099,17 +5035,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, coverageeligibilityresponse_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_detectedissue_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, detectedissue_code_system);
-
-        CREATE INDEX r4b_sp1_idx_detectedissue_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, detectedissue_code_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_identified_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS detectedissue_identified_end TIMESTAMP WITH TIME ZONE; 
  
@@ -6142,33 +5067,11 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, device_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS device_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS device_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_device_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, device_type_system);
-
-        CREATE INDEX r4b_sp1_idx_device_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, device_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS device_url TEXT; 
  
         CREATE INDEX r4b_sp1_idx_device_url 
         ON r4b_sp1_idx 
         USING btree (tenant, device_url); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicedefinition_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicedefinition_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_devicedefinition_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, devicedefinition_type_system);
-
-        CREATE INDEX r4b_sp1_idx_devicedefinition_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, devicedefinition_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_category_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_category_value TEXT; 
  
@@ -6179,17 +5082,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_devicemetric_category_value
         ON r4b_sp1_idx 
         USING btree (tenant, devicemetric_category_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicemetric_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_devicemetric_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, devicemetric_type_system);
-
-        CREATE INDEX r4b_sp1_idx_devicemetric_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, devicemetric_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicerequest_authored_on_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS devicerequest_authored_on_end TIMESTAMP WITH TIME ZONE; 
@@ -6316,17 +5208,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_documentreference_description 
         ON r4b_sp1_idx 
         USING btree (tenant, documentreference_description); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_facility_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_facility_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_documentreference_facility_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, documentreference_facility_system);
-
-        CREATE INDEX r4b_sp1_idx_documentreference_facility_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, documentreference_facility_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_period_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_period_end TIMESTAMP WITH TIME ZONE; 
  
@@ -6337,17 +5218,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_documentreference_period_end
         ON r4b_sp1_idx 
         USING btree (tenant, documentreference_period_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_setting_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_setting_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_documentreference_setting_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, documentreference_setting_system);
-
-        CREATE INDEX r4b_sp1_idx_documentreference_setting_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, documentreference_setting_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS documentreference_status_value TEXT; 
@@ -6749,28 +5619,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, explanationofbenefit_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_relationship_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_relationship_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_familymemberhistory_relationship_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, familymemberhistory_relationship_system);
-
-        CREATE INDEX r4b_sp1_idx_familymemberhistory_relationship_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, familymemberhistory_relationship_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_sex_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_sex_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_familymemberhistory_sex_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, familymemberhistory_sex_system);
-
-        CREATE INDEX r4b_sp1_idx_familymemberhistory_sex_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, familymemberhistory_sex_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS familymemberhistory_status_value TEXT; 
  
@@ -6781,17 +5629,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_familymemberhistory_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, familymemberhistory_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS goal_achievement_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS goal_achievement_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_goal_achievement_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, goal_achievement_status_system);
-
-        CREATE INDEX r4b_sp1_idx_goal_achievement_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, goal_achievement_status_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS goal_lifecycle_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS goal_lifecycle_status_value TEXT; 
@@ -6836,17 +5673,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_group_actual_value
         ON r4b_sp1_idx 
         USING btree (tenant, group_actual_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS group_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS group_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_group_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, group_code_system);
-
-        CREATE INDEX r4b_sp1_idx_group_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, group_code_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS group_type_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS group_type_value TEXT; 
@@ -6924,28 +5750,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, immunization_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunization_status_reason_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunization_status_reason_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_immunization_status_reason_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunization_status_reason_system);
-
-        CREATE INDEX r4b_sp1_idx_immunization_status_reason_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunization_status_reason_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunization_vaccine_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunization_vaccine_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_immunization_vaccine_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunization_vaccine_code_system);
-
-        CREATE INDEX r4b_sp1_idx_immunization_vaccine_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunization_vaccine_code_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -6957,17 +5761,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, immunizationevaluation_date_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_dose_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_dose_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_immunizationevaluation_dose_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunizationevaluation_dose_status_system);
-
-        CREATE INDEX r4b_sp1_idx_immunizationevaluation_dose_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunizationevaluation_dose_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_status_value TEXT; 
  
@@ -6978,17 +5771,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_immunizationevaluation_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, immunizationevaluation_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_target_disease_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationevaluation_target_disease_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_immunizationevaluation_target_disease_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunizationevaluation_target_disease_system);
-
-        CREATE INDEX r4b_sp1_idx_immunizationevaluation_target_disease_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, immunizationevaluation_target_disease_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationrecommendation_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS immunizationrecommendation_date_end TIMESTAMP WITH TIME ZONE; 
@@ -7022,28 +5804,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_ingredient_identifier_value
         ON r4b_sp1_idx 
         USING btree (tenant, ingredient_identifier_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS ingredient_role_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS ingredient_role_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_ingredient_role_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, ingredient_role_system);
-
-        CREATE INDEX r4b_sp1_idx_ingredient_role_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, ingredient_role_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS ingredient_substance_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS ingredient_substance_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_ingredient_substance_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, ingredient_substance_code_system);
-
-        CREATE INDEX r4b_sp1_idx_ingredient_substance_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, ingredient_substance_code_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS insuranceplan_phonetic TEXT; 
  
@@ -7145,17 +5905,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, invoice_totalnet_end_code);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS invoice_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS invoice_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_invoice_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, invoice_type_system);
-
-        CREATE INDEX r4b_sp1_idx_invoice_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, invoice_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS library_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS library_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7209,17 +5958,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_library_title 
         ON r4b_sp1_idx 
         USING btree (tenant, library_title); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS library_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS library_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_library_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, library_type_system);
-
-        CREATE INDEX r4b_sp1_idx_library_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, library_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS library_url TEXT; 
  
         CREATE INDEX r4b_sp1_idx_library_url 
@@ -7235,17 +5973,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_library_version_value
         ON r4b_sp1_idx 
         USING btree (tenant, library_version_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS list_empty_reason_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS list_empty_reason_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_list_empty_reason_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, list_empty_reason_system);
-
-        CREATE INDEX r4b_sp1_idx_list_empty_reason_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, list_empty_reason_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS list_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS list_status_value TEXT; 
@@ -7263,11 +5990,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_list_title 
         ON r4b_sp1_idx 
         USING btree (tenant, list_title); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS location_address TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_location_address 
-        ON r4b_sp1_idx 
-        USING btree (tenant, location_address); 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS location_address_city TEXT; 
  
         CREATE INDEX r4b_sp1_idx_location_address_city 
@@ -7320,17 +6042,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_location_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, location_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS manufactureditemdefinition_dose_form_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS manufactureditemdefinition_dose_form_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_manufactureditemdefinition_dose_form_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, manufactureditemdefinition_dose_form_system);
-
-        CREATE INDEX r4b_sp1_idx_manufactureditemdefinition_dose_form_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, manufactureditemdefinition_dose_form_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS measure_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS measure_date_end TIMESTAMP WITH TIME ZONE; 
@@ -7445,28 +6156,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, media_created_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_modality_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_modality_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_media_modality_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_modality_system);
-
-        CREATE INDEX r4b_sp1_idx_media_modality_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_modality_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_site_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_site_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_media_site_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_site_system);
-
-        CREATE INDEX r4b_sp1_idx_media_site_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_site_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_status_value TEXT; 
  
@@ -7478,28 +6167,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, media_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_media_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_type_system);
-
-        CREATE INDEX r4b_sp1_idx_media_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_type_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_view_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS media_view_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_media_view_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_view_system);
-
-        CREATE INDEX r4b_sp1_idx_media_view_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, media_view_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_expiration_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_expiration_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7510,17 +6177,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_medication_expiration_date_end
         ON r4b_sp1_idx 
         USING btree (tenant, medication_expiration_date_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_form_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_form_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medication_form_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medication_form_system);
-
-        CREATE INDEX r4b_sp1_idx_medication_form_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medication_form_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_lot_number_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medication_lot_number_value TEXT; 
@@ -7566,17 +6222,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, medications_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicationdispense_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationdispense_type_system);
-
-        CREATE INDEX r4b_sp1_idx_medicationdispense_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationdispense_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_whenhandedover_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationdispense_whenhandedover_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7598,28 +6243,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_medicationdispense_whenprepared_end
         ON r4b_sp1_idx 
         USING btree (tenant, medicationdispense_whenprepared_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicationknowledge_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationknowledge_code_system);
-
-        CREATE INDEX r4b_sp1_idx_medicationknowledge_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationknowledge_code_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_doseform_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_doseform_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicationknowledge_doseform_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationknowledge_doseform_system);
-
-        CREATE INDEX r4b_sp1_idx_medicationknowledge_doseform_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationknowledge_doseform_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationknowledge_status_value TEXT; 
@@ -7643,17 +6266,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, medicationrequest_authoredon_end);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intended_performertype_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intended_performertype_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicationrequest_intended_performertype_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationrequest_intended_performertype_system);
-
-        CREATE INDEX r4b_sp1_idx_medicationrequest_intended_performertype_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationrequest_intended_performertype_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intent_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationrequest_intent_value TEXT; 
  
@@ -7676,17 +6288,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, medicationrequest_priority_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_category_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_category_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicationstatement_category_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationstatement_category_system);
-
-        CREATE INDEX r4b_sp1_idx_medicationstatement_category_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicationstatement_category_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_effective_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicationstatement_effective_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7697,39 +6298,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_medicationstatement_effective_end
         ON r4b_sp1_idx 
         USING btree (tenant, medicationstatement_effective_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_domain_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_domain_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_domain_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_domain_system);
-
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_domain_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_domain_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_status_system);
-
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS medicinalproductdefinition_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_type_system);
-
-        CREATE INDEX r4b_sp1_idx_medicinalproductdefinition_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, medicinalproductdefinition_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS messagedefinition_category_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS messagedefinition_category_value TEXT; 
@@ -7796,28 +6364,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_messageheader_source_uri 
         ON r4b_sp1_idx 
         USING btree (tenant, messageheader_source_uri); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_chromosome_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_chromosome_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_molecularsequence_chromosome_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, molecularsequence_chromosome_system);
-
-        CREATE INDEX r4b_sp1_idx_molecularsequence_chromosome_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, molecularsequence_chromosome_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_referenceseqid_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_referenceseqid_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_molecularsequence_referenceseqid_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, molecularsequence_referenceseqid_system);
-
-        CREATE INDEX r4b_sp1_idx_molecularsequence_referenceseqid_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, molecularsequence_referenceseqid_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_type_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS molecularsequence_type_value TEXT; 
  
@@ -7855,28 +6401,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_namingsystem_responsible 
         ON r4b_sp1_idx 
         USING btree (tenant, namingsystem_responsible); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS namingsystem_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS namingsystem_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_namingsystem_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, namingsystem_type_system);
-
-        CREATE INDEX r4b_sp1_idx_namingsystem_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, namingsystem_type_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_additive_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_additive_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_nutritionorder_additive_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, nutritionorder_additive_system);
-
-        CREATE INDEX r4b_sp1_idx_nutritionorder_additive_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, nutritionorder_additive_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_datetime_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_datetime_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7887,17 +6411,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_nutritionorder_datetime_end
         ON r4b_sp1_idx 
         USING btree (tenant, nutritionorder_datetime_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_formula_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_formula_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_nutritionorder_formula_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, nutritionorder_formula_system);
-
-        CREATE INDEX r4b_sp1_idx_nutritionorder_formula_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, nutritionorder_formula_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS nutritionorder_status_value TEXT; 
@@ -7921,28 +6434,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, nutritionproduct_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_data_absent_reason_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_data_absent_reason_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_observation_data_absent_reason_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_data_absent_reason_system);
-
-        CREATE INDEX r4b_sp1_idx_observation_data_absent_reason_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_data_absent_reason_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_method_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_method_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_observation_method_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_method_system);
-
-        CREATE INDEX r4b_sp1_idx_observation_method_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_method_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_status_value TEXT; 
  
@@ -7954,17 +6445,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, observation_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_concept_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_concept_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_observation_value_concept_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_concept_system);
-
-        CREATE INDEX r4b_sp1_idx_observation_value_concept_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_concept_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_date_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_date_end TIMESTAMP WITH TIME ZONE; 
  
@@ -7975,37 +6455,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_observation_value_date_end
         ON r4b_sp1_idx 
         USING btree (tenant, observation_value_date_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_value NUMERIC; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_start_code TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_value NUMERIC; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_quantity_end_code TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_start_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_value);
-        
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_start_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_system);
-
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_start_code
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_start_code);
-
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_end_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_value);
-        
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_end_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_system);
-
-        CREATE INDEX r4b_sp1_idx_observation_value_quantity_end_code
-        ON r4b_sp1_idx 
-        USING btree (tenant, observation_value_quantity_end_code);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS observation_value_string TEXT; 
  
@@ -8116,17 +6565,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, packagedproductdefinition_name_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS packagedproductdefinition_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS packagedproductdefinition_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_packagedproductdefinition_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, packagedproductdefinition_status_system);
-
-        CREATE INDEX r4b_sp1_idx_packagedproductdefinition_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, packagedproductdefinition_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS patient_active_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS patient_active_value TEXT; 
  
@@ -8181,17 +6619,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_paymentnotice_created_end
         ON r4b_sp1_idx 
         USING btree (tenant, paymentnotice_created_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_payment_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_payment_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_paymentnotice_payment_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, paymentnotice_payment_status_system);
-
-        CREATE INDEX r4b_sp1_idx_paymentnotice_payment_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, paymentnotice_payment_status_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS paymentnotice_status_value TEXT; 
@@ -8295,17 +6722,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_plandefinition_title 
         ON r4b_sp1_idx 
         USING btree (tenant, plandefinition_title); 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_plandefinition_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, plandefinition_type_system);
-
-        CREATE INDEX r4b_sp1_idx_plandefinition_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, plandefinition_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS plandefinition_url TEXT; 
  
         CREATE INDEX r4b_sp1_idx_plandefinition_url 
@@ -8354,17 +6770,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_practitionerrole_date_end
         ON r4b_sp1_idx 
         USING btree (tenant, practitionerrole_date_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS procedure_category_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS procedure_category_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_procedure_category_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, procedure_category_system);
-
-        CREATE INDEX r4b_sp1_idx_procedure_category_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, procedure_category_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS procedure_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS procedure_status_value TEXT; 
@@ -8512,28 +6917,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, regulatedauthorization_case_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS regulatedauthorization_case_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS regulatedauthorization_case_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_regulatedauthorization_case_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, regulatedauthorization_case_type_system);
-
-        CREATE INDEX r4b_sp1_idx_regulatedauthorization_case_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, regulatedauthorization_case_type_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS regulatedauthorization_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS regulatedauthorization_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_regulatedauthorization_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, regulatedauthorization_status_system);
-
-        CREATE INDEX r4b_sp1_idx_regulatedauthorization_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, regulatedauthorization_status_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS relatedperson_active_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS relatedperson_active_value TEXT; 
  
@@ -8555,17 +6938,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_requestgroup_authored_end
         ON r4b_sp1_idx 
         USING btree (tenant, requestgroup_authored_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_requestgroup_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, requestgroup_code_system);
-
-        CREATE INDEX r4b_sp1_idx_requestgroup_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, requestgroup_code_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_group_identifier_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS requestgroup_group_identifier_value TEXT; 
@@ -8798,17 +7170,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, researchsubject_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS riskassessment_method_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS riskassessment_method_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_riskassessment_method_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, riskassessment_method_system);
-
-        CREATE INDEX r4b_sp1_idx_riskassessment_method_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, riskassessment_method_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS schedule_active_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS schedule_active_value TEXT; 
  
@@ -8875,28 +7236,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, servicerequest_intent_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_occurrence_start TIMESTAMP WITH TIME ZONE; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_occurrence_end TIMESTAMP WITH TIME ZONE; 
- 
-        CREATE INDEX r4b_sp1_idx_servicerequest_occurrence_start
-        ON r4b_sp1_idx 
-        USING btree (tenant, servicerequest_occurrence_start);
-        
-        CREATE INDEX r4b_sp1_idx_servicerequest_occurrence_end
-        ON r4b_sp1_idx 
-        USING btree (tenant, servicerequest_occurrence_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_performer_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_performer_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_servicerequest_performer_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, servicerequest_performer_type_system);
-
-        CREATE INDEX r4b_sp1_idx_servicerequest_performer_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, servicerequest_performer_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_priority_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS servicerequest_priority_value TEXT; 
  
@@ -8929,17 +7268,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_servicerequest_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, servicerequest_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS slot_appointment_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS slot_appointment_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_slot_appointment_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, slot_appointment_type_system);
-
-        CREATE INDEX r4b_sp1_idx_slot_appointment_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, slot_appointment_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS slot_start_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS slot_start_end TIMESTAMP WITH TIME ZONE; 
@@ -8974,17 +7302,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, specimen_accession_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_bodysite_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_bodysite_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_specimen_bodysite_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimen_bodysite_system);
-
-        CREATE INDEX r4b_sp1_idx_specimen_bodysite_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimen_bodysite_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_collected_start TIMESTAMP WITH TIME ZONE; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_collected_end TIMESTAMP WITH TIME ZONE; 
  
@@ -9007,17 +7324,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, specimen_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimen_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_specimen_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimen_type_system);
-
-        CREATE INDEX r4b_sp1_idx_specimen_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimen_type_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_identifier_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_identifier_value TEXT; 
  
@@ -9028,17 +7334,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_specimendefinition_identifier_value
         ON r4b_sp1_idx 
         USING btree (tenant, specimendefinition_identifier_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_type_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS specimendefinition_type_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_specimendefinition_type_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimendefinition_type_system);
-
-        CREATE INDEX r4b_sp1_idx_specimendefinition_type_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, specimendefinition_type_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS structuredefinition_abstract_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS structuredefinition_abstract_value TEXT; 
@@ -9186,17 +7481,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         ON r4b_sp1_idx 
         USING btree (tenant, substance_status_value);
          
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS substancedefinition_domain_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS substancedefinition_domain_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_substancedefinition_domain_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, substancedefinition_domain_system);
-
-        CREATE INDEX r4b_sp1_idx_substancedefinition_domain_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, substancedefinition_domain_value);
-         
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplydelivery_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplydelivery_status_value TEXT; 
  
@@ -9207,17 +7491,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_supplydelivery_status_value
         ON r4b_sp1_idx 
         USING btree (tenant, supplydelivery_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_category_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_category_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_supplyrequest_category_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, supplyrequest_category_system);
-
-        CREATE INDEX r4b_sp1_idx_supplyrequest_category_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, supplyrequest_category_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_status_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS supplyrequest_status_value TEXT; 
@@ -9240,28 +7513,6 @@ CREATE TABLE IF NOT EXISTS r4b_sp1_idx (
         CREATE INDEX r4b_sp1_idx_task_authored_on_end
         ON r4b_sp1_idx 
         USING btree (tenant, task_authored_on_end);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_business_status_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_business_status_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_task_business_status_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, task_business_status_system);
-
-        CREATE INDEX r4b_sp1_idx_task_business_status_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, task_business_status_value);
-         
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_code_system TEXT; 
- ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_code_value TEXT; 
- 
-        CREATE INDEX r4b_sp1_idx_task_code_system
-        ON r4b_sp1_idx 
-        USING btree (tenant, task_code_system);
-
-        CREATE INDEX r4b_sp1_idx_task_code_value
-        ON r4b_sp1_idx 
-        USING btree (tenant, task_code_value);
          
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_group_identifier_system TEXT; 
  ALTER TABLE r4b_sp1_idx ADD COLUMN IF NOT EXISTS task_group_identifier_value TEXT; 

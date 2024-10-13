@@ -77,6 +77,27 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
     return this._nestedCardinality;
   }
 
+  isTypeChoice(): boolean {
+    if (this._meta._type_ === "typechoice") {
+      return true;
+    }
+    return false;
+  }
+
+  types(): TypeInfo[] | undefined {
+    if (this._meta._type_ === "typechoice") {
+      return Object.values(this._meta.fields).map((type) => {
+        return {
+          type: type as uri,
+          fhirVersion: this._fhirVersion,
+          cardinality: this._meta.cardinality,
+        };
+      });
+    }
+    const meta = this.meta();
+    return meta ? [meta] : undefined;
+  }
+
   meta(): TypeInfo | undefined {
     if (this._meta._type_ === "complex") {
       return {
