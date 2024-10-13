@@ -52,6 +52,59 @@ async function getParameterCardinality<Version extends FHIR_VERSION>(
       if (cardinality === "array" || cardinality === "unknown") {
         return cardinality;
       }
+
+      const types = v.types();
+      if (!types) {
+        return "unknown";
+      }
+      for (const meta of types) {
+        switch (meta.type) {
+          case "http://hl7.org/fhirpath/System.String":
+          case "markdown":
+          case "string":
+          case "code":
+          case "boolean":
+          case "id":
+          case "uri":
+          case "url":
+          case "uuid":
+          case "canonical":
+          case "decimal":
+          case "integer":
+          case "instant":
+          case "date":
+          case "dateTime":
+          case "Identifier":
+          case "ContactPoint":
+          case "Reference":
+          case "Coding":
+          case "Period":
+          case "Range":
+          case "Age":
+          case "Money":
+          case "Duration":
+          case "Quantity": {
+            break;
+          }
+          case "CodeableReference":
+          case "HumanName":
+          case "Address":
+          case "CodeableConcept":
+          case "Timing": {
+            return "array";
+          }
+          case "SampledData":
+          case undefined: {
+            console.log("invalid Type", searchParameter.expression);
+            return "unknown";
+          }
+          default: {
+            throw new Error(
+              `Unsupported type for:'${meta.type}' expression:'${searchParameter.expression}'`,
+            );
+          }
+        }
+      }
     }
   }
 

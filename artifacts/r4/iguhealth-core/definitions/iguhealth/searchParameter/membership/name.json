@@ -9,7 +9,9 @@
   "publisher": "IGUHealth",
   "description": "Membership name",
   "code": "name",
-  "base": ["Membership"],
+  "base": [
+    "Membership"
+  ],
   "type": "string",
   "expression": "Membership.name"
 }

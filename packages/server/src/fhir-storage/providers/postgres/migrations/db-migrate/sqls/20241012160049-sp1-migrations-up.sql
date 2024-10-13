@@ -46,14 +46,6 @@
         "account_status_system" = EXCLUDED."account_status_system", 
         "account_status_value" = EXCLUDED."account_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "account_type_system", "account_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Account-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "account_type_system" = EXCLUDED."account_type_system", 
-        "account_type_value" = EXCLUDED."account_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "activitydefinition_date_start", "activitydefinition_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -136,38 +128,6 @@
         "adverseevent_date_start" = EXCLUDED."adverseevent_date_start", 
         "adverseevent_date_end" = EXCLUDED."adverseevent_date_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_event_system", "adverseevent_event_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-event'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_event_system" = EXCLUDED."adverseevent_event_system", 
-        "adverseevent_event_value" = EXCLUDED."adverseevent_event_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_seriousness_system", "adverseevent_seriousness_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-seriousness'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_seriousness_system" = EXCLUDED."adverseevent_seriousness_system", 
-        "adverseevent_seriousness_value" = EXCLUDED."adverseevent_seriousness_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_severity_system", "adverseevent_severity_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-severity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_severity_system" = EXCLUDED."adverseevent_severity_system", 
-        "adverseevent_severity_value" = EXCLUDED."adverseevent_severity_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_clinical_status_system", "allergyintolerance_clinical_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AllergyIntolerance-clinical-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "allergyintolerance_clinical_status_system" = EXCLUDED."allergyintolerance_clinical_status_system", 
-        "allergyintolerance_clinical_status_value" = EXCLUDED."allergyintolerance_clinical_status_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_criticality_system", "allergyintolerance_criticality_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -176,14 +136,6 @@
         "allergyintolerance_criticality_system" = EXCLUDED."allergyintolerance_criticality_system", 
         "allergyintolerance_criticality_value" = EXCLUDED."allergyintolerance_criticality_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "clinical_date_start", "clinical_date_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/clinical-date'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "clinical_date_start" = EXCLUDED."clinical_date_start", 
-        "clinical_date_end" = EXCLUDED."clinical_date_end";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_last_date_start", "allergyintolerance_last_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -191,22 +143,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "allergyintolerance_last_date_start" = EXCLUDED."allergyintolerance_last_date_start", 
         "allergyintolerance_last_date_end" = EXCLUDED."allergyintolerance_last_date_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_verification_status_system", "allergyintolerance_verification_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AllergyIntolerance-verification-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "allergyintolerance_verification_status_system" = EXCLUDED."allergyintolerance_verification_status_system", 
-        "allergyintolerance_verification_status_value" = EXCLUDED."allergyintolerance_verification_status_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "appointment_appointment_type_system", "appointment_appointment_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Appointment-appointment-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "appointment_appointment_type_system" = EXCLUDED."appointment_appointment_type_system", 
-        "appointment_appointment_type_value" = EXCLUDED."appointment_appointment_type_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "appointment_date_start", "appointment_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -272,14 +208,6 @@
         "auditevent_type_system" = EXCLUDED."auditevent_type_system", 
         "auditevent_type_value" = EXCLUDED."auditevent_type_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "basic_code_system", "basic_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Basic-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "basic_code_system" = EXCLUDED."basic_code_system", 
-        "basic_code_value" = EXCLUDED."basic_code_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "basic_created_start", "basic_created_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -287,22 +215,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "basic_created_start" = EXCLUDED."basic_created_start", 
         "basic_created_end" = EXCLUDED."basic_created_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "bodystructure_location_system", "bodystructure_location_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/BodyStructure-location'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "bodystructure_location_system" = EXCLUDED."bodystructure_location_system", 
-        "bodystructure_location_value" = EXCLUDED."bodystructure_location_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "bodystructure_morphology_system", "bodystructure_morphology_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/BodyStructure-morphology'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "bodystructure_morphology_system" = EXCLUDED."bodystructure_morphology_system", 
-        "bodystructure_morphology_value" = EXCLUDED."bodystructure_morphology_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "bundle_identifier_system", "bundle_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -425,14 +337,6 @@
         "careteam_status_system" = EXCLUDED."careteam_status_system", 
         "careteam_status_value" = EXCLUDED."careteam_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_code_system", "chargeitem_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "chargeitem_code_system" = EXCLUDED."chargeitem_code_system", 
-        "chargeitem_code_value" = EXCLUDED."chargeitem_code_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_entered_date_start", "chargeitem_entered_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -446,14 +350,6 @@
           FROM "r4_number_idx" 
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-factor-override'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "chargeitem_factor_override" = EXCLUDED."chargeitem_factor_override";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_occurrence_start", "chargeitem_occurrence_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-occurrence'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "chargeitem_occurrence_start" = EXCLUDED."chargeitem_occurrence_start", 
-        "chargeitem_occurrence_end" = EXCLUDED."chargeitem_occurrence_end";
  
         INSERT INTO "r4_sp1_idx" (
           "tenant",
@@ -583,14 +479,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "claim_created_start" = EXCLUDED."claim_created_start", 
         "claim_created_end" = EXCLUDED."claim_created_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "claim_priority_system", "claim_priority_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Claim-priority'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "claim_priority_system" = EXCLUDED."claim_priority_system", 
-        "claim_priority_value" = EXCLUDED."claim_priority_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "claim_status_system", "claim_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -818,14 +706,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "condition_abatement_string" = EXCLUDED."condition_abatement_string";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_clinical_status_system", "condition_clinical_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-clinical-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_clinical_status_system" = EXCLUDED."condition_clinical_status_system", 
-        "condition_clinical_status_value" = EXCLUDED."condition_clinical_status_value";
- 
         INSERT INTO "r4_sp1_idx" (
           "tenant",
           "r_id", 
@@ -880,22 +760,6 @@
         "condition_recorded_date_start" = EXCLUDED."condition_recorded_date_start", 
         "condition_recorded_date_end" = EXCLUDED."condition_recorded_date_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_severity_system", "condition_severity_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-severity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_severity_system" = EXCLUDED."condition_severity_system", 
-        "condition_severity_value" = EXCLUDED."condition_severity_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_verification_status_system", "condition_verification_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-verification-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_verification_status_system" = EXCLUDED."condition_verification_status_system", 
-        "condition_verification_status_value" = EXCLUDED."condition_verification_status_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_period_start", "consent_period_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -903,14 +767,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "consent_period_start" = EXCLUDED."consent_period_start", 
         "consent_period_end" = EXCLUDED."consent_period_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_scope_system", "consent_scope_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Consent-scope'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "consent_scope_system" = EXCLUDED."consent_scope_system", 
-        "consent_scope_value" = EXCLUDED."consent_scope_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_status_system", "consent_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -963,14 +819,6 @@
         "coverage_status_system" = EXCLUDED."coverage_status_system", 
         "coverage_status_value" = EXCLUDED."coverage_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "coverage_type_system", "coverage_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Coverage-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "coverage_type_system" = EXCLUDED."coverage_type_system", 
-        "coverage_type_value" = EXCLUDED."coverage_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "coverageeligibilityrequest_created_start", "coverageeligibilityrequest_created_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -1018,14 +866,6 @@
         "coverageeligibilityresponse_status_system" = EXCLUDED."coverageeligibilityresponse_status_system", 
         "coverageeligibilityresponse_status_value" = EXCLUDED."coverageeligibilityresponse_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "detectedissue_code_system", "detectedissue_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DetectedIssue-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "detectedissue_code_system" = EXCLUDED."detectedissue_code_system", 
-        "detectedissue_code_value" = EXCLUDED."detectedissue_code_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "detectedissue_identified_start", "detectedissue_identified_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -1056,27 +896,11 @@
         "device_status_system" = EXCLUDED."device_status_system", 
         "device_status_value" = EXCLUDED."device_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "device_type_system", "device_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Device-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "device_type_system" = EXCLUDED."device_type_system", 
-        "device_type_value" = EXCLUDED."device_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "device_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4_uri_idx" 
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Device-url'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "device_url" = EXCLUDED."device_url";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "devicedefinition_type_system", "devicedefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DeviceDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "devicedefinition_type_system" = EXCLUDED."devicedefinition_type_system", 
-        "devicedefinition_type_value" = EXCLUDED."devicedefinition_type_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "devicemetric_category_system", "devicemetric_category_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -1085,14 +909,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "devicemetric_category_system" = EXCLUDED."devicemetric_category_system", 
         "devicemetric_category_value" = EXCLUDED."devicemetric_category_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "devicemetric_type_system", "devicemetric_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DeviceMetric-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "devicemetric_type_system" = EXCLUDED."devicemetric_type_system", 
-        "devicemetric_type_value" = EXCLUDED."devicemetric_type_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "devicerequest_authored_on_start", "devicerequest_authored_on_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -1194,14 +1010,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "documentreference_description" = EXCLUDED."documentreference_description";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_facility_system", "documentreference_facility_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DocumentReference-facility'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "documentreference_facility_system" = EXCLUDED."documentreference_facility_system", 
-        "documentreference_facility_value" = EXCLUDED."documentreference_facility_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_period_start", "documentreference_period_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -1209,14 +1017,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "documentreference_period_start" = EXCLUDED."documentreference_period_start", 
         "documentreference_period_end" = EXCLUDED."documentreference_period_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_setting_system", "documentreference_setting_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DocumentReference-setting'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "documentreference_setting_system" = EXCLUDED."documentreference_setting_system", 
-        "documentreference_setting_value" = EXCLUDED."documentreference_setting_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_status_system", "documentreference_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -1651,22 +1451,6 @@
         "explanationofbenefit_status_system" = EXCLUDED."explanationofbenefit_status_system", 
         "explanationofbenefit_status_value" = EXCLUDED."explanationofbenefit_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_relationship_system", "familymemberhistory_relationship_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-relationship'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "familymemberhistory_relationship_system" = EXCLUDED."familymemberhistory_relationship_system", 
-        "familymemberhistory_relationship_value" = EXCLUDED."familymemberhistory_relationship_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_sex_system", "familymemberhistory_sex_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-sex'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "familymemberhistory_sex_system" = EXCLUDED."familymemberhistory_sex_system", 
-        "familymemberhistory_sex_value" = EXCLUDED."familymemberhistory_sex_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_status_system", "familymemberhistory_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -1674,14 +1458,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "familymemberhistory_status_system" = EXCLUDED."familymemberhistory_status_system", 
         "familymemberhistory_status_value" = EXCLUDED."familymemberhistory_status_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "goal_achievement_status_system", "goal_achievement_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Goal-achievement-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "goal_achievement_status_system" = EXCLUDED."goal_achievement_status_system", 
-        "goal_achievement_status_value" = EXCLUDED."goal_achievement_status_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "goal_lifecycle_status_system", "goal_lifecycle_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -1714,14 +1490,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "group_actual_system" = EXCLUDED."group_actual_system", 
         "group_actual_value" = EXCLUDED."group_actual_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "group_code_system", "group_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Group-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "group_code_system" = EXCLUDED."group_code_system", 
-        "group_code_value" = EXCLUDED."group_code_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "group_type_system", "group_type_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -1785,22 +1553,6 @@
         "immunization_status_system" = EXCLUDED."immunization_status_system", 
         "immunization_status_value" = EXCLUDED."immunization_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunization_status_reason_system", "immunization_status_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Immunization-status-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunization_status_reason_system" = EXCLUDED."immunization_status_reason_system", 
-        "immunization_status_reason_value" = EXCLUDED."immunization_status_reason_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunization_vaccine_code_system", "immunization_vaccine_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Immunization-vaccine-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunization_vaccine_code_system" = EXCLUDED."immunization_vaccine_code_system", 
-        "immunization_vaccine_code_value" = EXCLUDED."immunization_vaccine_code_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_date_start", "immunizationevaluation_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -1809,14 +1561,6 @@
         "immunizationevaluation_date_start" = EXCLUDED."immunizationevaluation_date_start", 
         "immunizationevaluation_date_end" = EXCLUDED."immunizationevaluation_date_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_dose_status_system", "immunizationevaluation_dose_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-dose-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunizationevaluation_dose_status_system" = EXCLUDED."immunizationevaluation_dose_status_system", 
-        "immunizationevaluation_dose_status_value" = EXCLUDED."immunizationevaluation_dose_status_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_status_system", "immunizationevaluation_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -1824,14 +1568,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "immunizationevaluation_status_system" = EXCLUDED."immunizationevaluation_status_system", 
         "immunizationevaluation_status_value" = EXCLUDED."immunizationevaluation_status_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_target_disease_system", "immunizationevaluation_target_disease_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-target-disease'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunizationevaluation_target_disease_system" = EXCLUDED."immunizationevaluation_target_disease_system", 
-        "immunizationevaluation_target_disease_value" = EXCLUDED."immunizationevaluation_target_disease_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationrecommendation_date_start", "immunizationrecommendation_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -1942,14 +1678,6 @@
         "invoice_totalnet_end_code" =     EXCLUDED."invoice_totalnet_end_code",
         "invoice_totalnet_end_value" =    EXCLUDED."invoice_totalnet_end_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "invoice_type_system", "invoice_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Invoice-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "invoice_type_system" = EXCLUDED."invoice_type_system", 
-        "invoice_type_value" = EXCLUDED."invoice_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "library_date_start", "library_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2002,14 +1730,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "library_title" = EXCLUDED."library_title";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "library_type_system", "library_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Library-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "library_type_system" = EXCLUDED."library_type_system", 
-        "library_type_value" = EXCLUDED."library_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "library_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4_uri_idx" 
@@ -2023,14 +1743,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "library_version_system" = EXCLUDED."library_version_system", 
         "library_version_value" = EXCLUDED."library_version_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "list_empty_reason_system", "list_empty_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/List-empty-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "list_empty_reason_system" = EXCLUDED."list_empty_reason_system", 
-        "list_empty_reason_value" = EXCLUDED."list_empty_reason_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "list_status_system", "list_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -2046,13 +1758,6 @@
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/List-title'))
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "list_title" = EXCLUDED."list_title";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "location_address")
-        ( SELECT "tenant", "r_id", "r_version_id", "value"
-          FROM "r4_string_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Location-address'))
-        ON CONFLICT("tenant", "r_id")
-        DO UPDATE SET "location_address" = EXCLUDED."location_address";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "location_address_city")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
@@ -2204,22 +1909,6 @@
         "media_created_start" = EXCLUDED."media_created_start", 
         "media_created_end" = EXCLUDED."media_created_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "media_modality_system", "media_modality_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-modality'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_modality_system" = EXCLUDED."media_modality_system", 
-        "media_modality_value" = EXCLUDED."media_modality_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "media_site_system", "media_site_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-site'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_site_system" = EXCLUDED."media_site_system", 
-        "media_site_value" = EXCLUDED."media_site_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "media_status_system", "media_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -2228,22 +1917,6 @@
         "media_status_system" = EXCLUDED."media_status_system", 
         "media_status_value" = EXCLUDED."media_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "media_type_system", "media_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_type_system" = EXCLUDED."media_type_system", 
-        "media_type_value" = EXCLUDED."media_type_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "media_view_system", "media_view_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-view'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_view_system" = EXCLUDED."media_view_system", 
-        "media_view_value" = EXCLUDED."media_view_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_expiration_date_start", "medication_expiration_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2251,14 +1924,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medication_expiration_date_start" = EXCLUDED."medication_expiration_date_start", 
         "medication_expiration_date_end" = EXCLUDED."medication_expiration_date_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_form_system", "medication_form_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Medication-form'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medication_form_system" = EXCLUDED."medication_form_system", 
-        "medication_form_value" = EXCLUDED."medication_form_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_lot_number_system", "medication_lot_number_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -2292,14 +1957,6 @@
         "medications_status_system" = EXCLUDED."medications_status_system", 
         "medications_status_value" = EXCLUDED."medications_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationdispense_type_system", "medicationdispense_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationDispense-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationdispense_type_system" = EXCLUDED."medicationdispense_type_system", 
-        "medicationdispense_type_value" = EXCLUDED."medicationdispense_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationdispense_whenhandedover_start", "medicationdispense_whenhandedover_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2315,22 +1972,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medicationdispense_whenprepared_start" = EXCLUDED."medicationdispense_whenprepared_start", 
         "medicationdispense_whenprepared_end" = EXCLUDED."medicationdispense_whenprepared_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_code_system", "medicationknowledge_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationKnowledge-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationknowledge_code_system" = EXCLUDED."medicationknowledge_code_system", 
-        "medicationknowledge_code_value" = EXCLUDED."medicationknowledge_code_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_doseform_system", "medicationknowledge_doseform_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationKnowledge-doseform'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationknowledge_doseform_system" = EXCLUDED."medicationknowledge_doseform_system", 
-        "medicationknowledge_doseform_value" = EXCLUDED."medicationknowledge_doseform_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_status_system", "medicationknowledge_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -2348,14 +1989,6 @@
         "medicationrequest_authoredon_start" = EXCLUDED."medicationrequest_authoredon_start", 
         "medicationrequest_authoredon_end" = EXCLUDED."medicationrequest_authoredon_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationrequest_intended_performertype_system", "medicationrequest_intended_performertype_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performertype'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationrequest_intended_performertype_system" = EXCLUDED."medicationrequest_intended_performertype_system", 
-        "medicationrequest_intended_performertype_value" = EXCLUDED."medicationrequest_intended_performertype_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationrequest_intent_system", "medicationrequest_intent_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -2372,14 +2005,6 @@
         "medicationrequest_priority_system" = EXCLUDED."medicationrequest_priority_system", 
         "medicationrequest_priority_value" = EXCLUDED."medicationrequest_priority_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationstatement_category_system", "medicationstatement_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationStatement-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationstatement_category_system" = EXCLUDED."medicationstatement_category_system", 
-        "medicationstatement_category_value" = EXCLUDED."medicationstatement_category_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationstatement_effective_start", "medicationstatement_effective_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2387,14 +2012,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medicationstatement_effective_start" = EXCLUDED."medicationstatement_effective_start", 
         "medicationstatement_effective_end" = EXCLUDED."medicationstatement_effective_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "medicinalproductauthorization_status_system", "medicinalproductauthorization_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicinalProductAuthorization-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicinalproductauthorization_status_system" = EXCLUDED."medicinalproductauthorization_status_system", 
-        "medicinalproductauthorization_status_value" = EXCLUDED."medicinalproductauthorization_status_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "messagedefinition_category_system", "messagedefinition_category_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -2449,22 +2066,6 @@
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MessageHeader-source-uri'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "messageheader_source_uri" = EXCLUDED."messageheader_source_uri";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_chromosome_system", "molecularsequence_chromosome_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MolecularSequence-chromosome'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "molecularsequence_chromosome_system" = EXCLUDED."molecularsequence_chromosome_system", 
-        "molecularsequence_chromosome_value" = EXCLUDED."molecularsequence_chromosome_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_referenceseqid_system", "molecularsequence_referenceseqid_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MolecularSequence-referenceseqid'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "molecularsequence_referenceseqid_system" = EXCLUDED."molecularsequence_referenceseqid_system", 
-        "molecularsequence_referenceseqid_value" = EXCLUDED."molecularsequence_referenceseqid_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_type_system", "molecularsequence_type_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -2500,22 +2101,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "namingsystem_responsible" = EXCLUDED."namingsystem_responsible";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "namingsystem_type_system", "namingsystem_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NamingSystem-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "namingsystem_type_system" = EXCLUDED."namingsystem_type_system", 
-        "namingsystem_type_value" = EXCLUDED."namingsystem_type_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_additive_system", "nutritionorder_additive_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NutritionOrder-additive'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "nutritionorder_additive_system" = EXCLUDED."nutritionorder_additive_system", 
-        "nutritionorder_additive_value" = EXCLUDED."nutritionorder_additive_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_datetime_start", "nutritionorder_datetime_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2523,14 +2108,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "nutritionorder_datetime_start" = EXCLUDED."nutritionorder_datetime_start", 
         "nutritionorder_datetime_end" = EXCLUDED."nutritionorder_datetime_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_formula_system", "nutritionorder_formula_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NutritionOrder-formula'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "nutritionorder_formula_system" = EXCLUDED."nutritionorder_formula_system", 
-        "nutritionorder_formula_value" = EXCLUDED."nutritionorder_formula_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_status_system", "nutritionorder_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -2540,22 +2117,6 @@
         "nutritionorder_status_system" = EXCLUDED."nutritionorder_status_system", 
         "nutritionorder_status_value" = EXCLUDED."nutritionorder_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_data_absent_reason_system", "observation_data_absent_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-data-absent-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_data_absent_reason_system" = EXCLUDED."observation_data_absent_reason_system", 
-        "observation_data_absent_reason_value" = EXCLUDED."observation_data_absent_reason_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_method_system", "observation_method_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-method'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_method_system" = EXCLUDED."observation_method_system", 
-        "observation_method_value" = EXCLUDED."observation_method_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_status_system", "observation_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -2564,14 +2125,6 @@
         "observation_status_system" = EXCLUDED."observation_status_system", 
         "observation_status_value" = EXCLUDED."observation_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_concept_system", "observation_value_concept_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-value-concept'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_value_concept_system" = EXCLUDED."observation_value_concept_system", 
-        "observation_value_concept_value" = EXCLUDED."observation_value_concept_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_date_start", "observation_value_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -2579,37 +2132,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "observation_value_date_start" = EXCLUDED."observation_value_date_start", 
         "observation_value_date_end" = EXCLUDED."observation_value_date_end";
- 
-        INSERT INTO "r4_sp1_idx" (
-          "tenant",
-          "r_id", 
-          "r_version_id", 
-          "observation_value_quantity_start_system", 
-          "observation_value_quantity_start_code", 
-          "observation_value_quantity_start_value", 
-          "observation_value_quantity_end_system",
-          "observation_value_quantity_end_code",
-          "observation_value_quantity_end_value"
-        )
-        ( SELECT 
-         "tenant",
-         "r_id", 
-         "r_version_id", 
-         "start_system", 
-         "start_code",
-         "start_value",
-         "end_system", 
-         "end_code",
-         "end_value" 
-          FROM "r4_quantity_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-value-quantity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_value_quantity_start_system" = EXCLUDED."observation_value_quantity_start_system", 
-        "observation_value_quantity_start_code" =   EXCLUDED."observation_value_quantity_start_code",
-        "observation_value_quantity_start_value" =  EXCLUDED."observation_value_quantity_start_value",
-        "observation_value_quantity_end_system" =   EXCLUDED."observation_value_quantity_end_system", 
-        "observation_value_quantity_end_code" =     EXCLUDED."observation_value_quantity_end_code",
-        "observation_value_quantity_end_value" =    EXCLUDED."observation_value_quantity_end_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_string")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
@@ -2729,14 +2251,6 @@
         "paymentnotice_created_start" = EXCLUDED."paymentnotice_created_start", 
         "paymentnotice_created_end" = EXCLUDED."paymentnotice_created_end";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "paymentnotice_payment_status_system", "paymentnotice_payment_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/PaymentNotice-payment-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "paymentnotice_payment_status_system" = EXCLUDED."paymentnotice_payment_status_system", 
-        "paymentnotice_payment_status_value" = EXCLUDED."paymentnotice_payment_status_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "paymentnotice_status_system", "paymentnotice_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -2828,14 +2342,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "plandefinition_title" = EXCLUDED."plandefinition_title";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "plandefinition_type_system", "plandefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/PlanDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "plandefinition_type_system" = EXCLUDED."plandefinition_type_system", 
-        "plandefinition_type_value" = EXCLUDED."plandefinition_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "plandefinition_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4_uri_idx" 
@@ -2873,14 +2379,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "practitionerrole_date_start" = EXCLUDED."practitionerrole_date_start", 
         "practitionerrole_date_end" = EXCLUDED."practitionerrole_date_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "procedure_category_system", "procedure_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Procedure-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "procedure_category_system" = EXCLUDED."procedure_category_system", 
-        "procedure_category_value" = EXCLUDED."procedure_category_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "procedure_status_system", "procedure_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -3011,14 +2509,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "requestgroup_authored_start" = EXCLUDED."requestgroup_authored_start", 
         "requestgroup_authored_end" = EXCLUDED."requestgroup_authored_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "requestgroup_code_system", "requestgroup_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RequestGroup-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "requestgroup_code_system" = EXCLUDED."requestgroup_code_system", 
-        "requestgroup_code_value" = EXCLUDED."requestgroup_code_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "requestgroup_group_identifier_system", "requestgroup_group_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -3223,14 +2713,6 @@
         "researchsubject_status_system" = EXCLUDED."researchsubject_status_system", 
         "researchsubject_status_value" = EXCLUDED."researchsubject_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "riskassessment_method_system", "riskassessment_method_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RiskAssessment-method'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "riskassessment_method_system" = EXCLUDED."riskassessment_method_system", 
-        "riskassessment_method_value" = EXCLUDED."riskassessment_method_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "riskevidencesynthesis_date_start", "riskevidencesynthesis_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -3345,22 +2827,6 @@
         "servicerequest_intent_system" = EXCLUDED."servicerequest_intent_system", 
         "servicerequest_intent_value" = EXCLUDED."servicerequest_intent_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_occurrence_start", "servicerequest_occurrence_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ServiceRequest-occurrence'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "servicerequest_occurrence_start" = EXCLUDED."servicerequest_occurrence_start", 
-        "servicerequest_occurrence_end" = EXCLUDED."servicerequest_occurrence_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_performer_type_system", "servicerequest_performer_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ServiceRequest-performer-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "servicerequest_performer_type_system" = EXCLUDED."servicerequest_performer_type_system", 
-        "servicerequest_performer_type_value" = EXCLUDED."servicerequest_performer_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_priority_system", "servicerequest_priority_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -3384,14 +2850,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "servicerequest_status_system" = EXCLUDED."servicerequest_status_system", 
         "servicerequest_status_value" = EXCLUDED."servicerequest_status_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "slot_appointment_type_system", "slot_appointment_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Slot-appointment-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "slot_appointment_type_system" = EXCLUDED."slot_appointment_type_system", 
-        "slot_appointment_type_value" = EXCLUDED."slot_appointment_type_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "slot_start_start", "slot_start_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -3417,14 +2875,6 @@
         "specimen_accession_system" = EXCLUDED."specimen_accession_system", 
         "specimen_accession_value" = EXCLUDED."specimen_accession_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_bodysite_system", "specimen_bodysite_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Specimen-bodysite'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimen_bodysite_system" = EXCLUDED."specimen_bodysite_system", 
-        "specimen_bodysite_value" = EXCLUDED."specimen_bodysite_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_collected_start", "specimen_collected_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4_date_idx" 
@@ -3441,14 +2891,6 @@
         "specimen_status_system" = EXCLUDED."specimen_status_system", 
         "specimen_status_value" = EXCLUDED."specimen_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_type_system", "specimen_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Specimen-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimen_type_system" = EXCLUDED."specimen_type_system", 
-        "specimen_type_value" = EXCLUDED."specimen_type_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "specimendefinition_identifier_system", "specimendefinition_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -3456,14 +2898,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "specimendefinition_identifier_system" = EXCLUDED."specimendefinition_identifier_system", 
         "specimendefinition_identifier_value" = EXCLUDED."specimendefinition_identifier_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "specimendefinition_type_system", "specimendefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/SpecimenDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimendefinition_type_system" = EXCLUDED."specimendefinition_type_system", 
-        "specimendefinition_type_value" = EXCLUDED."specimendefinition_type_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "structuredefinition_abstract_system", "structuredefinition_abstract_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -3556,14 +2990,6 @@
         "supplydelivery_status_system" = EXCLUDED."supplydelivery_status_system", 
         "supplydelivery_status_value" = EXCLUDED."supplydelivery_status_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "supplyrequest_category_system", "supplyrequest_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/SupplyRequest-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "supplyrequest_category_system" = EXCLUDED."supplyrequest_category_system", 
-        "supplyrequest_category_value" = EXCLUDED."supplyrequest_category_value";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "supplyrequest_status_system", "supplyrequest_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -3579,22 +3005,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "task_authored_on_start" = EXCLUDED."task_authored_on_start", 
         "task_authored_on_end" = EXCLUDED."task_authored_on_end";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "task_business_status_system", "task_business_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Task-business-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "task_business_status_system" = EXCLUDED."task_business_status_system", 
-        "task_business_status_value" = EXCLUDED."task_business_status_value";
- 
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "task_code_system", "task_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Task-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "task_code_system" = EXCLUDED."task_code_system", 
-        "task_code_value" = EXCLUDED."task_code_value";
  
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "task_group_identifier_system", "task_group_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -3839,13 +3249,6 @@
         "membership_email_system" = EXCLUDED."membership_email_system", 
         "membership_email_value" = EXCLUDED."membership_email_value";
  
-        INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "membership_name")
-        ( SELECT "tenant", "r_id", "r_version_id", "value"
-          FROM "r4_string_idx" 
-          WHERE ("parameter_url" = 'https://iguhealth.app/fhir/SearchParameter/Membership-name'))
-        ON CONFLICT("tenant", "r_id")
-        DO UPDATE SET "membership_name" = EXCLUDED."membership_name";
- 
         INSERT INTO "r4_sp1_idx" ("tenant", "r_id", "r_version_id", "membership_role_system", "membership_role_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4_token_idx" 
@@ -3930,14 +3333,6 @@
         "account_status_system" = EXCLUDED."account_status_system", 
         "account_status_value" = EXCLUDED."account_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "account_type_system", "account_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Account-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "account_type_system" = EXCLUDED."account_type_system", 
-        "account_type_value" = EXCLUDED."account_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "activitydefinition_date_start", "activitydefinition_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -4004,14 +3399,6 @@
         "activitydefinition_version_system" = EXCLUDED."activitydefinition_version_system", 
         "activitydefinition_version_value" = EXCLUDED."activitydefinition_version_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "administrableproductdefinition_dose_form_system", "administrableproductdefinition_dose_form_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdministrableProductDefinition-dose-form'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "administrableproductdefinition_dose_form_system" = EXCLUDED."administrableproductdefinition_dose_form_system", 
-        "administrableproductdefinition_dose_form_value" = EXCLUDED."administrableproductdefinition_dose_form_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_actuality_system", "adverseevent_actuality_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -4028,38 +3415,6 @@
         "adverseevent_date_start" = EXCLUDED."adverseevent_date_start", 
         "adverseevent_date_end" = EXCLUDED."adverseevent_date_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_event_system", "adverseevent_event_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-event'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_event_system" = EXCLUDED."adverseevent_event_system", 
-        "adverseevent_event_value" = EXCLUDED."adverseevent_event_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_seriousness_system", "adverseevent_seriousness_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-seriousness'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_seriousness_system" = EXCLUDED."adverseevent_seriousness_system", 
-        "adverseevent_seriousness_value" = EXCLUDED."adverseevent_seriousness_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "adverseevent_severity_system", "adverseevent_severity_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AdverseEvent-severity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "adverseevent_severity_system" = EXCLUDED."adverseevent_severity_system", 
-        "adverseevent_severity_value" = EXCLUDED."adverseevent_severity_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_clinical_status_system", "allergyintolerance_clinical_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AllergyIntolerance-clinical-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "allergyintolerance_clinical_status_system" = EXCLUDED."allergyintolerance_clinical_status_system", 
-        "allergyintolerance_clinical_status_value" = EXCLUDED."allergyintolerance_clinical_status_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_criticality_system", "allergyintolerance_criticality_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -4068,14 +3423,6 @@
         "allergyintolerance_criticality_system" = EXCLUDED."allergyintolerance_criticality_system", 
         "allergyintolerance_criticality_value" = EXCLUDED."allergyintolerance_criticality_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinical_date_start", "clinical_date_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4b_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/clinical-date'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "clinical_date_start" = EXCLUDED."clinical_date_start", 
-        "clinical_date_end" = EXCLUDED."clinical_date_end";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_last_date_start", "allergyintolerance_last_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -4083,22 +3430,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "allergyintolerance_last_date_start" = EXCLUDED."allergyintolerance_last_date_start", 
         "allergyintolerance_last_date_end" = EXCLUDED."allergyintolerance_last_date_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "allergyintolerance_verification_status_system", "allergyintolerance_verification_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/AllergyIntolerance-verification-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "allergyintolerance_verification_status_system" = EXCLUDED."allergyintolerance_verification_status_system", 
-        "allergyintolerance_verification_status_value" = EXCLUDED."allergyintolerance_verification_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "appointment_appointment_type_system", "appointment_appointment_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Appointment-appointment-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "appointment_appointment_type_system" = EXCLUDED."appointment_appointment_type_system", 
-        "appointment_appointment_type_value" = EXCLUDED."appointment_appointment_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "appointment_date_start", "appointment_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -4164,14 +3495,6 @@
         "auditevent_type_system" = EXCLUDED."auditevent_type_system", 
         "auditevent_type_value" = EXCLUDED."auditevent_type_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "basic_code_system", "basic_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Basic-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "basic_code_system" = EXCLUDED."basic_code_system", 
-        "basic_code_value" = EXCLUDED."basic_code_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "basic_created_start", "basic_created_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -4179,22 +3502,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "basic_created_start" = EXCLUDED."basic_created_start", 
         "basic_created_end" = EXCLUDED."basic_created_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "bodystructure_location_system", "bodystructure_location_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/BodyStructure-location'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "bodystructure_location_system" = EXCLUDED."bodystructure_location_system", 
-        "bodystructure_location_value" = EXCLUDED."bodystructure_location_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "bodystructure_morphology_system", "bodystructure_morphology_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/BodyStructure-morphology'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "bodystructure_morphology_system" = EXCLUDED."bodystructure_morphology_system", 
-        "bodystructure_morphology_value" = EXCLUDED."bodystructure_morphology_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "bundle_identifier_system", "bundle_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -4317,14 +3624,6 @@
         "careteam_status_system" = EXCLUDED."careteam_status_system", 
         "careteam_status_value" = EXCLUDED."careteam_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_code_system", "chargeitem_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "chargeitem_code_system" = EXCLUDED."chargeitem_code_system", 
-        "chargeitem_code_value" = EXCLUDED."chargeitem_code_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_entered_date_start", "chargeitem_entered_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -4338,14 +3637,6 @@
           FROM "r4b_number_idx" 
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-factor-override'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "chargeitem_factor_override" = EXCLUDED."chargeitem_factor_override";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "chargeitem_occurrence_start", "chargeitem_occurrence_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4b_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ChargeItem-occurrence'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "chargeitem_occurrence_start" = EXCLUDED."chargeitem_occurrence_start", 
-        "chargeitem_occurrence_end" = EXCLUDED."chargeitem_occurrence_end";
  
         INSERT INTO "r4b_sp1_idx" (
           "tenant",
@@ -4542,14 +3833,6 @@
         "claim_created_start" = EXCLUDED."claim_created_start", 
         "claim_created_end" = EXCLUDED."claim_created_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "claim_priority_system", "claim_priority_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Claim-priority'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "claim_priority_system" = EXCLUDED."claim_priority_system", 
-        "claim_priority_value" = EXCLUDED."claim_priority_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "claim_status_system", "claim_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -4620,38 +3903,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "clinicalimpression_status_system" = EXCLUDED."clinicalimpression_status_system", 
         "clinicalimpression_status_value" = EXCLUDED."clinicalimpression_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinicalusedefinition_contraindication_system", "clinicalusedefinition_contraindication_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-contraindication'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "clinicalusedefinition_contraindication_system" = EXCLUDED."clinicalusedefinition_contraindication_system", 
-        "clinicalusedefinition_contraindication_value" = EXCLUDED."clinicalusedefinition_contraindication_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinicalusedefinition_effect_system", "clinicalusedefinition_effect_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-effect'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "clinicalusedefinition_effect_system" = EXCLUDED."clinicalusedefinition_effect_system", 
-        "clinicalusedefinition_effect_value" = EXCLUDED."clinicalusedefinition_effect_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinicalusedefinition_indication_system", "clinicalusedefinition_indication_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-indication'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "clinicalusedefinition_indication_system" = EXCLUDED."clinicalusedefinition_indication_system", 
-        "clinicalusedefinition_indication_value" = EXCLUDED."clinicalusedefinition_indication_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinicalusedefinition_interaction_system", "clinicalusedefinition_interaction_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ClinicalUseDefinition-interaction'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "clinicalusedefinition_interaction_system" = EXCLUDED."clinicalusedefinition_interaction_system", 
-        "clinicalusedefinition_interaction_value" = EXCLUDED."clinicalusedefinition_interaction_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "clinicalusedefinition_type_system", "clinicalusedefinition_type_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -4816,14 +4067,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "condition_abatement_string" = EXCLUDED."condition_abatement_string";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_clinical_status_system", "condition_clinical_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-clinical-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_clinical_status_system" = EXCLUDED."condition_clinical_status_system", 
-        "condition_clinical_status_value" = EXCLUDED."condition_clinical_status_value";
- 
         INSERT INTO "r4b_sp1_idx" (
           "tenant",
           "r_id", 
@@ -4878,22 +4121,6 @@
         "condition_recorded_date_start" = EXCLUDED."condition_recorded_date_start", 
         "condition_recorded_date_end" = EXCLUDED."condition_recorded_date_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_severity_system", "condition_severity_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-severity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_severity_system" = EXCLUDED."condition_severity_system", 
-        "condition_severity_value" = EXCLUDED."condition_severity_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "condition_verification_status_system", "condition_verification_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Condition-verification-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "condition_verification_status_system" = EXCLUDED."condition_verification_status_system", 
-        "condition_verification_status_value" = EXCLUDED."condition_verification_status_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_period_start", "consent_period_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -4901,14 +4128,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "consent_period_start" = EXCLUDED."consent_period_start", 
         "consent_period_end" = EXCLUDED."consent_period_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_scope_system", "consent_scope_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Consent-scope'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "consent_scope_system" = EXCLUDED."consent_scope_system", 
-        "consent_scope_value" = EXCLUDED."consent_scope_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "consent_status_system", "consent_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -4961,14 +4180,6 @@
         "coverage_status_system" = EXCLUDED."coverage_status_system", 
         "coverage_status_value" = EXCLUDED."coverage_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "coverage_type_system", "coverage_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Coverage-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "coverage_type_system" = EXCLUDED."coverage_type_system", 
-        "coverage_type_value" = EXCLUDED."coverage_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "coverageeligibilityrequest_created_start", "coverageeligibilityrequest_created_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -5016,14 +4227,6 @@
         "coverageeligibilityresponse_status_system" = EXCLUDED."coverageeligibilityresponse_status_system", 
         "coverageeligibilityresponse_status_value" = EXCLUDED."coverageeligibilityresponse_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "detectedissue_code_system", "detectedissue_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DetectedIssue-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "detectedissue_code_system" = EXCLUDED."detectedissue_code_system", 
-        "detectedissue_code_value" = EXCLUDED."detectedissue_code_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "detectedissue_identified_start", "detectedissue_identified_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -5054,27 +4257,11 @@
         "device_status_system" = EXCLUDED."device_status_system", 
         "device_status_value" = EXCLUDED."device_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "device_type_system", "device_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Device-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "device_type_system" = EXCLUDED."device_type_system", 
-        "device_type_value" = EXCLUDED."device_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "device_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4b_uri_idx" 
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Device-url'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "device_url" = EXCLUDED."device_url";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "devicedefinition_type_system", "devicedefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DeviceDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "devicedefinition_type_system" = EXCLUDED."devicedefinition_type_system", 
-        "devicedefinition_type_value" = EXCLUDED."devicedefinition_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "devicemetric_category_system", "devicemetric_category_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -5083,14 +4270,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "devicemetric_category_system" = EXCLUDED."devicemetric_category_system", 
         "devicemetric_category_value" = EXCLUDED."devicemetric_category_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "devicemetric_type_system", "devicemetric_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DeviceMetric-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "devicemetric_type_system" = EXCLUDED."devicemetric_type_system", 
-        "devicemetric_type_value" = EXCLUDED."devicemetric_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "devicerequest_authored_on_start", "devicerequest_authored_on_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -5192,14 +4371,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "documentreference_description" = EXCLUDED."documentreference_description";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_facility_system", "documentreference_facility_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DocumentReference-facility'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "documentreference_facility_system" = EXCLUDED."documentreference_facility_system", 
-        "documentreference_facility_value" = EXCLUDED."documentreference_facility_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_period_start", "documentreference_period_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -5207,14 +4378,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "documentreference_period_start" = EXCLUDED."documentreference_period_start", 
         "documentreference_period_end" = EXCLUDED."documentreference_period_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_setting_system", "documentreference_setting_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/DocumentReference-setting'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "documentreference_setting_system" = EXCLUDED."documentreference_setting_system", 
-        "documentreference_setting_value" = EXCLUDED."documentreference_setting_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "documentreference_status_system", "documentreference_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -5581,22 +4744,6 @@
         "explanationofbenefit_status_system" = EXCLUDED."explanationofbenefit_status_system", 
         "explanationofbenefit_status_value" = EXCLUDED."explanationofbenefit_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_relationship_system", "familymemberhistory_relationship_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-relationship'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "familymemberhistory_relationship_system" = EXCLUDED."familymemberhistory_relationship_system", 
-        "familymemberhistory_relationship_value" = EXCLUDED."familymemberhistory_relationship_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_sex_system", "familymemberhistory_sex_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/FamilyMemberHistory-sex'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "familymemberhistory_sex_system" = EXCLUDED."familymemberhistory_sex_system", 
-        "familymemberhistory_sex_value" = EXCLUDED."familymemberhistory_sex_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "familymemberhistory_status_system", "familymemberhistory_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -5604,14 +4751,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "familymemberhistory_status_system" = EXCLUDED."familymemberhistory_status_system", 
         "familymemberhistory_status_value" = EXCLUDED."familymemberhistory_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "goal_achievement_status_system", "goal_achievement_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Goal-achievement-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "goal_achievement_status_system" = EXCLUDED."goal_achievement_status_system", 
-        "goal_achievement_status_value" = EXCLUDED."goal_achievement_status_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "goal_lifecycle_status_system", "goal_lifecycle_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -5644,14 +4783,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "group_actual_system" = EXCLUDED."group_actual_system", 
         "group_actual_value" = EXCLUDED."group_actual_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "group_code_system", "group_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Group-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "group_code_system" = EXCLUDED."group_code_system", 
-        "group_code_value" = EXCLUDED."group_code_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "group_type_system", "group_type_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -5715,22 +4846,6 @@
         "immunization_status_system" = EXCLUDED."immunization_status_system", 
         "immunization_status_value" = EXCLUDED."immunization_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunization_status_reason_system", "immunization_status_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Immunization-status-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunization_status_reason_system" = EXCLUDED."immunization_status_reason_system", 
-        "immunization_status_reason_value" = EXCLUDED."immunization_status_reason_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunization_vaccine_code_system", "immunization_vaccine_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Immunization-vaccine-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunization_vaccine_code_system" = EXCLUDED."immunization_vaccine_code_system", 
-        "immunization_vaccine_code_value" = EXCLUDED."immunization_vaccine_code_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_date_start", "immunizationevaluation_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -5739,14 +4854,6 @@
         "immunizationevaluation_date_start" = EXCLUDED."immunizationevaluation_date_start", 
         "immunizationevaluation_date_end" = EXCLUDED."immunizationevaluation_date_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_dose_status_system", "immunizationevaluation_dose_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-dose-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunizationevaluation_dose_status_system" = EXCLUDED."immunizationevaluation_dose_status_system", 
-        "immunizationevaluation_dose_status_value" = EXCLUDED."immunizationevaluation_dose_status_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_status_system", "immunizationevaluation_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -5754,14 +4861,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "immunizationevaluation_status_system" = EXCLUDED."immunizationevaluation_status_system", 
         "immunizationevaluation_status_value" = EXCLUDED."immunizationevaluation_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationevaluation_target_disease_system", "immunizationevaluation_target_disease_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ImmunizationEvaluation-target-disease'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "immunizationevaluation_target_disease_system" = EXCLUDED."immunizationevaluation_target_disease_system", 
-        "immunizationevaluation_target_disease_value" = EXCLUDED."immunizationevaluation_target_disease_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "immunizationrecommendation_date_start", "immunizationrecommendation_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -5786,22 +4885,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "ingredient_identifier_system" = EXCLUDED."ingredient_identifier_system", 
         "ingredient_identifier_value" = EXCLUDED."ingredient_identifier_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "ingredient_role_system", "ingredient_role_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Ingredient-role'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "ingredient_role_system" = EXCLUDED."ingredient_role_system", 
-        "ingredient_role_value" = EXCLUDED."ingredient_role_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "ingredient_substance_code_system", "ingredient_substance_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Ingredient-substance-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "ingredient_substance_code_system" = EXCLUDED."ingredient_substance_code_system", 
-        "ingredient_substance_code_value" = EXCLUDED."ingredient_substance_code_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "insuranceplan_phonetic")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
@@ -5896,14 +4979,6 @@
         "invoice_totalnet_end_code" =     EXCLUDED."invoice_totalnet_end_code",
         "invoice_totalnet_end_value" =    EXCLUDED."invoice_totalnet_end_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "invoice_type_system", "invoice_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Invoice-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "invoice_type_system" = EXCLUDED."invoice_type_system", 
-        "invoice_type_value" = EXCLUDED."invoice_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "library_date_start", "library_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -5956,14 +5031,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "library_title" = EXCLUDED."library_title";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "library_type_system", "library_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Library-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "library_type_system" = EXCLUDED."library_type_system", 
-        "library_type_value" = EXCLUDED."library_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "library_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4b_uri_idx" 
@@ -5977,14 +5044,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "library_version_system" = EXCLUDED."library_version_system", 
         "library_version_value" = EXCLUDED."library_version_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "list_empty_reason_system", "list_empty_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/List-empty-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "list_empty_reason_system" = EXCLUDED."list_empty_reason_system", 
-        "list_empty_reason_value" = EXCLUDED."list_empty_reason_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "list_status_system", "list_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6000,13 +5059,6 @@
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/List-title'))
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "list_title" = EXCLUDED."list_title";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "location_address")
-        ( SELECT "tenant", "r_id", "r_version_id", "value"
-          FROM "r4b_string_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Location-address'))
-        ON CONFLICT("tenant", "r_id")
-        DO UPDATE SET "location_address" = EXCLUDED."location_address";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "location_address_city")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
@@ -6059,14 +5111,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "location_status_system" = EXCLUDED."location_status_system", 
         "location_status_value" = EXCLUDED."location_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "manufactureditemdefinition_dose_form_system", "manufactureditemdefinition_dose_form_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ManufacturedItemDefinition-dose-form'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "manufactureditemdefinition_dose_form_system" = EXCLUDED."manufactureditemdefinition_dose_form_system", 
-        "manufactureditemdefinition_dose_form_value" = EXCLUDED."manufactureditemdefinition_dose_form_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "measure_date_start", "measure_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -6166,22 +5210,6 @@
         "media_created_start" = EXCLUDED."media_created_start", 
         "media_created_end" = EXCLUDED."media_created_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "media_modality_system", "media_modality_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-modality'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_modality_system" = EXCLUDED."media_modality_system", 
-        "media_modality_value" = EXCLUDED."media_modality_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "media_site_system", "media_site_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-site'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_site_system" = EXCLUDED."media_site_system", 
-        "media_site_value" = EXCLUDED."media_site_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "media_status_system", "media_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -6190,22 +5218,6 @@
         "media_status_system" = EXCLUDED."media_status_system", 
         "media_status_value" = EXCLUDED."media_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "media_type_system", "media_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_type_system" = EXCLUDED."media_type_system", 
-        "media_type_value" = EXCLUDED."media_type_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "media_view_system", "media_view_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Media-view'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "media_view_system" = EXCLUDED."media_view_system", 
-        "media_view_value" = EXCLUDED."media_view_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_expiration_date_start", "medication_expiration_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -6213,14 +5225,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medication_expiration_date_start" = EXCLUDED."medication_expiration_date_start", 
         "medication_expiration_date_end" = EXCLUDED."medication_expiration_date_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_form_system", "medication_form_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Medication-form'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medication_form_system" = EXCLUDED."medication_form_system", 
-        "medication_form_value" = EXCLUDED."medication_form_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medication_lot_number_system", "medication_lot_number_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6254,14 +5258,6 @@
         "medications_status_system" = EXCLUDED."medications_status_system", 
         "medications_status_value" = EXCLUDED."medications_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationdispense_type_system", "medicationdispense_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationDispense-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationdispense_type_system" = EXCLUDED."medicationdispense_type_system", 
-        "medicationdispense_type_value" = EXCLUDED."medicationdispense_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationdispense_whenhandedover_start", "medicationdispense_whenhandedover_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -6277,22 +5273,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medicationdispense_whenprepared_start" = EXCLUDED."medicationdispense_whenprepared_start", 
         "medicationdispense_whenprepared_end" = EXCLUDED."medicationdispense_whenprepared_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_code_system", "medicationknowledge_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationKnowledge-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationknowledge_code_system" = EXCLUDED."medicationknowledge_code_system", 
-        "medicationknowledge_code_value" = EXCLUDED."medicationknowledge_code_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_doseform_system", "medicationknowledge_doseform_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationKnowledge-doseform'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationknowledge_doseform_system" = EXCLUDED."medicationknowledge_doseform_system", 
-        "medicationknowledge_doseform_value" = EXCLUDED."medicationknowledge_doseform_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationknowledge_status_system", "medicationknowledge_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6310,14 +5290,6 @@
         "medicationrequest_authoredon_start" = EXCLUDED."medicationrequest_authoredon_start", 
         "medicationrequest_authoredon_end" = EXCLUDED."medicationrequest_authoredon_end";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationrequest_intended_performertype_system", "medicationrequest_intended_performertype_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationRequest-intended-performertype'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationrequest_intended_performertype_system" = EXCLUDED."medicationrequest_intended_performertype_system", 
-        "medicationrequest_intended_performertype_value" = EXCLUDED."medicationrequest_intended_performertype_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationrequest_intent_system", "medicationrequest_intent_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -6334,14 +5306,6 @@
         "medicationrequest_priority_system" = EXCLUDED."medicationrequest_priority_system", 
         "medicationrequest_priority_value" = EXCLUDED."medicationrequest_priority_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationstatement_category_system", "medicationstatement_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicationStatement-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicationstatement_category_system" = EXCLUDED."medicationstatement_category_system", 
-        "medicationstatement_category_value" = EXCLUDED."medicationstatement_category_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicationstatement_effective_start", "medicationstatement_effective_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -6349,30 +5313,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "medicationstatement_effective_start" = EXCLUDED."medicationstatement_effective_start", 
         "medicationstatement_effective_end" = EXCLUDED."medicationstatement_effective_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicinalproductdefinition_domain_system", "medicinalproductdefinition_domain_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-domain'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicinalproductdefinition_domain_system" = EXCLUDED."medicinalproductdefinition_domain_system", 
-        "medicinalproductdefinition_domain_value" = EXCLUDED."medicinalproductdefinition_domain_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicinalproductdefinition_status_system", "medicinalproductdefinition_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicinalproductdefinition_status_system" = EXCLUDED."medicinalproductdefinition_status_system", 
-        "medicinalproductdefinition_status_value" = EXCLUDED."medicinalproductdefinition_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "medicinalproductdefinition_type_system", "medicinalproductdefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MedicinalProductDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "medicinalproductdefinition_type_system" = EXCLUDED."medicinalproductdefinition_type_system", 
-        "medicinalproductdefinition_type_value" = EXCLUDED."medicinalproductdefinition_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "messagedefinition_category_system", "messagedefinition_category_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6427,22 +5367,6 @@
           WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MessageHeader-source-uri'))
         ON CONFLICT("tenant", "r_id") DO UPDATE SET "messageheader_source_uri" = EXCLUDED."messageheader_source_uri";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_chromosome_system", "molecularsequence_chromosome_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MolecularSequence-chromosome'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "molecularsequence_chromosome_system" = EXCLUDED."molecularsequence_chromosome_system", 
-        "molecularsequence_chromosome_value" = EXCLUDED."molecularsequence_chromosome_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_referenceseqid_system", "molecularsequence_referenceseqid_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/MolecularSequence-referenceseqid'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "molecularsequence_referenceseqid_system" = EXCLUDED."molecularsequence_referenceseqid_system", 
-        "molecularsequence_referenceseqid_value" = EXCLUDED."molecularsequence_referenceseqid_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "molecularsequence_type_system", "molecularsequence_type_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -6478,22 +5402,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "namingsystem_responsible" = EXCLUDED."namingsystem_responsible";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "namingsystem_type_system", "namingsystem_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NamingSystem-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "namingsystem_type_system" = EXCLUDED."namingsystem_type_system", 
-        "namingsystem_type_value" = EXCLUDED."namingsystem_type_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_additive_system", "nutritionorder_additive_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NutritionOrder-additive'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "nutritionorder_additive_system" = EXCLUDED."nutritionorder_additive_system", 
-        "nutritionorder_additive_value" = EXCLUDED."nutritionorder_additive_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_datetime_start", "nutritionorder_datetime_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -6501,14 +5409,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "nutritionorder_datetime_start" = EXCLUDED."nutritionorder_datetime_start", 
         "nutritionorder_datetime_end" = EXCLUDED."nutritionorder_datetime_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_formula_system", "nutritionorder_formula_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/NutritionOrder-formula'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "nutritionorder_formula_system" = EXCLUDED."nutritionorder_formula_system", 
-        "nutritionorder_formula_value" = EXCLUDED."nutritionorder_formula_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "nutritionorder_status_system", "nutritionorder_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6526,22 +5426,6 @@
         "nutritionproduct_status_system" = EXCLUDED."nutritionproduct_status_system", 
         "nutritionproduct_status_value" = EXCLUDED."nutritionproduct_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_data_absent_reason_system", "observation_data_absent_reason_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-data-absent-reason'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_data_absent_reason_system" = EXCLUDED."observation_data_absent_reason_system", 
-        "observation_data_absent_reason_value" = EXCLUDED."observation_data_absent_reason_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_method_system", "observation_method_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-method'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_method_system" = EXCLUDED."observation_method_system", 
-        "observation_method_value" = EXCLUDED."observation_method_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_status_system", "observation_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -6550,14 +5434,6 @@
         "observation_status_system" = EXCLUDED."observation_status_system", 
         "observation_status_value" = EXCLUDED."observation_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_concept_system", "observation_value_concept_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-value-concept'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_value_concept_system" = EXCLUDED."observation_value_concept_system", 
-        "observation_value_concept_value" = EXCLUDED."observation_value_concept_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_date_start", "observation_value_date_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -6565,37 +5441,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "observation_value_date_start" = EXCLUDED."observation_value_date_start", 
         "observation_value_date_end" = EXCLUDED."observation_value_date_end";
- 
-        INSERT INTO "r4b_sp1_idx" (
-          "tenant",
-          "r_id", 
-          "r_version_id", 
-          "observation_value_quantity_start_system", 
-          "observation_value_quantity_start_code", 
-          "observation_value_quantity_start_value", 
-          "observation_value_quantity_end_system",
-          "observation_value_quantity_end_code",
-          "observation_value_quantity_end_value"
-        )
-        ( SELECT 
-         "tenant",
-         "r_id", 
-         "r_version_id", 
-         "start_system", 
-         "start_code",
-         "start_value",
-         "end_system", 
-         "end_code",
-         "end_value" 
-          FROM "r4b_quantity_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Observation-value-quantity'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "observation_value_quantity_start_system" = EXCLUDED."observation_value_quantity_start_system", 
-        "observation_value_quantity_start_code" =   EXCLUDED."observation_value_quantity_start_code",
-        "observation_value_quantity_start_value" =  EXCLUDED."observation_value_quantity_start_value",
-        "observation_value_quantity_end_system" =   EXCLUDED."observation_value_quantity_end_system", 
-        "observation_value_quantity_end_code" =     EXCLUDED."observation_value_quantity_end_code",
-        "observation_value_quantity_end_value" =    EXCLUDED."observation_value_quantity_end_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "observation_value_string")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
@@ -6683,14 +5528,6 @@
         "packagedproductdefinition_name_system" = EXCLUDED."packagedproductdefinition_name_system", 
         "packagedproductdefinition_name_value" = EXCLUDED."packagedproductdefinition_name_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "packagedproductdefinition_status_system", "packagedproductdefinition_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/PackagedProductDefinition-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "packagedproductdefinition_status_system" = EXCLUDED."packagedproductdefinition_status_system", 
-        "packagedproductdefinition_status_value" = EXCLUDED."packagedproductdefinition_status_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "patient_active_system", "patient_active_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -6730,14 +5567,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "paymentnotice_created_start" = EXCLUDED."paymentnotice_created_start", 
         "paymentnotice_created_end" = EXCLUDED."paymentnotice_created_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "paymentnotice_payment_status_system", "paymentnotice_payment_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/PaymentNotice-payment-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "paymentnotice_payment_status_system" = EXCLUDED."paymentnotice_payment_status_system", 
-        "paymentnotice_payment_status_value" = EXCLUDED."paymentnotice_payment_status_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "paymentnotice_status_system", "paymentnotice_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -6830,14 +5659,6 @@
         ON CONFLICT("tenant", "r_id")
         DO UPDATE SET "plandefinition_title" = EXCLUDED."plandefinition_title";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "plandefinition_type_system", "plandefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/PlanDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "plandefinition_type_system" = EXCLUDED."plandefinition_type_system", 
-        "plandefinition_type_value" = EXCLUDED."plandefinition_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "plandefinition_url")
         ( SELECT "tenant", "r_id", "r_version_id", "value"
           FROM "r4b_uri_idx" 
@@ -6875,14 +5696,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "practitionerrole_date_start" = EXCLUDED."practitionerrole_date_start", 
         "practitionerrole_date_end" = EXCLUDED."practitionerrole_date_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "procedure_category_system", "procedure_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Procedure-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "procedure_category_system" = EXCLUDED."procedure_category_system", 
-        "procedure_category_value" = EXCLUDED."procedure_category_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "procedure_status_system", "procedure_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -7006,22 +5819,6 @@
         "regulatedauthorization_case_system" = EXCLUDED."regulatedauthorization_case_system", 
         "regulatedauthorization_case_value" = EXCLUDED."regulatedauthorization_case_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "regulatedauthorization_case_type_system", "regulatedauthorization_case_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-case-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "regulatedauthorization_case_type_system" = EXCLUDED."regulatedauthorization_case_type_system", 
-        "regulatedauthorization_case_type_value" = EXCLUDED."regulatedauthorization_case_type_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "regulatedauthorization_status_system", "regulatedauthorization_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RegulatedAuthorization-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "regulatedauthorization_status_system" = EXCLUDED."regulatedauthorization_status_system", 
-        "regulatedauthorization_status_value" = EXCLUDED."regulatedauthorization_status_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "relatedperson_active_system", "relatedperson_active_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -7037,14 +5834,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "requestgroup_authored_start" = EXCLUDED."requestgroup_authored_start", 
         "requestgroup_authored_end" = EXCLUDED."requestgroup_authored_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "requestgroup_code_system", "requestgroup_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RequestGroup-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "requestgroup_code_system" = EXCLUDED."requestgroup_code_system", 
-        "requestgroup_code_value" = EXCLUDED."requestgroup_code_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "requestgroup_group_identifier_system", "requestgroup_group_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -7249,14 +6038,6 @@
         "researchsubject_status_system" = EXCLUDED."researchsubject_status_system", 
         "researchsubject_status_value" = EXCLUDED."researchsubject_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "riskassessment_method_system", "riskassessment_method_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/RiskAssessment-method'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "riskassessment_method_system" = EXCLUDED."riskassessment_method_system", 
-        "riskassessment_method_value" = EXCLUDED."riskassessment_method_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "schedule_active_system", "schedule_active_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -7305,22 +6086,6 @@
         "servicerequest_intent_system" = EXCLUDED."servicerequest_intent_system", 
         "servicerequest_intent_value" = EXCLUDED."servicerequest_intent_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_occurrence_start", "servicerequest_occurrence_end")
-        ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
-          FROM "r4b_date_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ServiceRequest-occurrence'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET
-        "servicerequest_occurrence_start" = EXCLUDED."servicerequest_occurrence_start", 
-        "servicerequest_occurrence_end" = EXCLUDED."servicerequest_occurrence_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_performer_type_system", "servicerequest_performer_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/ServiceRequest-performer-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "servicerequest_performer_type_system" = EXCLUDED."servicerequest_performer_type_system", 
-        "servicerequest_performer_type_value" = EXCLUDED."servicerequest_performer_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "servicerequest_priority_system", "servicerequest_priority_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -7344,14 +6109,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "servicerequest_status_system" = EXCLUDED."servicerequest_status_system", 
         "servicerequest_status_value" = EXCLUDED."servicerequest_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "slot_appointment_type_system", "slot_appointment_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Slot-appointment-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "slot_appointment_type_system" = EXCLUDED."slot_appointment_type_system", 
-        "slot_appointment_type_value" = EXCLUDED."slot_appointment_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "slot_start_start", "slot_start_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
@@ -7377,14 +6134,6 @@
         "specimen_accession_system" = EXCLUDED."specimen_accession_system", 
         "specimen_accession_value" = EXCLUDED."specimen_accession_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_bodysite_system", "specimen_bodysite_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Specimen-bodysite'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimen_bodysite_system" = EXCLUDED."specimen_bodysite_system", 
-        "specimen_bodysite_value" = EXCLUDED."specimen_bodysite_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_collected_start", "specimen_collected_end")
         ( SELECT "tenant", "r_id", "r_version_id", "start_date", "end_date"
           FROM "r4b_date_idx" 
@@ -7401,14 +6150,6 @@
         "specimen_status_system" = EXCLUDED."specimen_status_system", 
         "specimen_status_value" = EXCLUDED."specimen_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "specimen_type_system", "specimen_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Specimen-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimen_type_system" = EXCLUDED."specimen_type_system", 
-        "specimen_type_value" = EXCLUDED."specimen_type_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "specimendefinition_identifier_system", "specimendefinition_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -7416,14 +6157,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "specimendefinition_identifier_system" = EXCLUDED."specimendefinition_identifier_system", 
         "specimendefinition_identifier_value" = EXCLUDED."specimendefinition_identifier_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "specimendefinition_type_system", "specimendefinition_type_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/SpecimenDefinition-type'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "specimendefinition_type_system" = EXCLUDED."specimendefinition_type_system", 
-        "specimendefinition_type_value" = EXCLUDED."specimendefinition_type_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "structuredefinition_abstract_system", "structuredefinition_abstract_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -7545,14 +6278,6 @@
         "substance_status_system" = EXCLUDED."substance_status_system", 
         "substance_status_value" = EXCLUDED."substance_status_value";
  
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "substancedefinition_domain_system", "substancedefinition_domain_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/SubstanceDefinition-domain'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "substancedefinition_domain_system" = EXCLUDED."substancedefinition_domain_system", 
-        "substancedefinition_domain_value" = EXCLUDED."substancedefinition_domain_value";
- 
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "supplydelivery_status_system", "supplydelivery_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
           FROM "r4b_token_idx" 
@@ -7560,14 +6285,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET 
         "supplydelivery_status_system" = EXCLUDED."supplydelivery_status_system", 
         "supplydelivery_status_value" = EXCLUDED."supplydelivery_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "supplyrequest_category_system", "supplyrequest_category_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/SupplyRequest-category'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "supplyrequest_category_system" = EXCLUDED."supplyrequest_category_system", 
-        "supplyrequest_category_value" = EXCLUDED."supplyrequest_category_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "supplyrequest_status_system", "supplyrequest_status_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
@@ -7584,22 +6301,6 @@
         ON CONFLICT("tenant", "r_id") DO UPDATE SET
         "task_authored_on_start" = EXCLUDED."task_authored_on_start", 
         "task_authored_on_end" = EXCLUDED."task_authored_on_end";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "task_business_status_system", "task_business_status_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Task-business-status'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "task_business_status_system" = EXCLUDED."task_business_status_system", 
-        "task_business_status_value" = EXCLUDED."task_business_status_value";
- 
-        INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "task_code_system", "task_code_value")
-        ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
-          FROM "r4b_token_idx" 
-          WHERE ("parameter_url" = 'http://hl7.org/fhir/SearchParameter/Task-code'))
-        ON CONFLICT("tenant", "r_id") DO UPDATE SET 
-        "task_code_system" = EXCLUDED."task_code_system", 
-        "task_code_value" = EXCLUDED."task_code_value";
  
         INSERT INTO "r4b_sp1_idx" ("tenant", "r_id", "r_version_id", "task_group_identifier_system", "task_group_identifier_value")
         ( SELECT "tenant", "r_id", "r_version_id", "system", "value"
