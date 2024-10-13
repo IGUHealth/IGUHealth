@@ -2,12 +2,6 @@ import { Command } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
 
-import * as generateSQL from "zapatos/generate";
-
-// import { R4, R4B } from "@iguhealth/fhir-types/versions";
-// import { TenantId } from "@iguhealth/jwt/types";
-
-// import syncArtifacts from "../fhir-storage/providers/postgres/migrations/syncArtifacts.js";
 import createServer from "../../server.js";
 import createWorker from "../../worker/index.js";
 
@@ -66,26 +60,6 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   });
 
   await dbmigrate.up();
-
-  await generateSQL.generate({
-    db: {
-      user: process.env.FHIR_DATABASE_USERNAME,
-      password: process.env.FHIR_DATABASE_PASSWORD,
-      host: process.env.FHIR_DATABASE_HOST,
-      database: process.env.FHIR_DATABASE_NAME,
-      port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
-      ssl:
-        process.env.FHIR_DATABASE_SSL === "true"
-          ? {
-              // Self signed certificate CA is not used.
-              rejectUnauthorized: false,
-              host: process.env.FHIR_DATABASE_HOST,
-              port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
-            }
-          : false,
-    },
-    outDir: "src/fhir-storage/providers/postgres/generated",
-  });
 };
 
 export function runCommands(command: Command) {
