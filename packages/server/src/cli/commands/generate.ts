@@ -1,3 +1,4 @@
+import * as generateSQL from "zapatos/generate";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   FHIR_VERSION,
@@ -47,6 +48,25 @@ async function generateTypes() {
       writeFileSync(schemaFile.replace(".schema.json", ".schema.d.ts"), ts);
     }),
   );
+  await generateSQL.generate({
+    db: {
+      user: process.env.FHIR_DATABASE_USERNAME,
+      password: process.env.FHIR_DATABASE_PASSWORD,
+      host: process.env.FHIR_DATABASE_HOST,
+      database: process.env.FHIR_DATABASE_NAME,
+      port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
+      ssl:
+        process.env.FHIR_DATABASE_SSL === "true"
+          ? {
+              // Self signed certificate CA is not used.
+              rejectUnauthorized: false,
+              host: process.env.FHIR_DATABASE_HOST,
+              port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
+            }
+          : false,
+    },
+    outDir: "src/fhir-storage/providers/postgres/generated",
+  });
 }
 
 const writeSP1TSCode = async <Version extends FHIR_VERSION>(
