@@ -422,6 +422,58 @@ export const r4_sp1_idx: Set<string> = new Set([
   "https://iguhealth.app/fhir/SearchParameter/MessageTopic-topic",
 ]);
 
+export const canonicalColumns = {
+  ActivityDefinition: [
+    "http://hl7.org/fhir/SearchParameter/ActivityDefinition-url",
+  ],
+  CapabilityStatement: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  CodeSystem: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  CompartmentDefinition: [
+    "http://hl7.org/fhir/SearchParameter/conformance-url",
+  ],
+  ConceptMap: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  GraphDefinition: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  ImplementationGuide: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  MessageDefinition: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  OperationDefinition: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  SearchParameter: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  StructureDefinition: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  StructureMap: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  TerminologyCapabilities: [
+    "http://hl7.org/fhir/SearchParameter/conformance-url",
+  ],
+  ValueSet: ["http://hl7.org/fhir/SearchParameter/conformance-url"],
+  ChargeItemDefinition: [
+    "http://hl7.org/fhir/SearchParameter/ChargeItemDefinition-url",
+  ],
+  Contract: ["http://hl7.org/fhir/SearchParameter/Contract-url"],
+  Device: ["http://hl7.org/fhir/SearchParameter/Device-url"],
+  EffectEvidenceSynthesis: [
+    "http://hl7.org/fhir/SearchParameter/EffectEvidenceSynthesis-url",
+  ],
+  EventDefinition: ["http://hl7.org/fhir/SearchParameter/EventDefinition-url"],
+  Evidence: ["http://hl7.org/fhir/SearchParameter/Evidence-url"],
+  EvidenceVariable: [
+    "http://hl7.org/fhir/SearchParameter/EvidenceVariable-url",
+  ],
+  ExampleScenario: ["http://hl7.org/fhir/SearchParameter/ExampleScenario-url"],
+  Library: ["http://hl7.org/fhir/SearchParameter/Library-url"],
+  Measure: ["http://hl7.org/fhir/SearchParameter/Measure-url"],
+  PlanDefinition: ["http://hl7.org/fhir/SearchParameter/PlanDefinition-url"],
+  Questionnaire: ["http://hl7.org/fhir/SearchParameter/Questionnaire-url"],
+  ResearchDefinition: [
+    "http://hl7.org/fhir/SearchParameter/ResearchDefinition-url",
+  ],
+  ResearchElementDefinition: [
+    "http://hl7.org/fhir/SearchParameter/ResearchElementDefinition-url",
+  ],
+  RiskEvidenceSynthesis: [
+    "http://hl7.org/fhir/SearchParameter/RiskEvidenceSynthesis-url",
+  ],
+  Subscription: ["http://hl7.org/fhir/SearchParameter/Subscription-url"],
+  TestScript: ["http://hl7.org/fhir/SearchParameter/TestScript-url"],
+};
+
 export type r4_sp1_idx_token =
   | "resource_id"
   | "account_status"

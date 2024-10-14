@@ -72,6 +72,7 @@ import { createFHIRURL } from "../../../fhir-api/constants.js";
 import * as r4Sp1 from "./generated/sp1-parameters/r4.sp1parameters.js";
 import * as r4bSp1 from "./generated/sp1-parameters/r4b.sp1parameters.js";
 import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
+import { isSearchParameterInSingularTable } from "./search/utilities.js";
 
 type Sp1Insertable<Version extends FHIR_VERSION> = Version extends R4
   ? s.r4_sp1_idx.Insertable
@@ -1136,18 +1137,21 @@ async function indexResource<
     resource.resourceType as ResourceType<Version>,
   ]);
 
-  const sp1Parameters = searchParameters.filter((s) =>
-    fhirVersion === R4
-      ? r4Sp1.r4_sp1_idx.has(s.url)
-      : fhirVersion === R4B
-        ? r4bSp1.r4b_sp1_idx.has(s.url)
-        : false,
-  );
+  const sp1Parameters: Resource<Version, "SearchParameter">[] = [];
+  const manyParameters: Resource<Version, "SearchParameter">[] = [];
+
+  for (const parameter of searchParameters) {
+    if (isSearchParameterInSingularTable(fhirVersion, parameter)) {
+      sp1Parameters.push(parameter);
+    } else {
+      manyParameters.push(parameter);
+    }
+  }
 
   await indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource);
 
   await Promise.all(
-    searchParameters
+    manyParameters
       .filter((v) => v.expression !== undefined)
       .map(async (searchParameter) =>
         indexMultiSearchParameter(ctx, fhirVersion, searchParameter, resource),
