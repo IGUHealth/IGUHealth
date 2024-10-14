@@ -62,7 +62,7 @@ function getCanonicalSearchSQL(
   );
 
   return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
-  (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${conditions}`;
+  (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${conditions})`;
 }
 
 function isChainParameter(
