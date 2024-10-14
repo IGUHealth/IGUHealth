@@ -12,12 +12,15 @@ import {
 import * as sqlUtils from "../../../../../utilities/sql.js";
 import { missingModifier } from "./shared.js";
 import buildParametersSQL from "../index.js";
+import { isSearchParameterInSingularTable } from "../../utilities.js";
+import { getSp1Name } from "../../../../../../cli/generate/sp1-parameters.js";
+import { getSp1Column } from "../db_singular_clauses/shared.js";
 
 /*
  ** This function allows resolution based on canonical references.
  ** Performs a search on the uri table to find the reference_id for the canonical reference.
  */
-function generateCanonicalReferenceSearch(
+function canonicalManySQL(
   ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
@@ -35,6 +38,34 @@ function generateCanonicalReferenceSearch(
 
   return db.sql<s.r4_uri_idx.SQL | s.r4b_uri_idx.SQL>`
     ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${searchParameterToTableName(fhirVersion, "uri")} WHERE ${where} )`;
+}
+
+function canonicalSP1SQL(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: FHIR_VERSION,
+  parameter: SearchParameterResource,
+): db.SQLFragment {
+  const column = getSp1Column(
+    fhirVersion,
+    "uri",
+    parameter.searchParameter.url,
+  );
+  return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+      (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${column} = ${db.param(parameter.value[0])})`;
+}
+
+function getCanonicalSearchSQL(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: FHIR_VERSION,
+  parameter: SearchParameterResource,
+) {
+  if (
+    isSearchParameterInSingularTable(fhirVersion, parameter.searchParameter)
+  ) {
+    return canonicalSP1SQL(ctx, fhirVersion, parameter);
+  } else {
+    return canonicalManySQL(ctx, fhirVersion, parameter);
+  }
 }
 
 function isChainParameter(
@@ -120,7 +151,7 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
   parameter: SearchParameterResource,
   parameterValue: string | number,
 ) {
-  const canonicalSQL = db.sql<s.r4_reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
+  const canonicalSQL = db.sql<s.r4_reference_idx.SQL>`${"reference_id"} in ${getCanonicalSearchSQL(
     ctx,
     fhirVersion,
     parameter,
