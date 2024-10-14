@@ -155,6 +155,30 @@ function sqlSafeIdentifier(url: string) {
   return last.replace(/[^a-zA-Z0-9_]/g, "_").toLowerCase();
 }
 
+async function generateSp1CanonicalCode<Version extends FHIR_VERSION>(
+  version: Version,
+  parameters: Resource<Version, "SearchParameter">[],
+) {
+  const uriParameters = parameters.filter(
+    (p) => p.type === "uri" && p.code === "url",
+  );
+
+  const typeToColumn = uriParameters.reduce(
+    (acc: Record<code, uri[]>, parameter) => {
+      return parameter.base.reduce(
+        (acc, base) => ({
+          ...acc,
+          [base]: [...(acc[base] ?? []), parameter.url],
+        }),
+        acc,
+      );
+    },
+    {},
+  );
+
+  return `export const canonicalColumns = ${JSON.stringify(typeToColumn)}\n`;
+}
+
 export async function generateSP1TSCode<Version extends FHIR_VERSION>(
   version: Version,
   searchParameterUrls: Readonly<Set<string>>,
@@ -176,7 +200,7 @@ export ${sqlSafeIdentifier.toString().replace("url", "url: string")}\n`;
     .map((uri) => `\n  "${uri}",`)
     .join("")}\n])\n`;
 
-  code = `${code}\n ${fullSet}`;
+  code = `${code}\n ${fullSet} \n${await generateSp1CanonicalCode(version, searchParameters)}`;
 
   for (const type of Object.keys(parametersByType)) {
     const paramsOfType = parametersByType[type as code];
@@ -195,7 +219,11 @@ export ${sqlSafeIdentifier.toString().replace("url", "url: string")}\n`;
       .map((uri) => `\n  "${uri}",`)
       .join("")}\n])\n`;
 
-    code = `${code}\n ${SQLType}\n ${setOfTypeCode}`;
+    code = `
+    ${code}
+    ${SQLType}
+    ${setOfTypeCode}
+    `;
 
     code = `${code}\n export function asSP1${capitalize(type)}(url: uri): ${name}_${type} | undefined {
     if(!${name}_${type}_set.has(url)) return undefined;
