@@ -76,7 +76,7 @@ const Conversion: {
   },
 };
 
-export function getColumn<
+export function getSp1Column<
   Version extends FHIR_VERSION,
   Type extends SINGULAR_TYPE,
 >(version: Version, type: Type, uri: uri): ColumnType[Version][Type] {
@@ -122,7 +122,7 @@ export function missingModifier(
           case "string":
           case "number":
           case "uri": {
-            const column = getColumn(
+            const column = getSp1Column(
               fhirVersion,
               type as "string" | "number" | "uri",
               parameter.searchParameter.url,
@@ -135,7 +135,7 @@ export function missingModifier(
           }
 
           case "token": {
-            const column = getColumn(
+            const column = getSp1Column(
               fhirVersion,
               "token",
               parameter.searchParameter.url,
@@ -148,7 +148,7 @@ export function missingModifier(
           }
 
           case "date": {
-            const column = getColumn(
+            const column = getSp1Column(
               fhirVersion,
               "date",
               parameter.searchParameter.url,
@@ -160,7 +160,7 @@ export function missingModifier(
           }
 
           case "quantity": {
-            const column = getColumn(
+            const column = getSp1Column(
               fhirVersion,
               "quantity",
               parameter.searchParameter.url,
