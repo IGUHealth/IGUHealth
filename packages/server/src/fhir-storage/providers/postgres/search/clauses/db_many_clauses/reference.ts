@@ -1,44 +1,17 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { code, SearchParameter, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
-import {
-  SearchParameterResource,
-  searchParameterToTableName,
-} from "../../../../../utilities/search/parameters.js";
-import * as sqlUtils from "../../../../../utilities/sql.js";
+import { SearchParameterResource } from "../../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 import buildParametersSQL from "../index.js";
 import { isSearchParameterInSingularTable } from "../../utilities.js";
 import { getSp1Name } from "../../../../../../cli/generate/sp1-parameters.js";
 import { getSp1Column } from "../db_singular_clauses/shared.js";
-
-/*
- ** This function allows resolution based on canonical references.
- ** Performs a search on the uri table to find the reference_id for the canonical reference.
- */
-function canonicalManySQL(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
-): db.SQLFragment {
-  const where: s.r4_uri_idx.Whereable | s.r4b_uri_idx.Whereable = {
-    tenant: ctx.tenant,
-    resource_type:
-      (parameter.searchParameter.target ?? []).length === 0
-        ? db.sql`${db.self} IS NOT NULL`
-        : db.sql`${db.self} in (${sqlUtils.paramsWithComma(
-            parameter.searchParameter.target ?? [],
-          )})`,
-    value: parameter.value[0].toString(),
-  };
-
-  return db.sql<s.r4_uri_idx.SQL | s.r4b_uri_idx.SQL>`
-    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${searchParameterToTableName(fhirVersion, "uri")} WHERE ${where} )`;
-}
+import { canonicalColumns as r4CanonicalColumns } from "../../../generated/sp1-parameters/r4.sp1parameters.js";
 
 function canonicalSP1SQL(
   ctx: IGUHealthServerCTX,
@@ -54,18 +27,42 @@ function canonicalSP1SQL(
       (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${column} = ${db.param(parameter.value[0])})`;
 }
 
+function getCanonicalColumns(
+  fhirVersion: FHIR_VERSION,
+  bases: code[],
+): (s.r4_sp1_idx.Column | s.r4b_sp1_idx.Column)[] {
+  let columns: (s.r4_sp1_idx.Column | s.r4b_sp1_idx.Column)[] = [];
+  for (const base of bases) {
+    if (Object.keys(r4CanonicalColumns).includes(base)) {
+      const canonicalUrls =
+        r4CanonicalColumns[base as keyof typeof r4CanonicalColumns];
+      columns = columns.concat(
+        canonicalUrls.map((c) => getSp1Column(fhirVersion, "uri", c as uri)),
+      );
+    }
+  }
+
+  return columns;
+}
+
 function getCanonicalSearchSQL(
   ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
-) {
-  if (
-    isSearchParameterInSingularTable(fhirVersion, parameter.searchParameter)
-  ) {
-    return canonicalSP1SQL(ctx, fhirVersion, parameter);
-  } else {
-    return canonicalManySQL(ctx, fhirVersion, parameter);
+): db.SQLFragment | undefined {
+  const base = parameter.searchParameter.target;
+  const columns = getCanonicalColumns(fhirVersion, base ?? []);
+
+  if (columns.length === 0) {
+    return undefined;
   }
+
+  const conditions = db.conditions.or(
+    ...columns.map((column) => ({ [column]: parameter.value[0].toString() })),
+  );
+
+  return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+  (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${conditions}`;
 }
 
 function isChainParameter(
@@ -151,11 +148,10 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
   parameter: SearchParameterResource,
   parameterValue: string | number,
 ) {
-  const canonicalSQL = db.sql<s.r4_reference_idx.SQL>`${"reference_id"} in ${getCanonicalSearchSQL(
-    ctx,
-    fhirVersion,
-    parameter,
-  )}`;
+  const findCanonicalSQL = getCanonicalSearchSQL(ctx, fhirVersion, parameter);
+  const checkCanonicalSQL = findCanonicalSQL
+    ? db.sql`${"reference_id"} in ${findCanonicalSQL}`
+    : db.sql`false`;
 
   const referenceValue = parameterValue.toString();
   const parts = referenceValue.split("/");
@@ -165,7 +161,7 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
       reference_id: parts[0],
     };
     return db.conditions.or(
-      canonicalSQL,
+      checkCanonicalSQL,
       db.sql<s.r4_reference_idx.SQL>`${where}`,
     );
   } else if (parts.length === 2) {
@@ -175,12 +171,12 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
     };
 
     return db.conditions.or(
-      canonicalSQL,
+      checkCanonicalSQL,
       db.sql<s.r4_reference_idx.SQL>`${where}`,
     );
   } else {
     // In this case only perform a canonical search as could have passed a canonical url for the value.
-    return canonicalSQL;
+    return checkCanonicalSQL;
   }
 }
 
