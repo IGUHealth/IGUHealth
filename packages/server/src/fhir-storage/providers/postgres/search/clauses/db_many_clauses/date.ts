@@ -10,7 +10,7 @@ import {
   parseValuePrefix,
 } from "../../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
-import { getDateRange } from "../utilities.js";
+import { getDateRange } from "../../utilities.js";
 
 export default function dateClauses(
   _ctx: IGUHealthServerCTX,

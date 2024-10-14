@@ -11,7 +11,7 @@ import {
 import analyze from "@iguhealth/fhirpath/analyze";
 import * as prettier from "prettier";
 import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
-import { getColumn } from "../../fhir-storage/providers/postgres/search/clauses/db_singular_clauses/shared.js";
+import { getSp1Column } from "../../fhir-storage/providers/postgres/search/clauses/db_singular_clauses/shared.js";
 import { toSQLString } from "../../fhir-storage/providers/log_sql.js";
 
 export function getSp1Name(
@@ -386,7 +386,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
     switch (parameter.type) {
       case "number": {
         const manyTableName = searchParameterToTableName(version, "number");
-        const column = getColumn(version, "number", parameter.url);
+        const column = getSp1Column(version, "number", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
         ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
@@ -399,7 +399,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
       }
       case "date": {
         const manyTableName = searchParameterToTableName(version, "date");
-        const column = getColumn(version, "date", parameter.url);
+        const column = getSp1Column(version, "date", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_start`}, ${`${column}_end`})
         ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"start_date"}, ${"end_date"}
@@ -414,7 +414,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
       }
       case "quantity": {
         const manyTableName = searchParameterToTableName(version, "quantity");
-        const column = getColumn(version, "quantity", parameter.url);
+        const column = getSp1Column(version, "quantity", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (
           ${"tenant"},
@@ -453,7 +453,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
       }
       case "token": {
         const manyTableName = searchParameterToTableName(version, "token");
-        const column = getColumn(version, "token", parameter.url);
+        const column = getSp1Column(version, "token", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_system`}, ${`${column}_value`})
         ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"system"}, ${"value"}
@@ -469,7 +469,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
       }
       case "string": {
         const manyTableName = searchParameterToTableName(version, "string");
-        const column = getColumn(version, "string", parameter.url);
+        const column = getSp1Column(version, "string", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
         ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
@@ -483,7 +483,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
       }
       case "uri": {
         const manyTableName = searchParameterToTableName(version, "uri");
-        const column = getColumn(version, "uri", parameter.url);
+        const column = getSp1Column(version, "uri", parameter.url);
         const numberSQL = db.sql`
         INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
         ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}

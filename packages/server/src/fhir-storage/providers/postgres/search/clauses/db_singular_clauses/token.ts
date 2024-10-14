@@ -6,14 +6,14 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../../utilities/search/parameters.js";
-import { getColumn, missingModifier } from "./shared.js";
+import { getSp1Column, missingModifier } from "./shared.js";
 
 export default function tokenClauses(
   ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
-  const columnName = getColumn(
+  const columnName = getSp1Column(
     fhirVersion,
     "token",
     parameter.searchParameter.url,

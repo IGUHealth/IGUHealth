@@ -10,18 +10,18 @@ import {
   parseValuePrefix,
 } from "../../../../../utilities/search/parameters.js";
 import {
-  getColumn,
+  getSp1Column,
   missingModifier,
   SEARCH_INDEX_WHEREABLE,
 } from "./shared.js";
-import { getDateRange } from "../utilities.js";
+import { getDateRange } from "../../utilities.js";
 
 export default function dateClauses(
   _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
-  const columnName = getColumn(
+  const columnName = getSp1Column(
     fhirVersion,
     "date",
     parameter.searchParameter.url,

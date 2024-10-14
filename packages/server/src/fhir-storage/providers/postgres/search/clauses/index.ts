@@ -1,14 +1,13 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 import { code } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { buildClausesManySQL } from "./db_many_clauses/index.js";
-import { r4_sp1_idx } from "../../generated/sp1-parameters/r4.sp1parameters.js";
-import { r4b_sp1_idx } from "../../generated/sp1-parameters/r4b.sp1parameters.js";
 import { buildClausesSingularSQL } from "./db_singular_clauses/index.js";
+import { isSearchParameterInSingularTable } from "../utilities.js";
 
 function buildParametersManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
@@ -41,26 +40,12 @@ function splitSingular(
   const many = [];
 
   for (const parameter of parameters) {
-    switch (fhirVersion) {
-      case R4: {
-        if (r4_sp1_idx.has(parameter.searchParameter.url)) {
-          singular.push(parameter);
-        } else {
-          many.push(parameter);
-        }
-        break;
-      }
-      case R4B: {
-        if (r4b_sp1_idx.has(parameter.searchParameter.url)) {
-          singular.push(parameter);
-        } else {
-          many.push(parameter);
-        }
-        break;
-      }
-      default: {
-        throw new Error("Unsupported FHIR version");
-      }
+    if (
+      isSearchParameterInSingularTable(fhirVersion, parameter.searchParameter)
+    ) {
+      singular.push(parameter);
+    } else {
+      many.push(parameter);
     }
   }
 

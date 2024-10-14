@@ -7,14 +7,14 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../../utilities/search/parameters.js";
-import { getColumn, missingModifier } from "./shared.js";
+import { getSp1Column, missingModifier } from "./shared.js";
 
 export default function quantityClauses(
   _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
-  const columnName = getColumn(
+  const columnName = getSp1Column(
     fhirVersion,
     "quantity",
     parameter.searchParameter.url,

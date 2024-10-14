@@ -10,14 +10,14 @@ import {
   getDecimalPrecision,
   parseValuePrefix,
 } from "../../../../../utilities/search/parameters.js";
-import { getColumn, missingModifier } from "./shared.js";
+import { getSp1Column, missingModifier } from "./shared.js";
 
 export default function numberClauses(
   _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
-  const columnName = getColumn(
+  const columnName = getSp1Column(
     fhirVersion,
     "number",
     parameter.searchParameter.url,
