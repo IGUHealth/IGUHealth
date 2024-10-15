@@ -257,8 +257,10 @@ export async function generateSP1SQLTable<Version extends FHIR_VERSION>(
 CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
   r_id           TEXT         NOT NULL,
   r_version_id   INTEGER      NOT NULL PRIMARY KEY,
+  resource_type  TEXT         NOT NULL,
   tenant         TEXT         NOT NULL, 
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+
 
   UNIQUE (tenant, r_id),
   CONSTRAINT sp1_fk_resource
@@ -416,11 +418,13 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         const manyTableName = searchParameterToTableName(version, "number");
         const column = getSp1Column(version, "number", parameter.url);
         const numberSQL = db.sql`
-        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
-        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${"value"}
           FROM ${manyTableName} 
           WHERE ${whereable})
-        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET ${column} = EXCLUDED.${column};`;
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${column} = EXCLUDED.${column},
+        ${"resource_type"} = EXCLUDED.${"resource_type"};`;
 
         sql = `${sql}\n ${toSQLString(numberSQL)}`;
         break;
@@ -429,11 +433,12 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         const manyTableName = searchParameterToTableName(version, "date");
         const column = getSp1Column(version, "date", parameter.url);
         const numberSQL = db.sql`
-        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_start`}, ${`${column}_end`})
-        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"start_date"}, ${"end_date"}
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"resource_type"},  ${"r_version_id"}, ${`${column}_start`}, ${`${column}_end`})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${"start_date"}, ${"end_date"}
           FROM ${manyTableName} 
           WHERE ${whereable})
         ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET
+        ${"resource_type"} = EXCLUDED.${"resource_type"},
         ${`${column}_start`} = EXCLUDED.${`${column}_start`}, 
         ${`${column}_end`} = EXCLUDED.${`${column}_end`};`;
 
@@ -447,6 +452,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         INSERT INTO ${tableName} (
           ${"tenant"},
           ${"r_id"}, 
+          ${"resource_type"},
           ${"r_version_id"}, 
           ${`${column}_start_system`}, 
           ${`${column}_start_code`}, 
@@ -458,6 +464,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         ( SELECT 
          ${"tenant"},
          ${"r_id"}, 
+         ${"resource_type"},
          ${"r_version_id"}, 
          ${"start_system"}, 
          ${"start_code"},
@@ -468,6 +475,7 @@ export function sp1Migration<Version extends FHIR_VERSION>(
           FROM ${manyTableName} 
           WHERE ${whereable})
         ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${"resource_type"} = EXCLUDED.${"resource_type"},
         ${`${column}_start_system`} = EXCLUDED.${`${column}_start_system`}, 
         ${`${column}_start_code`} =   EXCLUDED.${`${column}_start_code`},
         ${`${column}_start_value`} =  EXCLUDED.${`${column}_start_value`},
@@ -483,11 +491,12 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         const manyTableName = searchParameterToTableName(version, "token");
         const column = getSp1Column(version, "token", parameter.url);
         const numberSQL = db.sql`
-        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${`${column}_system`}, ${`${column}_value`})
-        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"system"}, ${"value"}
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"resource_type"},  ${"r_version_id"}, ${`${column}_system`}, ${`${column}_value`})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"resource_type"},  ${"r_version_id"}, ${"system"}, ${"value"}
           FROM ${manyTableName} 
           WHERE ${whereable})
         ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${"resource_type"} = EXCLUDED.${"resource_type"},
         ${`${column}_system`} = EXCLUDED.${`${column}_system`}, 
         ${`${column}_value`} = EXCLUDED.${`${column}_value`};`;
 
@@ -499,12 +508,14 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         const manyTableName = searchParameterToTableName(version, "string");
         const column = getSp1Column(version, "string", parameter.url);
         const numberSQL = db.sql`
-        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
-        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${"value"}
           FROM ${manyTableName} 
           WHERE ${whereable})
         ON CONFLICT(${"tenant"}, ${"r_id"})
-        DO UPDATE SET ${column} = EXCLUDED.${column};`;
+        DO UPDATE SET 
+        ${"resource_type"} = EXCLUDED.${"resource_type"},
+        ${column} = EXCLUDED.${column};`;
 
         sql = `${sql}\n ${toSQLString(numberSQL)}`;
         break;
@@ -513,11 +524,13 @@ export function sp1Migration<Version extends FHIR_VERSION>(
         const manyTableName = searchParameterToTableName(version, "uri");
         const column = getSp1Column(version, "uri", parameter.url);
         const numberSQL = db.sql`
-        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${column})
-        ( SELECT ${"tenant"}, ${"r_id"}, ${"r_version_id"}, ${"value"}
+        INSERT INTO ${tableName} (${"tenant"}, ${"r_id"}, ${"resource_type"},  ${"r_version_id"}, ${column})
+        ( SELECT ${"tenant"}, ${"r_id"}, ${"resource_type"}, ${"r_version_id"}, ${"value"}
           FROM ${manyTableName} 
           WHERE ${whereable})
-        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET ${column} = EXCLUDED.${column};`;
+        ON CONFLICT(${"tenant"}, ${"r_id"}) DO UPDATE SET 
+        ${"resource_type"} = EXCLUDED.${"resource_type"},
+        ${column} = EXCLUDED.${column};`;
 
         sql = `${sql}\n ${toSQLString(numberSQL)}`;
         break;
