@@ -2942,18 +2942,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value: string | null;
       /**
-      * **r4_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system: string | null;
-      /**
-      * **r4_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value: string | null;
-      /**
       * **r4_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -3056,54 +3044,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start: Date | null;
       /**
-      * **r4_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value: string | null;
-      /**
       * **r4_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -3127,30 +3067,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start: Date | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value: string | null;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system: string | null;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value: string | null;
       /**
       * **r4_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -3248,18 +3164,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value: string | null;
       /**
-      * **r4_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system: string | null;
-      /**
-      * **r4_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value: string | null;
-      /**
       * **r4_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -3271,30 +3175,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start: Date | null;
-      /**
-      * **r4_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value: string | null;
       /**
       * **r4_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -3386,18 +3266,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value: string | null;
       /**
-      * **r4_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system: string | null;
-      /**
-      * **r4_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value: string | null;
-      /**
       * **r4_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -3415,18 +3283,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override: db.NumericString | null;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end: Date | null;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start: Date | null;
       /**
       * **r4_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -3584,18 +3440,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start: Date | null;
       /**
-      * **r4_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system: string | null;
-      /**
-      * **r4_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value: string | null;
-      /**
       * **r4_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -3691,18 +3535,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clientapplication_name: string | null;
-      /**
-      * **r4_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end: Date | null;
-      /**
-      * **r4_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start: Date | null;
       /**
       * **r4_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
@@ -3926,18 +3758,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string: string | null;
       /**
-      * **r4_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value: string | null;
-      /**
       * **r4_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -4003,30 +3823,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start: Date | null;
-      /**
-      * **r4_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value: string | null;
-      /**
-      * **r4_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value: string | null;
       /**
       * **r4_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -4106,18 +3902,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start: Date | null;
       /**
-      * **r4_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system: string | null;
-      /**
-      * **r4_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value: string | null;
-      /**
       * **r4_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -4183,18 +3967,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value: string | null;
-      /**
-      * **r4_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system: string | null;
-      /**
-      * **r4_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value: string | null;
       /**
       * **r4_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -4268,18 +4040,6 @@ declare module 'zapatos/schema' {
       */
       created_at: Date;
       /**
-      * **r4_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system: string | null;
-      /**
-      * **r4_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value: string | null;
-      /**
       * **r4_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -4316,35 +4076,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value: string | null;
       /**
-      * **r4_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system: string | null;
-      /**
-      * **r4_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value: string | null;
-      /**
       * **r4_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url: string | null;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value: string | null;
       /**
       * **r4_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -4357,18 +4093,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value: string | null;
-      /**
-      * **r4_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system: string | null;
-      /**
-      * **r4_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value: string | null;
       /**
       * **r4_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -4508,18 +4232,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description: string | null;
       /**
-      * **r4_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system: string | null;
-      /**
-      * **r4_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value: string | null;
-      /**
       * **r4_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -4531,18 +4243,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start: Date | null;
-      /**
-      * **r4_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system: string | null;
-      /**
-      * **r4_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value: string | null;
       /**
       * **r4_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -5078,30 +4778,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value: string | null;
       /**
-      * **r4_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value: string | null;
-      /**
       * **r4_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -5113,18 +4789,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value: string | null;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system: string | null;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value: string | null;
       /**
       * **r4_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -5173,18 +4837,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value: string | null;
-      /**
-      * **r4_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system: string | null;
-      /**
-      * **r4_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value: string | null;
       /**
       * **r4_sp1_idx.group_type_system**
       * - `text` in database
@@ -5288,18 +4940,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number: string | null;
       /**
-      * **r4_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value: string | null;
-      /**
       * **r4_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -5311,18 +4951,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value: string | null;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system: string | null;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value: string | null;
       /**
       * **r4_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -5336,18 +4964,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start: Date | null;
       /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value: string | null;
-      /**
       * **r4_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -5359,18 +4975,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value: string | null;
       /**
       * **r4_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -5534,18 +5138,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value: db.NumericString | null;
       /**
-      * **r4_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system: string | null;
-      /**
-      * **r4_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value: string | null;
-      /**
       * **r4_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -5606,18 +5198,6 @@ declare module 'zapatos/schema' {
       */
       library_title: string | null;
       /**
-      * **r4_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system: string | null;
-      /**
-      * **r4_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value: string | null;
-      /**
       * **r4_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -5636,18 +5216,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value: string | null;
       /**
-      * **r4_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value: string | null;
-      /**
       * **r4_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -5665,12 +5233,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title: string | null;
-      /**
-      * **r4_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address: string | null;
       /**
       * **r4_sp1_idx.location_address_city**
       * - `text` in database
@@ -5858,30 +5420,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start: Date | null;
       /**
-      * **r4_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system: string | null;
-      /**
-      * **r4_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value: string | null;
-      /**
-      * **r4_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system: string | null;
-      /**
-      * **r4_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value: string | null;
-      /**
       * **r4_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -5894,30 +5432,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value: string | null;
       /**
-      * **r4_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system: string | null;
-      /**
-      * **r4_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value: string | null;
-      /**
-      * **r4_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system: string | null;
-      /**
-      * **r4_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value: string | null;
-      /**
       * **r4_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -5929,18 +5443,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start: Date | null;
-      /**
-      * **r4_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system: string | null;
-      /**
-      * **r4_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value: string | null;
       /**
       * **r4_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -5978,18 +5480,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start: Date | null;
       /**
-      * **r4_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value: string | null;
-      /**
       * **r4_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -6014,30 +5504,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start: Date | null;
       /**
-      * **r4_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value: string | null;
-      /**
       * **r4_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -6061,18 +5527,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start: Date | null;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value: string | null;
       /**
       * **r4_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -6110,18 +5564,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value: string | null;
       /**
-      * **r4_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value: string | null;
-      /**
       * **r4_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -6134,18 +5576,6 @@ declare module 'zapatos/schema' {
       */
       medicationstatement_effective_start: Date | null;
       /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_system: string | null;
-      /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_value: string | null;
-      /**
       * **r4_sp1_idx.membership_email_system**
       * - `text` in database
       * - Nullable, no default
@@ -6157,12 +5587,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       membership_email_value: string | null;
-      /**
-      * **r4_sp1_idx.membership_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      membership_name: string | null;
       /**
       * **r4_sp1_idx.membership_role_system**
       * - `text` in database
@@ -6284,30 +5708,6 @@ declare module 'zapatos/schema' {
       */
       messagetopic_topic_value: string | null;
       /**
-      * **r4_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value: string | null;
-      /**
       * **r4_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -6350,30 +5750,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible: string | null;
       /**
-      * **r4_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system: string | null;
-      /**
-      * **r4_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value: string | null;
-      /**
       * **r4_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -6385,18 +5761,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start: Date | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value: string | null;
       /**
       * **r4_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -6410,30 +5774,6 @@ declare module 'zapatos/schema' {
       */
       nutritionorder_status_value: string | null;
       /**
-      * **r4_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value: string | null;
-      /**
-      * **r4_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value: string | null;
-      /**
       * **r4_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -6446,18 +5786,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value: string | null;
       /**
-      * **r4_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value: string | null;
-      /**
       * **r4_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -6469,42 +5797,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start: Date | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value: db.NumericString | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value: db.NumericString | null;
       /**
       * **r4_sp1_idx.observation_value_string**
       * - `text` in database
@@ -6650,18 +5942,6 @@ declare module 'zapatos/schema' {
       */
       paymentnotice_created_start: Date | null;
       /**
-      * **r4_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system: string | null;
-      /**
-      * **r4_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value: string | null;
-      /**
       * **r4_sp1_idx.paymentnotice_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -6776,18 +6056,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title: string | null;
       /**
-      * **r4_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value: string | null;
-      /**
       * **r4_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -6841,18 +6109,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start: Date | null;
-      /**
-      * **r4_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system: string | null;
-      /**
-      * **r4_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value: string | null;
       /**
       * **r4_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -7039,18 +6295,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start: Date | null;
-      /**
-      * **r4_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system: string | null;
-      /**
-      * **r4_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value: string | null;
       /**
       * **r4_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -7340,17 +6584,11 @@ declare module 'zapatos/schema' {
       */
       resource_source: string | null;
       /**
-      * **r4_sp1_idx.riskassessment_method_system**
+      * **r4_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system: string | null;
-      /**
-      * **r4_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value: string | null;
+      resource_type: string;
       /**
       * **r4_sp1_idx.riskevidencesynthesis_date_end**
       * - `timestamptz` in database
@@ -7502,30 +6740,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value: string | null;
       /**
-      * **r4_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end: Date | null;
-      /**
-      * **r4_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start: Date | null;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system: string | null;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value: string | null;
-      /**
       * **r4_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -7561,18 +6775,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value: string | null;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system: string | null;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value: string | null;
       /**
       * **r4_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -7610,18 +6812,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value: string | null;
       /**
-      * **r4_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system: string | null;
-      /**
-      * **r4_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value: string | null;
-      /**
       * **r4_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -7646,18 +6836,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value: string | null;
       /**
-      * **r4_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system: string | null;
-      /**
-      * **r4_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value: string | null;
-      /**
       * **r4_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -7669,18 +6847,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value: string | null;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value: string | null;
       /**
       * **r4_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -7808,18 +6974,6 @@ declare module 'zapatos/schema' {
       */
       supplydelivery_status_value: string | null;
       /**
-      * **r4_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system: string | null;
-      /**
-      * **r4_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value: string | null;
-      /**
       * **r4_sp1_idx.supplyrequest_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -7843,30 +6997,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start: Date | null;
-      /**
-      * **r4_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system: string | null;
-      /**
-      * **r4_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value: string | null;
-      /**
-      * **r4_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system: string | null;
-      /**
-      * **r4_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value: string | null;
       /**
       * **r4_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -8176,18 +7306,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value: string | null;
       /**
-      * **r4_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system: string | null;
-      /**
-      * **r4_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value: string | null;
-      /**
       * **r4_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -8290,54 +7408,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system: string | null;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value: string | null;
-      /**
       * **r4_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -8361,30 +7431,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system: string | null;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value: string | null;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system: string | null;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value: string | null;
       /**
       * **r4_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -8482,18 +7528,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value: string | null;
       /**
-      * **r4_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system: string | null;
-      /**
-      * **r4_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value: string | null;
-      /**
       * **r4_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -8505,30 +7539,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system: string | null;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value: string | null;
       /**
       * **r4_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -8620,18 +7630,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value: string | null;
       /**
-      * **r4_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system: string | null;
-      /**
-      * **r4_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value: string | null;
-      /**
       * **r4_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -8649,18 +7647,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override: number | null;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start: db.TimestampTzString | null;
       /**
       * **r4_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -8818,18 +7804,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system: string | null;
-      /**
-      * **r4_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value: string | null;
-      /**
       * **r4_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -8925,18 +7899,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clientapplication_name: string | null;
-      /**
-      * **r4_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start: db.TimestampTzString | null;
       /**
       * **r4_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
@@ -9160,18 +8122,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string: string | null;
       /**
-      * **r4_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value: string | null;
-      /**
       * **r4_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -9237,30 +8187,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value: string | null;
-      /**
-      * **r4_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system: string | null;
-      /**
-      * **r4_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value: string | null;
       /**
       * **r4_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -9340,18 +8266,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system: string | null;
-      /**
-      * **r4_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value: string | null;
-      /**
       * **r4_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -9417,18 +8331,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value: string | null;
-      /**
-      * **r4_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system: string | null;
-      /**
-      * **r4_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value: string | null;
       /**
       * **r4_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -9502,18 +8404,6 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
-      * **r4_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system: string | null;
-      /**
-      * **r4_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value: string | null;
-      /**
       * **r4_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -9550,35 +8440,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value: string | null;
       /**
-      * **r4_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system: string | null;
-      /**
-      * **r4_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value: string | null;
-      /**
       * **r4_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url: string | null;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value: string | null;
       /**
       * **r4_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -9591,18 +8457,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value: string | null;
-      /**
-      * **r4_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system: string | null;
-      /**
-      * **r4_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value: string | null;
       /**
       * **r4_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -9742,18 +8596,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description: string | null;
       /**
-      * **r4_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system: string | null;
-      /**
-      * **r4_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value: string | null;
-      /**
       * **r4_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -9765,18 +8607,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system: string | null;
-      /**
-      * **r4_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value: string | null;
       /**
       * **r4_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -10312,30 +9142,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value: string | null;
       /**
-      * **r4_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system: string | null;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value: string | null;
-      /**
       * **r4_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -10347,18 +9153,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value: string | null;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system: string | null;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value: string | null;
       /**
       * **r4_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -10407,18 +9201,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value: string | null;
-      /**
-      * **r4_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system: string | null;
-      /**
-      * **r4_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value: string | null;
       /**
       * **r4_sp1_idx.group_type_system**
       * - `text` in database
@@ -10522,18 +9304,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number: string | null;
       /**
-      * **r4_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value: string | null;
-      /**
       * **r4_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -10545,18 +9315,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value: string | null;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system: string | null;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value: string | null;
       /**
       * **r4_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -10570,18 +9328,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value: string | null;
-      /**
       * **r4_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -10593,18 +9339,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system: string | null;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value: string | null;
       /**
       * **r4_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -10768,18 +9502,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value: number | null;
       /**
-      * **r4_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system: string | null;
-      /**
-      * **r4_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value: string | null;
-      /**
       * **r4_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -10840,18 +9562,6 @@ declare module 'zapatos/schema' {
       */
       library_title: string | null;
       /**
-      * **r4_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system: string | null;
-      /**
-      * **r4_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value: string | null;
-      /**
       * **r4_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -10870,18 +9580,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value: string | null;
       /**
-      * **r4_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value: string | null;
-      /**
       * **r4_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -10899,12 +9597,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title: string | null;
-      /**
-      * **r4_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address: string | null;
       /**
       * **r4_sp1_idx.location_address_city**
       * - `text` in database
@@ -11092,30 +9784,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system: string | null;
-      /**
-      * **r4_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value: string | null;
-      /**
-      * **r4_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system: string | null;
-      /**
-      * **r4_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value: string | null;
-      /**
       * **r4_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -11128,30 +9796,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value: string | null;
       /**
-      * **r4_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system: string | null;
-      /**
-      * **r4_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value: string | null;
-      /**
-      * **r4_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system: string | null;
-      /**
-      * **r4_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value: string | null;
-      /**
       * **r4_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -11163,18 +9807,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system: string | null;
-      /**
-      * **r4_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value: string | null;
       /**
       * **r4_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -11212,18 +9844,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value: string | null;
-      /**
       * **r4_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -11248,30 +9868,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value: string | null;
-      /**
       * **r4_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -11295,18 +9891,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value: string | null;
       /**
       * **r4_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -11344,18 +9928,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value: string | null;
       /**
-      * **r4_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system: string | null;
-      /**
-      * **r4_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value: string | null;
-      /**
       * **r4_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -11368,18 +9940,6 @@ declare module 'zapatos/schema' {
       */
       medicationstatement_effective_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_system: string | null;
-      /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_value: string | null;
-      /**
       * **r4_sp1_idx.membership_email_system**
       * - `text` in database
       * - Nullable, no default
@@ -11391,12 +9951,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       membership_email_value: string | null;
-      /**
-      * **r4_sp1_idx.membership_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      membership_name: string | null;
       /**
       * **r4_sp1_idx.membership_role_system**
       * - `text` in database
@@ -11518,30 +10072,6 @@ declare module 'zapatos/schema' {
       */
       messagetopic_topic_value: string | null;
       /**
-      * **r4_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system: string | null;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value: string | null;
-      /**
       * **r4_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -11584,30 +10114,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible: string | null;
       /**
-      * **r4_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system: string | null;
-      /**
-      * **r4_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value: string | null;
-      /**
       * **r4_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -11619,18 +10125,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system: string | null;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value: string | null;
       /**
       * **r4_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -11644,30 +10138,6 @@ declare module 'zapatos/schema' {
       */
       nutritionorder_status_value: string | null;
       /**
-      * **r4_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value: string | null;
-      /**
-      * **r4_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value: string | null;
-      /**
       * **r4_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -11680,18 +10150,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value: string | null;
       /**
-      * **r4_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value: string | null;
-      /**
       * **r4_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -11703,42 +10161,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value: number | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system: string | null;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value: number | null;
       /**
       * **r4_sp1_idx.observation_value_string**
       * - `text` in database
@@ -11884,18 +10306,6 @@ declare module 'zapatos/schema' {
       */
       paymentnotice_created_start: db.TimestampTzString | null;
       /**
-      * **r4_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system: string | null;
-      /**
-      * **r4_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value: string | null;
-      /**
       * **r4_sp1_idx.paymentnotice_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -12010,18 +10420,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title: string | null;
       /**
-      * **r4_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value: string | null;
-      /**
       * **r4_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -12075,18 +10473,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system: string | null;
-      /**
-      * **r4_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value: string | null;
       /**
       * **r4_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -12273,18 +10659,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system: string | null;
-      /**
-      * **r4_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value: string | null;
       /**
       * **r4_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -12574,17 +10948,11 @@ declare module 'zapatos/schema' {
       */
       resource_source: string | null;
       /**
-      * **r4_sp1_idx.riskassessment_method_system**
+      * **r4_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system: string | null;
-      /**
-      * **r4_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value: string | null;
+      resource_type: string;
       /**
       * **r4_sp1_idx.riskevidencesynthesis_date_end**
       * - `timestamptz` in database
@@ -12736,30 +11104,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value: string | null;
       /**
-      * **r4_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system: string | null;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value: string | null;
-      /**
       * **r4_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -12795,18 +11139,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value: string | null;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system: string | null;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value: string | null;
       /**
       * **r4_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -12844,18 +11176,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value: string | null;
       /**
-      * **r4_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system: string | null;
-      /**
-      * **r4_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value: string | null;
-      /**
       * **r4_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -12880,18 +11200,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value: string | null;
       /**
-      * **r4_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system: string | null;
-      /**
-      * **r4_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value: string | null;
-      /**
       * **r4_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -12903,18 +11211,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value: string | null;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system: string | null;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value: string | null;
       /**
       * **r4_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -13042,18 +11338,6 @@ declare module 'zapatos/schema' {
       */
       supplydelivery_status_value: string | null;
       /**
-      * **r4_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system: string | null;
-      /**
-      * **r4_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value: string | null;
-      /**
       * **r4_sp1_idx.supplyrequest_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -13077,30 +11361,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start: db.TimestampTzString | null;
-      /**
-      * **r4_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system: string | null;
-      /**
-      * **r4_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value: string | null;
-      /**
-      * **r4_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system: string | null;
-      /**
-      * **r4_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value: string | null;
       /**
       * **r4_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -13410,18 +11670,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -13524,54 +11772,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -13595,30 +11795,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -13716,18 +11892,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -13739,30 +11903,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -13854,18 +11994,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -13883,18 +12011,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -14052,18 +12168,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -14159,18 +12263,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clientapplication_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
@@ -14394,18 +12486,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -14471,30 +12551,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -14574,18 +12630,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -14651,18 +12695,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -14736,18 +12768,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -14784,35 +12804,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -14825,18 +12821,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -14976,18 +12960,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -14999,18 +12971,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -15546,30 +13506,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -15581,18 +13517,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -15641,18 +13565,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.group_type_system**
       * - `text` in database
@@ -15756,18 +13668,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -15779,18 +13679,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -15804,18 +13692,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -15827,18 +13703,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -16002,18 +13866,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16074,18 +13926,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -16104,18 +13944,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -16133,12 +13961,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.location_address_city**
       * - `text` in database
@@ -16326,30 +14148,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -16362,30 +14160,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16397,18 +14171,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -16446,18 +14208,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16482,30 +14232,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -16529,18 +14255,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -16578,18 +14292,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16602,18 +14304,6 @@ declare module 'zapatos/schema' {
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.membership_email_system**
       * - `text` in database
       * - Nullable, no default
@@ -16625,12 +14315,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       membership_email_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.membership_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      membership_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.membership_role_system**
       * - `text` in database
@@ -16752,30 +14436,6 @@ declare module 'zapatos/schema' {
       */
       messagetopic_topic_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -16818,30 +14478,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16853,18 +14489,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -16878,30 +14502,6 @@ declare module 'zapatos/schema' {
       */
       nutritionorder_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -16914,18 +14514,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -16937,42 +14525,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.observation_value_string**
       * - `text` in database
@@ -17118,18 +14670,6 @@ declare module 'zapatos/schema' {
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.paymentnotice_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -17244,18 +14784,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -17309,18 +14837,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -17507,18 +15023,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -17808,17 +15312,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.riskassessment_method_system**
+      * **r4_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.riskevidencesynthesis_date_end**
       * - `timestamptz` in database
@@ -17970,30 +15468,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -18029,18 +15503,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -18078,18 +15540,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -18114,18 +15564,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -18137,18 +15575,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -18276,18 +15702,6 @@ declare module 'zapatos/schema' {
       */
       supplydelivery_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_sp1_idx.supplyrequest_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -18311,30 +15725,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -18644,18 +16034,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -18758,54 +16136,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -18829,30 +16159,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -18950,18 +16256,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -18973,30 +16267,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -19088,18 +16358,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -19117,18 +16375,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -19286,18 +16532,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -19393,18 +16627,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clientapplication_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
@@ -19628,18 +16850,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -19705,30 +16915,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -19808,18 +16994,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -19885,18 +17059,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -19970,18 +17132,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -20018,35 +17168,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -20059,18 +17185,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -20210,18 +17324,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -20233,18 +17335,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -20780,30 +17870,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -20815,18 +17881,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -20875,18 +17929,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.group_type_system**
       * - `text` in database
@@ -20990,18 +18032,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -21013,18 +18043,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -21038,18 +18056,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -21061,18 +18067,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -21236,18 +18230,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -21308,18 +18290,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -21338,18 +18308,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -21367,12 +18325,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.location_address_city**
       * - `text` in database
@@ -21560,30 +18512,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -21596,30 +18524,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -21631,18 +18535,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -21680,18 +18572,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -21716,30 +18596,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -21763,18 +18619,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -21812,18 +18656,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -21836,18 +18668,6 @@ declare module 'zapatos/schema' {
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.membership_email_system**
       * - `text` in database
       * - Nullable, no default
@@ -21859,12 +18679,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       membership_email_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.membership_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      membership_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.membership_role_system**
       * - `text` in database
@@ -21986,30 +18800,6 @@ declare module 'zapatos/schema' {
       */
       messagetopic_topic_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -22052,30 +18842,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -22087,18 +18853,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -22112,30 +18866,6 @@ declare module 'zapatos/schema' {
       */
       nutritionorder_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -22148,18 +18878,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -22171,42 +18889,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.observation_value_string**
       * - `text` in database
@@ -22352,18 +19034,6 @@ declare module 'zapatos/schema' {
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.paymentnotice_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -22478,18 +19148,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -22543,18 +19201,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -22741,18 +19387,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -23042,17 +19676,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.riskassessment_method_system**
+      * **r4_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      resource_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_sp1_idx.riskevidencesynthesis_date_end**
       * - `timestamptz` in database
@@ -23204,30 +19832,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -23263,18 +19867,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -23312,18 +19904,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -23348,18 +19928,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -23371,18 +19939,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -23510,18 +20066,6 @@ declare module 'zapatos/schema' {
       */
       supplydelivery_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4_sp1_idx.supplyrequest_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -23545,30 +20089,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -23878,18 +20398,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -23992,54 +20500,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -24063,30 +20523,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -24184,18 +20620,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -24207,30 +20631,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -24322,18 +20722,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -24351,18 +20739,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -24520,18 +20896,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -24627,18 +20991,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clientapplication_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
@@ -24862,18 +21214,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -24939,30 +21279,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -25042,18 +21358,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -25119,18 +21423,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -25204,18 +21496,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -25252,35 +21532,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -25293,18 +21549,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -25444,18 +21688,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -25467,18 +21699,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -26014,30 +22234,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26049,18 +22245,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -26109,18 +22293,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.group_type_system**
       * - `text` in database
@@ -26224,18 +22396,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26247,18 +22407,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -26272,18 +22420,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26295,18 +22431,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -26470,18 +22594,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -26542,18 +22654,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -26572,18 +22672,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26601,12 +22689,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.location_address_city**
       * - `text` in database
@@ -26794,30 +22876,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26830,30 +22888,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -26865,18 +22899,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -26914,18 +22936,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -26950,30 +22960,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -26997,18 +22983,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -27046,18 +23020,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -27070,18 +23032,6 @@ declare module 'zapatos/schema' {
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.medicinalproductauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductauthorization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.membership_email_system**
       * - `text` in database
       * - Nullable, no default
@@ -27093,12 +23043,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       membership_email_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.membership_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      membership_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.membership_role_system**
       * - `text` in database
@@ -27220,30 +23164,6 @@ declare module 'zapatos/schema' {
       */
       messagetopic_topic_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -27286,30 +23206,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -27321,18 +23217,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -27346,30 +23230,6 @@ declare module 'zapatos/schema' {
       */
       nutritionorder_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -27382,18 +23242,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -27405,42 +23253,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.observation_value_string**
       * - `text` in database
@@ -27586,18 +23398,6 @@ declare module 'zapatos/schema' {
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.paymentnotice_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -27712,18 +23512,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -27777,18 +23565,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -27975,18 +23751,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -28276,17 +24040,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.riskassessment_method_system**
+      * **r4_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_sp1_idx.riskevidencesynthesis_date_end**
       * - `timestamptz` in database
@@ -28438,30 +24196,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -28497,18 +24231,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -28546,18 +24268,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -28582,18 +24292,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -28605,18 +24303,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -28744,18 +24430,6 @@ declare module 'zapatos/schema' {
       */
       supplydelivery_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4_sp1_idx.supplyrequest_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -28779,30 +24453,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -31818,18 +27468,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value: string | null;
       /**
-      * **r4b_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value: string | null;
-      /**
       * **r4b_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -31908,18 +27546,6 @@ declare module 'zapatos/schema' {
       */
       activitydefinition_version_value: string | null;
       /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_value: string | null;
-      /**
       * **r4b_sp1_idx.adverseevent_actuality_system**
       * - `text` in database
       * - Nullable, no default
@@ -31944,54 +27570,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start: Date | null;
       /**
-      * **r4b_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value: string | null;
-      /**
       * **r4b_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -32015,30 +27593,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start: Date | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value: string | null;
       /**
       * **r4b_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -32136,18 +27690,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value: string | null;
       /**
-      * **r4b_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value: string | null;
-      /**
       * **r4b_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -32159,30 +27701,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start: Date | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value: string | null;
       /**
       * **r4b_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -32274,18 +27792,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value: string | null;
       /**
-      * **r4b_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value: string | null;
-      /**
       * **r4b_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -32303,18 +27809,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override: db.NumericString | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end: Date | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start: Date | null;
       /**
       * **r4b_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -32550,18 +28044,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start: Date | null;
       /**
-      * **r4b_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system: string | null;
-      /**
-      * **r4b_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value: string | null;
-      /**
       * **r4b_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -32652,18 +28134,6 @@ declare module 'zapatos/schema' {
       */
       claimresponse_use_value: string | null;
       /**
-      * **r4b_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end: Date | null;
-      /**
-      * **r4b_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start: Date | null;
-      /**
       * **r4b_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -32675,54 +28145,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clinicalimpression_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_value: string | null;
       /**
       * **r4b_sp1_idx.clinicalusedefinition_type_system**
       * - `text` in database
@@ -32946,18 +28368,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string: string | null;
       /**
-      * **r4b_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value: string | null;
-      /**
       * **r4b_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -33023,30 +28433,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start: Date | null;
-      /**
-      * **r4b_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value: string | null;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value: string | null;
       /**
       * **r4b_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -33126,18 +28512,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start: Date | null;
       /**
-      * **r4b_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system: string | null;
-      /**
-      * **r4b_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value: string | null;
-      /**
       * **r4b_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -33203,18 +28577,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value: string | null;
       /**
       * **r4b_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -33288,18 +28650,6 @@ declare module 'zapatos/schema' {
       */
       created_at: Date;
       /**
-      * **r4b_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value: string | null;
-      /**
       * **r4b_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -33336,35 +28686,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value: string | null;
       /**
-      * **r4b_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value: string | null;
-      /**
       * **r4b_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url: string | null;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -33377,18 +28703,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value: string | null;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value: string | null;
       /**
       * **r4b_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -33528,18 +28842,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description: string | null;
       /**
-      * **r4b_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system: string | null;
-      /**
-      * **r4b_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value: string | null;
-      /**
       * **r4b_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -33551,18 +28853,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start: Date | null;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system: string | null;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value: string | null;
       /**
       * **r4b_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -34014,30 +29304,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value: string | null;
       /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value: string | null;
-      /**
       * **r4b_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -34049,18 +29315,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value: string | null;
       /**
       * **r4b_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -34109,18 +29363,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value: string | null;
-      /**
-      * **r4b_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value: string | null;
       /**
       * **r4b_sp1_idx.group_type_system**
       * - `text` in database
@@ -34194,18 +29436,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number: string | null;
       /**
-      * **r4b_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value: string | null;
-      /**
       * **r4b_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -34217,18 +29447,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value: string | null;
       /**
       * **r4b_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -34242,18 +29460,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start: Date | null;
       /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value: string | null;
-      /**
       * **r4b_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -34265,18 +29471,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value: string | null;
       /**
       * **r4b_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -34337,30 +29531,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingredient_identifier_value: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_role_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_system: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_role_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_value: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_value: string | null;
       /**
       * **r4b_sp1_idx.insuranceplan_phonetic**
       * - `text` in database
@@ -34476,18 +29646,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value: db.NumericString | null;
       /**
-      * **r4b_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value: string | null;
-      /**
       * **r4b_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -34548,18 +29706,6 @@ declare module 'zapatos/schema' {
       */
       library_title: string | null;
       /**
-      * **r4b_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value: string | null;
-      /**
       * **r4b_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -34578,18 +29724,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value: string | null;
       /**
-      * **r4b_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value: string | null;
-      /**
       * **r4b_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -34607,12 +29741,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title: string | null;
-      /**
-      * **r4b_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address: string | null;
       /**
       * **r4b_sp1_idx.location_address_city**
       * - `text` in database
@@ -34673,18 +29801,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       location_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_value: string | null;
       /**
       * **r4b_sp1_idx.measure_date_end**
       * - `timestamptz` in database
@@ -34812,30 +29928,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start: Date | null;
       /**
-      * **r4b_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value: string | null;
-      /**
-      * **r4b_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value: string | null;
-      /**
       * **r4b_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -34848,30 +29940,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value: string | null;
       /**
-      * **r4b_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value: string | null;
-      /**
-      * **r4b_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value: string | null;
-      /**
       * **r4b_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -34883,18 +29951,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start: Date | null;
-      /**
-      * **r4b_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value: string | null;
       /**
       * **r4b_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -34932,18 +29988,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start: Date | null;
       /**
-      * **r4b_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -34968,30 +30012,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start: Date | null;
       /**
-      * **r4b_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -35015,18 +30035,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start: Date | null;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value: string | null;
       /**
       * **r4b_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -35064,18 +30072,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value: string | null;
       /**
-      * **r4b_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -35087,42 +30083,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationstatement_effective_start: Date | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.messagedefinition_category_system**
       * - `text` in database
@@ -35196,30 +30156,6 @@ declare module 'zapatos/schema' {
       */
       messageheader_source_uri: string | null;
       /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value: string | null;
-      /**
       * **r4b_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -35262,30 +30198,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible: string | null;
       /**
-      * **r4b_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value: string | null;
-      /**
       * **r4b_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -35297,18 +30209,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start: Date | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value: string | null;
       /**
       * **r4b_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -35334,30 +30234,6 @@ declare module 'zapatos/schema' {
       */
       nutritionproduct_status_value: string | null;
       /**
-      * **r4b_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value: string | null;
-      /**
-      * **r4b_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value: string | null;
-      /**
       * **r4b_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -35370,18 +30246,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value: string | null;
       /**
-      * **r4b_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value: string | null;
-      /**
       * **r4b_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -35393,42 +30257,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start: Date | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value: db.NumericString | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value: db.NumericString | null;
       /**
       * **r4b_sp1_idx.observation_value_string**
       * - `text` in database
@@ -35550,18 +30378,6 @@ declare module 'zapatos/schema' {
       */
       packagedproductdefinition_name_value: string | null;
       /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_value: string | null;
-      /**
       * **r4b_sp1_idx.patient_active_system**
       * - `text` in database
       * - Nullable, no default
@@ -35597,18 +30413,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       paymentnotice_created_start: Date | null;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value: string | null;
       /**
       * **r4b_sp1_idx.paymentnotice_status_system**
       * - `text` in database
@@ -35724,18 +30528,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title: string | null;
       /**
-      * **r4b_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value: string | null;
-      /**
       * **r4b_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -35789,18 +30581,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start: Date | null;
-      /**
-      * **r4b_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value: string | null;
       /**
       * **r4b_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -35970,35 +30750,11 @@ declare module 'zapatos/schema' {
       */
       regulatedauthorization_case_system: string | null;
       /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_value: string | null;
-      /**
       * **r4b_sp1_idx.regulatedauthorization_case_value**
       * - `text` in database
       * - Nullable, no default
       */
       regulatedauthorization_case_value: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_value: string | null;
       /**
       * **r4b_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -36023,18 +30779,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start: Date | null;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value: string | null;
       /**
       * **r4b_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -36324,17 +31068,11 @@ declare module 'zapatos/schema' {
       */
       resource_source: string | null;
       /**
-      * **r4b_sp1_idx.riskassessment_method_system**
+      * **r4b_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system: string | null;
-      /**
-      * **r4b_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value: string | null;
+      resource_type: string;
       /**
       * **r4b_sp1_idx.schedule_active_system**
       * - `text` in database
@@ -36408,30 +31146,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value: string | null;
       /**
-      * **r4b_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end: Date | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start: Date | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value: string | null;
-      /**
       * **r4b_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -36467,18 +31181,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value: string | null;
       /**
       * **r4b_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -36516,18 +31218,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value: string | null;
       /**
-      * **r4b_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value: string | null;
-      /**
       * **r4b_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -36552,18 +31242,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value: string | null;
       /**
-      * **r4b_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value: string | null;
-      /**
       * **r4b_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -36575,18 +31253,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value: string | null;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -36750,18 +31416,6 @@ declare module 'zapatos/schema' {
       */
       substance_status_value: string | null;
       /**
-      * **r4b_sp1_idx.substancedefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_system: string | null;
-      /**
-      * **r4b_sp1_idx.substancedefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_value: string | null;
-      /**
       * **r4b_sp1_idx.supplydelivery_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -36773,18 +31427,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       supplydelivery_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value: string | null;
       /**
       * **r4b_sp1_idx.supplyrequest_status_system**
       * - `text` in database
@@ -36809,30 +31451,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start: Date | null;
-      /**
-      * **r4b_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value: string | null;
       /**
       * **r4b_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -37094,18 +31712,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value: string | null;
       /**
-      * **r4b_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value: string | null;
-      /**
       * **r4b_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -37184,18 +31790,6 @@ declare module 'zapatos/schema' {
       */
       activitydefinition_version_value: string | null;
       /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_value: string | null;
-      /**
       * **r4b_sp1_idx.adverseevent_actuality_system**
       * - `text` in database
       * - Nullable, no default
@@ -37220,54 +31814,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system: string | null;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value: string | null;
-      /**
       * **r4b_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -37291,30 +31837,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value: string | null;
       /**
       * **r4b_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -37412,18 +31934,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value: string | null;
       /**
-      * **r4b_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value: string | null;
-      /**
       * **r4b_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -37435,30 +31945,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system: string | null;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value: string | null;
       /**
       * **r4b_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -37550,18 +32036,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value: string | null;
       /**
-      * **r4b_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value: string | null;
-      /**
       * **r4b_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -37579,18 +32053,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override: number | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start: db.TimestampTzString | null;
       /**
       * **r4b_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -37826,18 +32288,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system: string | null;
-      /**
-      * **r4b_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value: string | null;
-      /**
       * **r4b_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -37928,18 +32378,6 @@ declare module 'zapatos/schema' {
       */
       claimresponse_use_value: string | null;
       /**
-      * **r4b_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start: db.TimestampTzString | null;
-      /**
       * **r4b_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -37951,54 +32389,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clinicalimpression_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_value: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_system: string | null;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_value: string | null;
       /**
       * **r4b_sp1_idx.clinicalusedefinition_type_system**
       * - `text` in database
@@ -38222,18 +32612,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string: string | null;
       /**
-      * **r4b_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value: string | null;
-      /**
       * **r4b_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -38299,30 +32677,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value: string | null;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value: string | null;
       /**
       * **r4b_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -38402,18 +32756,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system: string | null;
-      /**
-      * **r4b_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value: string | null;
-      /**
       * **r4b_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -38479,18 +32821,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value: string | null;
       /**
       * **r4b_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -38564,18 +32894,6 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
-      * **r4b_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value: string | null;
-      /**
       * **r4b_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -38612,35 +32930,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value: string | null;
       /**
-      * **r4b_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value: string | null;
-      /**
       * **r4b_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url: string | null;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -38653,18 +32947,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value: string | null;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value: string | null;
       /**
       * **r4b_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -38804,18 +33086,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description: string | null;
       /**
-      * **r4b_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system: string | null;
-      /**
-      * **r4b_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value: string | null;
-      /**
       * **r4b_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -38827,18 +33097,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system: string | null;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value: string | null;
       /**
       * **r4b_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -39290,30 +33548,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value: string | null;
       /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system: string | null;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value: string | null;
-      /**
       * **r4b_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -39325,18 +33559,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value: string | null;
       /**
       * **r4b_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -39385,18 +33607,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value: string | null;
-      /**
-      * **r4b_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value: string | null;
       /**
       * **r4b_sp1_idx.group_type_system**
       * - `text` in database
@@ -39470,18 +33680,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number: string | null;
       /**
-      * **r4b_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value: string | null;
-      /**
       * **r4b_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -39493,18 +33691,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value: string | null;
       /**
       * **r4b_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -39518,18 +33704,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value: string | null;
-      /**
       * **r4b_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -39541,18 +33715,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system: string | null;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value: string | null;
       /**
       * **r4b_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -39613,30 +33775,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingredient_identifier_value: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_role_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_system: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_role_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_value: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_value: string | null;
       /**
       * **r4b_sp1_idx.insuranceplan_phonetic**
       * - `text` in database
@@ -39752,18 +33890,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value: number | null;
       /**
-      * **r4b_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value: string | null;
-      /**
       * **r4b_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -39824,18 +33950,6 @@ declare module 'zapatos/schema' {
       */
       library_title: string | null;
       /**
-      * **r4b_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value: string | null;
-      /**
       * **r4b_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -39854,18 +33968,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value: string | null;
       /**
-      * **r4b_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value: string | null;
-      /**
       * **r4b_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -39883,12 +33985,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title: string | null;
-      /**
-      * **r4b_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address: string | null;
       /**
       * **r4b_sp1_idx.location_address_city**
       * - `text` in database
@@ -39949,18 +34045,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       location_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_value: string | null;
       /**
       * **r4b_sp1_idx.measure_date_end**
       * - `timestamptz` in database
@@ -40088,30 +34172,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value: string | null;
-      /**
-      * **r4b_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value: string | null;
-      /**
       * **r4b_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -40124,30 +34184,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value: string | null;
       /**
-      * **r4b_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value: string | null;
-      /**
-      * **r4b_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system: string | null;
-      /**
-      * **r4b_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value: string | null;
-      /**
       * **r4b_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -40159,18 +34195,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system: string | null;
-      /**
-      * **r4b_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value: string | null;
       /**
       * **r4b_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -40208,18 +34232,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -40244,30 +34256,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start: db.TimestampTzString | null;
       /**
-      * **r4b_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -40291,18 +34279,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value: string | null;
       /**
       * **r4b_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -40340,18 +34316,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value: string | null;
       /**
-      * **r4b_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value: string | null;
-      /**
       * **r4b_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -40363,42 +34327,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationstatement_effective_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.messagedefinition_category_system**
       * - `text` in database
@@ -40472,30 +34400,6 @@ declare module 'zapatos/schema' {
       */
       messageheader_source_uri: string | null;
       /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system: string | null;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value: string | null;
-      /**
       * **r4b_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -40538,30 +34442,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible: string | null;
       /**
-      * **r4b_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value: string | null;
-      /**
       * **r4b_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -40573,18 +34453,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system: string | null;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value: string | null;
       /**
       * **r4b_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -40610,30 +34478,6 @@ declare module 'zapatos/schema' {
       */
       nutritionproduct_status_value: string | null;
       /**
-      * **r4b_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value: string | null;
-      /**
-      * **r4b_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value: string | null;
-      /**
       * **r4b_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -40646,18 +34490,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value: string | null;
       /**
-      * **r4b_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value: string | null;
-      /**
       * **r4b_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -40669,42 +34501,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value: number | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system: string | null;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value: number | null;
       /**
       * **r4b_sp1_idx.observation_value_string**
       * - `text` in database
@@ -40826,18 +34622,6 @@ declare module 'zapatos/schema' {
       */
       packagedproductdefinition_name_value: string | null;
       /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_value: string | null;
-      /**
       * **r4b_sp1_idx.patient_active_system**
       * - `text` in database
       * - Nullable, no default
@@ -40873,18 +34657,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       paymentnotice_created_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value: string | null;
       /**
       * **r4b_sp1_idx.paymentnotice_status_system**
       * - `text` in database
@@ -41000,18 +34772,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title: string | null;
       /**
-      * **r4b_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value: string | null;
-      /**
       * **r4b_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -41065,18 +34825,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value: string | null;
       /**
       * **r4b_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -41246,35 +34994,11 @@ declare module 'zapatos/schema' {
       */
       regulatedauthorization_case_system: string | null;
       /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_value: string | null;
-      /**
       * **r4b_sp1_idx.regulatedauthorization_case_value**
       * - `text` in database
       * - Nullable, no default
       */
       regulatedauthorization_case_value: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_value: string | null;
       /**
       * **r4b_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -41299,18 +35023,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value: string | null;
       /**
       * **r4b_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -41600,17 +35312,11 @@ declare module 'zapatos/schema' {
       */
       resource_source: string | null;
       /**
-      * **r4b_sp1_idx.riskassessment_method_system**
+      * **r4b_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system: string | null;
-      /**
-      * **r4b_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value: string | null;
+      resource_type: string;
       /**
       * **r4b_sp1_idx.schedule_active_system**
       * - `text` in database
@@ -41684,30 +35390,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value: string | null;
       /**
-      * **r4b_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value: string | null;
-      /**
       * **r4b_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -41743,18 +35425,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value: string | null;
       /**
       * **r4b_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -41792,18 +35462,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value: string | null;
       /**
-      * **r4b_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value: string | null;
-      /**
       * **r4b_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -41828,18 +35486,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value: string | null;
       /**
-      * **r4b_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value: string | null;
-      /**
       * **r4b_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -41851,18 +35497,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value: string | null;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system: string | null;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value: string | null;
       /**
       * **r4b_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -42026,18 +35660,6 @@ declare module 'zapatos/schema' {
       */
       substance_status_value: string | null;
       /**
-      * **r4b_sp1_idx.substancedefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_system: string | null;
-      /**
-      * **r4b_sp1_idx.substancedefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_value: string | null;
-      /**
       * **r4b_sp1_idx.supplydelivery_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -42049,18 +35671,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       supplydelivery_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system: string | null;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value: string | null;
       /**
       * **r4b_sp1_idx.supplyrequest_status_system**
       * - `text` in database
@@ -42085,30 +35695,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start: db.TimestampTzString | null;
-      /**
-      * **r4b_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system: string | null;
-      /**
-      * **r4b_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value: string | null;
-      /**
-      * **r4b_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system: string | null;
-      /**
-      * **r4b_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value: string | null;
       /**
       * **r4b_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -42370,18 +35956,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -42460,18 +36034,6 @@ declare module 'zapatos/schema' {
       */
       activitydefinition_version_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.adverseevent_actuality_system**
       * - `text` in database
       * - Nullable, no default
@@ -42496,54 +36058,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -42567,30 +36081,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -42688,18 +36178,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -42711,30 +36189,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -42826,18 +36280,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -42855,18 +36297,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -43102,18 +36532,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -43204,18 +36622,6 @@ declare module 'zapatos/schema' {
       */
       claimresponse_use_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -43227,54 +36633,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clinicalimpression_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.clinicalusedefinition_type_system**
       * - `text` in database
@@ -43498,18 +36856,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -43575,30 +36921,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -43678,18 +37000,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -43755,18 +37065,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -43840,18 +37138,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -43888,35 +37174,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -43929,18 +37191,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -44080,18 +37330,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -44103,18 +37341,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -44566,30 +37792,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -44601,18 +37803,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -44661,18 +37851,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.group_type_system**
       * - `text` in database
@@ -44746,18 +37924,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -44769,18 +37935,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -44794,18 +37948,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -44817,18 +37959,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -44889,30 +38019,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingredient_identifier_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.ingredient_role_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.ingredient_role_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.insuranceplan_phonetic**
       * - `text` in database
@@ -45028,18 +38134,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45100,18 +38194,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -45130,18 +38212,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -45159,12 +38229,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.location_address_city**
       * - `text` in database
@@ -45225,18 +38289,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       location_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.measure_date_end**
       * - `timestamptz` in database
@@ -45364,30 +38416,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -45400,30 +38428,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45435,18 +38439,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -45484,18 +38476,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45520,30 +38500,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -45567,18 +38523,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -45616,18 +38560,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45639,42 +38571,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.messagedefinition_category_system**
       * - `text` in database
@@ -45748,30 +38644,6 @@ declare module 'zapatos/schema' {
       */
       messageheader_source_uri?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -45814,30 +38686,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45849,18 +38697,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -45886,30 +38722,6 @@ declare module 'zapatos/schema' {
       */
       nutritionproduct_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -45922,18 +38734,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -45945,42 +38745,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.observation_value_string**
       * - `text` in database
@@ -46102,18 +38866,6 @@ declare module 'zapatos/schema' {
       */
       packagedproductdefinition_name_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.patient_active_system**
       * - `text` in database
       * - Nullable, no default
@@ -46149,18 +38901,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.paymentnotice_status_system**
       * - `text` in database
@@ -46276,18 +39016,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -46341,18 +39069,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -46522,35 +39238,11 @@ declare module 'zapatos/schema' {
       */
       regulatedauthorization_case_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.regulatedauthorization_case_value**
       * - `text` in database
       * - Nullable, no default
       */
       regulatedauthorization_case_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -46575,18 +39267,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -46876,17 +39556,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.riskassessment_method_system**
+      * **r4b_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.schedule_active_system**
       * - `text` in database
@@ -46960,30 +39634,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -47019,18 +39669,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -47068,18 +39706,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -47104,18 +39730,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -47127,18 +39741,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -47302,18 +39904,6 @@ declare module 'zapatos/schema' {
       */
       substance_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_sp1_idx.substancedefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.substancedefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_sp1_idx.supplydelivery_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -47325,18 +39915,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       supplydelivery_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.supplyrequest_status_system**
       * - `text` in database
@@ -47361,30 +39939,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **r4b_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -47646,18 +40200,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -47736,18 +40278,6 @@ declare module 'zapatos/schema' {
       */
       activitydefinition_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.adverseevent_actuality_system**
       * - `text` in database
       * - Nullable, no default
@@ -47772,54 +40302,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -47843,30 +40325,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -47964,18 +40422,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -47987,30 +40433,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -48102,18 +40524,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -48131,18 +40541,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -48378,18 +40776,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -48480,18 +40866,6 @@ declare module 'zapatos/schema' {
       */
       claimresponse_use_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -48503,54 +40877,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clinicalimpression_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.clinicalusedefinition_type_system**
       * - `text` in database
@@ -48774,18 +41100,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -48851,30 +41165,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -48954,18 +41244,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -49031,18 +41309,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -49116,18 +41382,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -49164,35 +41418,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -49205,18 +41435,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -49356,18 +41574,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -49379,18 +41585,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -49842,30 +42036,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -49877,18 +42047,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -49937,18 +42095,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.group_type_system**
       * - `text` in database
@@ -50022,18 +42168,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -50045,18 +42179,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -50070,18 +42192,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -50093,18 +42203,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -50165,30 +42263,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingredient_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.ingredient_role_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.ingredient_role_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.insuranceplan_phonetic**
       * - `text` in database
@@ -50304,18 +42378,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -50376,18 +42438,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -50406,18 +42456,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -50435,12 +42473,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.location_address_city**
       * - `text` in database
@@ -50501,18 +42533,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       location_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.measure_date_end**
       * - `timestamptz` in database
@@ -50640,30 +42660,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -50676,30 +42672,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -50711,18 +42683,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -50760,18 +42720,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -50796,30 +42744,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -50843,18 +42767,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -50892,18 +42804,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -50915,42 +42815,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.messagedefinition_category_system**
       * - `text` in database
@@ -51024,30 +42888,6 @@ declare module 'zapatos/schema' {
       */
       messageheader_source_uri?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -51090,30 +42930,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -51125,18 +42941,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -51162,30 +42966,6 @@ declare module 'zapatos/schema' {
       */
       nutritionproduct_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -51198,18 +42978,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -51221,42 +42989,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.observation_value_string**
       * - `text` in database
@@ -51378,18 +43110,6 @@ declare module 'zapatos/schema' {
       */
       packagedproductdefinition_name_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.patient_active_system**
       * - `text` in database
       * - Nullable, no default
@@ -51425,18 +43145,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.paymentnotice_status_system**
       * - `text` in database
@@ -51552,18 +43260,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -51617,18 +43313,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -51798,35 +43482,11 @@ declare module 'zapatos/schema' {
       */
       regulatedauthorization_case_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.regulatedauthorization_case_value**
       * - `text` in database
       * - Nullable, no default
       */
       regulatedauthorization_case_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -51851,18 +43511,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -52152,17 +43800,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.riskassessment_method_system**
+      * **r4b_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      resource_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_sp1_idx.schedule_active_system**
       * - `text` in database
@@ -52236,30 +43878,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -52295,18 +43913,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -52344,18 +43950,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -52380,18 +43974,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -52403,18 +43985,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -52578,18 +44148,6 @@ declare module 'zapatos/schema' {
       */
       substance_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **r4b_sp1_idx.substancedefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.substancedefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **r4b_sp1_idx.supplydelivery_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -52601,18 +44159,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       supplydelivery_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.supplyrequest_status_system**
       * - `text` in database
@@ -52637,30 +44183,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **r4b_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **r4b_sp1_idx.task_group_identifier_system**
       * - `text` in database
@@ -52922,18 +44444,6 @@ declare module 'zapatos/schema' {
       */
       account_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.account_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.account_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      account_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.activitydefinition_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -53012,18 +44522,6 @@ declare module 'zapatos/schema' {
       */
       activitydefinition_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.administrableproductdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      administrableproductdefinition_dose_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.adverseevent_actuality_system**
       * - `text` in database
       * - Nullable, no default
@@ -53048,54 +44546,6 @@ declare module 'zapatos/schema' {
       */
       adverseevent_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.adverseevent_event_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.adverseevent_event_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_event_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.adverseevent_seriousness_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_seriousness_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.adverseevent_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      adverseevent_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.allergyintolerance_criticality_system**
       * - `text` in database
       * - Nullable, no default
@@ -53119,30 +44569,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       allergyintolerance_last_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.allergyintolerance_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      allergyintolerance_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.appointment_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      appointment_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.appointment_date_end**
       * - `timestamptz` in database
@@ -53240,18 +44666,6 @@ declare module 'zapatos/schema' {
       */
       auditevent_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.basic_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.basic_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      basic_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.basic_created_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -53263,30 +44677,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       basic_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.bodystructure_location_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_location_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.bodystructure_morphology_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      bodystructure_morphology_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.bundle_identifier_system**
       * - `text` in database
@@ -53378,18 +44768,6 @@ declare module 'zapatos/schema' {
       */
       careteam_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.chargeitem_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.chargeitem_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      chargeitem_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.chargeitem_entered_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -53407,18 +44785,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       chargeitem_factor_override?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.chargeitem_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      chargeitem_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.chargeitem_price_override_end_code**
       * - `text` in database
@@ -53654,18 +45020,6 @@ declare module 'zapatos/schema' {
       */
       claim_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.claim_priority_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.claim_priority_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      claim_priority_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.claim_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -53756,18 +45110,6 @@ declare module 'zapatos/schema' {
       */
       claimresponse_use_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.clinical_date_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinical_date_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      clinical_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.clinicalimpression_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -53779,54 +45121,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       clinicalimpression_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_contraindication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_contraindication_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_effect_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_effect_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_indication_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_indication_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.clinicalusedefinition_interaction_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      clinicalusedefinition_interaction_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.clinicalusedefinition_type_system**
       * - `text` in database
@@ -54050,18 +45344,6 @@ declare module 'zapatos/schema' {
       */
       condition_abatement_string?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.condition_clinical_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.condition_clinical_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_clinical_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.condition_onset_age_end_code**
       * - `text` in database
       * - Nullable, no default
@@ -54127,30 +45409,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       condition_recorded_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.condition_severity_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.condition_severity_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_severity_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.condition_verification_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      condition_verification_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.conformance_date_end**
       * - `timestamptz` in database
@@ -54230,18 +45488,6 @@ declare module 'zapatos/schema' {
       */
       consent_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.consent_scope_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.consent_scope_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      consent_scope_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.consent_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -54307,18 +45553,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       coverage_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.coverage_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.coverage_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      coverage_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.coverageeligibilityrequest_created_end**
       * - `timestamptz` in database
@@ -54392,18 +45626,6 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.detectedissue_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.detectedissue_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      detectedissue_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.detectedissue_identified_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -54440,35 +45662,11 @@ declare module 'zapatos/schema' {
       */
       device_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.device_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.device_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      device_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.device_url**
       * - `text` in database
       * - Nullable, no default
       */
       device_url?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.devicedefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicedefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.devicemetric_category_system**
       * - `text` in database
@@ -54481,18 +45679,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       devicemetric_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.devicemetric_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      devicemetric_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.devicerequest_authored_on_end**
       * - `timestamptz` in database
@@ -54632,18 +45818,6 @@ declare module 'zapatos/schema' {
       */
       documentreference_description?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.documentreference_facility_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.documentreference_facility_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_facility_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.documentreference_period_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -54655,18 +45829,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       documentreference_period_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.documentreference_setting_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      documentreference_setting_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.documentreference_status_system**
       * - `text` in database
@@ -55118,30 +46280,6 @@ declare module 'zapatos/schema' {
       */
       explanationofbenefit_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_relationship_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_relationship_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.familymemberhistory_sex_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      familymemberhistory_sex_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.familymemberhistory_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -55153,18 +46291,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       familymemberhistory_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.goal_achievement_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      goal_achievement_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.goal_lifecycle_status_system**
       * - `text` in database
@@ -55213,18 +46339,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       group_actual_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.group_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.group_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      group_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.group_type_system**
       * - `text` in database
@@ -55298,18 +46412,6 @@ declare module 'zapatos/schema' {
       */
       immunization_lot_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.immunization_status_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunization_status_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_status_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.immunization_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -55321,18 +46423,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunization_vaccine_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunization_vaccine_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.immunizationevaluation_date_end**
       * - `timestamptz` in database
@@ -55346,18 +46436,6 @@ declare module 'zapatos/schema' {
       */
       immunizationevaluation_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_dose_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_dose_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.immunizationevaluation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -55369,18 +46447,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       immunizationevaluation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.immunizationevaluation_target_disease_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      immunizationevaluation_target_disease_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.immunizationrecommendation_date_end**
       * - `timestamptz` in database
@@ -55441,30 +46507,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       ingredient_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.ingredient_role_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.ingredient_role_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_role_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.ingredient_substance_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      ingredient_substance_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.insuranceplan_phonetic**
       * - `text` in database
@@ -55580,18 +46622,6 @@ declare module 'zapatos/schema' {
       */
       invoice_totalnet_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.invoice_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.invoice_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      invoice_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.library_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -55652,18 +46682,6 @@ declare module 'zapatos/schema' {
       */
       library_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.library_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.library_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      library_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.library_url**
       * - `text` in database
       * - Nullable, no default
@@ -55682,18 +46700,6 @@ declare module 'zapatos/schema' {
       */
       library_version_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.list_empty_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.list_empty_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      list_empty_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.list_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -55711,12 +46717,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       list_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.location_address**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      location_address?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.location_address_city**
       * - `text` in database
@@ -55777,18 +46777,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       location_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.manufactureditemdefinition_dose_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      manufactureditemdefinition_dose_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.measure_date_end**
       * - `timestamptz` in database
@@ -55916,30 +46904,6 @@ declare module 'zapatos/schema' {
       */
       media_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.media_modality_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_modality_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_modality_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_site_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_site_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_site_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.media_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -55952,30 +46916,6 @@ declare module 'zapatos/schema' {
       */
       media_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.media_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_view_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.media_view_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      media_view_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.medication_expiration_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -55987,18 +46927,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medication_expiration_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medication_form_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medication_form_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medication_form_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.medication_lot_number_system**
       * - `text` in database
@@ -56036,18 +46964,6 @@ declare module 'zapatos/schema' {
       */
       medicationadministration_effective_time_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.medicationdispense_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationdispense_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationdispense_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.medicationdispense_whenhandedover_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -56072,30 +46988,6 @@ declare module 'zapatos/schema' {
       */
       medicationdispense_whenprepared_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.medicationknowledge_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationknowledge_doseform_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationknowledge_doseform_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.medicationknowledge_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -56119,18 +47011,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationrequest_authoredon_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationrequest_intended_performertype_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationrequest_intended_performertype_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.medicationrequest_intent_system**
       * - `text` in database
@@ -56168,18 +47048,6 @@ declare module 'zapatos/schema' {
       */
       medications_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.medicationstatement_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicationstatement_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicationstatement_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.medicationstatement_effective_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -56191,42 +47059,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       medicationstatement_effective_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_domain_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.medicinalproductdefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      medicinalproductdefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.messagedefinition_category_system**
       * - `text` in database
@@ -56300,30 +47132,6 @@ declare module 'zapatos/schema' {
       */
       messageheader_source_uri?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_chromosome_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_chromosome_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.molecularsequence_referenceseqid_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      molecularsequence_referenceseqid_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.molecularsequence_type_system**
       * - `text` in database
       * - Nullable, no default
@@ -56366,30 +47174,6 @@ declare module 'zapatos/schema' {
       */
       namingsystem_responsible?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.namingsystem_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.namingsystem_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      namingsystem_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_additive_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_additive_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.nutritionorder_datetime_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -56401,18 +47185,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nutritionorder_datetime_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.nutritionorder_formula_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      nutritionorder_formula_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.nutritionorder_status_system**
       * - `text` in database
@@ -56438,30 +47210,6 @@ declare module 'zapatos/schema' {
       */
       nutritionproduct_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.observation_data_absent_reason_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_data_absent_reason_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_data_absent_reason_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_method_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.observation_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -56474,18 +47222,6 @@ declare module 'zapatos/schema' {
       */
       observation_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.observation_value_concept_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_concept_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_concept_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.observation_value_date_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -56497,42 +47233,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       observation_value_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_end_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.observation_value_quantity_start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      observation_value_quantity_start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.observation_value_string**
       * - `text` in database
@@ -56654,18 +47354,6 @@ declare module 'zapatos/schema' {
       */
       packagedproductdefinition_name_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.packagedproductdefinition_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      packagedproductdefinition_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.patient_active_system**
       * - `text` in database
       * - Nullable, no default
@@ -56701,18 +47389,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       paymentnotice_created_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.paymentnotice_payment_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      paymentnotice_payment_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.paymentnotice_status_system**
       * - `text` in database
@@ -56828,18 +47504,6 @@ declare module 'zapatos/schema' {
       */
       plandefinition_title?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.plandefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.plandefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      plandefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.plandefinition_url**
       * - `text` in database
       * - Nullable, no default
@@ -56893,18 +47557,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       practitionerrole_date_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.procedure_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.procedure_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      procedure_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.procedure_status_system**
       * - `text` in database
@@ -57074,35 +47726,11 @@ declare module 'zapatos/schema' {
       */
       regulatedauthorization_case_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_case_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_case_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.regulatedauthorization_case_value**
       * - `text` in database
       * - Nullable, no default
       */
       regulatedauthorization_case_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.regulatedauthorization_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      regulatedauthorization_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -57127,18 +47755,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       requestgroup_authored_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.requestgroup_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      requestgroup_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.requestgroup_group_identifier_system**
       * - `text` in database
@@ -57428,17 +48044,11 @@ declare module 'zapatos/schema' {
       */
       resource_source?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.riskassessment_method_system**
+      * **r4b_sp1_idx.resource_type**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      riskassessment_method_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.riskassessment_method_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      riskassessment_method_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.schedule_active_system**
       * - `text` in database
@@ -57512,30 +48122,6 @@ declare module 'zapatos/schema' {
       */
       servicerequest_intent_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.servicerequest_occurrence_end**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_end?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.servicerequest_occurrence_start**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      servicerequest_occurrence_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.servicerequest_performer_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      servicerequest_performer_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.servicerequest_priority_system**
       * - `text` in database
       * - Nullable, no default
@@ -57571,18 +48157,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       servicerequest_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.slot_appointment_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      slot_appointment_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.slot_start_end**
       * - `timestamptz` in database
@@ -57620,18 +48194,6 @@ declare module 'zapatos/schema' {
       */
       specimen_accession_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.specimen_bodysite_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.specimen_bodysite_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_bodysite_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.specimen_collected_end**
       * - `timestamptz` in database
       * - Nullable, no default
@@ -57656,18 +48218,6 @@ declare module 'zapatos/schema' {
       */
       specimen_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.specimen_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.specimen_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimen_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.specimendefinition_identifier_system**
       * - `text` in database
       * - Nullable, no default
@@ -57679,18 +48229,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       specimendefinition_identifier_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.specimendefinition_type_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      specimendefinition_type_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.structuredefinition_abstract_system**
       * - `text` in database
@@ -57854,18 +48392,6 @@ declare module 'zapatos/schema' {
       */
       substance_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **r4b_sp1_idx.substancedefinition_domain_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.substancedefinition_domain_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      substancedefinition_domain_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **r4b_sp1_idx.supplydelivery_status_system**
       * - `text` in database
       * - Nullable, no default
@@ -57877,18 +48403,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       supplydelivery_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.supplyrequest_category_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      supplyrequest_category_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.supplyrequest_status_system**
       * - `text` in database
@@ -57913,30 +48427,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       task_authored_on_start?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.task_business_status_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.task_business_status_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_business_status_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.task_code_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4b_sp1_idx.task_code_value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      task_code_value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.task_group_identifier_system**
       * - `text` in database

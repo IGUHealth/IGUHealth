@@ -93,6 +93,7 @@ async function indexSingularParameters<
   let insertable: Sp1Insertable<Version> = {
     tenant: ctx.tenant,
     r_id: resource.id,
+    resource_type: resource.resourceType,
     r_version_id: parseInt(resource.meta.versionId),
   };
   for (const parameter of parameters) {
