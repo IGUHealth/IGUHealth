@@ -104,6 +104,7 @@ function getSortColumn(index: number): db.DangerousRawString {
  * @returns SQL fragment for joining on the singular table for sorting.
  */
 function singularSortColumnsToSQL<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
   resourceTableIdentifier: db.DangerousRawString,
   fhirVersion: Version,
   singularSortColumns: {
@@ -119,7 +120,7 @@ function singularSortColumnsToSQL<Version extends FHIR_VERSION>(
     );
     return db.sql<
       s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL
-    >`LEFT JOIN (SELECT ${"r_id"}, ${db.mapWithSeparator(sortColumns, db.sql` `, (c) => c)} FROM ${tableName}) as sp1 ON sp1.r_id = ${resourceTableIdentifier}.id`;
+    >`LEFT JOIN (SELECT ${"r_version_id"}, ${db.mapWithSeparator(sortColumns, db.sql` `, (c) => c)} FROM ${tableName} WHERE ${"tenant"}=${db.param(ctx.tenant)}) as sp1 ON sp1.r_version_id = ${resourceTableIdentifier}.version_id`;
   }
 
   return undefined;
@@ -223,16 +224,17 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
       );
 
       manySortColumns.push(db.sql` LEFT JOIN 
-        (SELECT ${"r_id"}, MIN(${column_name}) AS ${sort_column_name} FROM ${table} 
+        (SELECT ${"r_version_id"}, MIN(${column_name}) AS ${sort_column_name} FROM ${table} 
           WHERE ${"tenant"}=${db.param(ctx.tenant)} AND
-          parameter_url=${db.param(parameter.url)} GROUP BY ${"r_id"}
+          parameter_url=${db.param(parameter.url)} GROUP BY ${"r_version_id"}
         )
         AS ${sort_column_name} 
-        ON ${sort_column_name}.r_id = ${resourceQueryAlias}.id`);
+        ON ${sort_column_name}.r_version_id = ${resourceQueryAlias}.version_id`);
     }
   }
 
   const singular = singularSortColumnsToSQL(
+    ctx,
     resourceQueryAlias,
     fhirVersion,
     singularSortColumns,
