@@ -3,12 +3,7 @@ import * as s from "zapatos/schema";
 
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import {
-  FHIR_VERSION,
-  R4,
-  R4B,
-  ResourceType,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
