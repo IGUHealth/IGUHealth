@@ -14,6 +14,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { toDBFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { IGUHealthServerCTX } from "../types.js";
+import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 
 export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   pg: db.Queryable,
@@ -21,27 +22,12 @@ export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   type: ResourceType<Version> | "ALL",
 ): Promise<number> {
-  const whereAble: s.r4_token_idx.Whereable | s.r4b_token_idx.Whereable = {
+  const whereAble: s.r4_sp1_idx.Whereable | s.r4b_sp1_idx.Whereable = {
     tenant: tenant,
-    parameter_name: "_id",
     resource_type: type === "ALL" ? db.sql`${db.self} IS NOT NULL` : type,
   };
-  switch (fhirVersion) {
-    case R4: {
-      return db.count("r4_token_idx", whereAble).run(pg);
-    }
-    case R4B: {
-      return db.count("r4b_token_idx", whereAble).run(pg);
-    }
-    default: {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `FHIR version '${fhirVersion}' is not supported in this middleware.`,
-        ),
-      );
-    }
-  }
+
+  return db.count(getSp1Name(fhirVersion), whereAble).run(pg);
 }
 
 export async function getTenantLimits(
