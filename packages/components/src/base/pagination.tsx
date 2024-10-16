@@ -59,7 +59,7 @@ export const Pagination = (props: PaginationProps) => {
 
   return (
     <nav>
-      <ul className="inline-flex -space-x-px text-xs h-10 ">
+      <ul className="inline-flex items-center -space-x-px text-xs h-10 ">
         <PaginationItem
           onClick={(e) => {
             props.onPagination(Math.max(props.currentPage - 1, 1));
