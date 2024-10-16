@@ -651,35 +651,55 @@ export function FHIRGenerativeSearchTableDisplay<Version extends FHIR_VERSION>({
               ...(columns ?? []),
             ]}
           />
-          <div className="mt-1 flex justify-end">
-            <div>
-              <Pagination
-                currentPage={
-                  Math.floor(
-                    parseInt(
-                      (
-                        parameters.find((p) => p.name === "_offset")
-                          ?.value[0] ?? 0
-                      ).toString(),
-                    ) / pagination,
-                  ) + 1
-                }
-                totalPages={Math.ceil((data.total ?? 0) / pagination)}
-                onPagination={(pageNumber) => {
-                  onParametersChange([
-                    ...parameters.filter((p) => p.name !== "_offset"),
-                    {
-                      name: "_offset",
-                      value: [(pageNumber - 1) * pagination],
-                    },
-                  ]);
-                }}
-              />
-              <div className="flex justify-end">
-                <span className="text-xs text-slate-500">
-                  {data.total ?? 0} total rows
+          <div className="mt-1 flex flex-col">
+            <div className="flex items-center">
+              <div className="flex flex-1 ">
+                <span className="text-xs text-slate-500 mr-2 overflow-ellipsis">
+                  {parseInt(
+                    (
+                      parameters.find((p) => p.name === "_offset")?.value[0] ??
+                      0
+                    ).toString(),
+                  )}{" "}
+                  to{" "}
+                  {parseInt(
+                    (
+                      parameters.find((p) => p.name === "_offset")?.value[0] ??
+                      0
+                    ).toString(),
+                  ) + pagination}{" "}
+                  rows
                 </span>
               </div>
+              <div className="flex justify-end">
+                <Pagination
+                  currentPage={
+                    Math.floor(
+                      parseInt(
+                        (
+                          parameters.find((p) => p.name === "_offset")
+                            ?.value[0] ?? 0
+                        ).toString(),
+                      ) / pagination,
+                    ) + 1
+                  }
+                  totalPages={Math.ceil((data.total ?? 0) / pagination)}
+                  onPagination={(pageNumber) => {
+                    onParametersChange([
+                      ...parameters.filter((p) => p.name !== "_offset"),
+                      {
+                        name: "_offset",
+                        value: [(pageNumber - 1) * pagination],
+                      },
+                    ]);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-end">
+              <span className="text-xs text-slate-500 overflow-ellipsis">
+                {data.total ?? 0} total rows
+              </span>
             </div>
           </div>
         </>
