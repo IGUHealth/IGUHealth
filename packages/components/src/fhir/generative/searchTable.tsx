@@ -677,7 +677,7 @@ export function FHIRGenerativeSearchTableDisplay<Version extends FHIR_VERSION>({
               />
               <div className="flex justify-end">
                 <span className="text-xs text-slate-500">
-                  {data.total} total rows
+                  {data.total ?? 0} total rows
                 </span>
               </div>
             </div>
