@@ -1,0 +1,27 @@
+---
+slug: updates_2024-08-10
+Title: Updates 2024-08-10
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-08-10
+
+## Server
+
+### Security
+
+#### OIDC
+* Added Support for RS384 for signing JWTs.
+* Added support for Refresh tokens and added a UI to manage/revoe them.
+* Added support for SMART Discovery document.
+* Added support for SMART Launch Context.
+* Added support for SMART V2 Scopes
+* Added SMART Claims (fhirUser, Patient) to JWT on SMART Launches
+* Added Scope interaction for Launches
+* PKCE no longer supports plain text. Only S256 is supported (per SMART spec).
+
+## General
+
+### Updated Packages
+* @iguhealth/server: 0.18.12

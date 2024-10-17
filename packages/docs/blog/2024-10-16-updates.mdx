@@ -1,0 +1,40 @@
+---
+slug: updates_2024-10-08
+Title: Updates 2024-10-08
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-10-08
+
+## Admin App
+
+* We've added support for testing AccessPolicyV2 resources in the admin app. This allows you to test your AccessPolicyV2 resources and see the results of the evaluation.
+
+### UI
+* Added simplified views for Subscription creation/deletion and viewing.
+* Condensed sidebar text
+* Added IDP configuration
+
+## Server
+
+* We've altered how Operation Definitions are deployed. We now require users to deploy via the $deploy [operation](https://github.com/IGUHealth/IGUHealth/blob/main/artifacts/r4/iguhealth-core/definitions/iguhealth/operation/deploy.json).
+This operation is invoked at the Operation Definition instance level and takes the code and environment variables as input parameters.
+
+### Security
+
+#### OIDC
+* We've added support for SMART on FHIR patient scopes. We use the HL7 patient compartment definition to determine which resources are accessible by a given patient scope.
+
+#### Federated Identity
+* We've added support for federated identity providers. This allows you to authenticate users via an external identity provider such as Azure, Okta, or Auth0.
+You can read more about this [here](/documentation/Security/External%20Identity%20Providers/Getting%20Started)
+
+## General
+
+We are beginning work on performance improvements for single-value search parameters (search parameters whose type is not a collection).
+We are currently working on an optimized index for these parameters to improve search performance.
+
+### Updated Packages
+* @iguhealth/server: 0.23.4
+* @iguhealth/admin-app: 0.16.0

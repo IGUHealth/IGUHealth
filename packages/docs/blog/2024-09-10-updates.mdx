@@ -1,0 +1,44 @@
+---
+slug: updates_2024-09-10
+Title: Updates 2024-09-10
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-09-10
+
+## Server
+
+### Security
+
+#### AccessPolicy V2
+
+We have added support for a new version of the AccessPolicy resource.
+This version allows for more fine-grained control over access to resources.
+We use a rule engine based on XACML to evaluate whether a user can perform a given request.
+This is evaluated using fhirpath expressions on the request and the user's claims.
+
+More information can be found in our [RFC](/rfcs/RFC_AccessPolicy)
+
+## General
+
+### FHIRPath
+
+We've rewritten our FHIRPath parser to be more performant.
+Currently, we've seen a roughly 60% improvement in parsing time.
+This will allow us to index resources faster and improve the performance of our FHIRPath queries.
+
+### Expression component
+We've added a new component to our component library that allows you to view FHIRPath expressions.
+We have written a custom codemirror mode to highlight and format FHIRPath expressions.
+
+### Meta values
+We've altered the way we pull type information about resources.
+We've created a pre-generated hashtable of type information per resource and use this to validate resources and for type information in our FHIRPath queries.
+
+### Updated Packages
+* @iguhealth/server: 0.21.1
+* @iguhealth/x-fhir-query: 0.4.0
+* @iguhealth/components: 0.13.0
+* @iguhealth/fhirpath: 0.9.0
+* @iguhealth/fhir-validation: 0.11.0
