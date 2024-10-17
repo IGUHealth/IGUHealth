@@ -258,17 +258,14 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
   r_id           TEXT         NOT NULL,
   r_version_id   INTEGER      NOT NULL PRIMARY KEY,
   resource_type  TEXT         NOT NULL,
-  tenant         TEXT         NOT NULL, 
+  tenant         TEXT         NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
 
 
   UNIQUE (tenant, r_id),
   CONSTRAINT sp1_fk_resource
       FOREIGN KEY(r_version_id) 
-	REFERENCES resources(version_id),
-  CONSTRAINT sp1_fk_tenant
-      FOREIGN KEY(tenant) 
-	REFERENCES tenants(id)
+	REFERENCES resources(version_id)
 );
 `;
   for (const sp1Url of sp1Urls) {
