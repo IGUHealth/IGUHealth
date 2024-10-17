@@ -49,21 +49,17 @@ This is done via the Subscription resource and the ClientApplication resource.
     _Take note of the ClientApplication.id after creating it._
 
 
-2. **Tie an AccessPolicy to your ClientApplication that allows it to post messages to the broker:**
+2. **Tie an AccessPolicyV2 to your ClientApplication that allows it to post messages to the broker:**
     ```bash
     {
-    "code": "admin-access",
-    "name": "Admin Access",
-    "type": "full-access",
-    "target": [
-        {
-        "link": {
-            "reference": "ClientApplication/${my-client-application-id}"
-        }
-        }
-    ],
-    "description": "Full admin access",
-    "resourceType": "AccessPolicy"
+        "name": "Admin",
+        "engine": "full-access",
+        "target": [
+            "link": {
+                "reference": "ClientApplication/${my-client-application-id}"
+            }
+        ],
+        "resourceType": "AccessPolicyV2"
     }
     ```
 

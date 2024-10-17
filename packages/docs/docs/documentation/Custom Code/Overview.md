@@ -166,7 +166,7 @@ exports.handler = async function (ctx, param) {
 
 ### Access Controls
 
-For an Operation invocation to access data on the server it must be tied to an [AccessPolicy](../Data_Model/R4/AccessPolicy.mdx) resource or be invoked by a user who has authorization to access the data.
+For an Operation invocation to access data on the server it must be tied to an [AccessPolicyV2](../Data_Model/R4/AccessPolicyV2.mdx) resource or be invoked by a user who has authorization to access the data.
 
 ### Secrets and Environment Variables
 
