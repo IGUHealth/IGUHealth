@@ -90,8 +90,6 @@ function parseSingleMessage(hl7v2Message: string): Hl7V2Message {
     truncationCharacter,
   };
 
-  console.log(mshSegment.slice(specialCharEndIndex + 1));
-
   // Special handling of MSH segment
   const hl7v2MessageParsed: Hl7V2Message = {
     MSH: [

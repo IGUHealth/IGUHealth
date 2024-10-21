@@ -7,8 +7,8 @@
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/v1/index.js",
+  "types": "lib/v1/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
@@ -33,9 +33,10 @@
     "typescript": "5.6.2"
   },
   "files": [
-    "lib/**"
+    "lib/**",
+    "readme.md"
   ],
   "exports": {
-    ".": "./lib/index.js"
+    ".": "./lib/v1/index.js"
   }
 }
