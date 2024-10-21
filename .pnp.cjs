@@ -17134,9 +17134,7 @@ const RAW_RUNTIME_STATE =
           ["@types/jest", "npm:29.5.12"],\
           ["chevrotain", "npm:11.0.3"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
-          ["peggy", "npm:4.0.3"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.2.5"],\
-          ["ts-pegjs", "virtual:b5862d30f1d39b94278557dd54c56f55c0897e264ce7f19b6281cd41f632105632dd77b28bb2c947b8faec87ae84ab68909410d67d9fbb43893a2e2ee7922f07#npm:4.2.1"],\
           ["tsx", "npm:4.19.0"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
         ],\
@@ -19785,16 +19783,6 @@ const RAW_RUNTIME_STATE =
           ["pvtsutils", "npm:1.3.5"],\
           ["tslib", "npm:2.6.2"],\
           ["webcrypto-core", "npm:1.8.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@peggyjs/from-mem", [\
-      ["npm:1.3.0", {\
-        "packageLocation": "./.yarn/cache/@peggyjs-from-mem-npm-1.3.0-00e43691dd-56535220f4.zip/node_modules/@peggyjs/from-mem/",\
-        "packageDependencies": [\
-          ["@peggyjs/from-mem", "npm:1.3.0"],\
-          ["semver", "npm:7.6.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -25874,19 +25862,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@ts-morph/common", [\
-      ["npm:0.19.0", {\
-        "packageLocation": "./.yarn/cache/@ts-morph-common-npm-0.19.0-002aa2f632-6a7111c14b.zip/node_modules/@ts-morph/common/",\
-        "packageDependencies": [\
-          ["@ts-morph/common", "npm:0.19.0"],\
-          ["fast-glob", "npm:3.3.0"],\
-          ["minimatch", "npm:7.4.6"],\
-          ["mkdirp", "npm:2.1.6"],\
-          ["path-browserify", "npm:1.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@tsconfig/node10", [\
       ["npm:1.0.9", {\
         "packageLocation": "./.yarn/cache/@tsconfig-node10-npm-1.0.9-f2e2d20feb-a33ae4dc2a.zip/node_modules/@tsconfig/node10/",\
@@ -31466,15 +31441,6 @@ const RAW_RUNTIME_STATE =
           ["@types/q", "npm:1.5.5"],\
           ["chalk", "npm:2.4.2"],\
           ["q", "npm:1.5.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["code-block-writer", [\
-      ["npm:12.0.0", {\
-        "packageLocation": "./.yarn/cache/code-block-writer-npm-12.0.0-943b9e5c78-7dc531e652.zip/node_modules/code-block-writer/",\
-        "packageDependencies": [\
-          ["code-block-writer", "npm:12.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -44366,14 +44332,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:7.4.6", {\
-        "packageLocation": "./.yarn/cache/minimatch-npm-7.4.6-f3feee458c-0046ba1161.zip/node_modules/minimatch/",\
-        "packageDependencies": [\
-          ["minimatch", "npm:7.4.6"],\
-          ["brace-expansion", "npm:2.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:9.0.2", {\
         "packageLocation": "./.yarn/cache/minimatch-npm-9.0.2-54f51f778f-b468863a8b.zip/node_modules/minimatch/",\
         "packageDependencies": [\
@@ -44559,13 +44517,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/mkdirp-npm-1.0.4-37f6ef56b9-d71b8dcd4b.zip/node_modules/mkdirp/",\
         "packageDependencies": [\
           ["mkdirp", "npm:1.0.4"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:2.1.6", {\
-        "packageLocation": "./.yarn/cache/mkdirp-npm-2.1.6-832c38f12a-4672fadb94.zip/node_modules/mkdirp/",\
-        "packageDependencies": [\
-          ["mkdirp", "npm:2.1.6"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -46124,18 +46075,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/pathval-npm-1.1.1-ce0311d7e0-b50a475106.zip/node_modules/pathval/",\
         "packageDependencies": [\
           ["pathval", "npm:1.1.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["peggy", [\
-      ["npm:4.0.3", {\
-        "packageLocation": "./.yarn/cache/peggy-npm-4.0.3-b7bb71e58f-d6b9592995.zip/node_modules/peggy/",\
-        "packageDependencies": [\
-          ["peggy", "npm:4.0.3"],\
-          ["@peggyjs/from-mem", "npm:1.3.0"],\
-          ["commander", "npm:12.1.0"],\
-          ["source-map-generator", "npm:0.8.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -54486,15 +54425,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["source-map-generator", [\
-      ["npm:0.8.0", {\
-        "packageLocation": "./.yarn/cache/source-map-generator-npm-0.8.0-494520805d-f57df2c1bf.zip/node_modules/source-map-generator/",\
-        "packageDependencies": [\
-          ["source-map-generator", "npm:0.8.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["source-map-js", [\
       ["npm:1.0.2", {\
         "packageLocation": "./.yarn/cache/source-map-js-npm-1.0.2-ee4f9f9b30-38e2d2dd18.zip/node_modules/source-map-js/",\
@@ -56363,17 +56293,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["ts-morph", [\
-      ["npm:18.0.0", {\
-        "packageLocation": "./.yarn/cache/ts-morph-npm-18.0.0-4399ce8f6e-349215342b.zip/node_modules/ts-morph/",\
-        "packageDependencies": [\
-          ["ts-morph", "npm:18.0.0"],\
-          ["@ts-morph/common", "npm:0.19.0"],\
-          ["code-block-writer", "npm:12.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["ts-node", [\
       ["npm:10.9.2", {\
         "packageLocation": "./.yarn/cache/ts-node-npm-10.9.2-3f3890b9ac-a91a15b3c9.zip/node_modules/ts-node/",\
@@ -56451,30 +56370,6 @@ const RAW_RUNTIME_STATE =
           "@types/swc__wasm",\
           "@types/typescript",\
           "typescript"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["ts-pegjs", [\
-      ["npm:4.2.1", {\
-        "packageLocation": "./.yarn/cache/ts-pegjs-npm-4.2.1-0f567a1059-895ec00483.zip/node_modules/ts-pegjs/",\
-        "packageDependencies": [\
-          ["ts-pegjs", "npm:4.2.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:b5862d30f1d39b94278557dd54c56f55c0897e264ce7f19b6281cd41f632105632dd77b28bb2c947b8faec87ae84ab68909410d67d9fbb43893a2e2ee7922f07#npm:4.2.1", {\
-        "packageLocation": "./.yarn/__virtual__/ts-pegjs-virtual-62c6ea6672/0/cache/ts-pegjs-npm-4.2.1-0f567a1059-895ec00483.zip/node_modules/ts-pegjs/",\
-        "packageDependencies": [\
-          ["ts-pegjs", "virtual:b5862d30f1d39b94278557dd54c56f55c0897e264ce7f19b6281cd41f632105632dd77b28bb2c947b8faec87ae84ab68909410d67d9fbb43893a2e2ee7922f07#npm:4.2.1"],\
-          ["@types/peggy", null],\
-          ["peggy", "npm:4.0.3"],\
-          ["prettier", "npm:2.8.8"],\
-          ["ts-morph", "npm:18.0.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/peggy",\
-          "peggy"\
         ],\
         "linkType": "HARD"\
       }]\

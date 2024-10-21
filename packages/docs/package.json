@@ -17,7 +17,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "generate": "NODE_ENV=development yarn node generate.mjs"
+    "generate-npm": "NODE_ENV=development yarn node generate.mjs npm",
+    "generate-fhir": "NODE_ENV=development yarn node generate.mjs fhir",
+    "generate": "yarn generate-npm && yarn generate-fhir"
   },
   "dependencies": {
     "@docusaurus/core": "^3.4.0",
