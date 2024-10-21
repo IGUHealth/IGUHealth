@@ -103,6 +103,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/generated-ops"\
     },\
     {\
+      "name": "@iguhealth/hl7v2-parsing",\
+      "reference": "workspace:packages/hl7v2-parsing"\
+    },\
+    {\
       "name": "@iguhealth/jwt",\
       "reference": "workspace:packages/jwt"\
     },\
@@ -169,6 +173,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/hl7.fhir.r4.test-data", ["workspace:artifacts/r4/test-data"]],\
     ["@iguhealth/hl7.fhir.r4b.core", ["workspace:artifacts/r4b/hl7-core"]],\
     ["@iguhealth/hl7.fhir.r4b.test-data", ["workspace:artifacts/r4b/test-data"]],\
+    ["@iguhealth/hl7v2-parsing", ["workspace:packages/hl7v2-parsing"]],\
     ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/r4/iguhealth-core"]],\
     ["@iguhealth/iguhealth.fhir.r4b.core", ["workspace:artifacts/r4b/iguhealth-core"]],\
     ["@iguhealth/jwt", ["workspace:packages/jwt"]],\
@@ -17190,6 +17195,20 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./artifacts/r4b/test-data/",\
         "packageDependencies": [\
           ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/hl7v2-parsing", [\
+      ["workspace:packages/hl7v2-parsing", {\
+        "packageLocation": "./packages/hl7v2-parsing/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7v2-parsing", "workspace:packages/hl7v2-parsing"],\
+          ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
+          ["ts-jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.2.5"],\
+          ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
         ],\
         "linkType": "SOFT"\
       }]\
