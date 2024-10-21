@@ -35,7 +35,7 @@ function createMemoryDatabase(
       fhirVersion: R4,
       loadDevelopmentPackages: true,
       resourceType: resourceType,
-      packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+      packageLocation: path.join(fileURLToPath(import.meta.url), "../.."),
       silence: true,
       onlyPackages: [
         "@iguhealth/hl7.fhir.r4.core",
