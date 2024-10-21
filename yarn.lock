@@ -10212,6 +10212,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/hl7v2-parsing@workspace:packages/hl7v2-parsing":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/hl7v2-parsing@workspace:packages/hl7v2-parsing"
+  dependencies:
+    "@iguhealth/operation-outcomes": "workspace:^"
+    "@jest/globals": "npm:^29.7.0"
+    jest: "npm:^29.7.0"
+    ts-jest: "npm:^29.2.5"
+    typescript: "npm:5.6.2"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/iguhealth.fhir.r4.core@workspace:^, @iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/r4/iguhealth-core":
   version: 0.0.0-use.local
   resolution: "@iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/r4/iguhealth-core"
