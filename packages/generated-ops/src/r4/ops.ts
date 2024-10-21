@@ -1,6 +1,5 @@
 import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";
-import { IOperation, Operation } from "@iguhealth/operation-execution";
-
+import { Operation, IOperation } from "@iguhealth/operation-execution";
 export namespace ActivityDefinitionApply {
   export type Input = {
     activityDefinition?: fhirTypes.ActivityDefinition;

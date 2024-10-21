@@ -50,6 +50,7 @@ import Tabs from "@theme/Tabs";
  | Membership.emailVerified | 0..1 | boolean | undefined 
  | Membership.name | 0..1 | HumanName | undefined 
  | Membership.role | 1..1 | code | undefined 
+ | Membership.federated | 0..1 | Reference | undefined 
 
  ## Search Parameters
 
@@ -65,6 +66,7 @@ import Tabs from "@theme/Tabs";
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | Email | token | Membership email | Membership.email  
+ | IdentityProvider | reference | Membership federated identityProvider | Membership.federated  
  | Link | reference | What/Who is associated with a given Membership. | Membership.link  
  | Name | string | Membership name | Membership.name  
  | Role | token | Membership role | Membership.role  
