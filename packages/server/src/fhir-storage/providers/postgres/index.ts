@@ -1068,9 +1068,15 @@ async function removeIndices<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
-  await Promise.all(
-    search_table_types.map((type) => {
-      return db.sql<
+  await Promise.all([
+    db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
+    DELETE FROM ${getSp1Name(fhirVersion)}
+    WHERE ${{
+      tenant: ctx.tenant,
+      r_id: resource.id,
+    }}`.run(ctx.db),
+    ...search_table_types.map((type) =>
+      db.sql<
         | s.r4_number_idx.SQL
         | s.r4_string_idx.SQL
         | s.r4_uri_idx.SQL
@@ -1086,17 +1092,11 @@ async function removeIndices<Version extends FHIR_VERSION>(
         | s.r4b_reference_idx.SQL
         | s.r4b_quantity_idx.SQL
       >`DELETE FROM ${searchParameterToTableName(fhirVersion, type)} WHERE ${{
+        tenant: ctx.tenant,
         r_id: resource.id,
-      }}`.run(ctx.db);
-    }),
-  );
-
-  // Delete from SP1 Table.
-  await db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
-    DELETE FROM ${getSp1Name(fhirVersion)}
-    WHERE ${{
-      r_id: resource.id,
-    }}`.run(ctx.db);
+      }}`.run(ctx.db),
+    ),
+  ]);
 }
 
 function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
@@ -1134,6 +1134,7 @@ async function indexResource<
   }
 
   await removeIndices(ctx, fhirVersion, resource);
+
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,
   ]);
@@ -1149,15 +1150,14 @@ async function indexResource<
     }
   }
 
-  await indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource);
-
-  await Promise.all(
-    manyParameters
+  await Promise.all([
+    await indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource),
+    ...manyParameters
       .filter((v) => v.expression !== undefined)
       .map(async (searchParameter) =>
         indexMultiSearchParameter(ctx, fhirVersion, searchParameter, resource),
       ),
-  );
+  ]);
 }
 
 async function createResource<
@@ -1182,6 +1182,7 @@ async function createResource<
     // the <const> prevents generalization to string[]
     const resourceCol = <const>["resource"];
     type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+
     const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
     INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
       data,
@@ -1193,6 +1194,7 @@ async function createResource<
       fhirVersion,
       res[0].resource as unknown as Resource<Version, AllResourceTypes>,
     );
+
     return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
   });
 }
@@ -1972,6 +1974,7 @@ function createPostgresMiddleware<
               );
             }
             case "instance": {
+              console.time("update resource");
               const { created, resource } = await updateResource(
                 context.ctx,
                 context.request.fhirVersion,
@@ -1982,6 +1985,7 @@ function createPostgresMiddleware<
                   id: context.request.id,
                 },
               );
+              console.timeEnd("update resource");
 
               return {
                 request: context.request,
