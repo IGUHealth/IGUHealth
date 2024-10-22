@@ -1974,7 +1974,6 @@ function createPostgresMiddleware<
               );
             }
             case "instance": {
-              console.time("update resource");
               const { created, resource } = await updateResource(
                 context.ctx,
                 context.request.fhirVersion,
@@ -1985,7 +1984,6 @@ function createPostgresMiddleware<
                   id: context.request.id,
                 },
               );
-              console.timeEnd("update resource");
 
               return {
                 request: context.request,
