@@ -27,7 +27,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX, Validator } from "./types.js";
+import { ValidationCTX, Validator } from "../types.js";
 import {
   capitalize,
   isPrimitiveType,
@@ -35,7 +35,7 @@ import {
   isTypeChoice,
   notNull,
   validateIsObject,
-} from "./utilities.js";
+} from "../utilities.js";
 import { validatePrimitive } from "./validate-primitive.js";
 
 export { ValidationCTX };

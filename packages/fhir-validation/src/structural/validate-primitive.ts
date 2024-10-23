@@ -8,8 +8,8 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX } from "./types.js";
-import { validateIsObject } from "./utilities.js";
+import { ValidationCTX } from "../types.js";
+import { validateIsObject } from "../utilities.js";
 
 const REGEX: Record<string, RegExp> = {
   // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
