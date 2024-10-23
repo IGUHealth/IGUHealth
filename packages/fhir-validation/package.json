@@ -28,6 +28,7 @@
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
+    "hl7.fhir.us.core": "4.0.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "typescript": "5.6.2"

@@ -17108,6 +17108,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
+          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["jsonpointer", "npm:5.0.1"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.2.5"],\
@@ -38351,6 +38352,15 @@ const RAW_RUNTIME_STATE =
           ["hl7.fhir.r4b.examples", "workspace:artifacts/r4b/test-data/examples-json"]\
         ],\
         "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["hl7.fhir.us.core", [\
+      ["npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0", {\
+        "packageLocation": "./.yarn/cache/hl7.fhir.us.core-npm-4.0.0-62879760c4-0ed77da0bd.zip/node_modules/hl7.fhir.us.core/",\
+        "packageDependencies": [\
+          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["hoist-non-react-statics", [\
