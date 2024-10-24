@@ -35,7 +35,7 @@ function getArtifactResources<Version extends FHIR_VERSION>(
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
         onlyPackages: [
-          "@iguhealth/hl7.fhir.r4.core",
+          "hl7.fhir.r4.core",
           "@iguhealth/hl7.fhir.r4b.core",
           "@iguhealth/hl7.fhir.r4.test-data",
           "@iguhealth/hl7.fhir.r4b.test-data",

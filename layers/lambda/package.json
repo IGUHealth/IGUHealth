@@ -14,7 +14,6 @@
     "@iguhealth/fhir-validation": "^0.9.4",
     "@iguhealth/fhirpath": "^0.7.4",
     "@iguhealth/generated-ops": "^0.7.7",
-    "@iguhealth/hl7.fhir.r4.core": "^0.4.3",
     "@iguhealth/meta-value": "^0.7.4",
     "@iguhealth/operation-execution": "^0.9.4",
     "@iguhealth/operation-outcomes": "^0.7.1",

@@ -37,10 +37,7 @@ function createMemoryDatabase(
       resourceType: resourceType,
       packageLocation: path.join(fileURLToPath(import.meta.url), "../.."),
       silence: true,
-      onlyPackages: [
-        "@iguhealth/hl7.fhir.r4.core",
-        "@iguhealth/hl7.fhir.r4.test-data",
-      ],
+      onlyPackages: ["hl7.fhir.r4.core", "@iguhealth/hl7.fhir.r4.test-data"],
     });
     data[resourceType] = resources;
   }

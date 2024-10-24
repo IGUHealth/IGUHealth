@@ -16828,13 +16828,13 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/testscript-runner", "workspace:packages/testscript-runner"],\
           ["@inquirer/prompts", "npm:5.3.8"],\
           ["@types/node", "npm:22.5.4"],\
           ["commander", "npm:12.1.0"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["pino", "npm:9.3.2"],\
           ["pino-pretty", "npm:11.2.2"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
@@ -17032,13 +17032,13 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@mdx-js/react", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.0.0"],\
           ["autoprefixer", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:10.4.20"],\
           ["clsx", "npm:2.0.0"],\
           ["dotenv", "npm:16.4.5"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["postcss", "npm:8.4.42"],\
           ["prism-react-renderer", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:2.3.1"],\
           ["react", "npm:18.3.1"],\
@@ -17102,12 +17102,12 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["jsonpointer", "npm:5.0.1"],\
@@ -17128,12 +17128,12 @@ const RAW_RUNTIME_STATE =
           ["@chevrotain/types", "npm:11.0.3"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["chevrotain", "npm:11.0.3"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.2.5"],\
           ["tsx", "npm:4.19.0"],\
@@ -17150,10 +17150,10 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@jest/globals", "npm:29.7.0"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["prettier", "npm:3.3.3"],\
           ["ts-jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.2.5"],\
@@ -17288,10 +17288,10 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.2.5"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
@@ -17308,10 +17308,10 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["ts-jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.2.5"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
@@ -17366,7 +17366,6 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"],\
@@ -17415,6 +17414,7 @@ const RAW_RUNTIME_STATE =
           ["dotenv", "npm:16.4.5"],\
           ["fast-json-patch", "npm:3.1.1"],\
           ["glob", "npm:11.0.0"],\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"],\
           ["ioredis", "npm:5.4.1"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["jose", "npm:5.8.0"],\
@@ -38341,6 +38341,15 @@ const RAW_RUNTIME_STATE =
           ["tiny-invariant", "npm:1.3.1"],\
           ["tiny-warning", "npm:1.0.3"],\
           ["value-equal", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["hl7.fhir.r4.core", [\
+      ["patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322", {\
+        "packageLocation": "./.yarn/cache/hl7.fhir.r4.core-patch-c24bb61d64-9683a28a77.zip/node_modules/hl7.fhir.r4.core/",\
+        "packageDependencies": [\
+          ["hl7.fhir.r4.core", "patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"]\
         ],\
         "linkType": "HARD"\
       }]\

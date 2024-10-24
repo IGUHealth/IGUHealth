@@ -446,6 +446,7 @@ export default async function validate(
     "StructureDefinition",
     canonical,
   );
+
   if (!sd)
     throw new OperationError(
       outcomeFatal(

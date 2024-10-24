@@ -430,15 +430,23 @@ function createResolveTypeToCanonical(
     Object.values(
       data?.[R4]?.["StructureDefinition"] ?? {},
     ) as r4.StructureDefinition[]
-  ).reduce(
-    (acc: Map<r4.uri, r4.canonical>, resource: r4.StructureDefinition) => {
-      if (resource?.type && resource?.url) {
-        acc.set(resource.type, resource.url as r4.canonical);
-      }
-      return acc;
-    },
-    new Map(),
-  );
+  )
+    .filter((sd) =>
+      [
+        "http://hl7.org/fhir/StructureDefinition/Resource",
+        "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        "http://hl7.org/fhir/StructureDefinition/Element",
+      ].includes(sd.baseDefinition ?? ""),
+    )
+    .reduce(
+      (acc: Map<r4.uri, r4.canonical>, resource: r4.StructureDefinition) => {
+        if (resource?.type && resource?.url) {
+          acc.set(resource.type, resource.url as r4.canonical);
+        }
+        return acc;
+      },
+      new Map(),
+    );
 
   const r4bMap = (
     Object.values(
@@ -568,7 +576,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
       loadArtifacts({
         fhirVersion: R4,
         resourceType,
-        silence: true,
+        silence: false,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
           "../../../../../",
@@ -593,7 +601,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
       loadArtifacts({
         fhirVersion: R4B,
         resourceType,
-        silence: true,
+        silence: false,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
           "../../../../../",
