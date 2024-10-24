@@ -9945,13 +9945,13 @@ __metadata:
     "@iguhealth/client": "workspace:^"
     "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/testscript-runner": "workspace:^"
     "@inquirer/prompts": "npm:^5.3.8"
     "@types/node": "npm:^22.5.4"
     commander: "npm:^12.1.0"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     pino: "npm:^9.3.2"
     pino-pretty: "npm:^11.2.2"
     typescript: "npm:5.6.2"
@@ -10070,13 +10070,13 @@ __metadata:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/client": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@mdx-js/react": "npm:^3.0.0"
     autoprefixer: "npm:^10.4.20"
     clsx: "npm:^2.0.0"
     dotenv: "npm:^16.4.5"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     postcss: "npm:^8.4.42"
     prism-react-renderer: "npm:^2.3.1"
     react: "npm:^18.3.1"
@@ -10132,12 +10132,12 @@ __metadata:
     "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4.test-data": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     hl7.fhir.us.core: "npm:4.0.0"
     jest: "npm:^29.7.0"
     jsonpointer: "npm:^5.0.1"
@@ -10156,12 +10156,12 @@ __metadata:
     "@chevrotain/types": "npm:^11.0.3"
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     chevrotain: "npm:^11.0.3"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.2.5"
     tsx: "npm:^4.19.0"
@@ -10176,10 +10176,10 @@ __metadata:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     jest: "npm:^29.7.0"
     prettier: "npm:^3.3.3"
     ts-jest: "npm:^29.2.5"
@@ -10187,7 +10187,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/hl7.fhir.r4.core@workspace:^, @iguhealth/hl7.fhir.r4.core@workspace:artifacts/r4/hl7-core":
+"@iguhealth/hl7.fhir.r4.core@workspace:artifacts/r4/hl7-core":
   version: 0.0.0-use.local
   resolution: "@iguhealth/hl7.fhir.r4.core@workspace:artifacts/r4/hl7-core"
   languageName: unknown
@@ -10286,10 +10286,10 @@ __metadata:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.2.5"
     typescript: "npm:5.6.2"
@@ -10304,10 +10304,10 @@ __metadata:
     "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhir-validation": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.2.5"
     typescript: "npm:5.6.2"
@@ -10356,7 +10356,6 @@ __metadata:
     "@iguhealth/fhir-validation": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4.test-data": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.test-data": "workspace:^"
@@ -10405,6 +10404,7 @@ __metadata:
     dotenv: "npm:^16.4.5"
     fast-json-patch: "npm:3.1.1"
     glob: "npm:^11.0.0"
+    hl7.fhir.r4.core: "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch"
     ioredis: "npm:5.4.1"
     jest: "npm:^29.7.0"
     jose: "npm:^5.8.0"
@@ -27150,6 +27150,20 @@ __metadata:
     tiny-warning: "npm:^1.0.0"
     value-equal: "npm:^1.0.1"
   checksum: 10/042373f69dad6419a4d551b995ef40f449a8854775a1157c4e9f077ee39aea6ca7ed8f45ec3e1762ef1891357a724d17dad11f2fe7d0edeebcbcf9f48ed3e4d4
+  languageName: node
+  linkType: hard
+
+"hl7.fhir.r4.core@npm:4.0.1":
+  version: 4.0.1
+  resolution: "hl7.fhir.r4.core@npm:4.0.1::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.r4.core%2F4.0.1"
+  checksum: 10/275ff90ab62afbed093aaf0f61fd1731febc0232fbafe2f5ae01339db156e7bea898f4608aad18a65730ff380b8048f72788e5da83589a8337d12596c085d311
+  languageName: node
+  linkType: hard
+
+"hl7.fhir.r4.core@patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch":
+  version: 4.0.1
+  resolution: "hl7.fhir.r4.core@patch:hl7.fhir.r4.core@npm%3A4.0.1%3A%3A__archiveUrl=https%253A%252F%252Fpackages.simplifier.net%252Fhl7.fhir.r4.core%252F4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch::version=4.0.1&hash=398322"
+  checksum: 10/9683a28a77a52ba117e87daf61367e192714533b61ecfc819d5acd14c44f6ef10e09a712fc36591cc0f443a8216a3cd3f856e5ea028f87fc9cb5575ac5d5d993
   languageName: node
   linkType: hard
 

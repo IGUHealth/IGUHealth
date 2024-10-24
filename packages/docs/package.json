@@ -44,9 +44,9 @@
     "@docusaurus/types": "^3.4.0",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
-    "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
+    "hl7.fhir.r4.core": "patch:hl7.fhir.r4.core@npm:4.0.1#~/.yarn/patches/hl7.fhir.r4.core-npm-4.0.1-7346bbc9d4.patch",
     "typescript": "5.6.2"
   },
   "browserslist": {

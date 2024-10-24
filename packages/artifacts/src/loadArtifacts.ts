@@ -82,8 +82,14 @@ export default function loadArtifacts<
         }
 
         // Filter out for packages that contain a fhirVersion specified by parameter.
-        return depPackage.fhirVersions?.some((version: string) =>
-          version.startsWith(fhirVersion),
+        return (
+          depPackage.fhirVersions?.some((version: string) =>
+            version.startsWith(fhirVersion),
+          ) ||
+          // Old versions use fhir-version-list
+          depPackage["fhir-version-list"]?.some((version: string) =>
+            version.startsWith(fhirVersion),
+          )
         );
       } catch (e) {
         return false;

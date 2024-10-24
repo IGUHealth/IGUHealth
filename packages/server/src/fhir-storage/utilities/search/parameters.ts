@@ -285,7 +285,7 @@ export async function parametersWithMetaAssociated(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `SearchParameter with name '${p.name}' found multiple parameters.`,
+            `SearchParameter with name '${p.name}' found multiple parameters '${searchParameterSearchResult.map((s) => s.id).join(", ")}'.`,
           ),
         );
 
