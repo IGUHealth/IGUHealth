@@ -38,6 +38,7 @@
     "readme.md"
   ],
   "exports": {
-    ".": "./lib/v1/index.js"
+    ".": "./lib/index.js",
+    "./structural": "./lib/structural/index.js"
   }
 }

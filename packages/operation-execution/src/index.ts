@@ -10,7 +10,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
-import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
+import validate, { ValidationCTX } from "@iguhealth/fhir-validation/structural";
 import {
   OperationError,
   issueError,
