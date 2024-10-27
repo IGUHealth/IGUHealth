@@ -7,8 +7,8 @@
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
   "type": "module",
-  "main": "lib/v1/index.js",
-  "types": "lib/v1/index.d.ts",
+  "main": "lib/structural/index.js",
+  "types": "lib/structural/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
@@ -38,6 +38,8 @@
     "readme.md"
   ],
   "exports": {
-    ".": "./lib/v1/index.js"
+    ".": "./lib/index.js",
+    "./structural": "./lib/structural/index.js",
+    "./types": "./lib/types.js"
   }
 }

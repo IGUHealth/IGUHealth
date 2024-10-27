@@ -15,7 +15,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import { Invocation } from "@iguhealth/operation-execution";
-import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
+import { OpCTX } from "@iguhealth/operation-execution";
 
 import { ValueSetExpand } from "./ops.js";
 
@@ -63,7 +63,6 @@ test("Test ValueSet Expands", async () => {
     if (inputIssues.length > 0) throw new Error("Input is invalid");
 
     const outputIssues = await op.validate(ctx, "out", output);
-    console.log(outputIssues);
     if (outputIssues.length > 0) throw new Error("Output is invalid");
 
     return output;

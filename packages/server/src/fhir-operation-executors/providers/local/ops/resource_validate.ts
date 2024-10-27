@@ -2,7 +2,7 @@ import { R4BTypeInteraction, R4TypeInteraction } from "@iguhealth/client/types";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
-import validate from "@iguhealth/fhir-validation";
+import validate from "@iguhealth/fhir-validation/structural";
 import { ResourceValidate } from "@iguhealth/generated-ops/r4";
 import {
   OperationError,
