@@ -8,7 +8,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX } from "./types.js";
+import { ValidationCTX } from "../types.js";
 import { validateIsObject } from "./utilities.js";
 
 const REGEX: Record<string, RegExp> = {
