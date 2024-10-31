@@ -17,6 +17,8 @@
   "dependencies": {
     "@iguhealth/codegen": "workspace:^",
     "@iguhealth/fhir-pointer": "workspace:^",
+    "@iguhealth/fhirpath": "workspace:^",
+    "@iguhealth/meta-value": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
     "jsonpointer": "^5.0.1"
   },
