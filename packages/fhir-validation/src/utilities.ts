@@ -27,3 +27,13 @@ export function isTypeChoice(element: ElementDefinition) {
 export function isResourceType(type: string) {
   return resourceTypes.has(type);
 }
+
+export function fieldName(elementDefinition: ElementDefinition, type?: string) {
+  const field = elementDefinition.path.split(".").pop() as string;
+  if (isTypeChoice(elementDefinition)) {
+    if (!type)
+      throw new Error("deriving field from typechoice requires a type");
+    return field.replace("[x]", capitalize(type));
+  }
+  return field;
+}
