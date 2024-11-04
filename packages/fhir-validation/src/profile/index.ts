@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Loc, toJSONPointer, typedPointer } from "@iguhealth/fhir-pointer";
-import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   canonical,
   ElementDefinition,
@@ -9,11 +8,7 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
-import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 
 import { ValidationCTX } from "../types.js";
@@ -24,7 +19,6 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { isObject } from "@iguhealth/meta-value/utilities";
 import { conformsToPattern } from "./validators.js";
 
 async function compress(value: string, encoding: CompressionFormat) {
