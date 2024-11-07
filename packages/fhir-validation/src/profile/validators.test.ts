@@ -28,4 +28,20 @@ test("pattern validation", () => {
     conformsToPattern({ a: { a: 1, b: 2 } }, { a: { a: 1, b: 2, c: 3 } }),
   ).toBeTruthy();
   expect(conformsToPattern({ a: { a: 1, b: 2 } }, { a: { a: 1 } })).toBeFalsy();
+
+  expect(
+    conformsToPattern(
+      { coding: [{ system: "http://loinc.org", code: "8480-6" }] },
+      {
+        coding: [
+          {
+            system: "http://loinc.org",
+            code: "8462-4",
+            display: "Diastolic blood pressure",
+          },
+        ],
+        text: "Diastolic blood pressure",
+      },
+    ),
+  ).toBeFalsy();
 });

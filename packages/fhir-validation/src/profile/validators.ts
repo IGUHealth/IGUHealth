@@ -13,12 +13,11 @@ export function conformsToPattern(pattern: unknown, value: unknown): boolean {
     if (Array.isArray(pattern)) {
       if (!Array.isArray(value)) return false;
       for (let i = 0; i < pattern.length; i++) {
-        // Per spec as long as a single value matches in the pattern then it's
-        const patternAt = pattern[i];
         const valueExists = value.filter((v) =>
-          conformsToPattern(patternAt, v),
+          conformsToPattern(pattern[i], v),
         );
-        if (!valueExists) return false;
+        // Per spec as long as a single value matches in the pattern then it's truthy
+        if (valueExists.length === 0) return false;
       }
       return true;
     } else {

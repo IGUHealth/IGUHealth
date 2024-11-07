@@ -37,8 +37,6 @@ import {
 } from "../utilities.js";
 import { validatePrimitive } from "./validate-primitive.js";
 
-export { ValidationCTX };
-
 function resolveContentReferenceIndex(
   sd: StructureDefinition | r4b.StructureDefinition,
   element: ElementDefinition | r4b.ElementDefinition,
@@ -334,7 +332,7 @@ async function validateSingular(
   }
 }
 
-async function validateElement(
+export async function validateElement(
   ctx: ValidationCTX,
   path: Loc<any, any, any>,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
