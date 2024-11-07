@@ -47,7 +47,7 @@
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "browserslist": {
     "production": [
