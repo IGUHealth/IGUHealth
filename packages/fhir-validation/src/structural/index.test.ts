@@ -18,7 +18,8 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 
-import { ValidationCTX, createValidator } from "./index";
+import { ValidationCTX } from "../types.js";
+import { createValidator } from "./index";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType<R4>[],
