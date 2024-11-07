@@ -33,47 +33,6 @@ async function compress(value: string, encoding: CompressionFormat) {
   return decoder.decode(buf);
 }
 
-type Discriminator = NonNullable<
-  NonNullable<ElementDefinition["slicing"]>["discriminator"]
->[number];
-
-function convertPathToElementPointer(discriminator: Discriminator) {
-  if (
-    discriminator.path.includes("ofType(") ||
-    discriminator.path.includes("resolve()") ||
-    discriminator.path.includes("extension(")
-  ) {
-    throw new OperationError(
-      outcomeFatal(
-        "not-supported",
-        `Discriminator path '${discriminator.path}' is not supported`,
-      ),
-    );
-  }
-
-  return discriminator.path.replace("$this", "");
-}
-
-/**
- * Removes the type from the path.
- * @param path The ElementDefinition path to remove the type from.
- */
-function removeTypeOnPath(path: string) {
-  path.substring(path.indexOf(".") + 1);
-}
-
-function findDiscriminatorValue(
-  sliceElement: ElementDefinition,
-  discriminator: Discriminator,
-) {
-  if (!sliceElement.sliceName) {
-    throw new OperationError(
-      outcomeFatal("not-supported", `Slice element does not have a slice name`),
-    );
-  }
-  const path = convertPathToElementPointer(discriminator);
-}
-
 /**
  * Methods of discriminator for slices pulled from <https://build.fhir.org/profiling.html#discriminator>
  * value:	The slices have different values in the nominated element, as determined by the applicable fixed value, pattern, or required ValueSet binding.
