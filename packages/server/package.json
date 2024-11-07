@@ -27,9 +27,9 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
-    "@aws-crypto/client-node": "^4.0.1",
-    "@aws-sdk/client-lambda": "^3.650.0",
-    "@aws-sdk/client-resource-groups-tagging-api": "^3.650.0",
+    "@aws-crypto/client-node": "^4.0.2",
+    "@aws-sdk/client-lambda": "^3.686.0",
+    "@aws-sdk/client-resource-groups-tagging-api": "^3.686.0",
     "@dagrejs/graphlib": "^2.2.4",
     "@iguhealth/access-control": "workspace:^",
     "@iguhealth/artifacts": "workspace:^",
@@ -89,7 +89,7 @@
     "react-dom": "^18.3.1",
     "redlock": "v5.0.0-beta.2",
     "validator": "^13.12.0",
-    "zapatos": "^6.4.2"
+    "zapatos": "^6.4.4"
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
@@ -126,7 +126,7 @@
     "tailwindcss": "^3.4.10",
     "ts-jest": "^29.2.5",
     "tsx": "4.11.2",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "files": [
     "public/**",
