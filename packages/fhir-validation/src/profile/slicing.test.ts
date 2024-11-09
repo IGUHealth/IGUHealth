@@ -316,4 +316,58 @@ test("Slice Validation", async () => {
       severity: "error",
     },
   ]);
+
+  expect(
+    validateSlices(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        id: "asdf",
+        resourceType: "Observation",
+        component: [
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8480-6",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 109,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 44,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+        ],
+      },
+      pointer("Observation", "asdf" as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Slice 'diastolic' does not have the minimum number of values.",
+      expression: undefined,
+      severity: "error",
+    },
+  ]);
 });
