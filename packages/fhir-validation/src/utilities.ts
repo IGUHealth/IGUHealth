@@ -20,8 +20,15 @@ export function notNull<T, Z extends T | undefined>(
   return true;
 }
 
+/**
+ * Per spec the ID can be used to determine if typechoice
+ * See https://hl7.org/fhir/R4/elementdefinition.html#id
+ * For type choice elements, the id reflects the type slice. e.g. For path = Patient.deceasedBoolean, the id is Patient.deceased[x]:deceasedBoolean
+ * @param element
+ * @returns
+ */
 export function isTypeChoice(element: ElementDefinition) {
-  return (element.type || []).length > 1;
+  return element.id?.endsWith("[x]");
 }
 
 export function isResourceType(type: string) {

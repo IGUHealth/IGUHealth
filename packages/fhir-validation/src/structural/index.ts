@@ -273,7 +273,7 @@ async function validateComplex(
     : issues;
 }
 
-async function validateSingular(
+export async function validateSingular(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
