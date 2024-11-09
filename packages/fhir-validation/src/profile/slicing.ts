@@ -2,8 +2,9 @@
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   ElementDefinition,
+  OperationOutcome,
   uri,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import {
   convertPathToElementPointer,
@@ -20,7 +21,9 @@ import { fieldName } from "../utilities.js";
 import { conformsToPattern } from "./validators.js";
 import { descend, get, Loc } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
+import { validateSingular } from "../structural/index.js";
+import { ValidationCTX } from "../types.js";
 
 function isSliced(element: ElementDefinition) {
   return element.slicing !== undefined;
@@ -279,13 +282,48 @@ export async function splitSlicing(
 }
 
 export async function validateSlices(
-  elements: ElementDefinition[],
+  ctx: ValidationCTX,
+  structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
   sliceDescriptor: SlicingDescriptor,
   root: object,
   _loc: Loc<any, any, any>,
-) {
-  const discriminatorElement = elements[sliceDescriptor.discriminator];
+): Promise<OperationOutcome["issue"]> {
+  const differential = structureDefinition.differential?.element ?? [];
+  const discriminatorElement = differential[sliceDescriptor.discriminator];
   const loc = descend(_loc, fieldName(discriminatorElement));
 
-  const slices = splitSlicing(elements, sliceDescriptor, root, loc);
+  const slices = await splitSlicing(differential, sliceDescriptor, root, loc);
+
+  let issues: OperationOutcome["issue"] = [];
+
+  for (const slice of sliceDescriptor.slices) {
+    for (const path of slices[slice]) {
+      const idx = (structureDefinition?.snapshot?.element ?? []).findIndex(
+        (e) => e.id === differential[slice].id,
+      );
+      const type =
+        (structureDefinition?.snapshot?.element ?? [])[idx].type ?? [];
+      if (type.length !== 1) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            "typechoices not supported for slicing.",
+          ),
+        );
+      }
+
+      issues = issues.concat(
+        await validateSingular(
+          ctx,
+          path,
+          structureDefinition,
+          idx,
+          root,
+          type[0].code,
+        ),
+      );
+    }
+  }
+
+  return issues;
 }
