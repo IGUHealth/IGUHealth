@@ -266,4 +266,54 @@ test("Slice Validation", async () => {
       pointer("Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([]);
+
+  expect(
+    validateSlices(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        id: "asdf",
+        resourceType: "Observation",
+        component: [
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8480-6",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 109,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8462-4",
+                },
+              ],
+            },
+            valueInteger: 44,
+          },
+        ],
+      },
+      pointer("Observation", "asdf" as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Additional fields found at path '/component/1': 'valueInteger'",
+      expression: ["/component/1"],
+      severity: "error",
+    },
+  ]);
 });
