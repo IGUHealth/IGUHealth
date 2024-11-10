@@ -21,13 +21,7 @@ import {
 
 import { fieldName } from "../utilities.js";
 import { conformsToPattern } from "./validators.js";
-import {
-  ascend,
-  descend,
-  get,
-  Loc,
-  toJSONPointer,
-} from "@iguhealth/fhir-pointer";
+import { descend, get, Loc } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import { validateSingular } from "../structural/index.js";
