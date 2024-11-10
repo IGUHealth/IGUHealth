@@ -3,6 +3,7 @@ import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-d
 import {
   ElementDefinition,
   OperationOutcome,
+  OperationOutcomeIssue,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
@@ -12,6 +13,7 @@ import {
   removeTypeOnPath,
 } from "./utilities.js";
 import {
+  issueError,
   OperationError,
   outcomeError,
   outcomeFatal,
@@ -281,6 +283,35 @@ export async function splitSlicing(
   return sliceSplit;
 }
 
+function validateSliceCardinality(
+  sliceElement: ElementDefinition,
+  paths: Loc<any, any, any>[],
+): OperationOutcomeIssue[] {
+  const issues: OperationOutcomeIssue[] = [];
+  if (paths.length < (sliceElement.min ?? 0)) {
+    issues.push(
+      issueError(
+        "structure",
+        `Slice '${sliceElement.sliceName}' does not have the minimum number of values.`,
+      ),
+    );
+  }
+
+  if (!isNaN(parseInt(sliceElement.max ?? "1"))) {
+    const max = parseInt(sliceElement.max ?? "1");
+    if (paths.length > max) {
+      issues.push(
+        issueError(
+          "structure",
+          `Slice '${sliceElement.sliceName}' has more than the maximum number of values.`,
+        ),
+      );
+    }
+  }
+
+  return issues;
+}
+
 export async function validateSlices(
   ctx: ValidationCTX,
   structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
@@ -297,12 +328,16 @@ export async function validateSlices(
   let issues: OperationOutcome["issue"] = [];
 
   for (const slice of sliceDescriptor.slices) {
+    const idx = (structureDefinition?.snapshot?.element ?? []).findIndex(
+      (e) => e.id === differential[slice].id,
+    );
+    const sliceElement = (structureDefinition?.snapshot?.element ?? [])[idx];
+    const type = sliceElement.type ?? [];
+    issues = issues.concat(
+      validateSliceCardinality(sliceElement, slices[slice]),
+    );
+
     for (const path of slices[slice]) {
-      const idx = (structureDefinition?.snapshot?.element ?? []).findIndex(
-        (e) => e.id === differential[slice].id,
-      );
-      const type =
-        (structureDefinition?.snapshot?.element ?? [])[idx].type ?? [];
       if (type.length !== 1) {
         throw new OperationError(
           outcomeError(
