@@ -55,11 +55,9 @@ test("VALIDATION OUTPUT", async () => {
       fhirVersion: R4,
       level: "system",
       resolveCanonical(fhirVersion, type, url) {
-        console.log(type);
         return undefined;
       },
       resolveTypeToCanonical(fhirVersion, type) {
-        console.log(type);
         return undefined;
       },
     },

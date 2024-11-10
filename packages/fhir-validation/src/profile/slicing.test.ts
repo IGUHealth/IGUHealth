@@ -19,7 +19,11 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { getSliceIndices, splitSlicing, validateSlices } from "./slicing.js";
+import {
+  getSliceIndices,
+  splitSlicing,
+  validateSliceDescriptor,
+} from "./slicing.js";
 import { ValidationCTX } from "../types.js";
 
 function createMemoryDatabase(
@@ -258,7 +262,7 @@ test("Slice Validation", async () => {
   const sliceIndexes = getSliceIndices(elements, 0);
 
   expect(
-    validateSlices(
+    validateSliceDescriptor(
       CTX,
       bloodProfile,
       sliceIndexes[0],
@@ -268,7 +272,7 @@ test("Slice Validation", async () => {
   ).resolves.toEqual([]);
 
   expect(
-    validateSlices(
+    validateSliceDescriptor(
       CTX,
       bloodProfile,
       sliceIndexes[0],
@@ -318,7 +322,7 @@ test("Slice Validation", async () => {
   ]);
 
   expect(
-    validateSlices(
+    validateSliceDescriptor(
       CTX,
       bloodProfile,
       sliceIndexes[0],

@@ -432,7 +432,12 @@ function createResolveTypeToCanonical(
     ) as r4.StructureDefinition[]
   ).reduce(
     (acc: Map<r4.uri, r4.canonical>, resource: r4.StructureDefinition) => {
-      if (resource?.type && resource?.url) {
+      if (
+        resource?.type &&
+        resource?.url &&
+        // Ignore profiles which will be constraints on the base definition.
+        resource.derivation !== "constraint"
+      ) {
         acc.set(resource.type, resource.url as r4.canonical);
       }
       return acc;

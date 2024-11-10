@@ -27,15 +27,15 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX, Validator } from "../types.js";
+import { ValidationCTX } from "../types.js";
 import {
   fieldName,
   isPrimitiveType,
   isResourceType,
-  notNull,
-  validateIsObject,
+  notNullable,
 } from "../utilities.js";
-import { validatePrimitive } from "./validate-primitive.js";
+import { validatePrimitive } from "../elements/primitive.js";
+import { isObject } from "@iguhealth/meta-value/utilities";
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition | r4b.StructureDefinition,
@@ -111,9 +111,9 @@ function isElementRequired(element: ElementDefinition) {
 
 async function validateReferenceTypeConstraint(
   ctx: ValidationCTX,
+  element: ElementDefinition,
   root: object,
   path: Loc<object, any, any>,
-  element: ElementDefinition,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
   const value = get(path, root) as Reference;
@@ -168,14 +168,17 @@ async function validateReferenceTypeConstraint(
  */
 async function validateComplex(
   ctx: ValidationCTX,
-  path: Loc<object, any, any>,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
+  path: Loc<object, any, any>,
   childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
-  let foundFields: string[] = [];
+  const foundFields: Set<string> =
+    structureDefinition.kind === "resource"
+      ? new Set(["resourceType"])
+      : new Set([]);
 
   const value = get(path, root);
 
@@ -193,7 +196,7 @@ async function validateComplex(
     await Promise.all(
       childrenIndexes.map(async (elementIndex) => {
         const element = structureDefinition.snapshot?.element?.[elementIndex];
-        if (!notNull(element)) {
+        if (!notNullable(element)) {
           throw new OperationError(
             outcomeFatal(
               "structure",
@@ -205,7 +208,7 @@ async function validateComplex(
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
         const fields = determineTypesAndFields(element, value);
-        foundFields = foundFields.concat(fields.map((f) => f.field));
+        fields.map((f) => f.field).forEach((f) => foundFields.add(f));
 
         if (isElementRequired(element) && fields.length === 0) {
           return [
@@ -224,10 +227,10 @@ async function validateComplex(
             fields.map((fieldType) =>
               validateElement(
                 ctx,
-                descend(path, fieldType.field),
                 structureDefinition,
                 elementIndex,
                 root,
+                descend(path, fieldType.field),
                 fieldType.type,
               ),
             ),
@@ -238,35 +241,16 @@ async function validateComplex(
   ).flat();
 
   // Check for additional fields
-  let additionalFields = Object.keys(value).filter(
-    (field) => foundFields.indexOf(field) === -1,
-  );
+  const additionalFields = foundFields.difference(new Set(Object.keys(value)));
 
-  if (elementIndex === 0 && structureDefinition.kind === "resource") {
-    if (value.resourceType !== structureDefinition.type) {
-      throw new OperationError(
-        outcomeError(
-          "structure",
-          `Expected resourceType '${
-            structureDefinition.type
-          }' at path '${toJSONPointer(path)}' found type '${
-            value.resourceType
-          }'`,
-          [toJSONPointer(path)],
-        ),
-      );
-    }
-    additionalFields = additionalFields.filter((v) => v !== "resourceType");
-  }
-
-  return additionalFields.length > 0
+  return additionalFields.size > 0
     ? [
         ...issues,
         issueError(
           "structure",
           `Additional fields found at path '${toJSONPointer(
             path,
-          )}': '${additionalFields.join(", ")}'`,
+          )}': '${Array.from(additionalFields).join(", ")}'`,
           [toJSONPointer(path)],
         ),
       ]
@@ -275,10 +259,10 @@ async function validateComplex(
 
 export async function validateSingular(
   ctx: ValidationCTX,
-  path: Loc<object, any, any>,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
+  path: Loc<object, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[
@@ -288,10 +272,10 @@ export async function validateSingular(
   if (element.contentReference) {
     return validateSingular(
       ctx,
-      path,
       structureDefinition,
       resolveContentReferenceIndex(structureDefinition, element),
       root,
+      path,
       type,
     );
   }
@@ -316,17 +300,17 @@ export async function validateSingular(
       const issues = await validate(ctx, type, root, path);
       // Special validation for reference to confirm the type constraint.
       if (issues.length === 0 && type === "Reference") {
-        return await validateReferenceTypeConstraint(ctx, root, path, element);
+        return await validateReferenceTypeConstraint(ctx, element, root, path);
       }
       return issues;
     }
   } else {
     return validateComplex(
       ctx,
-      path,
       structureDefinition,
       elementIndex,
       root,
+      path,
       childrenIndixes,
     );
   }
@@ -334,14 +318,14 @@ export async function validateSingular(
 
 export async function validateElement(
   ctx: ValidationCTX,
-  path: Loc<any, any, any>,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
+  structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
   elementIndex: number,
   root: object,
+  path: Loc<any, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[elementIndex];
-  if (!notNull(element)) {
+  if (!notNullable(element)) {
     throw new OperationError(
       outcomeFatal(
         "structure",
@@ -379,10 +363,10 @@ export async function validateElement(
           (value || []).map((_v: any, i: number) => {
             return validateSingular(
               ctx,
-              descend(path, i),
               structureDefinition,
               elementIndex,
               root,
+              descend(path, i),
               type,
             );
           }),
@@ -399,10 +383,10 @@ export async function validateElement(
       }
       return validateSingular(
         ctx,
-        path,
         structureDefinition,
         elementIndex,
         root,
+        path,
         type,
       );
     }
@@ -442,7 +426,7 @@ export default async function validate(
       ),
     );
 
-  if (!validateIsObject(root))
+  if (!isObject(root))
     return [
       issueError(
         "structure",
@@ -451,30 +435,21 @@ export default async function validate(
       ),
     ];
 
-  if (
-    isResourceType(type) &&
-    get(descend(path, "resourceType"), root) !== type
-  ) {
-    return [
-      issueError(
-        "invalid",
-        `ResourceType '${
-          (root as Resource<FHIR_VERSION, AllResourceTypes>).resourceType
-        }' does not match expected type '${type}'`,
-        [toJSONPointer(path)],
-      ),
-    ];
+  if (sd.kind === "resource") {
+    // Verify the resourceType aligns.
+    if (get(descend(path, "resourceType"), root) !== type) {
+      return [
+        issueError(
+          "invalid",
+          `ResourceType '${
+            (root as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
+              .resourceType
+          }' does not match expected type '${type}'`,
+          [toJSONPointer(path)],
+        ),
+      ];
+    }
   }
 
-  return validateElement(ctx, path, sd, 0, root, type);
-}
-
-export function createValidator(
-  ctx: ValidationCTX,
-  type: uri,
-  path: Loc<any, any, any> = typedPointer(),
-): Validator {
-  return (value: unknown) => {
-    return validate(ctx, type, value, path);
-  };
+  return validateElement(ctx, sd, 0, root, path, type);
 }
