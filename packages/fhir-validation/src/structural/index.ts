@@ -76,7 +76,15 @@ function findBaseFieldAndType(
   }
 }
 
-function determineTypesAndFields(
+/**
+ * Returns fields associated to an element. Because it could be a primitive it may result in multiple fields.
+ * IE _field for Element values for field primitive value.
+ *
+ * @param element The ElementDefinition to find fields for
+ * @param value Value to check for fields.
+ * @returns
+ */
+function getFoundFieldsForElement(
   element: ElementDefinition,
   value: object,
 ): FieldType[] {
@@ -248,7 +256,7 @@ async function validateElementNested(
         }
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
-        const fields = determineTypesAndFields(element, value);
+        const fields = getFoundFieldsForElement(element, value);
         fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
