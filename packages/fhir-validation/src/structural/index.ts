@@ -121,6 +121,44 @@ function isElementRequired(element: ElementDefinition) {
   return (element.min ?? 0) > 0;
 }
 
+function isReferenceConformantToStructureDefinition(
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
+  value: Reference,
+): boolean {
+  switch (true) {
+    case sd?.type === "Resource" || sd?.type === "DomainResource": {
+      return true;
+    }
+    case value.reference !== undefined: {
+      const resourceType = value.reference.split("/")[0];
+
+      switch (true) {
+        // Could be ref in bundle so skip for now.
+        case !isResourceType(resourceType): {
+          return true;
+        }
+        case resourceType === sd?.type: {
+          // If Reference also has type need to validate that as well
+          if (value.type) return resourceType === value.type;
+          return true;
+        }
+        default: {
+          return false;
+        }
+      }
+    }
+    case value.type && value === sd?.type: {
+      return true;
+    }
+    case value.type === undefined && value.reference === undefined: {
+      return true;
+    }
+    default: {
+      return false;
+    }
+  }
+}
+
 /**
  * Validate the Reference is conformant to the profile (only confirms the type)
  * @param ctx ValidationCTX
@@ -136,38 +174,31 @@ async function validateReferenceTypeConstraint(
   path: Loc<object, any, any>,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
-  const value = get(path, root) as Reference;
+  const value = get(path, root) as Reference | undefined;
+  if (!value) return [];
 
   const referenceProfiles = element.type?.find(
     (t) => t.code === "Reference",
   )?.targetProfile;
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
-  for (const profile of referenceProfiles ?? []) {
+  for (const profileURI of referenceProfiles ?? []) {
     const sd = await ctx.resolveCanonical(
       ctx.fhirVersion,
       "StructureDefinition",
-      profile,
+      profileURI,
     );
-    // Domain or resource type means all types are allowed.
-    if (sd?.type === "Resource" || sd?.type === "DomainResource") {
+    if (!sd) {
+      throw new OperationError(
+        outcomeFatal(
+          "not-found",
+          `Could not find profile: '${profileURI}' to validate reference`,
+        ),
+      );
+    }
+    if (isReferenceConformantToStructureDefinition(sd, value)) {
       return [];
     }
-    if (value?.reference) {
-      const resourceType = value.reference?.split("/")[0];
-      // Could be ref in bundle so skip for now.
-      if (!isResourceType(resourceType)) {
-        return [];
-      }
-      if (
-        resourceType === sd?.type &&
-        (value.type ? resourceType === value.type : true)
-      )
-        return [];
-    } else if (value.type && value === sd?.type) return [];
-    // Allow for reference type to be undefined.
-    else if (value.type === undefined && value.reference === undefined)
-      return [];
   }
 
   return [
