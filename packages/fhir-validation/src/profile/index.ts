@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import { Loc, toJSONPointer, typedPointer } from "@iguhealth/fhir-pointer";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
-  canonical,
   OperationOutcome,
   StructureDefinition,
+  canonical,
 } from "@iguhealth/fhir-types/r4/types";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { IMetaValue } from "@iguhealth/meta-value/interface";
-
-import { ValidationCTX } from "../types.js";
-import validateAllSlicesAtLocation from "../slicing/index.js";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
-import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
+import { IMetaValue } from "@iguhealth/meta-value/interface";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+
+import validateAllSlicesAtLocation from "../slicing/index.js";
+import { ValidationCTX } from "../types.js";
 
 function getNonSliceChildren(
   profile: Resource<FHIR_VERSION, "StructureDefinition">,
