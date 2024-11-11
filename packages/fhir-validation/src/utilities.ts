@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Loc, toJSONPointer } from "@iguhealth/fhir-pointer";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { ElementDefinition } from "@iguhealth/fhir-types/r4/types";
+import { ElementDefinition, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+
+import { ValidationCTX } from "./types.js";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -39,4 +45,37 @@ export function fieldName(elementDefinition: ElementDefinition, type?: string) {
     return field.replace("[x]", capitalize(type));
   }
   return field;
+}
+
+export async function resolveTypeToStructureDefinition(
+  ctx: ValidationCTX,
+  type: uri,
+): Promise<Resource<FHIR_VERSION, "StructureDefinition">> {
+  const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
+
+  if (!canonical) {
+    throw new OperationError(
+      outcomeFatal(
+        "structure",
+        `Unable to resolve canonical for type '${type}'`,
+        [],
+      ),
+    );
+  }
+
+  const sd = await ctx.resolveCanonical(
+    ctx.fhirVersion,
+    "StructureDefinition",
+    canonical,
+  );
+
+  if (!sd)
+    throw new OperationError(
+      outcomeFatal(
+        "structure",
+        `Unable to resolve canonical for type '${type}'`,
+      ),
+    );
+
+  return sd;
 }

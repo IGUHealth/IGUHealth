@@ -11,10 +11,10 @@ import {
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
-  id,
   OperationOutcome,
   Reference,
   StructureDefinition,
+  id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -23,21 +23,22 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
+import { isObject } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { validatePrimitive } from "../elements/primitive.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   fieldName,
   isPrimitiveType,
   isResourceType,
   notNullable,
+  resolveTypeToStructureDefinition,
 } from "../utilities.js";
-import { validatePrimitive } from "../elements/primitive.js";
-import { isObject } from "@iguhealth/meta-value/utilities";
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition | r4b.StructureDefinition,
@@ -56,12 +57,12 @@ function resolveContentReferenceIndex(
   return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
 }
 
-type FieldType = { field: string; type: uri };
+type PropertyAndType = { field: string; type: uri };
 
 function findBaseFieldAndType(
   element: ElementDefinition,
   value: object,
-): FieldType | undefined {
+): PropertyAndType | undefined {
   if (element.contentReference) {
     return {
       field: fieldName(element),
@@ -87,18 +88,18 @@ function findBaseFieldAndType(
 function getFoundFieldsForElement(
   element: ElementDefinition,
   value: object,
-): FieldType[] {
-  const fields: FieldType[] = [];
+): PropertyAndType[] {
+  const properties: PropertyAndType[] = [];
   const base = findBaseFieldAndType(element, value);
   if (base) {
-    fields.push(base);
+    properties.push(base);
     const { field, type } = base;
     if (isPrimitiveType(type)) {
       const primitiveElementField = {
         field: `_${field}`,
         type: "Element" as uri,
       };
-      if (`_${field}` in value) fields.push(primitiveElementField);
+      if (`_${field}` in value) properties.push(primitiveElementField);
     }
   } else {
     // Check for primitive extensions when non existent values
@@ -110,11 +111,11 @@ function getFoundFieldsForElement(
           field: `_${fieldName(element, primType.code)}`,
           type: "Element" as uri,
         };
-        fields.push(primitiveElementField);
+        properties.push(primitiveElementField);
       }
     }
   }
-  return fields;
+  return properties;
 }
 
 function isElementRequired(element: ElementDefinition) {
@@ -499,29 +500,7 @@ export default async function validate(
   if (isPrimitiveType(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
-  const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
-  if (!canonical) {
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)],
-      ),
-    );
-  }
-  const sd = await ctx.resolveCanonical(
-    ctx.fhirVersion,
-    "StructureDefinition",
-    canonical,
-  );
-  if (!sd)
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)],
-      ),
-    );
+  const sd = await resolveTypeToStructureDefinition(ctx, type);
 
   if (!isObject(root))
     return [

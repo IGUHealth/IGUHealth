@@ -2,6 +2,7 @@
 import * as fpointer from "@iguhealth/fhir-pointer";
 import { ElementDefinition } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { isObject } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
@@ -9,7 +10,6 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { ValidationCTX } from "../types.js";
-import { isObject } from "@iguhealth/meta-value/utilities";
 
 const REGEX: Record<string, RegExp> = {
   // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,

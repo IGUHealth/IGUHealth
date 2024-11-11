@@ -1,8 +1,8 @@
 import { Loc } from "@iguhealth/fhir-pointer";
 import {
-  canonical,
   ElementDefinition,
   StructureDefinition,
+  canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
