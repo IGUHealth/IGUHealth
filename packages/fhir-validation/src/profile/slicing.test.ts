@@ -196,39 +196,6 @@ const bloodPressureObservation: Observation = {
   ],
 } as Observation;
 
-test("Slicing Validation", async () => {
-  const elements = bloodProfile?.differential?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
-});
-
-test("Slice Splitting", async () => {
-  const elements = bloodProfile?.differential?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
-
-  expect(
-    splitSlicing(
-      elements,
-      sliceIndexes[0],
-      bloodPressureObservation,
-      descend(
-        pointer("Observation", bloodPressureObservation.id as id),
-        "component",
-      ),
-    ),
-  ).resolves.toEqual({
-    3: ["Observation|blood-pressure-observation/component/0"],
-    10: ["Observation|blood-pressure-observation/component/1"],
-  });
-
-  expect(
-    bloodPressureObservation?.component?.[0]?.code.coding?.[0]?.code,
-  ).toEqual("8480-6");
-  expect(
-    bloodPressureObservation?.component?.[1]?.code.coding?.[0]?.code,
-  ).toEqual("8462-4");
-  expect(bloodProfile?.differential?.element[3]?.sliceName).toEqual("systolic");
-});
-
 test("Slice Splitting", async () => {
   const elements = bloodProfile?.differential?.element ?? [];
   const sliceIndexes = getSliceIndices(elements, 0);
@@ -260,6 +227,13 @@ test("Slice Splitting", async () => {
 test("Slice Validation", async () => {
   const elements = bloodProfile?.differential?.element ?? [];
   const sliceIndexes = getSliceIndices(elements, 0);
+  validateSliceDescriptor(
+    CTX,
+    bloodProfile,
+    sliceIndexes[0],
+    bloodPressureObservation,
+    pointer("Observation", bloodPressureObservation.id as id),
+  );
 
   expect(
     validateSliceDescriptor(

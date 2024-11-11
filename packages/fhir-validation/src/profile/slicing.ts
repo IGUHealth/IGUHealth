@@ -2,6 +2,7 @@
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   ElementDefinition,
+  id,
   OperationOutcome,
   OperationOutcomeIssue,
   uri,
@@ -21,11 +22,11 @@ import {
 
 import { fieldName } from "../utilities.js";
 import { conformsToPattern } from "../elements/validators.js";
-import { descend, get, Loc } from "@iguhealth/fhir-pointer";
+import { descend, get, Loc, pointer } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import { validateSingular } from "../structural/index.js";
-import { ValidationCTX } from "../types.js";
+import { ElementLoc, ValidationCTX } from "../types.js";
 
 function isSliced(element: ElementDefinition) {
   return element.slicing !== undefined;
@@ -304,12 +305,12 @@ function validateSliceCardinality(
 
 export async function validateSliceDescriptor(
   ctx: ValidationCTX,
-  structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
+  profile: Resource<FHIR_VERSION, "StructureDefinition">,
   sliceDescriptor: SlicingDescriptor,
   root: object,
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
-  const differential = structureDefinition.differential?.element ?? [];
+  const differential = profile.differential?.element ?? [];
   const discriminatorElement = differential[sliceDescriptor.discriminator];
   const sliceLoc = descend(loc, fieldName(discriminatorElement));
 
@@ -321,32 +322,40 @@ export async function validateSliceDescriptor(
   );
 
   let issues: OperationOutcome["issue"] = [];
+  const snapshotLoc = descend(
+    descend(pointer("StructureDefinition", profile.id as id), "snapshot"),
+    "element",
+  );
 
   for (const slice of sliceDescriptor.slices) {
-    const idx = (structureDefinition?.snapshot?.element ?? []).findIndex(
+    const idx = (profile?.snapshot?.element ?? []).findIndex(
       (e) => e.id === differential[slice].id,
     );
-    const sliceElement = (structureDefinition?.snapshot?.element ?? [])[idx];
+    const sliceLoc = descend(snapshotLoc, idx) as unknown as ElementLoc;
+    const sliceElement = get(sliceLoc, profile);
+    if (!sliceElement) {
+      throw new OperationError(
+        outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
+      );
+    }
+
     const type = sliceElement.type ?? [];
     issues = issues.concat(
       validateSliceCardinality(sliceElement, slices[slice]),
     );
 
-    for (const path of slices[slice]) {
-      if (type.length !== 1) {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            "typechoices not supported for slicing.",
-          ),
-        );
-      }
+    if (type.length > 1) {
+      throw new OperationError(
+        outcomeError("not-supported", "typechoices not supported for slicing."),
+      );
+    }
 
+    for (const path of slices[slice]) {
       issues = issues.concat(
         await validateSingular(
           ctx,
-          structureDefinition,
-          idx,
+          profile,
+          sliceLoc,
           root,
           path,
           type[0].code,

@@ -2,13 +2,16 @@
 import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
+  ascend,
   descend,
   get,
+  pointer,
   toJSONPointer,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
+  id,
   OperationOutcome,
   Reference,
   StructureDefinition,
@@ -26,7 +29,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX } from "../types.js";
+import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   fieldName,
   isPrimitiveType,
@@ -38,17 +41,19 @@ import { isObject } from "@iguhealth/meta-value/utilities";
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition | r4b.StructureDefinition,
+  elementsLoc: Loc<StructureDefinition, ElementDefinition[]>,
   element: ElementDefinition | r4b.ElementDefinition,
-): number {
+): ElementLoc {
+  const elements = get(elementsLoc, sd as StructureDefinition);
   const contentReference = element.contentReference?.split("#")[1];
-  const referenceElementIndex = sd.snapshot?.element.findIndex(
+  const referenceElementIndex = elements.findIndex(
     (element) => element.id === contentReference,
   );
   if (!referenceElementIndex)
     throw new Error(
       "unable to resolve contentreference: '" + element.contentReference + "'",
     );
-  return referenceElementIndex;
+  return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
 }
 
 type FieldType = { field: string; type: uri };
@@ -162,17 +167,34 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
+function ascendElementLoc(loc: ElementLoc): {
+  parent: Loc<StructureDefinition, ElementDefinition[]>;
+  field: NonNullable<keyof ElementDefinition[]>;
+} {
+  const parent = ascend(loc);
+
+  if (!parent) {
+    throw new OperationError(
+      outcomeFatal("invalid", `Invalid element path ${loc}`),
+    );
+  }
+
+  return parent;
+}
+
 /**
  * Validating root / backbone / element nested types here.
  */
 async function validateComplex(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementIndex: number,
+  elementLoc: ElementLoc,
   root: object,
   path: Loc<object, any, any>,
   childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
+  const { field: elementIndex, parent: elementsLoc } =
+    ascendElementLoc(elementLoc);
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
   const foundFields: Set<string> =
     structureDefinition.kind === "resource" && elementIndex === 0
@@ -193,13 +215,17 @@ async function validateComplex(
 
   const issues = (
     await Promise.all(
-      childrenIndexes.map(async (elementIndex) => {
-        const element = structureDefinition.snapshot?.element?.[elementIndex];
+      childrenIndexes.map(async (childElementIndex) => {
+        const childElementLoc = descend(
+          elementsLoc,
+          childElementIndex,
+        ) as unknown as ElementLoc;
+        const element = get(childElementLoc, structureDefinition);
         if (!notNullable(element)) {
           throw new OperationError(
             outcomeFatal(
               "structure",
-              `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`,
+              `Element not found at '${childElementLoc}' for StructureDefinition ${structureDefinition.id}`,
               [toJSONPointer(path)],
             ),
           );
@@ -227,7 +253,7 @@ async function validateComplex(
               validateElement(
                 ctx,
                 structureDefinition,
-                elementIndex,
+                childElementLoc,
                 root,
                 descend(path, fieldType.field),
                 fieldType.type,
@@ -259,20 +285,26 @@ async function validateComplex(
 export async function validateSingular(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementIndex: number,
+  elementLoc: ElementLoc,
   root: object,
   path: Loc<object, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
-  const element = structureDefinition.snapshot?.element?.[
-    elementIndex
-  ] as ElementDefinition;
+  const { field: elementIndex, parent: elementsLoc } =
+    ascendElementLoc(elementLoc);
+
+  const element = get(elementLoc, structureDefinition);
+  if (!element) {
+    throw new OperationError(
+      outcomeFatal("invalid", `Element not found at loc '${elementLoc}'`),
+    );
+  }
 
   if (element.contentReference) {
     return validateSingular(
       ctx,
       structureDefinition,
-      resolveContentReferenceIndex(structureDefinition, element),
+      resolveContentReferenceIndex(structureDefinition, elementsLoc, element),
       root,
       path,
       type,
@@ -280,8 +312,8 @@ export async function validateSingular(
   }
 
   const childrenIndixes = eleIndexToChildIndexes(
-    structureDefinition.snapshot?.element || [],
-    elementIndex,
+    get(elementsLoc, structureDefinition as StructureDefinition) ?? [],
+    elementIndex as number,
   );
 
   // Leaf validation
@@ -307,7 +339,7 @@ export async function validateSingular(
     return validateComplex(
       ctx,
       structureDefinition,
-      elementIndex,
+      elementLoc,
       root,
       path,
       childrenIndixes,
@@ -318,17 +350,18 @@ export async function validateSingular(
 export async function validateElement(
   ctx: ValidationCTX,
   structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
-  elementIndex: number,
+  elementLoc: ElementLoc,
   root: object,
   path: Loc<any, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
-  const element = structureDefinition.snapshot?.element?.[elementIndex];
+  const element = get(elementLoc, structureDefinition);
+  const { field: elementIndex } = ascendElementLoc(elementLoc);
   if (!notNullable(element)) {
     throw new OperationError(
       outcomeFatal(
         "structure",
-        `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`,
+        `Element not found at '${elementLoc}' for StructureDefinition ${structureDefinition.id}`,
         [toJSONPointer(path)],
       ),
     );
@@ -363,7 +396,7 @@ export async function validateElement(
             return validateSingular(
               ctx,
               structureDefinition,
-              elementIndex,
+              elementLoc,
               root,
               descend(path, i),
               type,
@@ -383,7 +416,7 @@ export async function validateElement(
       return validateSingular(
         ctx,
         structureDefinition,
-        elementIndex,
+        elementLoc,
         root,
         path,
         type,
@@ -450,5 +483,20 @@ export default async function validate(
     }
   }
 
-  return validateElement(ctx, sd, 0, root, path, type);
+  const startingLoc = descend(
+    descend(
+      descend(pointer("StructureDefinition", sd.id as id), "snapshot"),
+      "element",
+    ),
+    0,
+  );
+
+  return validateElement(
+    ctx,
+    sd,
+    startingLoc as unknown as ElementLoc,
+    root,
+    path,
+    type,
+  );
 }
