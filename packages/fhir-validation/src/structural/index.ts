@@ -208,7 +208,7 @@ async function validateComplex(
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
         const fields = determineTypesAndFields(element, value);
-        fields.map((f) => f.field).forEach((f) => foundFields.add(f));
+        fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
           return [
@@ -241,7 +241,7 @@ async function validateComplex(
   ).flat();
 
   // Check for additional fields
-  const additionalFields = foundFields.difference(new Set(Object.keys(value)));
+  const additionalFields = new Set(Object.keys(value)).difference(foundFields);
 
   return additionalFields.size > 0
     ? [
