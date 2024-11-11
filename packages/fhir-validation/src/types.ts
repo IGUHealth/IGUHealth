@@ -1,8 +1,11 @@
+import { Loc } from "@iguhealth/fhir-pointer";
 import {
   canonical,
   ElementDefinition,
+  StructureDefinition,
   uri,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   FHIR_VERSION,
   Resource,
@@ -23,6 +26,15 @@ type ElementDefinitionPatternTypes = TypesByTemplate<
   ElementDefinition
 >;
 
+export type ElementLoc = Loc<
+  StructureDefinition | r4b.StructureDefinition,
+  ElementDefinition | r4b.ElementDefinition | undefined,
+  Loc<
+    StructureDefinition | r4b.StructureDefinition,
+    r4b.ElementDefinition[] | ElementDefinition[]
+  >
+>;
+
 export interface ValidationCTX {
   fhirVersion: FHIR_VERSION;
   resolveTypeToCanonical<Version extends FHIR_VERSION>(
@@ -39,7 +51,3 @@ export interface ValidationCTX {
   ) => Promise<Resource<FHIRVersion, Type> | undefined>;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
-
-export type Validator = (
-  input: unknown,
-) => Promise<Resource<FHIR_VERSION, "OperationOutcome">["issue"]>;
