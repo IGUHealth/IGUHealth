@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Loc, ascend, toJSONPointer } from "@iguhealth/fhir-pointer";
+import { Loc, ascend } from "@iguhealth/fhir-pointer";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   ElementDefinition,

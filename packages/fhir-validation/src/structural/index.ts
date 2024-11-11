@@ -2,7 +2,6 @@
 import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
-  ascend,
   descend,
   get,
   pointer,
