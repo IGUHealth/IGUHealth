@@ -21,7 +21,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { fieldName } from "../utilities.js";
-import { conformsToPattern } from "../elements/conformance.js";
+import { conformsToPattern, conformsToValue } from "../elements/conformance.js";
 import { descend, get, Loc, pointer } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
@@ -123,9 +123,8 @@ async function isConformantToSlicesDiscriminator(
         const value = get(loc, root);
         const evaluation = await fp.evaluate(discriminator.path, value);
         if (
-          evaluation.find(
-            (v) => JSON.stringify(v) === JSON.stringify(expectedValue),
-          ) !== undefined
+          evaluation.find((v) => conformsToValue(expectedValue, v)) !==
+          undefined
         ) {
           conformantLocs.push(loc);
         }
