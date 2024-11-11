@@ -113,6 +113,14 @@ function isElementRequired(element: ElementDefinition) {
   return (element.min ?? 0) > 0;
 }
 
+/**
+ * Validate the Reference is conformant to the profile (only confirms the type)
+ * @param ctx ValidationCTX
+ * @param element ElementDefinition to confirm Reference types
+ * @param root
+ * @param path
+ * @returns
+ */
 async function validateReferenceTypeConstraint(
   ctx: ValidationCTX,
   element: ElementDefinition,
@@ -127,7 +135,7 @@ async function validateReferenceTypeConstraint(
   )?.targetProfile;
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
-  for (const profile of referenceProfiles || []) {
+  for (const profile of referenceProfiles ?? []) {
     const sd = await ctx.resolveCanonical(
       ctx.fhirVersion,
       "StructureDefinition",
@@ -183,9 +191,17 @@ function ascendElementLoc(loc: ElementLoc): {
 }
 
 /**
- * Validating root / backbone / element nested types here.
+ * Validates the BackboneElement / Element values that have nested ElementDefinitions
+ *
+ * @param ctx
+ * @param structureDefinition
+ * @param elementLoc
+ * @param root
+ * @param path
+ * @param childrenIndexes
+ * @returns
  */
-async function validateComplex(
+async function validateElementNested(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementLoc: ElementLoc,
@@ -282,7 +298,17 @@ async function validateComplex(
     : issues;
 }
 
-export async function validateSingular(
+/**
+ * Validates a singular element. This Could be a primitive or complex type.
+ * @param ctx
+ * @param structureDefinition
+ * @param elementLoc The location to the ElementDefinition in the structure definition.
+ * @param root
+ * @param path
+ * @param type
+ * @returns
+ */
+export async function validateElementSingular(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementLoc: ElementLoc,
@@ -301,7 +327,7 @@ export async function validateSingular(
   }
 
   if (element.contentReference) {
-    return validateSingular(
+    return validateElementSingular(
       ctx,
       structureDefinition,
       resolveContentReferenceIndex(structureDefinition, elementsLoc, element),
@@ -336,7 +362,7 @@ export async function validateSingular(
       return issues;
     }
   } else {
-    return validateComplex(
+    return validateElementNested(
       ctx,
       structureDefinition,
       elementLoc,
@@ -393,7 +419,7 @@ export async function validateElement(
       return (
         await Promise.all(
           (value || []).map((_v: any, i: number) => {
-            return validateSingular(
+            return validateElementSingular(
               ctx,
               structureDefinition,
               elementLoc,
@@ -413,7 +439,7 @@ export async function validateElement(
           ]),
         ];
       }
-      return validateSingular(
+      return validateElementSingular(
         ctx,
         structureDefinition,
         elementLoc,

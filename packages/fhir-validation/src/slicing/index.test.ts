@@ -23,7 +23,7 @@ import {
   getSliceIndices,
   splitSlicing,
   validateSliceDescriptor,
-} from "./slicing.js";
+} from "./index.js";
 import { ValidationCTX } from "../types.js";
 
 function createMemoryDatabase(

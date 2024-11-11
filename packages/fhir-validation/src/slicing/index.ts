@@ -12,7 +12,7 @@ import {
   convertPathToElementPointer,
   Discriminator,
   removeTypeOnPath,
-} from "./utilities.js";
+} from "../profile/utilities.js";
 import {
   issueError,
   OperationError,
@@ -21,11 +21,11 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { fieldName } from "../utilities.js";
-import { conformsToPattern } from "../elements/validators.js";
+import { conformsToPattern } from "../elements/conformance.js";
 import { descend, get, Loc, pointer } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
-import { validateSingular } from "../structural/index.js";
+import { validateElementSingular } from "../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 
 function isSliced(element: ElementDefinition) {
@@ -352,7 +352,7 @@ export async function validateSliceDescriptor(
 
     for (const path of slices[slice]) {
       issues = issues.concat(
-        await validateSingular(
+        await validateElementSingular(
           ctx,
           profile,
           sliceLoc,

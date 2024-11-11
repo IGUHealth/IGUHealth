@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import { conformsToPattern } from "./validators.js";
+import { conformsToPattern } from "./conformance.js";
 
 test("pattern validation", () => {
   // Test number primitives
