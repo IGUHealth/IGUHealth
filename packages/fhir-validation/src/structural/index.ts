@@ -2,7 +2,6 @@
 import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
-  ascend,
   descend,
   get,
   pointer,
@@ -11,10 +10,10 @@ import {
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
-  id,
   OperationOutcome,
   Reference,
   StructureDefinition,
+  id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -23,21 +22,24 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
+import { isObject } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { validatePrimitive } from "../elements/primitive.js";
+import { validateCardinality } from "../elements/validators/cardinality.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
+  ascendElementLoc,
   fieldName,
   isPrimitiveType,
   isResourceType,
   notNullable,
+  resolveTypeToStructureDefinition,
 } from "../utilities.js";
-import { validatePrimitive } from "../elements/primitive.js";
-import { isObject } from "@iguhealth/meta-value/utilities";
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition | r4b.StructureDefinition,
@@ -56,12 +58,12 @@ function resolveContentReferenceIndex(
   return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
 }
 
-type FieldType = { field: string; type: uri };
+type PropertyAndType = { field: string; type: uri };
 
 function findBaseFieldAndType(
   element: ElementDefinition,
   value: object,
-): FieldType | undefined {
+): PropertyAndType | undefined {
   if (element.contentReference) {
     return {
       field: fieldName(element),
@@ -76,21 +78,29 @@ function findBaseFieldAndType(
   }
 }
 
-function determineTypesAndFields(
+/**
+ * Returns fields associated to an element. Because it could be a primitive it may result in multiple fields.
+ * IE _field for Element values for field primitive value.
+ *
+ * @param element The ElementDefinition to find fields for
+ * @param value Value to check for fields.
+ * @returns
+ */
+function getFoundFieldsForElement(
   element: ElementDefinition,
   value: object,
-): FieldType[] {
-  const fields: FieldType[] = [];
+): PropertyAndType[] {
+  const properties: PropertyAndType[] = [];
   const base = findBaseFieldAndType(element, value);
   if (base) {
-    fields.push(base);
+    properties.push(base);
     const { field, type } = base;
     if (isPrimitiveType(type)) {
       const primitiveElementField = {
         field: `_${field}`,
         type: "Element" as uri,
       };
-      if (`_${field}` in value) fields.push(primitiveElementField);
+      if (`_${field}` in value) properties.push(primitiveElementField);
     }
   } else {
     // Check for primitive extensions when non existent values
@@ -102,17 +112,63 @@ function determineTypesAndFields(
           field: `_${fieldName(element, primType.code)}`,
           type: "Element" as uri,
         };
-        fields.push(primitiveElementField);
+        properties.push(primitiveElementField);
       }
     }
   }
-  return fields;
+  return properties;
 }
 
 function isElementRequired(element: ElementDefinition) {
   return (element.min ?? 0) > 0;
 }
 
+function isReferenceConformantToStructureDefinition(
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
+  value: Reference,
+): boolean {
+  switch (true) {
+    case sd?.type === "Resource" || sd?.type === "DomainResource": {
+      return true;
+    }
+    case value.reference !== undefined: {
+      const resourceType = value.reference.split("/")[0];
+
+      switch (true) {
+        // Could be ref in bundle so skip for now.
+        case !isResourceType(resourceType): {
+          return true;
+        }
+        case resourceType === sd?.type: {
+          // If Reference also has type need to validate that as well
+          if (value.type) return resourceType === value.type;
+          return true;
+        }
+        default: {
+          return false;
+        }
+      }
+    }
+    case value.type && value === sd?.type: {
+      return true;
+    }
+    case value.type === undefined && value.reference === undefined: {
+      return true;
+    }
+    default: {
+      return false;
+    }
+  }
+}
+
+/**
+ * Validate the Reference is conformant to the profile (only confirms the type)
+ * @param ctx ValidationCTX
+ * @param element ElementDefinition to confirm Reference types
+ * @param root
+ * @param path
+ * @returns
+ */
 async function validateReferenceTypeConstraint(
   ctx: ValidationCTX,
   element: ElementDefinition,
@@ -120,38 +176,31 @@ async function validateReferenceTypeConstraint(
   path: Loc<object, any, any>,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
-  const value = get(path, root) as Reference;
+  const value = get(path, root) as Reference | undefined;
+  if (!value) return [];
 
   const referenceProfiles = element.type?.find(
     (t) => t.code === "Reference",
   )?.targetProfile;
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
-  for (const profile of referenceProfiles || []) {
+  for (const profileURI of referenceProfiles ?? []) {
     const sd = await ctx.resolveCanonical(
       ctx.fhirVersion,
       "StructureDefinition",
-      profile,
+      profileURI,
     );
-    // Domain or resource type means all types are allowed.
-    if (sd?.type === "Resource" || sd?.type === "DomainResource") {
+    if (!sd) {
+      throw new OperationError(
+        outcomeFatal(
+          "not-found",
+          `Could not find profile: '${profileURI}' to validate reference`,
+        ),
+      );
+    }
+    if (isReferenceConformantToStructureDefinition(sd, value)) {
       return [];
     }
-    if (value?.reference) {
-      const resourceType = value.reference?.split("/")[0];
-      // Could be ref in bundle so skip for now.
-      if (!isResourceType(resourceType)) {
-        return [];
-      }
-      if (
-        resourceType === sd?.type &&
-        (value.type ? resourceType === value.type : true)
-      )
-        return [];
-    } else if (value.type && value === sd?.type) return [];
-    // Allow for reference type to be undefined.
-    else if (value.type === undefined && value.reference === undefined)
-      return [];
   }
 
   return [
@@ -167,25 +216,18 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
-function ascendElementLoc(loc: ElementLoc): {
-  parent: Loc<StructureDefinition, ElementDefinition[]>;
-  field: NonNullable<keyof ElementDefinition[]>;
-} {
-  const parent = ascend(loc);
-
-  if (!parent) {
-    throw new OperationError(
-      outcomeFatal("invalid", `Invalid element path ${loc}`),
-    );
-  }
-
-  return parent;
-}
-
 /**
- * Validating root / backbone / element nested types here.
+ * Validates the BackboneElement / Element values that have nested ElementDefinitions
+ *
+ * @param ctx
+ * @param structureDefinition
+ * @param elementLoc
+ * @param root
+ * @param path
+ * @param childrenIndexes
+ * @returns
  */
-async function validateComplex(
+async function validateElementNested(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementLoc: ElementLoc,
@@ -232,7 +274,7 @@ async function validateComplex(
         }
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
-        const fields = determineTypesAndFields(element, value);
+        const fields = getFoundFieldsForElement(element, value);
         fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
@@ -282,7 +324,17 @@ async function validateComplex(
     : issues;
 }
 
-export async function validateSingular(
+/**
+ * Validates a singular element. This Could be a primitive or complex type.
+ * @param ctx
+ * @param structureDefinition
+ * @param elementLoc The location to the ElementDefinition in the structure definition.
+ * @param root
+ * @param path
+ * @param type
+ * @returns
+ */
+export async function validateElementSingular(
   ctx: ValidationCTX,
   structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementLoc: ElementLoc,
@@ -301,7 +353,7 @@ export async function validateSingular(
   }
 
   if (element.contentReference) {
-    return validateSingular(
+    return validateElementSingular(
       ctx,
       structureDefinition,
       resolveContentReferenceIndex(structureDefinition, elementsLoc, element),
@@ -336,7 +388,7 @@ export async function validateSingular(
       return issues;
     }
   } else {
-    return validateComplex(
+    return validateElementNested(
       ctx,
       structureDefinition,
       elementLoc,
@@ -356,7 +408,6 @@ export async function validateElement(
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = get(elementLoc, structureDefinition);
-  const { field: elementIndex } = ascendElementLoc(elementLoc);
   if (!notNullable(element)) {
     throw new OperationError(
       outcomeFatal(
@@ -367,33 +418,21 @@ export async function validateElement(
     );
   }
 
-  const hasMany =
-    (element.max === "*" || parseInt(element.max || "1") > 1) &&
-    // Root element has * so ignore in this case.
-    elementIndex !== 0;
-
   const value = get(path, root);
+
+  const issues = validateCardinality(element, elementLoc, root, path);
+  if (issues.length > 0) return issues;
 
   switch (true) {
     // If min is zero than allow undefined.
-    case element.min === 0 && value === undefined: {
+    case value === undefined: {
       return [];
     }
     case Array.isArray(value): {
-      if (!hasMany) {
-        return [
-          issueError(
-            "structure",
-            `Element is expected to be a singular value.`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
       return (
         await Promise.all(
           (value || []).map((_v: any, i: number) => {
-            return validateSingular(
+            return validateElementSingular(
               ctx,
               structureDefinition,
               elementLoc,
@@ -406,14 +445,7 @@ export async function validateElement(
       ).flat();
     }
     default: {
-      if (hasMany) {
-        return [
-          issueError("structure", `Element is expected to be an array.`, [
-            toJSONPointer(path),
-          ]),
-        ];
-      }
-      return validateSingular(
+      return validateElementSingular(
         ctx,
         structureDefinition,
         elementLoc,
@@ -434,29 +466,7 @@ export default async function validate(
   if (isPrimitiveType(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
-  const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
-  if (!canonical) {
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)],
-      ),
-    );
-  }
-  const sd = await ctx.resolveCanonical(
-    ctx.fhirVersion,
-    "StructureDefinition",
-    canonical,
-  );
-  if (!sd)
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)],
-      ),
-    );
+  const sd = await resolveTypeToStructureDefinition(ctx, type);
 
   if (!isObject(root))
     return [

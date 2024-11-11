@@ -12,9 +12,9 @@ export function conformsToPattern(pattern: unknown, value: unknown): boolean {
     if (!isObject(value)) return false;
     if (Array.isArray(pattern)) {
       if (!Array.isArray(value)) return false;
-      for (let i = 0; i < pattern.length; i++) {
+      for (const singularPattern of pattern) {
         const valueExists = value.filter((v) =>
-          conformsToPattern(pattern[i], v),
+          conformsToPattern(singularPattern, v),
         );
         // Per spec as long as a single value matches in the pattern then it's truthy
         if (valueExists.length === 0) return false;
@@ -30,4 +30,11 @@ export function conformsToPattern(pattern: unknown, value: unknown): boolean {
   } else {
     return pattern === value;
   }
+}
+
+export function conformsToValue(
+  expectedValue: unknown,
+  foundValue: unknown,
+): boolean {
+  return JSON.stringify(expectedValue) === JSON.stringify(foundValue);
 }

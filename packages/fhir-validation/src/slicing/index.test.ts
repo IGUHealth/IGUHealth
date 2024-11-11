@@ -1,8 +1,16 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
-import { test, expect } from "@jest/globals";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { descend, pointer } from "@iguhealth/fhir-pointer";
+import {
+  Observation,
+  StructureDefinition,
+  canonical,
+  id,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -10,21 +18,13 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { descend, pointer } from "@iguhealth/fhir-pointer";
-import {
-  canonical,
-  id,
-  Observation,
-  StructureDefinition,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
 
+import { ValidationCTX } from "../types.js";
 import {
   getSliceIndices,
   splitSlicing,
   validateSliceDescriptor,
-} from "./slicing.js";
-import { ValidationCTX } from "../types.js";
+} from "./index.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType<R4>[],

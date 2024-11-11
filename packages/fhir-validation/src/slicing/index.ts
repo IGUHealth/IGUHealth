@@ -1,32 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
+import { Loc, descend, get, pointer } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
-  id,
   OperationOutcome,
   OperationOutcomeIssue,
+  id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
+import { metaValue } from "@iguhealth/meta-value/v2";
 import {
-  convertPathToElementPointer,
-  Discriminator,
-  removeTypeOnPath,
-} from "./utilities.js";
-import {
-  issueError,
   OperationError,
+  issueError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { fieldName } from "../utilities.js";
-import { conformsToPattern } from "../elements/validators.js";
-import { descend, get, Loc, pointer } from "@iguhealth/fhir-pointer";
-import { metaValue } from "@iguhealth/meta-value/v2";
-import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
-import { validateSingular } from "../structural/index.js";
+import { conformsToPattern, conformsToValue } from "../elements/conformance.js";
+import {
+  Discriminator,
+  convertPathToElementPointer,
+  removeTypeOnPath,
+} from "../profile/utilities.js";
+import { validateElementSingular } from "../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
+import { fieldName } from "../utilities.js";
 
 function isSliced(element: ElementDefinition) {
   return element.slicing !== undefined;
@@ -123,9 +123,8 @@ async function isConformantToSlicesDiscriminator(
         const value = get(loc, root);
         const evaluation = await fp.evaluate(discriminator.path, value);
         if (
-          evaluation.find(
-            (v) => JSON.stringify(v) === JSON.stringify(expectedValue),
-          ) !== undefined
+          evaluation.find((v) => conformsToValue(expectedValue, v)) !==
+          undefined
         ) {
           conformantLocs.push(loc);
         }
@@ -352,7 +351,7 @@ export async function validateSliceDescriptor(
 
     for (const path of slices[slice]) {
       issues = issues.concat(
-        await validateSingular(
+        await validateElementSingular(
           ctx,
           profile,
           sliceLoc,
