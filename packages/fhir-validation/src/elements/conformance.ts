@@ -31,3 +31,10 @@ export function conformsToPattern(pattern: unknown, value: unknown): boolean {
     return pattern === value;
   }
 }
+
+export function conformsToValue(
+  expectedValue: unknown,
+  foundValue: unknown,
+): boolean {
+  return JSON.stringify(expectedValue) === JSON.stringify(foundValue);
+}
