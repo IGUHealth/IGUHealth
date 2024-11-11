@@ -1,11 +1,7 @@
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { ElementDefinition } from "@iguhealth/fhir-types/r4/types";
 
-export function validateIsObject(v: unknown): v is object {
-  return typeof v === "object" && v !== null;
-}
-
-export function capitalize(str: string) {
+function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -13,10 +9,10 @@ export function isPrimitiveType(type: string) {
   return primitiveTypes.has(type);
 }
 
-export function notNull<T, Z extends T | undefined>(
-  element: Z,
-): element is NonNullable<Z> {
-  if (element === undefined || element === null) return false;
+export function notNullable<T, Z extends T | undefined>(
+  value: Z,
+): value is NonNullable<Z> {
+  if (value === undefined || value === null) return false;
   return true;
 }
 

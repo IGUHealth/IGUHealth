@@ -19,7 +19,22 @@ import {
 } from "@iguhealth/fhir-types/lib/versions";
 
 import { ValidationCTX } from "../types.js";
-import { createValidator } from "./index";
+import { Loc, typedPointer } from "@iguhealth/fhir-pointer";
+import validate from "./index.js";
+
+type Validator = (
+  input: unknown,
+) => Promise<Resource<FHIR_VERSION, "OperationOutcome">["issue"]>;
+
+function createValidator(
+  ctx: ValidationCTX,
+  type: uri,
+  path: Loc<any, any, any> = typedPointer(),
+): Validator {
+  return (value: unknown) => {
+    return validate(ctx, type, value, path);
+  };
+}
 
 function createMemoryDatabase(
   resourceTypes: ResourceType<R4>[],

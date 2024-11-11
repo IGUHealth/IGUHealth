@@ -1,9 +1,27 @@
-import { canonical, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  canonical,
+  ElementDefinition,
+  uri,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+
+type IsTemplateKey<Pattern, T> = T extends Pattern ? T : never;
+
+type TemplateKeys<Pattern, T> = IsTemplateKey<Pattern, keyof T>;
+
+type TypesByTemplate<Pattern, T> = Pick<T, TemplateKeys<Pattern, T>>[keyof Pick<
+  T,
+  TemplateKeys<Pattern, T>
+>];
+
+type ElementDefinitionPatternTypes = TypesByTemplate<
+  `pattern${string}`,
+  ElementDefinition
+>;
 
 export interface ValidationCTX {
   fhirVersion: FHIR_VERSION;

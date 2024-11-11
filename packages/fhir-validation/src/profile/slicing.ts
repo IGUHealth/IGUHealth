@@ -20,7 +20,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { fieldName } from "../utilities.js";
-import { conformsToPattern } from "./validators.js";
+import { conformsToPattern } from "../elements/validators.js";
 import { descend, get, Loc } from "@iguhealth/fhir-pointer";
 import { metaValue } from "@iguhealth/meta-value/v2";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
@@ -129,7 +129,6 @@ async function isConformantToSlicesDiscriminator(
           conformantLocs.push(loc);
         }
       }
-
       return conformantLocs;
     }
     case "exists":
@@ -202,15 +201,6 @@ export async function validateSlice(
       }
     }
   }
-}
-
-async function validateSliceValues(
-  elements: ElementDefinition[],
-  sliceIndex: number,
-  root: object,
-  valueLocs: Loc<any, any, any>[],
-) {
-  throw new Error();
 }
 
 export async function splitSlicing(
@@ -312,18 +302,23 @@ function validateSliceCardinality(
   return issues;
 }
 
-export async function validateSlices(
+export async function validateSliceDescriptor(
   ctx: ValidationCTX,
   structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
   sliceDescriptor: SlicingDescriptor,
   root: object,
-  _loc: Loc<any, any, any>,
+  loc: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
   const differential = structureDefinition.differential?.element ?? [];
   const discriminatorElement = differential[sliceDescriptor.discriminator];
-  const loc = descend(_loc, fieldName(discriminatorElement));
+  const sliceLoc = descend(loc, fieldName(discriminatorElement));
 
-  const slices = await splitSlicing(differential, sliceDescriptor, root, loc);
+  const slices = await splitSlicing(
+    differential,
+    sliceDescriptor,
+    root,
+    sliceLoc,
+  );
 
   let issues: OperationOutcome["issue"] = [];
 
@@ -350,10 +345,10 @@ export async function validateSlices(
       issues = issues.concat(
         await validateSingular(
           ctx,
-          path,
           structureDefinition,
           idx,
           root,
+          path,
           type[0].code,
         ),
       );
@@ -361,4 +356,25 @@ export async function validateSlices(
   }
 
   return issues;
+}
+
+export default async function validateAllSlicesAtLocation(
+  ctx: ValidationCTX,
+  profile: Resource<FHIR_VERSION, "StructureDefinition">,
+  elementIndex: number,
+  root: object,
+  loc: Loc<any, any, any>,
+): Promise<OperationOutcomeIssue[]> {
+  const sliceIndices = getSliceIndices(
+    profile.differential?.element ?? [],
+    elementIndex,
+  );
+
+  return (
+    await Promise.all(
+      sliceIndices.map((sliceIndex) =>
+        validateSliceDescriptor(ctx, profile, sliceIndex, root, loc),
+      ),
+    )
+  ).flat();
 }

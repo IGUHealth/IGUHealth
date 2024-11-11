@@ -9,7 +9,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { ValidationCTX } from "../types.js";
-import { validateIsObject } from "../utilities.js";
+import { isObject } from "@iguhealth/meta-value/utilities";
 
 const REGEX: Record<string, RegExp> = {
   // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
@@ -34,7 +34,7 @@ export async function validatePrimitive(
   type: string,
 ): Promise<Resource<FHIR_VERSION, "OperationOutcome">["issue"]> {
   let value;
-  if (validateIsObject(rootValue)) value = fpointer.get(path, rootValue);
+  if (isObject(rootValue)) value = fpointer.get(path, rootValue);
   else if (path === fpointer.root(path)) value = rootValue;
   else {
     return [

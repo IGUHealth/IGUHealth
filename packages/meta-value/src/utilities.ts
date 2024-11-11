@@ -34,7 +34,7 @@ export function isRawPrimitive(v: unknown): v is RawPrimitive {
   );
 }
 
-export function isObject(value: unknown): value is { [key: string]: unknown } {
+export function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object";
 }
 
