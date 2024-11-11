@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Loc, toJSONPointer } from "@iguhealth/fhir-pointer";
+import { Loc, ascend, toJSONPointer } from "@iguhealth/fhir-pointer";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { ElementDefinition, uri } from "@iguhealth/fhir-types/r4/types";
+import {
+  ElementDefinition,
+  StructureDefinition,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { ValidationCTX } from "./types.js";
+import { ElementLoc, ValidationCTX } from "./types.js";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -78,4 +82,19 @@ export async function resolveTypeToStructureDefinition(
     );
 
   return sd;
+}
+
+export function ascendElementLoc(loc: ElementLoc): {
+  parent: Loc<StructureDefinition, ElementDefinition[]>;
+  field: NonNullable<keyof ElementDefinition[]>;
+} {
+  const parent = ascend(loc);
+
+  if (!parent) {
+    throw new OperationError(
+      outcomeFatal("invalid", `Invalid element path ${loc}`),
+    );
+  }
+
+  return parent;
 }

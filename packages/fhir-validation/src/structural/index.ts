@@ -31,8 +31,10 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { validatePrimitive } from "../elements/primitive.js";
+import { validateCardinality } from "../elements/validators/cardinality.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
+  ascendElementLoc,
   fieldName,
   isPrimitiveType,
   isResourceType,
@@ -213,21 +215,6 @@ async function validateReferenceTypeConstraint(
       [toJSONPointer(path)],
     ),
   ];
-}
-
-function ascendElementLoc(loc: ElementLoc): {
-  parent: Loc<StructureDefinition, ElementDefinition[]>;
-  field: NonNullable<keyof ElementDefinition[]>;
-} {
-  const parent = ascend(loc);
-
-  if (!parent) {
-    throw new OperationError(
-      outcomeFatal("invalid", `Invalid element path ${loc}`),
-    );
-  }
-
-  return parent;
 }
 
 /**
@@ -422,7 +409,6 @@ export async function validateElement(
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = get(elementLoc, structureDefinition);
-  const { field: elementIndex } = ascendElementLoc(elementLoc);
   if (!notNullable(element)) {
     throw new OperationError(
       outcomeFatal(
@@ -433,29 +419,17 @@ export async function validateElement(
     );
   }
 
-  const hasMany =
-    (element.max === "*" || parseInt(element.max || "1") > 1) &&
-    // Root element has * so ignore in this case.
-    elementIndex !== 0;
-
   const value = get(path, root);
+
+  const issues = validateCardinality(element, elementLoc, root, path);
+  if (issues.length > 0) return issues;
 
   switch (true) {
     // If min is zero than allow undefined.
-    case element.min === 0 && value === undefined: {
+    case value === undefined: {
       return [];
     }
     case Array.isArray(value): {
-      if (!hasMany) {
-        return [
-          issueError(
-            "structure",
-            `Element is expected to be a singular value.`,
-            [toJSONPointer(path)],
-          ),
-        ];
-      }
-
       return (
         await Promise.all(
           (value || []).map((_v: any, i: number) => {
@@ -472,13 +446,6 @@ export async function validateElement(
       ).flat();
     }
     default: {
-      if (hasMany) {
-        return [
-          issueError("structure", `Element is expected to be an array.`, [
-            toJSONPointer(path),
-          ]),
-        ];
-      }
       return validateElementSingular(
         ctx,
         structureDefinition,
