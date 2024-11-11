@@ -23,7 +23,6 @@ import {
 import {
   OperationError,
   issueError,
-  outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
