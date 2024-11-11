@@ -176,7 +176,7 @@ async function validateComplex(
 ): Promise<OperationOutcome["issue"]> {
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
   const foundFields: Set<string> =
-    structureDefinition.kind === "resource"
+    structureDefinition.kind === "resource" && elementIndex === 0
       ? new Set(["resourceType"])
       : new Set([]);
 
