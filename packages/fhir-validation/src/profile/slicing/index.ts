@@ -18,15 +18,18 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { conformsToPattern, conformsToValue } from "../elements/conformance.js";
+import {
+  conformsToPattern,
+  conformsToValue,
+} from "../../elements/conformance.js";
+import { validateElementSingular } from "../../structural/index.js";
+import { ElementLoc, ValidationCTX } from "../../types.js";
+import { fieldName } from "../../utilities.js";
 import {
   Discriminator,
   convertPathToElementPointer,
   removeTypeOnPath,
-} from "../profile/utilities.js";
-import { validateElementSingular } from "../structural/index.js";
-import { ElementLoc, ValidationCTX } from "../types.js";
-import { fieldName } from "../utilities.js";
+} from "../utilities.js";
 
 function isSliced(element: ElementDefinition) {
   return element.slicing !== undefined;

@@ -3,6 +3,7 @@ import { Loc, get, toJSONPointer } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
   OperationOutcomeIssue,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { issueError } from "@iguhealth/operation-outcomes";
@@ -14,12 +15,14 @@ export async function validatePattern(
   root: object,
   path: Loc<any, any, any>,
 ): Promise<Array<OperationOutcomeIssue>> {
-  const pattern = (await fp.evaluate("pattern", element))[0];
-  const value = get(path, root);
+  const pattern = (
+    await fp.evaluate("pattern", element, { type: "ElementDefinition" as uri })
+  )[0];
 
+  const value = get(path, root);
   if (!pattern) return [];
 
-  if (!conformsToPattern(pattern, value))
+  if (!conformsToPattern(pattern, value)) {
     return [
       issueError(
         "structure",
@@ -27,6 +30,7 @@ export async function validatePattern(
         [toJSONPointer(path)],
       ),
     ];
+  }
 
   return [];
 }

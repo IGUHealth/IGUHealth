@@ -12,8 +12,8 @@ import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import validateAllSlicesAtLocation from "../slicing/index.js";
 import { ValidationCTX } from "../types.js";
+import validateAllSlicesAtLocation from "./slicing/index.js";
 
 function getNonSliceChildren(
   profile: Resource<FHIR_VERSION, "StructureDefinition">,

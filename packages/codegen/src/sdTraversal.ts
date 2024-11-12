@@ -16,11 +16,17 @@ export function eleIndexToChildIndices(
   } else {
     const parent = elements[index];
     const parentPath = parent.path;
+    const depth = (parentPath.match(/\./g) ?? []).length;
     const parentPathEscaped = parentPath.replace(/\./g, "\\."); // Escape periods
     const childRegex = new RegExp("^" + parentPathEscaped + "\\." + "[^\\.]+$");
+
     let curIndex = index + 1;
     const childrenIndices: number[] = [];
-    while (curIndex < elements.length) {
+    while (
+      curIndex < elements.length &&
+      // Conform that the child is a direct child of the parent
+      (elements[curIndex]?.path?.match(/\./g) ?? []).length > depth
+    ) {
       if (elements[curIndex].path.match(childRegex)) {
         childrenIndices.push(curIndex);
       }
