@@ -3,14 +3,18 @@
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
+  ascend,
   descend,
+  get,
   pointer,
   toJSONPointer,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
 import {
+  ElementDefinition,
   OperationOutcome,
   OperationOutcomeIssue,
+  StructureDefinition,
   canonical,
   id,
   uri,
@@ -21,7 +25,24 @@ import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { ElementLoc, ValidationCTX } from "../types.js";
+import { ascendElementLoc } from "../utilities.js";
 import validateAllSlicesAtLocation from "./slicing/index.js";
+
+
+/**
+ * For descendants we want to ignore those slices which are validated seperately.
+ * This is done by filtering off sliceName and slicing property.
+ * 
+ * @param elements list of ElementDefinitions to filter
+ * @param indices The indices to filter out of the list if they are a part of a lice.
+ * @returns Indices that are not a part of a slice.
+ */
+function ignoreSliceElements(elements: ElementDefinition[], indices: number[]): number[]{
+  return indices.filter((index) => {
+    const element = elements[index];
+    return element.sliceName === undefined && element.slicing === undefined;
+  });
+}
 
 /**
  * Because profile is merely a constraint on the base we only need to validate select pieces.
@@ -65,8 +86,14 @@ async function validateProfileElement(
   path: Loc<any, any, any>,
   type: uri,
 ): Promise<OperationOutcomeIssue[]> {
-  // For Profiling validate changes in the cardinality and slices.
-  // No need to validate the nested type only at the top level (because structural would have already confirmed this).
+  const { parent: elementsLoc, field: elementIndex } =
+    ascendElementLoc(elementLoc);
+
+  const elements = get(elementsLoc, profile as StructureDefinition);
+  const children = eleIndexToChildIndices(elements, elementIndex as number);
+
+  const validateAllSlicesAtLocation()
+
   return [];
 }
 
