@@ -1,4 +1,5 @@
-{
+// Do not this code is generated 
+export default {
   "Resource": [
     {
       "_type_": "complex",
