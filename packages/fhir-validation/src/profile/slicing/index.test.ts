@@ -212,12 +212,26 @@ test("Slice Splitting", async () => {
       bloodPressureObservation,
       descend(
         pointer("Observation", bloodPressureObservation.id as id),
+        "category",
+      ),
+    ),
+  ).resolves.toEqual({
+    14: ["Observation|blood-pressure-observation/category/0"],
+  });
+
+  expect(
+    splitSlicing(
+      elements,
+      sliceIndexes[1],
+      bloodPressureObservation,
+      descend(
+        pointer("Observation", bloodPressureObservation.id as id),
         "component",
       ),
     ),
   ).resolves.toEqual({
-    3: ["Observation|blood-pressure-observation/component/0"],
-    10: ["Observation|blood-pressure-observation/component/1"],
+    62: ["Observation|blood-pressure-observation/component/0"],
+    78: ["Observation|blood-pressure-observation/component/1"],
   });
 
   expect(
@@ -226,12 +240,22 @@ test("Slice Splitting", async () => {
   expect(
     bloodPressureObservation?.component?.[1]?.code.coding?.[0]?.code,
   ).toEqual("8462-4");
-  expect(bloodProfile?.snapshot?.element[3]?.sliceName).toEqual("systolic");
+  expect(bloodProfile?.snapshot?.element[62]?.sliceName).toEqual("systolic");
 });
 
 test("Slice Validation", async () => {
-  const elements = bloodProfile?.differential?.element ?? [];
+  const elements = bloodProfile?.snapshot?.element ?? [];
   const sliceIndexes = getSliceIndices(elements, 0);
+
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[1],
+      bloodPressureObservation,
+      pointer("Observation", bloodPressureObservation.id as id),
+    ),
+  ).resolves.toEqual([]);
 
   expect(
     validateSliceDescriptor(
@@ -247,7 +271,7 @@ test("Slice Validation", async () => {
     validateSliceDescriptor(
       CTX,
       bloodProfile,
-      sliceIndexes[0],
+      sliceIndexes[1],
       {
         id: "asdf",
         resourceType: "Observation",
@@ -297,7 +321,7 @@ test("Slice Validation", async () => {
     validateSliceDescriptor(
       CTX,
       bloodProfile,
-      sliceIndexes[0],
+      sliceIndexes[1],
       {
         id: "asdf",
         resourceType: "Observation",
@@ -398,4 +422,111 @@ test("Pattern Check", async () => {
       severity: "error",
     },
   ]);
+});
+
+test("Blood Pressure Category", async () => {
+  const elements = bloodProfile?.snapshot?.element ?? [];
+  const sliceIndexes = getSliceIndices(elements, 0);
+
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        ...bloodProfile,
+        category: [
+          {
+            coding: [
+              {
+                system:
+                  "http://terminology.hl7.org/CodeSystem/observation-category",
+                // Incorrect.
+                code: "vital-signer",
+              },
+            ],
+          },
+        ],
+      },
+      pointer("Observation", bloodPressureObservation.id as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        ...bloodProfile,
+        category: [{}],
+      },
+      pointer("Observation", bloodPressureObservation.id as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        ...bloodProfile,
+        category: [
+          {
+            coding: [
+              {
+                system:
+                  "http://terminology.hl7.org/CodeSystem/observation-category-false",
+                code: "vital-signs",
+              },
+            ],
+            text: "Vital Signs",
+          },
+        ],
+      },
+      pointer("Observation", bloodPressureObservation.id as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        ...bloodProfile,
+        category: [
+          {
+            coding: [
+              {
+                system:
+                  "http://terminology.hl7.org/CodeSystem/observation-category",
+                code: "vital-signs",
+              },
+            ],
+          },
+        ],
+      },
+      pointer("Observation", bloodPressureObservation.id as id),
+    ),
+  ).resolves.toEqual([]);
 });

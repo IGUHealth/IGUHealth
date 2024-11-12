@@ -118,7 +118,9 @@ async function isConformantToSlicesDiscriminator(
   switch (discriminator.type) {
     case "value": {
       const expectedValue = (
-        await fp.evaluate("$this.fixed", sliceValueElementDefinition)
+        await fp.evaluate("$this.fixed", sliceValueElementDefinition, {
+          type: "ElementDefinition" as uri,
+        })
       )[0];
       const conformantLocs: Loc<any, any, any>[] = [];
 
@@ -244,32 +246,32 @@ export async function splitSlicing(
     let sliceValueLocs = locsToCheck;
     for (let d = 0; d < discriminators.length; d++) {
       const discriminator = discriminators[d];
-      const sliceElementIndex = findElementDefinitionForSliceDiscriminator(
-        discriminatorElementPaths[d],
-        elements,
-        sliceIndex,
-      );
+      const sliceDiscriminatorElementIndex =
+        findElementDefinitionForSliceDiscriminator(
+          discriminatorElementPaths[d],
+          elements,
+          sliceIndex,
+        );
 
-      if (!sliceElementIndex)
+      if (!sliceDiscriminatorElementIndex)
         throw new OperationError(
           outcomeError(
             "invalid",
-            "could not find element definition for slice",
+            "could not find element definition to use for slice discriminator.",
           ),
         );
 
-      const sliceElement = elements[sliceElementIndex];
+      const sliceElement = elements[sliceDiscriminatorElementIndex];
 
       sliceValueLocs = await isConformantToSlicesDiscriminator(
         discriminator,
         sliceElement,
         root,
-        locsToCheck,
+        sliceValueLocs,
       );
     }
 
     locsToCheck = locsToCheck.filter((l) => !sliceValueLocs.includes(l));
-
     sliceSplit[sliceIndex] = sliceValueLocs;
   }
 
