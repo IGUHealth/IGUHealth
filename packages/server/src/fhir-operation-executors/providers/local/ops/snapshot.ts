@@ -24,7 +24,7 @@ async function generateSnapshot(
 ): Promise<StructureDefinition> {
   if (sd.snapshot) return sd as StructureDefinition;
 
-  if (!sd.differential)
+  if (!sd.snapshot)
     throw new OperationError(
       outcomeError(
         "invalid",
@@ -44,7 +44,7 @@ async function generateSnapshot(
       ).slice()
     : [];
 
-  for (const element of sd.differential.element) {
+  for (const element of sd.snapshot.element) {
     const existingElementIndex = findLastIndex(
       baseSnapshotElements,
       (e) => e.id === element.id,
