@@ -118,7 +118,9 @@ async function isConformantToSlicesDiscriminator(
   switch (discriminator.type) {
     case "value": {
       const expectedValue = (
-        await fp.evaluate("$this.fixed", sliceValueElementDefinition)
+        await fp.evaluate("$this.fixed", sliceValueElementDefinition, {
+          type: "ElementDefinition" as uri,
+        })
       )[0];
       const conformantLocs: Loc<any, any, any>[] = [];
 
@@ -244,32 +246,32 @@ export async function splitSlicing(
     let sliceValueLocs = locsToCheck;
     for (let d = 0; d < discriminators.length; d++) {
       const discriminator = discriminators[d];
-      const sliceElementIndex = findElementDefinitionForSliceDiscriminator(
-        discriminatorElementPaths[d],
-        elements,
-        sliceIndex,
-      );
+      const sliceDiscriminatorElementIndex =
+        findElementDefinitionForSliceDiscriminator(
+          discriminatorElementPaths[d],
+          elements,
+          sliceIndex,
+        );
 
-      if (!sliceElementIndex)
+      if (!sliceDiscriminatorElementIndex)
         throw new OperationError(
           outcomeError(
             "invalid",
-            "could not find element definition for slice",
+            "could not find element definition to use for slice discriminator.",
           ),
         );
 
-      const sliceElement = elements[sliceElementIndex];
+      const sliceElement = elements[sliceDiscriminatorElementIndex];
 
       sliceValueLocs = await isConformantToSlicesDiscriminator(
         discriminator,
         sliceElement,
         root,
-        locsToCheck,
+        sliceValueLocs,
       );
     }
 
     locsToCheck = locsToCheck.filter((l) => !sliceValueLocs.includes(l));
-
     sliceSplit[sliceIndex] = sliceValueLocs;
   }
 
@@ -312,16 +314,11 @@ export async function validateSliceDescriptor(
   root: object,
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
-  const differential = profile.differential?.element ?? [];
-  const discriminatorElement = differential[sliceDescriptor.discriminator];
+  const snapshot = profile.snapshot?.element ?? [];
+  const discriminatorElement = snapshot[sliceDescriptor.discriminator];
   const sliceLoc = descend(loc, fieldName(discriminatorElement));
 
-  const slices = await splitSlicing(
-    differential,
-    sliceDescriptor,
-    root,
-    sliceLoc,
-  );
+  const slices = await splitSlicing(snapshot, sliceDescriptor, root, sliceLoc);
 
   let issues: OperationOutcome["issue"] = [];
   const snapshotLoc = descend(
@@ -330,11 +327,9 @@ export async function validateSliceDescriptor(
   );
 
   for (const slice of sliceDescriptor.slices) {
-    const idx = (profile?.snapshot?.element ?? []).findIndex(
-      (e) => e.id === differential[slice].id,
-    );
-    const sliceLoc = descend(snapshotLoc, idx) as unknown as ElementLoc;
+    const sliceLoc = descend(snapshotLoc, slice) as unknown as ElementLoc;
     const sliceElement = get(sliceLoc, profile);
+
     if (!sliceElement) {
       throw new OperationError(
         outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
@@ -377,7 +372,7 @@ export default async function validateAllSlicesAtLocation(
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcomeIssue[]> {
   const sliceIndices = getSliceIndices(
-    profile.differential?.element ?? [],
+    profile.snapshot?.element ?? [],
     elementIndex,
   );
 
