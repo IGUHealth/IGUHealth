@@ -94,31 +94,35 @@ const bloodProfile: StructureDefinition = memDatabase[
 ) as StructureDefinition;
 
 test("getSliceIndices", () => {
-  const elements = bloodProfile?.differential?.element ?? [];
+  const elements = bloodProfile?.snapshot?.element ?? [];
   const sliceIndexes = getSliceIndices(elements, 0);
 
   expect(sliceIndexes).toEqual([
     {
-      discriminator: 2,
-      slices: [3, 10],
+      discriminator: 13,
+      slices: [14],
+    },
+    {
+      discriminator: 53,
+      slices: [62, 78],
     },
   ]);
 
-  expect(elements[sliceIndexes[0].discriminator]?.path).toEqual(
+  expect(elements[sliceIndexes[1].discriminator]?.path).toEqual(
     "Observation.component",
   );
 
-  expect(elements[sliceIndexes[0].slices[0]]?.path).toEqual(
+  expect(elements[sliceIndexes[1].slices[0]]?.path).toEqual(
     "Observation.component",
   );
-  expect(elements[sliceIndexes[0].slices[0]]?.id).toEqual(
+  expect(elements[sliceIndexes[1].slices[0]]?.id).toEqual(
     "Observation.component:systolic",
   );
 
-  expect(elements[sliceIndexes[0].slices[1]]?.path).toEqual(
+  expect(elements[sliceIndexes[1].slices[1]]?.path).toEqual(
     "Observation.component",
   );
-  expect(elements[sliceIndexes[0].slices[1]]?.id).toEqual(
+  expect(elements[sliceIndexes[1].slices[1]]?.id).toEqual(
     "Observation.component:diastolic",
   );
 });
@@ -198,7 +202,7 @@ const bloodPressureObservation: Observation = {
 } as Observation;
 
 test("Slice Splitting", async () => {
-  const elements = bloodProfile?.differential?.element ?? [];
+  const elements = bloodProfile?.snapshot?.element ?? [];
   const sliceIndexes = getSliceIndices(elements, 0);
 
   expect(
@@ -222,7 +226,7 @@ test("Slice Splitting", async () => {
   expect(
     bloodPressureObservation?.component?.[1]?.code.coding?.[0]?.code,
   ).toEqual("8462-4");
-  expect(bloodProfile?.differential?.element[3]?.sliceName).toEqual("systolic");
+  expect(bloodProfile?.snapshot?.element[3]?.sliceName).toEqual("systolic");
 });
 
 test("Slice Validation", async () => {
@@ -239,109 +243,109 @@ test("Slice Validation", async () => {
     ),
   ).resolves.toEqual([]);
 
-  // expect(
-  //   validateSliceDescriptor(
-  //     CTX,
-  //     bloodProfile,
-  //     sliceIndexes[0],
-  //     {
-  //       id: "asdf",
-  //       resourceType: "Observation",
-  //       component: [
-  //         {
-  //           code: {
-  //             coding: [
-  //               {
-  //                 system: "http://loinc.org",
-  //                 code: "8480-6",
-  //               },
-  //             ],
-  //           },
-  //           valueQuantity: {
-  //             value: 109,
-  //             unit: "mmHg",
-  //             system: "http://unitsofmeasure.org",
-  //             code: "mm[Hg]",
-  //           },
-  //         },
-  //         {
-  //           code: {
-  //             coding: [
-  //               {
-  //                 system: "http://loinc.org",
-  //                 code: "8462-4",
-  //               },
-  //             ],
-  //           },
-  //           valueInteger: 44,
-  //         },
-  //       ],
-  //     },
-  //     pointer("Observation", "asdf" as id),
-  //   ),
-  // ).resolves.toEqual([
-  //   {
-  //     code: "structure",
-  //     diagnostics:
-  //       "Additional fields found at path '/component/1': 'valueInteger'",
-  //     expression: ["/component/1"],
-  //     severity: "error",
-  //   },
-  // ]);
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        id: "asdf",
+        resourceType: "Observation",
+        component: [
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8480-6",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 109,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8462-4",
+                },
+              ],
+            },
+            valueInteger: 44,
+          },
+        ],
+      },
+      pointer("Observation", "asdf" as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Additional fields found at path '/component/1': 'valueInteger'",
+      expression: ["/component/1"],
+      severity: "error",
+    },
+  ]);
 
-  // expect(
-  //   validateSliceDescriptor(
-  //     CTX,
-  //     bloodProfile,
-  //     sliceIndexes[0],
-  //     {
-  //       id: "asdf",
-  //       resourceType: "Observation",
-  //       component: [
-  //         {
-  //           code: {
-  //             coding: [
-  //               {
-  //                 system: "http://loinc.org",
-  //                 code: "8480-6",
-  //               },
-  //             ],
-  //           },
-  //           valueQuantity: {
-  //             value: 109,
-  //             unit: "mmHg",
-  //             system: "http://unitsofmeasure.org",
-  //             code: "mm[Hg]",
-  //           },
-  //         },
-  //         {
-  //           code: {
-  //             coding: [
-  //               {
-  //                 system: "http://loinc.org",
-  //               },
-  //             ],
-  //           },
-  //           valueQuantity: {
-  //             value: 44,
-  //             unit: "mmHg",
-  //             system: "http://unitsofmeasure.org",
-  //             code: "mm[Hg]",
-  //           },
-  //         },
-  //       ],
-  //     },
-  //     pointer("Observation", "asdf" as id),
-  //   ),
-  // ).resolves.toEqual([
-  //   {
-  //     code: "structure",
-  //     diagnostics:
-  //       "Slice 'diastolic' does not have the minimum number of values.",
-  //     expression: undefined,
-  //     severity: "error",
-  //   },
-  // ]);
+  expect(
+    validateSliceDescriptor(
+      CTX,
+      bloodProfile,
+      sliceIndexes[0],
+      {
+        id: "asdf",
+        resourceType: "Observation",
+        component: [
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                  code: "8480-6",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 109,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+          {
+            code: {
+              coding: [
+                {
+                  system: "http://loinc.org",
+                },
+              ],
+            },
+            valueQuantity: {
+              value: 44,
+              unit: "mmHg",
+              system: "http://unitsofmeasure.org",
+              code: "mm[Hg]",
+            },
+          },
+        ],
+      },
+      pointer("Observation", "asdf" as id),
+    ),
+  ).resolves.toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Slice 'diastolic' does not have the minimum number of values.",
+      expression: undefined,
+      severity: "error",
+    },
+  ]);
 });
 
 test("Pattern Check", async () => {
