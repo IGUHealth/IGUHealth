@@ -23,7 +23,6 @@ export function codeGenerationCommands(command: Command) {
     .requiredOption("-o, --output <output>", "output file")
     .option("-v, --version <version>", "FHIR Profiles to use", R4)
     .action(async (options) => {
-      console.log(path.join(fileURLToPath(import.meta.url), "../../../"));
       const structureDefinitions = loadArtifacts({
         fhirVersion: options.version as FHIR_VERSION,
         resourceType: "StructureDefinition",
@@ -33,7 +32,11 @@ export function codeGenerationCommands(command: Command) {
       mkdirSync(path.join(options.output, ".."), { recursive: true });
       const metadata = generateMetaData(structureDefinitions);
 
-      writeFileSync(options.output, JSON.stringify(metadata, null, 2));
+      writeFileSync(
+        options.output,
+        "// Do not this code is generated \nexport default " +
+          JSON.stringify(metadata, null, 2),
+      );
     });
 
   command

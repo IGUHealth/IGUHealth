@@ -36,6 +36,7 @@ function getMax(elementDefinition: ElementDefinition) {
 
 export function validateCardinality(
   element: ElementDefinition,
+  // Need this to check indice as specified below element zero indices are specified as array when we want to validate them as singular.
   elementLoc: ElementLoc,
   root: object,
   path: Loc<any, any, any>,
@@ -48,8 +49,8 @@ export function validateCardinality(
 
   // Value could be undefined if min is allowed to be zero.
   if (value === undefined && min === 0) return [];
-
   const isElementAnArray = isArray(element, elementIndex as number);
+
   if (Array.isArray(value) !== isElementAnArray) {
     return [
       issueError(

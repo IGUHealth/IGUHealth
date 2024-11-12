@@ -31,6 +31,7 @@ import {
 
 import { validatePrimitive } from "../elements/primitive.js";
 import { validateCardinality } from "../elements/validators/cardinality.js";
+import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   ascendElementLoc,
@@ -368,6 +369,11 @@ export async function validateElementSingular(
     elementIndex as number,
   );
 
+  const patternIssues = await validatePattern(element, root, path);
+  if (patternIssues.length > 0) {
+    return patternIssues;
+  }
+
   // Leaf validation
   if (childrenIndixes.length === 0) {
     if (
@@ -457,36 +463,31 @@ export async function validateElement(
   }
 }
 
-export default async function validate(
+export function validateSD(
   ctx: ValidationCTX,
-  type: uri,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>(),
-): Promise<OperationOutcome["issue"]> {
-  if (isPrimitiveType(type))
-    return validatePrimitive(ctx, undefined, root, path, type);
-
-  const sd = await resolveTypeToStructureDefinition(ctx, type);
-
+) {
   if (!isObject(root))
     return [
       issueError(
         "structure",
-        `Value must be an object when validating '${type}'. Instead found type of '${typeof root}'`,
+        `Value must be an object when validating '${sd.type}'. Instead found type of '${typeof root}'`,
         [toJSONPointer(path)],
       ),
     ];
 
   if (sd.kind === "resource") {
     // Verify the resourceType aligns.
-    if (get(descend(path, "resourceType"), root) !== type) {
+    if (get(descend(path, "resourceType"), root) !== sd.type) {
       return [
         issueError(
           "invalid",
           `ResourceType '${
             (root as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
               .resourceType
-          }' does not match expected type '${type}'`,
+          }' does not match expected type '${sd.type}'`,
           [toJSONPointer(path)],
         ),
       ];
@@ -507,6 +508,19 @@ export default async function validate(
     startingLoc as unknown as ElementLoc,
     root,
     path,
-    type,
+    sd.type,
   );
+}
+
+export default async function validate(
+  ctx: ValidationCTX,
+  type: uri,
+  root: unknown,
+  path: Loc<any, any, any> = typedPointer<any, any>(),
+): Promise<OperationOutcome["issue"]> {
+  if (isPrimitiveType(type))
+    return validatePrimitive(ctx, undefined, root, path, type);
+
+  const sd = await resolveTypeToStructureDefinition(ctx, type);
+  return validateSD(ctx, sd, root, path);
 }

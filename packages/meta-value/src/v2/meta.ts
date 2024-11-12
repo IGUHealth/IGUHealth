@@ -14,8 +14,8 @@ import {
   RawPrimitive,
   isObject,
 } from "../utilities.js";
-import _r4Meta from "./generated/r4.json" with { type: "json" };
-import _r4bMeta from "./generated/r4b.json" with { type: "json" };
+import _r4Meta from "./generated/r4.js";
+import _r4bMeta from "./generated/r4b.js";
 
 const R4_META: MetaV2Compiled = _r4Meta as unknown as MetaV2Compiled;
 const R4B_META: MetaV2Compiled = _r4bMeta as unknown as MetaV2Compiled;

@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { Loc, typedPointer } from "@iguhealth/fhir-pointer";
 import { resourceTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import {
   Account,
@@ -19,7 +20,6 @@ import {
 } from "@iguhealth/fhir-types/lib/versions";
 
 import { ValidationCTX } from "../types.js";
-import { Loc, typedPointer } from "@iguhealth/fhir-pointer";
 import validate from "./index.js";
 
 type Validator = (
