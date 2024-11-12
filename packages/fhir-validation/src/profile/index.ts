@@ -90,7 +90,7 @@ async function validateProfileElement(
     ascendElementLoc(elementLoc);
 
   const elements = get(elementsLoc, profile as StructureDefinition);
-  const children = eleIndexToChildIndices(elements, elementIndex as number);
+  const children = ignoreSliceElements(elements, eleIndexToChildIndices(elements, elementIndex as number));
 
   const validateAllSlicesAtLocation()
 
