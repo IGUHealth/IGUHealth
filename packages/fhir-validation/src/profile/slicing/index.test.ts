@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { descend, pointer } from "@iguhealth/fhir-pointer";
+import { descend, get, pointer } from "@iguhealth/fhir-pointer";
 import {
   Observation,
   StructureDefinition,
@@ -20,7 +20,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 
 import { validateSD } from "../../structural/index.js";
-import { ValidationCTX } from "../../types.js";
+import { ElementLoc, ValidationCTX } from "../../types.js";
 import {
   getSliceIndices,
   splitSlicing,
@@ -94,8 +94,17 @@ const bloodProfile: StructureDefinition = memDatabase[
 ) as StructureDefinition;
 
 test("getSliceIndices", () => {
-  const elements = bloodProfile?.snapshot?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
+  const elementsLoc = descend(
+    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    "element",
+  );
+  const elementLoc = descend(elementsLoc, 0);
+  const elements = get(elementsLoc, bloodProfile as StructureDefinition) ?? [];
+
+  const sliceIndexes = getSliceIndices(
+    bloodProfile,
+    elementLoc as unknown as ElementLoc,
+  );
 
   expect(sliceIndexes).toEqual([
     {
@@ -202,8 +211,17 @@ const bloodPressureObservation: Observation = {
 } as Observation;
 
 test("Slice Splitting", async () => {
-  const elements = bloodProfile?.snapshot?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
+  const elementsLoc = descend(
+    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    "element",
+  );
+  const elementLoc = descend(elementsLoc, 0);
+  const elements = get(elementsLoc, bloodProfile as StructureDefinition) ?? [];
+
+  const sliceIndexes = getSliceIndices(
+    bloodProfile,
+    elementLoc as unknown as ElementLoc,
+  );
 
   expect(
     splitSlicing(
@@ -244,8 +262,15 @@ test("Slice Splitting", async () => {
 });
 
 test("Slice Validation", async () => {
-  const elements = bloodProfile?.snapshot?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
+  const elementsLoc = descend(
+    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    "element",
+  );
+  const elementLoc = descend(elementsLoc, 0);
+  const sliceIndexes = getSliceIndices(
+    bloodProfile,
+    elementLoc as unknown as ElementLoc,
+  );
 
   expect(
     validateSliceDescriptor(
@@ -425,8 +450,16 @@ test("Pattern Check", async () => {
 });
 
 test("Blood Pressure Category", async () => {
-  const elements = bloodProfile?.snapshot?.element ?? [];
-  const sliceIndexes = getSliceIndices(elements, 0);
+  const elementsLoc = descend(
+    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    "element",
+  );
+
+  const elementLoc = descend(elementsLoc, 0);
+  const sliceIndexes = getSliceIndices(
+    bloodProfile,
+    elementLoc as unknown as ElementLoc,
+  );
 
   expect(
     validateSliceDescriptor(

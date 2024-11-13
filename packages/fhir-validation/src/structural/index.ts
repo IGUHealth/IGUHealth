@@ -11,6 +11,7 @@ import {
 import {
   ElementDefinition,
   OperationOutcome,
+  OperationOutcomeIssue,
   Reference,
   StructureDefinition,
   id,
@@ -412,7 +413,7 @@ export async function validateElement(
   root: object,
   path: Loc<any, any, any>,
   type: uri,
-): Promise<OperationOutcome["issue"]> {
+): Promise<OperationOutcomeIssue[]> {
   const element = get(elementLoc, structureDefinition);
   if (!notNullable(element)) {
     throw new OperationError(
