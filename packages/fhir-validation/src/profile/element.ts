@@ -111,11 +111,12 @@ export async function validateSingularProfileElement(
     eleIndexToChildIndices(elements, elementIndex as number),
   );
 
-  // Leaf node which would only validate the type.
+  // Structural Validation should have already checked the leaf nodes.
   if (children.length === 0) {
     return [];
   }
 
+  // Profile can further constrain typechoices check that here.
   if (!validateTypeIfMultipleTypesConstrained(element, type)) {
     throw new OperationError(
       outcomeFatal("invalid", `Element is not constrained to type '${type}'`, [
