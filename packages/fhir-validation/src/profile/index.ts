@@ -28,16 +28,18 @@ import { ElementLoc, ValidationCTX } from "../types.js";
 import { ascendElementLoc } from "../utilities.js";
 import validateAllSlicesAtLocation from "./slicing/index.js";
 
-
 /**
  * For descendants we want to ignore those slices which are validated seperately.
  * This is done by filtering off sliceName and slicing property.
- * 
+ *
  * @param elements list of ElementDefinitions to filter
  * @param indices The indices to filter out of the list if they are a part of a lice.
  * @returns Indices that are not a part of a slice.
  */
-function ignoreSliceElements(elements: ElementDefinition[], indices: number[]): number[]{
+function ignoreSliceElements(
+  elements: ElementDefinition[],
+  indices: number[],
+): number[] {
   return indices.filter((index) => {
     const element = elements[index];
     return element.sliceName === undefined && element.slicing === undefined;
@@ -90,9 +92,12 @@ async function validateProfileElement(
     ascendElementLoc(elementLoc);
 
   const elements = get(elementsLoc, profile as StructureDefinition);
-  const children = ignoreSliceElements(elements, eleIndexToChildIndices(elements, elementIndex as number));
+  const children = ignoreSliceElements(
+    elements,
+    eleIndexToChildIndices(elements, elementIndex as number),
+  );
 
-  const validateAllSlicesAtLocation()
+  await validateAllSlicesAtLocation(ctx, profile, elementLoc, root, path);
 
   return [];
 }

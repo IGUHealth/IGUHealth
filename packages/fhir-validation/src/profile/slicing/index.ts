@@ -5,6 +5,7 @@ import {
   ElementDefinition,
   OperationOutcome,
   OperationOutcomeIssue,
+  StructureDefinition,
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
@@ -24,7 +25,7 @@ import {
 } from "../../elements/conformance.js";
 import { validateElementSingular } from "../../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
-import { fieldName } from "../../utilities.js";
+import { ascendElementLoc, fieldName } from "../../utilities.js";
 import {
   Discriminator,
   convertPathToElementPointer,
@@ -45,10 +46,12 @@ type SlicingDescriptor = {
  * @param elements
  */
 export function getSliceIndices(
-  elements: ElementDefinition[],
-  index: number,
+  profile: Resource<FHIR_VERSION, "StructureDefinition">,
+  elementLoc: ElementLoc,
 ): SlicingDescriptor[] {
-  const children = eleIndexToChildIndices(elements, index);
+  const { parent: elementsLoc, field: index } = ascendElementLoc(elementLoc);
+  const elements = get(elementsLoc, profile as StructureDefinition);
+  const children = eleIndexToChildIndices(elements, index as number);
 
   const slices: SlicingDescriptor[] = [];
 
@@ -367,14 +370,11 @@ export async function validateSliceDescriptor(
 export default async function validateAllSlicesAtLocation(
   ctx: ValidationCTX,
   profile: Resource<FHIR_VERSION, "StructureDefinition">,
-  elementIndex: number,
+  elementLoc: ElementLoc,
   root: object,
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcomeIssue[]> {
-  const sliceIndices = getSliceIndices(
-    profile.snapshot?.element ?? [],
-    elementIndex,
-  );
+  const sliceIndices = getSliceIndices(profile, elementLoc);
 
   return (
     await Promise.all(
