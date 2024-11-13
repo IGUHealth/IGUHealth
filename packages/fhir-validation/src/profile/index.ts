@@ -3,7 +3,6 @@
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
 import {
   Loc,
-  ascend,
   descend,
   get,
   pointer,
@@ -12,14 +11,12 @@ import {
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
-  OperationOutcome,
   OperationOutcomeIssue,
   StructureDefinition,
   canonical,
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { IMetaValue } from "@iguhealth/meta-value/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
