@@ -32,11 +32,12 @@ import {
 
 import { validatePrimitive } from "../elements/primitive.js";
 import { validateCardinality } from "../elements/validators/cardinality.js";
+import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   ascendElementLoc,
-  fieldName,
+  getFoundFieldsForElement,
   isPrimitiveType,
   isResourceType,
   notNullable,
@@ -58,67 +59,6 @@ function resolveContentReferenceIndex(
       "unable to resolve contentreference: '" + element.contentReference + "'",
     );
   return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
-}
-
-type PropertyAndType = { field: string; type: uri };
-
-function findBaseFieldAndType(
-  element: ElementDefinition,
-  value: object,
-): PropertyAndType | undefined {
-  if (element.contentReference) {
-    return {
-      field: fieldName(element),
-      type: (element.type?.[0].code ?? "") as uri,
-    };
-  }
-  for (const type of element.type?.map((t) => t.code) || []) {
-    const field = fieldName(element, type);
-    if (field in value) {
-      return { field, type };
-    }
-  }
-}
-
-/**
- * Returns fields associated to an element. Because it could be a primitive it may result in multiple fields.
- * IE _field for Element values for field primitive value.
- *
- * @param element The ElementDefinition to find fields for
- * @param value Value to check for fields.
- * @returns
- */
-function getFoundFieldsForElement(
-  element: ElementDefinition,
-  value: object,
-): PropertyAndType[] {
-  const properties: PropertyAndType[] = [];
-  const base = findBaseFieldAndType(element, value);
-  if (base) {
-    properties.push(base);
-    const { field, type } = base;
-    if (isPrimitiveType(type)) {
-      const primitiveElementField = {
-        field: `_${field}`,
-        type: "Element" as uri,
-      };
-      if (`_${field}` in value) properties.push(primitiveElementField);
-    }
-  } else {
-    // Check for primitive extensions when non existent values
-    const primitives =
-      element.type?.filter((type) => isPrimitiveType(type.code)) || [];
-    for (const primType of primitives) {
-      if (`_${fieldName(element, primType.code)}` in value) {
-        const primitiveElementField = {
-          field: `_${fieldName(element, primType.code)}`,
-          type: "Element" as uri,
-        };
-        properties.push(primitiveElementField);
-      }
-    }
-  }
-  return properties;
 }
 
 function isElementRequired(element: ElementDefinition) {
@@ -373,6 +313,11 @@ export async function validateElementSingular(
   const patternIssues = await validatePattern(element, root, path);
   if (patternIssues.length > 0) {
     return patternIssues;
+  }
+
+  const fixedValueIssues = await validateFixedValue(element, root, path);
+  if (fixedValueIssues.length > 0) {
+    return fixedValueIssues;
   }
 
   // Leaf validation

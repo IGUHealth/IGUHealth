@@ -10,7 +10,7 @@ import { issueError } from "@iguhealth/operation-outcomes";
 
 import { conformsToValue } from "../conformance.js";
 
-export async function validateValue(
+export async function validateFixedValue(
   element: ElementDefinition,
   root: object,
   path: Loc<any, any, any>,

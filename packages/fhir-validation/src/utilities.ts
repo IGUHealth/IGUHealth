@@ -98,3 +98,67 @@ export function ascendElementLoc(loc: ElementLoc): {
 
   return parent;
 }
+
+export type PropertyAndType = { field: string; type: uri };
+
+function _findBaseFieldAndType(
+  element: ElementDefinition,
+  value: object,
+): PropertyAndType | undefined {
+  if (element.contentReference) {
+    const baseField = fieldName(element);
+    if (baseField in value) {
+      return {
+        field: fieldName(element),
+        type: (element.type?.[0].code ?? "") as uri,
+      };
+    }
+  }
+  for (const type of element.type?.map((t) => t.code) || []) {
+    const field = fieldName(element, type);
+    if (field in value) {
+      return { field, type };
+    }
+  }
+}
+
+/**
+ * Returns fields associated to an element. Because it could be a primitive it may result in multiple fields.
+ * IE _field for Element values for field primitive value.
+ *
+ * @param element The ElementDefinition to find fields for
+ * @param value Value to check for fields.
+ * @returns
+ */
+export function getFoundFieldsForElement(
+  element: ElementDefinition,
+  value: object,
+): PropertyAndType[] {
+  const properties: PropertyAndType[] = [];
+  const base = _findBaseFieldAndType(element, value);
+  if (base) {
+    properties.push(base);
+    const { field, type } = base;
+    if (isPrimitiveType(type)) {
+      const primitiveElementField = {
+        field: `_${field}`,
+        type: "Element" as uri,
+      };
+      if (`_${field}` in value) properties.push(primitiveElementField);
+    }
+  } else {
+    // Check for primitive extensions when non existent values
+    const primitives =
+      element.type?.filter((type) => isPrimitiveType(type.code)) || [];
+    for (const primType of primitives) {
+      if (`_${fieldName(element, primType.code)}` in value) {
+        const primitiveElementField = {
+          field: `_${fieldName(element, primType.code)}`,
+          type: "Element" as uri,
+        };
+        properties.push(primitiveElementField);
+      }
+    }
+  }
+  return properties;
+}

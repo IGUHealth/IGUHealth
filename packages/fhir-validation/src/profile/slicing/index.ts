@@ -23,9 +23,9 @@ import {
   conformsToPattern,
   conformsToValue,
 } from "../../elements/conformance.js";
-import { validateElementSingular } from "../../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
 import { ascendElementLoc, fieldName } from "../../utilities.js";
+import { validateSingularProfileElement } from "../element.js";
 import {
   Discriminator,
   convertPathToElementPointer,
@@ -227,6 +227,9 @@ export async function splitSlicing(
 
   const values = get(loc, root);
 
+  if (values === undefined) {
+    return sliceSplit;
+  }
   if (!Array.isArray(values)) {
     throw new OperationError(
       outcomeFatal("not-supported", "Cannot slice non array."),
@@ -352,7 +355,7 @@ export async function validateSliceDescriptor(
 
     for (const path of slices[slice]) {
       issues = issues.concat(
-        await validateElementSingular(
+        await validateSingularProfileElement(
           ctx,
           profile,
           sliceLoc,
@@ -365,22 +368,4 @@ export async function validateSliceDescriptor(
   }
 
   return issues;
-}
-
-export default async function validateAllSlicesAtLocation(
-  ctx: ValidationCTX,
-  profile: Resource<FHIR_VERSION, "StructureDefinition">,
-  elementLoc: ElementLoc,
-  root: object,
-  loc: Loc<any, any, any>,
-): Promise<OperationOutcomeIssue[]> {
-  const sliceIndices = getSliceIndices(profile, elementLoc);
-
-  return (
-    await Promise.all(
-      sliceIndices.map((sliceIndex) =>
-        validateSliceDescriptor(ctx, profile, sliceIndex, root, loc),
-      ),
-    )
-  ).flat();
 }
