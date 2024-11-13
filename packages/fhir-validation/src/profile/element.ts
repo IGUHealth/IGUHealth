@@ -79,24 +79,6 @@ export async function validateSingularProfileElement(
     );
   }
 
-  const children = ignoreSliceElements(
-    elements,
-    eleIndexToChildIndices(elements, elementIndex as number),
-  );
-
-  // Leaf node which would only validate the type.
-  if (children.length === 0) {
-    return [];
-  }
-
-  if (!validateTypeIfMultipleTypesConstrained(element, type)) {
-    throw new OperationError(
-      outcomeFatal("invalid", `Element is not constrained to type '${type}'`, [
-        toJSONPointer(path),
-      ]),
-    );
-  }
-
   const value = get(path, root);
 
   const foundFields: Set<string> =
@@ -104,6 +86,7 @@ export async function validateSingularProfileElement(
       ? new Set(["resourceType"])
       : new Set([]);
 
+  // Slice Validation
   const sliceIndices = getSliceIndices(profile, elementLoc);
   const sliceIssues = (
     await Promise.all(
@@ -120,6 +103,25 @@ export async function validateSingularProfileElement(
 
   if (sliceIssues.length > 0) {
     return sliceIssues;
+  }
+  // [END] Slice Validation
+
+  const children = ignoreSliceElements(
+    elements,
+    eleIndexToChildIndices(elements, elementIndex as number),
+  );
+
+  // Leaf node which would only validate the type.
+  if (children.length === 0) {
+    return [];
+  }
+
+  if (!validateTypeIfMultipleTypesConstrained(element, type)) {
+    throw new OperationError(
+      outcomeFatal("invalid", `Element is not constrained to type '${type}'`, [
+        toJSONPointer(path),
+      ]),
+    );
   }
 
   const patternIssues = await validatePattern(element, root, path);
