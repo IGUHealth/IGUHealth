@@ -158,8 +158,6 @@ export async function validateSingularProfileElement(
     }
   }
 
-  // [FIXME] fields for slices need to be handled.
-
   const additionalFields = new Set(Object.keys(value)).difference(foundFields);
 
   if (additionalFields.size > 0) {
