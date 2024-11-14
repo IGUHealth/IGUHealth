@@ -6,6 +6,7 @@ import {
   OperationOutcome,
   OperationOutcomeIssue,
   StructureDefinition,
+  canonical,
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
@@ -29,6 +30,7 @@ import { validateSingularProfileElement } from "../element.js";
 import {
   Discriminator,
   convertPathToElementPointer,
+  joinPaths,
   removeTypeOnPath,
 } from "../utilities.js";
 
@@ -66,6 +68,7 @@ export function getSliceIndices(
         sliceIndexes.push(children[i]);
         i++;
       }
+
       slices.push({
         discriminator: discriminatorIndex,
         slices: sliceIndexes,
@@ -83,28 +86,68 @@ export function getSliceIndices(
  * @param currentIndex The current index to search for the slice value.
  * @returns The index of elementdefinition to use to slice the value for the discriminator.
  */
-function findElementDefinitionForSliceDiscriminator(
-  discriminatorElementPath: string,
+async function findElementDefinitionForSliceDiscriminator(
+  ctx: ValidationCTX,
+  searchingForElementPath: string,
   elements: ElementDefinition[],
   currentIndex: number,
-): number | undefined {
+  parentCurrentElementPath: string | undefined = undefined,
+): Promise<ElementDefinition | undefined> {
   const element = elements[currentIndex];
-  const typelessPath = removeTypeOnPath(element.path);
+  const currentElementPath = parentCurrentElementPath
+    ? joinPaths(parentCurrentElementPath, removeTypeOnPath(element.path))
+    : removeTypeOnPath(element.path);
 
-  if (discriminatorElementPath === typelessPath) {
-    return currentIndex;
+  if (searchingForElementPath === currentElementPath) {
+    return element;
   }
 
-  if (discriminatorElementPath.startsWith(typelessPath)) {
+  // No need for further processing if the discriminator path is not a prefix of the current element path.
+  if (searchingForElementPath.startsWith(currentElementPath)) {
+    const profiles = element.type
+      ?.map((t) => t.profile)
+      .flat()
+      .filter((t): t is canonical => t !== undefined);
+
+    if (profiles) {
+      for (const profile of profiles) {
+        const profileSD = await ctx.resolveCanonical(
+          ctx.fhirVersion,
+          "StructureDefinition",
+          profile,
+        );
+        if (!profileSD) {
+          throw new OperationError(
+            outcomeError("not-found", `Could not resolve profile '${profile}'`),
+          );
+        }
+
+        const elementInProfile =
+          await findElementDefinitionForSliceDiscriminator(
+            ctx,
+            searchingForElementPath,
+            profileSD.snapshot?.element ?? [],
+            0,
+            // Use current element path as parent path.
+            currentElementPath,
+          );
+
+        if (elementInProfile !== undefined) return elementInProfile;
+      }
+    }
+
     const childIndexes = eleIndexToChildIndices(elements, currentIndex);
     for (const childIndex of childIndexes) {
-      const foundIndex = findElementDefinitionForSliceDiscriminator(
-        discriminatorElementPath,
-        elements,
-        childIndex,
-      );
-      if (foundIndex) {
-        return foundIndex;
+      const elementDefinitionForSliceDiscriminator =
+        await findElementDefinitionForSliceDiscriminator(
+          ctx,
+          searchingForElementPath,
+          elements,
+          childIndex,
+          parentCurrentElementPath,
+        );
+      if (elementDefinitionForSliceDiscriminator !== undefined) {
+        return elementDefinitionForSliceDiscriminator;
       }
     }
   }
@@ -212,6 +255,7 @@ export async function validateSlice(
 }
 
 export async function splitSlicing(
+  ctx: ValidationCTX,
   elements: ElementDefinition[],
   sliceDescriptor: SlicingDescriptor,
   root: object,
@@ -252,26 +296,26 @@ export async function splitSlicing(
     let sliceValueLocs = locsToCheck;
     for (let d = 0; d < discriminators.length; d++) {
       const discriminator = discriminators[d];
-      const sliceDiscriminatorElementIndex =
-        findElementDefinitionForSliceDiscriminator(
+      const sliceDiscriminatorElementValue =
+        await findElementDefinitionForSliceDiscriminator(
+          ctx,
           discriminatorElementPaths[d],
           elements,
           sliceIndex,
         );
 
-      if (!sliceDiscriminatorElementIndex)
+      if (!sliceDiscriminatorElementValue) {
         throw new OperationError(
           outcomeError(
             "invalid",
-            "could not find element definition to use for slice discriminator.",
+            `Could not find element definition to use for slice discriminator '${discriminatorElementPaths[d]}'.`,
           ),
         );
-
-      const sliceElement = elements[sliceDiscriminatorElementIndex];
+      }
 
       sliceValueLocs = await isConformantToSlicesDiscriminator(
         discriminator,
-        sliceElement,
+        sliceDiscriminatorElementValue,
         root,
         sliceValueLocs,
       );
@@ -324,7 +368,13 @@ export async function validateSliceDescriptor(
   const discriminatorElement = snapshot[sliceDescriptor.discriminator];
   const sliceLoc = descend(loc, fieldName(discriminatorElement));
 
-  const slices = await splitSlicing(snapshot, sliceDescriptor, root, sliceLoc);
+  const slices = await splitSlicing(
+    ctx,
+    snapshot,
+    sliceDescriptor,
+    root,
+    sliceLoc,
+  );
 
   let issues: OperationOutcome["issue"] = [];
   const snapshotLoc = descend(
