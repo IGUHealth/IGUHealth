@@ -93,6 +93,14 @@ const bloodProfile: StructureDefinition = memDatabase[
     "http://hl7.org/fhir/us/core/StructureDefinition/us-core-blood-pressure",
 ) as StructureDefinition;
 
+const usCorePatientProfile: StructureDefinition = memDatabase[
+  "StructureDefinition"
+].find(
+  (p) =>
+    (p as StructureDefinition).url ===
+    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
+) as StructureDefinition;
+
 test("getSliceIndices", () => {
   const elementsLoc = descend(
     descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
@@ -225,6 +233,7 @@ test("Slice Splitting", async () => {
 
   expect(
     splitSlicing(
+      CTX,
       elements,
       sliceIndexes[0],
       bloodPressureObservation,
@@ -239,6 +248,7 @@ test("Slice Splitting", async () => {
 
   expect(
     splitSlicing(
+      CTX,
       elements,
       sliceIndexes[1],
       bloodPressureObservation,

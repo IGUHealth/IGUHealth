@@ -186,6 +186,58 @@ test("Test BP profile", async () => {
       severity: "error",
     },
   ]);
+
+  expect(
+    validateProfile(CTX, bloodProfile, {
+      ...bloodPressureObservation,
+      component: [
+        {
+          code: {
+            coding: [
+              {
+                system: "http://loinc.org",
+                code: "bad",
+                display: "Systolic blood pressure",
+              },
+            ],
+            text: "Systolic blood pressure",
+          },
+          valueQuantity: {
+            value: 109,
+            unit: "mmHg",
+            system: "http://unitsofmeasure.org",
+            code: "mm[Hg]",
+          },
+        },
+        {
+          code: {
+            coding: [
+              {
+                system: "http://loinc.org",
+                code: "8462-4",
+                display: "Diastolic blood pressure",
+              },
+            ],
+            text: "Diastolic blood pressure",
+          },
+          valueQuantity: {
+            value: 44,
+            unit: "mmHg",
+            system: "http://unitsofmeasure.org",
+            code: "mm[Hg]",
+          },
+        },
+      ],
+    }),
+  ).resolves.toEqual([
+    {
+      severity: "error",
+      code: "structure",
+      diagnostics:
+        "Slice 'systolic' does not have the minimum number of values.",
+      expression: undefined,
+    },
+  ]);
 });
 
 test("Invalid type constraint systolic.value", async () => {

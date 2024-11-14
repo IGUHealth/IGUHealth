@@ -6,7 +6,13 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
  * @param path The ElementDefinition path to remove the type from.
  */
 export function removeTypeOnPath(path: string): string {
-  return path.substring(path.indexOf(".") + 1);
+  const firstDot = path.indexOf(".");
+  // If first element this would be the entire path as no subfield.
+  return path.substring(firstDot !== -1 ? path.indexOf(".") + 1 : path.length);
+}
+
+export function joinPaths(...paths: string[]) {
+  return paths.filter((p) => p !== "").join(".");
 }
 
 export type Discriminator = NonNullable<
