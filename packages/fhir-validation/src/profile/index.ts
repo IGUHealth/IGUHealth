@@ -20,7 +20,7 @@ export async function validateProfile(
   ctx: ValidationCTX,
   profile: Resource<FHIR_VERSION, "StructureDefinition">,
   root: object,
-  path_: Loc<any, any, any> | undefined,
+  path_?: Loc<any, any, any>,
 ): Promise<OperationOutcomeIssue[]> {
   const path =
     path_ ??
@@ -68,7 +68,7 @@ export default async function validateProfileCanonical(
   ctx: ValidationCTX,
   profileURL: canonical,
   root: object,
-  path_: Loc<any, any, any> | undefined,
+  path_?: Loc<any, any, any>,
 ): Promise<OperationOutcomeIssue[]> {
   const profile = await ctx.resolveCanonical(
     ctx.fhirVersion,

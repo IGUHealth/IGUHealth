@@ -413,7 +413,7 @@ export function validateSD(
   ctx: ValidationCTX,
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
   root: unknown,
-  path_: Loc<any, any, any> | undefined,
+  path_?: Loc<any, any, any>,
 ) {
   const path =
     path_ ?? pointer(ctx.fhirVersion, sd.type as AllResourceTypes, "id" as id);
@@ -466,7 +466,7 @@ export default async function validate(
   ctx: ValidationCTX,
   type: uri,
   root: unknown,
-  path_: Loc<any, any, any> | undefined,
+  path_?: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
   const path =
     path_ ?? pointer(ctx.fhirVersion, type as AllDataTypes, "id" as id);
