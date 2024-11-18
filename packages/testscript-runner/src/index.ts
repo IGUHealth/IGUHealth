@@ -1165,6 +1165,7 @@ export async function run<Version extends FHIR_VERSION>(
   } as Resource<Version, "TestReport">;
 
   const pointer = fhirPointer<Version, ResourceType<Version>>(
+    version,
     "TestScript" as ResourceType<Version>,
     testScript.id as id,
   ) as unknown as Loc<

@@ -412,7 +412,10 @@ export async function validateSliceDescriptor(
 
     let issues: OperationOutcome["issue"] = [];
     const snapshotLoc = descend(
-      descend(pointer("StructureDefinition", profile.id as id), "snapshot"),
+      descend(
+        pointer(ctx.fhirVersion, "StructureDefinition", profile.id as id),
+        "snapshot",
+      ),
       "element",
     );
 

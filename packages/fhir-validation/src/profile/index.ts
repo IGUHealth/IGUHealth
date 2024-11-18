@@ -36,7 +36,10 @@ export async function validateProfile(
 
   const startingLoc = descend(
     descend(
-      descend(pointer("StructureDefinition", profile.id as id), "snapshot"),
+      descend(
+        pointer(ctx.fhirVersion, "StructureDefinition", profile.id as id),
+        "snapshot",
+      ),
       "element",
     ),
     0,

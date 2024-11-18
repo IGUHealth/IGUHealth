@@ -35,7 +35,7 @@ function findVariable(
   | pt.Loc<AccessPolicyV2, AccessPolicyV2Attribute | undefined, any>
   | undefined {
   const pointer = pt.descend(
-    pt.pointer("AccessPolicyV2", policy.id as id),
+    pt.pointer(R4, "AccessPolicyV2", policy.id as id),
     "attribute",
   );
   for (let i = 0; i < (policy.attribute ?? []).length; i++) {

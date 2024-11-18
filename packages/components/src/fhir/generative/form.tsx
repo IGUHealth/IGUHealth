@@ -488,6 +488,7 @@ export const FHIRGenerativeForm = ({
       value={value}
       type={structureDefinition.snapshot?.element?.[0]?.type?.[0]}
       pointer={pointer(
+        fhirVersion,
         structureDefinition.type as ResourceType,
         value?.id || ("new" as id),
       )}

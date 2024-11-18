@@ -3,6 +3,7 @@ import { produce } from "immer";
 
 import * as fpt from "@iguhealth/fhir-pointer";
 import { Resource, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 export interface Mutation<T, R> {
   path: fpt.Loc<T, R, any>;
@@ -42,6 +43,7 @@ function createPatchesNonExistantFields<T extends Record<string, any>, R>(
   let patches: Operation[] = [];
   let curValue = resource as unknown;
   let curPointer: fpt.Loc<T, any, any> = fpt.pointer(
+    R4,
     resource.resourceType,
     resource.id as id,
   );

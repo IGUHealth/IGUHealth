@@ -21,6 +21,7 @@ import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
+  R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
@@ -441,7 +442,7 @@ export function validateSD(
 
   const startingLoc = descend(
     descend(
-      descend(pointer("StructureDefinition", sd.id as id), "snapshot"),
+      descend(pointer(R4, "StructureDefinition", sd.id as id), "snapshot"),
       "element",
     ),
     0,
