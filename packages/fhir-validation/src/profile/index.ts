@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  Loc,
-  descend,
-  pointer,
-  toJSONPointer,
-  typedPointer,
-} from "@iguhealth/fhir-pointer";
+import { Loc, descend, pointer, toJSONPointer } from "@iguhealth/fhir-pointer";
 import {
   OperationOutcomeIssue,
   canonical,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import {
+  AllDataTypes,
+  FHIR_VERSION,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { ElementLoc, ValidationCTX } from "../types.js";
@@ -22,8 +20,12 @@ export async function validateProfile(
   ctx: ValidationCTX,
   profile: Resource<FHIR_VERSION, "StructureDefinition">,
   root: object,
-  path: Loc<any, any, any> = typedPointer<any, any>(),
+  path_: Loc<any, any, any> | undefined,
 ): Promise<OperationOutcomeIssue[]> {
+  const path =
+    path_ ??
+    pointer(ctx.fhirVersion, profile?.type as AllDataTypes, "id" as id);
+
   if (profile.derivation !== "constraint") {
     throw new OperationError(
       outcomeFatal(
@@ -66,13 +68,17 @@ export default async function validateProfileCanonical(
   ctx: ValidationCTX,
   profileURL: canonical,
   root: object,
-  path: Loc<any, any, any> = typedPointer<any, any>(),
+  path_: Loc<any, any, any> | undefined,
 ): Promise<OperationOutcomeIssue[]> {
   const profile = await ctx.resolveCanonical(
     ctx.fhirVersion,
     "StructureDefinition",
     profileURL,
   );
+
+  const path =
+    path_ ??
+    pointer(ctx.fhirVersion, profile?.type as AllDataTypes, "id" as id);
 
   if (!profile) {
     throw new OperationError(

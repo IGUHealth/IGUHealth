@@ -6,7 +6,6 @@ import {
   get,
   pointer,
   toJSONPointer,
-  typedPointer,
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
@@ -19,6 +18,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
+  AllDataTypes,
   AllResourceTypes,
   FHIR_VERSION,
   R4,
@@ -413,8 +413,11 @@ export function validateSD(
   ctx: ValidationCTX,
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
   root: unknown,
-  path: Loc<any, any, any> = typedPointer<any, any>(),
+  path_: Loc<any, any, any> | undefined,
 ) {
+  const path =
+    path_ ?? pointer(ctx.fhirVersion, sd.type as AllResourceTypes, "id" as id);
+
   if (!isObject(root))
     return [
       issueError(
@@ -424,15 +427,16 @@ export function validateSD(
       ),
     ];
 
+  const resource = root as unknown as Resource<FHIR_VERSION, AllResourceTypes>;
+
   if (sd.kind === "resource") {
     // Verify the resourceType aligns.
-    if (get(descend(path, "resourceType"), root) !== sd.type) {
+    if (get(descend(path, "resourceType"), resource) !== sd.type) {
       return [
         issueError(
           "invalid",
           `ResourceType '${
-            (root as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
-              .resourceType
+            resource.resourceType
           }' does not match expected type '${sd.type}'`,
           [toJSONPointer(path)],
         ),
@@ -452,7 +456,7 @@ export function validateSD(
     ctx,
     sd,
     startingLoc as unknown as ElementLoc,
-    root,
+    resource,
     path,
     sd.type,
   );
@@ -462,8 +466,11 @@ export default async function validate(
   ctx: ValidationCTX,
   type: uri,
   root: unknown,
-  path: Loc<any, any, any> = typedPointer<any, any>(),
+  path_: Loc<any, any, any> | undefined,
 ): Promise<OperationOutcome["issue"]> {
+  const path =
+    path_ ?? pointer(ctx.fhirVersion, type as AllDataTypes, "id" as id);
+
   if (isPrimitiveType(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
