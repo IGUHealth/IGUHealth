@@ -38,9 +38,9 @@
     "lib/**"
   ],
   "exports": {
-    ".": "./lib/v1/index.js",
-    "./v1": "./lib/v1/index.js",
     "./v2": "./lib/v2/index.js",
+    "./v2/meta/r4": "./lib/v2/generated/r4.js",
+    "./v2/meta/r4b": "./lib/v2/generated/r4b.js",
     "./spoof": "./lib/v2/spoof.js",
     "./utilities": "./lib/utilities.js",
     "./interface": "./lib/interface.js"

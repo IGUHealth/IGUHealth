@@ -1,22 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Loc, ascend } from "@iguhealth/fhir-pointer";
-import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   ElementDefinition,
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { isPrimitiveType } from "@iguhealth/meta-value/utilities";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { ElementLoc, ValidationCTX } from "./types.js";
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
 }
 
 export function notNullable<T, Z extends T | undefined>(
@@ -149,7 +146,7 @@ export function getFoundFieldsForElement(
   } else {
     // Check for primitive extensions when non existent values
     const primitives =
-      element.type?.filter((type) => isPrimitiveType(type.code)) || [];
+      element.type?.filter((type) => isPrimitiveType(type.code)) ?? [];
     for (const primType of primitives) {
       if (`_${fieldName(element, primType.code)}` in value) {
         const primitiveElementField = {

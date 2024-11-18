@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { eleIndexToChildIndices } from "@iguhealth/codegen/traversal/structure-definition";
-import { Loc, descend, get, pointer } from "@iguhealth/fhir-pointer";
+import {
+  Loc,
+  descend,
+  get,
+  pointer,
+  toFHIRPath,
+} from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
   OperationOutcome,
@@ -17,15 +23,12 @@ import {
   OperationError,
   issueError,
   outcomeError,
-  outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  conformsToPattern,
-  conformsToValue,
-} from "../../elements/conformance.js";
+import { conformsToValue } from "../../elements/validators/fixedValue.js";
+import { conformsToPattern } from "../../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
-import { ascendElementLoc, fieldName } from "../../utilities.js";
+import { ascendElementLoc, fieldName, isTypeChoice } from "../../utilities.js";
 import { validateSingularProfileElement } from "../element.js";
 import {
   Discriminator,
@@ -213,7 +216,25 @@ async function isConformantToSlicesDiscriminator(
 
       return conformantLocs;
     }
-    case "type":
+    case "type": {
+      const expectedTypes =
+        sliceValueElementDefinition.type?.map((t) => t.code) ?? [];
+
+      const conformantLocs: Loc<any, any, any>[] = [];
+
+      for (const loc of locs) {
+        const value = await fp.evaluateWithMeta(toFHIRPath(loc), root);
+        const evaluation = await fp.evaluateWithMeta(discriminator.path, value);
+
+        const type = evaluation?.[0]?.meta()?.type;
+
+        if (type && expectedTypes.includes(type)) {
+          conformantLocs.push(loc);
+        }
+      }
+
+      return conformantLocs;
+    }
     case "profile": {
       throw new Error("Not supported");
     }
@@ -254,12 +275,12 @@ export async function validateSlice(
   }
 }
 
-export async function splitSlicing(
+async function splitSlicing(
   ctx: ValidationCTX,
   elements: ElementDefinition[],
   sliceDescriptor: SlicingDescriptor,
   root: object,
-  loc: Loc<any, any, any>,
+  locsToCheck: Loc<any, any, any>[],
 ): Promise<Record<number, Loc<any, any, any>[]>> {
   const sliceSplit = sliceDescriptor.slices.reduce(
     (acc: Record<number, Loc<any, any, any>[]>, sliceIndex) => {
@@ -268,22 +289,6 @@ export async function splitSlicing(
     },
     {},
   );
-
-  const values = get(loc, root);
-
-  if (values === undefined) {
-    return sliceSplit;
-  }
-  if (!Array.isArray(values)) {
-    throw new OperationError(
-      outcomeFatal("not-supported", "Cannot slice non array."),
-    );
-  }
-
-  let locsToCheck = values.map((_v: unknown, i: number) => descend(loc, i));
-
-  // A couple of notes we will determine per discriminator the element path that should be expected.
-  // Using that we will loop over the slices and determine if value conforms to slice element using discriminator.
 
   // [Serialized as a group] The entries must be adjacent for a given slice.
   const discriminatorElement = elements[sliceDescriptor.discriminator];
@@ -357,6 +362,34 @@ function validateSliceCardinality(
   return issues;
 }
 
+/**
+ * Returns the location for the value to be sliced. Note this could be an array or a singular value (in the case of slicing by type).
+ * @param discriminatorElement The element definition that is the discriminator. This defines what method is used for slicing.
+ * @param root The value of the root object
+ * @param loc Location in the root object of the slice.
+ * @returns Location of the value to be sliced against the root.
+ */
+export function getSliceLocs(
+  discriminatorElement: ElementDefinition,
+  root: object,
+  loc: Loc<any, any, any>,
+): Loc<any, any, any>[] {
+  if (isTypeChoice(discriminatorElement)) {
+    return (
+      discriminatorElement.type?.map((t) =>
+        descend(loc, fieldName(discriminatorElement, t.code)),
+      ) ?? []
+    );
+  }
+  const valueLoc = descend(loc, fieldName(discriminatorElement));
+  const value = get(valueLoc, root);
+  if (Array.isArray(value)) {
+    return value.map((_v, i) => descend(valueLoc, i));
+  } else {
+    return [valueLoc];
+  }
+}
+
 export async function validateSliceDescriptor(
   ctx: ValidationCTX,
   profile: Resource<FHIR_VERSION, "StructureDefinition">,
@@ -364,58 +397,66 @@ export async function validateSliceDescriptor(
   root: object,
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
-  const snapshot = profile.snapshot?.element ?? [];
-  const discriminatorElement = snapshot[sliceDescriptor.discriminator];
-  const sliceLoc = descend(loc, fieldName(discriminatorElement));
+  try {
+    const snapshot = profile.snapshot?.element ?? [];
+    const discriminatorElement = snapshot[sliceDescriptor.discriminator];
+    const sliceValueLocs = getSliceLocs(discriminatorElement, root, loc);
 
-  const slices = await splitSlicing(
-    ctx,
-    snapshot,
-    sliceDescriptor,
-    root,
-    sliceLoc,
-  );
-
-  let issues: OperationOutcome["issue"] = [];
-  const snapshotLoc = descend(
-    descend(pointer("StructureDefinition", profile.id as id), "snapshot"),
-    "element",
-  );
-
-  for (const slice of sliceDescriptor.slices) {
-    const sliceLoc = descend(snapshotLoc, slice) as unknown as ElementLoc;
-    const sliceElement = get(sliceLoc, profile);
-
-    if (!sliceElement) {
-      throw new OperationError(
-        outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
-      );
-    }
-
-    const type = sliceElement.type ?? [];
-    issues = issues.concat(
-      validateSliceCardinality(sliceElement, slices[slice]),
+    const slices = await splitSlicing(
+      ctx,
+      snapshot,
+      sliceDescriptor,
+      root,
+      sliceValueLocs,
     );
 
-    if (type.length > 1) {
-      throw new OperationError(
-        outcomeError("not-supported", "typechoices not supported for slicing."),
-      );
-    }
+    let issues: OperationOutcome["issue"] = [];
+    const snapshotLoc = descend(
+      descend(pointer("StructureDefinition", profile.id as id), "snapshot"),
+      "element",
+    );
 
-    for (const path of slices[slice]) {
+    for (const slice of sliceDescriptor.slices) {
+      const sliceLoc = descend(snapshotLoc, slice) as unknown as ElementLoc;
+      const sliceElement = get(sliceLoc, profile);
+
+      if (!sliceElement) {
+        throw new OperationError(
+          outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
+        );
+      }
+
+      const type = sliceElement.type ?? [];
       issues = issues.concat(
-        await validateSingularProfileElement(
-          ctx,
-          profile,
-          sliceLoc,
-          root,
-          path,
-          type[0].code,
-        ),
+        validateSliceCardinality(sliceElement, slices[slice]),
       );
-    }
-  }
 
-  return issues;
+      if (type.length > 1) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            "typechoices not supported for slicing.",
+          ),
+        );
+      }
+
+      for (const path of slices[slice]) {
+        issues = issues.concat(
+          await validateSingularProfileElement(
+            ctx,
+            profile,
+            sliceLoc,
+            root,
+            path,
+            type[0].code,
+          ),
+        );
+      }
+    }
+
+    return issues;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 }

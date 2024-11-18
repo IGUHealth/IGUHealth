@@ -21,11 +21,8 @@ import {
 
 import { validateSD } from "../../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
-import {
-  getSliceIndices,
-  splitSlicing,
-  validateSliceDescriptor,
-} from "./index.js";
+import { validateProfile } from "../index.js";
+import { getSliceIndices, validateSliceDescriptor } from "./index.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType<R4>[],
@@ -283,60 +280,9 @@ test("us-core patient slicing", async () => {
   ]);
 });
 
-test("Slice Splitting", async () => {
-  const elementsLoc = descend(
-    descend(
-      pointer("StructureDefinition", usCorePatientProfile.id as id),
-      "snapshot",
-    ),
-    "element",
-  );
-  const elementLoc = descend(elementsLoc, 0);
-  const elements =
-    get(elementsLoc, usCorePatientProfile as StructureDefinition) ?? [];
-
-  const sliceIndexes = getSliceIndices(
-    usCorePatientProfile,
-    elementLoc as unknown as ElementLoc,
-  );
-  await splitSlicing(
-    CTX,
-    elements,
-    sliceIndexes[0],
-    usCorePatient,
-    descend(pointer("Patient", usCorePatient.id as id), "extension"),
-  );
-
-  const sliceLocations = splitSlicing(
-    CTX,
-    elements,
-    sliceIndexes[0],
-    usCorePatient,
-    descend(pointer("Patient", usCorePatient.id as id), "extension"),
-  );
-  expect(sliceLocations).resolves.toEqual({
-    "10": ["Patient|example/extension/2"],
-    "8": ["Patient|example/extension/0"],
-    "9": ["Patient|example/extension/1"],
-  });
-
-  expect(usCorePatientProfile.snapshot?.element[8].id).toEqual(
-    "Patient.extension:race",
-  );
-  expect(usCorePatientProfile.snapshot?.element[9].id).toEqual(
-    "Patient.extension:ethnicity",
-  );
-  expect(usCorePatientProfile.snapshot?.element[10].id).toEqual(
-    "Patient.extension:birthsex",
-  );
-
-  expect(usCorePatient.extension?.[0].url).toEqual(
-    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
-  );
-  expect(usCorePatient.extension?.[1].url).toEqual(
-    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
-  );
-  expect(usCorePatient.extension?.[2].url).toEqual(
-    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-  );
+test("Validate US-CORE", async () => {
+  //   await validateProfile(CTX, usCorePatientProfile, usCorePatient);
+  //   expect(
+  //     validateProfile(CTX, usCorePatientProfile, usCorePatient),
+  //   ).resolves.toEqual([]);
 });

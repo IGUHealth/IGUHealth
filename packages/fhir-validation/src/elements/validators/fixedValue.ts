@@ -8,7 +8,12 @@ import {
 import * as fp from "@iguhealth/fhirpath";
 import { issueError } from "@iguhealth/operation-outcomes";
 
-import { conformsToValue } from "../conformance.js";
+export function conformsToValue(
+  expectedValue: unknown,
+  foundValue: unknown,
+): boolean {
+  return JSON.stringify(expectedValue) === JSON.stringify(foundValue);
+}
 
 export async function validateFixedValue(
   element: ElementDefinition,
