@@ -83,7 +83,7 @@ test("get function", () => {
 
 test("path meta", () => {
   const nestedLoc = descend(pointer("Patient", "123" as id), "name");
-  expect(pathMeta(nestedLoc)).toEqual({ resourceType: "Patient", id: "123" });
+  expect(pathMeta(nestedLoc)).toEqual({ type: "Patient", id: "123" });
 });
 
 test("fields", () => {

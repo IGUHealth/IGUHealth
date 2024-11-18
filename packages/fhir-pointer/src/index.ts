@@ -2,11 +2,11 @@ import jsonpointer from "jsonpointer";
 
 import { id } from "@iguhealth/fhir-types/r4/types";
 import {
-  AllResourceTypes,
+  AllDataTypes,
+  Data,
+  DataType,
   FHIR_VERSION,
   R4,
-  Resource,
-  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
 // Parent Loc
@@ -103,15 +103,15 @@ export function toFHIRPath<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
 
 export function pathMeta<
   Version extends FHIR_VERSION,
-  T extends Resource<Version, AllResourceTypes>,
+  T extends Data<Version, AllDataTypes>,
   R,
   P extends Parent<T>,
->(loc: Loc<T, R, P>): { resourceType: ResourceType<Version>; id: id } {
+>(loc: Loc<T, R, P>): { type: DataType<Version>; id: id } {
   const indexOfLastSlash = loc.indexOf("/");
-  const [resourceType, id] = loc
+  const [type, id] = loc
     .substring(0, indexOfLastSlash === -1 ? loc.length : indexOfLastSlash)
     .split("|");
-  return { resourceType: resourceType as ResourceType<Version>, id: id as id };
+  return { type: type as DataType<Version>, id: id as id };
 }
 
 export function get<T extends object, R, P extends Parent<T>>(
@@ -135,19 +135,19 @@ export function fields<T extends object, R, P extends Parent<T>>(
 
 export function root<
   Version extends FHIR_VERSION,
-  T extends Resource<Version, AllResourceTypes>,
+  T extends Data<Version, AllDataTypes>,
   R,
   P extends Parent<T>,
 >(loc: Loc<T, R, P>): Loc<T, T> {
-  const { resourceType, id } = pathMeta(loc);
-  return pointer(resourceType, id) as any as Loc<T, T>;
+  const { type, id } = pathMeta(loc);
+  return pointer(type, id) as any as Loc<T, T>;
 }
 
 function metaString<Version extends FHIR_VERSION>(
-  resourceType: ResourceType<Version>,
+  type: DataType<Version>,
   id: id,
 ) {
-  return `${resourceType}|${id}`;
+  return `${type}|${id}`;
 }
 
 /*
@@ -155,19 +155,16 @@ function metaString<Version extends FHIR_VERSION>(
  */
 export function pointer<
   Version extends FHIR_VERSION,
-  T extends ResourceType<Version>,
->(
-  resourceType: T,
-  resourceId: id,
-): Loc<Resource<Version, T>, Resource<Version, T>> {
+  T extends DataType<Version>,
+>(resourceType: T, resourceId: id): Loc<Data<Version, T>, Data<Version, T>> {
   return `${metaString(resourceType, resourceId)}` as Loc<
-    Resource<Version, T>,
-    Resource<Version, T>
+    Data<Version, T>,
+    Data<Version, T>
   >;
 }
 
 export function typedPointer<V, T>(): Loc<V, T, Parent<V>> {
-  return metaString("Unknown" as ResourceType<R4>, "unknown" as id) as Loc<
+  return metaString("Unknown" as DataType<R4>, "unknown" as id) as Loc<
     V,
     T,
     Parent<V>
