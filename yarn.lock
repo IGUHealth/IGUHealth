@@ -11173,6 +11173,7 @@ __metadata:
   dependencies:
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     jest: "npm:^29.7.0"
     jsonpointer: "npm:^5.0.1"

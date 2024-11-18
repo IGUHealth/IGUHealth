@@ -35,6 +35,7 @@
   ],
   "dependencies": {
     "@iguhealth/meta-value": "workspace:^",
+    "@iguhealth/operation-outcomes": "workspace:^",
     "jsonpointer": "^5.0.1"
   }
 }
