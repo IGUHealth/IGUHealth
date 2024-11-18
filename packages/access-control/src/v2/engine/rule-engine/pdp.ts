@@ -24,6 +24,7 @@ import {
 import pip from "./pip.js";
 import { PolicyContext, Result } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 const PERMISSION_LEVELS = {
   deny: <const>-1,
@@ -215,7 +216,7 @@ export async function evaluate<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   accessPolicy: AccessPolicyV2,
 ): Promise<OperationOutcome> {
-  const loc = pt.pointer("AccessPolicyV2", accessPolicy.id as id);
+  const loc = pt.pointer(R4, "AccessPolicyV2", accessPolicy.id as id);
   let result: (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS] =
     PERMISSION_LEVELS.deny;
   let context = policyContext;

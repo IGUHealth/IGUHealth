@@ -258,7 +258,7 @@ const usCorePatient: Patient = {
 test("us-core patient slicing", async () => {
   const elementsLoc = descend(
     descend(
-      pointer("StructureDefinition", usCorePatientProfile.id as id),
+      pointer(R4, "StructureDefinition", usCorePatientProfile.id as id),
       "snapshot",
     ),
     "element",

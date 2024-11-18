@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jsonpointer from "jsonpointer";
 
 import { id } from "@iguhealth/fhir-types/r4/types";
@@ -9,35 +10,12 @@ import {
   R4,
 } from "@iguhealth/fhir-types/versions";
 
-// Parent Loc
-declare const __parent: unique symbol;
-declare const __root: unique symbol;
-type _Loc<B, T> = { [__root]: (root: B) => T };
-type Parent<B> = Loc<B, unknown, any> | null;
+import { toJSONPointer } from "./conversions.js";
+import { Loc, NullGuard, Parent } from "./types.js";
+import { escapeField, unescapeField } from "./utilities.js";
 
-export type Loc<
-  B,
-  T,
-  P extends Loc<B, unknown, Parent<B>> | null = null,
-> = string & _Loc<B, T> & { [__parent]: P };
-
-/*
- ** Access field in potentially Nullable V
- ** If V is nullable then set the return type to potentially nullable as well.
- */
-export type NullGuard<V, Field extends keyof NonNullable<V>> =
-  V extends NonNullable<V>
-    ? NonNullable<V>[Field]
-    : NonNullable<V>[Field] | undefined;
-
-// See [https://datatracker.ietf.org/doc/html/rfc6901#section-3] for reference.
-function escapeField(field: string) {
-  return field.replace("~", "~0").replace("/", "~1");
-}
-
-function unescapeField(field: string) {
-  return field.replace("~1", "/").replace("~0", "~");
-}
+export { Loc, NullGuard } from "./types.js";
+export * from "./conversions.js";
 
 /*
  ** Descend Loc pointer with field.
@@ -77,41 +55,23 @@ export function ascend<T, R, P extends Parent<T>>(
   };
 }
 
-export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
-  const indexOfLastSlash = loc.indexOf("/");
-  if (indexOfLastSlash === -1) return "";
-  return loc.substring(indexOfLastSlash, loc.length);
-}
-
-export function toFHIRPath<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
-  const indexOfLastSlash = loc.indexOf("/");
-  if (indexOfLastSlash === -1) return "$this";
-  const pieces = loc.substring(indexOfLastSlash + 1).split("/");
-  let fp = "$this";
-  for (const piece of pieces) {
-    const unescapedField = unescapeField(piece);
-    const parsedNumber = parseInt(unescapedField);
-    if (isNaN(parsedNumber)) {
-      fp += `.${unescapedField}`;
-    } else {
-      fp += `[${parsedNumber}]`;
-    }
-  }
-
-  return fp;
-}
-
 export function pathMeta<
   Version extends FHIR_VERSION,
   T extends Data<Version, AllDataTypes>,
   R,
   P extends Parent<T>,
->(loc: Loc<T, R, P>): { type: DataType<Version>; id: id } {
+>(
+  loc: Loc<T, R, P>,
+): { version: FHIR_VERSION; type: DataType<Version>; id: id } {
   const indexOfLastSlash = loc.indexOf("/");
-  const [type, id] = loc
+  const [fhirVersion, type, id] = loc
     .substring(0, indexOfLastSlash === -1 ? loc.length : indexOfLastSlash)
     .split("|");
-  return { type: type as DataType<Version>, id: id as id };
+  return {
+    version: fhirVersion as FHIR_VERSION,
+    type: type as DataType<Version>,
+    id: id as id,
+  };
 }
 
 export function get<T extends object, R, P extends Parent<T>>(
@@ -139,15 +99,16 @@ export function root<
   R,
   P extends Parent<T>,
 >(loc: Loc<T, R, P>): Loc<T, T> {
-  const { type, id } = pathMeta(loc);
-  return pointer(type, id) as any as Loc<T, T>;
+  const { version, type, id } = pathMeta(loc);
+  return pointer(version, type, id) as any as Loc<T, T>;
 }
 
 function metaString<Version extends FHIR_VERSION>(
+  fhirVersion: FHIR_VERSION,
   type: DataType<Version>,
   id: id,
 ) {
-  return `${type}|${id}`;
+  return `${fhirVersion}|${type}|${id}`;
 }
 
 /*
@@ -156,15 +117,19 @@ function metaString<Version extends FHIR_VERSION>(
 export function pointer<
   Version extends FHIR_VERSION,
   T extends DataType<Version>,
->(resourceType: T, resourceId: id): Loc<Data<Version, T>, Data<Version, T>> {
-  return `${metaString(resourceType, resourceId)}` as Loc<
+>(
+  fhir_version: FHIR_VERSION,
+  resourceType: T,
+  resourceId: id,
+): Loc<Data<Version, T>, Data<Version, T>> {
+  return `${metaString(fhir_version, resourceType, resourceId)}` as Loc<
     Data<Version, T>,
     Data<Version, T>
   >;
 }
 
 export function typedPointer<V, T>(): Loc<V, T, Parent<V>> {
-  return metaString("Unknown" as DataType<R4>, "unknown" as id) as Loc<
+  return metaString(R4, "Unknown" as DataType<R4>, "unknown" as id) as Loc<
     V,
     T,
     Parent<V>

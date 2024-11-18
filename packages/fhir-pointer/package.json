@@ -34,6 +34,7 @@
     "src/**"
   ],
   "dependencies": {
+    "@iguhealth/meta-value": "workspace:^",
     "jsonpointer": "^5.0.1"
   }
 }

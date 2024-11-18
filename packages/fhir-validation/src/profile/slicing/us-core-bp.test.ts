@@ -103,7 +103,10 @@ const usCorePatientProfile: StructureDefinition = memDatabase[
 
 test("getSliceIndices", () => {
   const elementsLoc = descend(
-    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    descend(
+      pointer(R4, "StructureDefinition", bloodProfile.id as id),
+      "snapshot",
+    ),
     "element",
   );
   const elementLoc = descend(elementsLoc, 0);
@@ -220,7 +223,10 @@ const bloodPressureObservation: Observation = {
 
 test("Slice Validation", async () => {
   const elementsLoc = descend(
-    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    descend(
+      pointer(R4, "StructureDefinition", bloodProfile.id as id),
+      "snapshot",
+    ),
     "element",
   );
   const elementLoc = descend(elementsLoc, 0);
@@ -235,7 +241,7 @@ test("Slice Validation", async () => {
       bloodProfile,
       sliceIndexes[1],
       bloodPressureObservation,
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([]);
 
@@ -245,7 +251,7 @@ test("Slice Validation", async () => {
       bloodProfile,
       sliceIndexes[0],
       bloodPressureObservation,
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([]);
 
@@ -287,7 +293,7 @@ test("Slice Validation", async () => {
           },
         ],
       },
-      pointer("Observation", "asdf" as id),
+      pointer(R4, "Observation", "asdf" as id),
     ),
   ).resolves.toEqual([
     {
@@ -341,7 +347,7 @@ test("Slice Validation", async () => {
           },
         ],
       },
-      pointer("Observation", "asdf" as id),
+      pointer(R4, "Observation", "asdf" as id),
     ),
   ).resolves.toEqual([
     {
@@ -408,7 +414,10 @@ test("Pattern Check", async () => {
 
 test("Blood Pressure Category", async () => {
   const elementsLoc = descend(
-    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
+    descend(
+      pointer(R4, "StructureDefinition", bloodProfile.id as id),
+      "snapshot",
+    ),
     "element",
   );
 
@@ -438,7 +447,7 @@ test("Blood Pressure Category", async () => {
           },
         ],
       },
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([
     {
@@ -457,7 +466,7 @@ test("Blood Pressure Category", async () => {
         ...bloodProfile,
         category: [{}],
       },
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([
     {
@@ -487,7 +496,7 @@ test("Blood Pressure Category", async () => {
           },
         ],
       },
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([
     {
@@ -516,7 +525,7 @@ test("Blood Pressure Category", async () => {
           },
         ],
       },
-      pointer("Observation", bloodPressureObservation.id as id),
+      pointer(R4, "Observation", bloodPressureObservation.id as id),
     ),
   ).resolves.toEqual([]);
 });
