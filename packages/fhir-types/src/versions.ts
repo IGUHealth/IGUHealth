@@ -32,3 +32,26 @@ export type Resource<
       ? r4b.AResource<Type>
       : never
     : never;
+
+// [DATA TYPES]
+// ------------------------------------------------------------------------------------------------
+
+export type DataType<Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number]> =
+  Version extends R4 ? r4.DataType : Version extends R4B ? r4b.DataType : never;
+
+export type AllDataTypes = r4.DataType | r4b.DataType;
+
+export type Data<
+  Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
+  Type extends AllDataTypes,
+> = Version extends R4
+  ? Type extends r4.DataType
+    ? r4.AData<Type>
+    : never
+  : Version extends R4B
+    ? Type extends r4b.DataType
+      ? r4b.AData<Type>
+      : never
+    : never;
+
+// ------------------------------------------------------------------------------------------------
