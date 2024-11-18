@@ -4136,269 +4136,6 @@ export interface UsageContext {
   valueReference?: Reference;
 }
 
-export interface Quantity {
-  /** 
-   * Unique id for inter-element referencing
-   */
-  id?: id;
-  /** 
-   * Additional content defined by implementations
-   */
-  extension?: Array<Extension>;
-  /** 
-   * Numerical value (with implicit precision)
-   */
-  value?: decimal;
-  /** 
-   * Numerical value (with implicit precision)
-   */
-  _value?: Element
-  /** 
-   * < | <= | >= | > - how to understand the value
-   */
-  comparator?: code;
-  /** 
-   * < | <= | >= | > - how to understand the value
-   */
-  _comparator?: Element
-  /** 
-   * Unit representation
-   */
-  unit?: string;
-  /** 
-   * Unit representation
-   */
-  _unit?: Element
-  /** 
-   * System that defines coded unit form
-   */
-  system?: uri;
-  /** 
-   * System that defines coded unit form
-   */
-  _system?: Element
-  /** 
-   * Coded form of the unit
-   */
-  code?: code;
-  /** 
-   * Coded form of the unit
-   */
-  _code?: Element
-}
-
-export interface Quantity {
-  /** 
-   * Unique id for inter-element referencing
-   */
-  id?: id;
-  /** 
-   * Additional content defined by implementations
-   */
-  extension?: Array<Extension>;
-  /** 
-   * Numerical value (with implicit precision)
-   */
-  value?: decimal;
-  /** 
-   * Numerical value (with implicit precision)
-   */
-  _value?: Element
-  /** 
-   * < | <= | >= | > - how to understand the value
-   */
-  comparator?: code;
-  /** 
-   * < | <= | >= | > - how to understand the value
-   */
-  _comparator?: Element
-  /** 
-   * Unit representation
-   */
-  unit?: string;
-  /** 
-   * Unit representation
-   */
-  _unit?: Element
-  /** 
-   * System that defines coded unit form
-   */
-  system?: uri;
-  /** 
-   * System that defines coded unit form
-   */
-  _system?: Element
-  /** 
-   * Coded form of the unit
-   */
-  code?: code;
-  /** 
-   * Coded form of the unit
-   */
-  _code?: Element
-}
-export type ResourceMap = {
-  Account: Account;
-  ActivityDefinition: ActivityDefinition;
-  AdverseEvent: AdverseEvent;
-  AllergyIntolerance: AllergyIntolerance;
-  Appointment: Appointment;
-  AppointmentResponse: AppointmentResponse;
-  AuditEvent: AuditEvent;
-  Basic: Basic;
-  Binary: Binary;
-  BiologicallyDerivedProduct: BiologicallyDerivedProduct;
-  BodyStructure: BodyStructure;
-  Bundle: Bundle;
-  CapabilityStatement: CapabilityStatement;
-  CarePlan: CarePlan;
-  CareTeam: CareTeam;
-  CatalogEntry: CatalogEntry;
-  ChargeItem: ChargeItem;
-  ChargeItemDefinition: ChargeItemDefinition;
-  Claim: Claim;
-  ClaimResponse: ClaimResponse;
-  ClinicalImpression: ClinicalImpression;
-  CodeSystem: CodeSystem;
-  Communication: Communication;
-  CommunicationRequest: CommunicationRequest;
-  CompartmentDefinition: CompartmentDefinition;
-  Composition: Composition;
-  ConceptMap: ConceptMap;
-  Condition: Condition;
-  Consent: Consent;
-  Contract: Contract;
-  Coverage: Coverage;
-  CoverageEligibilityRequest: CoverageEligibilityRequest;
-  CoverageEligibilityResponse: CoverageEligibilityResponse;
-  DetectedIssue: DetectedIssue;
-  Device: Device;
-  DeviceDefinition: DeviceDefinition;
-  DeviceMetric: DeviceMetric;
-  DeviceRequest: DeviceRequest;
-  DeviceUseStatement: DeviceUseStatement;
-  DiagnosticReport: DiagnosticReport;
-  DocumentManifest: DocumentManifest;
-  DocumentReference: DocumentReference;
-  EffectEvidenceSynthesis: EffectEvidenceSynthesis;
-  Encounter: Encounter;
-  Endpoint: Endpoint;
-  EnrollmentRequest: EnrollmentRequest;
-  EnrollmentResponse: EnrollmentResponse;
-  EpisodeOfCare: EpisodeOfCare;
-  EventDefinition: EventDefinition;
-  Evidence: Evidence;
-  EvidenceVariable: EvidenceVariable;
-  ExampleScenario: ExampleScenario;
-  ExplanationOfBenefit: ExplanationOfBenefit;
-  FamilyMemberHistory: FamilyMemberHistory;
-  Flag: Flag;
-  Goal: Goal;
-  GraphDefinition: GraphDefinition;
-  Group: Group;
-  GuidanceResponse: GuidanceResponse;
-  HealthcareService: HealthcareService;
-  ImagingStudy: ImagingStudy;
-  Immunization: Immunization;
-  ImmunizationEvaluation: ImmunizationEvaluation;
-  ImmunizationRecommendation: ImmunizationRecommendation;
-  ImplementationGuide: ImplementationGuide;
-  InsurancePlan: InsurancePlan;
-  Invoice: Invoice;
-  Library: Library;
-  Linkage: Linkage;
-  List: List;
-  Location: Location;
-  Measure: Measure;
-  MeasureReport: MeasureReport;
-  Media: Media;
-  Medication: Medication;
-  MedicationAdministration: MedicationAdministration;
-  MedicationDispense: MedicationDispense;
-  MedicationKnowledge: MedicationKnowledge;
-  MedicationRequest: MedicationRequest;
-  MedicationStatement: MedicationStatement;
-  MedicinalProduct: MedicinalProduct;
-  MedicinalProductAuthorization: MedicinalProductAuthorization;
-  MedicinalProductContraindication: MedicinalProductContraindication;
-  MedicinalProductIndication: MedicinalProductIndication;
-  MedicinalProductIngredient: MedicinalProductIngredient;
-  MedicinalProductInteraction: MedicinalProductInteraction;
-  MedicinalProductManufactured: MedicinalProductManufactured;
-  MedicinalProductPackaged: MedicinalProductPackaged;
-  MedicinalProductPharmaceutical: MedicinalProductPharmaceutical;
-  MedicinalProductUndesirableEffect: MedicinalProductUndesirableEffect;
-  MessageDefinition: MessageDefinition;
-  MessageHeader: MessageHeader;
-  MolecularSequence: MolecularSequence;
-  NamingSystem: NamingSystem;
-  NutritionOrder: NutritionOrder;
-  Observation: Observation;
-  ObservationDefinition: ObservationDefinition;
-  OperationDefinition: OperationDefinition;
-  OperationOutcome: OperationOutcome;
-  Organization: Organization;
-  OrganizationAffiliation: OrganizationAffiliation;
-  Parameters: Parameters;
-  Patient: Patient;
-  PaymentNotice: PaymentNotice;
-  PaymentReconciliation: PaymentReconciliation;
-  Person: Person;
-  PlanDefinition: PlanDefinition;
-  Practitioner: Practitioner;
-  PractitionerRole: PractitionerRole;
-  Procedure: Procedure;
-  Provenance: Provenance;
-  Questionnaire: Questionnaire;
-  QuestionnaireResponse: QuestionnaireResponse;
-  RelatedPerson: RelatedPerson;
-  RequestGroup: RequestGroup;
-  ResearchDefinition: ResearchDefinition;
-  ResearchElementDefinition: ResearchElementDefinition;
-  ResearchStudy: ResearchStudy;
-  ResearchSubject: ResearchSubject;
-  RiskAssessment: RiskAssessment;
-  RiskEvidenceSynthesis: RiskEvidenceSynthesis;
-  Schedule: Schedule;
-  SearchParameter: SearchParameter;
-  ServiceRequest: ServiceRequest;
-  Slot: Slot;
-  Specimen: Specimen;
-  SpecimenDefinition: SpecimenDefinition;
-  StructureDefinition: StructureDefinition;
-  StructureMap: StructureMap;
-  Subscription: Subscription;
-  Substance: Substance;
-  SubstanceNucleicAcid: SubstanceNucleicAcid;
-  SubstancePolymer: SubstancePolymer;
-  SubstanceProtein: SubstanceProtein;
-  SubstanceReferenceInformation: SubstanceReferenceInformation;
-  SubstanceSourceMaterial: SubstanceSourceMaterial;
-  SubstanceSpecification: SubstanceSpecification;
-  SupplyDelivery: SupplyDelivery;
-  SupplyRequest: SupplyRequest;
-  Task: Task;
-  TerminologyCapabilities: TerminologyCapabilities;
-  TestReport: TestReport;
-  TestScript: TestScript;
-  ValueSet: ValueSet;
-  VerificationResult: VerificationResult;
-  VisionPrescription: VisionPrescription;
-  AccessPolicyV2: AccessPolicyV2;
-  AccessPolicy: AccessPolicy;
-  ClientApplication: ClientApplication;
-  IdentityProvider: IdentityProvider;
-  Membership: Membership;
-  MessageBroker: MessageBroker;
-  MessageTopic: MessageTopic;
-}
-
-export type ResourceType = keyof ResourceMap
-export type AResource<T extends keyof ResourceMap> = ResourceMap[T];
-export type ConcreteType = ResourceMap[keyof ResourceMap]
-export type Resource = ConcreteType
-export type DomainResource = ConcreteType
-
 export interface AccountCoverage {
   /** 
    * Unique id for inter-element referencing
@@ -45488,3 +45225,221 @@ resourceType: "MessageTopic"
    */
   broker: Reference;
 }
+export type ResourceMap = {
+  Account: Account;
+  ActivityDefinition: ActivityDefinition;
+  AdverseEvent: AdverseEvent;
+  AllergyIntolerance: AllergyIntolerance;
+  Appointment: Appointment;
+  AppointmentResponse: AppointmentResponse;
+  AuditEvent: AuditEvent;
+  Basic: Basic;
+  Binary: Binary;
+  BiologicallyDerivedProduct: BiologicallyDerivedProduct;
+  BodyStructure: BodyStructure;
+  Bundle: Bundle;
+  CapabilityStatement: CapabilityStatement;
+  CarePlan: CarePlan;
+  CareTeam: CareTeam;
+  CatalogEntry: CatalogEntry;
+  ChargeItem: ChargeItem;
+  ChargeItemDefinition: ChargeItemDefinition;
+  Claim: Claim;
+  ClaimResponse: ClaimResponse;
+  ClinicalImpression: ClinicalImpression;
+  CodeSystem: CodeSystem;
+  Communication: Communication;
+  CommunicationRequest: CommunicationRequest;
+  CompartmentDefinition: CompartmentDefinition;
+  Composition: Composition;
+  ConceptMap: ConceptMap;
+  Condition: Condition;
+  Consent: Consent;
+  Contract: Contract;
+  Coverage: Coverage;
+  CoverageEligibilityRequest: CoverageEligibilityRequest;
+  CoverageEligibilityResponse: CoverageEligibilityResponse;
+  DetectedIssue: DetectedIssue;
+  Device: Device;
+  DeviceDefinition: DeviceDefinition;
+  DeviceMetric: DeviceMetric;
+  DeviceRequest: DeviceRequest;
+  DeviceUseStatement: DeviceUseStatement;
+  DiagnosticReport: DiagnosticReport;
+  DocumentManifest: DocumentManifest;
+  DocumentReference: DocumentReference;
+  EffectEvidenceSynthesis: EffectEvidenceSynthesis;
+  Encounter: Encounter;
+  Endpoint: Endpoint;
+  EnrollmentRequest: EnrollmentRequest;
+  EnrollmentResponse: EnrollmentResponse;
+  EpisodeOfCare: EpisodeOfCare;
+  EventDefinition: EventDefinition;
+  Evidence: Evidence;
+  EvidenceVariable: EvidenceVariable;
+  ExampleScenario: ExampleScenario;
+  ExplanationOfBenefit: ExplanationOfBenefit;
+  FamilyMemberHistory: FamilyMemberHistory;
+  Flag: Flag;
+  Goal: Goal;
+  GraphDefinition: GraphDefinition;
+  Group: Group;
+  GuidanceResponse: GuidanceResponse;
+  HealthcareService: HealthcareService;
+  ImagingStudy: ImagingStudy;
+  Immunization: Immunization;
+  ImmunizationEvaluation: ImmunizationEvaluation;
+  ImmunizationRecommendation: ImmunizationRecommendation;
+  ImplementationGuide: ImplementationGuide;
+  InsurancePlan: InsurancePlan;
+  Invoice: Invoice;
+  Library: Library;
+  Linkage: Linkage;
+  List: List;
+  Location: Location;
+  Measure: Measure;
+  MeasureReport: MeasureReport;
+  Media: Media;
+  Medication: Medication;
+  MedicationAdministration: MedicationAdministration;
+  MedicationDispense: MedicationDispense;
+  MedicationKnowledge: MedicationKnowledge;
+  MedicationRequest: MedicationRequest;
+  MedicationStatement: MedicationStatement;
+  MedicinalProduct: MedicinalProduct;
+  MedicinalProductAuthorization: MedicinalProductAuthorization;
+  MedicinalProductContraindication: MedicinalProductContraindication;
+  MedicinalProductIndication: MedicinalProductIndication;
+  MedicinalProductIngredient: MedicinalProductIngredient;
+  MedicinalProductInteraction: MedicinalProductInteraction;
+  MedicinalProductManufactured: MedicinalProductManufactured;
+  MedicinalProductPackaged: MedicinalProductPackaged;
+  MedicinalProductPharmaceutical: MedicinalProductPharmaceutical;
+  MedicinalProductUndesirableEffect: MedicinalProductUndesirableEffect;
+  MessageDefinition: MessageDefinition;
+  MessageHeader: MessageHeader;
+  MolecularSequence: MolecularSequence;
+  NamingSystem: NamingSystem;
+  NutritionOrder: NutritionOrder;
+  Observation: Observation;
+  ObservationDefinition: ObservationDefinition;
+  OperationDefinition: OperationDefinition;
+  OperationOutcome: OperationOutcome;
+  Organization: Organization;
+  OrganizationAffiliation: OrganizationAffiliation;
+  Parameters: Parameters;
+  Patient: Patient;
+  PaymentNotice: PaymentNotice;
+  PaymentReconciliation: PaymentReconciliation;
+  Person: Person;
+  PlanDefinition: PlanDefinition;
+  Practitioner: Practitioner;
+  PractitionerRole: PractitionerRole;
+  Procedure: Procedure;
+  Provenance: Provenance;
+  Questionnaire: Questionnaire;
+  QuestionnaireResponse: QuestionnaireResponse;
+  RelatedPerson: RelatedPerson;
+  RequestGroup: RequestGroup;
+  ResearchDefinition: ResearchDefinition;
+  ResearchElementDefinition: ResearchElementDefinition;
+  ResearchStudy: ResearchStudy;
+  ResearchSubject: ResearchSubject;
+  RiskAssessment: RiskAssessment;
+  RiskEvidenceSynthesis: RiskEvidenceSynthesis;
+  Schedule: Schedule;
+  SearchParameter: SearchParameter;
+  ServiceRequest: ServiceRequest;
+  Slot: Slot;
+  Specimen: Specimen;
+  SpecimenDefinition: SpecimenDefinition;
+  StructureDefinition: StructureDefinition;
+  StructureMap: StructureMap;
+  Subscription: Subscription;
+  Substance: Substance;
+  SubstanceNucleicAcid: SubstanceNucleicAcid;
+  SubstancePolymer: SubstancePolymer;
+  SubstanceProtein: SubstanceProtein;
+  SubstanceReferenceInformation: SubstanceReferenceInformation;
+  SubstanceSourceMaterial: SubstanceSourceMaterial;
+  SubstanceSpecification: SubstanceSpecification;
+  SupplyDelivery: SupplyDelivery;
+  SupplyRequest: SupplyRequest;
+  Task: Task;
+  TerminologyCapabilities: TerminologyCapabilities;
+  TestReport: TestReport;
+  TestScript: TestScript;
+  ValueSet: ValueSet;
+  VerificationResult: VerificationResult;
+  VisionPrescription: VisionPrescription;
+  AccessPolicyV2: AccessPolicyV2;
+  AccessPolicy: AccessPolicy;
+  ClientApplication: ClientApplication;
+  IdentityProvider: IdentityProvider;
+  Membership: Membership;
+  MessageBroker: MessageBroker;
+  MessageTopic: MessageTopic;
+}
+
+
+export type ResourceType = keyof ResourceMap
+
+export type AResource<T extends keyof ResourceMap> = ResourceMap[T];
+
+export type ConcreteType = ResourceMap[keyof ResourceMap]
+
+export type Resource = ConcreteType
+export type DomainResource = ConcreteType
+
+type ComplexMap = {
+  Element: Element;
+  BackboneElement: BackboneElement;
+  Address: Address;
+  Age: Age;
+  Annotation: Annotation;
+  Attachment: Attachment;
+  CodeableConcept: CodeableConcept;
+  Coding: Coding;
+  ContactDetail: ContactDetail;
+  ContactPoint: ContactPoint;
+  Contributor: Contributor;
+  Count: Count;
+  DataRequirement: DataRequirement;
+  Distance: Distance;
+  Dosage: Dosage;
+  Duration: Duration;
+  ElementDefinition: ElementDefinition;
+  Expression: Expression;
+  Extension: Extension;
+  HumanName: HumanName;
+  Identifier: Identifier;
+  MarketingStatus: MarketingStatus;
+  Meta: Meta;
+  Money: Money;
+  Narrative: Narrative;
+  ParameterDefinition: ParameterDefinition;
+  Period: Period;
+  Population: Population;
+  ProdCharacteristic: ProdCharacteristic;
+  ProductShelfLife: ProductShelfLife;
+  Quantity: Quantity;
+  Range: Range;
+  Ratio: Ratio;
+  Reference: Reference;
+  RelatedArtifact: RelatedArtifact;
+  SampledData: SampledData;
+  Signature: Signature;
+  SubstanceAmount: SubstanceAmount;
+  Timing: Timing;
+  TriggerDefinition: TriggerDefinition;
+  UsageContext: UsageContext;
+}
+
+
+type ComplexTypes = keyof ComplexMap
+
+type DataMap = ComplexMap & ResourceMap
+
+export type DataType = keyof DataMap
+
+export type AData<T extends DataType> = DataMap[T];

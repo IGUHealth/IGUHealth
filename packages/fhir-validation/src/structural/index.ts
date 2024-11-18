@@ -23,7 +23,7 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { isObject } from "@iguhealth/meta-value/utilities";
+import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
@@ -38,7 +38,6 @@ import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   ascendElementLoc,
   getFoundFieldsForElement,
-  isPrimitiveType,
   isResourceType,
   notNullable,
   resolveTypeToStructureDefinition,

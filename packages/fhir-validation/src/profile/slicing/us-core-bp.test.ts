@@ -23,7 +23,7 @@ import { validateSD } from "../../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
 import {
   getSliceIndices,
-  splitSlicing,
+  getSliceLocs,
   validateSliceDescriptor,
 } from "./index.js";
 
@@ -217,59 +217,6 @@ const bloodPressureObservation: Observation = {
     },
   ],
 } as Observation;
-
-test("Slice Splitting", async () => {
-  const elementsLoc = descend(
-    descend(pointer("StructureDefinition", bloodProfile.id as id), "snapshot"),
-    "element",
-  );
-  const elementLoc = descend(elementsLoc, 0);
-  const elements = get(elementsLoc, bloodProfile as StructureDefinition) ?? [];
-
-  const sliceIndexes = getSliceIndices(
-    bloodProfile,
-    elementLoc as unknown as ElementLoc,
-  );
-
-  expect(
-    splitSlicing(
-      CTX,
-      elements,
-      sliceIndexes[0],
-      bloodPressureObservation,
-      descend(
-        pointer("Observation", bloodPressureObservation.id as id),
-        "category",
-      ),
-    ),
-  ).resolves.toEqual({
-    14: ["Observation|blood-pressure-observation/category/0"],
-  });
-
-  expect(
-    splitSlicing(
-      CTX,
-      elements,
-      sliceIndexes[1],
-      bloodPressureObservation,
-      descend(
-        pointer("Observation", bloodPressureObservation.id as id),
-        "component",
-      ),
-    ),
-  ).resolves.toEqual({
-    62: ["Observation|blood-pressure-observation/component/0"],
-    78: ["Observation|blood-pressure-observation/component/1"],
-  });
-
-  expect(
-    bloodPressureObservation?.component?.[0]?.code.coding?.[0]?.code,
-  ).toEqual("8480-6");
-  expect(
-    bloodPressureObservation?.component?.[1]?.code.coding?.[0]?.code,
-  ).toEqual("8462-4");
-  expect(bloodProfile?.snapshot?.element[62]?.sliceName).toEqual("systolic");
-});
 
 test("Slice Validation", async () => {
   const elementsLoc = descend(

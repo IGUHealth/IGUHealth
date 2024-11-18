@@ -41,5 +41,11 @@ export function convertPathToElementPointer(
     );
   }
 
-  return `${removeTypeOnPath(discriminatorElement.path)}.${discriminator.path.replace("$this", "")}`;
+  const parentPath = removeTypeOnPath(discriminatorElement.path);
+  const path = discriminator.path.replace("$this", "");
+
+  if (path === "") {
+    return parentPath;
+  }
+  return `${parentPath}.${path}`;
 }

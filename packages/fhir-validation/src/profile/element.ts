@@ -20,6 +20,7 @@ import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import { ascendElementLoc, getFoundFieldsForElement } from "../utilities.js";
+import validateProfileCanonical from "./index.js";
 import { getSliceIndices, validateSliceDescriptor } from "./slicing/index.js";
 
 /**
@@ -110,6 +111,23 @@ export async function validateSingularProfileElement(
     elements,
     eleIndexToChildIndices(elements, elementIndex as number),
   );
+
+  const profileUrlsToValidate =
+    element.type?.find((t) => t.code === type)?.profile ?? [];
+
+  for (let i = 0; i < profileUrlsToValidate.length; i++) {
+    const profileIssues = await validateProfileCanonical(
+      ctx,
+      profileUrlsToValidate[i],
+      root,
+      path,
+    );
+    // Only need one profile to be conformant so continue if invalid and break if valid.
+    if (profileIssues.length === 0) break;
+    else if (i === profileUrlsToValidate.length - 1) {
+      return profileIssues;
+    }
+  }
 
   // Structural Validation should have already checked the leaf nodes.
   if (children.length === 0) {

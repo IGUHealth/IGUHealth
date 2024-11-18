@@ -288,7 +288,7 @@ ${children.join("\n")}
 
 function resourceOrComplexFhirToTypescript(
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
-): string | void {
+): string | undefined {
   let typescriptTypes = "";
   traversalBottomUp(sd, (element, children: string[]): string[] => {
     if (children.length === 0) {
@@ -313,11 +313,16 @@ function getNonAbstractResourceTypes(
 }
 
 // Handle DomainResource and Resource by union joining existing generated types.
-function abstractResourceTypes(
-  resourcesSds: Resource<FHIR_VERSION, "StructureDefinition">[],
-) {
-  const abstractResourceTypes = resourcesSds.filter((sd) => sd.abstract);
-  const nonAbstractResourceTypes = resourcesSds.filter((sd) => !sd.abstract);
+function generateAbstracts({
+  resourceSDs,
+  complexSDs,
+}: {
+  resourceSDs: Resource<FHIR_VERSION, "StructureDefinition">[];
+  complexSDs: Resource<FHIR_VERSION, "StructureDefinition">[];
+}) {
+  // Resources
+  const abstractResourceTypes = resourceSDs.filter((sd) => sd.abstract);
+  const nonAbstractResourceTypes = resourceSDs.filter((sd) => !sd.abstract);
   const ResourceMap = `export type ResourceMap = {\n${nonAbstractResourceTypes
     .map((resource) => {
       return `  ${resource.id}: ${resource.id};`;
@@ -327,15 +332,34 @@ function abstractResourceTypes(
   const ResourceType = `export type ResourceType = keyof ResourceMap`;
   const AResource = `export type AResource<T extends keyof ResourceMap> = ResourceMap[T];`;
   const ConcreteType = `export type ConcreteType = ResourceMap[keyof ResourceMap]`;
-  if (abstractResourceTypes.length > 0) {
-    return `${ResourceMap}\n${ResourceType}\n${AResource}\n${ConcreteType}\n${abstractResourceTypes
-      .map(
-        (abstractResource) =>
-          `export type ${abstractResource.id} = ConcreteType`,
-      )
-      .join("\n")}`;
-  }
-  return;
+  const abstractResourceTypesTypescript = abstractResourceTypes
+    .map(
+      (abstractResource) => `export type ${abstractResource.id} = ConcreteType`,
+    )
+    .join("\n");
+
+  // Complex
+  const ComplexMap = `type ComplexMap = {\n${complexSDs
+    .map((complex) => {
+      return `  ${complex.id}: ${complex.id};`;
+    })
+    .join("\n")}\n}\n`;
+
+  const ComplexTypes = `type ComplexTypes = keyof ComplexMap`;
+  const DataMap = `type DataMap = ComplexMap & ResourceMap`;
+  const DataType = `export type DataType = keyof DataMap`;
+  const AData = `export type AData<T extends DataType> = DataMap[T];`;
+
+  return `${ResourceMap}\n
+${ResourceType}\n
+${AResource}\n
+${ConcreteType}\n
+${abstractResourceTypesTypescript}\n
+${ComplexMap}\n
+${ComplexTypes}\n
+${DataMap}\n
+${DataType}\n
+${AData}`;
 }
 
 export function generateTypes<Version extends FHIR_VERSION>(
@@ -344,30 +368,32 @@ export function generateTypes<Version extends FHIR_VERSION>(
     Array<Resource<Version, "StructureDefinition">>
   >,
 ): string {
-  const primitiveTypes = structureDefinitions.filter(
+  const primitiveSDs = structureDefinitions.filter(
     (sd) => sd.kind === "primitive-type",
   );
-  const complexTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "complex-type",
-  );
-  const resourceTypes = structureDefinitions.filter(
+
+  const complexSDs = structureDefinitions
+    .filter((sd) => sd.kind === "complex-type")
+    .filter((type) => type)
+    .filter((sd) => sd.derivation !== "constraint");
+
+  const resourceSDs = structureDefinitions.filter(
     (sd) => sd.kind === "resource",
   );
 
-  const typescriptTypes: string = primitiveTypes
+  const typescriptTypes: string = primitiveSDs
     .map(primitiveToTypescriptType)
     .filter((type) => type)
+    // Generate Complex types
+    .concat(complexSDs.map(resourceOrComplexFhirToTypescript))
+    // Generate Resources
     .concat(
-      complexTypes
+      getNonAbstractResourceTypes(resourceSDs)
         .map(resourceOrComplexFhirToTypescript)
         .filter((type) => type),
     )
-    .concat(abstractResourceTypes(resourceTypes))
-    .concat(
-      getNonAbstractResourceTypes(resourceTypes)
-        .map(resourceOrComplexFhirToTypescript)
-        .filter((type) => type),
-    )
+    // Generate Maps
+    .concat(generateAbstracts({ resourceSDs, complexSDs }))
     .join("\n");
   return typescriptTypes;
 }
