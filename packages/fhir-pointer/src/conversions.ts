@@ -30,9 +30,10 @@ function resolveFieldToTypeChoiceName(
   meta: ElementNode,
   field: string,
 ): string | undefined {
-  const keysToCheck = Object.keys(meta.properties ?? {}).filter((key) => {
-    field.startsWith(key);
-  });
+  const keysToCheck = Object.keys(meta.properties ?? {}).filter((key) =>
+    field.startsWith(key),
+  );
+
   for (const key of keysToCheck) {
     const information = getMeta(version, type as uri, meta, key);
     if (information._type_ === "typechoice") {
@@ -92,7 +93,14 @@ export function toFHIRPath<
         field = typeChoiceField;
       }
 
-      const nextMeta = getResolvedMeta(version, base, meta, {}, field);
+      const nextMeta = getResolvedMeta(
+        version,
+        base,
+        meta,
+        // Hack to inject the typechoice field in.
+        { [unescapedField]: {} },
+        field,
+      );
       if (!nextMeta) {
         throw new OperationError(
           outcomeFatal("invalid", "Cannot convert path to FHIRPath", [
