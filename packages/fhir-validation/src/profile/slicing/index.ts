@@ -4,8 +4,10 @@ import {
   Loc,
   descend,
   get,
+  pathMeta,
   pointer,
   toFHIRPath,
+  toJSONPointer,
 } from "@iguhealth/fhir-pointer";
 import {
   ElementDefinition,
@@ -223,8 +225,18 @@ async function isConformantToSlicesDiscriminator(
       const conformantLocs: Loc<any, any, any>[] = [];
 
       for (const loc of locs) {
-        const value = await fp.evaluateWithMeta(toFHIRPath(loc), root);
-        const evaluation = await fp.evaluateWithMeta(discriminator.path, value);
+        const meta = pathMeta(loc);
+        const value = await fp.evaluateWithMeta(toFHIRPath(loc), root, {
+          fhirVersion: meta?.version,
+          type: meta?.type as uri,
+        });
+
+        // Map over to use the metavaluesingular.
+        const evaluation = (
+          await Promise.all(
+            value.map((v) => fp.evaluateWithMeta(discriminator.path, v)),
+          )
+        ).flat();
 
         const type = evaluation?.[0]?.meta()?.type;
 
@@ -334,6 +346,7 @@ async function splitSlicing(
 }
 
 function validateSliceCardinality(
+  parentLoc: Loc<any, any, any>,
   sliceElement: ElementDefinition,
   paths: Loc<any, any, any>[],
 ): OperationOutcomeIssue[] {
@@ -343,6 +356,7 @@ function validateSliceCardinality(
       issueError(
         "structure",
         `Slice '${sliceElement.sliceName}' does not have the minimum number of values.`,
+        [toJSONPointer(parentLoc)],
       ),
     );
   }
@@ -354,6 +368,7 @@ function validateSliceCardinality(
         issueError(
           "structure",
           `Slice '${sliceElement.sliceName}' has more than the maximum number of values.`,
+          [toJSONPointer(parentLoc)],
         ),
       );
     }
@@ -397,69 +412,61 @@ export async function validateSliceDescriptor(
   root: object,
   loc: Loc<any, any, any>,
 ): Promise<OperationOutcome["issue"]> {
-  try {
-    const snapshot = profile.snapshot?.element ?? [];
-    const discriminatorElement = snapshot[sliceDescriptor.discriminator];
-    const sliceValueLocs = getSliceLocs(discriminatorElement, root, loc);
+  const snapshot = profile.snapshot?.element ?? [];
+  const discriminatorElement = snapshot[sliceDescriptor.discriminator];
+  const sliceValueLocs = getSliceLocs(discriminatorElement, root, loc);
 
-    const slices = await splitSlicing(
-      ctx,
-      snapshot,
-      sliceDescriptor,
-      root,
-      sliceValueLocs,
-    );
+  const slices = await splitSlicing(
+    ctx,
+    snapshot,
+    sliceDescriptor,
+    root,
+    sliceValueLocs,
+  );
 
-    let issues: OperationOutcome["issue"] = [];
-    const snapshotLoc = descend(
-      descend(
-        pointer(ctx.fhirVersion, "StructureDefinition", profile.id as id),
-        "snapshot",
-      ),
-      "element",
-    );
+  let issues: OperationOutcome["issue"] = [];
+  const snapshotLoc = descend(
+    descend(
+      pointer(ctx.fhirVersion, "StructureDefinition", profile.id as id),
+      "snapshot",
+    ),
+    "element",
+  );
 
-    for (const slice of sliceDescriptor.slices) {
-      const sliceLoc = descend(snapshotLoc, slice) as unknown as ElementLoc;
-      const sliceElement = get(sliceLoc, profile);
+  for (const slice of sliceDescriptor.slices) {
+    const sliceLoc = descend(snapshotLoc, slice) as unknown as ElementLoc;
+    const sliceElement = get(sliceLoc, profile);
 
-      if (!sliceElement) {
-        throw new OperationError(
-          outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
-        );
-      }
-
-      const type = sliceElement.type ?? [];
-      issues = issues.concat(
-        validateSliceCardinality(sliceElement, slices[slice]),
+    if (!sliceElement) {
+      throw new OperationError(
+        outcomeError("not-found", `Slice element not found at '${sliceLoc}'`),
       );
-
-      if (type.length > 1) {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            "typechoices not supported for slicing.",
-          ),
-        );
-      }
-
-      for (const path of slices[slice]) {
-        issues = issues.concat(
-          await validateSingularProfileElement(
-            ctx,
-            profile,
-            sliceLoc,
-            root,
-            path,
-            type[0].code,
-          ),
-        );
-      }
     }
 
-    return issues;
-  } catch (e) {
-    console.log(e);
-    throw e;
+    const type = sliceElement.type ?? [];
+    issues = issues.concat(
+      validateSliceCardinality(loc, sliceElement, slices[slice]),
+    );
+
+    if (type.length > 1) {
+      throw new OperationError(
+        outcomeError("not-supported", "typechoices not supported for slicing."),
+      );
+    }
+
+    for (const path of slices[slice]) {
+      issues = issues.concat(
+        await validateSingularProfileElement(
+          ctx,
+          profile,
+          sliceLoc,
+          root,
+          path,
+          type[0].code,
+        ),
+      );
+    }
   }
+
+  return issues;
 }
