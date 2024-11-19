@@ -354,7 +354,7 @@ test("Slice Validation", async () => {
       code: "structure",
       diagnostics:
         "Slice 'diastolic' does not have the minimum number of values.",
-      expression: undefined,
+      expression: [""],
       severity: "error",
     },
   ]);
@@ -454,6 +454,7 @@ test("Blood Pressure Category", async () => {
       code: "structure",
       diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
       severity: "error",
+      expression: [""],
     },
   ]);
 
@@ -473,6 +474,7 @@ test("Blood Pressure Category", async () => {
       code: "structure",
       diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
       severity: "error",
+      expression: [""],
     },
   ]);
 
@@ -503,6 +505,7 @@ test("Blood Pressure Category", async () => {
       code: "structure",
       diagnostics: "Slice 'VSCat' does not have the minimum number of values.",
       severity: "error",
+      expression: [""],
     },
   ]);
 
