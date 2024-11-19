@@ -1,7 +1,3 @@
-import {
-  ElementNode,
-  TypeChoiceNode,
-} from "@iguhealth/codegen/generate/meta-data";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bsets from "@iguhealth/fhir-types/r4b/sets";
@@ -13,7 +9,13 @@ import {
   Location,
   TypeInfo,
 } from "../interface.js";
-import { getMeta, getStartingMeta, resolveTypeNode } from "./meta.js";
+import {
+  ElementNode,
+  TypeChoiceNode,
+  getMeta,
+  getStartingMeta,
+  resolveTypeNode,
+} from "./meta.js";
 
 function descendMeta(
   fhirVersion: FHIR_VERSION,

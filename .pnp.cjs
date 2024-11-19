@@ -18795,6 +18795,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
+          ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
           ["jsonpointer", "npm:5.0.1"],\

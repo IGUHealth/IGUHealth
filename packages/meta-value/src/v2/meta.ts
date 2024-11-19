@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
+import type {
   ElementNode,
   MetaNode,
   MetaV2Compiled,
   TypeChoiceNode,
   TypeNode,
 } from "@iguhealth/codegen/generate/meta-data";
-import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import {
@@ -19,6 +19,8 @@ import _r4bMeta from "./generated/r4b.js";
 
 const R4_META: MetaV2Compiled = _r4Meta as unknown as MetaV2Compiled;
 const R4B_META: MetaV2Compiled = _r4bMeta as unknown as MetaV2Compiled;
+
+export { MetaNode, ElementNode, TypeNode, TypeChoiceNode };
 
 function getGlobalMeta(fhirVersion: FHIR_VERSION): MetaV2Compiled {
   switch (fhirVersion) {

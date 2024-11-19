@@ -281,8 +281,8 @@ test("us-core patient slicing", async () => {
 });
 
 test("Validate US-CORE", async () => {
-  //   await validateProfile(CTX, usCorePatientProfile, usCorePatient);
-  //   expect(
-  //     validateProfile(CTX, usCorePatientProfile, usCorePatient),
-  //   ).resolves.toEqual([]);
+  // await validateProfile(CTX, usCorePatientProfile, usCorePatient);
+  // expect(
+  //   validateProfile(CTX, usCorePatientProfile, usCorePatient),
+  // ).resolves.toEqual([]);
 });

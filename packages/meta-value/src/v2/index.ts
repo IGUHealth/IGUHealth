@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ElementNode } from "@iguhealth/codegen/generate/meta-data";
+
 import {
   Element,
   Resource as R4Resource,
@@ -25,7 +25,7 @@ import {
   isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
-import { getResolvedMeta, getStartingMeta } from "./meta.js";
+import { ElementNode, getResolvedMeta, getStartingMeta } from "./meta.js";
 import { SpoofMetaValueV2 } from "./spoof.js";
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
