@@ -175,14 +175,14 @@ test("Test BP profile", async () => {
       code: "structure",
       diagnostics:
         "Slice 'systolic' does not have the minimum number of values.",
-      expression: undefined,
+      expression: [""],
       severity: "error",
     },
     {
       code: "structure",
       diagnostics:
         "Slice 'diastolic' does not have the minimum number of values.",
-      expression: undefined,
+      expression: [""],
       severity: "error",
     },
   ]);
@@ -235,7 +235,7 @@ test("Test BP profile", async () => {
       code: "structure",
       diagnostics:
         "Slice 'systolic' does not have the minimum number of values.",
-      expression: undefined,
+      expression: [""],
     },
   ]);
 });
