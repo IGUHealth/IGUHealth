@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
+import type {
   ElementNode,
   MetaNode,
   MetaV2Compiled,
   TypeChoiceNode,
   TypeNode,
 } from "@iguhealth/codegen/generate/meta-data";
-import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import {
