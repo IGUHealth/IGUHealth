@@ -6,11 +6,9 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import {
   ElementNode,
-  MetaNode,
   getMeta,
   getResolvedMeta,
   getStartingMeta,
-  resolveTypeNode,
 } from "@iguhealth/meta-value/meta";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
