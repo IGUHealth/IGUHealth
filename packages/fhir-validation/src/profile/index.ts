@@ -8,6 +8,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import {
   AllDataTypes,
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
@@ -64,7 +65,7 @@ export async function validateProfile(
  * @param value the value to check
  * @param path The current path of the value.
  */
-export default async function validateProfileCanonical(
+export async function validateProfileCanonical(
   ctx: ValidationCTX,
   profileURL: canonical,
   root: object,
@@ -91,4 +92,35 @@ export default async function validateProfileCanonical(
   }
 
   return validateProfile(ctx, profile, root, path);
+}
+
+/**
+ * Validates a resources profiles found on meta.profile.
+ * @param ctx Validation Context
+ * @param resource The resource with profiles to validate
+ * @returns Any issues found during profile validation.
+ */
+export default async function validateResourceProfiles(
+  ctx: ValidationCTX,
+  resource: Resource<FHIR_VERSION, AllResourceTypes>,
+  path_?: Loc<any, any, any>,
+): Promise<OperationOutcomeIssue[]> {
+  const profiles = resource.meta?.profile ?? [];
+  const path =
+    path_ ??
+    pointer(
+      ctx.fhirVersion,
+      resource.resourceType,
+      resource.id ?? ("new" as id),
+    );
+
+  const issues = (
+    await Promise.all(
+      profiles.map((profile) =>
+        validateProfileCanonical(ctx, profile, resource, path),
+      ),
+    )
+  ).flat();
+
+  return issues;
 }

@@ -20,7 +20,7 @@ import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import { ascendElementLoc, getFoundFieldsForElement } from "../utilities.js";
-import validateProfileCanonical from "./index.js";
+import { validateProfileCanonical } from "./index.js";
 import { getSliceIndices, validateSliceDescriptor } from "./slicing/index.js";
 
 /**

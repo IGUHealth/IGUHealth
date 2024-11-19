@@ -69,6 +69,7 @@ function createValidationMiddleware<State>(): MiddlewareAsyncChain<
         ) {
           throw new OperationError(outcome);
         }
+
         break;
       }
       case "patch-request": {
