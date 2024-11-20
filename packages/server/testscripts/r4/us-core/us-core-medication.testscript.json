@@ -1,0 +1,95 @@
+{
+    "id": "us-core-Medication",
+    "title": "USCore Medication tests",
+    "resourceType": "TestScript",
+    "contained": [
+        {
+            "resourceType": "Medication",
+            "id": "resource",
+            "meta": {
+                "tag": [
+                    {
+                        "code": "us-core-Medication"
+                    }
+                ],
+                "extension": [
+                    {
+                        "url": "http://hl7.org/fhir/StructureDefinition/instance-name",
+                        "valueString": "Uscore Med1 Example"
+                    },
+                    {
+                        "url": "http://hl7.org/fhir/StructureDefinition/instance-description",
+                        "valueMarkdown": "This is a uscore med1 example for the *US Core Medication Profile*."
+                    }
+                ],
+                "profile": [
+                    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-medication"
+                ]
+            },
+            "text": {
+                "status": "generated",
+                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><p><b>code</b>: <span title=\"Codes: {http://www.nlm.nih.gov/research/umls/rxnorm 206765}\">lisinopril oral 10 mg</span></p></div>"
+            },
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                        "code": "206765",
+                        "display": "Prinivil 10 MG Oral Tablet"
+                    }
+                ],
+                "text": "lisinopril oral 10 mg"
+            }
+        }
+    ],
+    "fixture": [
+        {
+            "id": "resource",
+            "autocreate": false,
+            "autodelete": false,
+            "resource": {
+                "reference": "#resource"
+            }
+        }
+    ],
+    "test": [
+        {
+            "id": "01-Create Resource",
+            "name": "Create Resource",
+            "description": "Create a us-core resource",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "resource": "Medication",
+                        "sourceId": "resource",
+                        "responseId": "create-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "01-ReadResourceOK",
+                        "direction": "response",
+                        "resource": "Medication"
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "params": "_tag=us-core-Medication"
+                }
+            }
+        ]
+    }
+}
