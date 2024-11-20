@@ -392,6 +392,27 @@ test("paramValidation", async () => {
     ],
     resourceType: "OperationOutcome",
   });
+  try {
+    await invoke(operation, ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: {
+        resourceType: "Patient",
+        name: [
+          {
+            _given: [
+              {
+                id: "123",
+                extension: [{ url: "testing", valueString: "Hello" }],
+              },
+            ],
+          },
+        ],
+      },
+    });
+  } catch (e) {
+    console.log(JSON.stringify(e));
+  }
 
   expect(
     invoke(operation, ctx, {
