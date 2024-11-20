@@ -1,0 +1,288 @@
+{
+    "id": "us-core-patient",
+    "title": "USCore Patient tests",
+    "description": "Test US Core patient profile.",
+    "resourceType": "TestScript",
+    "contained": [
+        {
+            "resourceType": "Patient",
+            "id": "us-core-patient",
+            "meta": {
+                "profile": [
+                    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                ]
+            },
+            "extension": [
+                {
+                    "extension": [
+                        {
+                            "url": "ombCategory",
+                            "valueCoding": {
+                                "system": "urn:oid:2.16.840.1.113883.6.238",
+                                "code": "2028-9",
+                                "display": "Asian"
+                            }
+                        },
+                        {
+                            "url": "text",
+                            "valueString": "Asian"
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "ombCategory",
+                            "valueCoding": {
+                                "system": "urn:oid:2.16.840.1.113883.6.238",
+                                "code": "2186-5",
+                                "display": "Not Hispanic or Latino"
+                            }
+                        },
+                        {
+                            "url": "text",
+                            "valueString": "Not Hispanic or Latino"
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+                    "valueCode": "M"
+                }
+            ],
+            "identifier": [
+                {
+                    "use": "usual",
+                    "type": {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                                "code": "MR",
+                                "display": "Medical Record Number"
+                            }
+                        ],
+                        "text": "Medical Record Number"
+                    },
+                    "system": "http://hospital.smarthealthit.org",
+                    "value": "1032704"
+                }
+            ],
+            "active": true,
+            "name": [
+                {
+                    "family": "Example",
+                    "given": [
+                        "Child"
+                    ]
+                }
+            ],
+            "telecom": [
+                {
+                    "system": "phone",
+                    "value": "555-555-5555",
+                    "use": "home"
+                }
+            ],
+            "gender": "male",
+            "birthDate": "2016-01-15",
+            "address": [
+                {
+                    "line": [
+                        "49 Meadow St"
+                    ],
+                    "city": "Mounds",
+                    "state": "OK",
+                    "postalCode": "74047",
+                    "country": "US"
+                }
+            ]
+        },
+        {
+            "resourceType": "Patient",
+            "id": "invalid-us-core-patient",
+            "meta": {
+                "profile": [
+                    "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                ]
+            },
+            "extension": [
+                {
+                    "extension": [
+                        {
+                            "url": "ombCategory",
+                            "valueInteger": 5
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "ombCategory",
+                            "valueString": "Test"
+                        },
+                        {
+                            "url": "text",
+                            "valueString": "Not Hispanic or Latino"
+                        }
+                    ],
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+                    "valueCode": "M"
+                }
+            ],
+            "identifier": [
+                {
+                    "use": "usual",
+                    "type": {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                                "code": "MR",
+                                "display": "Medical Record Number"
+                            }
+                        ],
+                        "text": "Medical Record Number"
+                    },
+                    "system": "http://hospital.smarthealthit.org",
+                    "value": "1032704"
+                }
+            ],
+            "active": true,
+            "name": [
+                {
+                    "family": "Example",
+                    "given": [
+                        "Child"
+                    ]
+                }
+            ],
+            "telecom": [
+                {
+                    "system": "phone",
+                    "value": "555-555-5555",
+                    "use": "home"
+                }
+            ],
+            "gender": "male",
+            "birthDate": "2016-01-15",
+            "address": [
+                {
+                    "line": [
+                        "49 Meadow St"
+                    ],
+                    "city": "Mounds",
+                    "state": "OK",
+                    "postalCode": "74047",
+                    "country": "US"
+                }
+            ]
+        }
+    ],
+    "fixture": [
+        {
+            "id": "fixture-patient-create",
+            "autocreate": false,
+            "autodelete": false,
+            "resource": {
+                "reference": "#us-core-patient",
+                "display": "US Core Patient"
+            }
+        },
+        {
+            "id": "fixture-invalid-patient-create",
+            "autocreate": false,
+            "autodelete": false,
+            "resource": {
+                "reference": "#invalid-us-core-patient",
+                "display": "US Core Patient"
+            }
+        }
+    ],
+    "test": [
+        {
+            "id": "01-Create Patient",
+            "name": "Create Patient",
+            "description": "Create a Patient and validate response.",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "resource": "Patient",
+                        "sourceId": "fixture-patient-create",
+                        "responseId": "create-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "01-ReadPatientOK",
+                        "description": "Confirm patient created.",
+                        "direction": "response",
+                        "resource": "Patient"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "Confirm first name is Peter",
+                        "expression": "Patient.name.given[0]",
+                        "value": "Child"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "02-attempt-to-Create-Invalid-Patient",
+            "name": "Attempt to Create Invalid Patient",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "resource": "Patient",
+                        "sourceId": "fixture-invalid-patient-create",
+                        "responseId": "create-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "01-ReadPatientFailed",
+                        "description": "Confirm patient created.",
+                        "direction": "response",
+                        "resource": "OperationOutcome"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "Confirm first name is Peter",
+                        "expression": "OperationOutcome.issue[0].diagnostics",
+                        "value": "Slice 'valueCoding' does not have the minimum number of values."
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "resource": "Patient",
+                    "description": "Delete the patient resource on the test server using the id from create-response.",
+                    "targetId": "create-response"
+                }
+            }
+        ]
+    }
+}
