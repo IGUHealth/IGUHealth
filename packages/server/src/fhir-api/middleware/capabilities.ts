@@ -58,8 +58,11 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
   const sds = (
     await client.search_type(ctx, fhirVersion, "StructureDefinition", [
       { name: "_count", value: [1000] },
+      { name: "kind", value: ["resource"] },
+      { name: "abstract", value: ["false"] },
+      { name: "derivation", value: ["specialization"] },
     ])
-  ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
+  ).resources;
 
   const rootParameters = await client.search_type(
     ctx,
