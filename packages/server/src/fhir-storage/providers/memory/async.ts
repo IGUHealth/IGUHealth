@@ -561,23 +561,28 @@ export class Memory<CTX extends IGUHealthServerCTX>
   }
 }
 
+export type MemoryParameter = Partial<Parameters<typeof loadArtifacts>[0]> & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  resourceType: any;
+};
+
 export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
   r4,
   r4b,
 }: {
-  r4: r4.ResourceType[];
-  r4b: r4b.ResourceType[];
+  r4: MemoryParameter[];
+  r4b: MemoryParameter[];
 }): Memory<CTX> {
   const r4Resources: r4.Resource[] = r4
-    .map((resourceType) =>
+    .map((config) =>
       loadArtifacts({
         fhirVersion: R4,
-        resourceType,
         silence: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
           "../../../../../",
         ),
+        ...config,
       }),
     )
     .flat();
@@ -594,15 +599,15 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
   );
 
   const r4bResources: r4b.Resource[] = r4b
-    .map((resourceType) =>
+    .map((config) =>
       loadArtifacts({
         fhirVersion: R4B,
-        resourceType,
         silence: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
           "../../../../../",
         ),
+        ...config,
       }),
     )
     .flat();

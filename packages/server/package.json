@@ -68,6 +68,7 @@
     "dotenv": "^16.4.5",
     "fast-json-patch": "3.1.1",
     "glob": "^11.0.0",
+    "hl7.fhir.us.core": "4.0.0",
     "ioredis": "5.4.1",
     "jose": "^5.8.0",
     "json-schema-to-typescript": "^15.0.2",

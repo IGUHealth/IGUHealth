@@ -11478,6 +11478,7 @@ __metadata:
     dotenv: "npm:^16.4.5"
     fast-json-patch: "npm:3.1.1"
     glob: "npm:^11.0.0"
+    hl7.fhir.us.core: "npm:4.0.0"
     ioredis: "npm:5.4.1"
     jest: "npm:^29.7.0"
     jose: "npm:^5.8.0"

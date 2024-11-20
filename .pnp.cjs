@@ -19144,6 +19144,7 @@ const RAW_RUNTIME_STATE =
           ["dotenv", "npm:16.4.5"],\
           ["fast-json-patch", "npm:3.1.1"],\
           ["glob", "npm:11.0.0"],\
+          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["ioredis", "npm:5.4.1"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
           ["jose", "npm:5.8.0"],\

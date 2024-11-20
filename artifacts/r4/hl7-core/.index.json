@@ -6,6 +6,18 @@
       "resourceType": "ConceptMap"
     },
     {
+      "filename": "definitions/hl7/dataelements.min.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/hl7/extension-definitions.min.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/hl7/profiles-others.min.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "definitions/hl7/profiles-resources.min.json",
       "resourceType": "CapabilityStatement"
     },

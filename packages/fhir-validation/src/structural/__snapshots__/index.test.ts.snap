@@ -26258,100 +26258,73 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
 [
   {
     "abstract": false,
-    "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-    "derivation": "specialization",
-    "id": "Account",
-    "kind": "resource",
-    "name": "Account",
+    "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Extension",
+    "context": [
+      {
+        "expression": "ElementDefinition.mapping",
+        "type": "element",
+      },
+    ],
+    "derivation": "constraint",
+    "id": "11179-objectClass",
+    "kind": "complex-type",
+    "name": "objectClass",
     "resourceType": "StructureDefinition",
     "snapshot": {
       "element": [
         {
-          "alias": [
-            "Cost center",
-            "Record",
-          ],
           "base": {
             "max": "*",
             "min": 0,
-            "path": "Account",
+            "path": "Extension",
           },
+          "comment": "ObjectClass and Property are treated as a data model that can be mapped to, like any other.  This extension merely captures the ObjectClass element as a discrete code.  The information conveyed here should also be conveyed in human-readable form in the mapping.map element.",
+          "condition": [
+            "ele-1",
+          ],
           "constraint": [
             {
-              "expression": "contained.contained.empty()",
-              "human": "If the resource is contained in another resource, it SHALL NOT contain nested Resources",
-              "key": "dom-2",
+              "expression": "hasValue() or (children().count() > id.count())",
+              "human": "All FHIR elements must have a @value or children",
+              "key": "ele-1",
               "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-              "xpath": "not(parent::f:contained and f:contained)",
+              "source": "http://hl7.org/fhir/StructureDefinition/Element",
+              "xpath": "@value|f:*|h:div",
             },
             {
-              "expression": "contained.where((('#'+id in (%resource.descendants().reference | %resource.descendants().as(canonical) | %resource.descendants().as(uri) | %resource.descendants().as(url))) or descendants().where(reference = '#').exists() or descendants().where(as(canonical) = '#').exists() or descendants().where(as(canonical) = '#').exists()).not()).trace('unmatched', id).empty()",
-              "human": "If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource",
-              "key": "dom-3",
+              "expression": "extension.exists() != value.exists()",
+              "human": "Must have either extensions or value[x], not both",
+              "key": "ext-1",
               "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-              "xpath": "not(exists(for $id in f:contained/*/f:id/@value return $contained[not(parent::*/descendant::f:reference/@value=concat('#', $contained/*/id/@value) or descendant::f:reference[@value='#'])]))",
-            },
-            {
-              "expression": "contained.meta.versionId.empty() and contained.meta.lastUpdated.empty()",
-              "human": "If a resource is contained in another resource, it SHALL NOT have a meta.versionId or a meta.lastUpdated",
-              "key": "dom-4",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-              "xpath": "not(exists(f:contained/*/f:meta/f:versionId)) and not(exists(f:contained/*/f:meta/f:lastUpdated))",
-            },
-            {
-              "expression": "contained.meta.security.empty()",
-              "human": "If a resource is contained in another resource, it SHALL NOT have a security label",
-              "key": "dom-5",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-              "xpath": "not(exists(f:contained/*/f:meta/f:security))",
-            },
-            {
-              "expression": "text.\`div\`.exists()",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice",
-                  "valueBoolean": true,
-                },
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice-explanation",
-                  "valueMarkdown": "When a resource has no narrative, only systems that fully understand the data can display the resource to a human safely. Including a human readable representation in the resource makes for a much more robust eco-system and cheaper handling of resources by intermediary systems. Some ecosystems restrict distribution of resources to only those systems that do fully understand the resources, and as a consequence implementers may believe that the narrative is superfluous. However experience shows that such eco-systems often open up to new participants over time.",
-                },
-              ],
-              "human": "A resource should have narrative for robust management",
-              "key": "dom-6",
-              "severity": "warning",
-              "source": "http://hl7.org/fhir/StructureDefinition/DomainResource",
-              "xpath": "exists(f:text/h:div)",
+              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
+              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), 'value')])",
             },
           ],
-          "definition": "A financial tool for tracking value accrued for a particular purpose.  In the healthcare field, used to track charges for a patient, cost centers, etc.",
-          "id": "Account",
+          "definition": "A concept that represents a set of ideas, abstractions, or things in the real world that can be identified with explicit boundaries and meaning and whose properties and behavior follow the same rules. It may be either a single concept or a group of associated concepts, abstractions, or things.",
+          "id": "Extension",
           "isModifier": false,
-          "isSummary": false,
-          "max": "*",
+          "max": "1",
           "min": 0,
-          "path": "Account",
-          "short": "Tracks balance, charges, for patient or cost center",
+          "path": "Extension",
+          "short": "Object Class",
         },
         {
           "base": {
             "max": "1",
             "min": 0,
-            "path": "Resource.id",
+            "path": "Element.id",
           },
-          "comment": "The only time that a resource does not have an id is when it is being submitted to the server using a create operation.",
-          "definition": "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
-          "id": "Account.id",
+          "definition": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+          "id": "Extension.id",
           "isModifier": false,
-          "isSummary": true,
+          "isSummary": false,
           "max": "1",
           "min": 0,
-          "path": "Account.id",
-          "short": "Logical id of this artifact",
+          "path": "Extension.id",
+          "representation": [
+            "xmlAttr",
+          ],
+          "short": "Unique id for inter-element referencing",
           "type": [
             {
               "code": "http://hl7.org/fhirpath/System.String",
@@ -26366,9 +26339,9 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
         },
         {
           "base": {
-            "max": "1",
+            "max": "*",
             "min": 0,
-            "path": "Resource.meta",
+            "path": "Element.extension",
           },
           "constraint": [
             {
@@ -26379,283 +26352,36 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
               "source": "http://hl7.org/fhir/StructureDefinition/Element",
               "xpath": "@value|f:*|h:div",
             },
+            {
+              "expression": "extension.exists() != value.exists()",
+              "human": "Must have either extensions or value[x], not both",
+              "key": "ext-1",
+              "severity": "error",
+              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
+              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
+            },
           ],
-          "definition": "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
-          "id": "Account.meta",
+          "definition": "An Extension",
+          "id": "Extension.extension",
           "isModifier": false,
-          "isSummary": true,
-          "max": "1",
+          "isSummary": false,
+          "max": "0",
           "min": 0,
-          "path": "Account.meta",
-          "short": "Metadata about the resource",
-          "type": [
-            {
-              "code": "Meta",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Resource.implicitRules",
-          },
-          "comment": "Asserting this rule set restricts the content to be only understood by a limited set of trading partners. This inherently limits the usefulness of the data in the long term. However, the existing health eco-system is highly fractured, and not yet ready to define, collect, and exchange data in a generally computable sense. Wherever possible, implementers and/or specification writers should avoid using this element. Often, when used, the URL is a reference to an implementation guide that defines these special rules as part of it's narrative along with other profiles, value sets, etc.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc.",
-          "id": "Account.implicitRules",
-          "isModifier": true,
-          "isModifierReason": "This element is labeled as a modifier because the implicit rules may provide additional knowledge about the resource that modifies it's meaning or interpretation",
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.implicitRules",
-          "short": "A set of rules under which this content was created",
-          "type": [
-            {
-              "code": "uri",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Resource.language",
-          },
-          "binding": {
-            "description": "A human language.",
-            "extension": [
+          "path": "Extension.extension",
+          "short": "Extension",
+          "slicing": {
+            "description": "Extensions are always sliced by (at least) url",
+            "discriminator": [
               {
-                "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-                "valueCanonical": "http://hl7.org/fhir/ValueSet/all-languages",
-              },
-              {
-                "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-                "valueString": "Language",
-              },
-              {
-                "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding",
-                "valueBoolean": true,
+                "path": "url",
+                "type": "value",
               },
             ],
-            "strength": "preferred",
-            "valueSet": "http://hl7.org/fhir/ValueSet/languages",
+            "rules": "open",
           },
-          "comment": "Language is provided to support indexing and accessibility (typically, services such as text to speech use the language tag). The html language tag in the narrative applies  to the narrative. The language tag on the resource may be used to specify the language of other presentations generated from the data in the resource. Not all the content has to be in the base language. The Resource.language should not be assumed to apply to the narrative automatically. If a language is specified, it should it also be specified on the div element in the html (see rules in HTML5 for information about the relationship between xml:lang and the html lang attribute).",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The base language in which the resource is written.",
-          "id": "Account.language",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.language",
-          "short": "Language of the resource content",
-          "type": [
-            {
-              "code": "code",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "narrative",
-            "html",
-            "xhtml",
-            "display",
-          ],
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "DomainResource.text",
-          },
-          "comment": "Contained resources do not have narrative. Resources that are not contained SHOULD have a narrative. In some cases, a resource may only have text with little or no additional discrete data (as long as all minOccurs=1 elements are satisfied).  This may be necessary for data from legacy systems where information is captured as a "text blob" or where text is additionally entered raw or narrated and encoded information is added later.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "A human-readable narrative that contains a summary of the resource and can be used to represent the content of the resource to a human. The narrative need not encode all the structured data, but is required to contain sufficient detail to make it "clinically safe" for a human to just read the narrative. Resource definitions may define what content should be represented in the narrative to ensure clinical safety.",
-          "id": "Account.text",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.text",
-          "short": "Text summary of the resource, for human interpretation",
-          "type": [
-            {
-              "code": "Narrative",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "inline resources",
-            "anonymous resources",
-            "contained resources",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "DomainResource.contained",
-          },
-          "comment": "This should never be done when the content can be identified properly, as once identification is lost, it is extremely difficult (and context dependent) to restore it again. Contained resources may have profiles and tags In their meta elements, but SHALL NOT have security labels.",
-          "definition": "These resources do not have an independent existence apart from the resource that contains them - they cannot be identified independently, and nor can they have their own independent transaction scope.",
-          "id": "Account.contained",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.contained",
-          "short": "Contained, inline Resources",
-          "type": [
-            {
-              "code": "Resource",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "DomainResource.extension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the resource. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-          "id": "Account.extension",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.extension",
-          "short": "Additional content defined by implementations",
           "type": [
             {
               "code": "Extension",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "DomainResource.modifierExtension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the resource and that modifies the understanding of the element that contains it and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer is allowed to define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.
-
-Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself).",
-          "id": "Account.modifierExtension",
-          "isModifier": true,
-          "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the resource that contains them",
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.modifierExtension",
-          "requirements": "Modifier extensions allow for extensions that *cannot* be safely ignored to be clearly distinguished from the vast majority of extensions which can be safely ignored.  This promotes interoperability by eliminating the need for implementers to prohibit the presence of extensions. For further information, see the [definition of modifier extensions](extensibility.html#modifierExtension).",
-          "short": "Extensions that cannot be ignored",
-          "type": [
-            {
-              "code": "Extension",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Account.identifier",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Unique identifier used to reference the account.  Might or might not be intended for human use (e.g. credit card number).",
-          "id": "Account.identifier",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "*",
-          "min": 0,
-          "path": "Account.identifier",
-          "short": "Account number",
-          "type": [
-            {
-              "code": "Identifier",
             },
           ],
         },
@@ -26663,42 +26389,30 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
           "base": {
             "max": "1",
             "min": 1,
-            "path": "Account.status",
+            "path": "Extension.url",
           },
-          "binding": {
-            "description": "Indicates whether the account is available to be used.",
-            "extension": [
-              {
-                "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-                "valueString": "AccountStatus",
-              },
-            ],
-            "strength": "required",
-            "valueSet": "http://hl7.org/fhir/ValueSet/account-status|4.0.1",
-          },
-          "comment": "This element is labeled as a modifier because the status contains the codes inactive and entered-in-error that mark the Account as not currently valid.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Indicates whether the account is presently used/usable or not.",
-          "id": "Account.status",
-          "isModifier": true,
-          "isModifierReason": "This element is labelled as a modifier because it is a status element that contains status entered-in-error which means that the resource should not be treated as valid",
-          "isSummary": true,
+          "comment": "The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.",
+          "definition": "Source of the definition for the extension code - a logical name or a URL.",
+          "fixedUri": "http://hl7.org/fhir/StructureDefinition/11179-objectClass",
+          "id": "Extension.url",
+          "isModifier": false,
+          "isSummary": false,
           "max": "1",
           "min": 1,
-          "path": "Account.status",
-          "short": "active | inactive | entered-in-error | on-hold | unknown",
+          "path": "Extension.url",
+          "representation": [
+            "xmlAttr",
+          ],
+          "short": "identifies the meaning of the extension",
           "type": [
             {
-              "code": "code",
+              "code": "http://hl7.org/fhirpath/System.String",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+                  "valueUrl": "uri",
+                },
+              ],
             },
           ],
         },
@@ -26706,18 +26420,18 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
           "base": {
             "max": "1",
             "min": 0,
-            "path": "Account.type",
+            "path": "Extension.value[x]",
           },
           "binding": {
-            "description": "The usage type of this account, permits categorization of accounts.",
+            "description": "A concept that represents a set of ideas, abstractions, or things in the real world that can be identified with explicit boundaries and meaning and whose properties and behavior follow the same rules; e.g. Person, Prescription, Encounter, etc.",
             "extension": [
               {
                 "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-                "valueString": "AccountType",
+                "valueString": "11179ObjectClass",
               },
             ],
             "strength": "example",
-            "valueSet": "http://hl7.org/fhir/ValueSet/account-type",
+            "valueSet": "http://hl7.org/fhir/ValueSet/dataelement-sdcobjectclass",
           },
           "constraint": [
             {
@@ -26729,708 +26443,26 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
               "xpath": "@value|f:*|h:div",
             },
           ],
-          "definition": "Categorizes the account for reporting and searching purposes.",
-          "id": "Account.type",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.type",
-          "short": "E.g. patient, expense, depreciation",
-          "type": [
-            {
-              "code": "CodeableConcept",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "Title",
-          ],
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.name",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Name used for the account when displaying it to humans in reports, etc.",
-          "id": "Account.name",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.name",
-          "short": "Human-readable label",
-          "type": [
-            {
-              "code": "string",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "target",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Account.subject",
-          },
-          "comment": "Accounts can be applied to non-patients for tracking other non-patient related activities, such as group services (patients not tracked, and costs charged to another body), or might not be allocated.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Identifies the entity which incurs the expenses. While the immediate recipients of services or goods might be entities related to the subject, the expenses were ultimately incurred by the subject of the Account.",
-          "id": "Account.subject",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "*",
-          "min": 0,
-          "path": "Account.subject",
-          "short": "The entity that caused the expenses",
-          "type": [
-            {
-              "code": "Reference",
-              "targetProfile": [
-                "http://hl7.org/fhir/StructureDefinition/Patient",
-                "http://hl7.org/fhir/StructureDefinition/Device",
-                "http://hl7.org/fhir/StructureDefinition/Practitioner",
-                "http://hl7.org/fhir/StructureDefinition/PractitionerRole",
-                "http://hl7.org/fhir/StructureDefinition/Location",
-                "http://hl7.org/fhir/StructureDefinition/HealthcareService",
-                "http://hl7.org/fhir/StructureDefinition/Organization",
-              ],
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.servicePeriod",
-          },
-          "comment": "It is possible for transactions to be posted outside the service period, as long as the service was provided within the defined service period.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The date range of services associated with this account.",
-          "id": "Account.servicePeriod",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.servicePeriod",
-          "short": "Transaction window",
-          "type": [
-            {
-              "code": "Period",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Account.coverage",
-          },
-          "comment": "Typically. this may be some form of insurance, internal charges, or self-pay.
-
-Local or jurisdictional business rules may determine which coverage covers which types of billable items charged to the account, and in which order.
-Where the order is important, a local/jurisdictional extension may be defined to specify the order for the type of charge.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The party(s) that are responsible for covering the payment of this account, and what order should they be applied to the account.",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
-              "valueString": "Coverage",
-            },
-          ],
-          "id": "Account.coverage",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "*",
-          "min": 0,
-          "path": "Account.coverage",
-          "short": "The party(s) that are responsible for covering the payment of this account, and what order should they be applied to the account",
-          "type": [
-            {
-              "code": "BackboneElement",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Element.id",
-          },
-          "definition": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-          "id": "Account.coverage.id",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.coverage.id",
-          "representation": [
-            "xmlAttr",
-          ],
-          "short": "Unique id for inter-element referencing",
-          "type": [
-            {
-              "code": "http://hl7.org/fhirpath/System.String",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-                  "valueUrl": "string",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Element.extension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-          "id": "Account.coverage.extension",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.coverage.extension",
-          "short": "Additional content defined by implementations",
-          "type": [
-            {
-              "code": "Extension",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-            "modifiers",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "BackboneElement.modifierExtension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.
-
-Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself).",
-          "id": "Account.coverage.modifierExtension",
-          "isModifier": true,
-          "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the element that contains them",
-          "isSummary": true,
-          "max": "*",
-          "min": 0,
-          "path": "Account.coverage.modifierExtension",
-          "requirements": "Modifier extensions allow for extensions that *cannot* be safely ignored to be clearly distinguished from the vast majority of extensions which can be safely ignored.  This promotes interoperability by eliminating the need for implementers to prohibit the presence of extensions. For further information, see the [definition of modifier extensions](extensibility.html#modifierExtension).",
-          "short": "Extensions that cannot be ignored even if unrecognized",
-          "type": [
-            {
-              "code": "Extension",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 1,
-            "path": "Account.coverage.coverage",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The party(s) that contribute to payment (or part of) of the charges applied to this account (including self-pay).
-
-A coverage may only be responsible for specific types of charges, and the sequence of the coverages in the account could be important when processing billing.",
-          "id": "Account.coverage.coverage",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 1,
-          "path": "Account.coverage.coverage",
-          "short": "The party(s), such as insurances, that may contribute to the payment of this account",
-          "type": [
-            {
-              "code": "Reference",
-              "targetProfile": [
-                "http://hl7.org/fhir/StructureDefinition/Coverage",
-              ],
-            },
-          ],
-        },
-        {
-          "alias": [
-            "coordination of benefit priority",
-          ],
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.coverage.priority",
-          },
-          "comment": "It is common in some jurisdictions for there to be multiple coverages allocated to an account, and a sequence is required to order the settling of the account (often with insurance claiming).",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The priority of the coverage in the context of this account.",
-          "id": "Account.coverage.priority",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.coverage.priority",
-          "short": "The priority of the coverage in the context of this account",
-          "type": [
-            {
-              "code": "positiveInt",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.owner",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Indicates the service area, hospital, department, etc. with responsibility for managing the Account.",
-          "id": "Account.owner",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.owner",
-          "short": "Entity managing the Account",
-          "type": [
-            {
-              "code": "Reference",
-              "targetProfile": [
-                "http://hl7.org/fhir/StructureDefinition/Organization",
-              ],
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.description",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Provides additional information about what the account tracks and how it is used.",
-          "id": "Account.description",
-          "isModifier": false,
-          "isSummary": true,
-          "max": "1",
-          "min": 0,
-          "path": "Account.description",
-          "short": "Explanation of purpose/use",
-          "type": [
-            {
-              "code": "string",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Account.guarantor",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The parties responsible for balancing the account if other payment options fall short.",
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-explicit-type-name",
-              "valueString": "Guarantor",
-            },
-          ],
-          "id": "Account.guarantor",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.guarantor",
-          "short": "The parties ultimately responsible for balancing the Account",
-          "type": [
-            {
-              "code": "BackboneElement",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Element.id",
-          },
-          "definition": "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-          "id": "Account.guarantor.id",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.guarantor.id",
-          "representation": [
-            "xmlAttr",
-          ],
-          "short": "Unique id for inter-element referencing",
-          "type": [
-            {
-              "code": "http://hl7.org/fhirpath/System.String",
-              "extension": [
-                {
-                  "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-                  "valueUrl": "string",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "Element.extension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-          "id": "Account.guarantor.extension",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "*",
-          "min": 0,
-          "path": "Account.guarantor.extension",
-          "short": "Additional content defined by implementations",
-          "type": [
-            {
-              "code": "Extension",
-            },
-          ],
-        },
-        {
-          "alias": [
-            "extensions",
-            "user content",
-            "modifiers",
-          ],
-          "base": {
-            "max": "*",
-            "min": 0,
-            "path": "BackboneElement.modifierExtension",
-          },
-          "comment": "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-            {
-              "expression": "extension.exists() != value.exists()",
-              "human": "Must have either extensions or value[x], not both",
-              "key": "ext-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Extension",
-              "xpath": "exists(f:extension)!=exists(f:*[starts-with(local-name(.), "value")])",
-            },
-          ],
-          "definition": "May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.
-
-Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself).",
-          "id": "Account.guarantor.modifierExtension",
-          "isModifier": true,
-          "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the element that contains them",
-          "isSummary": true,
-          "max": "*",
-          "min": 0,
-          "path": "Account.guarantor.modifierExtension",
-          "requirements": "Modifier extensions allow for extensions that *cannot* be safely ignored to be clearly distinguished from the vast majority of extensions which can be safely ignored.  This promotes interoperability by eliminating the need for implementers to prohibit the presence of extensions. For further information, see the [definition of modifier extensions](extensibility.html#modifierExtension).",
-          "short": "Extensions that cannot be ignored even if unrecognized",
-          "type": [
-            {
-              "code": "Extension",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 1,
-            "path": "Account.guarantor.party",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The entity who is responsible.",
-          "id": "Account.guarantor.party",
+          "definition": "Value of extension - must be one of a constrained set of the data types (see [Extensibility](http://hl7.org/fhir/extensibility.html) for a list).",
+          "id": "Extension.value[x]",
           "isModifier": false,
           "isSummary": false,
           "max": "1",
           "min": 1,
-          "path": "Account.guarantor.party",
-          "short": "Responsible entity",
+          "path": "Extension.value[x]",
+          "short": "Value of extension",
           "type": [
             {
-              "code": "Reference",
-              "targetProfile": [
-                "http://hl7.org/fhir/StructureDefinition/Patient",
-                "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
-                "http://hl7.org/fhir/StructureDefinition/Organization",
-              ],
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.guarantor.onHold",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "A guarantor may be placed on credit hold or otherwise have their role temporarily suspended.",
-          "id": "Account.guarantor.onHold",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.guarantor.onHold",
-          "short": "Credit or other hold applied",
-          "type": [
-            {
-              "code": "boolean",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.guarantor.period",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "The timeframe during which the guarantor accepts responsibility for the account.",
-          "id": "Account.guarantor.period",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.guarantor.period",
-          "short": "Guarantee account during",
-          "type": [
-            {
-              "code": "Period",
-            },
-          ],
-        },
-        {
-          "base": {
-            "max": "1",
-            "min": 0,
-            "path": "Account.partOf",
-          },
-          "constraint": [
-            {
-              "expression": "hasValue() or (children().count() > id.count())",
-              "human": "All FHIR elements must have a @value or children",
-              "key": "ele-1",
-              "severity": "error",
-              "source": "http://hl7.org/fhir/StructureDefinition/Element",
-              "xpath": "@value|f:*|h:div",
-            },
-          ],
-          "definition": "Reference to a parent Account.",
-          "id": "Account.partOf",
-          "isModifier": false,
-          "isSummary": false,
-          "max": "1",
-          "min": 0,
-          "path": "Account.partOf",
-          "short": "Reference to a parent Account",
-          "type": [
-            {
-              "code": "Reference",
-              "targetProfile": [
-                "http://hl7.org/fhir/StructureDefinition/Account",
-              ],
+              "code": "Coding",
             },
           ],
         },
       ],
     },
     "status": "draft",
-    "type": "Account",
-    "url": "http://hl7.org/fhir/StructureDefinition/Account",
+    "title": "Object Class",
+    "type": "Extension",
+    "url": "http://hl7.org/fhir/StructureDefinition/11179-objectClass",
     "version": "4.0.1",
   },
   [],

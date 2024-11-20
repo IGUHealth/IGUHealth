@@ -4,7 +4,12 @@ import { pino } from "pino";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
-import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  R4,
+  R4B,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import {
@@ -36,7 +41,10 @@ import {
   AUTH_RESOURCETYPES,
   createAuthStorageClient,
 } from "../fhir-storage/providers/auth-storage/index.js";
-import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/async.js";
+import {
+  MemoryParameter,
+  createArtifactMemoryDatabase,
+} from "../fhir-storage/providers/memory/async.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
@@ -45,36 +53,58 @@ import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
 import { IGUHealthServerCTX } from "./types.js";
 
-const R4_SPECIAL_TYPES: {
-  MEMORY: ResourceType<R4>[];
-  AUTH: ResourceType<R4>[];
-} = {
-  AUTH: AUTH_RESOURCETYPES,
-  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
+type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
+
+const R4_SPECIAL_TYPES: FHIRArtifactTypes = {
+  AUTH: AUTH_RESOURCETYPES.map((resourceType) => ({ resourceType })),
+  MEMORY: [
+    { resourceType: "StructureDefinition" as AllResourceTypes },
+    {
+      resourceType: "SearchParameter" as AllResourceTypes,
+      // Don't want to load other searchparameters which could conflict with base for now.
+      onlyPackages: [
+        "@iguhealth/hl7.fhir.r4.core",
+        "@iguhealth/hl7.fhir.r4b.core",
+        "@iguhealth/iguhealth.fhir.r4.core",
+        "@iguhealth/iguhealth.fhir.r4b.core",
+      ],
+    },
+    { resourceType: "ValueSet" as AllResourceTypes },
+    { resourceType: "CodeSystem" as AllResourceTypes },
+  ],
 };
 const R4_ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
 const R4_DB_TYPES: ResourceType<R4>[] = (
   [...r4Sets.resourceTypes] as ResourceType<R4>[]
-).filter((type) => R4_ALL_SPECIAL_TYPES.indexOf(type) === -1);
+).filter(
+  (type) =>
+    R4_ALL_SPECIAL_TYPES.find((k) => k.resourceType === type) === undefined,
+);
 
-const R4B_SPECIAL_TYPES: { MEMORY: ResourceType<R4B>[] } & Record<
-  string,
-  ResourceType<R4B>[]
-> = {
+const R4B_SPECIAL_TYPES: FHIRArtifactTypes = {
   DISSALLOWED: [
     // "Subscription",
     // "SubscriptionTopic",
     // "SubscriptionStatus",
-    "OperationDefinition",
+    { resourceType: "OperationDefinition" as AllResourceTypes },
   ],
-  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
+  MEMORY: [
+    { resourceType: "StructureDefinition" as AllResourceTypes },
+    { resourceType: "SearchParameter" as AllResourceTypes },
+    { resourceType: "ValueSet" as AllResourceTypes },
+    { resourceType: "CodeSystem" as AllResourceTypes },
+  ],
 };
+
 const R4B_ALL_SPECIAL_TYPES = Object.values(R4B_SPECIAL_TYPES).flatMap(
   (v) => v,
 );
 const R4B_DB_TYPES: ResourceType<R4B>[] = (
   [...r4bSets.resourceTypes] as ResourceType<R4B>[]
-).filter((type) => R4B_ALL_SPECIAL_TYPES.indexOf(type) === -1);
+).filter(
+  (type) =>
+    R4B_ALL_SPECIAL_TYPES.find((k) => k.resourceType === type) === undefined,
+);
 
 export const createLogger = () =>
   pino<string>(
@@ -205,12 +235,16 @@ export function createClient(): {
       filter: {
         r4: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.MEMORY,
+          resourcesSupported: R4_SPECIAL_TYPES.MEMORY.map(
+            (m) => m.resourceType,
+          ),
           interactionsSupported: ["read-request", "search-request"],
         },
         r4b: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_SPECIAL_TYPES.MEMORY,
+          resourcesSupported: R4B_SPECIAL_TYPES.MEMORY.map(
+            (m) => m.resourceType,
+          ),
           interactionsSupported: ["read-request", "search-request"],
         },
       },
@@ -220,7 +254,7 @@ export function createClient(): {
       filter: {
         r4: {
           levelsSupported: ["type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.AUTH,
+          resourcesSupported: R4_SPECIAL_TYPES.AUTH.map((m) => m.resourceType),
           interactionsSupported: AUTH_METHODS_ALLOWED,
         },
       },

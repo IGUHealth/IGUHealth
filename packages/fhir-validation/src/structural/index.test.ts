@@ -89,6 +89,7 @@ const CTX: ValidationCTX = {
       (sd: unknown) => (sd as StructureDefinition).url === url,
     ) as Resource<Version, Type>;
     if (!sd) throw new Error(`Couldn't find sd with url '${url}'`);
+
     return sd as Resource<Version, Type>;
   },
 };

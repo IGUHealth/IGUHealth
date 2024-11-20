@@ -21,6 +21,12 @@ const artifactParameters = loadArtifacts({
   loadDevelopmentPackages: true,
   resourceType: "SearchParameter",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  onlyPackages: [
+    "@iguhealth/hl7.fhir.r4.core",
+    "@iguhealth/hl7.fhir.r4b.core",
+    "@iguhealth/iguhealth.fhir.r4.core",
+    "@iguhealth/iguhealth.fhir.r4b.core",
+  ],
   silence: true,
 });
 const sds = loadArtifacts({

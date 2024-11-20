@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "minify": "yarn node ../../../packages/cli/lib/iguhealth.js minimize artifacts -d definitions",
-    "generate-index-nonmin": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file --extension json -p . -r definitions --ignore \\*.min.json definitions/hl7/profiles-others.json definitions/hl7/dataelements.json definitions/hl7/extension-definitions.json",
-    "generate-index": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file --extension .min.json -p . -r definitions --ignore definitions/hl7/profiles-others.min.json definitions/hl7/dataelements.min.json definitions/hl7/extension-definitions.min.json",
+    "generate-index-nonmin": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file --extension json -p . -r definitions --ignore \\*.min.json",
+    "generate-index": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file --extension .min.json -p . -r definitions",
     "publish": "yarn npm publish --access public --tolerate-republish"
   },
   "files": [
