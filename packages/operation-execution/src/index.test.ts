@@ -245,9 +245,7 @@ test("execution", async () => {
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
     async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd.url as canonical;
+      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
     },
     level: "instance",
   };
@@ -316,9 +314,7 @@ test("paramValidation", async () => {
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
     async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd.url as canonical;
+      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
     },
     level: "instance",
   };
@@ -547,9 +543,8 @@ test("Test invalid resource validation", async () => {
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
     async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd.url as canonical;
+      if (!type) throw new Error("Could not resolve type undefined");
+      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
     },
     level: "instance",
   };

@@ -111,7 +111,8 @@ function _findBaseFieldAndType(
       };
     }
   }
-  for (const type of element.type?.map((t) => t.code) || []) {
+
+  for (const type of element.type?.map((t) => t.code) ?? []) {
     const field = fieldName(element, type);
     if (field in value) {
       return { field, type };
@@ -133,6 +134,7 @@ export function getFoundFieldsForElement(
 ): PropertyAndType[] {
   const properties: PropertyAndType[] = [];
   const base = _findBaseFieldAndType(element, value);
+
   if (base) {
     properties.push(base);
     const { field, type } = base;
