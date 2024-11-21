@@ -262,7 +262,7 @@
                 },
                 {
                     "assert": {
-                        "label": "Confirm first name is Peter",
+                        "label": "Confirm error",
                         "expression": "OperationOutcome.issue[0].diagnostics",
                         "value": "Slice 'valueCoding' does not have the minimum number of values."
                     }
