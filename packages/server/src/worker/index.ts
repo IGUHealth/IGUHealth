@@ -561,8 +561,8 @@ async function createWorker(
   const cache = new RedisCache(redis);
   const logger = createLogger().child({ worker: workerID });
   const sdArtifacts = createArtifactMemoryDatabase({
-    r4: ["StructureDefinition"],
-    r4b: ["StructureDefinition"],
+    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
+    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
   });
 
   let isRunning = true;
