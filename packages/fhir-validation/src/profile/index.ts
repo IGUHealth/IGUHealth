@@ -91,7 +91,9 @@ export async function validateProfileCanonical(
     );
   }
 
-  return validateProfile(ctx, profile, root, path);
+  const issues = await validateProfile(ctx, profile, root, path);
+
+  return issues;
 }
 
 /**

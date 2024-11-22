@@ -8,13 +8,18 @@ import { generateMetaData } from "@iguhealth/codegen/generate/meta-data";
 import generateOps from "@iguhealth/codegen/generate/operation-definition";
 import { generateSets } from "@iguhealth/codegen/generate/sets";
 import { generateTypes } from "@iguhealth/codegen/generate/typescript-types";
+import { StructureDefinition } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
   FHIR_VERSIONS_SUPPORTED,
   R4,
 } from "@iguhealth/fhir-types/versions";
+import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops";
 
+import { createClient } from "../client.js";
+import { CONFIG_LOCATION } from "../config.js";
 import logger from "../logger.js";
+import { conversion, dataCommand } from "../utilities.js";
 
 export function codeGenerationCommands(command: Command) {
   command
@@ -113,4 +118,42 @@ export function codeGenerationCommands(command: Command) {
       writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
       logger.info(`index generated and saved at '${indexLoc}'`);
     });
+
+  dataCommand.command(
+    command
+      .command("snapshot")
+      .argument("<fhirVersion>", "FHIR Version")
+      .description("Generate a snapshot of a StructureDefinition")
+      .option("-o, --output <output>", "Output file")
+      .action(async (userFHIRVersion, options) => {
+        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
+        const resourceToSave = dataCommand.readData(options);
+
+        const client = await createClient(CONFIG_LOCATION);
+        if (
+          !resourceToSave ||
+          typeof resourceToSave !== "object" ||
+          (resourceToSave as unknown as Record<string, unknown>)
+            ?.resourceType !== "StructureDefinition"
+        ) {
+          throw new Error("No StructureDefinition to generate snapshot.");
+        }
+
+        const sd = await client.invoke_type(
+          StructureDefinitionSnapshot.Op,
+          {},
+          FHIRVersion,
+          "StructureDefinition",
+          {
+            definition: resourceToSave as StructureDefinition,
+          },
+        );
+
+        if (options.output) {
+          writeFileSync(options.output, JSON.stringify(sd, null, 2));
+        } else {
+          console.log(JSON.stringify(sd, null, 2));
+        }
+      }),
+  );
 }

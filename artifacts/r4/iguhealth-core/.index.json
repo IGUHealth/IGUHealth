@@ -46,6 +46,22 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "definitions/iguhealth/profiling/extensions/author.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/profiling/extensions/subscription-channel.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/profiling/extensions/version-sequence.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/profiling/resource/iguhealth-subscription.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "definitions/iguhealth/searchParameter/access-policy-v2/engine.json",
       "resourceType": "SearchParameter"
     },

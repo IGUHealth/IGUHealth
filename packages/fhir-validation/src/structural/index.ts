@@ -39,6 +39,7 @@ import { ElementLoc, ValidationCTX } from "../types.js";
 import {
   ascendElementLoc,
   getFoundFieldsForElement,
+  isElementRequired,
   isResourceType,
   notNullable,
   resolveTypeToStructureDefinition,
@@ -59,10 +60,6 @@ function resolveContentReferenceIndex(
       "unable to resolve contentreference: '" + element.contentReference + "'",
     );
   return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
-}
-
-function isElementRequired(element: ElementDefinition) {
-  return (element.min ?? 0) > 0;
 }
 
 function isReferenceConformantToStructureDefinition(

@@ -22,7 +22,7 @@ async function generateSnapshot(
   ctx: IGUHealthServerCTX,
   sd: StructureDefinition | r4b.StructureDefinition,
 ): Promise<StructureDefinition> {
-  if (sd.snapshot) return sd as StructureDefinition;
+  sd.snapshot = { element: [] };
 
   if (!sd.differential)
     throw new OperationError(

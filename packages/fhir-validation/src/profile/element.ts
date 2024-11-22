@@ -19,7 +19,11 @@ import { validateCardinality } from "../elements/validators/cardinality.js";
 import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
-import { ascendElementLoc, getFoundFieldsForElement } from "../utilities.js";
+import {
+  ascendElementLoc,
+  getFoundFieldsForElement,
+  isElementRequired,
+} from "../utilities.js";
 import { validateProfileCanonical } from "./index.js";
 import { getSliceIndices, validateSliceDescriptor } from "./slicing/index.js";
 
@@ -161,6 +165,19 @@ export async function validateSingularProfileElement(
     const fields = getFoundFieldsForElement(childElement, value);
     fields.forEach((f) => foundFields.add(f.field));
 
+    // Confirm if no fields are found and the element is required then issue an error.
+    if (isElementRequired(childElement) && fields.length === 0) {
+      issues = issues.concat([
+        issueError(
+          "structure",
+          `Missing required field '${childElement.path}' at path '${toJSONPointer(
+            childElementLoc,
+          )}'`,
+          [toJSONPointer(path)],
+        ),
+      ]);
+    }
+
     for (const field of fields) {
       const childValueLoc = descend(path, field.field);
       issues = issues.concat(
@@ -237,6 +254,7 @@ export async function validateProfileElement(
 ): Promise<OperationOutcomeIssue[]> {
   const value = get(path, root);
   const element = get(elementLoc, profile as StructureDefinition);
+
   if (!element) {
     throw new OperationError(
       outcomeFatal(
@@ -252,6 +270,7 @@ export async function validateProfileElement(
 
   // [Cardinality validation]
   issues = issues.concat(validateCardinality(element, elementLoc, root, path));
+
   switch (true) {
     case Array.isArray(value): {
       issues = issues.concat(
