@@ -120,6 +120,10 @@ function _findBaseFieldAndType(
   }
 }
 
+export function isElementRequired(element: ElementDefinition) {
+  return (element.min ?? 0) > 0;
+}
+
 /**
  * Returns fields associated to an element. Because it could be a primitive it may result in multiple fields.
  * IE _field for Element values for field primitive value.
