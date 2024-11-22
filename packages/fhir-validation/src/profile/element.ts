@@ -171,7 +171,7 @@ export async function validateSingularProfileElement(
         issueError(
           "structure",
           `Missing required field '${childElement.path}' at path '${toJSONPointer(
-            childElementLoc,
+            path,
           )}'`,
           [toJSONPointer(path)],
         ),
