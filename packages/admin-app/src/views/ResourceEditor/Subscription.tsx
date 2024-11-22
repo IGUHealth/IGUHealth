@@ -1,11 +1,10 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { FHIRCodeEditable, Input, Select } from "@iguhealth/components";
 import {
   ConcreteType,
-  ResourceType,
   Subscription,
   code,
   id,
@@ -280,26 +279,54 @@ function SimpleSubscriptionView({
 
 export default function SubscriptionView({
   id,
-  resourceType,
+
   resource,
   actions,
   structureDefinition,
   onChange,
 }: Readonly<SubscriptionEditorProps>) {
+  const subscription = useMemo(() => {
+    if (!resource) {
+      return {
+        resourceType: "Subscription",
+        meta: {
+          profile: ["https://iguhealth.app/resource/Subscription"],
+        },
+        status: "active",
+        criteria: "",
+        reason: "",
+        channel: {
+          type: "rest-hook",
+          endpoint: "",
+        },
+      } as Subscription;
+    }
+    return {
+      ...resource,
+      meta: {
+        ...resource?.meta,
+        profile: ["https://iguhealth.app/resource/Subscription"],
+      },
+    } as Subscription;
+  }, [resource]);
+
   return (
     <ResourceEditorComponent
       id={id as id}
       actions={actions}
       structureDefinition={structureDefinition}
-      resourceType={resourceType as ResourceType}
-      resource={resource}
+      resourceType={"Subscription"}
+      resource={subscription}
       onChange={onChange}
       leftTabs={[
         {
           id: "simple-editor",
           title: "Quick Editor",
           content: (
-            <SimpleSubscriptionView resource={resource} onChange={onChange} />
+            <SimpleSubscriptionView
+              resource={subscription}
+              onChange={onChange}
+            />
           ),
         },
       ]}
