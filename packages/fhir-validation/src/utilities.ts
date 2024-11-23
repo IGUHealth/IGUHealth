@@ -7,7 +7,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
-import { isPrimitiveType } from "@iguhealth/meta-value/utilities";
+import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { ElementLoc, ValidationCTX } from "./types.js";
@@ -134,8 +134,9 @@ export function isElementRequired(element: ElementDefinition) {
  */
 export function getFoundFieldsForElement(
   element: ElementDefinition,
-  value: object,
+  value: unknown,
 ): PropertyAndType[] {
+  if (!isObject(value)) return [];
   const properties: PropertyAndType[] = [];
   const base = _findBaseFieldAndType(element, value);
 
