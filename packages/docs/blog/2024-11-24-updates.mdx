@@ -1,0 +1,50 @@
+---
+slug: updates_2024-11-23
+Title: Updates 2024-11-23
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-11-23
+
+## Profiling
+We've now added support for profiling. You can read more about profiling [here](https://hl7.org/fhir/R4/profiling.html).
+
+#### Support
+* [Slicing](https://hl7.org/fhir/R4/profiling.html#slicing): Allows you to validate sublists of items.
+  * Type Slicing: We support slicing based on type; this allows you to add additional constraints on a type from a typechoice.
+  * Pattern Slicing: Slice based on a pattern defined in the discriminator.
+  * Fixed Value Slicing: Slice based on a fixed value defined in the discriminator.
+* Nested Profiles: We allow you to create and extend profiles from other profiles.
+* Cardinality: Support for restricting cardinality on elements.
+* Patterns: Support for defining patterns on elements.
+* Fixed Values: Support for defining fixed values on elements.
+
+## Server
+
+* We've added support for US Core profiles. You can now use the US Core profiles in your FHIR resources. 
+  You can read more about the US Core profiles [here](https://hl7.org/fhir/us/core/STU4/index.html).
+
+## Admin App
+
+* We've altered the Subscription editor to support a simple editor for creating Subscriptions
+* Subscriptions built in the admin app now automatically adhere to our https://iguhealth.app/resource/Subscription profile.
+
+
+## Artifacts
+* All of our extensions are now defined in profiles found [here](https://www.npmjs.com/package/@iguhealth/iguhealth.fhir.r4.core).
+
+
+
+
+
+### Updated Packages
+* @iguhealth/access-control: 0.4.10
+* @iguhealth/admin-app: 0.16.12
+* @iguhealth/cli: 0.10.10
+* @iguhealth/client: 0.14.9
+* @iguhealth/components: 0.15.12
+* @iguhealth/fhir-validation: 0.13.9
+* @iguhealth/generated-ops: 0.11.10
+* @iguhealth/server: 0.23.21
+* @iguhealth/testscript-runner: 0.6.10
