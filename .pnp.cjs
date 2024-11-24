@@ -23,6 +23,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:artifacts/r4/iguhealth-core"\
     },\
     {\
+      "name": "hl7.fhir.uv.subscriptions-backport.r4",\
+      "reference": "workspace:artifacts/r4/r5-subscription-backport"\
+    },\
+    {\
       "name": "@iguhealth/hl7.fhir.r4.test-data",\
       "reference": "workspace:artifacts/r4/test-data"\
     },\
@@ -188,6 +192,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
     ["@iguhealth/x-fhir-query", ["workspace:packages/x-fhir-query"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
+    ["hl7.fhir.uv.subscriptions-backport.r4", ["workspace:artifacts/r4/r5-subscription-backport"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
   "fallbackPool": [\
@@ -40125,6 +40130,16 @@ const RAW_RUNTIME_STATE =
           ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["hl7.fhir.uv.subscriptions-backport.r4", [\
+      ["workspace:artifacts/r4/r5-subscription-backport", {\
+        "packageLocation": "./artifacts/r4/r5-subscription-backport/",\
+        "packageDependencies": [\
+          ["hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["hoist-non-react-statics", [\

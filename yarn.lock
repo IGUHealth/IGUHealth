@@ -28275,6 +28275,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hl7.fhir.uv.subscriptions-backport.r4@workspace:artifacts/r4/r5-subscription-backport":
+  version: 0.0.0-use.local
+  resolution: "hl7.fhir.uv.subscriptions-backport.r4@workspace:artifacts/r4/r5-subscription-backport"
+  dependencies:
+    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "hoist-non-react-statics@npm:^3.1.0":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
