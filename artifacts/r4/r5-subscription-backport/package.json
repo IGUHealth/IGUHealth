@@ -18,7 +18,7 @@
     "example": "example"
   },
   "jurisdiction": "http://unstats.un.org/unsd/methods/m49/m49.htm#001",
-  "name": "hl7.fhir.uv.subscriptions-backport.r4",
+  "name": "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4",
   "fhirVersions": [
     "4.0.0"
   ]
