@@ -1,0 +1,50 @@
+{
+    "resourceType": "StructureDefinition",
+    "id": "iguhealth-subscriptiontopic-backport",
+    "url": "https://iguhealth.app/resource/SubscriptionTopic-backport",
+    "version": "4.0.0",
+    "name": "IGUHealth SubscriptionTopic-backport",
+    "title": "IGUHealth SubscriptionTopic-backport",
+    "status": "active",
+    "publisher": "IGUHealth",
+    "description": "Extends Basic for support of SubscriptionTopic",
+    "fhirVersion": "4.0.1",
+    "kind": "resource",
+    "abstract": false,
+    "type": "Basic",
+    "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Basic",
+    "derivation": "constraint",
+    "differential": {
+        "element": [
+            {
+                "id": "Basic",
+                "path": "Basic"
+            },
+            {
+                "id": "Basic.code",
+                "path": "Basic.code",
+                "patternCodeableConcept": {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/fhir-types",
+                            "code": "SubscriptionTopic"
+                        }
+                    ]
+                }
+            },
+            {
+                "id": "Basic.extension",
+                "path": "Basic.extension",
+                "slicing": {
+                    "discriminator": [
+                        {
+                            "type": "value",
+                            "path": "url"
+                        }
+                    ],
+                    "rules": "open"
+                }
+            }
+        ]
+    }
+}
