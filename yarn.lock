@@ -11284,6 +11284,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/hl7.fhir.uv.subscriptions-backport.r4@workspace:^, @iguhealth/hl7.fhir.uv.subscriptions-backport.r4@workspace:artifacts/r4/r5-subscription-backport":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4@workspace:artifacts/r4/r5-subscription-backport"
+  dependencies:
+    "@iguhealth/hl7.fhir.r4.core": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/hl7v2-parsing@workspace:packages/hl7v2-parsing":
   version: 0.0.0-use.local
   resolution: "@iguhealth/hl7v2-parsing@workspace:packages/hl7v2-parsing"
@@ -11433,6 +11441,7 @@ __metadata:
     "@iguhealth/hl7.fhir.r4.test-data": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.test-data": "workspace:^"
+    "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^"
     "@iguhealth/jwt": "workspace:^"

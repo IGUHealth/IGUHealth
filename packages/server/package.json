@@ -42,6 +42,7 @@
     "@iguhealth/generated-ops": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
+    "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^",
     "@iguhealth/jwt": "workspace:^",

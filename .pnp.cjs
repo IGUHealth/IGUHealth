@@ -23,6 +23,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:artifacts/r4/iguhealth-core"\
     },\
     {\
+      "name": "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4",\
+      "reference": "workspace:artifacts/r4/r5-subscription-backport"\
+    },\
+    {\
       "name": "@iguhealth/hl7.fhir.r4.test-data",\
       "reference": "workspace:artifacts/r4/test-data"\
     },\
@@ -173,6 +177,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/hl7.fhir.r4.test-data", ["workspace:artifacts/r4/test-data"]],\
     ["@iguhealth/hl7.fhir.r4b.core", ["workspace:artifacts/r4b/hl7-core"]],\
     ["@iguhealth/hl7.fhir.r4b.test-data", ["workspace:artifacts/r4b/test-data"]],\
+    ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", ["workspace:artifacts/r4/r5-subscription-backport"]],\
     ["@iguhealth/hl7v2-parsing", ["workspace:packages/hl7v2-parsing"]],\
     ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/r4/iguhealth-core"]],\
     ["@iguhealth/iguhealth.fhir.r4b.core", ["workspace:artifacts/r4b/iguhealth-core"]],\
@@ -18927,6 +18932,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", [\
+      ["workspace:artifacts/r4/r5-subscription-backport", {\
+        "packageLocation": "./artifacts/r4/r5-subscription-backport/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@iguhealth/hl7v2-parsing", [\
       ["workspace:packages/hl7v2-parsing", {\
         "packageLocation": "./packages/hl7v2-parsing/",\
@@ -19099,6 +19114,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"],\
+          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/iguhealth.fhir.r4b.core", "workspace:artifacts/r4b/iguhealth-core"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
