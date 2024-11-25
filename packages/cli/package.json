@@ -22,11 +22,11 @@
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/testscript-runner": "workspace:^",
-    "@inquirer/prompts": "^5.3.8",
-    "@types/node": "^22.5.4",
+    "@inquirer/prompts": "^5.5.0",
+    "@types/node": "^22.9.4",
     "commander": "^12.1.0",
-    "pino": "^9.3.2",
-    "pino-pretty": "^11.2.2"
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
