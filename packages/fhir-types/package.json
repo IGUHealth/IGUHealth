@@ -32,7 +32,7 @@
     "./r4b/types": "./lib/generated/r4b/types.js"
   },
   "devDependencies": {
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.9.4",
     "typescript": "5.7.2"
   },
   "files": [
