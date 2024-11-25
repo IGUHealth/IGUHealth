@@ -18,6 +18,7 @@ function getAllFiles(directory: string): string[] {
   }
   return files;
 }
+
 function getRegexForIgnore(urlPattern: string): RegExp {
   const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
   return regex;
