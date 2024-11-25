@@ -15,6 +15,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { validatePrimitive } from "../elements/primitive.js";
 import { validateCardinality } from "../elements/validators/cardinality.js";
 import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
@@ -135,6 +136,10 @@ export async function validateSingularProfileElement(
 
   // Structural Validation should have already checked the leaf nodes.
   if (children.length === 0) {
+    // Validate binding if any on code.
+    if (type === "code") {
+      return validatePrimitive(ctx, element, root, path, type);
+    }
     return [];
   }
 
