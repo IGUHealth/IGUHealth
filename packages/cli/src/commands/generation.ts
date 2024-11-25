@@ -19,7 +19,7 @@ import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
 import logger from "../logger.js";
-import { conversion, dataCommand, getAllFiles } from "../utilities.js";
+import { conversion, getAllFiles } from "../utilities.js";
 
 export function codeGenerationCommands(command: Command) {
   command
