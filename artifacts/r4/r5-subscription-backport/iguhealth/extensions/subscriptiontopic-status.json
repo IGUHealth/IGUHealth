@@ -1,0 +1,48 @@
+{
+    "resourceType": "StructureDefinition",
+    "id": "backport-subscriptiontopic.status",
+    "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-SubscriptionTopic.status",
+    "version": "4.0.0",
+    "name": "Backport subscriptiontopic.status",
+    "status": "active",
+    "publisher": "IGUHealth",
+    "fhirVersion": "4.0.1",
+    "kind": "complex-type",
+    "abstract": false,
+    "type": "Extension",
+    "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Extension",
+    "derivation": "constraint",
+    "differential": {
+        "element": [
+            {
+                "id": "Extension",
+                "path": "Extension",
+                "min": 0,
+                "max": "1"
+            },
+            {
+                "id": "Extension.url",
+                "path": "Extension.url",
+                "min": 1,
+                "max": "1",
+                "fixedUri": "http://hl7.org/fhir/5.0/StructureDefinition/extension-SubscriptionTopic.status"
+            },
+            {
+                "id": "Extension.valueCode",
+                "path": "Extension.valueCode",
+                "min": 1,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "code"
+                    }
+                ],
+                "binding": {
+                    "strength": "required",
+                    "description": "The lifecycle status of an artifact.",
+                    "valueSet": "http://hl7.org/fhir/ValueSet/publication-status|4.0.1"
+                }
+            }
+        ]
+    }
+}

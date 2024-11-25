@@ -44,6 +44,38 @@
                     ],
                     "rules": "open"
                 }
+            },
+            {
+                "id": "Basic.extension:SubscriptionTopic-url",
+                "path": "Basic.extension",
+                "sliceName": "subscriptiontopic-url",
+                "min": 1,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "Extension",
+                        "profile": [
+                            "https://iguhealth.app/SubscriptionTopic/url"
+                        ]
+                    }
+                ],
+                "mustSupport": false
+            },
+            {
+                "id": "Basic.extension:SubscriptionTopic-status",
+                "path": "Basic.extension",
+                "sliceName": "subscriptiontopic-status",
+                "min": 1,
+                "max": "1",
+                "type": [
+                    {
+                        "code": "Extension",
+                        "profile": [
+                            "https://iguhealth.app/SubscriptionTopic/code"
+                        ]
+                    }
+                ],
+                "mustSupport": false
             }
         ]
     }
