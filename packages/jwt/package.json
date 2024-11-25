@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/jwt",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "dependencies": {
     "jose": "^5.8.0"
   },

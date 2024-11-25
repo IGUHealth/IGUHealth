@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-patch-building",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
