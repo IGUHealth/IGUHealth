@@ -77,6 +77,22 @@
           }
         ],
         "mustSupport": false
+      },
+      {
+        "id": "Basic.extension:SubscriptionTopic-resourceTrigger",
+        "path": "Basic.extension",
+        "sliceName": "subscriptiontopic-resourceTrigger",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://hl7.org/fhir/5.0/StructureDefinition/extension-SubscriptionTopic.resourceTrigger"
+            ]
+          }
+        ],
+        "mustSupport": false
       }
     ]
   },
@@ -436,6 +452,22 @@
             "code": "Extension",
             "profile": [
               "http://hl7.org/fhir/5.0/StructureDefinition/extension-SubscriptionTopic.status"
+            ]
+          }
+        ],
+        "mustSupport": false
+      },
+      {
+        "id": "Basic.extension:SubscriptionTopic-resourceTrigger",
+        "path": "Basic.extension",
+        "sliceName": "subscriptiontopic-resourceTrigger",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "Extension",
+            "profile": [
+              "http://hl7.org/fhir/5.0/StructureDefinition/extension-SubscriptionTopic.resourceTrigger"
             ]
           }
         ],

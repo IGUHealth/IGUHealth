@@ -361,7 +361,10 @@ export class TerminologyProvider implements ITerminologyProvider {
 
     if (!valueset) {
       throw new OperationError(
-        outcomeError("not-found", "ValueSet was not found."),
+        outcomeError(
+          "not-found",
+          `ValueSet '${input.url ?? input.valueSet?.url}' was not found.`,
+        ),
       );
     }
 
@@ -387,7 +390,10 @@ export class TerminologyProvider implements ITerminologyProvider {
 
     if (!valueset) {
       throw new OperationError(
-        outcomeError("not-found", "ValueSet was not found."),
+        outcomeError(
+          "not-found",
+          `ValueSet '${input.url ?? input.valueSet?.url}' was not found.`,
+        ),
       );
     }
 

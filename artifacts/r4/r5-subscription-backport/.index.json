@@ -98,6 +98,18 @@
       "resourceType": "SubscriptionTopic"
     },
     {
+      "filename": "iguhealth/extensions/subscription-resource-trigger/index.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "iguhealth/extensions/subscription-resource-trigger/resource.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "iguhealth/extensions/subscription-resource-trigger/supported-interaction.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "iguhealth/extensions/subscriptiontopic-status.json",
       "resourceType": "StructureDefinition"
     },
