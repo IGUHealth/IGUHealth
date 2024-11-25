@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { mkdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -19,7 +19,7 @@ import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
 import logger from "../logger.js";
-import { conversion, dataCommand } from "../utilities.js";
+import { conversion, getAllFiles } from "../utilities.js";
 
 export function codeGenerationCommands(command: Command) {
   command
@@ -119,41 +119,50 @@ export function codeGenerationCommands(command: Command) {
       logger.info(`index generated and saved at '${indexLoc}'`);
     });
 
-  dataCommand.command(
-    command
-      .command("snapshot")
-      .argument("<fhirVersion>", "FHIR Version")
-      .description("Generate a snapshot of a StructureDefinition")
-      .option("-o, --output <output>", "Output file")
-      .action(async (userFHIRVersion, options) => {
-        const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
-        const resourceToSave = dataCommand.readData(options);
+  command
+    .command("snapshot")
+    .argument("<fhirVersion>", "FHIR Version")
+    .description("Generate a snapshot of a StructureDefinition")
+    .option(
+      "-d, --directory <directory>",
+      "Directory with artifacts to minimize.",
+    )
+    .action(async (userFHIRVersion, options) => {
+      const FHIRVersion = conversion.asFHIRType(userFHIRVersion);
 
-        const client = await createClient(CONFIG_LOCATION);
+      const profileLocs: string[] = getAllFiles(options.directory).filter(
+        (f) => !f.endsWith("min.json") && f.endsWith(".json"),
+      );
+
+      for (const profileLoc of profileLocs) {
+        const fileContents = readFileSync(profileLoc);
+        const profile = JSON.parse(fileContents.toString("utf8"));
         if (
-          !resourceToSave ||
-          typeof resourceToSave !== "object" ||
-          (resourceToSave as unknown as Record<string, unknown>)
-            ?.resourceType !== "StructureDefinition"
+          typeof profile === "object" &&
+          profile.resourceType === "StructureDefinition"
         ) {
-          throw new Error("No StructureDefinition to generate snapshot.");
-        }
+          const client = await createClient(CONFIG_LOCATION);
+          if (
+            !profile ||
+            typeof profile !== "object" ||
+            (profile as unknown as Record<string, unknown>)?.resourceType !==
+              "StructureDefinition"
+          ) {
+            throw new Error("No StructureDefinition to generate snapshot.");
+          }
 
-        const sd = await client.invoke_type(
-          StructureDefinitionSnapshot.Op,
-          {},
-          FHIRVersion,
-          "StructureDefinition",
-          {
-            definition: resourceToSave as StructureDefinition,
-          },
-        );
+          const sd = await client.invoke_type(
+            StructureDefinitionSnapshot.Op,
+            {},
+            FHIRVersion,
+            "StructureDefinition",
+            {
+              definition: profile as StructureDefinition,
+            },
+          );
 
-        if (options.output) {
-          writeFileSync(options.output, JSON.stringify(sd, null, 2));
-        } else {
-          console.log(JSON.stringify(sd, null, 2));
+          writeFileSync(profileLoc, JSON.stringify(sd, null, 2));
         }
-      }),
-  );
+      }
+    });
 }

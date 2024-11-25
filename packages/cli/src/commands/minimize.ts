@@ -1,6 +1,5 @@
 import { Command } from "commander";
 import fs from "node:fs";
-import path from "node:path";
 
 import {
   AllResourceTypes,
@@ -8,19 +7,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
-function getAllFiles(directory: string): string[] {
-  const files: string[] = [];
-  const filesInDirectory = fs.readdirSync(directory);
-  for (const file of filesInDirectory) {
-    const absolute = path.join(directory, file);
-    if (fs.statSync(absolute).isDirectory()) {
-      files.push(...getAllFiles(absolute));
-    } else {
-      files.push(absolute);
-    }
-  }
-  return files;
-}
+import { getAllFiles } from "../utilities.js";
 
 function minimizeResource<T extends Resource<FHIR_VERSION, AllResourceTypes>>(
   resource: T,

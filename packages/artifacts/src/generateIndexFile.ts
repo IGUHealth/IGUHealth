@@ -18,6 +18,7 @@ function getAllFiles(directory: string): string[] {
   }
   return files;
 }
+
 function getRegexForIgnore(urlPattern: string): RegExp {
   const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
   return regex;
@@ -49,29 +50,34 @@ export default function generateIndexFile({
     .sort((a, b) => a.localeCompare(b));
 
   for (const file of files) {
-    const fileContents = fs.readFileSync(file);
-    const json = JSON.parse(fileContents.toString("utf8"));
-    if (json.resourceType === "Bundle") {
-      const bundle = json as Bundle;
-      // Add to index
-      const resourceTypes = new Set(
-        bundle.entry?.map((entry) => entry.resource?.resourceType),
-      );
+    try {
+      const fileContents = fs.readFileSync(file);
+      const json = JSON.parse(fileContents.toString("utf8"));
+      if (json.resourceType === "Bundle") {
+        const bundle = json as Bundle;
+        // Add to index
+        const resourceTypes = new Set(
+          bundle.entry?.map((entry) => entry.resource?.resourceType),
+        );
 
-      index.files = (index.files || []).concat(
-        [...resourceTypes].map((resourceType) => ({
-          filename: file,
-          resourceType,
-        })),
-      );
-    } else if (json.resourceType) {
-      // Add to index
-      index.files = (index.files || []).concat([
-        {
-          filename: file,
-          resourceType: json.resourceType,
-        },
-      ]);
+        index.files = (index.files || []).concat(
+          [...resourceTypes].map((resourceType) => ({
+            filename: file,
+            resourceType,
+          })),
+        );
+      } else if (json.resourceType) {
+        // Add to index
+        index.files = (index.files || []).concat([
+          {
+            filename: file,
+            resourceType: json.resourceType,
+          },
+        ]);
+      }
+    } catch (e) {
+      console.error("Failed to parse file ", file);
+      throw e;
     }
   }
   return index;

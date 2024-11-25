@@ -17,6 +17,10 @@
     "lib": "package",
     "example": "example"
   },
+  "scripts": {
+    "minify": "yarn node ../../../packages/cli/lib/iguhealth.js minimize artifacts -d .",
+    "generate-index": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file --extension .json -p . -r ."
+  },
   "jurisdiction": "http://unstats.un.org/unsd/methods/m49/m49.htm#001",
   "name": "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4",
   "fhirVersions": [
