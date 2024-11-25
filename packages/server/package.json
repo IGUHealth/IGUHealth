@@ -127,7 +127,7 @@
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.10",
     "ts-jest": "^29.2.5",
-    "tsx": "4.19.2",
+    "tsx": "4.11.2",
     "typescript": "5.7.2"
   },
   "files": [

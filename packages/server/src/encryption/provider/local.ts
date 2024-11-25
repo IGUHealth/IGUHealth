@@ -1,10 +1,10 @@
-import crypto from "node:crypto";
+import crypto, { BinaryLike, CipherGCMTypes, CipherKey } from "node:crypto";
 
 import { EncryptionProvider } from "./interface.js";
 
 export default class LocalEncryption implements EncryptionProvider {
   private _key: Buffer;
-  private _alg: string;
+  private _alg: CipherGCMTypes;
   private _iv: Buffer;
 
   constructor({
@@ -14,11 +14,11 @@ export default class LocalEncryption implements EncryptionProvider {
   }: {
     key: Buffer;
     iv: Buffer;
-    algorithm?: string;
+    algorithm?: CipherGCMTypes;
   }) {
     this._key = key;
     this._iv = iv;
-    this._alg = algorithm || "aes-256-cbc";
+    this._alg = algorithm ?? ("aes-256-cbc" as CipherGCMTypes);
   }
   async encrypt(
     context: Record<string, string>,
@@ -26,11 +26,14 @@ export default class LocalEncryption implements EncryptionProvider {
   ): Promise<string> {
     const cipher = crypto.createCipheriv(
       this._alg,
-      Buffer.from(this._key),
-      this._iv,
+      this._key as CipherKey,
+      this._iv as BinaryLike,
     );
     let encrypted = cipher.update(data);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    encrypted = Buffer.concat([
+      encrypted as Uint8Array<ArrayBufferLike>,
+      cipher.final() as Uint8Array<ArrayBufferLike>,
+    ]);
     return encrypted.toString("hex");
   }
   async decrypt(
@@ -40,11 +43,17 @@ export default class LocalEncryption implements EncryptionProvider {
     const encryptedText = Buffer.from(data, "hex");
     const decipher = crypto.createDecipheriv(
       this._alg,
-      Buffer.from(this._key),
-      this._iv,
+      this._key as CipherKey,
+      this._iv as BinaryLike,
     );
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    let decrypted = decipher.update(
+      encryptedText as Uint8Array<ArrayBufferLike>,
+    );
+    decrypted = Buffer.concat([
+      decrypted as Uint8Array<ArrayBufferLike>,
+      decipher.final() as Uint8Array<ArrayBufferLike>,
+    ]);
     return decrypted.toString();
   }
 }
