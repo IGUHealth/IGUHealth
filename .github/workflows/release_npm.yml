@@ -12,15 +12,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: EnableCorePack
+        run: corepack enable
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: 22.7.0
           cache: "yarn"
           registry-url: "https://registry.npmjs.org"
-
-      - name: EnableCorePack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn

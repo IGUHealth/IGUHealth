@@ -20,7 +20,7 @@
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
     "typedoc": "^0.26.6",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   },
   "description": "",
   "keywords": [],
@@ -44,5 +44,5 @@
       "unplugged": true
     }
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.3"
 }

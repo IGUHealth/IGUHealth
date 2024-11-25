@@ -52,17 +52,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: EnableCorePack
+        run: corepack enable
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: 22.7.0
           cache: "yarn"
 
-      - name: EnableCorePack
-        run: corepack enable
-
       - name: Yarn Setup
-        run: corepack prepare yarn@4.1.1 --activate
+        run: corepack prepare yarn@4.5.3 --activate
 
       - name: Build
         run: sh install.sh

@@ -284,7 +284,7 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         await this.lambdaClient.send(
           new UpdateFunctionCodeCommand({
             FunctionName: existingLambda.Configuration?.FunctionArn,
-            ZipFile: zip,
+            ZipFile: zip as Uint8Array<ArrayBufferLike>,
           }),
         );
 
@@ -312,7 +312,7 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
         Role: this.role,
         Tags: getLambdaTags(ctx, operation.operationDefinition),
         Code: {
-          ZipFile: zip,
+          ZipFile: zip as Uint8Array<ArrayBufferLike>,
         },
         Timeout: 10,
         Environment: {
