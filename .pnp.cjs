@@ -25538,7 +25538,7 @@ const RAW_RUNTIME_STATE =
           ["@storybook/core", "npm:8.2.9"],\
           ["@storybook/csf", "npm:0.1.11"],\
           ["@types/cross-spawn", "npm:6.0.2"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["globby", "npm:14.0.1"],\
           ["jscodeshift", "virtual:666986d258552cf3b0c0c6a74b09dca5c3974d9f21fb43273db0ab51084a7a35f6b18fc12e2d246a59dedda9316e14a1cba7660f1508abadda2530f4eefa22e9#npm:0.15.1"],\
           ["lodash", "npm:4.17.21"],\
@@ -30623,7 +30623,7 @@ const RAW_RUNTIME_STATE =
           ["chokidar", "npm:3.6.0"],\
           ["ci-info", "npm:3.9.0"],\
           ["cli-table3", "npm:0.6.5"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["csv-parse", "npm:4.16.3"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["dependency-tree", "npm:10.0.9"],\
@@ -34001,10 +34001,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["cross-spawn", [\
-      ["npm:7.0.3", {\
-        "packageLocation": "./.yarn/cache/cross-spawn-npm-7.0.3-e4ff3e65b3-e1a13869d2.zip/node_modules/cross-spawn/",\
+      ["npm:7.0.6", {\
+        "packageLocation": "./.yarn/cache/cross-spawn-npm-7.0.6-264bddf921-0d52657d7a.zip/node_modules/cross-spawn/",\
         "packageDependencies": [\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["path-key", "npm:3.1.1"],\
           ["shebang-command", "npm:2.0.0"],\
           ["which", "npm:2.0.2"]\
@@ -37271,7 +37271,7 @@ const RAW_RUNTIME_STATE =
           ["@nodelib/fs.walk", "npm:1.2.8"],\
           ["ajv", "npm:6.12.6"],\
           ["chalk", "npm:4.1.2"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["doctrine", "npm:3.0.0"],\
           ["escape-string-regexp", "npm:4.0.0"],\
@@ -37318,7 +37318,7 @@ const RAW_RUNTIME_STATE =
           ["@ungap/structured-clone", "npm:1.2.0"],\
           ["ajv", "npm:6.12.6"],\
           ["chalk", "npm:4.1.2"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["doctrine", "npm:3.0.0"],\
           ["escape-string-regexp", "npm:4.0.0"],\
@@ -38003,7 +38003,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/execa-npm-5.1.1-191347acf5-8ada91f2d7.zip/node_modules/execa/",\
         "packageDependencies": [\
           ["execa", "npm:5.1.1"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["get-stream", "npm:6.0.1"],\
           ["human-signals", "npm:2.1.0"],\
           ["is-stream", "npm:2.0.1"],\
@@ -38778,7 +38778,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/foreground-child-npm-3.1.1-77e78ed774-087edd4485.zip/node_modules/foreground-child/",\
         "packageDependencies": [\
           ["foreground-child", "npm:3.1.1"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["signal-exit", "npm:4.0.2"]\
         ],\
         "linkType": "HARD"\
@@ -38787,7 +38787,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/foreground-child-npm-3.3.0-b8be745271-e3a60480f3.zip/node_modules/foreground-child/",\
         "packageDependencies": [\
           ["foreground-child", "npm:3.3.0"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["signal-exit", "npm:4.0.2"]\
         ],\
         "linkType": "HARD"\
@@ -47691,7 +47691,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["password-prompt", "npm:1.1.3"],\
           ["ansi-escapes", "npm:4.3.2"],\
-          ["cross-spawn", "npm:7.0.3"]\
+          ["cross-spawn", "npm:7.0.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -53247,7 +53247,7 @@ const RAW_RUNTIME_STATE =
           ["address", "npm:1.2.2"],\
           ["browserslist", "npm:4.21.9"],\
           ["chalk", "npm:4.1.2"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["detect-port-alt", "npm:1.1.6"],\
           ["escape-string-regexp", "npm:4.0.0"],\
           ["filesize", "npm:8.0.7"],\
@@ -53288,7 +53288,7 @@ const RAW_RUNTIME_STATE =
           ["address", "npm:1.2.2"],\
           ["browserslist", "npm:4.21.9"],\
           ["chalk", "npm:4.1.2"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["detect-port-alt", "npm:1.1.6"],\
           ["escape-string-regexp", "npm:4.0.0"],\
           ["filesize", "npm:8.0.7"],\
@@ -56597,7 +56597,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/libzip", "npm:2.3.0"],\
           ["chalk", "npm:4.1.2"],\
           ["commander", "npm:6.2.1"],\
-          ["cross-spawn", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.6"],\
           ["detect-indent", "npm:6.1.0"],\
           ["envinfo", "npm:7.10.0"],\
           ["execa", "npm:5.1.1"],\
