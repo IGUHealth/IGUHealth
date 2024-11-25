@@ -40,6 +40,8 @@ RUN set -eux; \
 
 COPY . /app
 WORKDIR /app
+
+RUN corepack enable
 RUN yarn install
 RUN yarn workspaces foreach -ptR --topological-dev --from @iguhealth/admin-app run build
 
