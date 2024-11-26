@@ -134,15 +134,6 @@ export async function validateSingularProfileElement(
     }
   }
 
-  // Structural Validation should have already checked the leaf nodes.
-  if (children.length === 0) {
-    // Validate binding if any on code.
-    if (type === "code") {
-      return validatePrimitive(ctx, element, root, path, type);
-    }
-    return [];
-  }
-
   // Profile can further constrain typechoices check that here.
   if (!validateTypeIfMultipleTypesConstrained(element, type)) {
     throw new OperationError(
@@ -164,52 +155,59 @@ export async function validateSingularProfileElement(
 
   let issues: OperationOutcomeIssue[] = [];
 
-  for (const childIndex of children) {
-    const childElement = elements[childIndex];
-    const childElementLoc = descend(elementsLoc, childIndex);
-    const fields = getFoundFieldsForElement(childElement, value);
-    fields.forEach((f) => foundFields.add(f.field));
+  if (children.length > 0) {
+    for (const childIndex of children) {
+      const childElement = elements[childIndex];
+      const childElementLoc = descend(elementsLoc, childIndex);
+      const fields = getFoundFieldsForElement(childElement, value);
+      fields.forEach((f) => foundFields.add(f.field));
 
-    // Confirm if no fields are found and the element is required then issue an error.
-    if (isElementRequired(childElement) && fields.length === 0) {
+      // Confirm if no fields are found and the element is required then issue an error.
+      if (isElementRequired(childElement) && fields.length === 0) {
+        issues = issues.concat([
+          issueError(
+            "structure",
+            `Missing required field '${childElement.path}' at path '${toJSONPointer(
+              path,
+            )}'`,
+            [toJSONPointer(path)],
+          ),
+        ]);
+      }
+
+      for (const field of fields) {
+        const childValueLoc = descend(path, field.field);
+        issues = issues.concat(
+          await validateProfileElement(
+            ctx,
+            profile,
+            childElementLoc as unknown as ElementLoc,
+            root,
+            childValueLoc,
+            field.type,
+          ),
+        );
+      }
+    }
+    const additionalFields = new Set(Object.keys(value)).difference(
+      foundFields,
+    );
+
+    if (additionalFields.size > 0) {
       issues = issues.concat([
         issueError(
           "structure",
-          `Missing required field '${childElement.path}' at path '${toJSONPointer(
+          `Additional fields found at path '${toJSONPointer(
             path,
-          )}'`,
+          )}': '${Array.from(additionalFields).join(", ")}'`,
           [toJSONPointer(path)],
         ),
       ]);
     }
-
-    for (const field of fields) {
-      const childValueLoc = descend(path, field.field);
-      issues = issues.concat(
-        await validateProfileElement(
-          ctx,
-          profile,
-          childElementLoc as unknown as ElementLoc,
-          root,
-          childValueLoc,
-          field.type,
-        ),
-      );
-    }
-  }
-
-  const additionalFields = new Set(Object.keys(value)).difference(foundFields);
-
-  if (additionalFields.size > 0) {
-    issues = issues.concat([
-      issueError(
-        "structure",
-        `Additional fields found at path '${toJSONPointer(
-          path,
-        )}': '${Array.from(additionalFields).join(", ")}'`,
-        [toJSONPointer(path)],
-      ),
-    ]);
+  } else if (type === "code") {
+    issues = issues.concat(
+      await validatePrimitive(ctx, element, root, path, type),
+    );
   }
 
   return issues;
