@@ -22581,7 +22581,7 @@ const RAW_RUNTIME_STATE =
           ["@rollup/pluginutils", "virtual:60003b738c9e31fe31cb1bd4767e8e06c17b7f12b032490bfccd4fbd24f743d083b74c55854944be0acc674a7a6ec5440dfe1ef80b5a48d8c40285d683e4a14c#npm:3.1.0"],\
           ["@types/babel__core", null],\
           ["@types/rollup", null],\
-          ["rollup", "npm:2.79.1"]\
+          ["rollup", "npm:2.79.2"]\
         ],\
         "packagePeers": [\
           "@babel/core",\
@@ -22688,7 +22688,7 @@ const RAW_RUNTIME_STATE =
           ["deepmerge", "npm:4.3.1"],\
           ["is-module", "npm:1.0.0"],\
           ["resolve", "patch:resolve@npm%3A1.22.3#optional!builtin<compat/resolve>::version=1.22.3&hash=c3c19d"],\
-          ["rollup", "npm:2.79.1"]\
+          ["rollup", "npm:2.79.2"]\
         ],\
         "packagePeers": [\
           "@types/rollup",\
@@ -22734,7 +22734,7 @@ const RAW_RUNTIME_STATE =
           ["@rollup/pluginutils", "virtual:60003b738c9e31fe31cb1bd4767e8e06c17b7f12b032490bfccd4fbd24f743d083b74c55854944be0acc674a7a6ec5440dfe1ef80b5a48d8c40285d683e4a14c#npm:3.1.0"],\
           ["@types/rollup", null],\
           ["magic-string", "npm:0.25.9"],\
-          ["rollup", "npm:2.79.1"]\
+          ["rollup", "npm:2.79.2"]\
         ],\
         "packagePeers": [\
           "@types/rollup",\
@@ -22846,7 +22846,7 @@ const RAW_RUNTIME_STATE =
           ["@types/rollup", null],\
           ["estree-walker", "npm:1.0.1"],\
           ["picomatch", "npm:2.3.1"],\
-          ["rollup", "npm:2.79.1"]\
+          ["rollup", "npm:2.79.2"]\
         ],\
         "packagePeers": [\
           "@types/rollup",\
@@ -55120,14 +55120,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["rollup", [\
-      ["npm:2.79.1", {\
-        "packageLocation": "./.yarn/cache/rollup-npm-2.79.1-94e707a9a3-df087b7013.zip/node_modules/rollup/",\
-        "packageDependencies": [\
-          ["rollup", "npm:2.79.1"],\
-          ["fsevents", "patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:2.79.2", {\
         "packageLocation": "./.yarn/cache/rollup-npm-2.79.2-1b08e69c0e-095ba0a828.zip/node_modules/rollup/",\
         "packageDependencies": [\
@@ -55307,7 +55299,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/code-frame", "npm:7.22.5"],\
           ["@types/rollup", null],\
           ["jest-worker", "npm:26.6.2"],\
-          ["rollup", "npm:2.79.1"],\
+          ["rollup", "npm:2.79.2"],\
           ["serialize-javascript", "npm:4.0.0"],\
           ["terser", "npm:5.18.2"]\
         ],\
@@ -60290,7 +60282,7 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:7.2.3"],\
           ["lodash", "npm:4.17.21"],\
           ["pretty-bytes", "npm:5.6.0"],\
-          ["rollup", "npm:2.79.1"],\
+          ["rollup", "npm:2.79.2"],\
           ["rollup-plugin-terser", "virtual:3d8f742cc215c59a7a778b8fde5b525a10008250717413c6f792d2aaf8a04680d4097b976c8e544abb523de4489bb8c3c9e4615e55985d64a083ecbb31631bd2#npm:7.0.2"],\
           ["source-map", "npm:0.8.0-beta.0"],\
           ["stringify-object", "npm:3.3.0"],\
