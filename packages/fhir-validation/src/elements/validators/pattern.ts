@@ -49,7 +49,6 @@ export async function validatePattern(
   const pattern = (
     await fp.evaluate("pattern", element, { type: "ElementDefinition" as uri })
   )[0];
-
   const value = get(path, root);
   if (!pattern) return [];
 
