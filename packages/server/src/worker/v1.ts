@@ -1,7 +1,5 @@
 // Backend Processes used for subscriptions and cron jobs.
 import { randomUUID } from "crypto";
-import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -21,7 +19,6 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
 import { createCertsIfNoneExists } from "@iguhealth/jwt/certifications";
-import { TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
   isOperationError,
@@ -30,7 +27,6 @@ import {
 
 import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import loadEnv from "../env.js";
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -48,24 +44,16 @@ import {
 } from "../fhir-storage/utilities/search/parameters.js";
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
+import { getActiveTenants } from "./retrieval/tenant.js";
 import {
+  IGUHealthWorkerCTX,
   createWorkerIGUHealthClient,
-  workerServices,
+  staticWorkerServices,
+  tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
 
 loadEnv();
-
-type WorkerServices = Pick<
-  IGUHealthServerCTX,
-  | "db"
-  | "logger"
-  | "cache"
-  | "tenant"
-  | "user"
-  | "resolveCanonical"
-  | "resolveTypeToCanonical"
->;
 
 if (process.env.NODE_ENV === "development") {
   await createCertsIfNoneExists(
@@ -108,7 +96,7 @@ async function getVersionSequence(
 
 async function handleSubscriptionPayload(
   client: AsynchronousClient<unknown, unknown>,
-  services: WorkerServices,
+  services: IGUHealthWorkerCTX,
   fhirVersion: R4,
   subscription: Subscription,
   payload: Resource<FHIR_VERSION, AllResourceTypes>[],
@@ -217,7 +205,7 @@ async function handleSubscriptionPayload(
         );
       }
 
-      const bundle: Resource<R4, "Bundle"> = {
+      const bundle: Resource<FHIR_VERSION, "Bundle"> = {
         resourceType: "Bundle",
         type: "message",
         timestamp: new Date().toISOString(),
@@ -239,7 +227,7 @@ async function handleSubscriptionPayload(
             resource,
           })),
         ],
-      } as Resource<R4, "Bundle">;
+      } as Resource<FHIR_VERSION, "Bundle">;
 
       const endpoint = subscription.channel.endpoint;
       const headers = subscription.channel.header
@@ -287,7 +275,7 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 
 function processSubscription(
   workerID: string,
-  ctx: WorkerServices,
+  ctx: IGUHealthWorkerCTX,
   fhirVersion: FHIR_VERSION,
   client: AsynchronousClient<unknown, unknown>,
   subscriptionId: id,
@@ -512,20 +500,12 @@ function processSubscription(
   };
 }
 
-async function getActiveTenants(pool: db.Queryable): Promise<TenantId[]> {
-  const tenants = await db.sql<s.tenants.SQL, s.tenants.Selectable[]>`
-    SELECT ${"id"} from ${"tenants"} where ${{ deleted: false }}
-  `.run(pool);
-
-  return tenants.map((w) => w.id as TenantId);
-}
-
 async function createWorker(
   workerID = randomUUID(),
   fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
-  const services = workerServices(workerID);
+  const services = staticWorkerServices(workerID);
 
   let isRunning = true;
 
@@ -535,17 +515,15 @@ async function createWorker(
     try {
       const activeTenants = await getActiveTenants(services.db);
       for (const tenant of activeTenants) {
-        const tokenPayload = workerTokenClaims(workerID, tenant);
-        const client = createWorkerIGUHealthClient(tenant, tokenPayload);
+        const tenantClaims = workerTokenClaims(workerID, tenant);
+        const client = createWorkerIGUHealthClient(tenant, tenantClaims);
 
-        const ctx: WorkerServices = {
-          ...services,
-          tenant: tenant,
-          user: {
-            resource: WORKER_APP,
-            payload: tokenPayload,
-          },
-        };
+        const ctx: IGUHealthWorkerCTX = tenantWorkerContext(
+          services,
+          tenant,
+          tenantClaims,
+        );
+
         const activeSubscriptionIds = (
           await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },

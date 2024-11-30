@@ -1,3 +1,4 @@
+import { Parameter } from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
@@ -21,6 +22,18 @@ import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/a
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import RedisLock from "../synchronization/redis.lock.js";
 
+export type IGUHealthWorkerCTX = Pick<
+  IGUHealthServerCTX,
+  | "db"
+  | "logger"
+  | "lock"
+  | "cache"
+  | "tenant"
+  | "user"
+  | "resolveCanonical"
+  | "resolveTypeToCanonical"
+> & { workerID: string };
+
 export function workerTokenClaims(
   workerID: string,
   tenant: TenantId,
@@ -38,6 +51,9 @@ export function workerTokenClaims(
 
   return accessTokenPayload;
 }
+
+export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
+export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
 export function createWorkerIGUHealthClient(
   tenant: TenantId,
@@ -64,17 +80,9 @@ export function createWorkerIGUHealthClient(
   return client;
 }
 
-export function workerServices(
+export function staticWorkerServices(
   workerID: string,
-): Pick<
-  IGUHealthServerCTX,
-  | "resolveCanonical"
-  | "resolveTypeToCanonical"
-  | "db"
-  | "logger"
-  | "cache"
-  | "lock"
-> {
+): Omit<IGUHealthWorkerCTX, "user" | "tenant"> {
   const db = createPGPool();
   const redis = getRedisClient();
   const lock = new RedisLock(redis);
@@ -92,5 +100,21 @@ export function workerServices(
     logger,
     cache,
     lock,
+    workerID,
+  };
+}
+
+export function tenantWorkerContext(
+  services: Omit<IGUHealthWorkerCTX, "user" | "tenant">,
+  tenant: TenantId,
+  claims: AccessTokenPayload<s.user_role>,
+): IGUHealthWorkerCTX {
+  return {
+    ...services,
+    tenant: tenant,
+    user: {
+      resource: WORKER_APP,
+      payload: claims,
+    },
   };
 }

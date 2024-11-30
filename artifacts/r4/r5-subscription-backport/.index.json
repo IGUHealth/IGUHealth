@@ -166,6 +166,10 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "searchParameter/r4-subscription-topic-status.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "StructureDefinition-backport-channel-type.json",
       "resourceType": "StructureDefinition"
     },
