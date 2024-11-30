@@ -5,7 +5,7 @@ import { TenantId } from "@iguhealth/jwt";
 import { Message, Queue } from "./interface.js";
 
 export class PostgresQueue implements Queue {
-  private _client: Queryable;
+  private readonly _client: Queryable;
 
   constructor(db: Queryable) {
     this._client = db;

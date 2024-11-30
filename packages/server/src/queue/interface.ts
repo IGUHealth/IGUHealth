@@ -1,4 +1,3 @@
-import { id, integer } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 

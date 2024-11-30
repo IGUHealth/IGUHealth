@@ -8,18 +8,6 @@ type SubscriptionTopicVersion<FHIR_VERSION> = FHIR_VERSION extends R4
   ? Basic
   : SubscriptionTopic;
 
-function startServices() {
-  const db = createPGPool();
-  const redis = getRedisClient();
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const logger = createLogger().child({ worker: workerID });
-  const sdArtifacts = createArtifactMemoryDatabase({
-    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-  });
-}
-
 function retrieveSubscriptionTopics<Version extends FHIR_VERSION>(
   fhirVersion: Version,
 ): SubscriptionTopicVersion<Version>[] {
@@ -38,8 +26,8 @@ function retrieveSubscriptionTopics<Version extends FHIR_VERSION>(
  * @param loopInterval the loop interval in milliseconds
  */
 export default async function subscriptionTopicWorker(
-  workerID = randomUUID(),
-  fhirVersion: FHIR_VERSION = R4,
+  _workerID = randomUUID(),
+  _fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
   let isRunning = true;
