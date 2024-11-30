@@ -3,7 +3,7 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
-import createWorker from "../../worker/index.js";
+import createWorker from "../../worker/v1.js";
 
 interface DBMigrate {
   up: () => Promise<void>;

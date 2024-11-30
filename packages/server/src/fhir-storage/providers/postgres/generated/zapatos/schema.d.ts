@@ -27,6 +27,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type fhir_version = ['r4', 'r4b', 'r5'];
   }
+  export type interaction_trigger = 'create' | 'delete' | 'update';
+  export namespace every {
+    export type interaction_trigger = ['create', 'delete', 'update'];
+  }
   export type limitation_type = 'LIMIT_TOTAL';
   export namespace every {
     export type limitation_type = ['LIMIT_TOTAL'];
@@ -50142,6 +50146,269 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **sub_queue**
+   * - Table in database
+   */
+  export namespace sub_queue {
+    export type Table = 'sub_queue';
+    export interface Selectable {
+      /**
+      * **sub_queue.created_at**
+      * - `timestamptz` in database
+      * - Nullable, default: `CURRENT_TIMESTAMP`
+      */
+      created_at: Date | null;
+      /**
+      * **sub_queue.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_version: string;
+      /**
+      * **sub_queue.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('sub_queue_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **sub_queue.interaction**
+      * - `interaction_trigger` in database
+      * - `NOT NULL`, no default
+      */
+      interaction: interaction_trigger;
+      /**
+      * **sub_queue.resource_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_id: string;
+      /**
+      * **sub_queue.resource_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      resource_version_id: number;
+      /**
+      * **sub_queue.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **sub_queue.topic_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      topic_id: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **sub_queue.created_at**
+      * - `timestamptz` in database
+      * - Nullable, default: `CURRENT_TIMESTAMP`
+      */
+      created_at: db.TimestampTzString | null;
+      /**
+      * **sub_queue.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_version: string;
+      /**
+      * **sub_queue.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('sub_queue_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **sub_queue.interaction**
+      * - `interaction_trigger` in database
+      * - `NOT NULL`, no default
+      */
+      interaction: interaction_trigger;
+      /**
+      * **sub_queue.resource_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_id: string;
+      /**
+      * **sub_queue.resource_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      resource_version_id: number;
+      /**
+      * **sub_queue.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **sub_queue.topic_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      topic_id: string;
+    }
+    export interface Whereable {
+      /**
+      * **sub_queue.created_at**
+      * - `timestamptz` in database
+      * - Nullable, default: `CURRENT_TIMESTAMP`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('sub_queue_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.interaction**
+      * - `interaction_trigger` in database
+      * - `NOT NULL`, no default
+      */
+      interaction?: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.resource_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.resource_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      resource_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.topic_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      topic_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **sub_queue.created_at**
+      * - `timestamptz` in database
+      * - Nullable, default: `CURRENT_TIMESTAMP`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **sub_queue.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_version: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sub_queue.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('sub_queue_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **sub_queue.interaction**
+      * - `interaction_trigger` in database
+      * - `NOT NULL`, no default
+      */
+      interaction: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment;
+      /**
+      * **sub_queue.resource_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sub_queue.resource_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      resource_version_id: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **sub_queue.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sub_queue.topic_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      topic_id: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **sub_queue.created_at**
+      * - `timestamptz` in database
+      * - Nullable, default: `CURRENT_TIMESTAMP`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **sub_queue.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sub_queue.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('sub_queue_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **sub_queue.interaction**
+      * - `interaction_trigger` in database
+      * - `NOT NULL`, no default
+      */
+      interaction?: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.SQLFragment<any, interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment>;
+      /**
+      * **sub_queue.resource_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sub_queue.resource_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      resource_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **sub_queue.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sub_queue.topic_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      topic_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'sub_queue_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **subscription_tier**
    * - Table in database
    */
@@ -51182,20 +51449,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = auth_method.Table | authorization_code.Table | authorization_scopes.Table | limitations.Table | migrations.Table | migrations_state.Table | r4_date_idx.Table | r4_number_idx.Table | r4_quantity_idx.Table | r4_reference_idx.Table | r4_sp1_idx.Table | r4_string_idx.Table | r4_token_idx.Table | r4_uri_idx.Table | r4b_date_idx.Table | r4b_number_idx.Table | r4b_quantity_idx.Table | r4b_reference_idx.Table | r4b_sp1_idx.Table | r4b_string_idx.Table | r4b_token_idx.Table | r4b_uri_idx.Table | resources.Table | subscription_tier.Table | tenants.Table | terminology_codes.Table | terminology_edge.Table | terminology_systems.Table | users.Table;
-    export type Selectable = auth_method.Selectable | authorization_code.Selectable | authorization_scopes.Selectable | limitations.Selectable | migrations.Selectable | migrations_state.Selectable | r4_date_idx.Selectable | r4_number_idx.Selectable | r4_quantity_idx.Selectable | r4_reference_idx.Selectable | r4_sp1_idx.Selectable | r4_string_idx.Selectable | r4_token_idx.Selectable | r4_uri_idx.Selectable | r4b_date_idx.Selectable | r4b_number_idx.Selectable | r4b_quantity_idx.Selectable | r4b_reference_idx.Selectable | r4b_sp1_idx.Selectable | r4b_string_idx.Selectable | r4b_token_idx.Selectable | r4b_uri_idx.Selectable | resources.Selectable | subscription_tier.Selectable | tenants.Selectable | terminology_codes.Selectable | terminology_edge.Selectable | terminology_systems.Selectable | users.Selectable;
-    export type JSONSelectable = auth_method.JSONSelectable | authorization_code.JSONSelectable | authorization_scopes.JSONSelectable | limitations.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | r4_date_idx.JSONSelectable | r4_number_idx.JSONSelectable | r4_quantity_idx.JSONSelectable | r4_reference_idx.JSONSelectable | r4_sp1_idx.JSONSelectable | r4_string_idx.JSONSelectable | r4_token_idx.JSONSelectable | r4_uri_idx.JSONSelectable | r4b_date_idx.JSONSelectable | r4b_number_idx.JSONSelectable | r4b_quantity_idx.JSONSelectable | r4b_reference_idx.JSONSelectable | r4b_sp1_idx.JSONSelectable | r4b_string_idx.JSONSelectable | r4b_token_idx.JSONSelectable | r4b_uri_idx.JSONSelectable | resources.JSONSelectable | subscription_tier.JSONSelectable | tenants.JSONSelectable | terminology_codes.JSONSelectable | terminology_edge.JSONSelectable | terminology_systems.JSONSelectable | users.JSONSelectable;
-    export type Whereable = auth_method.Whereable | authorization_code.Whereable | authorization_scopes.Whereable | limitations.Whereable | migrations.Whereable | migrations_state.Whereable | r4_date_idx.Whereable | r4_number_idx.Whereable | r4_quantity_idx.Whereable | r4_reference_idx.Whereable | r4_sp1_idx.Whereable | r4_string_idx.Whereable | r4_token_idx.Whereable | r4_uri_idx.Whereable | r4b_date_idx.Whereable | r4b_number_idx.Whereable | r4b_quantity_idx.Whereable | r4b_reference_idx.Whereable | r4b_sp1_idx.Whereable | r4b_string_idx.Whereable | r4b_token_idx.Whereable | r4b_uri_idx.Whereable | resources.Whereable | subscription_tier.Whereable | tenants.Whereable | terminology_codes.Whereable | terminology_edge.Whereable | terminology_systems.Whereable | users.Whereable;
-    export type Insertable = auth_method.Insertable | authorization_code.Insertable | authorization_scopes.Insertable | limitations.Insertable | migrations.Insertable | migrations_state.Insertable | r4_date_idx.Insertable | r4_number_idx.Insertable | r4_quantity_idx.Insertable | r4_reference_idx.Insertable | r4_sp1_idx.Insertable | r4_string_idx.Insertable | r4_token_idx.Insertable | r4_uri_idx.Insertable | r4b_date_idx.Insertable | r4b_number_idx.Insertable | r4b_quantity_idx.Insertable | r4b_reference_idx.Insertable | r4b_sp1_idx.Insertable | r4b_string_idx.Insertable | r4b_token_idx.Insertable | r4b_uri_idx.Insertable | resources.Insertable | subscription_tier.Insertable | tenants.Insertable | terminology_codes.Insertable | terminology_edge.Insertable | terminology_systems.Insertable | users.Insertable;
-    export type Updatable = auth_method.Updatable | authorization_code.Updatable | authorization_scopes.Updatable | limitations.Updatable | migrations.Updatable | migrations_state.Updatable | r4_date_idx.Updatable | r4_number_idx.Updatable | r4_quantity_idx.Updatable | r4_reference_idx.Updatable | r4_sp1_idx.Updatable | r4_string_idx.Updatable | r4_token_idx.Updatable | r4_uri_idx.Updatable | r4b_date_idx.Updatable | r4b_number_idx.Updatable | r4b_quantity_idx.Updatable | r4b_reference_idx.Updatable | r4b_sp1_idx.Updatable | r4b_string_idx.Updatable | r4b_token_idx.Updatable | r4b_uri_idx.Updatable | resources.Updatable | subscription_tier.Updatable | tenants.Updatable | terminology_codes.Updatable | terminology_edge.Updatable | terminology_systems.Updatable | users.Updatable;
-    export type UniqueIndex = auth_method.UniqueIndex | authorization_code.UniqueIndex | authorization_scopes.UniqueIndex | limitations.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | r4_date_idx.UniqueIndex | r4_number_idx.UniqueIndex | r4_quantity_idx.UniqueIndex | r4_reference_idx.UniqueIndex | r4_sp1_idx.UniqueIndex | r4_string_idx.UniqueIndex | r4_token_idx.UniqueIndex | r4_uri_idx.UniqueIndex | r4b_date_idx.UniqueIndex | r4b_number_idx.UniqueIndex | r4b_quantity_idx.UniqueIndex | r4b_reference_idx.UniqueIndex | r4b_sp1_idx.UniqueIndex | r4b_string_idx.UniqueIndex | r4b_token_idx.UniqueIndex | r4b_uri_idx.UniqueIndex | resources.UniqueIndex | subscription_tier.UniqueIndex | tenants.UniqueIndex | terminology_codes.UniqueIndex | terminology_edge.UniqueIndex | terminology_systems.UniqueIndex | users.UniqueIndex;
-    export type Column = auth_method.Column | authorization_code.Column | authorization_scopes.Column | limitations.Column | migrations.Column | migrations_state.Column | r4_date_idx.Column | r4_number_idx.Column | r4_quantity_idx.Column | r4_reference_idx.Column | r4_sp1_idx.Column | r4_string_idx.Column | r4_token_idx.Column | r4_uri_idx.Column | r4b_date_idx.Column | r4b_number_idx.Column | r4b_quantity_idx.Column | r4b_reference_idx.Column | r4b_sp1_idx.Column | r4b_string_idx.Column | r4b_token_idx.Column | r4b_uri_idx.Column | resources.Column | subscription_tier.Column | tenants.Column | terminology_codes.Column | terminology_edge.Column | terminology_systems.Column | users.Column;
+    export type Table = auth_method.Table | authorization_code.Table | authorization_scopes.Table | limitations.Table | migrations.Table | migrations_state.Table | r4_date_idx.Table | r4_number_idx.Table | r4_quantity_idx.Table | r4_reference_idx.Table | r4_sp1_idx.Table | r4_string_idx.Table | r4_token_idx.Table | r4_uri_idx.Table | r4b_date_idx.Table | r4b_number_idx.Table | r4b_quantity_idx.Table | r4b_reference_idx.Table | r4b_sp1_idx.Table | r4b_string_idx.Table | r4b_token_idx.Table | r4b_uri_idx.Table | resources.Table | sub_queue.Table | subscription_tier.Table | tenants.Table | terminology_codes.Table | terminology_edge.Table | terminology_systems.Table | users.Table;
+    export type Selectable = auth_method.Selectable | authorization_code.Selectable | authorization_scopes.Selectable | limitations.Selectable | migrations.Selectable | migrations_state.Selectable | r4_date_idx.Selectable | r4_number_idx.Selectable | r4_quantity_idx.Selectable | r4_reference_idx.Selectable | r4_sp1_idx.Selectable | r4_string_idx.Selectable | r4_token_idx.Selectable | r4_uri_idx.Selectable | r4b_date_idx.Selectable | r4b_number_idx.Selectable | r4b_quantity_idx.Selectable | r4b_reference_idx.Selectable | r4b_sp1_idx.Selectable | r4b_string_idx.Selectable | r4b_token_idx.Selectable | r4b_uri_idx.Selectable | resources.Selectable | sub_queue.Selectable | subscription_tier.Selectable | tenants.Selectable | terminology_codes.Selectable | terminology_edge.Selectable | terminology_systems.Selectable | users.Selectable;
+    export type JSONSelectable = auth_method.JSONSelectable | authorization_code.JSONSelectable | authorization_scopes.JSONSelectable | limitations.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | r4_date_idx.JSONSelectable | r4_number_idx.JSONSelectable | r4_quantity_idx.JSONSelectable | r4_reference_idx.JSONSelectable | r4_sp1_idx.JSONSelectable | r4_string_idx.JSONSelectable | r4_token_idx.JSONSelectable | r4_uri_idx.JSONSelectable | r4b_date_idx.JSONSelectable | r4b_number_idx.JSONSelectable | r4b_quantity_idx.JSONSelectable | r4b_reference_idx.JSONSelectable | r4b_sp1_idx.JSONSelectable | r4b_string_idx.JSONSelectable | r4b_token_idx.JSONSelectable | r4b_uri_idx.JSONSelectable | resources.JSONSelectable | sub_queue.JSONSelectable | subscription_tier.JSONSelectable | tenants.JSONSelectable | terminology_codes.JSONSelectable | terminology_edge.JSONSelectable | terminology_systems.JSONSelectable | users.JSONSelectable;
+    export type Whereable = auth_method.Whereable | authorization_code.Whereable | authorization_scopes.Whereable | limitations.Whereable | migrations.Whereable | migrations_state.Whereable | r4_date_idx.Whereable | r4_number_idx.Whereable | r4_quantity_idx.Whereable | r4_reference_idx.Whereable | r4_sp1_idx.Whereable | r4_string_idx.Whereable | r4_token_idx.Whereable | r4_uri_idx.Whereable | r4b_date_idx.Whereable | r4b_number_idx.Whereable | r4b_quantity_idx.Whereable | r4b_reference_idx.Whereable | r4b_sp1_idx.Whereable | r4b_string_idx.Whereable | r4b_token_idx.Whereable | r4b_uri_idx.Whereable | resources.Whereable | sub_queue.Whereable | subscription_tier.Whereable | tenants.Whereable | terminology_codes.Whereable | terminology_edge.Whereable | terminology_systems.Whereable | users.Whereable;
+    export type Insertable = auth_method.Insertable | authorization_code.Insertable | authorization_scopes.Insertable | limitations.Insertable | migrations.Insertable | migrations_state.Insertable | r4_date_idx.Insertable | r4_number_idx.Insertable | r4_quantity_idx.Insertable | r4_reference_idx.Insertable | r4_sp1_idx.Insertable | r4_string_idx.Insertable | r4_token_idx.Insertable | r4_uri_idx.Insertable | r4b_date_idx.Insertable | r4b_number_idx.Insertable | r4b_quantity_idx.Insertable | r4b_reference_idx.Insertable | r4b_sp1_idx.Insertable | r4b_string_idx.Insertable | r4b_token_idx.Insertable | r4b_uri_idx.Insertable | resources.Insertable | sub_queue.Insertable | subscription_tier.Insertable | tenants.Insertable | terminology_codes.Insertable | terminology_edge.Insertable | terminology_systems.Insertable | users.Insertable;
+    export type Updatable = auth_method.Updatable | authorization_code.Updatable | authorization_scopes.Updatable | limitations.Updatable | migrations.Updatable | migrations_state.Updatable | r4_date_idx.Updatable | r4_number_idx.Updatable | r4_quantity_idx.Updatable | r4_reference_idx.Updatable | r4_sp1_idx.Updatable | r4_string_idx.Updatable | r4_token_idx.Updatable | r4_uri_idx.Updatable | r4b_date_idx.Updatable | r4b_number_idx.Updatable | r4b_quantity_idx.Updatable | r4b_reference_idx.Updatable | r4b_sp1_idx.Updatable | r4b_string_idx.Updatable | r4b_token_idx.Updatable | r4b_uri_idx.Updatable | resources.Updatable | sub_queue.Updatable | subscription_tier.Updatable | tenants.Updatable | terminology_codes.Updatable | terminology_edge.Updatable | terminology_systems.Updatable | users.Updatable;
+    export type UniqueIndex = auth_method.UniqueIndex | authorization_code.UniqueIndex | authorization_scopes.UniqueIndex | limitations.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | r4_date_idx.UniqueIndex | r4_number_idx.UniqueIndex | r4_quantity_idx.UniqueIndex | r4_reference_idx.UniqueIndex | r4_sp1_idx.UniqueIndex | r4_string_idx.UniqueIndex | r4_token_idx.UniqueIndex | r4_uri_idx.UniqueIndex | r4b_date_idx.UniqueIndex | r4b_number_idx.UniqueIndex | r4b_quantity_idx.UniqueIndex | r4b_reference_idx.UniqueIndex | r4b_sp1_idx.UniqueIndex | r4b_string_idx.UniqueIndex | r4b_token_idx.UniqueIndex | r4b_uri_idx.UniqueIndex | resources.UniqueIndex | sub_queue.UniqueIndex | subscription_tier.UniqueIndex | tenants.UniqueIndex | terminology_codes.UniqueIndex | terminology_edge.UniqueIndex | terminology_systems.UniqueIndex | users.UniqueIndex;
+    export type Column = auth_method.Column | authorization_code.Column | authorization_scopes.Column | limitations.Column | migrations.Column | migrations_state.Column | r4_date_idx.Column | r4_number_idx.Column | r4_quantity_idx.Column | r4_reference_idx.Column | r4_sp1_idx.Column | r4_string_idx.Column | r4_token_idx.Column | r4_uri_idx.Column | r4b_date_idx.Column | r4b_number_idx.Column | r4b_quantity_idx.Column | r4b_reference_idx.Column | r4b_sp1_idx.Column | r4b_string_idx.Column | r4b_token_idx.Column | r4b_uri_idx.Column | resources.Column | sub_queue.Column | subscription_tier.Column | tenants.Column | terminology_codes.Column | terminology_edge.Column | terminology_systems.Column | users.Column;
   
-    export type AllBaseTables = [auth_method.Table, authorization_code.Table, authorization_scopes.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_sp1_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_sp1_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, subscription_tier.Table, tenants.Table, terminology_codes.Table, terminology_edge.Table, terminology_systems.Table, users.Table];
+    export type AllBaseTables = [auth_method.Table, authorization_code.Table, authorization_scopes.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_sp1_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_sp1_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, sub_queue.Table, subscription_tier.Table, tenants.Table, terminology_codes.Table, terminology_edge.Table, terminology_systems.Table, users.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [auth_method.Table, authorization_code.Table, authorization_scopes.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_sp1_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_sp1_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, subscription_tier.Table, tenants.Table, terminology_codes.Table, terminology_edge.Table, terminology_systems.Table, users.Table];
+    export type AllTablesAndViews = [auth_method.Table, authorization_code.Table, authorization_scopes.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_sp1_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_sp1_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, sub_queue.Table, subscription_tier.Table, tenants.Table, terminology_codes.Table, terminology_edge.Table, terminology_systems.Table, users.Table];
   }
 
 
@@ -51246,6 +51513,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Selectable;
     "r4b_uri_idx": r4b_uri_idx.Selectable;
     "resources": resources.Selectable;
+    "sub_queue": sub_queue.Selectable;
     "subscription_tier": subscription_tier.Selectable;
     "tenants": tenants.Selectable;
     "terminology_codes": terminology_codes.Selectable;
@@ -51278,6 +51546,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.JSONSelectable;
     "r4b_uri_idx": r4b_uri_idx.JSONSelectable;
     "resources": resources.JSONSelectable;
+    "sub_queue": sub_queue.JSONSelectable;
     "subscription_tier": subscription_tier.JSONSelectable;
     "tenants": tenants.JSONSelectable;
     "terminology_codes": terminology_codes.JSONSelectable;
@@ -51310,6 +51579,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Whereable;
     "r4b_uri_idx": r4b_uri_idx.Whereable;
     "resources": resources.Whereable;
+    "sub_queue": sub_queue.Whereable;
     "subscription_tier": subscription_tier.Whereable;
     "tenants": tenants.Whereable;
     "terminology_codes": terminology_codes.Whereable;
@@ -51342,6 +51612,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Insertable;
     "r4b_uri_idx": r4b_uri_idx.Insertable;
     "resources": resources.Insertable;
+    "sub_queue": sub_queue.Insertable;
     "subscription_tier": subscription_tier.Insertable;
     "tenants": tenants.Insertable;
     "terminology_codes": terminology_codes.Insertable;
@@ -51374,6 +51645,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Updatable;
     "r4b_uri_idx": r4b_uri_idx.Updatable;
     "resources": resources.Updatable;
+    "sub_queue": sub_queue.Updatable;
     "subscription_tier": subscription_tier.Updatable;
     "tenants": tenants.Updatable;
     "terminology_codes": terminology_codes.Updatable;
@@ -51406,6 +51678,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.UniqueIndex;
     "r4b_uri_idx": r4b_uri_idx.UniqueIndex;
     "resources": resources.UniqueIndex;
+    "sub_queue": sub_queue.UniqueIndex;
     "subscription_tier": subscription_tier.UniqueIndex;
     "tenants": tenants.UniqueIndex;
     "terminology_codes": terminology_codes.UniqueIndex;
@@ -51438,6 +51711,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Column;
     "r4b_uri_idx": r4b_uri_idx.Column;
     "resources": resources.Column;
+    "sub_queue": sub_queue.Column;
     "subscription_tier": subscription_tier.Column;
     "tenants": tenants.Column;
     "terminology_codes": terminology_codes.Column;
@@ -51470,6 +51744,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.SQL;
     "r4b_uri_idx": r4b_uri_idx.SQL;
     "resources": resources.SQL;
+    "sub_queue": sub_queue.SQL;
     "subscription_tier": subscription_tier.SQL;
     "tenants": tenants.SQL;
     "terminology_codes": terminology_codes.SQL;
