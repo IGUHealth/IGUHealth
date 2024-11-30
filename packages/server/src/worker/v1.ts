@@ -25,7 +25,6 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import loadEnv from "../env.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {

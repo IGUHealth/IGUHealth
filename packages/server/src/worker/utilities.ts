@@ -1,4 +1,3 @@
-import { Parameter } from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
