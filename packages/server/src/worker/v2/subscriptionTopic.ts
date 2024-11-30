@@ -111,7 +111,7 @@ async function processTenant(
 
   const processedTopics: Record<id, Promise<void>> = {};
   for (const subscriptionTopic of subscriptionTopics) {
-    if (subscriptionTopic.id && !processedTopics[subscriptionTopic.id]) {
+    if (subscriptionTopic.id && !(subscriptionTopic.id in processedTopics)) {
       processedTopics[subscriptionTopic.id] = processSubscriptionTopic(
         tenantContext,
         tenant,
@@ -144,7 +144,7 @@ export default async function subscriptionTopicWorker(
       const executingTenants: Record<TenantId, Promise<void>> = {};
       for (const tenant of activeTenants) {
         // Only process tenant if not already processing.
-        if (!executingTenants[tenant]) {
+        if (!(tenant in executingTenants)) {
           executingTenants[tenant] = processTenant(
             services,
             tenant,
