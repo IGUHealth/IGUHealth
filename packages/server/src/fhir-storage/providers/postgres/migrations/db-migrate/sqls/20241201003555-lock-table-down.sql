@@ -1,0 +1,1 @@
+DROP TABLE iguhealth_locks;
