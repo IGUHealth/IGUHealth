@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import * as db from "zapatos/db";
 
 import { Basic, code, id } from "@iguhealth/fhir-types/r4/types";
 import { SubscriptionTopic } from "@iguhealth/fhir-types/r4b/types";
@@ -6,6 +7,8 @@ import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
+import { FHIRTransaction } from "../../fhir-storage/transactions.js";
+import { ensureLocksCreated, getAvailableLocks } from "../retrieval/locks.js";
 import { getActiveTenants } from "../retrieval/tenant.js";
 import {
   IGUHealthWorkerCTX,
@@ -51,7 +54,6 @@ async function retrieveActiveSubscriptionTopics<Version extends FHIR_VERSION>(
 
 async function processSubscriptionTopic<Version extends FHIR_VERSION>(
   services: IGUHealthWorkerCTX,
-  tenant: TenantId,
   fhirVersion: Version,
   subscriptionTopic: SubscriptionTopicVersion<Version>,
 ) {
@@ -94,34 +96,61 @@ async function processSubscriptionTopic<Version extends FHIR_VERSION>(
   }
 }
 
-async function processTenant(
+async function processTenant<Version extends FHIR_VERSION>(
   services: Omit<IGUHealthWorkerCTX, "tenant" | "user">,
   tenant: TenantId,
-  fhirVersion: FHIR_VERSION,
+  fhirVersion: Version,
 ) {
   const payload = workerTokenClaims(services.workerID, tenant);
-  const tenantContext = tenantWorkerContext(services, tenant, payload);
+  const workerContext = tenantWorkerContext(services, tenant, payload);
   const client = createWorkerIGUHealthClient(tenant, payload);
 
-  const subscriptionTopics = await retrieveActiveSubscriptionTopics(
-    {},
-    client,
-    fhirVersion,
+  const subscriptionTopics: SubscriptionTopicVersion<Version>[] =
+    await retrieveActiveSubscriptionTopics({}, client, fhirVersion);
+
+  await ensureLocksCreated(
+    workerContext.db,
+    subscriptionTopics.map((st) => ({
+      id: st.id as string,
+      type: "subscriptiontopic",
+      fhir_version: fhirVersion,
+      tenant: workerContext.tenant,
+      value: st.meta?.versionId as string,
+    })),
   );
 
-  const processedTopics: Record<id, Promise<void>> = {};
-  for (const subscriptionTopic of subscriptionTopics) {
-    if (subscriptionTopic.id && !(subscriptionTopic.id in processedTopics)) {
-      processedTopics[subscriptionTopic.id] = processSubscriptionTopic(
-        tenantContext,
-        tenant,
-        fhirVersion,
-        subscriptionTopic,
-      ).finally(() => {
-        delete processedTopics[subscriptionTopic.id as id];
-      });
-    }
-  }
+  await FHIRTransaction(
+    workerContext,
+    db.IsolationLevel.RepeatableRead,
+    async (tenantContext) => {
+      const locksRetrieved = await getAvailableLocks(
+        tenantContext.db,
+        tenantContext.tenant,
+        "subscriptiontopic",
+        subscriptionTopics.map((st) => st.id as string),
+      );
+
+      const allowedSubTopics = subscriptionTopics.filter((st) =>
+        locksRetrieved.some((lock) => lock.id === st.id),
+      );
+
+      const processedTopics: Record<id, Promise<void>> = {};
+      for (const subscriptionTopic of allowedSubTopics) {
+        if (
+          subscriptionTopic.id &&
+          !(subscriptionTopic.id in processedTopics)
+        ) {
+          processedTopics[subscriptionTopic.id] = processSubscriptionTopic(
+            tenantContext,
+            fhirVersion,
+            subscriptionTopic,
+          ).finally(() => {
+            delete processedTopics[subscriptionTopic.id as id];
+          });
+        }
+      }
+    },
+  );
 }
 
 /**

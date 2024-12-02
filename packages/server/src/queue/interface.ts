@@ -13,5 +13,9 @@ export interface Message {
 }
 
 export interface Queue {
-  send(tenant: TenantId, message: Message[]): Promise<Message[]>;
+  send(
+    tenant: TenantId,
+    topic_id: string,
+    messages: Omit<Message, "id" | "tenant" | "topic_id">[],
+  ): Promise<Message[]>;
 }

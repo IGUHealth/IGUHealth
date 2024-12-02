@@ -23,6 +23,7 @@ import RedisLock from "../synchronization/redis.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
+  | "tenant"
   | "db"
   | "logger"
   | "lock"

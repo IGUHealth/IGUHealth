@@ -1,5 +1,7 @@
 // Backend Processes used for subscriptions and cron jobs.
 import { randomUUID } from "crypto";
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -34,6 +36,7 @@ import logAuditEvent, {
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
 import { fitsSearchCriteria } from "../fhir-storage/providers/memory/search.js";
+import { FHIRTransaction } from "../fhir-storage/transactions.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {
   SearchParameterResource,
@@ -43,6 +46,11 @@ import {
 } from "../fhir-storage/utilities/search/parameters.js";
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
+import {
+  ensureLocksCreated,
+  getAvailableLocks,
+  updateLock,
+} from "./retrieval/locks.js";
 import { getActiveTenants } from "./retrieval/tenant.js";
 import {
   IGUHealthWorkerCTX,
@@ -135,9 +143,19 @@ async function handleSubscriptionPayload(
             // headers: subscription.channel.header,
             headers: { ...headers, "Content-Type": "application/fhir+json" },
             body: JSON.stringify(resource),
+          }).then((res) => {
+            if (res.status >= 400) {
+              throw new OperationError(
+                outcomeError(
+                  "exception",
+                  "Failed to send message to endpoint.",
+                ),
+              );
+            }
           }),
         ),
       );
+
       return;
     }
     case "operation": {
@@ -267,17 +285,12 @@ async function handleSubscriptionPayload(
   }
 }
 
-// Returns key for subscription lock.
-function subscriptionLockKey(tenant: string, subscriptionId: string) {
-  return `${tenant}:${subscriptionId}`;
-}
-
-function processSubscription(
+async function processSubscription(
   workerID: string,
   ctx: IGUHealthWorkerCTX,
   fhirVersion: FHIR_VERSION,
   client: AsynchronousClient<unknown, unknown>,
-  subscriptionId: id,
+  lock: s.iguhealth_locks.Selectable,
 ) {
   if (fhirVersion !== R4)
     throw new OperationError(
@@ -286,127 +299,136 @@ function processSubscription(
         `FHIR version ${fhirVersion} is not supported.`,
       ),
     );
-  return async () => {
-    // Reread here in event that concurrent process has altered the id.
-    const subscription = await client.read(
-      {},
-      fhirVersion,
-      "Subscription",
-      subscriptionId,
-    );
-    if (!subscription)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `Subscription with id '${subscriptionId}' not found.`,
-        ),
-      );
-    if (subscription.status !== "active") return;
 
-    const logger = ctx.logger.child({
-      worker: workerID,
-      tenant: ctx.tenant,
-      criteria: subscription.criteria,
+  // Reread here in event that concurrent process has altered the id.
+  const subscription = await client.read(
+    {},
+    fhirVersion,
+    "Subscription",
+    lock.id as id,
+  );
+  if (!subscription)
+    throw new OperationError(
+      outcomeError("not-found", `Subscription with id '${lock.id}' not found.`),
+    );
+  if (subscription.status !== "active") return;
+
+  const logger = ctx.logger.child({
+    worker: workerID,
+    tenant: ctx.tenant,
+    criteria: subscription.criteria,
+  });
+
+  try {
+    // Only doing r4 for Subs right now.
+    const request = httpRequestToFHIRRequest("r4", {
+      url: subscription.criteria,
+      method: "GET",
     });
 
-    try {
-      // Only doing r4 for Subs right now.
-      const request = httpRequestToFHIRRequest("r4", {
-        url: subscription.criteria,
-        method: "GET",
-      });
+    if (request.type !== "search-request") {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Criteria must be a search request but found ${request.type}`,
+        ),
+      );
+    }
 
-      if (request.type !== "search-request") {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `Criteria must be a search request but found ${request.type}`,
-          ),
-        );
+    if (request.fhirVersion !== R4) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Criteria must be a search request for FHIR version 4.0 but found ${request.fhirVersion}`,
+        ),
+      );
+    }
+
+    const sortParameter = request.parameters.find((p) => p.name === "_sort");
+
+    if (sortParameter) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Criteria cannot include _sort. Sorting must be based order resource was updated.`,
+        ),
+      );
+    }
+
+    const latestVersionIdForSub = parseInt(lock.value?.toString() ?? "");
+    if (isNaN(latestVersionIdForSub) || latestVersionIdForSub < 0) {
+      throw new OperationError(
+        outcomeError("invalid", `Subscription version sequence is invalid.`),
+      );
+    }
+
+    let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
+
+    switch (request.level) {
+      case "system": {
+        historyPoll = await client.history_system({}, fhirVersion, [
+          {
+            name: "_since-version",
+            value: [latestVersionIdForSub],
+          },
+        ]);
+        break;
       }
-
-      if (request.fhirVersion !== R4) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `Criteria must be a search request for FHIR version 4.0 but found ${request.fhirVersion}`,
-          ),
-        );
-      }
-
-      const sortParameter = request.parameters.find((p) => p.name === "_sort");
-
-      if (sortParameter) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `Criteria cannot include _sort. Sorting must be based order resource was updated.`,
-          ),
-        );
-      }
-
-      const cachedSubID = await ctx.cache.get(ctx, `${subscription.id}_latest`);
-
-      const latestVersionIdForSub = cachedSubID
-        ? cachedSubID
-        : // If latest isn't there then use the subscription version when created.
-          await getVersionSequence(subscription);
-
-      let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
-
-      switch (request.level) {
-        case "system": {
-          historyPoll = await client.history_system({}, fhirVersion, [
+      case "type": {
+        historyPoll = await client.history_type(
+          {},
+          fhirVersion,
+          request.resource,
+          [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
             },
-          ]);
-          break;
-        }
-        case "type": {
-          historyPoll = await client.history_type(
-            {},
-            fhirVersion,
-            request.resource,
-            [
-              {
-                name: "_since-version",
-                value: [latestVersionIdForSub],
-              },
-            ],
-          );
-          break;
-        }
+          ],
+        );
+        break;
       }
-      // Reverse mutates the array in place.
-      historyPoll.reverse();
+    }
+    // Reverse mutates the array in place.
+    historyPoll.reverse();
 
-      const resourceTypes = deriveResourceTypeFilter(request);
-      // Remove _type as using on derived resourceTypeFilter
-      request.parameters = request.parameters.filter((p) => p.name !== "_type");
+    const resourceTypes = deriveResourceTypeFilter(request);
+    // Remove _type as using on derived resourceTypeFilter
+    request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
-      const parameters = await parametersWithMetaAssociated(
-        async (resourceTypes, name) =>
-          await findSearchParameter(
-            client,
-            ctx,
-            fhirVersion,
-            resourceTypes,
-            name,
+    const parameters = await parametersWithMetaAssociated(
+      async (resourceTypes, name) =>
+        await findSearchParameter(
+          client,
+          ctx,
+          fhirVersion,
+          resourceTypes,
+          name,
+        ),
+      resourceTypes,
+      request.parameters,
+    );
+
+    // Standard parameters
+    const resourceParameters = parameters.filter(
+      (v): v is SearchParameterResource => v.type === "resource",
+    );
+
+    if (historyPoll.length > 0) {
+      logger.info(`PROCESSING Subscription '${subscription.id}'`);
+      if (historyPoll[0].resource === undefined)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "history poll returned entry missing resource.",
           ),
-        resourceTypes,
-        request.parameters,
-      );
+        );
 
-      // Standard parameters
-      const resourceParameters = parameters.filter(
-        (v): v is SearchParameterResource => v.type === "resource",
-      );
+      // Do reverse as ordering is the latest update first.
+      const payload: Resource<R4, AllResourceTypes>[] = [];
 
-      if (historyPoll.length > 0) {
-        logger.info(`PROCESSING Subscription '${subscription.id}'`);
-        if (historyPoll[0].resource === undefined)
+      for (const entry of historyPoll) {
+        if (entry.resource === undefined)
           throw new OperationError(
             outcomeError(
               "invalid",
@@ -414,89 +436,71 @@ function processSubscription(
             ),
           );
 
-        // Do reverse as ordering is the latest update first.
-        const payload: Resource<R4, AllResourceTypes>[] = [];
-
-        for (const entry of historyPoll) {
-          if (entry.resource === undefined)
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "history poll returned entry missing resource.",
-              ),
-            );
-
-          if (
-            entry.resource &&
-            (await fitsSearchCriteria(
-              {
-                resolveCanonical: ctx.resolveCanonical,
-                resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-                resolveRemoteCanonical: createResolverRemoteCanonical(
-                  client,
-                  {},
-                ),
-              },
-              R4,
-              entry.resource,
-              resourceParameters,
-            ))
-          ) {
-            payload.push(entry.resource as Resource<R4, AllResourceTypes>);
-          }
+        if (
+          entry.resource &&
+          (await fitsSearchCriteria(
+            {
+              resolveCanonical: ctx.resolveCanonical,
+              resolveTypeToCanonical: ctx.resolveTypeToCanonical,
+              resolveRemoteCanonical: createResolverRemoteCanonical(client, {}),
+            },
+            R4,
+            entry.resource,
+            resourceParameters,
+          ))
+        ) {
+          payload.push(entry.resource as Resource<R4, AllResourceTypes>);
         }
-        if (payload.length > 0) {
-          await handleSubscriptionPayload(
-            client,
-            ctx,
-            fhirVersion,
-            subscription,
-            payload,
-          );
-        }
-        await ctx.cache.set(
+      }
+      if (payload.length > 0) {
+        await handleSubscriptionPayload(
+          client,
           ctx,
-          `${subscription.id}_latest`,
-          await getVersionSequence(
-            historyPoll[historyPoll.length - 1].resource as Resource<
-              R4,
-              AllResourceTypes
-            >,
-          ),
+          fhirVersion,
+          subscription,
+          payload,
         );
       }
-    } catch (e) {
-      logger.error(e);
-      Sentry.logError(e);
-      let errorDescription = "Subscription failed to process";
-
-      if (isOperationError(e)) {
-        errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
-      }
-      await logAuditEvent(
-        client,
-        {},
-        fhirVersion,
-        createAuditEvent(
-          ctx.user.payload,
-          SERIOUS_FAILURE,
-          { reference: `Subscription/${subscription.id}` },
-          errorDescription,
+      await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
+        value: await getVersionSequence(
+          historyPoll[historyPoll.length - 1].resource as Resource<
+            R4,
+            AllResourceTypes
+          >,
         ),
-      );
-
-      await client.update(
-        {},
-        fhirVersion,
-        "Subscription",
-        subscription.id as id,
-        {
-          ...subscription,
-          status: "error" as code,
-        },
-      );
+      });
     }
-  };
+  } catch (e) {
+    logger.error(e);
+    Sentry.logError(e);
+    let errorDescription = "Subscription failed to process";
+
+    if (isOperationError(e)) {
+      errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
+    }
+    await logAuditEvent(
+      client,
+      {},
+      fhirVersion,
+      createAuditEvent(
+        ctx.user.payload,
+        SERIOUS_FAILURE,
+        { reference: `Subscription/${subscription.id}` },
+        errorDescription,
+      ),
+    );
+
+    await client.update(
+      {},
+      fhirVersion,
+      "Subscription",
+      subscription.id as id,
+      {
+        ...subscription,
+        status: "error" as code,
+      },
+    );
+  }
 }
 
 async function createWorker(
@@ -523,30 +527,47 @@ async function createWorker(
           tenantClaims,
         );
 
-        const activeSubscriptionIds = (
+        const activeSubscriptions = (
           await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
           ])
-        ).resources.map((r) => r.id);
-        for (const subscriptionId of activeSubscriptionIds) {
-          // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
-          if (!subscriptionId)
-            throw new Error("Subscription ID was undefined.");
-          try {
-            await services.lock.withLock(
-              subscriptionLockKey(tenant, subscriptionId),
-              processSubscription(
-                workerID,
-                ctx,
-                fhirVersion,
-                client,
-                subscriptionId,
+        ).resources;
+
+        await ensureLocksCreated(
+          ctx.db,
+          activeSubscriptions.map((sub) => ({
+            id: sub.id as string,
+            type: "old_subscription",
+            fhir_version: fhirVersion,
+            tenant: ctx.tenant,
+            value: sub.meta?.versionId as string,
+          })),
+        );
+
+        await FHIRTransaction(
+          ctx,
+          db.IsolationLevel.RepeatableRead,
+          async (txContext) => {
+            const locks = await getAvailableLocks(
+              txContext.db,
+              txContext.tenant,
+              "old_subscription",
+              activeSubscriptions.map((sub) => sub.id as string),
+            );
+
+            await Promise.all(
+              locks.map((lock) =>
+                processSubscription(
+                  workerID,
+                  txContext,
+                  fhirVersion,
+                  client,
+                  lock,
+                ),
               ),
             );
-          } catch (e) {
-            services.logger.error(e);
-          }
-        }
+          },
+        );
       }
     } catch (e) {
       services.logger.error(e);

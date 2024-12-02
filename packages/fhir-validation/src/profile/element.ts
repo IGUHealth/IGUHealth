@@ -9,6 +9,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { isPrimitiveType } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
@@ -57,7 +58,15 @@ function validateTypeIfMultipleTypesConstrained(
   type: uri,
 ): boolean {
   if (element.type) {
-    return element.type.find((t) => t.code === type) !== undefined;
+    if (element.type.find((t) => t.code === type) !== undefined) {
+      return true;
+    } else if (
+      type === "Element" &&
+      element.type.find((t) => isPrimitiveType(t.code))
+    ) {
+      return true;
+    }
+    return false;
   }
   return true;
 }
@@ -137,9 +146,11 @@ export async function validateSingularProfileElement(
   // Profile can further constrain typechoices check that here.
   if (!validateTypeIfMultipleTypesConstrained(element, type)) {
     throw new OperationError(
-      outcomeFatal("invalid", `Element is not constrained to type '${type}'`, [
-        toJSONPointer(path),
-      ]),
+      outcomeFatal(
+        "invalid",
+        `Valid types: '${element.type?.map((t) => t.code).join(",")}' is not constrained to type '${type}'`,
+        [toJSONPointer(path)],
+      ),
     );
   }
 

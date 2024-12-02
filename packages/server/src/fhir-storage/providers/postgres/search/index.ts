@@ -29,9 +29,9 @@ import {
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
+import { toSQLString } from "../../log_sql.js";
 import buildParametersSQL from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
-import { toSQLString } from "../../log_sql.js";
 
 type FHIRSearchRequest =
   | R4SystemSearchRequest
