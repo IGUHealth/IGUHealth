@@ -13,12 +13,13 @@ export class PostgresQueue implements Queue {
 
   async send(
     tenant: TenantId,
-    messages: Omit<Message, "id" | "tenant">[],
+    topic_id: string,
+    messages: Omit<Message, "id" | "tenant" | "topic_id">[],
   ): Promise<Message[]> {
     const response = await db
       .insert(
         "sub_queue",
-        messages.map((m) => ({ ...m, tenant })),
+        messages.map((m) => ({ ...m, tenant, topic_id })),
       )
       .run(this._client);
 
