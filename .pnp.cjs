@@ -18959,8 +18959,8 @@ const RAW_RUNTIME_STATE =
           ["@koa/cors", "npm:5.0.0"],\
           ["@koa/router", "npm:13.1.0"],\
           ["@sendgrid/mail", "npm:8.1.3"],\
+          ["@sentry/core", "npm:8.42.0"],\
           ["@sentry/node", "npm:8.42.0"],\
-          ["@sentry/utils", "npm:8.42.0"],\
           ["@types/adm-zip", "npm:0.5.6"],\
           ["@types/jest", "npm:29.5.14"],\
           ["@types/koa", "npm:2.15.0"],\
@@ -24009,16 +24009,6 @@ const RAW_RUNTIME_STATE =
           "@types/opentelemetry__instrumentation",\
           "@types/opentelemetry__sdk-trace-base",\
           "@types/opentelemetry__semantic-conventions"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@sentry/utils", [\
-      ["npm:8.42.0", {\
-        "packageLocation": "./.yarn/cache/@sentry-utils-npm-8.42.0-c62bc40225-748740d87e.zip/node_modules/@sentry/utils/",\
-        "packageDependencies": [\
-          ["@sentry/utils", "npm:8.42.0"],\
-          ["@sentry/core", "npm:8.42.0"]\
         ],\
         "linkType": "HARD"\
       }]\
