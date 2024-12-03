@@ -45,6 +45,7 @@ export async function sentryTransaction<T>(
   body: (transaction: Sentry.Transaction | undefined) => Promise<T>,
 ): Promise<T> {
   if (!dsn) return body(undefined);
+  // TODO(sentry): Use `startInactiveSpan()` instead - see https://github.com/getsentry/sentry-javascript/blob/develop/docs/v8-new-performance-apis.md
   const transaction = Sentry.startTransaction(transactionContext);
   try {
     const value = await body(transaction);
@@ -60,6 +61,7 @@ export async function sentrySpan<T>(
   body: (span: Sentry.Span | undefined) => Promise<T>,
 ): Promise<T> {
   if (!transaction) return body(undefined);
+  // TODO(sentry): Use `startInactiveSpan()` instead - see https://github.com/getsentry/sentry-javascript/blob/develop/docs/v8-new-performance-apis.md
   const span = transaction.startChild(spanContext);
   try {
     const value = await body(span);
@@ -90,6 +92,7 @@ export function tracingMiddleWare<
         );
       }
 
+      // TODO(sentry): Use `startInactiveSpan()` instead - see https://github.com/getsentry/sentry-javascript/blob/develop/docs/v8-new-performance-apis.md
       const transaction = Sentry.startTransaction({
         name: `${reqMethod} ${reqUrl}`,
         op: "http.server",
@@ -101,9 +104,7 @@ export function tracingMiddleWare<
       ctx.__sentry_transaction = transaction;
 
       // We put the transaction on the scope so users can attach children to it
-      Sentry.getCurrentHub().configureScope((scope) => {
-        scope.setSpan(transaction);
-      });
+      Sentry.getCurrentScope().setSpan(transaction);
       ctx.res.on("finish", () => {
         // Push `transaction.finish` to the next event loop so open spans have a chance to finish before the transaction closes
         setImmediate(() => {

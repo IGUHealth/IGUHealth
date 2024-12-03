@@ -91,7 +91,8 @@ function createFHIRKoaMiddleware(): Koa.Middleware<
     // @ts-ignore
     const transaction = ctx.__sentry_transaction;
     if (transaction) {
-      span = transaction.startChild({
+      span = // TODO(sentry): Use `startInactiveSpan()` instead - see https://github.com/getsentry/sentry-javascript/blob/develop/docs/v8-new-performance-apis.md
+      transaction.startChild({
         description: "FHIR MIDDLEWARE",
         op: "fhirserver",
       });
