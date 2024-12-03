@@ -20,6 +20,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
+import { TenantId } from "@iguhealth/jwt";
 import { createCertsIfNoneExists } from "@iguhealth/jwt/certifications";
 import {
   OperationError,
@@ -511,6 +512,8 @@ async function createWorker(
   const services = staticWorkerServices(workerID);
 
   let isRunning = true;
+  const tenantOffsets: Record<TenantId, number | undefined> = {};
+  const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
@@ -530,8 +533,28 @@ async function createWorker(
         const activeSubscriptions = (
           await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
+            { name: "_count", value: [totalSubsProcessAtATime] },
+            {
+              name: "_iguhealth-version-seq",
+              value: [`ge${tenantOffsets[tenant] ?? 0}`],
+            },
           ])
         ).resources;
+
+        tenantOffsets[tenant] =
+          // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
+          // Set back to zero to loop over all active subscriptions again.
+          activeSubscriptions.length < totalSubsProcessAtATime
+            ? 0
+            : Math.max(
+                ...activeSubscriptions.map(
+                  (sub) =>
+                    sub.meta?.extension?.find(
+                      (ext) =>
+                        ext.url === "https://iguhealth.app/version-sequence",
+                    )?.valueInteger as number,
+                ),
+              );
 
         await ensureLocksCreated(
           ctx.db,
