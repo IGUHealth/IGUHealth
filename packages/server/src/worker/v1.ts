@@ -513,6 +513,7 @@ async function createWorker(
 
   let isRunning = true;
   const tenantOffsets: Record<TenantId, number | undefined> = {};
+  const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
@@ -532,7 +533,7 @@ async function createWorker(
         const activeSubscriptions = (
           await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
-            { name: "_count", value: [5] },
+            { name: "_count", value: [totalSubsProcessAtATime] },
             {
               name: "_iguhealth-version-seq",
               value: [`ge${tenantOffsets[tenant] ?? 0}`],
@@ -541,9 +542,9 @@ async function createWorker(
         ).resources;
 
         tenantOffsets[tenant] =
-          // If less than 5 subscriptions, then we have reached the end of list of active subscriptions.
+          // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
           // Set back to zero to loop over all active subscriptions again.
-          activeSubscriptions.length < 5
+          activeSubscriptions.length < totalSubsProcessAtATime
             ? 0
             : Math.max(
                 ...activeSubscriptions.map(
