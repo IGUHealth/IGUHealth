@@ -536,7 +536,7 @@ async function createWorker(
             { name: "_count", value: [totalSubsProcessAtATime] },
             {
               name: "_iguhealth-version-seq",
-              value: [`ge${tenantOffsets[tenant] ?? 0}`],
+              value: [`gt${tenantOffsets[tenant] ?? -1}`],
             },
           ])
         ).resources;
@@ -545,7 +545,7 @@ async function createWorker(
           // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
           // Set back to zero to loop over all active subscriptions again.
           activeSubscriptions.length < totalSubsProcessAtATime
-            ? 0
+            ? -1
             : Math.max(
                 ...activeSubscriptions.map(
                   (sub) =>
