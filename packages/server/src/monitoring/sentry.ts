@@ -1,7 +1,6 @@
+import { stripUrlQueryAndFragment } from "@sentry/core";
 import * as Sentry from "@sentry/node";
-import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
-import pg from "pg";
 
 import { KoaExtensions } from "../fhir-api/types.js";
 
@@ -15,7 +14,7 @@ export function enableSentry(
     release,
     integrations: [
       // Automatically instrument Node.js libraries and frameworks
-      new Sentry.Integrations.Postgres({ module: pg }),
+      Sentry.postgresIntegration(),
     ],
     // Performance Monitoring
     tracesSampleRate: 1.0,
@@ -39,36 +38,6 @@ export const onKoaError = (err: unknown) => {
   logError(err);
 };
 
-export async function sentryTransaction<T>(
-  dsn: string | undefined,
-  transactionContext: Parameters<typeof Sentry.startTransaction>[0],
-  body: (transaction: Sentry.Transaction | undefined) => Promise<T>,
-): Promise<T> {
-  if (!dsn) return body(undefined);
-  const transaction = Sentry.startTransaction(transactionContext);
-  try {
-    const value = await body(transaction);
-    return value;
-  } finally {
-    transaction.finish();
-  }
-}
-
-export async function sentrySpan<T>(
-  transaction: Sentry.Transaction | Sentry.Span | undefined,
-  spanContext: Parameters<typeof Sentry.startSpan>[0],
-  body: (span: Sentry.Span | undefined) => Promise<T>,
-): Promise<T> {
-  if (!transaction) return body(undefined);
-  const span = transaction.startChild(spanContext);
-  try {
-    const value = await body(span);
-    return value;
-  } finally {
-    span.finish();
-  }
-}
-
 // this tracing middleware creates a transaction per request
 export function tracingMiddleWare<
   State extends KoaExtensions.IGUHealth,
@@ -82,41 +51,15 @@ export function tracingMiddleWare<
       const reqMethod = (ctx.method || "").toUpperCase();
       const reqUrl = ctx.url && stripUrlQueryAndFragment(ctx.url);
 
-      // connect to trace of upstream app
-      let traceparentData;
-      if (ctx.request.get("sentry-trace")) {
-        traceparentData = Sentry.extractTraceparentData(
-          ctx.request.get("sentry-trace"),
-        );
-      }
-
-      const transaction = Sentry.startTransaction({
-        name: `${reqMethod} ${reqUrl}`,
-        op: "http.server",
-        ...traceparentData,
-      });
-
-      // [FIXME]
-      // @ts-ignore
-      ctx.__sentry_transaction = transaction;
-
-      // We put the transaction on the scope so users can attach children to it
-      Sentry.getCurrentHub().configureScope((scope) => {
-        scope.setSpan(transaction);
-      });
-      ctx.res.on("finish", () => {
-        // Push `transaction.finish` to the next event loop so open spans have a chance to finish before the transaction closes
-        setImmediate(() => {
-          // if using koa router, a nicer way to capture transaction using the matched route
-          if (ctx._matchedRoute) {
-            transaction.setName(`${reqMethod} ${ctx._matchedRoute}`);
-          }
-          transaction.setHttpStatus(ctx.status);
-          transaction.finish();
-        });
-      });
+      await Sentry.startSpan(
+        {
+          name: `${reqMethod} ${reqUrl}`,
+          op: "http.server",
+        },
+        async (_span) => {
+          return next();
+        },
+      );
     }
-
-    await next();
   };
 }

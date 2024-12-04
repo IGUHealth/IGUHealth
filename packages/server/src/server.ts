@@ -1,6 +1,7 @@
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
+import * as Sentry from "@sentry/node";
 import Koa from "koa";
 import koaCompress from "koa-compress";
 import helmet from "koa-helmet";
@@ -87,39 +88,27 @@ function createFHIRKoaMiddleware(): Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > {
   return async (ctx, next) => {
-    let span;
-    // @ts-ignore
-    const transaction = ctx.__sentry_transaction;
-    if (transaction) {
-      span = transaction.startChild({
-        description: "FHIR MIDDLEWARE",
-        op: "fhirserver",
-      });
-    }
+    await Sentry.startSpan(
+      { name: "FHIR MIDDLEWARE", op: "fhirserver" },
+      async () => {
+        if (!KoaExtensions.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
+          throw new Error("FHIR Context is not authorized");
+        }
+        const response = await ctx.state.iguhealth.client.request(
+          ctx.state.iguhealth,
+          httpRequestToFHIRRequest(ctx.params.fhirVersion, {
+            url: `${ctx.params.fhirUrl || ""}${
+              ctx.request.querystring ? `?${ctx.request.querystring}` : ""
+            }`,
+            method: ctx.request.method,
+            body: ctx.request.body,
+          }),
+        );
 
-    if (!KoaExtensions.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
-      throw new Error("FHIR Context is not authorized");
-    }
-
-    try {
-      const response = await ctx.state.iguhealth.client.request(
-        ctx.state.iguhealth,
-        httpRequestToFHIRRequest(ctx.params.fhirVersion, {
-          url: `${ctx.params.fhirUrl || ""}${
-            ctx.request.querystring ? `?${ctx.request.querystring}` : ""
-          }`,
-          method: ctx.request.method,
-          body: ctx.request.body,
-        }),
-      );
-
-      fhirResponseSetKoa(ctx, response);
-      await next();
-    } finally {
-      if (span) {
-        span.finish();
-      }
-    }
+        fhirResponseSetKoa(ctx, response);
+        await next();
+      },
+    );
   };
 }
 
