@@ -62,11 +62,11 @@ export function tracingMiddleWare<
           op: "http.server",
         },
         async (_span) => {
-          return next();
+          await next();
         },
       );
     } else {
-      return next();
+      await next();
     }
   };
 }
