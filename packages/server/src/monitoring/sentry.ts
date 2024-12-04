@@ -65,6 +65,8 @@ export function tracingMiddleWare<
           return next();
         },
       );
+    } else {
+      return next();
     }
   };
 }
