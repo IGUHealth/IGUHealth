@@ -20,6 +20,11 @@ export function enableSentry(
     tracesSampleRate: 1.0,
     // Set sampling rate for profiling - this is relative to tracesSampleRate
     profilesSampleRate: 1.0,
+    beforeBreadcrumb(breadCrumb: Sentry.Breadcrumb) {
+      // Avoid sending bread crumbs for http requests.
+      if (breadCrumb.type === "http") return null;
+      return breadCrumb;
+    },
     ...options,
   });
 }
@@ -57,9 +62,11 @@ export function tracingMiddleWare<
           op: "http.server",
         },
         async (_span) => {
-          return next();
+          await next();
         },
       );
+    } else {
+      await next();
     }
   };
 }
