@@ -56,6 +56,7 @@ import { getActiveTenants } from "./retrieval/tenant.js";
 import {
   IGUHealthWorkerCTX,
   createWorkerIGUHealthClient,
+  getVersionSequence,
   staticWorkerServices,
   tenantWorkerContext,
   workerTokenClaims,
@@ -79,28 +80,6 @@ if (process.env.SENTRY_WORKER_DSN)
       process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
     ),
   });
-
-async function getVersionSequence(
-  resource: Resource<R4, AllResourceTypes>,
-): Promise<number> {
-  const evaluation = (
-    await fhirpath.evaluate(
-      "$this.meta.extension.where(url=%sequenceUrl).value",
-      resource,
-      {
-        variables: {
-          sequenceUrl: "https://iguhealth.app/version-sequence",
-        },
-      },
-    )
-  )[0];
-
-  if (typeof evaluation !== "number") {
-    throw new Error("No version sequence found.");
-  }
-
-  return evaluation;
-}
 
 async function handleSubscriptionPayload(
   client: AsynchronousClient<unknown, unknown>,
