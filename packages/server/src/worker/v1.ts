@@ -3,7 +3,6 @@ import { randomUUID } from "crypto";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { AsynchronousClient } from "@iguhealth/client";
 import {
   Bundle,
   BundleEntry,
@@ -55,7 +54,6 @@ import {
 import { getActiveTenants } from "./retrieval/tenant.js";
 import {
   IGUHealthWorkerCTX,
-  createWorkerIGUHealthClient,
   getVersionSequence,
   staticWorkerServices,
   tenantWorkerContext,
@@ -82,8 +80,7 @@ if (process.env.SENTRY_WORKER_DSN)
   });
 
 async function handleSubscriptionPayload(
-  client: AsynchronousClient<unknown, unknown>,
-  services: IGUHealthWorkerCTX,
+  ctx: IGUHealthWorkerCTX,
   fhirVersion: R4,
   subscription: Subscription,
   payload: Resource<FHIR_VERSION, AllResourceTypes>[],
@@ -153,11 +150,11 @@ async function handleSubscriptionPayload(
       )[0];
       if (typeof operation !== "string") {
         logAuditEvent(
-          client,
+          ctx.client,
           {},
           fhirVersion,
           createAuditEvent(
-            services.user.payload,
+            ctx.user.payload,
             MAJOR_FAILURE,
             { reference: `Subscription/${subscription.id}` },
             `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`,
@@ -169,8 +166,8 @@ async function handleSubscriptionPayload(
       }
 
       const operationDefinition = await resolveOperationDefinition(
-        client,
-        services,
+        ctx.client,
+        {},
         fhirVersion,
         operation,
       );
@@ -183,15 +180,20 @@ async function handleSubscriptionPayload(
         })),
       };
 
-      await client.invoke_system(operationDefinition.code, {}, fhirVersion, {
-        resourceType: "Parameters",
-        parameter: [
-          {
-            name: "input",
-            resource: bundle,
-          },
-        ],
-      } as Parameters);
+      await ctx.client.invoke_system(
+        operationDefinition.code,
+        {},
+        fhirVersion,
+        {
+          resourceType: "Parameters",
+          parameter: [
+            {
+              name: "input",
+              resource: bundle,
+            },
+          ],
+        } as Parameters,
+      );
 
       return;
     }
@@ -269,7 +271,6 @@ async function processSubscription(
   workerID: string,
   ctx: IGUHealthWorkerCTX,
   fhirVersion: FHIR_VERSION,
-  client: AsynchronousClient<unknown, unknown>,
   lock: s.iguhealth_locks.Selectable,
 ) {
   if (fhirVersion !== R4)
@@ -281,7 +282,7 @@ async function processSubscription(
     );
 
   // Reread here in event that concurrent process has altered the id.
-  const subscription = await client.read(
+  const subscription = await ctx.client.read(
     {},
     fhirVersion,
     "Subscription",
@@ -346,7 +347,7 @@ async function processSubscription(
 
     switch (request.level) {
       case "system": {
-        historyPoll = await client.history_system({}, fhirVersion, [
+        historyPoll = await ctx.client.history_system({}, fhirVersion, [
           {
             name: "_since-version",
             value: [latestVersionIdForSub],
@@ -355,7 +356,7 @@ async function processSubscription(
         break;
       }
       case "type": {
-        historyPoll = await client.history_type(
+        historyPoll = await ctx.client.history_type(
           {},
           fhirVersion,
           request.resource,
@@ -379,8 +380,8 @@ async function processSubscription(
     const parameters = await parametersWithMetaAssociated(
       async (resourceTypes, name) =>
         await findSearchParameter(
-          client,
-          ctx,
+          ctx.client,
+          {},
           fhirVersion,
           resourceTypes,
           name,
@@ -422,7 +423,10 @@ async function processSubscription(
             {
               resolveCanonical: ctx.resolveCanonical,
               resolveTypeToCanonical: ctx.resolveTypeToCanonical,
-              resolveRemoteCanonical: createResolverRemoteCanonical(client, {}),
+              resolveRemoteCanonical: createResolverRemoteCanonical(
+                ctx.client,
+                {},
+              ),
             },
             R4,
             entry.resource,
@@ -434,7 +438,6 @@ async function processSubscription(
       }
       if (payload.length > 0) {
         await handleSubscriptionPayload(
-          client,
           ctx,
           fhirVersion,
           subscription,
@@ -458,8 +461,9 @@ async function processSubscription(
     if (isOperationError(e)) {
       errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
     }
+
     await logAuditEvent(
-      client,
+      ctx.client,
       {},
       fhirVersion,
       createAuditEvent(
@@ -470,7 +474,7 @@ async function processSubscription(
       ),
     );
 
-    await client.update(
+    await ctx.client.update(
       {},
       fhirVersion,
       "Subscription",
@@ -501,7 +505,6 @@ async function createWorker(
       const activeTenants = await getActiveTenants(services.db);
       for (const tenant of activeTenants) {
         const tenantClaims = workerTokenClaims(workerID, tenant);
-        const client = createWorkerIGUHealthClient(tenant, tenantClaims);
 
         const ctx: IGUHealthWorkerCTX = tenantWorkerContext(
           services,
@@ -510,7 +513,7 @@ async function createWorker(
         );
 
         const activeSubscriptions = (
-          await client.search_type({}, fhirVersion, "Subscription", [
+          await ctx.client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
             { name: "_count", value: [totalSubsProcessAtATime] },
             {
@@ -559,13 +562,7 @@ async function createWorker(
 
             await Promise.all(
               locks.map((lock) =>
-                processSubscription(
-                  workerID,
-                  txContext,
-                  fhirVersion,
-                  client,
-                  lock,
-                ),
+                processSubscription(workerID, txContext, fhirVersion, lock),
               ),
             );
           },
