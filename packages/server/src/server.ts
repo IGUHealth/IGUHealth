@@ -378,6 +378,7 @@ export default async function createServer(): Promise<
         app,
       ),
     )
+    .use(MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
