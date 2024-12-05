@@ -14,7 +14,6 @@ import {
   IGUHealthWorkerCTX,
   WorkerClient,
   WorkerClientCTX,
-  createWorkerIGUHealthClient,
   staticWorkerServices,
   tenantWorkerContext,
   workerTokenClaims,
@@ -97,16 +96,19 @@ async function processSubscriptionTopic<Version extends FHIR_VERSION>(
 }
 
 async function processTenant<Version extends FHIR_VERSION>(
-  services: Omit<IGUHealthWorkerCTX, "tenant" | "user">,
+  services: Omit<IGUHealthWorkerCTX, "tenant" | "user" | "client">,
   tenant: TenantId,
   fhirVersion: Version,
 ) {
   const payload = workerTokenClaims(services.workerID, tenant);
   const workerContext = tenantWorkerContext(services, tenant, payload);
-  const client = createWorkerIGUHealthClient(tenant, payload);
 
   const subscriptionTopics: SubscriptionTopicVersion<Version>[] =
-    await retrieveActiveSubscriptionTopics({}, client, fhirVersion);
+    await retrieveActiveSubscriptionTopics(
+      {},
+      workerContext.client,
+      fhirVersion,
+    );
 
   await ensureLocksCreated(
     workerContext.db,
