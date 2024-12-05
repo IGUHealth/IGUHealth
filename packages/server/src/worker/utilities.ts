@@ -2,7 +2,8 @@ import * as s from "zapatos/schema";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
 import { id } from "@iguhealth/fhir-types/r4/types";
-import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
+import { AllResourceTypes, R4, Resource } from "@iguhealth/fhir-types/versions";
+import * as fhirpath from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -32,7 +33,7 @@ export type IGUHealthWorkerCTX = Pick<
   | "user"
   | "resolveCanonical"
   | "resolveTypeToCanonical"
-> & { workerID: string };
+> & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(
   workerID: string,
@@ -55,7 +56,31 @@ export function workerTokenClaims(
 export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
-export function createWorkerIGUHealthClient(
+export function staticWorkerServices(
+  workerID: string,
+): Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client"> {
+  const db = createPGPool();
+  const redis = getRedisClient();
+  const lock = new RedisLock(redis);
+  const cache = new RedisCache(redis);
+  const logger = createLogger().child({ worker: workerID });
+  const sdArtifacts = createArtifactMemoryDatabase({
+    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
+    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
+  });
+
+  return {
+    resolveCanonical: sdArtifacts.resolveCanonical,
+    resolveTypeToCanonical: sdArtifacts.resolveTypeToCanonical,
+    db,
+    logger,
+    cache,
+    lock,
+    workerID,
+  };
+}
+
+function createWorkerIGUHealthClient(
   tenant: TenantId,
   tokenPayload: AccessTokenPayload<s.user_role>,
 ): ReturnType<typeof createHTTPClient> {
@@ -80,41 +105,40 @@ export function createWorkerIGUHealthClient(
   return client;
 }
 
-export function staticWorkerServices(
-  workerID: string,
-): Omit<IGUHealthWorkerCTX, "user" | "tenant"> {
-  const db = createPGPool();
-  const redis = getRedisClient();
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const logger = createLogger().child({ worker: workerID });
-  const sdArtifacts = createArtifactMemoryDatabase({
-    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-  });
-
-  return {
-    resolveCanonical: sdArtifacts.resolveCanonical,
-    resolveTypeToCanonical: sdArtifacts.resolveTypeToCanonical,
-    db,
-    logger,
-    cache,
-    lock,
-    workerID,
-  };
-}
-
 export function tenantWorkerContext(
-  services: Omit<IGUHealthWorkerCTX, "user" | "tenant">,
+  services: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
   tenant: TenantId,
   claims: AccessTokenPayload<s.user_role>,
 ): IGUHealthWorkerCTX {
   return {
     ...services,
     tenant: tenant,
+    client: createWorkerIGUHealthClient(tenant, claims),
     user: {
       resource: WORKER_APP,
       payload: claims,
     },
   };
+}
+
+export async function getVersionSequence(
+  resource: Resource<R4, AllResourceTypes>,
+): Promise<number> {
+  const evaluation = (
+    await fhirpath.evaluate(
+      "$this.meta.extension.where(url=%sequenceUrl).value",
+      resource,
+      {
+        variables: {
+          sequenceUrl: "https://iguhealth.app/version-sequence",
+        },
+      },
+    )
+  )[0];
+
+  if (typeof evaluation !== "number") {
+    throw new Error("No version sequence found.");
+  }
+
+  return evaluation;
 }
