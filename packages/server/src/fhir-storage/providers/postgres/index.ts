@@ -1455,8 +1455,7 @@ async function patchResource<Version extends FHIR_VERSION>(
         author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
         author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: newResource as unknown as db.JSONObject,
-        prev_version_id: parseInt(existingResource.meta?.versionId as string),
-        patches: JSON.stringify(patches),
+        prev_version_id: parseInt(existingResource.meta?.versionId as string)
       };
 
       const resourceCol = <const>["resource"];
@@ -1543,9 +1542,7 @@ async function updateResource<
       resource: resource as unknown as db.JSONObject,
       prev_version_id: existingResource
         ? parseInt(existingResource.meta?.versionId as string)
-        : undefined,
-      // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
-      patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
+        : undefined
     };
 
     const res = await db
