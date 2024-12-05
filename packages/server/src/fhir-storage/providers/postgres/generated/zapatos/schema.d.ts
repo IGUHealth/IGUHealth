@@ -50003,12 +50003,6 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **resources.patches**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      patches: db.JSONValue | null;
-      /**
       * **resources.prev_version_id**
       * - `int8` in database
       * - Nullable, no default
@@ -50082,12 +50076,6 @@ declare module 'zapatos/schema' {
       * - Generated column
       */
       id: string;
-      /**
-      * **resources.patches**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      patches: db.JSONValue | null;
       /**
       * **resources.prev_version_id**
       * - `int8` in database
@@ -50163,12 +50151,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **resources.patches**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      patches?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **resources.prev_version_id**
       * - `int8` in database
       * - Nullable, no default
@@ -50237,12 +50219,6 @@ declare module 'zapatos/schema' {
       */
       fhir_version: fhir_version | db.Parameter<fhir_version> | db.SQLFragment;
       /**
-      * **resources.patches**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      patches?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **resources.prev_version_id**
       * - `int8` in database
       * - Nullable, no default
@@ -50304,12 +50280,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       fhir_version?: fhir_version | db.Parameter<fhir_version> | db.SQLFragment | db.SQLFragment<any, fhir_version | db.Parameter<fhir_version> | db.SQLFragment>;
-      /**
-      * **resources.patches**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      patches?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **resources.prev_version_id**
       * - `int8` in database
