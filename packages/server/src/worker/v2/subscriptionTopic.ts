@@ -8,8 +8,7 @@ import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
 import { FHIRTransaction } from "../../fhir-storage/transactions.js";
-import { ensureLocksCreated, getAvailableLocks } from "../retrieval/locks.js";
-import { getActiveTenants } from "../retrieval/tenant.js";
+import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
 import {
   IGUHealthWorkerCTX,
   WorkerClient,
@@ -18,6 +17,7 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "../utilities.js";
+import { getActiveTenants } from "../../authN/db/tenant.js";
 
 type SubscriptionTopicVersion<FHIR_VERSION> = FHIR_VERSION extends R4
   ? Basic

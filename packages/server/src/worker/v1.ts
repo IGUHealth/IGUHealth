@@ -50,8 +50,7 @@ import {
   ensureLocksCreated,
   getAvailableLocks,
   updateLock,
-} from "./retrieval/locks.js";
-import { getActiveTenants } from "./retrieval/tenant.js";
+} from "./data/locks.js";
 import {
   IGUHealthWorkerCTX,
   getVersionSequence,
@@ -59,6 +58,7 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
+import { getActiveTenants } from "../authN/db/tenant.js";
 
 loadEnv();
 
