@@ -14,7 +14,6 @@ import path from "node:path";
 import zlib from "node:zlib";
 import React from "react";
 import { fileURLToPath } from "url";
-import * as db from "zapatos/db";
 
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
@@ -59,6 +58,7 @@ import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
+import { getTenant } from "./authN/db/tenant.js";
 
 loadEnv();
 
@@ -269,9 +269,10 @@ export default async function createServer(): Promise<
         outcomeError("invalid", "No tenant present in request."),
       );
 
-    const tenant = await db
-      .selectOne("tenants", { id: ctx.params.tenant }, { columns: ["id"] })
-      .run(ctx.state.iguhealth.db);
+    const tenant = await getTenant(
+      ctx.state.iguhealth.db,
+      ctx.params.tenant as TenantId,
+    );
 
     if (!tenant) {
       throw new OperationError(outcomeError("not-found", "Tenant not found"));
