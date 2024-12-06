@@ -46,7 +46,7 @@ import {
   createArtifactMemoryDatabase,
 } from "../fhir-storage/providers/memory/async.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
-import RouterClient from "../fhir-storage/router.js";
+import RouterClient from "../fhir-storage/providers/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
