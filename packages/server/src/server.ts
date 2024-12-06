@@ -14,7 +14,6 @@ import path from "node:path";
 import zlib from "node:zlib";
 import React from "react";
 import { fileURLToPath } from "url";
-import * as db from "zapatos/db";
 
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
