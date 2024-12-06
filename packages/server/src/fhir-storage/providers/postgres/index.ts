@@ -56,7 +56,7 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
-import indexResource, { removeIndices } from "./indexing.js";
+import indexResource, { removeIndices } from "./search/indexing.js";
 
 async function createResource<
   CTX extends IGUHealthServerCTX,

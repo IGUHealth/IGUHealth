@@ -18,22 +18,22 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
-import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
-import dataConversion from "../../utilities/search/dataConversion.js";
+import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
+import { createResolverRemoteCanonical } from "../../../utilities/canonical.js";
+import dataConversion from "../../../utilities/search/dataConversion.js";
 import {
   searchParameterToTableName,
   searchResources,
-} from "../../utilities/search/parameters.js";
+} from "../../../utilities/search/parameters.js";
 import {
   SEARCH_TABLE_TYPES,
   search_table_types,
   search_types_supported,
-} from "./constants.js";
-import * as r4Sp1 from "./generated/sp1-parameters/r4.sp1parameters.js";
-import * as r4bSp1 from "./generated/sp1-parameters/r4b.sp1parameters.js";
-import { isSearchParameterInSingularTable } from "./search/utilities.js";
+} from "../constants.js";
+import * as r4Sp1 from "../generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4bSp1 from "../generated/sp1-parameters/r4b.sp1parameters.js";
+import { isSearchParameterInSingularTable } from "./utilities.js";
 
 type Insertables = {
   quantity: s.r4b_quantity_idx.Insertable | s.r4_quantity_idx.Insertable;
