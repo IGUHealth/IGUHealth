@@ -186,7 +186,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
       } else {
         // Need to determine how to handle identifier style references.
         return [];
-        //return [{ reference: reference }];
       }
     }
     case "uri":
