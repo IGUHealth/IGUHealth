@@ -353,7 +353,6 @@ async function patchResource<Version extends FHIR_VERSION>(
         author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
         author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: newResource as unknown as db.JSONObject,
-        prev_version_id: parseInt(existingResource.meta?.versionId as string),
       };
 
       const resourceCol = <const>["resource"];
@@ -438,9 +437,6 @@ async function updateResource<
       author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-      prev_version_id: existingResource
-        ? parseInt(existingResource.meta?.versionId as string)
-        : undefined,
     };
 
     const res = await db
@@ -487,7 +483,6 @@ async function deleteResource<
       author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-      prev_version_id: parseInt(resource.meta?.versionId as string),
       deleted: true,
     };
 
