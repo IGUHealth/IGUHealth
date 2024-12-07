@@ -138,7 +138,6 @@ async function toInsertableIndex<
             r_version_id: parseInt(resource.meta.versionId),
             parameter_name: parameter.name,
             parameter_url: parameter.url,
-            reference: {} as db.JSONValue,
             reference_type: resourceType,
             reference_id: id,
           };
