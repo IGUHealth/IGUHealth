@@ -1100,7 +1100,7 @@ export default async function indexResource<
   }
 
   await Promise.all([
-    await indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource),
+    indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource),
     ...manyParameters
       .filter((v) => v.expression !== undefined)
       .map(async (searchParameter) =>
