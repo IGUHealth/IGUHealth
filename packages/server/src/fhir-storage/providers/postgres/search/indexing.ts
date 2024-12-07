@@ -118,43 +118,32 @@ async function toInsertableIndex<
         )
       ).flat();
 
-      return references
-        .filter(({ reference }) => {
-          if (!reference.reference) {
-            ctx.logger.warn("Cannot index logical reference.");
-            return false;
+      return references.map(
+        ({
+          resourceType,
+          id,
+        }): s.r4_reference_idx.Insertable | s.r4b_reference_idx.Insertable => {
+          if (!resourceType || !id) {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                "Resource type or id not found when indexing the resource.",
+              ),
+            );
           }
-          return true;
-        })
-        .map(
-          ({
-            reference,
-            resourceType,
-            id,
-          }):
-            | s.r4_reference_idx.Insertable
-            | s.r4b_reference_idx.Insertable => {
-            if (!resourceType || !id) {
-              throw new OperationError(
-                outcomeError(
-                  "exception",
-                  "Resource type or id not found when indexing the resource.",
-                ),
-              );
-            }
-            return {
-              tenant: ctx.tenant,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              reference: reference as db.JSONValue,
-              reference_type: resourceType,
-              reference_id: id,
-            };
-          },
-        ) as Insertables[Type][];
+          return {
+            tenant: ctx.tenant,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            reference: {} as db.JSONValue,
+            reference_type: resourceType,
+            reference_id: id,
+          };
+        },
+      ) as Insertables[Type][];
     }
     case "uri": {
       return (

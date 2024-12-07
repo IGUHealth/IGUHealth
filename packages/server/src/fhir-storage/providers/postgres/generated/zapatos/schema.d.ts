@@ -2706,12 +2706,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id: number;
       /**
-      * **r4_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue;
-      /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2785,12 +2779,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
       r_version_id: number;
-      /**
-      * **r4_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -2866,12 +2854,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2946,12 +2928,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **r4_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
-      /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -3025,12 +3001,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
       r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **r4_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -27280,12 +27250,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id: number;
       /**
-      * **r4b_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue;
-      /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -27359,12 +27323,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       r_version_id: number;
-      /**
-      * **r4b_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -27440,12 +27398,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **r4b_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -27520,12 +27472,6 @@ declare module 'zapatos/schema' {
       */
       r_version_id: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **r4b_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
-      /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -27599,12 +27545,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **r4b_reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database

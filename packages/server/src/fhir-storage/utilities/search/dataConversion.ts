@@ -165,7 +165,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
   resolveCanonical?: ResolveCanonical,
 ): Promise<
   Array<{
-    reference: Reference;
     resourceType?: ResourceType<Version>;
     id?: id;
     url?: canonical | uri;
@@ -178,7 +177,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
       if (resourceTypes.has(resourceType) && id) {
         return [
           {
-            reference: reference,
             resourceType: resourceType as ResourceType<Version>,
             id: id as id,
           },
@@ -211,9 +209,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
 
       return [
         {
-          reference: {
-            reference: `${resource.resourceType}/${resource.id}`,
-          },
           resourceType: resource.resourceType as ResourceType<Version>,
           id: resource.id,
           url: value.getValue() as canonical | uri,
