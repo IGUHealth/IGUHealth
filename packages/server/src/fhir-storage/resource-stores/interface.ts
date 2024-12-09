@@ -3,16 +3,16 @@ import {
   Resource,
   AllResourceTypes,
 } from "@iguhealth/fhir-types/versions";
+import * as s from "zapatos/schema";
 
 export interface ResourceStore {
   read<Version extends FHIR_VERSION>(
     fhirVersion: Version,
-    id: string[],
+    version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 
-  create<Version extends FHIR_VERSION>(
-    fhirVersion: Version,
-    resources: Resource<Version, AllResourceTypes>[],
+  insert<Version extends FHIR_VERSION>(
+    data: s.resources.Insertable,
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 
   delete<Version extends FHIR_VERSION>(
