@@ -18362,7 +18362,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-window", "npm:1.8.8"],\
           ["classnames", "npm:2.5.1"],\
           ["fhirclient", "virtual:b46d0427f1d2c1317925bf0d45d4b29f27445dfd377e0f285de9087d79b83a923346272d843549a58626965802889de2a3c8f01e4a3d6a5f1a951a48687fe1ff#npm:2.5.4"],\
-          ["nanoid", "npm:5.0.8"],\
+          ["nanoid", "npm:5.0.9"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.3.1"],\
           ["react-router-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:6.28.0"],\
@@ -19006,7 +19006,7 @@ const RAW_RUNTIME_STATE =
           ["koa-redis", "npm:4.0.1"],\
           ["koa-session", "npm:6.4.0"],\
           ["koa-static", "npm:5.0.0"],\
-          ["nanoid", "npm:5.0.8"],\
+          ["nanoid", "npm:5.0.9"],\
           ["pg", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:8.13.1"],\
           ["pino", "npm:9.5.0"],\
           ["pino-pretty", "npm:11.3.0"],\
@@ -47388,10 +47388,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:5.0.8", {\
-        "packageLocation": "./.yarn/cache/nanoid-npm-5.0.8-23de382abf-df131a5154.zip/node_modules/nanoid/",\
+      ["npm:5.0.9", {\
+        "packageLocation": "./.yarn/cache/nanoid-npm-5.0.9-1fe375d93f-8a3f9104f8.zip/node_modules/nanoid/",\
         "packageDependencies": [\
-          ["nanoid", "npm:5.0.8"]\
+          ["nanoid", "npm:5.0.9"]\
         ],\
         "linkType": "HARD"\
       }]\
