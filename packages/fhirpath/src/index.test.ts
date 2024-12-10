@@ -6,6 +6,7 @@ import {
   OperationDefinition,
   Patient,
   Practitioner,
+  Questionnaire,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
@@ -296,12 +297,12 @@ test("repeat", async () => {
     await evaluate("$this.repeat(item)", [
       {
         resourceType: "Questionnaire",
-        item: [{ id: "1", item: [{ id: "2", item: { id: "4" } }] }],
-      },
+        item: [{ id: "1", item: [{ id: "2", item: [{ id: "4" }] }] }],
+      } as Questionnaire,
     ]),
   ).toEqual([
-    { id: "1", item: [{ id: "2", item: { id: "4" } }] },
-    { id: "2", item: { id: "4" } },
+    { id: "1", item: [{ id: "2", item: [{ id: "4" }] }] },
+    { id: "2", item: [{ id: "4" }] },
     { id: "4" },
   ]);
 });

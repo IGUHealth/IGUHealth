@@ -21,5 +21,5 @@ export interface IMetaValue<T> {
 }
 
 export interface IMetaValueArray<T> extends IMetaValue<T[]> {
-  toArray(): IMetaValue<T>[];
+  toArray(): IMetaValue<unknown>[];
 }

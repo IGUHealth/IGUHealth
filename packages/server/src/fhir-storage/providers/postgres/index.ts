@@ -104,6 +104,7 @@ async function getResourceById<Version extends FHIR_VERSION>(
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
   const latestCols = <const>["resource", "deleted"];
   type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
+
   const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
     SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
       tenant: ctx.tenant,
