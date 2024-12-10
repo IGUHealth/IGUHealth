@@ -8,26 +8,40 @@ import * as db from "zapatos/db";
 
 import { ResourceStore } from "./interface.js";
 
-class PostgresStore implements ResourceStore {
+export class PostgresStore implements ResourceStore {
   private readonly _pg: db.Queryable;
   constructor(pg: db.Queryable) {
     this._pg = pg;
   }
-  read<Version extends FHIR_VERSION>(
+  async read<Version extends FHIR_VERSION>(
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
-    throw new Error("Method not implemented.");
+    const whereable = db.conditions.or(
+      ...version_ids.map((v): s.resources.Whereable | db.SQLFragment => ({
+        version_id: parseInt(v),
+      })),
+    );
+
+    const res = await db
+      .select("resources", whereable, { columns: ["resource"] })
+      .run(this._pg);
+
+    return res.map((r) => r.resource) as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >[];
   }
-  insert<Version extends FHIR_VERSION>(
-    data: s.resources.Insertable,
+  async insert<Version extends FHIR_VERSION>(
+    data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
-    throw new Error("Method not implemented.");
-  }
-  delete<Version extends FHIR_VERSION>(
-    fhirVersion: Version,
-    id: string[],
-  ): Promise<void> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .insert("resources", data, { returning: ["resource"] })
+      .run(this._pg);
+
+    return result.map((r) => r.resource) as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >[];
   }
 }

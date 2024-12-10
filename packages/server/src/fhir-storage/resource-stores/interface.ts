@@ -12,11 +12,6 @@ export interface ResourceStore {
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 
   insert<Version extends FHIR_VERSION>(
-    data: s.resources.Insertable,
+    data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
-
-  delete<Version extends FHIR_VERSION>(
-    fhirVersion: Version,
-    id: string[],
-  ): Promise<void>;
 }

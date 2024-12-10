@@ -57,6 +57,7 @@ import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
 import indexResource, { removeIndices } from "./search/indexing.js";
+import { PostgresStore } from "../../resource-stores/postgres.js";
 
 async function createResource<
   CTX extends IGUHealthServerCTX,
@@ -69,32 +70,67 @@ async function createResource<
   // For creation force new id.
   resource.id = generateId();
   return FHIRTransaction(ctx, db.IsolationLevel.ReadCommitted, async (ctx) => {
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "POST",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-    };
-    // the <const> prevents generalization to string[]
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+    const store = new PostgresStore(ctx.db);
 
-    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-    INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-      data,
-    )}) RETURNING ${db.cols(resourceCol)}
-    `.run(ctx.db);
+    const res = await store.insert([
+      {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(fhirVersion),
+        request_method: "POST",
+        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        resource: resource as unknown as db.JSONObject,
+      },
+    ]);
 
     await indexResource(
       ctx,
       fhirVersion,
-      res[0].resource as unknown as Resource<Version, AllResourceTypes>,
+      res[0] as Resource<Version, AllResourceTypes>,
     );
 
-    return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
+    return res[0] as Resource<Version, AllResourceTypes>;
   });
+}
+
+async function getLatestVersionId(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: FHIR_VERSION,
+  id: string,
+): Promise<id | undefined> {
+  switch (fhirVersion) {
+    case R4: {
+      const res = await db
+        .selectOne(
+          "r4_sp1_idx",
+          {
+            r_id: id,
+          },
+          { columns: ["r_version_id"] },
+        )
+        .run(ctx.db);
+
+      return res?.r_version_id.toString() as id | undefined;
+    }
+    case R4B: {
+      const res = await db
+        .selectOne(
+          "r4b_sp1_idx",
+          {
+            r_id: id,
+          },
+          { columns: ["r_version_id"] },
+        )
+        .run(ctx.db);
+
+      return res?.r_version_id.toString() as id | undefined;
+    }
+    default: {
+      throw new OperationError(
+        outcomeError("not-supported", `Unknown FHIR version.`),
+      );
+    }
+  }
 }
 
 async function getResourceById<Version extends FHIR_VERSION>(
@@ -102,24 +138,13 @@ async function getResourceById<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   id: string,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
-  const latestCols = <const>["resource", "deleted"];
-  type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
+  const store = new PostgresStore(ctx.db);
 
-  const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
-    SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
-      tenant: ctx.tenant,
-      id: id,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-    }} ORDER BY ${"version_id"} DESC LIMIT 1
-  `;
+  const versionId = await getLatestVersionId(ctx, fhirVersion, id);
+  if (!versionId) return undefined;
 
-  const res = await db.sql<s.resources.SQL, s.resources.Selectable[]>`
-  SELECT * FROM (${getLatestVersionSQLFragment}) as t WHERE t.deleted = false
-  `.run(ctx.db);
-
-  return res[0]?.resource as unknown as
-    | Resource<Version, AllResourceTypes>
-    | undefined;
+  const res = await store.read(fhirVersion, [versionId]);
+  return res[0];
 }
 
 async function getResource<
@@ -347,26 +372,19 @@ async function patchResource<Version extends FHIR_VERSION>(
         newResource.id = existingResource.id;
       }
 
-      const data: s.resources.Insertable = {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(fhirVersion),
-        request_method: "PATCH",
-        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        resource: newResource as unknown as db.JSONObject,
-      };
+      const store = new PostgresStore(ctx.db);
+      const res = await store.insert([
+        {
+          tenant: ctx.tenant,
+          fhir_version: toDBFHIRVersion(fhirVersion),
+          request_method: "PATCH",
+          author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+          author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+          resource: newResource as unknown as db.JSONObject,
+        },
+      ]);
 
-      const resourceCol = <const>["resource"];
-      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-      const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-          data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(ctx.db);
-
-      const patchedResource = res[0].resource as unknown as Resource<
-        Version,
-        AllResourceTypes
-      >;
+      const patchedResource = res[0] as Resource<Version, AllResourceTypes>;
 
       await indexResource(ctx, fhirVersion, patchedResource);
       return patchedResource;
@@ -431,23 +449,20 @@ async function updateResource<
       });
     }
 
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "PUT",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-    };
+    const store = new PostgresStore(ctx.db);
 
-    const res = await db
-      .insert("resources", data, { returning: ["resource"] })
-      .run(ctx.db);
+    const res = await store.insert([
+      {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(fhirVersion),
+        request_method: "PUT",
+        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        resource: resource as unknown as db.JSONObject,
+      },
+    ]);
 
-    const updatedResource = res.resource as unknown as Resource<
-      Version,
-      AllResourceTypes
-    >;
+    const updatedResource = res[0] as Resource<Version, AllResourceTypes>;
 
     await indexResource(ctx, fhirVersion, updatedResource);
 
@@ -477,25 +492,19 @@ async function deleteResource<
         ),
       );
 
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "DELETE",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-      deleted: true,
-    };
+    const store = new PostgresStore(ctx.db);
+    await store.insert([
+      {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(fhirVersion),
+        request_method: "DELETE",
+        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        resource: resource as unknown as db.JSONObject,
+        deleted: true,
+      },
+    ]);
 
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-
-    const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
-      INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-        data,
-      )}) RETURNING ${db.cols(resourceCol)}`;
-
-    await deleteResource.run(ctx.db);
     await removeIndices(ctx, fhirVersion, resource);
   });
 }
