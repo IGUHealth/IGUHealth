@@ -32,10 +32,10 @@ function conversion<T>(
   fhirVersion: FHIR_VERSION,
   base: string,
   meta: ElementNode,
-  value: Array<unknown> | undefined,
+  value: Array<unknown>,
   location: Location,
 ): MetaValueV2Singular<T>[] {
-  return (value ?? []).map((v, i) => {
+  return value.map((v, i) => {
     if (v instanceof MetaValueV2Singular) return v;
     return new MetaValueV2Singular(
       fhirVersion,
@@ -78,7 +78,14 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
     return true;
   }
   meta(): TypeInfo | undefined {
-    return this._value[0]?.meta();
+    const meta = this._value[0]?.meta();
+    if (meta) {
+      return {
+        ...meta,
+        cardinality: "array",
+      };
+    }
+    return undefined;
   }
   location(): Location {
     return this._location;
