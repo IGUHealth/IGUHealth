@@ -50,7 +50,7 @@ export function flatten<T>(
       return [];
     }
     case node?.isArray(): {
-      return node.toArray();
+      return node.toArray() as IMetaValue<T>[];
     }
     case node && node.isArray() === false: {
       return [node];

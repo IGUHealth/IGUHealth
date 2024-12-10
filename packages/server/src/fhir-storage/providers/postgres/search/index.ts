@@ -15,6 +15,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import * as fhirpath from "@iguhealth/fhirpath";
 
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import {
@@ -25,13 +26,14 @@ import {
   deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
-  searchParameterToTableName,
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
 import { toSQLString } from "../../log_sql.js";
 import buildParametersSQL from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
+import dataConversion from "../../../utilities/search/dataConversion.js";
+import { createResolverRemoteCanonical } from "../../../utilities/canonical.js";
 
 type FHIRSearchRequest =
   | R4SystemSearchRequest
@@ -213,21 +215,30 @@ async function processInclude<Version extends FHIR_VERSION>(
             ),
           );
 
+        const parameter = includeParameterSearchParam.resources[0];
+
         // Derive the id and type from the reference_idx table for the given param for the resources.
-        const idResult = await db.sql<
-          s.r4_reference_idx.SQL | s.r4b_reference_idx.SQL,
-          (s.r4_reference_idx.Selectable | s.r4b_reference_idx.Selectable)[]
-        >`
-        SELECT ${"reference_id"}, ${"reference_type"}
-        FROM ${searchParameterToTableName(fhirVersion, "reference")} 
-        WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(ids)}) AND
-        ${"parameter_url"} = ${db.param(
-          includeParameterSearchParam.resources[0].url,
-        )}
-        `.run(client);
+        const evaluation = await fhirpath.evaluateWithMeta(
+          parameter.expression as string,
+          results,
+          {
+            fhirVersion,
+          },
+        );
+
+        const referenceTo = await dataConversion<Version, "reference">(
+          fhirVersion,
+          parameter,
+          evaluation,
+          createResolverRemoteCanonical(ctx.client, ctx),
+        );
 
         const types: string[] = [
-          ...new Set(idResult.map((r) => r.reference_type)),
+          ...new Set(
+            referenceTo
+              .map((r) => r.resourceType)
+              .filter((type) => type !== undefined),
+          ),
         ];
 
         return ctx.client
@@ -235,7 +246,9 @@ async function processInclude<Version extends FHIR_VERSION>(
             { name: "_type", value: types },
             {
               name: "_id",
-              value: idResult.map((id) => id.reference_id),
+              value: referenceTo
+                .map((ref) => ref.id)
+                .filter((id) => id !== undefined),
             },
           ])
           .then((r) => r.resources);

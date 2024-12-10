@@ -28,39 +28,39 @@ import {
 import { ElementNode, getResolvedMeta, getStartingMeta } from "./meta.js";
 import { SpoofMetaValueV2 } from "./spoof.js";
 
+function conversion<T>(
+  fhirVersion: FHIR_VERSION,
+  base: string,
+  meta: ElementNode,
+  value: Array<unknown>,
+  location: Location,
+): MetaValueV2Singular<T>[] {
+  return value.map((v, i) => {
+    if (v instanceof MetaValueV2Singular) return v;
+    return new MetaValueV2Singular(
+      fhirVersion,
+      base,
+      { ...meta, cardinality: "single" },
+      v,
+      [...location, i],
+    );
+  });
+}
+
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
-  private _value: Array<MetaValueV2Singular<T>>;
-  private _meta: ElementNode;
-  private _fhirVersion: FHIR_VERSION;
+  private _value: Array<MetaValueV2Singular<unknown>>;
 
   private _location: Location;
 
-  constructor(
-    fhirVersion: FHIR_VERSION,
-    base: string,
-    meta: ElementNode,
-    value: Array<T>,
-    location: Location,
-  ) {
-    this._value = value.map((v, i) => {
-      if (v instanceof MetaValueV2Singular) return v;
-      return new MetaValueV2Singular(
-        fhirVersion,
-        base,
-        { ...meta, cardinality: "single" },
-        v,
-        [...location, i],
-      );
-    });
-    this._meta = meta;
-    this._fhirVersion = fhirVersion;
+  constructor(value: MetaValueV2Singular<unknown>[], location: Location) {
+    this._value = value;
     this._location = location;
   }
   keys(): (string | number)[] {
     throw new Error("Method not allowed on arrays.");
   }
   getValue(): Array<T> {
-    return this._value.map((v) => v.getValue());
+    return this._value.map((v) => v.getValue()) as Array<T>;
   }
   isType(_type: string): boolean {
     throw new Error("Method not allowed on arrays.");
@@ -71,18 +71,14 @@ class MetaValueV2Array<T> implements IMetaValueArray<T> {
     }
     return undefined;
   }
-  toArray(): Array<MetaValueV2Singular<T>> {
+  toArray(): Array<MetaValueV2Singular<unknown>> {
     return this._value;
   }
   isArray(): this is MetaValueV2Array<Array<T>> {
     return true;
   }
   meta(): TypeInfo | undefined {
-    return {
-      type: this._meta.type,
-      fhirVersion: this._fhirVersion,
-      cardinality: this._meta.cardinality,
-    };
+    return this._value[0]?.meta();
   }
   location(): Location {
     return this._location;
@@ -195,14 +191,17 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
           }
           case nextMeta.meta.cardinality === "array": {
             return new MetaValueV2Array(
-              this._fhirVersion,
-              nextMeta.base,
-              nextMeta.meta as ElementNode,
-              [
-                ...new Array(
-                  Math.max(value?.length ?? 0, element?.length ?? 0),
-                ),
-              ].map((_z, i) => toFPPrimitive(value?.[i], element?.[i])),
+              conversion(
+                this._fhirVersion,
+                nextMeta.base,
+                nextMeta.meta as ElementNode,
+                [
+                  ...new Array(
+                    Math.max(value?.length ?? 0, element?.length ?? 0),
+                  ),
+                ].map((_z, i) => toFPPrimitive(value?.[i], element?.[i])),
+                descendLoc(this, nextMeta.field),
+              ),
               descendLoc(this, nextMeta.field),
             );
           }
@@ -225,10 +224,13 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
           }
           case nextMeta.meta.cardinality === "array": {
             return new MetaValueV2Array(
-              this._fhirVersion,
-              nextMeta.base,
-              nextMeta.meta as ElementNode,
-              (this._value as any)?.[nextMeta.field] ?? [],
+              conversion(
+                this._fhirVersion,
+                nextMeta.base,
+                nextMeta.meta as ElementNode,
+                (this._value as any)?.[nextMeta.field] ?? [],
+                descendLoc(this, nextMeta.field),
+              ),
               descendLoc(this, nextMeta.field),
             );
           }
@@ -314,10 +316,13 @@ class NonMetaValue<T> implements IMetaValue<T> {
 
         if (Array.isArray(fpPrimitive)) {
           return new MetaValueV2Array(
-            R4,
-            "Element",
-            getStartingMeta(R4, "Element" as uri) as ElementNode,
-            fpPrimitive,
+            conversion(
+              R4,
+              "Element",
+              getStartingMeta(R4, "Element" as uri) as ElementNode,
+              fpPrimitive,
+              descendLoc(this, field.toString()),
+            ),
             descendLoc(this, field.toString()),
           );
         } else {
@@ -341,16 +346,13 @@ class NonMetaValue<T> implements IMetaValue<T> {
       default: {
         // Should handle array for type determination?
         const type = attemptDetermineType(value);
+        const loc = descendLoc(this, field.toString());
         if (type) {
           const meta = getStartingMeta(R4, type);
-
           if (isArray(value)) {
             return new MetaValueV2Array(
-              R4,
-              type,
-              meta as ElementNode,
-              value,
-              descendLoc(this, field.toString()),
+              conversion(R4, type, meta as ElementNode, value, loc),
+              loc,
             );
           } else {
             return new MetaValueV2Singular(
@@ -358,15 +360,11 @@ class NonMetaValue<T> implements IMetaValue<T> {
               type,
               meta as ElementNode,
               value,
-              descendLoc(this, field.toString()),
+              loc,
             );
           }
         } else {
-          return new NonMetaValue(
-            this._fhirVersion,
-            value,
-            descendLoc(this, field.toString()),
-          );
+          return new NonMetaValue(this._fhirVersion, value, loc);
         }
       }
     }
@@ -381,10 +379,15 @@ function attemptDetermineType(value: unknown): uri | undefined {
 }
 
 export function metaValue<T>(
-  { type, fhirVersion }: Partial<TypeInfo> | undefined = { fhirVersion: R4 },
+  metaOptions: Partial<TypeInfo> | undefined = { fhirVersion: R4 },
   value: T | T[],
   location: Location = [],
 ): IMetaValue<NonNullable<T>> | IMetaValueArray<NonNullable<T>> | undefined {
+  let { type, fhirVersion } = metaOptions;
+  if (!fhirVersion) {
+    fhirVersion = R4;
+  }
+
   switch (true) {
     case value === undefined: {
       return undefined;
@@ -396,39 +399,35 @@ export function metaValue<T>(
     }
     default: {
       // Assign a type automatically if the value is a resourceType
-      type = type ?? attemptDetermineType(value);
-      if (!fhirVersion) {
-        fhirVersion = R4;
-      }
+      if (isArray(value)) {
+        return new MetaValueV2Array(
+          value.map(
+            (v, i) =>
+              metaValue(metaOptions, v, [
+                ...location,
+                i,
+              ]) as MetaValueV2Singular<unknown>,
+          ),
+          location,
+        );
+      } else {
+        type = type ?? attemptDetermineType(value);
+        const meta = getStartingMeta(fhirVersion, type as uri);
 
-      const meta = getStartingMeta(fhirVersion, type as uri);
-
-      switch (true) {
-        case meta === undefined || type === undefined: {
+        if (meta === undefined || type === undefined) {
           return new NonMetaValue(
             fhirVersion,
             value as NonNullable<T>,
             location,
           );
         }
-        case isArray(value): {
-          return new MetaValueV2Array(
-            fhirVersion,
-            type, // Start as base because resource root is not specified in elements
-            meta,
-            value as NonNullable<T>[],
-            location,
-          );
-        }
-        default: {
-          return new MetaValueV2Singular(
-            fhirVersion,
-            type, // Start as base because resource root is not specified in elements
-            meta,
-            value as NonNullable<T>,
-            location,
-          );
-        }
+        return new MetaValueV2Singular(
+          fhirVersion,
+          type, // Start as base because resource root is not specified in elements
+          meta,
+          value as NonNullable<T>,
+          location,
+        );
       }
     }
   }
