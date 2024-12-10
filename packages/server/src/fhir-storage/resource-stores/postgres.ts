@@ -9,14 +9,16 @@ import * as db from "zapatos/db";
 import { ResourceStore } from "./interface.js";
 
 class PostgresStore implements ResourceStore {
-  private _pg: db.Queryable;
+  private readonly _pg: db.Queryable;
   constructor(pg: db.Queryable) {
     this._pg = pg;
   }
   read<Version extends FHIR_VERSION>(
     fhirVersion: Version,
     version_ids: string[],
-  ): Promise<Resource<Version, AllResourceTypes>[]> {}
+  ): Promise<Resource<Version, AllResourceTypes>[]> {
+    throw new Error("Method not implemented.");
+  }
   insert<Version extends FHIR_VERSION>(
     data: s.resources.Insertable,
   ): Promise<Resource<Version, AllResourceTypes>[]> {

@@ -48,7 +48,7 @@ function conversion<T>(
 }
 
 class MetaValueV2Array<T> implements IMetaValueArray<T> {
-  private _value: Array<MetaValueV2Singular<unknown>>;
+  private readonly _value: Array<MetaValueV2Singular<unknown>>;
 
   private _location: Location;
 
