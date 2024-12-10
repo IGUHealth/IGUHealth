@@ -32,10 +32,10 @@ function conversion<T>(
   fhirVersion: FHIR_VERSION,
   base: string,
   meta: ElementNode,
-  value: Array<unknown>,
+  value: Array<unknown> | undefined,
   location: Location,
 ): MetaValueV2Singular<T>[] {
-  return value.map((v, i) => {
+  return (value ?? []).map((v, i) => {
     if (v instanceof MetaValueV2Singular) return v;
     return new MetaValueV2Singular(
       fhirVersion,
