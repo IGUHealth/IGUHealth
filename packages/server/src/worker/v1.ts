@@ -35,7 +35,7 @@ import logAuditEvent, {
   createAuditEvent,
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
-import { fitsSearchCriteria } from "../fhir-storage/providers/memory/search.js";
+import { fitsSearchCriteria } from "../fhir-storage/providers/middleware/memory/search.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {

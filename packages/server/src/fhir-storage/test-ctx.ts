@@ -23,7 +23,7 @@ import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
-import { Memory } from "./providers/memory/async.js";
+import { Memory } from "./providers/middleware/memory/async.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,

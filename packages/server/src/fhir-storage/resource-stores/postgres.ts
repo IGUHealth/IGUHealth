@@ -7,6 +7,8 @@ import * as s from "zapatos/schema";
 import * as db from "zapatos/db";
 
 import { ResourceStore } from "./interface.js";
+import { toDBFHIRVersion } from "../utilities/version.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export class PostgresStore implements ResourceStore {
   private readonly _pg: db.Queryable;
@@ -17,20 +19,48 @@ export class PostgresStore implements ResourceStore {
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
+    if (version_ids.length === 0) return [];
+    const fhir_version = toDBFHIRVersion(fhirVersion);
     const whereable = db.conditions.or(
       ...version_ids.map((v): s.resources.Whereable | db.SQLFragment => ({
         version_id: parseInt(v),
+        fhir_version,
       })),
     );
 
-    const res = await db
-      .select("resources", whereable, { columns: ["resource"] })
-      .run(this._pg);
-
-    return res.map((r) => r.resource) as unknown as Resource<
+    const res = (
+      await db
+        .select("resources", whereable, { columns: ["resource"] })
+        .run(this._pg)
+    ).map((r) => r.resource) as unknown as Resource<
       Version,
       AllResourceTypes
     >[];
+
+    const version_ids_to_index = version_ids.reduce(
+      (acc: Record<string, number>, id, index) => {
+        acc[id] = index;
+        return acc;
+      },
+      {},
+    );
+
+    const returnOrdered = [...new Array(version_ids.length)];
+
+    res.forEach((resource) => {
+      const versionId = resource.meta?.versionId;
+      if (!versionId)
+        throw new OperationError(
+          outcomeError(
+            "exception",
+            "postgres store could not derive versionId from resource meta.",
+          ),
+        );
+      const index = version_ids_to_index[versionId];
+      returnOrdered[index] = resource;
+    });
+
+    return returnOrdered;
   }
   async insert<Version extends FHIR_VERSION>(
     data: s.resources.Insertable[],

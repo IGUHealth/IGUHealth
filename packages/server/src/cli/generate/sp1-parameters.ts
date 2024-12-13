@@ -11,7 +11,7 @@ import {
 import analyze from "@iguhealth/fhirpath/analyze";
 import * as prettier from "prettier";
 import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
-import { getSp1Column } from "../../fhir-storage/providers/postgres/search/clauses/db_singular_clauses/shared.js";
+import { getSp1Column } from "../../fhir-storage/search-stores/postgres/clauses/db_singular_clauses/shared.js";
 import { toSQLString } from "../../fhir-storage/providers/log_sql.js";
 
 export function getSp1Name(
