@@ -5,12 +5,12 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { isSearchTableType } from "../../../../providers/constants.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,
 } from "../../../../utilities/search/parameters.js";
 import { intersect } from "../../../../utilities/sql.js";
-import { isSearchTableType } from "../../../../providers/constants.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";

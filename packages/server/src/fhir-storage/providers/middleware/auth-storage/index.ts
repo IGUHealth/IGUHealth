@@ -257,6 +257,7 @@ function updateUserTableMiddleware<
       case "create-request": {
         const res = await next(context);
         const membership = (res.response as R4CreateResponse)?.body;
+
         if (membership.resourceType !== "Membership") {
           throw new OperationError(
             outcomeError("invariant", "Invalid resource type."),
@@ -318,6 +319,7 @@ function updateUserTableMiddleware<
 
         const existingUser = await db
           .selectOne("users", {
+            tenant: context.ctx.tenant,
             fhir_user_id: membership.id as string,
           })
           .run(context.ctx.db);
