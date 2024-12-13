@@ -12,7 +12,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/lib/versions";
 
-import { testServices } from "../../test-ctx.js";
+import { testServices } from "../../../test-ctx.js";
 import { Memory } from "./async.js";
 import type { InternalData } from "./types.js";
 
@@ -110,7 +110,7 @@ test("Creation and search", async () => {
   );
 
   expect(
-    await memDb.read(testServices, R4, "SearchParameter", "test1"),
+    await memDb.read(testServices, R4, "SearchParameter", "test1" as id),
   ).toEqual(
     generateParameter({
       id: "test1",

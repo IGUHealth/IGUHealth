@@ -17,9 +17,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["A"] }]
+            "name": [
+              {
+                "given": [
+                  "A"
+                ]
+              }
+            ]
           }
         },
         {
@@ -30,9 +40,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["B"] }]
+            "name": [
+              {
+                "given": [
+                  "B"
+                ]
+              }
+            ]
           }
         },
         {
@@ -43,9 +63,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["C"] }]
+            "name": [
+              {
+                "given": [
+                  "C"
+                ]
+              }
+            ]
           }
         },
         {
@@ -56,9 +86,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["D"] }]
+            "name": [
+              {
+                "given": [
+                  "D"
+                ]
+              }
+            ]
           }
         },
         {
@@ -69,9 +109,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["E"] }]
+            "name": [
+              {
+                "given": [
+                  "E"
+                ]
+              }
+            ]
           }
         },
         {
@@ -82,9 +132,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["F"] }]
+            "name": [
+              {
+                "given": [
+                  "F"
+                ]
+              }
+            ]
           }
         },
         {
@@ -95,9 +155,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["G"] }]
+            "name": [
+              {
+                "given": [
+                  "G"
+                ]
+              }
+            ]
           }
         },
         {
@@ -108,9 +178,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["H"] }]
+            "name": [
+              {
+                "given": [
+                  "H"
+                ]
+              }
+            ]
           }
         },
         {
@@ -121,9 +201,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["I"] }]
+            "name": [
+              {
+                "given": [
+                  "I"
+                ]
+              }
+            ]
           }
         },
         {
@@ -134,9 +224,19 @@
           "resource": {
             "resourceType": "Patient",
             "meta": {
-              "tag": [{ "code": "total-test" }]
+              "tag": [
+                {
+                  "code": "total-test"
+                }
+              ]
             },
-            "name": [{ "given": ["J"] }]
+            "name": [
+              {
+                "given": [
+                  "J"
+                ]
+              }
+            ]
           }
         }
       ]
