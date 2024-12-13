@@ -20,6 +20,7 @@ async function createMemoryDatabase(
   resourceTypes: ResourceType[],
 ): Promise<FHIRClientAsync<IGUHealthServerCTX>> {
   const database = new Memory({});
+
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
@@ -28,7 +29,7 @@ async function createMemoryDatabase(
         loadDevelopmentPackages: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
-          "../../../../",
+          "../../../../../",
         ),
         onlyPackages: [
           "@iguhealth/hl7.fhir.r4.core",
