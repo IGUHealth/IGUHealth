@@ -22,7 +22,7 @@ import {
   getRedisClient,
 } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { createPGPool } from "../../fhir-storage/providers/postgres/pg.js";
+import { createPGPool } from "../../fhir-storage/providers/middleware/postgres/pg.js";
 import { FHIRTransaction } from "../../fhir-storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
