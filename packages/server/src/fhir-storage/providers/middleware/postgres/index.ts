@@ -158,6 +158,7 @@ async function getResource<
   id: string,
 ): Promise<Resource<Version, Type> | undefined> {
   const resource = await getResourceById(ctx, fhirVersion, id);
+
   if (resource === undefined || resource.resourceType !== resourceType) {
     return undefined;
   }
@@ -537,6 +538,8 @@ async function conditionalDelete(
     throw new OperationError(
       outcomeError("too-costly", "The operation is too costly to perform."),
     );
+
+  
 
   for (const { type, id } of result.result) {
     await deleteResource(ctx, searchRequest.fhirVersion, type, id);

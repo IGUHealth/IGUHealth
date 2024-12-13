@@ -5,7 +5,9 @@ import { id } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { toSQLString } from "../../providers/log_sql.js";
 import {
   ParameterType,
   SearchParameterResource,
@@ -17,11 +19,9 @@ import {
   searchParameterToTableName,
 } from "../../utilities/search/parameters.js";
 import * as sqlUtils from "../../utilities/sql.js";
-import { toSQLString } from "../../providers/log_sql.js";
+import { FHIRSearchRequest, SearchResult } from "../interface.js";
 import buildParametersSQL from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
-import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
-import { FHIRSearchRequest, SearchResult } from "../interface.js";
 
 type InteralSearchRequest<Version extends FHIR_VERSION> = {
   resourceTypes: ResourceType<Version>[];
@@ -241,17 +241,18 @@ function resourceSearchColumns(
   table: ReturnType<typeof getSp1Name>,
   totalParameterValue: string,
 ): string[] {
+  const columns = [
+    `${table}.r_version_id`,
+    `${table}.r_id`,
+    `${table}.resource_type`,
+  ];
   switch (totalParameterValue) {
     case "none": {
-      return [`${table}.r_version_id`, `${table}.r_id`];
+      return columns;
     }
     case "accurate":
     case "estimate": {
-      return [
-        `${table}.r_version_id`,
-        `${table}.r_id`,
-        "count(*) OVER () AS total_count",
-      ];
+      return [...columns, "count(*) OVER () AS total_count"];
     }
     default:
       throw new OperationError(
