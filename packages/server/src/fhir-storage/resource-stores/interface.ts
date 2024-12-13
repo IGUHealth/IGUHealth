@@ -1,12 +1,15 @@
+import * as s from "zapatos/schema";
+
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
-  AllResourceTypes,
 } from "@iguhealth/fhir-types/versions";
-import * as s from "zapatos/schema";
+import { TenantId } from "@iguhealth/jwt";
 
 export interface ResourceStore {
   read<Version extends FHIR_VERSION>(
+    tenant: TenantId,
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;

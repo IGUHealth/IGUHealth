@@ -144,7 +144,7 @@ async function getResourceById<Version extends FHIR_VERSION>(
   const versionId = await getLatestVersionId(ctx, fhirVersion, id);
   if (!versionId) return undefined;
 
-  const res = await store.read(fhirVersion, [versionId]);
+  const res = await store.read(ctx.tenant, fhirVersion, [versionId]);
   return res[0];
 }
 
@@ -641,6 +641,7 @@ function createPostgresMiddleware<
             context.request,
           );
           const resources = await store.read(
+            context.ctx.tenant,
             context.request.fhirVersion,
             result.result.map((r) => r.version_id),
           );

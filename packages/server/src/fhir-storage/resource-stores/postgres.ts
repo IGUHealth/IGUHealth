@@ -1,14 +1,16 @@
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
+
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
-  AllResourceTypes,
 } from "@iguhealth/fhir-types/versions";
-import * as s from "zapatos/schema";
-import * as db from "zapatos/db";
-
-import { ResourceStore } from "./interface.js";
-import { toDBFHIRVersion } from "../utilities/version.js";
+import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { toDBFHIRVersion } from "../utilities/version.js";
+import { ResourceStore } from "./interface.js";
 
 export class PostgresStore implements ResourceStore {
   private readonly _pg: db.Queryable;
@@ -16,6 +18,7 @@ export class PostgresStore implements ResourceStore {
     this._pg = pg;
   }
   async read<Version extends FHIR_VERSION>(
+    tenant: TenantId,
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
@@ -24,6 +27,7 @@ export class PostgresStore implements ResourceStore {
     const whereable = db.conditions.or(
       ...version_ids.map((v): s.resources.Whereable | db.SQLFragment => ({
         version_id: parseInt(v),
+        tenant,
         fhir_version,
       })),
     );
