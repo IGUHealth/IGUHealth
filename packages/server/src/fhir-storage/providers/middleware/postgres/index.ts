@@ -341,6 +341,7 @@ async function patchResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
+  searchEngine: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
@@ -402,8 +403,7 @@ async function patchResource<
 
       const patchedResource = res[0] as Resource<Version, AllResourceTypes>;
 
-      const search = new PostgresSearchEngine();
-      await search.index(ctx, fhirVersion, patchedResource);
+      await searchEngine.index(ctx, fhirVersion, patchedResource);
       return patchedResource;
     } catch (e) {
       if (isOperationError(e)) throw e;
@@ -425,6 +425,7 @@ async function updateResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
+  search: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -481,7 +482,6 @@ async function updateResource<
 
     const updatedResource = res[0] as Resource<Version, AllResourceTypes>;
 
-    const search = new PostgresSearchEngine();
     await search.index(ctx, fhirVersion, updatedResource);
 
     return {
@@ -496,6 +496,7 @@ async function deleteResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
+  search: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
@@ -529,13 +530,13 @@ async function deleteResource<
       },
     ]);
 
-    const search = new PostgresSearchEngine();
     await search.removeIndex(ctx, fhirVersion, resource);
   });
 }
 
 async function conditionalDelete(
   store: ResourceStore<IGUHealthServerCTX>,
+  search: SearchEngine<IGUHealthServerCTX>,
   ctx: IGUHealthServerCTX,
   searchRequest:
     | R4TypeSearchRequest
@@ -552,7 +553,6 @@ async function conditionalDelete(
     { name: "_count", value: [limit] },
   ];
 
-  const search = new PostgresSearchEngine();
   const result = await search.search(ctx, searchRequest);
 
   if ((result.total ?? limit + 1) > limit)
@@ -561,7 +561,14 @@ async function conditionalDelete(
     );
 
   for (const { type, id } of result.result) {
-    await deleteResource(store, ctx, searchRequest.fhirVersion, type, id);
+    await deleteResource(
+      store,
+      search,
+      ctx,
+      searchRequest.fhirVersion,
+      type,
+      id,
+    );
   }
 
   switch (searchRequest.level) {
@@ -655,8 +662,7 @@ function createPostgresMiddleware<
           };
         }
         case "search-request": {
-          const searchEngine = new PostgresSearchEngine();
-          const result = await searchEngine.search(
+          const result = await context.state.search.search(
             context.ctx,
             context.request,
           );
@@ -747,6 +753,7 @@ function createPostgresMiddleware<
         case "patch-request": {
           const savedResource = await patchResource(
             context.state.store,
+            context.state.search,
             context.ctx,
             context.request.fhirVersion,
             context.request.resource,
@@ -776,8 +783,7 @@ function createPostgresMiddleware<
                 context.ctx,
                 db.IsolationLevel.RepeatableRead,
                 async (ctx) => {
-                  const searchEngine = new PostgresSearchEngine();
-                  const result = await searchEngine.search(ctx, {
+                  const result = await context.state.search.search(ctx, {
                     fhirVersion: request.fhirVersion,
                     type: "search-request",
                     level: "type",
@@ -819,6 +825,7 @@ function createPostgresMiddleware<
 
                         const { resource, created } = await updateResource(
                           context.state.store,
+                          context.state.search,
                           ctx,
                           request.fhirVersion,
                           request.body,
@@ -880,6 +887,7 @@ function createPostgresMiddleware<
                       }
                       const { created, resource } = await updateResource(
                         context.state.store,
+                        context.state.search,
                         ctx,
                         request.fhirVersion,
                         { ...request.body, id: foundResource.id },
@@ -916,6 +924,7 @@ function createPostgresMiddleware<
             case "instance": {
               const { created, resource } = await updateResource(
                 context.state.store,
+                context.state.search,
                 context.ctx,
                 context.request.fhirVersion,
                 // Set the id for the request body to ensure that the resource is updated correctly.
@@ -953,6 +962,7 @@ function createPostgresMiddleware<
             case "instance": {
               await deleteResource(
                 context.state.store,
+                context.state.search,
                 context.ctx,
                 context.request.fhirVersion,
                 context.request.resource,
@@ -979,6 +989,7 @@ function createPostgresMiddleware<
                 ctx: context.ctx,
                 response: await conditionalDelete(
                   context.state.store,
+                  context.state.search,
                   context.ctx,
                   {
                     type: "search-request",
@@ -997,6 +1008,7 @@ function createPostgresMiddleware<
                 ctx: context.ctx,
                 response: await conditionalDelete(
                   context.state.store,
+                  context.state.search,
                   context.ctx,
                   {
                     type: "search-request",
