@@ -1,5 +1,4 @@
-import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,

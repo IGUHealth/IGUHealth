@@ -6,8 +6,6 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
-
 export interface ResourceStore<CTX> {
   read<Version extends FHIR_VERSION>(
     ctx: CTX,
