@@ -1,5 +1,4 @@
-import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -20,8 +19,8 @@ export type FHIRSearchRequest =
 
 export type SearchResult = { version_id: id; id: id; type: AllResourceTypes };
 
-export interface SearchEngine {
-  search<CTX extends IGUHealthServerCTX>(
+export interface SearchEngine<CTX> {
+  search(
     ctx: CTX,
     fhirRequest: FHIRSearchRequest,
   ): Promise<{
@@ -29,13 +28,13 @@ export interface SearchEngine {
     result: SearchResult[];
   }>;
 
-  index<Version extends FHIR_VERSION, CTX extends IGUHealthServerCTX>(
+  index<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     resource: Resource<Version, AllResourceTypes>,
   ): Promise<void>;
 
-  removeIndex<Version extends FHIR_VERSION, CTX extends IGUHealthServerCTX>(
+  removeIndex<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     resource: Resource<Version, AllResourceTypes>,

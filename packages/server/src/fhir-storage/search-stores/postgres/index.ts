@@ -8,7 +8,9 @@ import { FHIRSearchRequest, SearchEngine, SearchResult } from "../interface.js";
 import { executeSearchQuery } from "./search.js";
 import indexResource, { removeIndices } from "./indexing.js";
 
-export class PostgresSearchEngine implements SearchEngine {
+export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
+  implements SearchEngine<CTX>
+{
   async search<CTX extends IGUHealthServerCTX>(
     ctx: CTX,
     request: FHIRSearchRequest,

@@ -6,19 +6,17 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { toDBFHIRVersion } from "../utilities/version.js";
 import { ResourceStore } from "./interface.js";
 
-export class PostgresStore implements ResourceStore {
-  private readonly _pg: db.Queryable;
-  constructor(pg: db.Queryable) {
-    this._pg = pg;
-  }
+export class PostgresStore<CTX extends IGUHealthServerCTX>
+  implements ResourceStore<CTX>
+{
   async read<Version extends FHIR_VERSION>(
-    tenant: TenantId,
+    ctx: IGUHealthServerCTX,
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
@@ -27,7 +25,7 @@ export class PostgresStore implements ResourceStore {
     const whereable = db.conditions.or(
       ...version_ids.map((v): s.resources.Whereable | db.SQLFragment => ({
         version_id: parseInt(v),
-        tenant,
+        tenant: ctx.tenant,
         fhir_version,
       })),
     );
@@ -35,7 +33,7 @@ export class PostgresStore implements ResourceStore {
     const res = (
       await db
         .select("resources", whereable, { columns: ["resource"] })
-        .run(this._pg)
+        .run(ctx.db)
     ).map((r) => r.resource) as unknown as Resource<
       Version,
       AllResourceTypes
@@ -67,11 +65,12 @@ export class PostgresStore implements ResourceStore {
     return returnOrdered;
   }
   async insert<Version extends FHIR_VERSION>(
+    ctx: IGUHealthServerCTX,
     data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     const result = await db
       .insert("resources", data, { returning: ["resource"] })
-      .run(this._pg);
+      .run(ctx.db);
 
     return result.map((r) => r.resource) as unknown as Resource<
       Version,
