@@ -5,16 +5,18 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 
-export interface ResourceStore {
+import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+
+export interface ResourceStore<CTX> {
   read<Version extends FHIR_VERSION>(
-    tenant: TenantId,
+    ctx: CTX,
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 
   insert<Version extends FHIR_VERSION>(
+    ctx: CTX,
     data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 }
