@@ -7,7 +7,6 @@ import { FHIRClient } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareAsync,
-  MiddlewareAsync,
   MiddlewareAsyncChain,
 } from "@iguhealth/client/middleware";
 import { code, id, unsignedInt, uri } from "@iguhealth/fhir-types/r4/types";
