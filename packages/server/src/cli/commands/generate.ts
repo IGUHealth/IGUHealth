@@ -1,4 +1,11 @@
+import { Command } from "commander";
+import { glob } from "glob";
+import { compileFromFile } from "json-schema-to-typescript";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import * as generateSQL from "zapatos/generate";
+
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   FHIR_VERSION,
@@ -6,16 +13,11 @@ import {
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { Command } from "commander";
-import { glob } from "glob";
-import { compileFromFile } from "json-schema-to-typescript";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+
 import {
-  generateSP1TSCode,
-  generateSP1Sets,
   generateSP1SQLTable,
+  generateSP1Sets,
+  generateSP1TSCode,
   sp1Migration,
 } from "../generate/sp1-parameters.js";
 
@@ -65,7 +67,7 @@ async function generateTypes() {
             }
           : false,
     },
-    outDir: "src/fhir-storage/providers/postgres/generated",
+    outDir: "src/fhir-storage/providers/middleware/postgres/generated",
   });
 }
 
