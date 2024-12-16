@@ -22,7 +22,8 @@ export const FHIRHumanNameEditable = ({
           value={value?.given?.[0] || ""}
           onChange={(firstName) => {
             const given = value?.given ? [...value.given] : [];
-            if (firstName) {
+
+            if (firstName !== undefined) {
               given[0] = firstName;
             }
             onChange?.call(this, { ...value, given });
@@ -34,7 +35,7 @@ export const FHIRHumanNameEditable = ({
           onChange={(middleName) => {
             const given = value?.given ? [...value.given] : [];
             if (!given[0]) given[0] = "";
-            if (middleName) {
+            if (middleName !== undefined) {
               given[1] = middleName;
             }
             onChange?.call(this, { ...value, given });
