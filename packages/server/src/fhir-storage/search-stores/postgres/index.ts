@@ -2,34 +2,37 @@ import {
   FHIR_VERSION,
   Resource,
   AllResourceTypes,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { FHIRSearchRequest, SearchEngine, SearchResult } from "../interface.js";
 import { executeSearchQuery } from "./search.js";
 import indexResource, { removeIndices } from "./indexing.js";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
   implements SearchEngine<CTX>
 {
-  async search<CTX extends IGUHealthServerCTX>(
+  async search(
     ctx: CTX,
     request: FHIRSearchRequest,
   ): Promise<{ total?: number; result: SearchResult[] }> {
     const result = await executeSearchQuery(ctx, request);
     return result;
   }
-  index<Version extends FHIR_VERSION, CTX extends IGUHealthServerCTX>(
+  index<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     resource: Resource<Version, AllResourceTypes>,
   ): Promise<void> {
     return indexResource(ctx, fhirVersion, resource);
   }
-  removeIndex<Version extends FHIR_VERSION, CTX extends IGUHealthServerCTX>(
+  removeIndex<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
-    resource: Resource<Version, AllResourceTypes>,
+    id: id,
+    resourceType: ResourceType<Version>,
   ): Promise<void> {
-    return removeIndices(ctx, fhirVersion, resource);
+    return removeIndices(ctx, fhirVersion, id, resourceType);
   }
 }

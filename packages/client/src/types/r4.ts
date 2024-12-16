@@ -183,11 +183,15 @@ export type R4InstanceDeleteResponse = R4InstanceInteraction & {
 export type R4TypeDeleteResponse = R4TypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["delete"];
+  // For conditional deletes include the ids of the resources that were deleted.
+  deletions?: { id: id; type: ResourceType }[];
 };
 
 export type R4SystemDeleteResponse = R4SystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["delete"];
+  // For conditional deletes include the ids of the resources that were deleted.
+  deletions?: { id: id; type: ResourceType }[];
 };
 
 export type R4InstanceHistoryResponse = R4InstanceInteraction & {
