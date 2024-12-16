@@ -1298,16 +1298,20 @@ function createSynchronousIndexingMiddleware<
   };
 }
 
-export function createPostgresClient<CTX extends IGUHealthServerCTX>(
-  { transaction_entry_limit }: { transaction_entry_limit: number } = {
-    transaction_entry_limit: 20,
-  },
-): FHIRClient<CTX> {
+export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
+  transaction_entry_limit,
+  store,
+  search,
+}: {
+  transaction_entry_limit: number;
+  store: ResourceStore<CTX>;
+  search: SearchEngine<CTX>;
+}): FHIRClient<CTX> {
   return new AsynchronousClient<StorageState<CTX>, CTX>(
     {
       transaction_entry_limit,
-      store: new PostgresStore(),
-      search: new PostgresSearchEngine(),
+      store,
+      search,
     },
     createMiddlewareAsync([
       createSynchronousIndexingMiddleware(),
