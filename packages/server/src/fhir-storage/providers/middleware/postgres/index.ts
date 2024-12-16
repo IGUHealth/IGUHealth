@@ -60,7 +60,7 @@ import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
 import { ResourceStore } from "../../../resource-stores/interface.js";
 import { SearchEngine } from "../../../search-stores/interface.js";
 
-type PGState<CTX> = {
+type StorageState<CTX> = {
   transaction_entry_limit: number;
   store: ResourceStore<CTX>;
   search: SearchEngine<CTX>;
@@ -71,7 +71,6 @@ async function createResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
-  searchEngine: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -89,12 +88,6 @@ async function createResource<
         resource: resource as unknown as db.JSONObject,
       },
     ]);
-
-    await searchEngine.index(
-      ctx,
-      fhirVersion,
-      res[0] as Resource<Version, AllResourceTypes>,
-    );
 
     return res[0] as Resource<Version, AllResourceTypes>;
   });
@@ -341,7 +334,6 @@ async function patchResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
-  searchEngine: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
@@ -403,7 +395,6 @@ async function patchResource<
 
       const patchedResource = res[0] as Resource<Version, AllResourceTypes>;
 
-      await searchEngine.index(ctx, fhirVersion, patchedResource);
       return patchedResource;
     } catch (e) {
       if (isOperationError(e)) throw e;
@@ -425,7 +416,6 @@ async function updateResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
-  search: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -482,8 +472,6 @@ async function updateResource<
 
     const updatedResource = res[0] as Resource<Version, AllResourceTypes>;
 
-    await search.index(ctx, fhirVersion, updatedResource);
-
     return {
       created: existingResource === undefined,
       resource: updatedResource,
@@ -496,7 +484,6 @@ async function deleteResource<
   Version extends FHIR_VERSION,
 >(
   store: ResourceStore<CTX>,
-  search: SearchEngine<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
@@ -529,8 +516,6 @@ async function deleteResource<
         deleted: true,
       },
     ]);
-
-    await search.removeIndex(ctx, fhirVersion, resource);
   });
 }
 
@@ -561,14 +546,7 @@ async function conditionalDelete(
     );
 
   for (const { type, id } of result.result) {
-    await deleteResource(
-      store,
-      search,
-      ctx,
-      searchRequest.fhirVersion,
-      type,
-      id,
-    );
+    await deleteResource(store, ctx, searchRequest.fhirVersion, type, id);
   }
 
   switch (searchRequest.level) {
@@ -600,9 +578,9 @@ async function conditionalDelete(
   }
 }
 
-function createPostgresMiddleware<
+function createStorageMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends PGState<CTX>,
+  State extends StorageState<CTX>,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
@@ -741,7 +719,7 @@ function createPostgresMiddleware<
               type: "create-response",
               body: await createResource(
                 context.state.store,
-                context.state.search,
+
                 context.ctx,
                 context.request.fhirVersion,
                 context.request.body,
@@ -753,7 +731,6 @@ function createPostgresMiddleware<
         case "patch-request": {
           const savedResource = await patchResource(
             context.state.store,
-            context.state.search,
             context.ctx,
             context.request.fhirVersion,
             context.request.resource,
@@ -825,7 +802,6 @@ function createPostgresMiddleware<
 
                         const { resource, created } = await updateResource(
                           context.state.store,
-                          context.state.search,
                           ctx,
                           request.fhirVersion,
                           request.body,
@@ -848,7 +824,6 @@ function createPostgresMiddleware<
                       } else {
                         const resource = await createResource(
                           context.state.store,
-                          context.state.search,
                           ctx,
                           request.fhirVersion,
                           request.body,
@@ -887,7 +862,6 @@ function createPostgresMiddleware<
                       }
                       const { created, resource } = await updateResource(
                         context.state.store,
-                        context.state.search,
                         ctx,
                         request.fhirVersion,
                         { ...request.body, id: foundResource.id },
@@ -924,7 +898,6 @@ function createPostgresMiddleware<
             case "instance": {
               const { created, resource } = await updateResource(
                 context.state.store,
-                context.state.search,
                 context.ctx,
                 context.request.fhirVersion,
                 // Set the id for the request body to ensure that the resource is updated correctly.
@@ -962,7 +935,6 @@ function createPostgresMiddleware<
             case "instance": {
               await deleteResource(
                 context.state.store,
-                context.state.search,
                 context.ctx,
                 context.request.fhirVersion,
                 context.request.resource,
@@ -1238,17 +1210,68 @@ function createPostgresMiddleware<
   ]);
 }
 
+/**
+ * Indexing middleware for searching. This happens within a single transaction if single postgres.
+ * @returns
+ */
+function createSynchronousIndexingMiddleware<
+  CTX extends IGUHealthServerCTX,
+  State extends StorageState<CTX>,
+>(): MiddlewareAsync<State, CTX> {
+  return createMiddlewareAsync<State, CTX>([
+    async (context, next) => {
+      switch (context.request.type) {
+        case "update-request":
+        case "patch-request":
+        case "create-request": {
+          const response = await next(context);
+          if (
+            !["patch-response", "update-response", "create-response"].includes(
+              response.response?.type ?? "",
+            )
+          )
+            throw new OperationError(
+              outcomeFatal("exception", "Invalid response"),
+            );
+
+          await context.state.search.index(
+            context.ctx,
+            context.request.fhirVersion,
+            // Checked above for response type.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (response.response as any)?.body,
+          );
+
+          return response;
+        }
+        case "delete-request": {
+          throw new Error();
+          // const response = await next(context);
+          // await context.state.search.removeIndex(
+          //   context.ctx,
+          //   context.ctx.response.fhirVersion,
+          //   response.resource,
+          // );
+        }
+        default: {
+          return next(context);
+        }
+      }
+    },
+  ]);
+}
+
 export function createPostgresClient<CTX extends IGUHealthServerCTX>(
   { transaction_entry_limit }: { transaction_entry_limit: number } = {
     transaction_entry_limit: 20,
   },
 ): FHIRClient<CTX> {
-  return new AsynchronousClient<PGState<CTX>, CTX>(
+  return new AsynchronousClient<StorageState<CTX>, CTX>(
     {
       transaction_entry_limit,
       store: new PostgresStore(),
       search: new PostgresSearchEngine(),
     },
-    createPostgresMiddleware(),
+    createStorageMiddleware(),
   );
 }

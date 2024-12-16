@@ -272,14 +272,16 @@ async function getAllParametersForResource<
 export async function removeIndices<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  resource: Resource<Version, AllResourceTypes>,
+  id: id,
+  resourceType: ResourceType<Version>,
 ) {
   await Promise.all([
     db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
       DELETE FROM ${getSp1Name(fhirVersion)}
       WHERE ${{
         tenant: ctx.tenant,
-        r_id: resource.id,
+        r_id: id,
+        resource_type: resourceType,
       }}`.run(ctx.db),
     ...search_table_types.map((type) =>
       db.sql<
@@ -299,7 +301,8 @@ export async function removeIndices<Version extends FHIR_VERSION>(
         | s.r4b_quantity_idx.SQL
       >`DELETE FROM ${searchParameterToTableName(fhirVersion, type)} WHERE ${{
         tenant: ctx.tenant,
-        r_id: resource.id,
+        r_id: id,
+        resource_type: resourceType,
       }}`.run(ctx.db),
     ),
   ]);
@@ -1082,7 +1085,12 @@ export default async function indexResource<
     );
   }
 
-  await removeIndices(ctx, fhirVersion, resource);
+  await removeIndices(
+    ctx,
+    fhirVersion,
+    resource.id,
+    resource.resourceType as ResourceType<Version>,
+  );
 
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,

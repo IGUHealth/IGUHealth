@@ -3,6 +3,7 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   R4BSystemSearchRequest,
@@ -37,6 +38,7 @@ export interface SearchEngine<CTX> {
   removeIndex<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
-    resource: Resource<Version, AllResourceTypes>,
+    id: id,
+    resourceType: ResourceType<Version>,
   ): Promise<void>;
 }
