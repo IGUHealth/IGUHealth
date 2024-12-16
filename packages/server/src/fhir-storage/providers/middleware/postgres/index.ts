@@ -723,7 +723,6 @@ function createStorageMiddleware<
             type: "create-response",
             body: await createResource(
               context.state.store,
-
               context.ctx,
               context.request.fhirVersion,
               context.request.body,
@@ -1061,7 +1060,6 @@ function createStorageMiddleware<
           }
         }
       }
-
       case "transaction-request": {
         let transactionBundle = context.request.body;
         const { locationsToUpdate, order } =
