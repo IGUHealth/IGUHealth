@@ -7,7 +7,7 @@ import {
   createMiddlewareAsync,
   MiddlewareAsyncChain,
 } from "@iguhealth/client/middleware";
-import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
+import { code, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -84,60 +84,19 @@ async function createResource<
   return res[0] as Resource<Version, AllResourceTypes>;
 }
 
-async function getLatestVersionId(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  id: string,
-): Promise<id | undefined> {
-  switch (fhirVersion) {
-    case R4: {
-      const res = await db
-        .selectOne(
-          "r4_sp1_idx",
-          {
-            r_id: id,
-          },
-          { columns: ["r_version_id"] },
-        )
-        .run(ctx.db);
-
-      return res?.r_version_id.toString() as id | undefined;
-    }
-    case R4B: {
-      const res = await db
-        .selectOne(
-          "r4b_sp1_idx",
-          {
-            r_id: id,
-          },
-          { columns: ["r_version_id"] },
-        )
-        .run(ctx.db);
-
-      return res?.r_version_id.toString() as id | undefined;
-    }
-    default: {
-      throw new OperationError(
-        outcomeError("not-supported", `Unknown FHIR version.`),
-      );
-    }
-  }
-}
-
 async function getResourceById<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
-  store: ResourceStore<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   id: string,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
-  const versionId = await getLatestVersionId(ctx, fhirVersion, id);
-  if (!versionId) return undefined;
+  const res = await ctx.client.search_system(ctx, fhirVersion, [
+    { name: "_id", value: [id] },
+  ]);
 
-  const res = await store.read(ctx, fhirVersion, [versionId]);
-  return res[0];
+  return res.resources[0];
 }
 
 async function getResource<
@@ -151,7 +110,7 @@ async function getResource<
   resourceType: Type,
   id: string,
 ): Promise<Resource<Version, Type> | undefined> {
-  const resource = await getResourceById(store, ctx, fhirVersion, id);
+  const resource = await getResourceById(ctx, fhirVersion, id);
 
   if (resource === undefined || resource.resourceType !== resourceType) {
     return undefined;
@@ -257,12 +216,7 @@ async function updateResource<
       outcomeError("invalid", "Resource id not found on resource"),
     );
 
-  const existingResource = await getResourceById(
-    store,
-    ctx,
-    fhirVersion,
-    resource.id,
-  );
+  const existingResource = await getResourceById(ctx, fhirVersion, resource.id);
 
   if (
     existingResource &&
