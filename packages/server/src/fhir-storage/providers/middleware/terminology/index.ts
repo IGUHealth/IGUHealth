@@ -11,7 +11,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../../middleware/validate-resourcetype.js";
-import { createPostgresClient } from "../postgres/index.js";
+import { createRemoteStorage } from "../postgres/index.js";
 
 export const TERMINOLOGY_RESOURCETYPES: ResourceType[] = [
   "ValueSet",
@@ -24,7 +24,7 @@ export const TERMINOLOGY_METHODS_ALLOWED: FHIRRequest["type"][] = [
 
 function createTerminologyMiddleware<
   State extends {
-    fhirDB: ReturnType<typeof createPostgresClient>;
+    fhirDB: ReturnType<typeof createRemoteStorage>;
   },
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
@@ -46,10 +46,10 @@ function createTerminologyMiddleware<
 }
 
 export function createTerminologyClient<CTX extends IGUHealthServerCTX>(
-  fhirDB: ReturnType<typeof createPostgresClient>,
+  fhirDB: ReturnType<typeof createRemoteStorage>,
 ): FHIRClientAsync<CTX> {
   return new AsynchronousClient<
-    { fhirDB: ReturnType<typeof createPostgresClient> },
+    { fhirDB: ReturnType<typeof createRemoteStorage> },
     CTX
   >({ fhirDB }, createTerminologyMiddleware());
 }

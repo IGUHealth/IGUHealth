@@ -45,13 +45,15 @@ import {
   MemoryParameter,
   createArtifactMemoryDatabase,
 } from "../fhir-storage/providers/middleware/memory/async.js";
-import { createPostgresClient } from "../fhir-storage/providers/middleware/postgres/index.js";
+import { createRemoteStorage } from "../fhir-storage/providers/middleware/postgres/index.js";
 import RouterClient from "../fhir-storage/providers/middleware/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
 import { IGUHealthServerCTX } from "./types.js";
+import { PostgresStore } from "../fhir-storage/resource-stores/postgres.js";
+import { PostgresSearchEngine } from "../fhir-storage/search-stores/postgres/index.js";
 
 type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
 
@@ -175,10 +177,12 @@ export function createClient(): {
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
   });
-  const pgSource = createPostgresClient({
+  const pgSource = createRemoteStorage({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
+    store: new PostgresStore(),
+    search: new PostgresSearchEngine(),
   });
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
