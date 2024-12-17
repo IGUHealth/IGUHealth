@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -7,10 +8,153 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  R4BHistoryInstanceRequest,
+  R4BSystemHistoryRequest,
+  R4BTypeHistoryRequest,
+  R4HistoryInstanceRequest,
+  R4SystemHistoryRequest,
+  R4TypeHistoryRequest,
+} from "@iguhealth/client/types";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { toDBFHIRVersion } from "../utilities/version.js";
 import { ResourceStore } from "./interface.js";
+import { createFHIRURL } from "../../fhir-api/constants.js";
+import { ParsedParameter } from "@iguhealth/client/lib/url";
+import { deriveLimit } from "../utilities/search/parameters.js";
+import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+
+const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
+function processHistoryParameters(
+  parameters: ParsedParameter<string | number>[],
+): s.resources.Whereable {
+  const sqlParams: s.resources.Whereable = {};
+  const _since = parameters.find((p) => p.name === "_since");
+  const _since_versionId = parameters.find((p) => p.name === "_since-version");
+
+  const invalidParameters = parameters.filter(
+    (p) => validHistoryParameters.indexOf(p.name) === -1,
+  );
+
+  if (invalidParameters.length !== 0) {
+    throw new OperationError(
+      outcomeError(
+        "invalid",
+        `Invalid parameters: ${invalidParameters.map((p) => p.name).join(", ")}`,
+      ),
+    );
+  }
+
+  if (_since?.value[0] && typeof _since?.value[0] === "string") {
+    const value = dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz");
+    if (!value.isValid()) {
+      throw new OperationError(
+        outcomeError("invalid", "_since must be a valid date time."),
+      );
+    }
+    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(value.toDate())}`;
+  }
+
+  if (_since_versionId?.value[0]) {
+    const value = parseInt(_since_versionId.value[0].toString());
+    if (isNaN(value)) {
+      throw new OperationError(
+        outcomeError("invalid", "_since-version must be a number."),
+      );
+    }
+    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(value)}`;
+  }
+
+  return sqlParams;
+}
+
+function historyLevelFilter(
+  request:
+    | R4HistoryInstanceRequest
+    | R4TypeHistoryRequest
+    | R4SystemHistoryRequest
+    | R4BHistoryInstanceRequest
+    | R4BTypeHistoryRequest
+    | R4BSystemHistoryRequest,
+): s.resources.Whereable {
+  switch (request.level) {
+    case "instance": {
+      return {
+        resource_type: request.resource,
+        id: request.id,
+      };
+    }
+    case "type": {
+      return {
+        resource_type: request.resource,
+      };
+    }
+    case "system": {
+      return {};
+    }
+    default:
+      throw new OperationError(
+        outcomeError("invalid", "Invalid history level"),
+      );
+  }
+}
+
+async function getHistory<
+  CTX extends IGUHealthServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  filters: s.resources.Whereable,
+  parameters: ParsedParameter<string | number>[],
+): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
+  const _count = parameters.find((p) => p.name === "_count");
+  const limit = deriveLimit([0, 50], _count);
+
+  const historyCols = <const>["resource", "request_method"];
+  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
+  const historySQL = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
+  FROM ${"resources"} 
+  WHERE
+  ${{
+    fhir_version: toDBFHIRVersion(fhirVersion),
+    tenant: ctx.tenant,
+    ...filters,
+    ...processHistoryParameters(parameters),
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
+
+  const history = await historySQL.run(ctx.db);
+
+  const resourceHistory = history.map((row) => {
+    const resource = row.resource as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >;
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      resource: resource as any,
+      fullUrl: createFHIRURL(
+        fhirVersion,
+        ctx.tenant,
+        `${resource.resourceType}/${resource.id}`,
+      ),
+      request: {
+        url: `resource.resourceType}/${resource.id}` as uri,
+        method: row.request_method as code,
+      },
+      response: {
+        location: `${resource.resourceType}/${resource.id}` as uri,
+        status: "200",
+        etag: resource.meta?.versionId as id,
+        lastModified: resource.meta?.lastUpdated,
+      },
+    };
+  });
+
+  return resourceHistory;
+}
 
 export class PostgresStore<CTX extends IGUHealthServerCTX>
   implements ResourceStore<CTX>
@@ -76,5 +220,22 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
       Version,
       AllResourceTypes
     >[];
+  }
+  async history<Version extends FHIR_VERSION>(
+    ctx: IGUHealthServerCTX,
+    request:
+      | R4HistoryInstanceRequest
+      | R4TypeHistoryRequest
+      | R4SystemHistoryRequest
+      | R4BHistoryInstanceRequest
+      | R4BTypeHistoryRequest
+      | R4BSystemHistoryRequest,
+  ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
+    return getHistory(
+      ctx,
+      request.fhirVersion,
+      historyLevelFilter(request),
+      request.parameters || [],
+    );
   }
 }

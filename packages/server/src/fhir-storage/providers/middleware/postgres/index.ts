@@ -1,7 +1,5 @@
 import jsonpatch, { Operation } from "fast-json-patch";
-import dayjs from "dayjs";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { FHIRClient } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
@@ -9,7 +7,7 @@ import {
   createMiddlewareAsync,
   MiddlewareAsyncChain,
 } from "@iguhealth/client/middleware";
-import { code, id, unsignedInt, uri } from "@iguhealth/fhir-types/r4/types";
+import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -26,32 +24,24 @@ import {
 } from "@iguhealth/operation-outcomes";
 import {
   FHIRResponse,
-  R4BHistoryInstanceRequest,
   R4BInstanceDeleteResponse,
   R4BSystemDeleteResponse,
-  R4BSystemHistoryRequest,
   R4BSystemSearchRequest,
   R4BTypeDeleteResponse,
-  R4BTypeHistoryRequest,
   R4BTypeSearchRequest,
-  R4HistoryInstanceRequest,
   R4InstanceDeleteResponse,
   R4SystemDeleteResponse,
-  R4SystemHistoryRequest,
   R4SystemSearchRequest,
   R4TypeDeleteResponse,
-  R4TypeHistoryRequest,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
 
-import { deriveLimit } from "../../../utilities/search/parameters.js";
 import {
   fhirResourceToBundleEntry,
   fhirResponseToBundleEntry,
 } from "../../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
 import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { ParsedParameter } from "@iguhealth/client/url";
 import {
   buildTransactionTopologicalGraph,
   FHIRTransaction,
@@ -60,9 +50,6 @@ import { validateResource } from "../../../../fhir-operation-executors/providers
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
 import { generateId } from "../../../utilities/generateId.js";
-import { createFHIRURL } from "../../../../fhir-api/constants.js";
-import { PostgresStore } from "../../../resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
 import { ResourceStore } from "../../../resource-stores/interface.js";
 import { SearchEngine } from "../../../search-stores/interface.js";
 
@@ -171,166 +158,6 @@ async function getResource<
   }
 
   return resource as Resource<Version, Type>;
-}
-
-async function getVersionedResource<Version extends FHIR_VERSION>(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: Version,
-  resourceType: ResourceType<Version>,
-  id: string,
-  versionId: string,
-) {
-  const res = await db
-    .select("resources", {
-      tenant: ctx.tenant,
-      resource_type: resourceType,
-      id: id,
-      version_id: parseInt(versionId),
-      fhir_version: toDBFHIRVersion(fhirVersion),
-    })
-    .run(ctx.db);
-
-  if (res.length === 0) {
-    throw new OperationError(
-      outcomeError(
-        "not-found",
-        `'${resourceType}' with id '${id}' was not found`,
-      ),
-    );
-  }
-
-  return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
-}
-
-const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
-function processHistoryParameters(
-  parameters: ParsedParameter<string | number>[],
-): s.resources.Whereable {
-  const sqlParams: s.resources.Whereable = {};
-  const _since = parameters.find((p) => p.name === "_since");
-  const _since_versionId = parameters.find((p) => p.name === "_since-version");
-
-  const invalidParameters = parameters.filter(
-    (p) => validHistoryParameters.indexOf(p.name) === -1,
-  );
-
-  if (invalidParameters.length !== 0) {
-    throw new OperationError(
-      outcomeError(
-        "invalid",
-        `Invalid parameters: ${invalidParameters.map((p) => p.name).join(", ")}`,
-      ),
-    );
-  }
-
-  if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    const value = dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz");
-    if (!value.isValid()) {
-      throw new OperationError(
-        outcomeError("invalid", "_since must be a valid date time."),
-      );
-    }
-    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(value.toDate())}`;
-  }
-
-  if (_since_versionId?.value[0]) {
-    const value = parseInt(_since_versionId.value[0].toString());
-    if (isNaN(value)) {
-      throw new OperationError(
-        outcomeError("invalid", "_since-version must be a number."),
-      );
-    }
-    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(value)}`;
-  }
-
-  return sqlParams;
-}
-
-function historyLevelFilter(
-  request:
-    | R4HistoryInstanceRequest
-    | R4TypeHistoryRequest
-    | R4SystemHistoryRequest
-    | R4BHistoryInstanceRequest
-    | R4BTypeHistoryRequest
-    | R4BSystemHistoryRequest,
-): s.resources.Whereable {
-  switch (request.level) {
-    case "instance": {
-      return {
-        resource_type: request.resource,
-        id: request.id,
-      };
-    }
-    case "type": {
-      return {
-        resource_type: request.resource,
-      };
-    }
-    case "system": {
-      return {};
-    }
-    default:
-      throw new OperationError(
-        outcomeError("invalid", "Invalid history level"),
-      );
-  }
-}
-
-async function getHistory<
-  CTX extends IGUHealthServerCTX,
-  Version extends FHIR_VERSION,
->(
-  ctx: CTX,
-  fhirVersion: Version,
-  filters: s.resources.Whereable,
-  parameters: ParsedParameter<string | number>[],
-): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
-  const _count = parameters.find((p) => p.name === "_count");
-  const limit = deriveLimit([0, 50], _count);
-
-  const historyCols = <const>["resource", "request_method"];
-  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const historySQL = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT ${db.cols(historyCols)}
-  FROM ${"resources"} 
-  WHERE
-  ${{
-    fhir_version: toDBFHIRVersion(fhirVersion),
-    tenant: ctx.tenant,
-    ...filters,
-    ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
-
-  const history = await historySQL.run(ctx.db);
-
-  const resourceHistory = history.map((row) => {
-    const resource = row.resource as unknown as Resource<
-      Version,
-      AllResourceTypes
-    >;
-    return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resource: resource as any,
-      fullUrl: createFHIRURL(
-        fhirVersion,
-        ctx.tenant,
-        `${resource.resourceType}/${resource.id}`,
-      ),
-      request: {
-        url: `resource.resourceType}/${resource.id}` as uri,
-        method: row.request_method as code,
-      },
-      response: {
-        location: `${resource.resourceType}/${resource.id}` as uri,
-        status: "200",
-        etag: resource.meta?.versionId as id,
-        lastModified: resource.meta?.lastUpdated,
-      },
-    };
-  });
-
-  return resourceHistory;
 }
 
 async function patchResource<
@@ -620,13 +447,44 @@ function createStorageMiddleware<
         };
       }
       case "vread-request": {
-        const resource = await getVersionedResource(
+        const foundResources = await context.state.store.read(
           context.ctx,
           context.request.fhirVersion,
-          context.request.resource,
-          context.request.id,
-          context.request.versionId,
+          [context.request.versionId],
         );
+        if (foundResources.length === 0) {
+          throw new OperationError(
+            outcomeError(
+              "not-found",
+              `'${context.request.resource}' with id '${context.request.id}' and version '${context.request.versionId}' was not found`,
+            ),
+          );
+        }
+        if (foundResources.length > 1) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `Multiple resources found with id '${context.request.id}' and version '${context.request.versionId}'`,
+            ),
+          );
+        }
+        const foundResource = foundResources[0];
+        if (foundResource.id !== context.request.id) {
+          throw new OperationError(
+            outcomeError(
+              "not-found",
+              `'${context.request.resource}' with id '${context.request.id}' and version '${context.request.versionId}' was not found`,
+            ),
+          );
+        }
+        if (foundResource.resourceType !== context.request.resource) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `Resource type '${context.request.resource}' does not match found resource type '${foundResource.resourceType}'`,
+            ),
+          );
+        }
 
         return {
           state: context.state,
@@ -639,7 +497,7 @@ function createStorageMiddleware<
             resource: context.request.resource,
             id: context.request.id,
             versionId: context.request.versionId,
-            body: resource,
+            body: foundResource,
           } as FHIRResponse,
         };
       }
@@ -991,11 +849,9 @@ function createStorageMiddleware<
       }
 
       case "history-request": {
-        const history = await getHistory(
+        const history = await context.state.store.history(
           context.ctx,
-          context.request.fhirVersion,
-          historyLevelFilter(context.request),
-          context.request.parameters || [],
+          context.request,
         );
 
         switch (context.request.level) {
