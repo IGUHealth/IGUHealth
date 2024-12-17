@@ -1125,7 +1125,7 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
     },
     createMiddlewareAsync(
       [createSynchronousIndexingMiddleware(), createStorageMiddleware()],
-      { logging: true },
+      { logging: false },
     ),
   );
 }
