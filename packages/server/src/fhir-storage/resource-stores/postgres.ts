@@ -24,6 +24,7 @@ import { createFHIRURL } from "../../fhir-api/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { paramsWithComma } from "../utilities/sql.js";
 
 const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -165,14 +166,13 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     if (version_ids.length === 0) return [];
+
     const fhir_version = toDBFHIRVersion(fhirVersion);
-    const whereable = db.conditions.or(
-      ...version_ids.map((v): s.resources.Whereable | db.SQLFragment => ({
-        version_id: parseInt(v),
-        tenant: ctx.tenant,
-        fhir_version,
-      })),
-    );
+    const whereable = db.sql<s.resources.SQL>`
+      ${"tenant"} = ${db.param(ctx.tenant)}
+      AND ${"fhir_version"} = ${db.param(fhir_version)}
+      AND ${"version_id"} IN (${paramsWithComma(version_ids)})
+    `;
 
     const res = (
       await db
