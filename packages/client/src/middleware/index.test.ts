@@ -70,11 +70,15 @@ test("Test middleware Async", async () => {
     },
   ]);
 
-  const result = middleware({ state: {}, ctx: {}, request: {} as any });
+  const result = middleware({
+    state: {},
+    ctx: {},
+    request: { key: "test" } as any,
+  });
   expect(result).toBeInstanceOf(Promise);
   expect(await result).toEqual({
     state: {},
-    request: {},
+    request: { key: "test" },
     ctx: {},
     response: {
       fhirVersion: R4,

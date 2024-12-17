@@ -368,7 +368,7 @@ function createStorageMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends StorageState<CTX>,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context) => {
+  return async function storageMiddleware(context) {
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
@@ -1018,7 +1018,7 @@ function createSynchronousIndexingMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends StorageState<CTX>,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async function synchronousIndexingMiddleware(context, next) {
     switch (context.request.type) {
       case "update-request":
       case "patch-request":
@@ -1123,9 +1123,9 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
       store,
       search,
     },
-    createMiddlewareAsync([
-      createSynchronousIndexingMiddleware(),
-      createStorageMiddleware(),
-    ]),
+    createMiddlewareAsync(
+      [createSynchronousIndexingMiddleware(), createStorageMiddleware()],
+      { logging: false },
+    ),
   );
 }
