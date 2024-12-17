@@ -28,8 +28,8 @@ const producer = kafka.producer();
  * It wraps a resourcestore for performing operations like read and history.
  */
 class KafkaStore<CTX> implements ResourceStore<CTX> {
-  private _store: ResourceStore<CTX>;
-  private _producer: Producer;
+  private readonly _store: ResourceStore<CTX>;
+  private readonly _producer: Producer;
   constructor(store: ResourceStore<CTX>, producer: Producer) {
     this._store = store;
     this._producer = producer;
