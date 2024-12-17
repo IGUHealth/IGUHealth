@@ -23,15 +23,26 @@ export type MiddlewareAsync<State, CTX> = (ctx: {
 
 export function createMiddlewareAsync<State, CTX>(
   middleware: MiddlewareAsyncChain<State, CTX>[],
+  options: { logging?: boolean } = { logging: false },
 ): MiddlewareAsync<State, CTX> {
-  return (request) => {
+  return async (context) => {
     const [first, ...rest] = middleware;
+    context.request.key =
+      context.request.key ?? Math.ceil(Math.random() * 10000).toString();
     if (rest[0]) {
-      return first(request, (req) => {
-        return createMiddlewareAsync(rest)(req);
+      if (options.logging) console.time(`${context.request.key}:${first.name}`);
+      const response = await first(context, (req) => {
+        return createMiddlewareAsync(rest, options)(req);
       });
+      if (options.logging)
+        console.timeEnd(`${context.request.key}:${first.name}`);
+      return response;
     } else {
-      return first(request, async (v) => v);
+      if (options.logging) console.time(`${context.request.key}:${first.name}`);
+      const response = await first(context, async (v) => v);
+      if (options.logging)
+        console.timeEnd(`${context.request.key}:${first.name}`);
+      return response;
     }
   };
 }

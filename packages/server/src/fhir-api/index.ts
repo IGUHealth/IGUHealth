@@ -177,7 +177,7 @@ export function createClient(): {
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
   });
-  const pgSource = createRemoteStorage({
+  const remoteStorage = createRemoteStorage({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
@@ -262,7 +262,7 @@ export function createClient(): {
           interactionsSupported: AUTH_METHODS_ALLOWED,
         },
       },
-      source: createAuthStorageClient(pgSource),
+      source: createAuthStorageClient(remoteStorage),
     },
     {
       filter: {
@@ -299,7 +299,7 @@ export function createClient(): {
           ],
         },
       },
-      source: pgSource,
+      source: remoteStorage,
     },
   ]);
 
