@@ -52,8 +52,6 @@ import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
 import { IGUHealthServerCTX } from "./types.js";
-import { PostgresStore } from "../fhir-storage/resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../fhir-storage/search-stores/postgres/index.js";
 
 type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
 
@@ -181,8 +179,6 @@ export function createClient(): {
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
-    store: new PostgresStore(),
-    search: new PostgresSearchEngine(),
   });
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,

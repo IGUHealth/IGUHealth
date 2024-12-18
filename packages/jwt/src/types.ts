@@ -40,6 +40,8 @@ export interface IGUHealthCustomClaims<role> {
    * The ID of the resource the token is associated with.
    */
   [CUSTOM_CLAIMS.RESOURCE_ID]: id;
+  [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: id;
+  [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: id[];
   /**
    * The users role for the tenant.
    */

@@ -45,6 +45,8 @@ export function workerTokenClaims(
     aud: WORKER_APP.id as id,
     sub: WORKER_APP.id as string as Subject,
     [CUSTOM_CLAIMS.RESOURCE_ID]: WORKER_APP.id as id,
+    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: WORKER_APP.meta?.versionId as id,
+    [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: [],
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: WORKER_APP.resourceType,
     [CUSTOM_CLAIMS.TENANT]: tenant,
     [CUSTOM_CLAIMS.ROLE]: "admin",

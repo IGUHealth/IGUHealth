@@ -44,6 +44,8 @@ import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
+import { SearchEngine } from "../fhir-storage/search-stores/interface.js";
+import { ResourceStore } from "../fhir-storage/resource-stores/interface.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];
@@ -125,11 +127,15 @@ export interface IGUHealthServerCTX {
   // FHIR Client
   client: FHIRClientAsync<IGUHealthServerCTX>;
 
-  // Services
+  // Storage
   db: db.Queryable;
+  search: SearchEngine<IGUHealthServerCTX>;
+  store: ResourceStore<IGUHealthServerCTX>;
+
+  // Services
+  cache: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
   logger: Logger<string>;
   lock: Lock<unknown>;
-  cache: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
   terminologyProvider?: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;
@@ -163,6 +169,8 @@ function createRootClaims(
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: clientApp.resourceType,
     [CUSTOM_CLAIMS.ROLE]: "owner",
     [CUSTOM_CLAIMS.TENANT]: tenant,
+    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: clientApp.meta?.versionId as id,
+    [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: [],
   };
 }
 

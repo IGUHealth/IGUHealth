@@ -14,6 +14,8 @@ import { getRedisClient } from "../../../../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../../../fhir-api/types.js";
 import RedisLock from "../../../../../synchronization/redis.lock.js";
 import { createPGPool } from "../pg.js";
+import { PostgresStore } from "../../../../resource-stores/postgres.js";
+import { PostgresSearchEngine } from "../../../../search-stores/postgres/index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -30,6 +32,8 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
   const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
+    store: new PostgresStore(),
+    search: new PostgresSearchEngine(),
     logger,
     lock: new RedisLock(redis),
     cache: new RedisCache(redis),

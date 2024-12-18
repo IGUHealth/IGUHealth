@@ -59,6 +59,8 @@ import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
 import { getTenant } from "./authN/db/tenant.js";
+import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
+import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
 
 loadEnv();
 
@@ -183,6 +185,8 @@ export default async function createServer(): Promise<
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
+    store: new PostgresStore(),
+    search: new PostgresSearchEngine(),
     logger,
     lock: new RedisLock(redis),
     cache: new RedisCache(redis),
