@@ -9,11 +9,9 @@ import {
   CUSTOM_CLAIMS,
   JWT,
   Subject,
-  TenantId,
 } from "@iguhealth/jwt/types";
 
 import { getIssuer } from "./constants.js";
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import { asRoot, IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
