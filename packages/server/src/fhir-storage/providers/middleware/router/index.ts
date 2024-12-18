@@ -1,7 +1,6 @@
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/interface";
 import {
-  MiddlewareAsync,
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
@@ -157,228 +156,226 @@ export function findSource<T>(
 function createRouterMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends { sources: Sources<CTX> },
->(): MiddlewareAsync<State, CTX> {
-  return createMiddlewareAsync<State, CTX>([
-    async (context) => {
-      const sources = findSource(context.state.sources, context.request);
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async function routerMiddleware(context) {
+    const sources = findSource(context.state.sources, context.request);
 
-      if (sources.length === 0) {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `No source found with support for operation '${context.request.type}' for level '${context.request.level}' and  type '${context.request.level === "type" || context.request.level === "instance" ? context.request.resource : "none"}'`,
-          ),
+    if (sources.length === 0) {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `No source found with support for operation '${context.request.type}' for level '${context.request.level}' and  type '${context.request.level === "type" || context.request.level === "instance" ? context.request.resource : "none"}'`,
+        ),
+      );
+    }
+
+    switch (context.request.type) {
+      // Multi-types allowed
+      case "search-request": {
+        const responses = (
+          await Promise.all(
+            sources.map((source) =>
+              source.source.request(context.ctx, context.request),
+            ),
+          )
+        ).filter(
+          (res): res is R4TypeSearchResponse | R4SystemSearchResponse =>
+            res.type === "search-response",
         );
+
+        const entry = responses.map((b) => b.body.entry ?? []).flat();
+        return {
+          ...context,
+          response: {
+            ...responses[0],
+            body: {
+              resourceType: "Bundle",
+              type: "searchset" as r4.code,
+              total: responses.reduce(
+                (acc: number | undefined, res) =>
+                  res.body.total ? (acc ?? 0) + res.body.total : undefined,
+                undefined,
+              ) as r4.unsignedInt | undefined,
+              entry,
+            },
+          },
+        };
+      }
+      case "history-request": {
+        const responses = (
+          await Promise.all(
+            sources.map((source) =>
+              source.source.request(context.ctx, context.request),
+            ),
+          )
+        ).filter(
+          (
+            res,
+          ): res is
+            | R4SystemHistoryResponse
+            | R4TypeHistoryResponse
+            | R4InstanceHistoryResponse => res.type === "history-response",
+        );
+
+        const entry = responses.map((b) => b.body.entry ?? []).flat();
+
+        return {
+          ...context,
+          response: {
+            ...responses[0],
+            body: {
+              resourceType: "Bundle",
+              type: "history" as r4.code,
+              entry,
+            },
+          },
+        };
+      }
+      // Search for the first one successful
+      case "read-request":
+      case "vread-request": {
+        const responses = (
+          await Promise.all(
+            sources.map(async (source) => {
+              try {
+                return await source.source.request(
+                  context.ctx,
+                  context.request,
+                );
+              } catch (e) {
+                context.ctx.logger.error(e);
+                return undefined;
+              }
+            }),
+          )
+        ).filter(
+          (response): response is FHIRResponse => response !== undefined,
+        );
+
+        if (responses.length > 1)
+          throw new OperationError(
+            outcomeError("not-found", `Read response returned two items`),
+          );
+
+        if (responses.length !== 1)
+          throw new OperationError(
+            outcomeError("not-found", `Resource not found`),
+          );
+
+        return {
+          ...context,
+          response: responses[0],
+        };
       }
 
-      switch (context.request.type) {
-        // Multi-types allowed
-        case "search-request": {
-          const responses = (
-            await Promise.all(
-              sources.map((source) =>
-                source.source.request(context.ctx, context.request),
-              ),
-            )
-          ).filter(
-            (res): res is R4TypeSearchResponse | R4SystemSearchResponse =>
-              res.type === "search-response",
-          );
-
-          const entry = responses.map((b) => b.body.entry ?? []).flat();
-          return {
-            ...context,
-            response: {
-              ...responses[0],
-              body: {
-                resourceType: "Bundle",
-                type: "searchset" as r4.code,
-                total: responses.reduce(
-                  (acc: number | undefined, res) =>
-                    res.body.total ? (acc ?? 0) + res.body.total : undefined,
-                  undefined,
-                ) as r4.unsignedInt | undefined,
-                entry,
-              },
-            },
-          };
-        }
-        case "history-request": {
-          const responses = (
-            await Promise.all(
-              sources.map((source) =>
-                source.source.request(context.ctx, context.request),
-              ),
-            )
-          ).filter(
-            (
-              res,
-            ): res is
-              | R4SystemHistoryResponse
-              | R4TypeHistoryResponse
-              | R4InstanceHistoryResponse => res.type === "history-response",
-          );
-
-          const entry = responses.map((b) => b.body.entry ?? []).flat();
-
-          return {
-            ...context,
-            response: {
-              ...responses[0],
-              body: {
-                resourceType: "Bundle",
-                type: "history" as r4.code,
-                entry,
-              },
-            },
-          };
-        }
-        // Search for the first one successful
-        case "read-request":
-        case "vread-request": {
-          const responses = (
-            await Promise.all(
-              sources.map(async (source) => {
-                try {
-                  return await source.source.request(
-                    context.ctx,
-                    context.request,
-                  );
-                } catch (e) {
-                  context.ctx.logger.error(e);
-                  return undefined;
-                }
-              }),
-            )
-          ).filter(
-            (response): response is FHIRResponse => response !== undefined,
-          );
-
-          if (responses.length > 1)
-            throw new OperationError(
-              outcomeError("not-found", `Read response returned two items`),
-            );
-
-          if (responses.length !== 1)
-            throw new OperationError(
-              outcomeError("not-found", `Resource not found`),
-            );
-
-          return {
-            ...context,
-            response: responses[0],
-          };
-        }
-
-        case "batch-request": {
-          const entries: r4.BundleEntry[] = await Promise.all(
-            (context.request.body.entry || []).map(
-              async (entry, index): Promise<r4.BundleEntry> => {
-                try {
-                  if (!entry.request?.method) {
-                    return {
-                      response: {
-                        status: "500",
-                        outcome: outcomeError(
-                          "invalid",
-                          `invalid entry in batch at index '${index}'`,
-                        ),
-                      },
-                    };
-                  }
-                  const fhirRequest = httpRequestToFHIRRequest(
-                    context.request.fhirVersion,
-                    {
-                      url: entry.request?.url || "",
-                      method: entry.request?.method,
-                      body: entry.resource,
-                    },
-                  );
-
-                  const fhirResponse = await context.ctx.client.request(
-                    context.ctx,
-                    fhirRequest,
-                  );
-                  return fhirResponseToBundleEntry(
-                    context.ctx.tenant,
-                    fhirResponse,
-                  );
-                } catch (e) {
-                  if (isOperationError(e)) {
-                    return {
-                      response: {
-                        status: issueToStatusCode(
-                          e.operationOutcome.issue?.[0],
-                        ).toString(),
-                        outcome: e.operationOutcome,
-                      },
-                    };
-                  }
+      case "batch-request": {
+        const entries: r4.BundleEntry[] = await Promise.all(
+          (context.request.body.entry || []).map(
+            async (entry, index): Promise<r4.BundleEntry> => {
+              try {
+                if (!entry.request?.method) {
                   return {
                     response: {
                       status: "500",
-                      outcome: outcomeFatal(
-                        "unknown",
-                        "An unknown error occured.",
+                      outcome: outcomeError(
+                        "invalid",
+                        `invalid entry in batch at index '${index}'`,
                       ),
                     },
                   };
                 }
-              },
-            ),
+                const fhirRequest = httpRequestToFHIRRequest(
+                  context.request.fhirVersion,
+                  {
+                    url: entry.request?.url || "",
+                    method: entry.request?.method,
+                    body: entry.resource,
+                  },
+                );
+
+                const fhirResponse = await context.ctx.client.request(
+                  context.ctx,
+                  fhirRequest,
+                );
+                return fhirResponseToBundleEntry(
+                  context.ctx.tenant,
+                  fhirResponse,
+                );
+              } catch (e) {
+                if (isOperationError(e)) {
+                  return {
+                    response: {
+                      status: issueToStatusCode(
+                        e.operationOutcome.issue?.[0],
+                      ).toString(),
+                      outcome: e.operationOutcome,
+                    },
+                  };
+                }
+                return {
+                  response: {
+                    status: "500",
+                    outcome: outcomeFatal(
+                      "unknown",
+                      "An unknown error occured.",
+                    ),
+                  },
+                };
+              }
+            },
+          ),
+        );
+        return {
+          ...context,
+          response: {
+            fhirVersion: context.request.fhirVersion,
+            type: "batch-response",
+            level: "system",
+            body: {
+              resourceType: "Bundle",
+              type: "batch-response" as r4.code | r4b.code,
+              entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
+            } as r4b.Bundle | r4.Bundle,
+          } as FHIRResponse,
+        };
+      }
+      // Mutations and invocations should only have one source
+      case "invoke-request":
+      case "transaction-request":
+      case "create-request":
+      case "update-request":
+      case "patch-request":
+      case "delete-request": {
+        if (sources.length > 1)
+          throw new Error(
+            `Only one source can support create per mutation operation'`,
           );
-          return {
-            ...context,
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              type: "batch-response",
-              level: "system",
-              body: {
-                resourceType: "Bundle",
-                type: "batch-response" as r4.code | r4b.code,
-                entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
-              } as r4b.Bundle | r4.Bundle,
-            } as FHIRResponse,
-          };
-        }
-        // Mutations and invocations should only have one source
-        case "invoke-request":
-        case "transaction-request":
-        case "create-request":
-        case "update-request":
-        case "patch-request":
-        case "delete-request": {
-          if (sources.length > 1)
-            throw new Error(
-              `Only one source can support create per mutation operation'`,
-            );
-          if (sources.length < 1)
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `No source found with support for operation '${
-                  context.request.type
-                }' for type '${(context.request as R4ConditinalUpdateRequest).resource}'`,
-              ),
-            );
-          const source = sources[0];
-          const response = await source.source.request(
-            context.ctx,
-            context.request,
-          );
-          return { ...context, response };
-        }
-        case "capabilities-request":
-        default:
+        if (sources.length < 1)
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Not supported '${context.request.type}'`,
+              `No source found with support for operation '${
+                context.request.type
+              }' for type '${(context.request as R4ConditinalUpdateRequest).resource}'`,
             ),
           );
+        const source = sources[0];
+        const response = await source.source.request(
+          context.ctx,
+          context.request,
+        );
+        return { ...context, response };
       }
-    },
-  ]);
+      case "capabilities-request":
+      default:
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `Not supported '${context.request.type}'`,
+          ),
+        );
+    }
+  };
 }
 
 export default function RouterClient<CTX extends IGUHealthServerCTX>(
@@ -387,6 +384,8 @@ export default function RouterClient<CTX extends IGUHealthServerCTX>(
 ): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
   return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(
     { sources },
-    createMiddlewareAsync([...middleware, createRouterMiddleware()]),
+    createMiddlewareAsync([...middleware, createRouterMiddleware()], {
+      logging: false,
+    }),
   );
 }

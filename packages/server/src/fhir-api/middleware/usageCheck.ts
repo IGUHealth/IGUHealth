@@ -110,7 +110,7 @@ function createCheckTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async (context, next) => {
+  return async function checkTenantUsageMiddleware(context, next) {
     await checkTenantUsage(context.ctx.db, context.ctx.tenant, context.request);
 
     return next(context);

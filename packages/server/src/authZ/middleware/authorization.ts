@@ -17,7 +17,7 @@ function createAuthorizationMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async (context, next) => {
+  return async function authorizationMiddleware(context, next) {
     switch (context.ctx.user.payload[CUSTOM_CLAIMS.ROLE]) {
       // Owner and super admin bypass authorization.
       case "owner":

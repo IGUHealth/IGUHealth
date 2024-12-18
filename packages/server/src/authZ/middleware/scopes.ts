@@ -92,7 +92,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async (context, next) => {
+  return async function validateScopesMiddleware(context, next) {
     switch (context.request.type) {
       case "capabilities-request":
       case "transaction-request":
@@ -206,7 +206,7 @@ export function createInjectScopesMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async (context, next) => {
+  return async function scopesMiddleware(context, next) {
     context.ctx.user.scope = parseScopes.parseScopes(
       context.ctx.user.payload.scope,
     );
