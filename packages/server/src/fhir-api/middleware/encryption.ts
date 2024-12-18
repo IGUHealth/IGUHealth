@@ -7,7 +7,7 @@ import { IGUHealthServerCTX } from "../types.js";
 function createEncryptionMiddleware<State>(
   resourceTypesToEncrypt: AllResourceTypes[],
 ): MiddlewareAsyncChain<State, IGUHealthServerCTX> {
-  return async (context, next) => {
+  return async function encryptionMiddleware(context, next) {
     if (!context.ctx.encryptionProvider) {
       return next(context);
     }

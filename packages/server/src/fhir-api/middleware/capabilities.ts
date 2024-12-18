@@ -111,7 +111,7 @@ function createCapabilitiesMiddleware<State>(): MiddlewareAsyncChain<
   State,
   IGUHealthServerCTX
 > {
-  return async (context, next) => {
+  return async function capabilitiesMiddleware(context, next) {
     if (context.request.type === "capabilities-request") {
       return {
         ...context,
