@@ -53,7 +53,7 @@ import { generateId } from "../../../utilities/generateId.js";
 import { ResourceStore } from "../../../resource-stores/interface.js";
 import { SearchEngine } from "../../../search-stores/interface.js";
 
-type StorageState<CTX> = {
+type StorageState = {
   transaction_entry_limit: number;
 };
 
@@ -364,7 +364,7 @@ async function conditionalDelete(
 
 function createStorageMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends StorageState<CTX>,
+  State extends StorageState,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function storageMiddleware(context) {
     switch (context.request.type) {
@@ -1014,7 +1014,7 @@ function createStorageMiddleware<
  */
 function createSynchronousIndexingMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends StorageState<CTX>,
+  State extends StorageState,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function synchronousIndexingMiddleware(context, next) {
     switch (context.request.type) {
@@ -1111,7 +1111,7 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
 }: {
   transaction_entry_limit: number;
 }): FHIRClient<CTX> {
-  return new AsynchronousClient<StorageState<CTX>, CTX>(
+  return new AsynchronousClient<StorageState, CTX>(
     {
       transaction_entry_limit,
     },
