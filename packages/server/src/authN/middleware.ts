@@ -99,7 +99,7 @@ export async function verifyBasicAuth<
     }
 
     const token = await createClientCredentialToken(
-      ctx.state.iguhealth.tenant,
+      ctx.state.iguhealth,
       clientApplication,
     );
     ctx.req.headers.authorization = "Bearer " + token;
@@ -132,8 +132,10 @@ async function findResourceAndAccessPolicies<
   Type extends "Membership" | "OperationDefinition" | "ClientApplication",
 >(
   ctx: IGUHealthServerCTX,
-  resourceType: Type,
-  id: id,
+  memberType: Type,
+  memberId: id,
+  memberVersionId: id,
+  accessPolicyVersionIds: id[],
 ): Promise<{
   resource?: Resource<R4, Type>;
   accessPolicies: AccessPolicyV2[];
@@ -143,7 +145,7 @@ async function findResourceAndAccessPolicies<
   // For hardcoded clients access check is needed
   // IE iguhealth system app and worker app.
   const hardCodedClient = clients.find(
-    (client) => client.id === id && resourceType === client.resourceType,
+    (client) => client.id === memberId && memberType === client.resourceType,
   );
   if (hardCodedClient)
     return {
@@ -151,35 +153,21 @@ async function findResourceAndAccessPolicies<
       accessPolicies: [],
     };
 
-  const context = await asRoot(ctx);
-
-  const usersAndAccessPolicies = (await ctx.client.search_type(
-    context,
+  const [member, ...accessPolicies] = await ctx.store.read(
+    await asRoot(ctx),
     R4,
-    resourceType,
-    [
-      {
-        name: "_id",
-        value: [id],
-      },
-      { name: "_revinclude", value: ["AccessPolicyV2:link"] },
-    ],
-  )) as {
-    total?: number;
-    resources: (Resource<R4, Type> | AccessPolicyV2)[];
-  };
-
-  const resource = usersAndAccessPolicies.resources.filter(
-    (r): r is Resource<R4, Type> => r.resourceType === resourceType,
+    [memberVersionId, ...accessPolicyVersionIds],
   );
 
-  const accessPolicies = usersAndAccessPolicies.resources.filter(
-    (r): r is AccessPolicyV2 => r.resourceType === "AccessPolicyV2",
-  );
+  if (member?.resourceType !== memberType) {
+    throw new OperationError(
+      outcomeError("security", "Resource type does not match the version id."),
+    );
+  }
 
   return {
-    resource: resource[0],
-    accessPolicies,
+    resource: member as Resource<R4, Type>,
+    accessPolicies: accessPolicies as AccessPolicyV2[],
   };
 }
 
@@ -202,6 +190,8 @@ async function userResourceAndAccessPolicies(
         await asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
         user[CUSTOM_CLAIMS.RESOURCE_TYPE],
         user[CUSTOM_CLAIMS.RESOURCE_ID],
+        user[CUSTOM_CLAIMS.RESOURCE_VERSION_ID],
+        user[CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS],
       );
     }
 
@@ -267,6 +257,8 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
     scope: "user/*.*",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: PUBLIC_APP.resourceType,
     [CUSTOM_CLAIMS.RESOURCE_ID]: PUBLIC_APP.id as id,
+    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: PUBLIC_APP.meta?.versionId as id,
+    [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: [],
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",
   };

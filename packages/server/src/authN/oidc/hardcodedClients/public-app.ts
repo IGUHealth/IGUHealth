@@ -7,6 +7,9 @@ import { ClientApplication } from "@iguhealth/fhir-types/lib/generated/r4/types"
 export const PUBLIC_APP = {
   resourceType: "ClientApplication",
   id: "public",
+  meta: {
+    versionId: "public",
+  },
   grantType: ["client_credentials"],
   // Used for public access if API is set to open.
   name: "Public access",

@@ -26,6 +26,8 @@ import { createPGPool } from "../../fhir-storage/providers/middleware/postgres/p
 import { FHIRTransaction } from "../../fhir-storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
+import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
+import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -135,6 +137,8 @@ function tenantCommands(command: Command) {
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
+        store: new PostgresStore(),
+        search: new PostgresSearchEngine(),
         ...createClient(),
       };
 
@@ -160,6 +164,8 @@ function clientAppCommands(command: Command) {
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
+        store: new PostgresStore(),
+        search: new PostgresSearchEngine(),
         ...createClient(),
       };
 

@@ -181,8 +181,6 @@ export function createClient(): {
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
-    store: new PostgresStore(),
-    search: new PostgresSearchEngine(),
   });
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,

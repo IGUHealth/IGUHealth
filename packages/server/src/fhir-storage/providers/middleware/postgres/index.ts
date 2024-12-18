@@ -55,8 +55,6 @@ import { SearchEngine } from "../../../search-stores/interface.js";
 
 type StorageState<CTX> = {
   transaction_entry_limit: number;
-  store: ResourceStore<CTX>;
-  search: SearchEngine<CTX>;
 };
 
 async function createResource<
@@ -372,7 +370,7 @@ function createStorageMiddleware<
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
-          context.state.store,
+          context.ctx.store,
           context.ctx,
           context.request.fhirVersion,
           context.request.resource,
@@ -401,7 +399,7 @@ function createStorageMiddleware<
         };
       }
       case "vread-request": {
-        const foundResources = await context.state.store.read(
+        const foundResources = await context.ctx.store.read(
           context.ctx,
           context.request.fhirVersion,
           [context.request.versionId],
@@ -456,11 +454,11 @@ function createStorageMiddleware<
         };
       }
       case "search-request": {
-        const result = await context.state.search.search(
+        const result = await context.ctx.search.search(
           context.ctx,
           context.request,
         );
-        const resources = await context.state.store.read(
+        const resources = await context.ctx.store.read(
           context.ctx,
           context.request.fhirVersion,
           result.result.map((r) => r.version_id),
@@ -534,7 +532,7 @@ function createStorageMiddleware<
             resource: context.request.resource,
             type: "create-response",
             body: await createResource(
-              context.state.store,
+              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               context.request.body,
@@ -545,7 +543,7 @@ function createStorageMiddleware<
 
       case "patch-request": {
         const savedResource = await patchResource(
-          context.state.store,
+          context.ctx.store,
           context.ctx,
           context.request.fhirVersion,
           context.request.resource,
@@ -571,7 +569,7 @@ function createStorageMiddleware<
         switch (context.request.level) {
           case "type": {
             const request = context.request;
-            const result = await context.state.search.search(context.ctx, {
+            const result = await context.ctx.search.search(context.ctx, {
               fhirVersion: request.fhirVersion,
               type: "search-request",
               level: "type",
@@ -596,7 +594,7 @@ function createStorageMiddleware<
                 if (request.body.id) {
                   // From R5 but Applying here on all versions to dissallow updating a Resource if it already exists
                   const existingResource = await getResource(
-                    context.state.store,
+                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body.resourceType,
@@ -612,7 +610,7 @@ function createStorageMiddleware<
                   }
 
                   const { resource, created } = await updateResource(
-                    context.state.store,
+                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body,
@@ -634,7 +632,7 @@ function createStorageMiddleware<
                   };
                 } else {
                   const resource = await createResource(
-                    context.state.store,
+                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body,
@@ -669,7 +667,7 @@ function createStorageMiddleware<
                   );
                 }
                 const { created, resource } = await updateResource(
-                  context.state.store,
+                  context.ctx.store,
                   context.ctx,
                   request.fhirVersion,
                   { ...request.body, id: foundResource.id },
@@ -700,7 +698,7 @@ function createStorageMiddleware<
           }
           case "instance": {
             const { created, resource } = await updateResource(
-              context.state.store,
+              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               // Set the id for the request body to ensure that the resource is updated correctly.
@@ -737,7 +735,7 @@ function createStorageMiddleware<
         switch (context.request.level) {
           case "instance": {
             await deleteResource(
-              context.state.store,
+              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               context.request.resource,
@@ -763,8 +761,8 @@ function createStorageMiddleware<
               state: context.state,
               ctx: context.ctx,
               response: await conditionalDelete(
-                context.state.store,
-                context.state.search,
+                context.ctx.store,
+                context.ctx.search,
                 context.ctx,
                 {
                   type: "search-request",
@@ -782,8 +780,8 @@ function createStorageMiddleware<
               state: context.state,
               ctx: context.ctx,
               response: await conditionalDelete(
-                context.state.store,
-                context.state.search,
+                context.ctx.store,
+                context.ctx.search,
                 context.ctx,
                 {
                   type: "search-request",
@@ -803,7 +801,7 @@ function createStorageMiddleware<
       }
 
       case "history-request": {
-        const history = await context.state.store.history(
+        const history = await context.ctx.store.history(
           context.ctx,
           context.request,
         );
@@ -1039,7 +1037,7 @@ function createSynchronousIndexingMiddleware<
                 outcomeFatal("exception", "Invalid response"),
               );
 
-            await context.state.search.index(
+            await context.ctx.search.index(
               ctx,
               context.request.fhirVersion,
               // Checked above for response type.
@@ -1067,7 +1065,7 @@ function createSynchronousIndexingMiddleware<
                   | R4InstanceDeleteResponse
                   | R4BInstanceDeleteResponse;
 
-                await context.state.search.removeIndex(
+                await context.ctx.search.removeIndex(
                   ctx,
                   deleteResponse.fhirVersion,
                   deleteResponse.id,
@@ -1086,7 +1084,7 @@ function createSynchronousIndexingMiddleware<
 
                 await Promise.all(
                   (deleteResponse.deletions ?? []).map((deletion) =>
-                    context.state.search.removeIndex(
+                    context.ctx.search.removeIndex(
                       ctx,
                       deleteResponse.fhirVersion,
                       deletion.id,
@@ -1110,18 +1108,12 @@ function createSynchronousIndexingMiddleware<
 
 export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit,
-  store,
-  search,
 }: {
   transaction_entry_limit: number;
-  store: ResourceStore<CTX>;
-  search: SearchEngine<CTX>;
 }): FHIRClient<CTX> {
   return new AsynchronousClient<StorageState<CTX>, CTX>(
     {
       transaction_entry_limit,
-      store,
-      search,
     },
     createMiddlewareAsync(
       [createSynchronousIndexingMiddleware(), createStorageMiddleware()],

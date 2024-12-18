@@ -270,6 +270,13 @@ async function createTokenResponse({
     user.id,
   );
 
+  const accesspolicies = await ctx.client.search_type(
+    await asRoot(ctx),
+    R4,
+    "AccessPolicyV2",
+    [{ name: "link", value: [user.fhir_user_id as id] }],
+  );
+
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: getIssuer(ctx.tenant),
 
@@ -277,13 +284,19 @@ async function createTokenResponse({
     patient: launchParameters?.Patient,
     encounter: launchParameters?.Encounter,
 
+    sub: user.id as Subject,
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
+
     [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: user.role,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: (user.fhir_user_id as id) ?? undefined,
-    sub: user.id as Subject,
+    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]:
+      user.fhir_user_versionid.toString() as id,
+    [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: accesspolicies.resources
+      .map((r) => r.meta?.versionId)
+      .filter((v) => v !== undefined),
   };
   const idTokenPayload = await getIDTokenPayload(ctx, user, approvedScopes);
   const tokenExiration = "1h";
@@ -501,7 +514,7 @@ export function tokenPost<
 
         ctx.body = {
           access_token: await createClientCredentialToken(
-            ctx.state.iguhealth.tenant,
+            ctx.state.iguhealth,
             clientApplication,
           ),
           token_type: "Bearer",

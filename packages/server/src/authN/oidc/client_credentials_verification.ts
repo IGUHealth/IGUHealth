@@ -13,6 +13,9 @@ import {
 } from "@iguhealth/jwt/types";
 
 import { getIssuer } from "./constants.js";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { asRoot, IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 export type ClientCredentials = { client_id: string; client_secret: string };
 
@@ -63,7 +66,7 @@ export function authenticateClientCredentials(
 }
 
 export async function createClientCredentialToken(
-  tenant: TenantId,
+  ctx: Omit<IGUHealthServerCTX, "user">,
   client: ClientApplication,
   expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
@@ -72,13 +75,24 @@ export async function createClientCredentialToken(
     process.env.AUTH_LOCAL_SIGNING_KEY,
   );
 
+  const policies = await ctx.client.search_type(
+    await asRoot(ctx),
+    R4,
+    "AccessPolicyV2",
+    [{ name: "link", value: [client.id as id] }],
+  );
+
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(tenant),
+    iss: getIssuer(ctx.tenant),
     aud: client.id as string,
-    [CUSTOM_CLAIMS.TENANT]: tenant,
+    [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
     [CUSTOM_CLAIMS.ROLE]: "member",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
     [CUSTOM_CLAIMS.RESOURCE_ID]: client.id as id,
+    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: client.meta?.versionId as id,
+    [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: policies.resources
+      .map((p) => p.meta?.versionId)
+      .filter((v) => v !== undefined),
     scope: client.scope ?? "",
     sub: client.id as string as Subject,
   };

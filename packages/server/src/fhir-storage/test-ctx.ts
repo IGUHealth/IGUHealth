@@ -24,6 +24,8 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./providers/middleware/memory/async.js";
+import { PostgresStore } from "./resource-stores/postgres.js";
+import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
@@ -71,6 +73,8 @@ export const testServices: IGUHealthServerCTX = {
           }
         : false,
   }),
+  store: new PostgresStore(),
+  search: new PostgresSearchEngine(),
   // @ts-ignore
   user: {
     payload: {

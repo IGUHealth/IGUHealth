@@ -52,6 +52,13 @@ async function getUserSource(
     throw new OperationError(outcomeError("exception", "User not found"));
   }
 
+  const policies = await ctx.client.search_type(ctx, R4, "AccessPolicyV2", [
+    {
+      name: "link",
+      value: [userId],
+    },
+  ]);
+
   return {
     payload: {
       iss: getIssuer(ctx.tenant),
@@ -61,6 +68,10 @@ async function getUserSource(
         "role" in resource ? (resource.role as s.user_role) : "member",
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
       [CUSTOM_CLAIMS.RESOURCE_ID]: resource.id as id,
+      [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: resource.meta?.versionId as id,
+      [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: policies.resources
+        .map((p) => p.meta?.versionId)
+        .filter((v) => v !== undefined),
       scope: "user/*.*",
       sub: resource.id as string as Subject,
     },
