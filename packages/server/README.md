@@ -2,6 +2,7 @@
 # Environment Variables
 | name | description | required | defaults |
 |------|-------------|----------|----------|
+| IGUHEALTH_ENVIRONMENT | The environment the server is running in | true | development |
 | SESSION_COOKIE_SECRETS | Secret used to sign session cookies | true | iguhealth |
 | FHIR_DATABASE_NAME | Postgres database name.  | true | iguhealth |
 | FHIR_DATABASE_HOST | Postgres host | true | localhost |

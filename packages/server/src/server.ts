@@ -61,6 +61,7 @@ import * as views from "./views/index.js";
 import { getTenant } from "./authN/db/tenant.js";
 import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
 import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
+// import { KafkaStore } from "./fhir-storage/resource-stores/kafka.js";
 
 loadEnv();
 

@@ -7,7 +7,7 @@ import {
   createMiddlewareAsync,
   MiddlewareAsyncChain,
 } from "@iguhealth/client/middleware";
-import { code, unsignedInt } from "@iguhealth/fhir-types/r4/types";
+import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -53,7 +53,7 @@ import { generateId } from "../../../utilities/generateId.js";
 import { ResourceStore } from "../../../resource-stores/interface.js";
 import { SearchEngine } from "../../../search-stores/interface.js";
 
-type StorageState<CTX> = {
+type StorageState = {
   transaction_entry_limit: number;
 };
 
@@ -88,13 +88,11 @@ async function getResourceById<
 >(
   ctx: CTX,
   fhirVersion: Version,
-  id: string,
+  id: id,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
-  const res = await ctx.client.search_system(ctx, fhirVersion, [
-    { name: "_id", value: [id] },
-  ]);
+  const resource = await ctx.store.readLatestResourceById(ctx, fhirVersion, id);
 
-  return res.resources[0];
+  return resource;
 }
 
 async function getResource<
@@ -102,11 +100,10 @@ async function getResource<
   Version extends FHIR_VERSION,
   Type extends ResourceType<Version>,
 >(
-  store: ResourceStore<CTX>,
-  ctx: IGUHealthServerCTX,
+  ctx: CTX,
   fhirVersion: Version,
   resourceType: Type,
-  id: string,
+  id: id,
 ): Promise<Resource<Version, Type> | undefined> {
   const resource = await getResourceById(ctx, fhirVersion, id);
 
@@ -125,11 +122,10 @@ async function patchResource<
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
-  id: string,
+  id: id,
   patches: Operation[],
 ): Promise<Resource<Version, AllResourceTypes>> {
   const existingResource = await getResource(
-    store,
     ctx,
     fhirVersion,
     resourceType,
@@ -266,9 +262,9 @@ async function deleteResource<
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
-  id: string,
+  id: id,
 ) {
-  const resource = await getResource(store, ctx, fhirVersion, resourceType, id);
+  const resource = await getResource(ctx, fhirVersion, resourceType, id);
   if (!resource)
     throw new OperationError(
       outcomeError(
@@ -364,13 +360,12 @@ async function conditionalDelete(
 
 function createStorageMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends StorageState<CTX>,
+  State extends StorageState,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function storageMiddleware(context) {
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
-          context.ctx.store,
           context.ctx,
           context.request.fhirVersion,
           context.request.resource,
@@ -402,7 +397,7 @@ function createStorageMiddleware<
         const foundResources = await context.ctx.store.read(
           context.ctx,
           context.request.fhirVersion,
-          [context.request.versionId],
+          [context.request.versionId as id],
         );
         if (foundResources.length === 0) {
           throw new OperationError(
@@ -594,7 +589,6 @@ function createStorageMiddleware<
                 if (request.body.id) {
                   // From R5 but Applying here on all versions to dissallow updating a Resource if it already exists
                   const existingResource = await getResource(
-                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body.resourceType,
@@ -1014,7 +1008,7 @@ function createStorageMiddleware<
  */
 function createSynchronousIndexingMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends StorageState<CTX>,
+  State extends StorageState,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function synchronousIndexingMiddleware(context, next) {
     switch (context.request.type) {
@@ -1111,7 +1105,7 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
 }: {
   transaction_entry_limit: number;
 }): FHIRClient<CTX> {
-  return new AsynchronousClient<StorageState<CTX>, CTX>(
+  return new AsynchronousClient<StorageState, CTX>(
     {
       transaction_entry_limit,
     },

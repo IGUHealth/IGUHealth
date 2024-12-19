@@ -208,6 +208,32 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
 
     return returnOrdered;
   }
+
+  async readLatestResourceById<Version extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: Version,
+    id: id,
+  ): Promise<Resource<Version, AllResourceTypes> | undefined> {
+    const result = await db
+      .selectOne(
+        "resources",
+        {
+          tenant: ctx.tenant,
+          id: id,
+          fhir_version: toDBFHIRVersion(fhirVersion),
+        },
+        {
+          order: { by: "version_id", direction: "DESC" },
+          columns: ["resource"],
+        },
+      )
+      .run(ctx.db);
+
+    return result?.resource as unknown as Promise<
+      Resource<Version, AllResourceTypes> | undefined
+    >;
+  }
+
   async insert<Version extends FHIR_VERSION>(
     ctx: IGUHealthServerCTX,
     data: s.resources.Insertable[],

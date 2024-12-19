@@ -7,6 +7,7 @@ import {
   R4SystemHistoryRequest,
   R4TypeHistoryRequest,
 } from "@iguhealth/client/types";
+import { id } from "@iguhealth/fhir-types/r4/types";
 
 import {
   AllResourceTypes,
@@ -18,8 +19,14 @@ export interface ResourceStore<CTX> {
   read<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
-    version_ids: string[],
+    version_ids: id[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
+
+  readLatestResourceById<Version extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: Version,
+    id: id,
+  ): Promise<Resource<Version, AllResourceTypes> | undefined>;
 
   insert<Version extends FHIR_VERSION>(
     ctx: CTX,

@@ -46,7 +46,7 @@ async function fhirSearchRequesttoInteralRequest<
 
   const parameters = await parametersWithMetaAssociated(
     async (resourceTypes, name) =>
-      await findSearchParameter(
+      findSearchParameter(
         ctx.client,
         await asRoot(ctx),
         request.fhirVersion,
