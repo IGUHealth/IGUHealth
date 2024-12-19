@@ -268,6 +268,16 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
 	REFERENCES resources(version_id)
 );
 `;
+
+  sql = `${sql}
+CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_tenant ON ${getSp1Name(
+    version,
+  )} USING hash(tenant);
+CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_resource_type ON ${getSp1Name(
+    version,
+  )}USING hash(resource_type);
+  `;
+
   for (const sp1Url of sp1Urls) {
     const parameter = parameterHash[sp1Url];
     switch (parameter.type) {
@@ -275,7 +285,7 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} NUMERIC;`;
 
         sql = `${sql} \n 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)});`;
         break;
@@ -285,11 +295,11 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end TIMESTAMP WITH TIME ZONE;`;
 
         sql = `${sql} \n 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start);
         
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end);
         `;
@@ -305,27 +315,27 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_end_code TEXT;`;
 
         sql = `${sql} \n 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_value
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_value
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_value);
         
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_system
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_system
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_system);
 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_code
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_start_code
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_start_code);
 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_value
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_value
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_value);
         
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_system
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_system
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_system);
 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_code
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_end_code
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_end_code);
         `;
@@ -337,11 +347,11 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)}_value TEXT;`;
 
         sql = `${sql} \n 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_system
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_system
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_system);
 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_value
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)}_value
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)}_value);
         `;
@@ -352,7 +362,7 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
       case "uri": {
         sql = `${sql} \n ALTER TABLE ${getSp1Name(version)} ADD COLUMN IF NOT EXISTS ${sqlSafeIdentifier(parameter.url)} TEXT;`;
         sql = `${sql} \n 
-        CREATE INDEX ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
+        CREATE INDEX IF NOT EXISTS ${getSp1Name(version)}_${sqlSafeIdentifier(parameter.url)} 
         ON ${getSp1Name(version)} 
         USING btree (tenant, ${sqlSafeIdentifier(parameter.url)});`;
 
