@@ -489,7 +489,7 @@ type MemoryData = {
 export class Memory<CTX extends IGUHealthServerCTX>
   implements MemoryClientInterface<CTX>
 {
-  private _client;
+  private readonly _client;
 
   public request: FHIRClientAsync<CTX>["request"];
   public capabilities: FHIRClientAsync<CTX>["capabilities"];
