@@ -85,7 +85,7 @@ async function generateTypes() {
             }
           : false,
     },
-    outDir: "src/fhir-storage/providers/middleware/postgres/generated",
+    outDir: "src/fhir-storage/providers/schemas/generated",
   });
 }
 

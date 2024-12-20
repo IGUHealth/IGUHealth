@@ -31,8 +31,8 @@ import {
   search_table_types,
   search_types_supported,
 } from "../../providers/constants.js";
-import * as r4Sp1 from "../../providers/middleware/postgres/generated/sp1-parameters/r4.sp1parameters.js";
-import * as r4bSp1 from "../../providers/middleware/postgres/generated/sp1-parameters/r4b.sp1parameters.js";
+import * as r4Sp1 from "../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4bSp1 from "../../providers/schemas/generated/sp1-parameters/r4b.sp1parameters.js";
 import { isSearchParameterInSingularTable } from "./utilities.js";
 
 type Insertables = {
