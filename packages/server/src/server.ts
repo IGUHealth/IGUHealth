@@ -52,7 +52,7 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
-import { createPGPool } from "./fhir-storage/providers/middleware/postgres/pg.js";
+import { createPGPool } from "./fhir-storage/providers/pg.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";

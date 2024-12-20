@@ -11,7 +11,7 @@ import buildParametersSQL from "../index.js";
 import { isSearchParameterInSingularTable } from "../../utilities.js";
 import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
 import { getSp1Column } from "../db_singular_clauses/shared.js";
-import { canonicalColumns as r4CanonicalColumns } from "../../../../providers/middleware/postgres/generated/sp1-parameters/r4.sp1parameters.js";
+import { canonicalColumns as r4CanonicalColumns } from "../../../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
 
 function canonicalSP1SQL(
   ctx: IGUHealthServerCTX,

@@ -55,7 +55,7 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
     cmdOptions: {
       "sql-file": true,
       "migrations-dir":
-        "src/fhir-storage/providers/middleware/postgres/migrations/db-migrate",
+        "src/fhir-storage/providers/schemas/migrations/db-migrate",
     },
   });
 
