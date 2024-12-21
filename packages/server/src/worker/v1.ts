@@ -27,6 +27,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { getActiveTenants } from "../authN/db/tenant.js";
 import loadEnv from "../env.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
@@ -58,7 +59,6 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
-import { getActiveTenants } from "../authN/db/tenant.js";
 
 loadEnv();
 

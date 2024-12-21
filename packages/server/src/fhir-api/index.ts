@@ -45,8 +45,8 @@ import {
   MemoryParameter,
   createArtifactMemoryDatabase,
 } from "../fhir-storage/providers/clients/memory/async.js";
-import { createRemoteStorage } from "../fhir-storage/providers/clients/storage/index.js";
 import RouterClient from "../fhir-storage/providers/clients/router/index.js";
+import { createRemoteStorage } from "../fhir-storage/providers/clients/storage/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
