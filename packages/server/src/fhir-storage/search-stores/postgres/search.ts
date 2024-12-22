@@ -7,7 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
-import { toSQLString } from "../../providers/log_sql.js";
+import { toSQLString } from "../../log_sql.js";
 import {
   ParameterType,
   SearchParameterResource,

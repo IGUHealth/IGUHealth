@@ -27,6 +27,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { getActiveTenants } from "../authN/db/tenant.js";
 import loadEnv from "../env.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
@@ -35,7 +36,7 @@ import logAuditEvent, {
   createAuditEvent,
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
-import { fitsSearchCriteria } from "../fhir-storage/providers/clients/memory/search.js";
+import { fitsSearchCriteria } from "../fhir-storage/clients/memory/search.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {
@@ -58,7 +59,6 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
-import { getActiveTenants } from "../authN/db/tenant.js";
 
 loadEnv();
 

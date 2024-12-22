@@ -42,10 +42,10 @@ import {
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
+import { ResourceStore } from "../fhir-storage/resource-stores/interface.js";
+import { SearchEngine } from "../fhir-storage/search-stores/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
-import { SearchEngine } from "../fhir-storage/search-stores/interface.js";
-import { ResourceStore } from "../fhir-storage/resource-stores/interface.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];
@@ -133,9 +133,10 @@ export interface IGUHealthServerCTX {
   store: ResourceStore<IGUHealthServerCTX>;
 
   // Services
-  cache: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
+  cache?: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
+  lock?: Lock<unknown>;
+
   logger: Logger<string>;
-  lock: Lock<unknown>;
   terminologyProvider?: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;
@@ -180,9 +181,9 @@ function createRootClaims(
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export async function asRoot(
+export function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
-): Promise<IGUHealthServerCTX> {
+): IGUHealthServerCTX {
   const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
 
   return {

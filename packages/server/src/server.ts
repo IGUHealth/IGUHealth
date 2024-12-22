@@ -29,6 +29,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { getTenant } from "./authN/db/tenant.js";
 import { createGlobalAuthRouter } from "./authN/global/index.js";
 import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
@@ -52,16 +53,14 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
-import { createPGPool } from "./fhir-storage/providers/pg.js";
+import { createPGPool } from "./fhir-storage/pg.js";
+import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
+import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
-import { getTenant } from "./authN/db/tenant.js";
-import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
-import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
-// import { KafkaStore } from "./fhir-storage/resource-stores/kafka.js";
 
 loadEnv();
 
@@ -183,6 +182,7 @@ export default async function createServer(): Promise<
 
   const redis = getRedisClient();
   const logger = createLogger();
+
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),

@@ -3,6 +3,7 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
+import createStorageWorker from "../../worker/kafka/storage.js";
 import createWorker from "../../worker/v1.js";
 
 interface DBMigrate {
@@ -54,12 +55,17 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
     cmdOptions: {
       "sql-file": true,
-      "migrations-dir":
-        "src/fhir-storage/providers/schemas/migrations/db-migrate",
+      "migrations-dir": "src/fhir-storage/schemas/migrations/db-migrate",
     },
   });
 
   await dbmigrate.up();
+};
+
+const kafkaWorker: Parameters<Command["action"]>[0] = async () => {
+  runningServices = {
+    worker: await createStorageWorker(),
+  };
 };
 
 export function runCommands(command: Command) {
@@ -69,6 +75,11 @@ export function runCommands(command: Command) {
     .description("Run the server.")
     .action(server);
   command.command("worker").description("Run a worker.").action(worker);
+  command
+    .command("kafka-worker")
+    .description("Run a kafka worker.")
+    .action(kafkaWorker);
+
   command
     .command("both")
     .option("-p, --port <number>", "port to run on.", "3000")

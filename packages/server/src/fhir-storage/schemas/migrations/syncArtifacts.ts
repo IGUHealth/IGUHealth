@@ -7,14 +7,14 @@ import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import RedisCache from "../../../../cache/providers/redis.js";
-import { createClient, createLogger } from "../../../../fhir-api/index.js";
-import { getRedisClient } from "../../../../fhir-api/index.js";
-import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
-import RedisLock from "../../../../synchronization/redis.lock.js";
+import RedisCache from "../../../cache/providers/redis.js";
+import { createClient, createLogger } from "../../../fhir-api/index.js";
+import { getRedisClient } from "../../../fhir-api/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import RedisLock from "../../../synchronization/redis.lock.js";
 import { createPGPool } from "../../pg.js";
-import { PostgresStore } from "../../../resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
+import { PostgresStore } from "../../resource-stores/postgres.js";
+import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");

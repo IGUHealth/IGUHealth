@@ -22,12 +22,12 @@ import {
   getRedisClient,
 } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { createPGPool } from "../../fhir-storage/providers/pg.js";
+import { createPGPool } from "../../fhir-storage/pg.js";
+import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
+import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
 import { FHIRTransaction } from "../../fhir-storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,

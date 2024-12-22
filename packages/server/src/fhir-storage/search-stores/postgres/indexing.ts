@@ -20,19 +20,19 @@ import {
 
 import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import {
+  SEARCH_TABLE_TYPES,
+  search_table_types,
+  search_types_supported,
+} from "../../constants.js";
+import * as r4Sp1 from "../../schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4bSp1 from "../../schemas/generated/sp1-parameters/r4b.sp1parameters.js";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import dataConversion from "../../utilities/search/dataConversion.js";
 import {
   searchParameterToTableName,
   searchResources,
 } from "../../utilities/search/parameters.js";
-import {
-  SEARCH_TABLE_TYPES,
-  search_table_types,
-  search_types_supported,
-} from "../../providers/constants.js";
-import * as r4Sp1 from "../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
-import * as r4bSp1 from "../../providers/schemas/generated/sp1-parameters/r4b.sp1parameters.js";
 import { isSearchParameterInSingularTable } from "./utilities.js";
 
 type Insertables = {

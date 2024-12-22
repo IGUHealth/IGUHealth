@@ -1,3 +1,4 @@
+import * as prettier from "prettier";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -9,10 +10,10 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import analyze from "@iguhealth/fhirpath/analyze";
-import * as prettier from "prettier";
-import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
+
+import { toSQLString } from "../../fhir-storage/log_sql.js";
 import { getSp1Column } from "../../fhir-storage/search-stores/postgres/clauses/db_singular_clauses/shared.js";
-import { toSQLString } from "../../fhir-storage/providers/log_sql.js";
+import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
 
 export function getSp1Name(
   version: FHIR_VERSION,

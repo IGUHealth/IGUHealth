@@ -39,6 +39,10 @@ export interface IGUHealthEnvironment {
    */
   FHIR_DATABASE_SSL?: "true" | "false";
   /**
+   * Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].
+   */
+  FHIR_STORAGE_ASYNC?: "true" | "false";
+  /**
    * Redis host
    */
   REDIS_HOST: string;

@@ -1,27 +1,12 @@
 import jsonpatch, { Operation } from "fast-json-patch";
 import * as db from "zapatos/db";
 
-import { FHIRClient } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClient } from "@iguhealth/client/interface";
 import {
-  createMiddlewareAsync,
   MiddlewareAsyncChain,
+  createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  R4,
-  R4B,
-  Resource,
-  ResourceType,
-} from "@iguhealth/fhir-types/versions";
-import {
-  isOperationError,
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-} from "@iguhealth/operation-outcomes";
 import {
   FHIRResponse,
   R4BInstanceDeleteResponse,
@@ -35,23 +20,38 @@ import {
   R4TypeDeleteResponse,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
+import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  R4B,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
+import {
+  OperationError,
+  isOperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
+import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
+import { ResourceStore } from "../../resource-stores/interface.js";
+import { SearchEngine } from "../../search-stores/interface.js";
+import {
+  FHIRTransaction,
+  buildTransactionTopologicalGraph,
+} from "../../transactions.js";
 import {
   fhirResourceToBundleEntry,
   fhirResponseToBundleEntry,
-} from "../../../utilities/bundle.js";
-import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import {
-  buildTransactionTopologicalGraph,
-  FHIRTransaction,
-} from "../../../transactions.js";
-import { validateResource } from "../../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt/types";
-import { toDBFHIRVersion } from "../../../utilities/version.js";
-import { generateId } from "../../../utilities/generateId.js";
-import { ResourceStore } from "../../../resource-stores/interface.js";
-import { SearchEngine } from "../../../search-stores/interface.js";
+} from "../../utilities/bundle.js";
+import { generateId } from "../../utilities/generateId.js";
+import { toDBFHIRVersion } from "../../utilities/version.js";
 
 type StorageState = {
   transaction_entry_limit: number;
@@ -67,7 +67,9 @@ async function createResource<
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<Resource<Version, AllResourceTypes>> {
   // For creation force new id.
+
   resource.id = generateId();
+  console.time(resource.id + "createResource");
   const res = await store.insert(ctx, [
     {
       tenant: ctx.tenant,
@@ -78,7 +80,7 @@ async function createResource<
       resource: resource as unknown as db.JSONObject,
     },
   ]);
-
+  console.timeEnd(resource.id + "createResource");
   return res[0] as Resource<Version, AllResourceTypes>;
 }
 
@@ -1100,18 +1102,27 @@ function createSynchronousIndexingMiddleware<
   };
 }
 
+/**
+ * Create a remote storage client.
+ * @param param0 Options for the storage client.
+ * @returns FHIRClient
+ */
 export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit,
+  synchronousIndexing,
 }: {
   transaction_entry_limit: number;
+  synchronousIndexing: boolean;
 }): FHIRClient<CTX> {
+  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [];
+  if (synchronousIndexing)
+    middleware.push(createSynchronousIndexingMiddleware());
+  middleware.push(createStorageMiddleware());
+
   return new AsynchronousClient<StorageState, CTX>(
     {
       transaction_entry_limit,
     },
-    createMiddlewareAsync(
-      [createSynchronousIndexingMiddleware(), createStorageMiddleware()],
-      { logging: false },
-    ),
+    createMiddlewareAsync(middleware, { logging: false }),
   );
 }

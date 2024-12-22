@@ -10,12 +10,12 @@ import {
 import * as fhirpath from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import dataConversion, {
   ResolveCanonical,
   SEARCH_TYPE,
-} from "../../../utilities/search/dataConversion.js";
-import { SearchParameterResource } from "../../../utilities/search/parameters.js";
+} from "../../utilities/search/dataConversion.js";
+import { SearchParameterResource } from "../../utilities/search/parameters.js";
 import fitsCriteria from "./search/fitsCriteria.js";
 
 dayjs.extend(isBetween);

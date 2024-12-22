@@ -21,14 +21,14 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { generateId } from "../../../utilities/generateId.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { generateId } from "../../utilities/generateId.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
-} from "../../../utilities/search/parameters.js";
+} from "../../utilities/search/parameters.js";
 import { fitsSearchCriteria } from "./search.js";
 import { InternalData } from "./types.js";
 
@@ -580,7 +580,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
         silence: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
-          "../../../../../../",
+          "../../../../../",
         ),
         ...config,
       }),
@@ -605,7 +605,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
         silence: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
-          "../../../../../../",
+          "../../../../../",
         ),
         ...config,
       }),

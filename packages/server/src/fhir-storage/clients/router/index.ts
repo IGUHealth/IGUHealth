@@ -26,10 +26,10 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
-import { fhirResponseToBundleEntry } from "../../../utilities/bundle.js";
-import { deriveResourceTypeFilter } from "../../../utilities/search/parameters.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
+import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
+import { deriveResourceTypeFilter } from "../../utilities/search/parameters.js";
 
 type InteractionSupported = FHIRRequest["type"];
 type InteractionsSupported = InteractionSupported[];

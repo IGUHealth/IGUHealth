@@ -8,19 +8,16 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { isSearchTableType, search_table_types } from "../../constants.js";
 import {
   SearchParameterResult,
   searchParameterToTableName,
   searchResources,
 } from "../../utilities/search/parameters.js";
-import {
-  isSearchTableType,
-  search_table_types,
-} from "../../providers/constants.js";
-import { isSearchParameterInSingularTable } from "./utilities.js";
 import { getSp1Column } from "./clauses/db_singular_clauses/shared.js";
-import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
+import { isSearchParameterInSingularTable } from "./utilities.js";
 
 type SORT_DIRECTION = "ascending" | "descending";
 
