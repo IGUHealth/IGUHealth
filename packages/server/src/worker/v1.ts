@@ -574,7 +574,7 @@ async function createWorker(
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
   }
-  return () => {
+  return async () => {
     isRunning = false;
   };
 }
