@@ -8,9 +8,9 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
+import { testServices } from "../../test-ctx.js";
 import { Memory } from "../memory/async.js";
 import RouterClient from "./index.js";
-import { testServices } from "../../../test-ctx.js";
 
 test("Test routing on resourceTypes", async () => {
   const router = RouterClient(

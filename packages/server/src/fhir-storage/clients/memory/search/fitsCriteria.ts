@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   ADataConversion,
   SEARCH_TYPE,
-} from "../../../../utilities/search/dataConversion.js";
+} from "../../../utilities/search/dataConversion.js";
 
 export default function fitsCriteria<T extends SEARCH_TYPE>(
   type: T,

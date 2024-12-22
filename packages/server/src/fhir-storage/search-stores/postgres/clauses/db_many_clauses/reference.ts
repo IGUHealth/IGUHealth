@@ -1,17 +1,17 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { code, SearchParameter, uri } from "@iguhealth/fhir-types/r4/types";
+import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
-import { missingModifier } from "./shared.js";
-import buildParametersSQL from "../index.js";
-import { isSearchParameterInSingularTable } from "../../utilities.js";
 import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { canonicalColumns as r4CanonicalColumns } from "../../../../schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import { isSearchParameterInSingularTable } from "../../utilities.js";
 import { getSp1Column } from "../db_singular_clauses/shared.js";
-import { canonicalColumns as r4CanonicalColumns } from "../../../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import buildParametersSQL from "../index.js";
+import { missingModifier } from "./shared.js";
 
 function canonicalSP1SQL(
   ctx: IGUHealthServerCTX,

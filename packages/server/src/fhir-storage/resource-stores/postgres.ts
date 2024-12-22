@@ -102,7 +102,7 @@ function historyLevelFilter(
 }
 
 async function getHistory<
-  CTX extends IGUHealthServerCTX,
+  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -157,11 +157,11 @@ async function getHistory<
   return resourceHistory;
 }
 
-export class PostgresStore<CTX extends IGUHealthServerCTX>
+export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">>
   implements ResourceStore<CTX>
 {
   async read<Version extends FHIR_VERSION>(
-    ctx: IGUHealthServerCTX,
+    ctx: CTX,
     fhirVersion: Version,
     version_ids: string[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
@@ -235,7 +235,7 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
   }
 
   async insert<Version extends FHIR_VERSION>(
-    ctx: IGUHealthServerCTX,
+    ctx: CTX,
     data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     const result = await db
@@ -248,7 +248,7 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
     >[];
   }
   async history<Version extends FHIR_VERSION>(
-    ctx: IGUHealthServerCTX,
+    ctx: CTX,
     request:
       | R4HistoryInstanceRequest
       | R4TypeHistoryRequest

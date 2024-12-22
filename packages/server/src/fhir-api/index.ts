@@ -40,13 +40,13 @@ import {
   AUTH_METHODS_ALLOWED,
   AUTH_RESOURCETYPES,
   createAuthStorageClient,
-} from "../fhir-storage/providers/clients/auth-storage/index.js";
+} from "../fhir-storage/clients/auth-storage/index.js";
 import {
   MemoryParameter,
   createArtifactMemoryDatabase,
-} from "../fhir-storage/providers/clients/memory/async.js";
-import { createRemoteStorage } from "../fhir-storage/providers/clients/storage/index.js";
-import RouterClient from "../fhir-storage/providers/clients/router/index.js";
+} from "../fhir-storage/clients/memory/async.js";
+import { createRemoteStorage } from "../fhir-storage/clients/remote-storage/index.js";
+import RouterClient from "../fhir-storage/clients/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
@@ -175,7 +175,9 @@ export function createClient(): {
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
   });
+
   const remoteStorage = createRemoteStorage({
+    synchronousIndexing: (process.env.FHIR_STORAGE_ASYNC ?? "true") === "true",
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { getDatePrecision } from "../../utilities/search/parameters.js";
+
 import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
@@ -7,8 +7,10 @@ import {
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { r4_sp1_idx } from "../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
-import { r4b_sp1_idx } from "../../providers/schemas/generated/sp1-parameters/r4b.sp1parameters.js";
+
+import { r4_sp1_idx } from "../../schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import { r4b_sp1_idx } from "../../schemas/generated/sp1-parameters/r4b.sp1parameters.js";
+import { getDatePrecision } from "../../utilities/search/parameters.js";
 
 export function getDateRange(value: string): [string, string] {
   // yyyy-mm-ddThh:mm:ss[Z|(+|-)hh:mm]

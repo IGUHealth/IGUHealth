@@ -17,7 +17,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   isSearchTableType,
   search_table_types,
-} from "../../providers/constants.js";
+} from "../../constants.js";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
   type: "resource";

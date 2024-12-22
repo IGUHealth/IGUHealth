@@ -65,6 +65,15 @@
       "description": "Whether Postgres connection is SSL",
       "default": "false"
     },
+    "FHIR_STORAGE_ASYNC": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].",
+      "default": "true"
+    },
     "REDIS_HOST": {
       "type": "string",
       "description": "Redis host",

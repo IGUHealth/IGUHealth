@@ -4,17 +4,16 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { isSearchTableType } from "../../../../constants.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
-
-import { isSearchTableType } from "../../../../providers/constants.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";
 import stringClauses from "./string.js";
 import tokenClauses from "./token.js";
 import uriClauses from "./uri.js";
-import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
 
 const PARAMETER_CLAUSES: Record<
   string,

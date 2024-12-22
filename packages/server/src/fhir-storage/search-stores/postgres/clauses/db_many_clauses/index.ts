@@ -5,7 +5,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
-import { isSearchTableType } from "../../../../providers/constants.js";
+import { isSearchTableType } from "../../../../constants.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,

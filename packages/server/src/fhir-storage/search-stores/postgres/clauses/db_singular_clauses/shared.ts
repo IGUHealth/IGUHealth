@@ -1,13 +1,13 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-
-import * as r4Sp1Parameters from "../../../../providers/schemas/generated/sp1-parameters/r4.sp1parameters.js";
-import * as r4bSp1Parameters from "../../../../providers/schemas/generated/sp1-parameters/r4b.sp1parameters.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import * as r4Sp1Parameters from "../../../../schemas/generated/sp1-parameters/r4.sp1parameters.js";
+import * as r4bSp1Parameters from "../../../../schemas/generated/sp1-parameters/r4b.sp1parameters.js";
+import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
   | s.r4_sp1_idx.Whereable

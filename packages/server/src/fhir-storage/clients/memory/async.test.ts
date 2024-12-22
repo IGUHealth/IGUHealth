@@ -12,7 +12,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/lib/versions";
 
-import { testServices } from "../../../test-ctx.js";
+import { testServices } from "../../test-ctx.js";
 import { Memory } from "./async.js";
 import type { InternalData } from "./types.js";
 
@@ -20,7 +20,7 @@ const artifactParameters = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "SearchParameter",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../../"),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   onlyPackages: [
     "@iguhealth/hl7.fhir.r4.core",
     "@iguhealth/hl7.fhir.r4b.core",
@@ -33,7 +33,7 @@ const sds = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../../"),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 

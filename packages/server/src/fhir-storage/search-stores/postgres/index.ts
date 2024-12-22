@@ -1,14 +1,15 @@
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
-  AllResourceTypes,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { FHIRSearchRequest, SearchEngine, SearchResult } from "../interface.js";
-import { executeSearchQuery } from "./search.js";
 import indexResource, { removeIndices } from "./indexing.js";
-import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { executeSearchQuery } from "./search.js";
 
 export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
   implements SearchEngine<CTX>
