@@ -47,12 +47,10 @@ export class KafkaStore<CTX> implements ResourceStore<CTX> {
     ctx: CTX,
     data: resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
-    const response = await this._producer.send({
+    await this._producer.send({
       topic: "resources",
       messages: data.map((d) => ({ value: JSON.stringify(d) })),
     });
-
-    console.log(response);
 
     return data.map(
       (d) => d.resource as unknown as Resource<Version, AllResourceTypes>,
