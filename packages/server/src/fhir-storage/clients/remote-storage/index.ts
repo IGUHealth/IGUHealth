@@ -69,7 +69,7 @@ async function createResource<
   // For creation force new id.
 
   resource.id = generateId();
-  console.time(resource.id + "createResource");
+
   const res = await store.insert(ctx, [
     {
       tenant: ctx.tenant,
@@ -80,7 +80,7 @@ async function createResource<
       resource: resource as unknown as db.JSONObject,
     },
   ]);
-  console.timeEnd(resource.id + "createResource");
+
   return res[0] as Resource<Version, AllResourceTypes>;
 }
 
