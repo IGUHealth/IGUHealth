@@ -77,6 +77,7 @@ ALTER TABLE "r4b_uri_idx" ADD CONSTRAINT "fk_resource" FOREIGN KEY (r_version_id
 ALTER TABLE "r4_sp1_idx" ADD CONSTRAINT "sp1_fk_resource" FOREIGN KEY (r_version_id) REFERENCES resources(version_id);
 ALTER TABLE "r4b_sp1_idx" ADD CONSTRAINT "sp1_fk_resource" FOREIGN KEY (r_version_id) REFERENCES resources(version_id);
 
+ALTER TABLE resources ALTER COLUMN version_id SET DEFAULT gen_random_uuid()::text;
 
 CREATE OR REPLACE FUNCTION igu_fhir_extensions (version_id TEXT, author_type Text, author_id Text, extensions JSONB) RETURNS JSONB AS $$
     declare ext_author_url TEXT;
