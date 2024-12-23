@@ -47,7 +47,7 @@ export function membershipToUser(user: Membership): s.users.Insertable {
     first_name: user.name?.given?.[0] ?? null,
     last_name: user.name?.family ?? null,
     role: user.role as s.user_role,
-    fhir_user_versionid: parseInt(fhir_user_versionid),
+    fhir_user_versionid: fhir_user_versionid,
     fhir_user_id,
     fhir_provider_id: user.federated?.reference?.split("/")[1] ?? null,
   };

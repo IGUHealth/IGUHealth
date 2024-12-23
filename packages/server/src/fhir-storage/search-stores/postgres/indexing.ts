@@ -74,7 +74,7 @@ async function toInsertableIndex<
           tenant: ctx.tenant,
           r_id: resource.id,
           resource_type: resource.resourceType,
-          r_version_id: parseInt(resource.meta.versionId),
+          r_version_id: resource.meta.versionId,
           parameter_name: parameter.name,
           parameter_url: parameter.url,
           // Note because I can use string -infinity for the start value, I need to cast it to number here even though technically string,
@@ -101,7 +101,7 @@ async function toInsertableIndex<
           tenant: ctx.tenant,
           r_id: resource.id,
           resource_type: resource.resourceType,
-          r_version_id: parseInt(resource.meta.versionId),
+          r_version_id: resource.meta.versionId,
           parameter_name: parameter.name,
           parameter_url: parameter.url,
           start_date: value.start as unknown as Date,
@@ -135,7 +135,7 @@ async function toInsertableIndex<
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
+            r_version_id: resource.meta.versionId,
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             reference_type: resourceType,
@@ -153,7 +153,7 @@ async function toInsertableIndex<
           tenant: ctx.tenant,
           r_id: resource.id,
           resource_type: resource.resourceType,
-          r_version_id: parseInt(resource.meta.versionId),
+          r_version_id: resource.meta.versionId,
           parameter_name: parameter.name,
           parameter_url: parameter.url,
           value,
@@ -173,7 +173,7 @@ async function toInsertableIndex<
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
+            r_version_id: resource.meta.versionId,
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             system: value.system,
@@ -201,7 +201,7 @@ async function toInsertableIndex<
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
+            r_version_id: resource.meta.versionId,
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             value,
@@ -226,7 +226,7 @@ async function toInsertableIndex<
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
-            r_version_id: parseInt(resource.meta.versionId),
+            r_version_id: resource.meta.versionId,
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             value,
@@ -315,11 +315,7 @@ function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
   id: id;
   meta: { versionId: id };
 } {
-  if (
-    !resource.id ||
-    (!resource.meta?.versionId &&
-      isNaN(parseInt(resource.meta?.versionId || "")))
-  ) {
+  if (!resource.id || !resource.meta?.versionId) {
     return false;
   }
   return true;
@@ -345,7 +341,7 @@ async function indexSingularParameters<
     tenant: ctx.tenant,
     r_id: resource.id,
     resource_type: resource.resourceType,
-    r_version_id: parseInt(resource.meta.versionId),
+    r_version_id: resource.meta.versionId,
   };
   for (const parameter of parameters) {
     const evaluation = await fhirpath.evaluateWithMeta(
