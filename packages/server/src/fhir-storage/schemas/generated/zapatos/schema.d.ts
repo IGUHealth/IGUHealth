@@ -1468,10 +1468,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_date_idx.resource_type**
       * - `text` in database
@@ -1542,10 +1542,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_date_idx.resource_type**
       * - `text` in database
@@ -1616,10 +1616,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_date_idx.resource_type**
       * - `text` in database
@@ -1690,10 +1690,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_date_idx.resource_type**
       * - `text` in database
@@ -1764,10 +1764,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_date_idx.resource_type**
       * - `text` in database
@@ -1845,10 +1845,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_number_idx.resource_type**
       * - `text` in database
@@ -1913,10 +1913,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_number_idx.resource_type**
       * - `text` in database
@@ -1981,10 +1981,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_number_idx.resource_type**
       * - `text` in database
@@ -2049,10 +2049,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_number_idx.resource_type**
       * - `text` in database
@@ -2117,10 +2117,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_number_idx.resource_type**
       * - `text` in database
@@ -2216,10 +2216,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_quantity_idx.resource_type**
       * - `text` in database
@@ -2314,10 +2314,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_quantity_idx.resource_type**
       * - `text` in database
@@ -2412,10 +2412,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_quantity_idx.resource_type**
       * - `text` in database
@@ -2510,10 +2510,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_quantity_idx.resource_type**
       * - `text` in database
@@ -2608,10 +2608,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_quantity_idx.resource_type**
       * - `text` in database
@@ -2701,10 +2701,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -2775,10 +2775,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -2849,10 +2849,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -2923,10 +2923,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -2997,10 +2997,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_reference_idx.reference_id**
       * - `text` in database
@@ -6444,10 +6444,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -10808,10 +10808,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -15172,10 +15172,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -19536,10 +19536,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -23900,10 +23900,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_sp1_idx.relatedperson_active_system**
       * - `text` in database
@@ -24917,10 +24917,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_string_idx.resource_type**
       * - `text` in database
@@ -24985,10 +24985,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_string_idx.resource_type**
       * - `text` in database
@@ -25053,10 +25053,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_string_idx.resource_type**
       * - `text` in database
@@ -25121,10 +25121,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_string_idx.resource_type**
       * - `text` in database
@@ -25189,10 +25189,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_string_idx.resource_type**
       * - `text` in database
@@ -25270,10 +25270,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_token_idx.resource_type**
       * - `text` in database
@@ -25344,10 +25344,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_token_idx.resource_type**
       * - `text` in database
@@ -25418,10 +25418,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_token_idx.resource_type**
       * - `text` in database
@@ -25492,10 +25492,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_token_idx.resource_type**
       * - `text` in database
@@ -25566,10 +25566,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_token_idx.resource_type**
       * - `text` in database
@@ -25653,10 +25653,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_uri_idx.resource_type**
       * - `text` in database
@@ -25721,10 +25721,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4_uri_idx.resource_type**
       * - `text` in database
@@ -25789,10 +25789,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4_uri_idx.resource_type**
       * - `text` in database
@@ -25857,10 +25857,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
       * **r4_uri_idx.resource_type**
       * - `text` in database
@@ -25925,10 +25925,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **r4_uri_idx.resource_type**
       * - `text` in database
@@ -26012,10 +26012,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_date_idx.resource_type**
       * - `text` in database
@@ -26086,10 +26086,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_date_idx.resource_type**
       * - `text` in database
@@ -26160,10 +26160,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_date_idx.resource_type**
       * - `text` in database
@@ -26234,10 +26234,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_date_idx.resource_type**
       * - `text` in database
@@ -26308,10 +26308,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_date_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_date_idx.resource_type**
       * - `text` in database
@@ -26389,10 +26389,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_number_idx.resource_type**
       * - `text` in database
@@ -26457,10 +26457,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_number_idx.resource_type**
       * - `text` in database
@@ -26525,10 +26525,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_number_idx.resource_type**
       * - `text` in database
@@ -26593,10 +26593,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_number_idx.resource_type**
       * - `text` in database
@@ -26661,10 +26661,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_number_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_number_idx.resource_type**
       * - `text` in database
@@ -26760,10 +26760,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_quantity_idx.resource_type**
       * - `text` in database
@@ -26858,10 +26858,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_quantity_idx.resource_type**
       * - `text` in database
@@ -26956,10 +26956,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_quantity_idx.resource_type**
       * - `text` in database
@@ -27054,10 +27054,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_quantity_idx.resource_type**
       * - `text` in database
@@ -27152,10 +27152,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_quantity_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_quantity_idx.resource_type**
       * - `text` in database
@@ -27245,10 +27245,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -27319,10 +27319,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -27393,10 +27393,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -27467,10 +27467,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -27541,10 +27541,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_reference_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_reference_idx.reference_id**
       * - `text` in database
@@ -30886,10 +30886,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -35130,10 +35130,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -39374,10 +39374,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -43618,10 +43618,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -47862,10 +47862,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_sp1_idx.regulatedauthorization_case_system**
       * - `text` in database
@@ -48861,10 +48861,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_string_idx.resource_type**
       * - `text` in database
@@ -48929,10 +48929,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_string_idx.resource_type**
       * - `text` in database
@@ -48997,10 +48997,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_string_idx.resource_type**
       * - `text` in database
@@ -49065,10 +49065,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_string_idx.resource_type**
       * - `text` in database
@@ -49133,10 +49133,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_string_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_string_idx.resource_type**
       * - `text` in database
@@ -49214,10 +49214,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_token_idx.resource_type**
       * - `text` in database
@@ -49288,10 +49288,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_token_idx.resource_type**
       * - `text` in database
@@ -49362,10 +49362,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_token_idx.resource_type**
       * - `text` in database
@@ -49436,10 +49436,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_token_idx.resource_type**
       * - `text` in database
@@ -49510,10 +49510,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_token_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_token_idx.resource_type**
       * - `text` in database
@@ -49597,10 +49597,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_uri_idx.resource_type**
       * - `text` in database
@@ -49665,10 +49665,10 @@ declare module 'zapatos/schema' {
       r_id: string;
       /**
       * **r4b_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number;
+      r_version_id: string;
       /**
       * **r4b_uri_idx.resource_type**
       * - `text` in database
@@ -49733,10 +49733,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **r4b_uri_idx.resource_type**
       * - `text` in database
@@ -49801,10 +49801,10 @@ declare module 'zapatos/schema' {
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id: number | db.Parameter<number> | db.SQLFragment;
+      r_version_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **r4b_uri_idx.resource_type**
       * - `text` in database
@@ -49869,10 +49869,10 @@ declare module 'zapatos/schema' {
       r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_uri_idx.r_version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      r_version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **r4b_uri_idx.resource_type**
       * - `text` in database
@@ -49968,10 +49968,10 @@ declare module 'zapatos/schema' {
       tenant: string;
       /**
       * **resources.version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
       */
-      version_id: number;
+      version_id: string;
     }
     export interface JSONSelectable {
       /**
@@ -50036,10 +50036,10 @@ declare module 'zapatos/schema' {
       tenant: string;
       /**
       * **resources.version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
       */
-      version_id: number;
+      version_id: string;
     }
     export interface Whereable {
       /**
@@ -50104,10 +50104,10 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
       */
-      version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -50160,10 +50160,10 @@ declare module 'zapatos/schema' {
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **resources.version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
       */
-      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -50216,10 +50216,10 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **resources.version_id**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
       */
-      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'resources_pkey';
     export type Column = keyof Selectable;
@@ -51095,10 +51095,10 @@ declare module 'zapatos/schema' {
       fhir_user_id: string;
       /**
       * **users.fhir_user_versionid**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      fhir_user_versionid: number;
+      fhir_user_versionid: string;
       /**
       * **users.first_name**
       * - `text` in database
@@ -51187,10 +51187,10 @@ declare module 'zapatos/schema' {
       fhir_user_id: string;
       /**
       * **users.fhir_user_versionid**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      fhir_user_versionid: number;
+      fhir_user_versionid: string;
       /**
       * **users.first_name**
       * - `text` in database
@@ -51279,10 +51279,10 @@ declare module 'zapatos/schema' {
       fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.fhir_user_versionid**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      fhir_user_versionid?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      fhir_user_versionid?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.first_name**
       * - `text` in database
@@ -51371,10 +51371,10 @@ declare module 'zapatos/schema' {
       fhir_user_id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **users.fhir_user_versionid**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      fhir_user_versionid: number | db.Parameter<number> | db.SQLFragment;
+      fhir_user_versionid: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **users.first_name**
       * - `text` in database
@@ -51463,10 +51463,10 @@ declare module 'zapatos/schema' {
       fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **users.fhir_user_versionid**
-      * - `int4` in database
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      fhir_user_versionid?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      fhir_user_versionid?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **users.first_name**
       * - `text` in database

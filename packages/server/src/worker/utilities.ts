@@ -122,25 +122,3 @@ export function tenantWorkerContext(
     },
   };
 }
-
-export async function getVersionSequence(
-  resource: Resource<R4, AllResourceTypes>,
-): Promise<number> {
-  const evaluation = (
-    await fhirpath.evaluate(
-      "$this.meta.extension.where(url=%sequenceUrl).value",
-      resource,
-      {
-        variables: {
-          sequenceUrl: "https://iguhealth.app/version-sequence",
-        },
-      },
-    )
-  )[0];
-
-  if (typeof evaluation !== "number") {
-    throw new Error("No version sequence found.");
-  }
-
-  return evaluation;
-}

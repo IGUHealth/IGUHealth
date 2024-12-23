@@ -1,5 +1,7 @@
 // Backend Processes used for subscriptions and cron jobs.
 import { randomUUID } from "crypto";
+import dayjs from "dayjs";
+import minMax from "dayjs/plugin/minMax.js";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -54,11 +56,12 @@ import {
 } from "./data/locks.js";
 import {
   IGUHealthWorkerCTX,
-  getVersionSequence,
   staticWorkerServices,
   tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
+
+dayjs.extend(minMax);
 
 loadEnv();
 
@@ -78,6 +81,19 @@ if (process.env.SENTRY_WORKER_DSN)
       process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
     ),
   });
+
+function getLatestTimestamp(
+  resources: Resource<FHIR_VERSION, AllResourceTypes>[],
+): dayjs.Dayjs {
+  return (
+    dayjs.max(
+      ...resources
+        .map((resource) => resource.meta?.lastUpdated)
+        .filter((date) => date !== undefined)
+        .map((date) => dayjs(date, format)),
+    ) ?? dayjs.unix(0)
+  );
+}
 
 async function handleSubscriptionPayload(
   ctx: IGUHealthWorkerCTX,
@@ -336,11 +352,10 @@ async function processSubscription(
       );
     }
 
-    const latestVersionIdForSub = parseInt(lock.value?.toString() ?? "");
-    if (isNaN(latestVersionIdForSub) || latestVersionIdForSub < 0) {
-      throw new OperationError(
-        outcomeError("invalid", `Subscription version sequence is invalid.`),
-      );
+    let latestDateStampForSub: string = lock.value?.toString() ?? "";
+    if (!dayjs(latestDateStampForSub, format).isValid()) {
+      latestDateStampForSub =
+        subscription.meta?.lastUpdated ?? dayjs.unix(0).format(format);
     }
 
     let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
@@ -349,8 +364,8 @@ async function processSubscription(
       case "system": {
         historyPoll = await ctx.client.history_system({}, fhirVersion, [
           {
-            name: "_since-version",
-            value: [latestVersionIdForSub],
+            name: "_since",
+            value: [latestDateStampForSub],
           },
         ]);
         break;
@@ -362,8 +377,8 @@ async function processSubscription(
           request.resource,
           [
             {
-              name: "_since-version",
-              value: [latestVersionIdForSub],
+              name: "_since",
+              value: [latestDateStampForSub],
             },
           ],
         );
@@ -445,12 +460,12 @@ async function processSubscription(
         );
       }
       await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: await getVersionSequence(
+        value: getLatestTimestamp([
           historyPoll[historyPoll.length - 1].resource as Resource<
             R4,
             AllResourceTypes
           >,
-        ),
+        ]).format(format),
       });
     }
   } catch (e) {
@@ -487,6 +502,8 @@ async function processSubscription(
   }
 }
 
+const format = "YYYY-MM-DDThh:mm:ss+zz:zz";
+
 async function createWorker(
   workerID = randomUUID(),
   fhirVersion: FHIR_VERSION = R4,
@@ -495,7 +512,7 @@ async function createWorker(
   const services = staticWorkerServices(workerID);
 
   let isRunning = true;
-  const tenantOffsets: Record<TenantId, number | undefined> = {};
+  const tenantOffsets: Record<TenantId, dayjs.Dayjs | null | undefined> = {};
   const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
@@ -512,13 +529,16 @@ async function createWorker(
           tenantClaims,
         );
 
+        const dateOffsetString =
+          tenantOffsets[tenant]?.format(format) ?? dayjs.unix(0).format(format);
+
         const activeSubscriptions = (
           await ctx.client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
             { name: "_count", value: [totalSubsProcessAtATime] },
             {
-              name: "_iguhealth-version-seq",
-              value: [`gt${tenantOffsets[tenant] ?? -1}`],
+              name: "_lastUpdated",
+              value: [`gt${dateOffsetString}`],
             },
           ])
         ).resources;
@@ -527,16 +547,8 @@ async function createWorker(
           // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
           // Set back to zero to loop over all active subscriptions again.
           activeSubscriptions.length < totalSubsProcessAtATime
-            ? -1
-            : Math.max(
-                ...activeSubscriptions.map(
-                  (sub) =>
-                    sub.meta?.extension?.find(
-                      (ext) =>
-                        ext.url === "https://iguhealth.app/version-sequence",
-                    )?.valueInteger as number,
-                ),
-              );
+            ? dayjs.unix(0)
+            : getLatestTimestamp(activeSubscriptions);
 
         await ensureLocksCreated(
           ctx.db,
