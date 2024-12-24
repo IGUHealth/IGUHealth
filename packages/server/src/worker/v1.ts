@@ -1,6 +1,7 @@
 // Backend Processes used for subscriptions and cron jobs.
 import { randomUUID } from "crypto";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import minMax from "dayjs/plugin/minMax.js";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -62,6 +63,7 @@ import {
 } from "./utilities.js";
 
 dayjs.extend(minMax);
+dayjs.extend(customParseFormat);
 
 loadEnv();
 
@@ -90,7 +92,7 @@ function getLatestTimestamp(
       ...resources
         .map((resource) => resource.meta?.lastUpdated)
         .filter((date) => date !== undefined)
-        .map((date) => dayjs(date, format)),
+        .map((date) => dayjs(date, FORMAT, true)),
     ) ?? dayjs.unix(0)
   );
 }
@@ -353,10 +355,35 @@ async function processSubscription(
     }
 
     let latestDateStampForSub: string = lock.value?.toString() ?? "";
-    if (!dayjs(latestDateStampForSub, format).isValid()) {
-      latestDateStampForSub =
-        subscription.meta?.lastUpdated ?? dayjs.unix(0).format(format);
+
+    console.log(FORMAT);
+
+    console.log({
+      latestDateStampForSub,
+      valid: dayjs(latestDateStampForSub, FORMAT, true).isValid(),
+      FORMAT,
+    });
+
+    if (!dayjs(latestDateStampForSub, FORMAT, true).isValid()) {
+      latestDateStampForSub = dayjs(
+        subscription.meta?.lastUpdated,
+        FORMAT,
+        true,
+      ).format(FORMAT[0]);
+
+      console.log(
+        "TESTING:",
+        dayjs(subscription.meta?.lastUpdated, FORMAT, true).format(FORMAT[0]),
+        FORMAT,
+        subscription.meta?.lastUpdated,
+      );
     }
+
+    console.log({
+      latestDateStampForSub,
+      valid: dayjs(latestDateStampForSub, FORMAT, true).isValid(),
+      FORMAT,
+    });
 
     let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
 
@@ -365,7 +392,9 @@ async function processSubscription(
         historyPoll = await ctx.client.history_system({}, fhirVersion, [
           {
             name: "_since",
-            value: [latestDateStampForSub],
+            value: [
+              dayjs(latestDateStampForSub, FORMAT, true).format(FORMAT[0]),
+            ],
           },
         ]);
         break;
@@ -378,7 +407,9 @@ async function processSubscription(
           [
             {
               name: "_since",
-              value: [latestDateStampForSub],
+              value: [
+                dayjs(latestDateStampForSub, FORMAT, true).format(FORMAT[0]),
+              ],
             },
           ],
         );
@@ -386,6 +417,7 @@ async function processSubscription(
       }
     }
     // Reverse mutates the array in place.
+
     historyPoll.reverse();
 
     const resourceTypes = deriveResourceTypeFilter(request);
@@ -459,13 +491,19 @@ async function processSubscription(
           payload,
         );
       }
+
       await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: getLatestTimestamp([
-          historyPoll[historyPoll.length - 1].resource as Resource<
-            R4,
-            AllResourceTypes
-          >,
-        ]).format(format),
+        value: dayjs
+          .max(
+            dayjs(latestDateStampForSub, FORMAT, true),
+            getLatestTimestamp([
+              historyPoll[historyPoll.length - 1].resource as Resource<
+                R4,
+                AllResourceTypes
+              >,
+            ]),
+          )
+          .format(FORMAT[0]),
       });
     }
   } catch (e) {
@@ -502,7 +540,7 @@ async function processSubscription(
   }
 }
 
-const format = "YYYY-MM-DDThh:mm:ss+zz:zz";
+const FORMAT = ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ss.SSSZ"];
 
 async function createWorker(
   workerID = randomUUID(),
@@ -530,7 +568,8 @@ async function createWorker(
         );
 
         const dateOffsetString =
-          tenantOffsets[tenant]?.format(format) ?? dayjs.unix(0).format(format);
+          tenantOffsets[tenant]?.format(FORMAT[0]) ??
+          dayjs.unix(0).format(FORMAT[0]);
 
         const activeSubscriptions = (
           await ctx.client.search_type({}, fhirVersion, "Subscription", [
@@ -557,7 +596,7 @@ async function createWorker(
             type: "old_subscription",
             fhir_version: fhirVersion,
             tenant: ctx.tenant,
-            value: sub.meta?.versionId as string,
+            value: JSON.stringify(sub.meta?.lastUpdated),
           })),
         );
 

@@ -25,6 +25,7 @@ import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../utilities/sql.js";
+import { toSQLString } from "../log_sql.js";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -47,8 +48,11 @@ function processHistoryParameters(
     );
   }
 
+  console.log(_since?.value)
+
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    const value = dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz");
+    const value = dayjs(_since.value[0], "YYYY-MM-DDTHH:mm:ssZ");
+
     if (!value.isValid()) {
       throw new OperationError(
         outcomeError("invalid", "_since must be a valid date time."),
@@ -114,7 +118,9 @@ async function getHistory<
     tenant: ctx.tenant,
     ...filters,
     ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
+  }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
+
+  console.log(toSQLString(historySQL));
 
   const history = await historySQL.run(ctx.db);
 
@@ -213,7 +219,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">
           fhir_version: toDBFHIRVersion(fhirVersion),
         },
         {
-          order: { by: "version_id", direction: "DESC" },
+          order: { by: "created_at", direction: "DESC" },
           columns: ["resource"],
         },
       )

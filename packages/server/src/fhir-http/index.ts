@@ -855,9 +855,12 @@ export type HTTPResponse = {
   headers?: Record<string, string>;
 };
 
+// date-fns
+// yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+
 function lastModified(instant: r4.instant | undefined): string | undefined {
   if (!instant) return undefined;
-  return dayjs(instant, "YYYY-MM-DDThh:mm:ss.SSSZ")
+  return dayjs(instant, "YYYY-MM-DDTHH:mm:ss.SSSZ")
     .tz("GMT")
     .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
 }

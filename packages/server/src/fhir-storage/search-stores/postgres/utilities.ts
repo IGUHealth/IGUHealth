@@ -14,7 +14,7 @@ import { getDatePrecision } from "../../utilities/search/parameters.js";
 
 export function getDateRange(value: string): [string, string] {
   // yyyy-mm-ddThh:mm:ss[Z|(+|-)hh:mm]
-  const formattedDate = dayjs(value, "YYYY-MM-DDThh:mm:ssZ");
+  const formattedDate = dayjs(value, "YYYY-MM-DDTHH:mm:ssZ");
   const precision = getDatePrecision(value as dateTime | date);
 
   switch (precision) {
