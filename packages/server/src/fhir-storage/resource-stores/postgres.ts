@@ -27,7 +27,6 @@ import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../utilities/sql.js";
-import { toSQLString } from "../log_sql.js";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -49,8 +48,6 @@ function processHistoryParameters(
       ),
     );
   }
-
-  console.log(_since?.value)
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
     const value =   dateFns.parse(
@@ -126,7 +123,7 @@ async function getHistory<
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
 
-  console.log(toSQLString(historySQL));
+
 
   const history = await historySQL.run(ctx.db);
 
