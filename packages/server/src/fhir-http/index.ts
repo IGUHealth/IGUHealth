@@ -851,9 +851,6 @@ export type HTTPResponse = {
   headers?: Record<string, string>;
 };
 
-// date-fns
-// yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-
 function lastModified(instant: r4.instant | undefined): string | undefined {
   if (!instant) return undefined;
   const date = dateFns.parse(

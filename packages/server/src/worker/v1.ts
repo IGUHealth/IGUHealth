@@ -1,8 +1,8 @@
 // Backend Processes used for subscriptions and cron jobs.
+
+import * as dateTzs from "@date-fns/tz";
 import { randomUUID } from "crypto";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat.js";
-import minMax from "dayjs/plugin/minMax.js";
+import * as dateFns from "date-fns";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -62,9 +62,6 @@ import {
   workerTokenClaims,
 } from "./utilities.js";
 
-dayjs.extend(minMax);
-dayjs.extend(customParseFormat);
-
 loadEnv();
 
 if (process.env.NODE_ENV === "development") {
@@ -86,15 +83,14 @@ if (process.env.SENTRY_WORKER_DSN)
 
 function getLatestTimestamp(
   resources: Resource<FHIR_VERSION, AllResourceTypes>[],
-): dayjs.Dayjs {
-  return (
-    dayjs.max(
-      ...resources
-        .map((resource) => resource.meta?.lastUpdated)
-        .filter((date) => date !== undefined)
-        .map((date) => dayjs(date, FORMAT, true)),
-    ) ?? dayjs.unix(0)
+): Date {
+  const result = dateFns.max(
+    resources
+      .map((resource) => resource.meta?.lastUpdated)
+      .filter((date) => date !== undefined)
+      .map((date) => dateFns.parseISO(date)),
   );
+  return result;
 }
 
 async function handleSubscriptionPayload(
@@ -354,36 +350,19 @@ async function processSubscription(
       );
     }
 
-    let latestDateStampForSub: string = lock.value?.toString() ?? "";
+    const latestDateStampForSub: string = lock.value?.toString() ?? "";
 
-    console.log(FORMAT);
+    let parsedDate: Date | dateTzs.TZDate | undefined = FORMAT.map((f) =>
+      dateFns.parse(latestDateStampForSub, f, new dateTzs.TZDate()),
+    ).find((f) => dateFns.isValid(f));
 
-    console.log({
-      latestDateStampForSub,
-      valid: dayjs(latestDateStampForSub, FORMAT, true).isValid(),
-      FORMAT,
-    });
-
-    if (!dayjs(latestDateStampForSub, FORMAT, true).isValid()) {
-      latestDateStampForSub = dayjs(
-        subscription.meta?.lastUpdated,
-        FORMAT,
-        true,
-      ).format(FORMAT[0]);
-
-      console.log(
-        "TESTING:",
-        dayjs(subscription.meta?.lastUpdated, FORMAT, true).format(FORMAT[0]),
-        FORMAT,
-        subscription.meta?.lastUpdated,
+    if (parsedDate === undefined) {
+      parsedDate = dateFns.parse(
+        subscription.meta?.lastUpdated as string,
+        MILLISECOND_FORMAT,
+        new dateTzs.TZDate(),
       );
     }
-
-    console.log({
-      latestDateStampForSub,
-      valid: dayjs(latestDateStampForSub, FORMAT, true).isValid(),
-      FORMAT,
-    });
 
     let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
 
@@ -392,9 +371,7 @@ async function processSubscription(
         historyPoll = await ctx.client.history_system({}, fhirVersion, [
           {
             name: "_since",
-            value: [
-              dayjs(latestDateStampForSub, FORMAT, true).format(FORMAT[0]),
-            ],
+            value: [dateFns.format(parsedDate, SECOND_FORMAT)],
           },
         ]);
         break;
@@ -407,9 +384,7 @@ async function processSubscription(
           [
             {
               name: "_since",
-              value: [
-                dayjs(latestDateStampForSub, FORMAT, true).format(FORMAT[0]),
-              ],
+              value: [dateFns.format(parsedDate, SECOND_FORMAT)],
             },
           ],
         );
@@ -493,17 +468,18 @@ async function processSubscription(
       }
 
       await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: dayjs
-          .max(
-            dayjs(latestDateStampForSub, FORMAT, true),
+        value: dateFns.format(
+          dateFns.max([
+            latestDateStampForSub,
             getLatestTimestamp([
               historyPoll[historyPoll.length - 1].resource as Resource<
                 R4,
                 AllResourceTypes
               >,
             ]),
-          )
-          .format(FORMAT[0]),
+          ]),
+          MILLISECOND_FORMAT,
+        ),
       });
     }
   } catch (e) {
@@ -540,7 +516,9 @@ async function processSubscription(
   }
 }
 
-const FORMAT = ["YYYY-MM-DDTHH:mm:ssZ", "YYYY-MM-DDTHH:mm:ss.SSSZ"];
+const MILLISECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+const SECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+const FORMAT = [SECOND_FORMAT, MILLISECOND_FORMAT];
 
 async function createWorker(
   workerID = randomUUID(),
@@ -550,7 +528,7 @@ async function createWorker(
   const services = staticWorkerServices(workerID);
 
   let isRunning = true;
-  const tenantOffsets: Record<TenantId, dayjs.Dayjs | null | undefined> = {};
+  const tenantOffsets: Record<TenantId, Date | null | undefined> = {};
   const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
@@ -567,9 +545,9 @@ async function createWorker(
           tenantClaims,
         );
 
-        const dateOffsetString =
-          tenantOffsets[tenant]?.format(FORMAT[0]) ??
-          dayjs.unix(0).format(FORMAT[0]);
+        const dateOffsetString: string = tenantOffsets[tenant]
+          ? dateFns.format(tenantOffsets[tenant], MILLISECOND_FORMAT)
+          : dateFns.format(dateFns.fromUnixTime(0), MILLISECOND_FORMAT);
 
         const activeSubscriptions = (
           await ctx.client.search_type({}, fhirVersion, "Subscription", [
@@ -586,7 +564,7 @@ async function createWorker(
           // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
           // Set back to zero to loop over all active subscriptions again.
           activeSubscriptions.length < totalSubsProcessAtATime
-            ? dayjs.unix(0)
+            ? dateFns.fromUnixTime(0)
             : getLatestTimestamp(activeSubscriptions);
 
         await ensureLocksCreated(
