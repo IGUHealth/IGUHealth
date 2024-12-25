@@ -297,7 +297,7 @@ function updateUserTableMiddleware<
               );
 
             await users.remove(context.ctx.db, context.ctx.tenant, {
-              fhir_user_versionid: parseInt(versionId),
+              fhir_user_versionid: versionId,
             });
 
             return next(context);

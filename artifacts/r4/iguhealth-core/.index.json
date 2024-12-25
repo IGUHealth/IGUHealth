@@ -58,10 +58,6 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/iguhealth/profiling/extensions/version-sequence.json",
-      "resourceType": "StructureDefinition"
-    },
-    {
       "filename": "definitions/iguhealth/profiling/resource/iguhealth-subscription.json",
       "resourceType": "StructureDefinition"
     },

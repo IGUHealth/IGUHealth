@@ -1,6 +1,5 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone.js";
-import utc from "dayjs/plugin/utc.js";
+import * as dateTzs from "@date-fns/tz";
+import * as dateFns from "date-fns";
 
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
@@ -10,9 +9,6 @@ import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/set
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 /*
  ** For Summary of types see:
@@ -855,11 +851,20 @@ export type HTTPResponse = {
   headers?: Record<string, string>;
 };
 
+// date-fns
+// yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+
 function lastModified(instant: r4.instant | undefined): string | undefined {
   if (!instant) return undefined;
-  return dayjs(instant, "YYYY-MM-DDThh:mm:ss.SSSZ")
-    .tz("GMT")
-    .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+  const date = dateFns.parse(
+    instant,
+    "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+    new dateTzs.TZDate(),
+  );
+  const offset = dateTzs.tzOffset("GMT", date);
+  const gmtDate = dateFns.addMinutes(date, offset);
+
+  return dateFns.format(gmtDate, "EEE, dd MMM yyyy HH:mm:ss 'GMT'");
 }
 
 export function fhirResponseToHTTPResponse(
