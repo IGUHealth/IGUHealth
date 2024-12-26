@@ -391,9 +391,20 @@ async function processSubscription(
         break;
       }
     }
-    // Reverse mutates the array in place.
 
-    historyPoll.reverse();
+    // Because precision is not too the millisecond perform additional filter here.
+    historyPoll = historyPoll
+      .filter((r) =>
+        dateFns.isAfter(
+          dateFns.parse(
+            r.resource?.meta?.lastUpdated as string,
+            MILLISECOND_FORMAT,
+            new dateTzs.TZDate(),
+          ),
+          parsedDate,
+        ),
+      )
+      .reverse();
 
     const resourceTypes = deriveResourceTypeFilter(request);
     // Remove _type as using on derived resourceTypeFilter
@@ -468,17 +479,20 @@ async function processSubscription(
       }
 
       await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: dateFns.format(
-          dateFns.max([
-            latestDateStampForSub,
-            getLatestTimestamp([
-              historyPoll[historyPoll.length - 1].resource as Resource<
-                R4,
-                AllResourceTypes
-              >,
+        value: JSON.stringify(
+          dateFns.format(
+            dateFns.max([
+              parsedDate,
+              getLatestTimestamp([
+                historyPoll[historyPoll.length - 1].resource as Resource<
+                  R4,
+                  AllResourceTypes
+                >,
+              ]),
+              1,
             ]),
-          ]),
-          MILLISECOND_FORMAT,
+            MILLISECOND_FORMAT,
+          ),
         ),
       });
     }
@@ -546,8 +560,8 @@ async function createWorker(
         );
 
         const dateOffsetString: string = tenantOffsets[tenant]
-          ? dateFns.format(tenantOffsets[tenant], MILLISECOND_FORMAT)
-          : dateFns.format(dateFns.fromUnixTime(0), MILLISECOND_FORMAT);
+          ? dateFns.format(tenantOffsets[tenant], SECOND_FORMAT)
+          : dateFns.format(dateFns.fromUnixTime(0), SECOND_FORMAT);
 
         const activeSubscriptions = (
           await ctx.client.search_type({}, fhirVersion, "Subscription", [

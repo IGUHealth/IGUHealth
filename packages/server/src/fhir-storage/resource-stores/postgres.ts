@@ -50,10 +50,8 @@ function processHistoryParameters(
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    const value =   dateFns.parse(
+    const value =   dateFns.parseISO(
         _since.value[0],
-        "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-        new dateTzs.TZDate(),
       );
 
     if (!dateFns.isValid(value)) {
@@ -122,8 +120,6 @@ async function getHistory<
     ...filters,
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
-
-
 
   const history = await historySQL.run(ctx.db);
 
