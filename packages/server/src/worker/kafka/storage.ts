@@ -10,8 +10,8 @@ import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 export default async function createStorageWorker() {
   const kafka = new Kafka({
     logLevel: logLevel.INFO,
-    brokers: ["localhost:9092"],
-    clientId: "resource",
+    brokers: process.env.KAFKA_BROKERS?.split(",") ?? [],
+    clientId: process.env.KAFKA_CLIENT_ID,
   });
 
   const workerId = "worker-1";

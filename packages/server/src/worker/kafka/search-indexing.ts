@@ -20,8 +20,8 @@ import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 export default async function createIndexingWorker() {
   const kafka = new Kafka({
     logLevel: logLevel.INFO,
-    brokers: ["localhost:9092"],
-    clientId: "resource-indexing",
+    brokers: process.env.KAFKA_BROKERS?.split(",") ?? [],
+    clientId: process.env.KAFKA_CLIENT_ID,
   });
 
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
