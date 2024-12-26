@@ -1,6 +1,4 @@
 import * as dateFns from "date-fns";
-import * as dateTzs from "@date-fns/tz";
-
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
