@@ -3,6 +3,7 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
+import createIndexingWorker from "../../worker/kafka/search-indexing.js";
 import createStorageWorker from "../../worker/kafka/storage.js";
 import createWorker from "../../worker/v1.js";
 
@@ -62,23 +63,40 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   await dbmigrate.up();
 };
 
-const kafkaWorker: Parameters<Command["action"]>[0] = async () => {
+const kafkaStorage: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
     worker: await createStorageWorker(),
   };
 };
 
+const kafkaIndexing: Parameters<Command["action"]>[0] = async () => {
+  runningServices = {
+    worker: await createIndexingWorker(),
+  };
+};
+
+function kafkaCommands(command: Command) {
+  command
+    .command("storage")
+    .description("Storage kafka worker.")
+    .action(kafkaStorage);
+
+  command
+    .command("indexing")
+    .description("Indexing kafka worker.")
+    .action(kafkaIndexing);
+}
+
 export function runCommands(command: Command) {
+  kafkaCommands(command.command("kafka-worker"));
+
   command
     .command("server")
     .option("-p, --port <number>", "port to run on.", "3000")
     .description("Run the server.")
     .action(server);
+
   command.command("worker").description("Run a worker.").action(worker);
-  command
-    .command("kafka-worker")
-    .description("Run a kafka worker.")
-    .action(kafkaWorker);
 
   command
     .command("both")

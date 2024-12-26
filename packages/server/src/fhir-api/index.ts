@@ -177,7 +177,7 @@ export function createClient(): {
   });
 
   const remoteStorage = createRemoteStorage({
-    synchronousIndexing: (process.env.FHIR_STORAGE_ASYNC ?? "true") === "true",
+    synchronousIndexing: false, //(process.env.FHIR_STORAGE_ASYNC ?? "true") === "true",
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
