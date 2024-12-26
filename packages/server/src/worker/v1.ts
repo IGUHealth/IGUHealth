@@ -1,5 +1,8 @@
 // Backend Processes used for subscriptions and cron jobs.
+
+import * as dateTzs from "@date-fns/tz";
 import { randomUUID } from "crypto";
+import * as dateFns from "date-fns";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -54,7 +57,6 @@ import {
 } from "./data/locks.js";
 import {
   IGUHealthWorkerCTX,
-  getVersionSequence,
   staticWorkerServices,
   tenantWorkerContext,
   workerTokenClaims,
@@ -78,6 +80,18 @@ if (process.env.SENTRY_WORKER_DSN)
       process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
     ),
   });
+
+function getLatestTimestamp(
+  resources: Resource<FHIR_VERSION, AllResourceTypes>[],
+): Date {
+  const result = dateFns.max(
+    resources
+      .map((resource) => resource.meta?.lastUpdated)
+      .filter((date) => date !== undefined)
+      .map((date) => dateFns.parseISO(date)),
+  );
+  return result;
+}
 
 async function handleSubscriptionPayload(
   ctx: IGUHealthWorkerCTX,
@@ -336,10 +350,17 @@ async function processSubscription(
       );
     }
 
-    const latestVersionIdForSub = parseInt(lock.value?.toString() ?? "");
-    if (isNaN(latestVersionIdForSub) || latestVersionIdForSub < 0) {
-      throw new OperationError(
-        outcomeError("invalid", `Subscription version sequence is invalid.`),
+    const latestDateStampForSub: string = lock.value?.toString() ?? "";
+
+    let parsedDate: Date | dateTzs.TZDate | undefined = FORMAT.map((f) =>
+      dateFns.parse(latestDateStampForSub, f, new dateTzs.TZDate()),
+    ).find((f) => dateFns.isValid(f));
+
+    if (parsedDate === undefined) {
+      parsedDate = dateFns.parse(
+        subscription.meta?.lastUpdated as string,
+        MILLISECOND_FORMAT,
+        new dateTzs.TZDate(),
       );
     }
 
@@ -349,8 +370,8 @@ async function processSubscription(
       case "system": {
         historyPoll = await ctx.client.history_system({}, fhirVersion, [
           {
-            name: "_since-version",
-            value: [latestVersionIdForSub],
+            name: "_since",
+            value: [dateFns.format(parsedDate, SECOND_FORMAT)],
           },
         ]);
         break;
@@ -362,16 +383,28 @@ async function processSubscription(
           request.resource,
           [
             {
-              name: "_since-version",
-              value: [latestVersionIdForSub],
+              name: "_since",
+              value: [dateFns.format(parsedDate, SECOND_FORMAT)],
             },
           ],
         );
         break;
       }
     }
-    // Reverse mutates the array in place.
-    historyPoll.reverse();
+
+    // Because precision is not too the millisecond perform additional filter here.
+    historyPoll = historyPoll
+      .filter((r) =>
+        dateFns.isAfter(
+          dateFns.parse(
+            r.resource?.meta?.lastUpdated as string,
+            MILLISECOND_FORMAT,
+            new dateTzs.TZDate(),
+          ),
+          parsedDate,
+        ),
+      )
+      .reverse();
 
     const resourceTypes = deriveResourceTypeFilter(request);
     // Remove _type as using on derived resourceTypeFilter
@@ -444,12 +477,22 @@ async function processSubscription(
           payload,
         );
       }
+
       await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: await getVersionSequence(
-          historyPoll[historyPoll.length - 1].resource as Resource<
-            R4,
-            AllResourceTypes
-          >,
+        value: JSON.stringify(
+          dateFns.format(
+            dateFns.max([
+              parsedDate,
+              getLatestTimestamp([
+                historyPoll[historyPoll.length - 1].resource as Resource<
+                  R4,
+                  AllResourceTypes
+                >,
+              ]),
+              1,
+            ]),
+            MILLISECOND_FORMAT,
+          ),
         ),
       });
     }
@@ -487,6 +530,10 @@ async function processSubscription(
   }
 }
 
+const MILLISECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+const SECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+const FORMAT = [SECOND_FORMAT, MILLISECOND_FORMAT];
+
 async function createWorker(
   workerID = randomUUID(),
   fhirVersion: FHIR_VERSION = R4,
@@ -495,7 +542,7 @@ async function createWorker(
   const services = staticWorkerServices(workerID);
 
   let isRunning = true;
-  const tenantOffsets: Record<TenantId, number | undefined> = {};
+  const tenantOffsets: Record<TenantId, Date | null | undefined> = {};
   const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
@@ -512,13 +559,17 @@ async function createWorker(
           tenantClaims,
         );
 
+        const dateOffsetString: string = tenantOffsets[tenant]
+          ? dateFns.format(tenantOffsets[tenant], SECOND_FORMAT)
+          : dateFns.format(dateFns.fromUnixTime(0), SECOND_FORMAT);
+
         const activeSubscriptions = (
           await ctx.client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
             { name: "_count", value: [totalSubsProcessAtATime] },
             {
-              name: "_iguhealth-version-seq",
-              value: [`gt${tenantOffsets[tenant] ?? -1}`],
+              name: "_lastUpdated",
+              value: [`gt${dateOffsetString}`],
             },
           ])
         ).resources;
@@ -527,16 +578,8 @@ async function createWorker(
           // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
           // Set back to zero to loop over all active subscriptions again.
           activeSubscriptions.length < totalSubsProcessAtATime
-            ? -1
-            : Math.max(
-                ...activeSubscriptions.map(
-                  (sub) =>
-                    sub.meta?.extension?.find(
-                      (ext) =>
-                        ext.url === "https://iguhealth.app/version-sequence",
-                    )?.valueInteger as number,
-                ),
-              );
+            ? dateFns.fromUnixTime(0)
+            : getLatestTimestamp(activeSubscriptions);
 
         await ensureLocksCreated(
           ctx.db,
@@ -545,7 +588,7 @@ async function createWorker(
             type: "old_subscription",
             fhir_version: fhirVersion,
             tenant: ctx.tenant,
-            value: sub.meta?.versionId as string,
+            value: JSON.stringify(sub.meta?.lastUpdated),
           })),
         );
 

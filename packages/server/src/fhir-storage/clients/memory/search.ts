@@ -1,6 +1,3 @@
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween.js";
-
 import { uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -17,8 +14,6 @@ import dataConversion, {
 } from "../../utilities/search/dataConversion.js";
 import { SearchParameterResource } from "../../utilities/search/parameters.js";
 import fitsCriteria from "./search/fitsCriteria.js";
-
-dayjs.extend(isBetween);
 
 interface MemorySearchCTX {
   resolveCanonical: IGUHealthServerCTX["resolveCanonical"];

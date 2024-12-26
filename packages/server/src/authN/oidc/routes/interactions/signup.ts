@@ -69,7 +69,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,
-        fhir_user_versionid: parseInt(membership.meta?.versionId ?? ""),
+        fhir_user_versionid: membership.meta?.versionId,
       },
     );
 

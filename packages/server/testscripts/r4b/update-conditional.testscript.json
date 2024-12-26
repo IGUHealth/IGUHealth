@@ -7,9 +7,20 @@
     {
       "id": "patient-chalmers",
       "resourceType": "Patient",
-      "name": [{ "family": "Chalmers", "given": ["Peter"] }],
+      "name": [
+        {
+          "family": "Chalmers",
+          "given": [
+            "Peter"
+          ]
+        }
+      ],
       "meta": {
-        "tag": [{ "code": "update-conditional-test" }]
+        "tag": [
+          {
+            "code": "update-conditional-test"
+          }
+        ]
       }
     }
   ],
@@ -83,7 +94,7 @@
         {
           "assert": {
             "expression": "Patient.meta.versionId",
-            "operator": "greaterThan",
+            "operator": "notEquals",
             "compareToSourceId": "create-response",
             "compareToSourceExpression": "Patient.meta.versionId"
           }

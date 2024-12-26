@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { endOfDay, formatISO, parseISO, startOfDay } from "date-fns";
 
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -260,8 +260,8 @@ async function toDateRange(
       const v: date = value.getValue() as date;
       return [
         {
-          start: dayjs(v, "YYYY-MM-DD").toISOString(),
-          end: dayjs(v, "YYYY-MM-DD").toISOString(),
+          start: formatISO(startOfDay(parseISO(v))),
+          end: formatISO(endOfDay(parseISO(v))),
         },
       ];
     }

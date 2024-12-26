@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import * as dateFns from "date-fns";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -26,13 +26,13 @@ import { deriveLimit } from "../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../utilities/sql.js";
 
-const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
+const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
   parameters: ParsedParameter<string | number>[],
 ): s.resources.Whereable {
   const sqlParams: s.resources.Whereable = {};
   const _since = parameters.find((p) => p.name === "_since");
-  const _since_versionId = parameters.find((p) => p.name === "_since-version");
+
 
   const invalidParameters = parameters.filter(
     (p) => validHistoryParameters.indexOf(p.name) === -1,
@@ -48,23 +48,16 @@ function processHistoryParameters(
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    const value = dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz");
-    if (!value.isValid()) {
+    const value =   dateFns.parseISO(
+        _since.value[0],
+      );
+
+    if (!dateFns.isValid(value)) {
       throw new OperationError(
         outcomeError("invalid", "_since must be a valid date time."),
       );
     }
-    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(value.toDate())}`;
-  }
-
-  if (_since_versionId?.value[0]) {
-    const value = parseInt(_since_versionId.value[0].toString());
-    if (isNaN(value)) {
-      throw new OperationError(
-        outcomeError("invalid", "_since-version must be a number."),
-      );
-    }
-    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(value)}`;
+    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(value)}`;
   }
 
   return sqlParams;
@@ -124,7 +117,7 @@ async function getHistory<
     tenant: ctx.tenant,
     ...filters,
     ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
+  }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
 
   const history = await historySQL.run(ctx.db);
 
@@ -223,7 +216,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">
           fhir_version: toDBFHIRVersion(fhirVersion),
         },
         {
-          order: { by: "version_id", direction: "DESC" },
+          order: { by: "created_at", direction: "DESC" },
           columns: ["resource"],
         },
       )

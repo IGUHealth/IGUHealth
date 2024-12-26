@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import * as dateFns from "date-fns";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -69,12 +69,13 @@ export default function fitsCriteria<T extends SEARCH_TYPE>(
       const range = data as ADataConversion<"date">;
 
       return parameters.some((param) => {
-        return dayjs(param).isBetween(
-          range.start,
-          dayjs(range.end),
-          null,
-          "[]",
-        );
+        const date = dateFns.parseISO(param.toString());
+        const res = dateFns.isWithinInterval(date, {
+          start: dateFns.parseISO(range.start),
+          end: dateFns.parseISO(range.end),
+        });
+
+        return res;
       });
     }
 

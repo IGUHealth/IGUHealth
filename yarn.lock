@@ -9362,6 +9362,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@date-fns/tz@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@date-fns/tz@npm:1.2.0"
+  checksum: 10/a9c2d32f98a5a5c655a7d3843046a5a36779b2ef0db803c608291976e6254e594a085777bf738379f50c7e9fc2ffebbf8bb836e9e9759a5ef2b703f91bb785de
+  languageName: node
+  linkType: hard
+
 "@dependents/detective-less@npm:^4.1.0":
   version: 4.1.0
   resolution: "@dependents/detective-less@npm:4.1.0"
@@ -11259,6 +11266,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.25.4"
     "@babel/preset-typescript": "npm:^7.24.7"
     "@dagrejs/graphlib": "npm:^2.2.4"
+    "@date-fns/tz": "npm:^1.2.0"
     "@iguhealth/access-control": "workspace:^"
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
@@ -11313,7 +11321,7 @@ __metadata:
     copyfiles: "npm:^2.4.1"
     cssnano: "npm:^7.0.2"
     csv: "npm:^6.3.11"
-    dayjs: "npm:^1.11.13"
+    date-fns: "npm:^4.1.0"
     db-migrate: "npm:1.0.0-beta.27"
     db-migrate-pg: "npm:^1.5.2"
     dotenv: "npm:^16.4.5"
@@ -24537,6 +24545,13 @@ __metadata:
     debug: "npm:3.1.0"
     dogapi: "npm:2.8.4"
   checksum: 10/c22ad483fe072cf288ec27aa94550b354d209c626aeebadb4ef5e02875a8d65aea5184d256b5a040f2a01ff3a447e40423e9b12d89ea4af2aadc23bba7ea8189
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10/d5f6e9de5bbc52310f786099e18609289ed5e30af60a71e0646784c8185ddd1d0eebcf7c96b7faaaefc4a8366f3a3a4244d099b6d0866ee2bec80d1361e64342
   languageName: node
   linkType: hard
 

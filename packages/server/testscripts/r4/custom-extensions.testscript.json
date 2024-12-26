@@ -83,14 +83,6 @@
         {
           "assert": {
             "label": "Confirm expression extensions",
-            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/version-sequence').value",
-            "operator": "greaterThan",
-            "value": "0"
-          }
-        },
-        {
-          "assert": {
-            "label": "Confirm expression extensions",
             "expression": "Patient.meta.extension.where(url='https://iguhealth.app/author').value.reference",
             "operator": "contains",
             "value": "ClientApplication"

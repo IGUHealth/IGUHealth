@@ -8,15 +8,30 @@
       "id": "patient",
       "resourceType": "Patient",
       "meta": {
-        "tag": [{ "code": "update-test" }]
+        "tag": [
+          {
+            "code": "update-test"
+          }
+        ]
       },
-      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+      "name": [
+        {
+          "family": "Chalmers",
+          "given": [
+            "Peter"
+          ]
+        }
+      ]
     },
     {
       "id": "encounter",
       "resourceType": "Encounter",
       "meta": {
-        "tag": [{ "code": "update-test" }]
+        "tag": [
+          {
+            "code": "update-test"
+          }
+        ]
       },
       "class": {
         "code": "123"
@@ -134,7 +149,7 @@
             "expression": "Encounter.meta.versionId",
             "compareToSourceId": "encounter-response",
             "compareToSourceExpression": "Encounter.meta.versionId",
-            "operator": "greaterThan"
+            "operator": "notEquals"
           }
         }
       ]

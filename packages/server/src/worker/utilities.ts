@@ -2,8 +2,7 @@ import * as s from "zapatos/schema";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
 import { id } from "@iguhealth/fhir-types/r4/types";
-import { AllResourceTypes, R4, Resource } from "@iguhealth/fhir-types/versions";
-import * as fhirpath from "@iguhealth/fhirpath";
+import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -121,26 +120,4 @@ export function tenantWorkerContext(
       payload: claims,
     },
   };
-}
-
-export async function getVersionSequence(
-  resource: Resource<R4, AllResourceTypes>,
-): Promise<number> {
-  const evaluation = (
-    await fhirpath.evaluate(
-      "$this.meta.extension.where(url=%sequenceUrl).value",
-      resource,
-      {
-        variables: {
-          sequenceUrl: "https://iguhealth.app/version-sequence",
-        },
-      },
-    )
-  )[0];
-
-  if (typeof evaluation !== "number") {
-    throw new Error("No version sequence found.");
-  }
-
-  return evaluation;
 }
