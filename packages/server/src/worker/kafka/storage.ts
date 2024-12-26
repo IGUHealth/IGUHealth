@@ -34,7 +34,7 @@ export default async function createStorageWorker() {
         );
 
         await store.insert({ ...services, tenant: value.tenant as TenantId }, [
-          associateVersionIdFromKafkaMessage(message, value),
+          associateVersionIdFromKafkaMessage(partition, message, value),
         ]);
       }
 

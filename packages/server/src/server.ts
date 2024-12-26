@@ -55,7 +55,7 @@ import {
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
 import { createPGPool } from "./fhir-storage/pg.js";
-import { KafkaStore } from "./fhir-storage/resource-stores/kafka.js";
+import { KafkaWrapperStore } from "./fhir-storage/resource-stores/kafka.js";
 import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
 import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
@@ -197,7 +197,7 @@ export default async function createServer(): Promise<
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
-    store: new KafkaStore(new PostgresStore(), producer),
+    store: new KafkaWrapperStore(new PostgresStore(), producer),
     search: new PostgresSearchEngine(),
     logger,
     lock: new RedisLock(redis),

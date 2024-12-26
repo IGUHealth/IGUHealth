@@ -43,6 +43,7 @@ export default async function createIndexingWorker() {
     eachMessage: async ({ topic, partition, message }) => {
       if (message.value) {
         const value = associateVersionIdFromKafkaMessage(
+          partition,
           message,
           JSON.parse(message.value.toString()),
         );

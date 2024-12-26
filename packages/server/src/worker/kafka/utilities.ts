@@ -24,12 +24,15 @@ export function associateResourceVersionId<
  * @param message Kafka Message
  * @returns version_id
  */
-export function deriveKafkaVersionId(message: KafkaMessage): id {
+export function deriveKafkaVersionId(
+  partition: number,
+  message: KafkaMessage,
+): id {
   if (!message.offset) {
     throw new Error("Kafka message does not have an offset.");
   }
 
-  return `kafka-${message.offset}` as id;
+  return `kafka-${partition}-${message.offset}` as id;
 }
 
 /**
@@ -39,10 +42,11 @@ export function deriveKafkaVersionId(message: KafkaMessage): id {
  * @returns insertion
  */
 export function associateVersionIdFromKafkaMessage(
+  partition: number,
   message: KafkaMessage,
   mutation: s.resources.Insertable,
 ): s.resources.Insertable {
-  const versionId = deriveKafkaVersionId(message);
+  const versionId = deriveKafkaVersionId(partition, message);
   let returnVal = { ...mutation, version_id: versionId };
   if (mutation.resource) {
     const resource: Resource<FHIR_VERSION, AllResourceTypes> =
