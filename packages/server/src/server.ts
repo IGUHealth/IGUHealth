@@ -56,7 +56,7 @@ import {
 } from "./fhir-http/index.js";
 import { createPGPool } from "./fhir-storage/pg.js";
 import createResourceStore from "./fhir-storage/resource-stores/index.js";
-import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
+import { createSearchStore } from "./fhir-storage/search-stores/index.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";
@@ -197,7 +197,7 @@ export default async function createServer(): Promise<
           }
         : undefined,
     }),
-    search: new PostgresSearchEngine(),
+    search: await createSearchStore({ type: "postgres" }),
     logger,
     lock: new RedisLock(redis),
     cache: new RedisCache(redis),

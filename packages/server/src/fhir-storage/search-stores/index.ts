@@ -10,7 +10,7 @@ interface PostgresSearchEngineConfig {
 
 export type SearchEngineConfig = PostgresSearchEngineConfig;
 
-export async function createStore<CTX extends IGUHealthServerCTX>(
+export async function createSearchStore<CTX extends IGUHealthServerCTX>(
   config: SearchEngineConfig,
 ): Promise<SearchEngine<CTX>> {
   switch (config.type) {

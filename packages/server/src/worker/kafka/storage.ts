@@ -3,7 +3,7 @@ import * as s from "zapatos/schema";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
+import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { staticWorkerServices } from "../utilities.js";
 import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
@@ -18,7 +18,7 @@ export default async function createStorageWorker() {
   const topic = "resources";
   const consumer = kafka.consumer({ groupId: "resource-storage" });
 
-  const store = new PostgresStore();
+  const store = await createResourceStore({ type: "postgres" });
   const services = staticWorkerServices(workerId);
 
   await consumer.connect();

@@ -12,8 +12,8 @@ import { TenantId } from "@iguhealth/jwt";
 import { createClient, createLogger } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 import { createPGPool } from "../../fhir-storage/pg.js";
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
+import createResourceStore from "../../fhir-storage/resource-stores/index.js";
+import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
@@ -27,8 +27,8 @@ export default async function createIndexingWorker() {
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
-    store: new PostgresStore(),
-    search: new PostgresSearchEngine(),
+    store: await createResourceStore({ type: "postgres" }),
+    search: await createSearchStore({ type: "postgres" }),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
     ...createClient(),
