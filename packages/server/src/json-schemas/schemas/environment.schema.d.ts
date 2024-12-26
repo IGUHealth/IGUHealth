@@ -43,6 +43,18 @@ export interface IGUHealthEnvironment {
    */
   FHIR_STORAGE_ASYNC?: "true" | "false";
   /**
+   * Kafka host
+   */
+  KAFKA_HOST?: string;
+  /**
+   * Kafka brokers
+   */
+  KAFKA_BROKERS?: string;
+  /**
+   * Kafka client id
+   */
+  KAFKA_CLIENT_ID?: string;
+  /**
    * Redis host
    */
   REDIS_HOST: string;

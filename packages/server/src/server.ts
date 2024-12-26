@@ -2,7 +2,7 @@ import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
 import * as Sentry from "@sentry/node";
-import { Kafka, logLevel } from "kafkajs";
+import { logLevel } from "kafkajs";
 import Koa from "koa";
 import koaCompress from "koa-compress";
 import helmet from "koa-helmet";
@@ -55,8 +55,7 @@ import {
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
 import { createPGPool } from "./fhir-storage/pg.js";
-import { KafkaWrapperStore } from "./fhir-storage/resource-stores/kafka.js";
-import { PostgresStore } from "./fhir-storage/resource-stores/postgres.js";
+import createResourceStore from "./fhir-storage/resource-stores/index.js";
 import { PostgresSearchEngine } from "./fhir-storage/search-stores/postgres/index.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
@@ -185,19 +184,19 @@ export default async function createServer(): Promise<
   const redis = getRedisClient();
   const logger = createLogger();
 
-  const kafka = new Kafka({
-    logLevel: logLevel.INFO,
-    brokers: ["localhost:9092"],
-    clientId: "server",
-  });
-
-  const producer = kafka.producer();
-  await producer.connect();
-
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
-    store: new KafkaWrapperStore(new PostgresStore(), producer),
+    store: await createResourceStore({
+      type: "postgres",
+      kafka: process.env.FHIR_STORAGE_ASYNC
+        ? {
+            logLevel: logLevel.INFO,
+            brokers: process.env.KAFKA_BROKERS?.split(",") ?? [],
+            clientId: process.env.KAFKA_CLIENT_ID,
+          }
+        : undefined,
+    }),
     search: new PostgresSearchEngine(),
     logger,
     lock: new RedisLock(redis),
