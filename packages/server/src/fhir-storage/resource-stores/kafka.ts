@@ -45,18 +45,19 @@ export class KafkaWrapperStore<CTX> implements ResourceStore<CTX> {
   }
   async insert<Version extends FHIR_VERSION>(
     ctx: CTX,
-    data: resources.Insertable[],
+    entries: resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     await this._producer.send({
       topic: "resources",
-      messages: data.map((d) => ({
-        key: (d.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
-          .id,
-        value: JSON.stringify(d),
+      messages: entries.map((entry) => ({
+        key: (
+          entry.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>
+        ).id,
+        value: JSON.stringify(entry),
       })),
     });
 
-    return data.map(
+    return entries.map(
       (d) => d.resource as unknown as Resource<Version, AllResourceTypes>,
     );
   }

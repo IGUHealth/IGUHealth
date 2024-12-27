@@ -1,0 +1,3 @@
+ALTER TABLE resources
+ALTER COLUMN version_id
+DROP DEFAULT;
