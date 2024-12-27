@@ -48,14 +48,36 @@ export default async function createIndexingWorker() {
           JSON.parse(message.value.toString()),
         );
 
-        await iguhealthServices.search.index(
-          asRoot({
-            ...iguhealthServices,
-            tenant: value.tenant as TenantId,
-          }),
-          value.fhir_version === "r4" ? R4 : R4B,
-          value.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>,
-        );
+        if (value.deleted === true) {
+          const resource = value.resource as unknown as Resource<
+            FHIR_VERSION,
+            AllResourceTypes
+          >;
+          if (!resource.id) {
+            throw new Error("Resource ID is required for DELETE operation");
+          }
+          await iguhealthServices.search.removeIndex(
+            asRoot({
+              ...iguhealthServices,
+              tenant: value.tenant as TenantId,
+            }),
+            value.fhir_version === "r4" ? R4 : R4B,
+            resource.id,
+            resource.resourceType,
+          );
+        } else {
+          await iguhealthServices.search.index(
+            asRoot({
+              ...iguhealthServices,
+              tenant: value.tenant as TenantId,
+            }),
+            value.fhir_version === "r4" ? R4 : R4B,
+            value.resource as unknown as Resource<
+              FHIR_VERSION,
+              AllResourceTypes
+            >,
+          );
+        }
       }
 
       const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
