@@ -1,10 +1,9 @@
 import { Kafka, logLevel } from "kafkajs";
+import * as s from "zapatos/schema";
 
 import {
   AllResourceTypes,
   FHIR_VERSION,
-  R4,
-  R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
@@ -14,6 +13,7 @@ import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 import { createPGPool } from "../../fhir-storage/pg.js";
 import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
+import { toFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
@@ -61,7 +61,7 @@ export default async function createIndexingWorker() {
               ...iguhealthServices,
               tenant: value.tenant as TenantId,
             }),
-            value.fhir_version === "r4" ? R4 : R4B,
+            toFHIRVersion(value.fhir_version as s.fhir_version),
             resource.id,
             resource.resourceType,
           );
@@ -71,7 +71,7 @@ export default async function createIndexingWorker() {
               ...iguhealthServices,
               tenant: value.tenant as TenantId,
             }),
-            value.fhir_version === "r4" ? R4 : R4B,
+            toFHIRVersion(value.fhir_version as s.fhir_version),
             value.resource as unknown as Resource<
               FHIR_VERSION,
               AllResourceTypes

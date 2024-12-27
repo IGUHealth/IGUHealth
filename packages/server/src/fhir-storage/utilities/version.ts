@@ -21,3 +21,22 @@ export function toDBFHIRVersion(fhirVersion: FHIR_VERSION): s.fhir_version {
     }
   }
 }
+
+export function toFHIRVersion(fhirVersion: s.fhir_version): FHIR_VERSION {
+  switch (fhirVersion) {
+    case "r4": {
+      return R4;
+    }
+    case "r4b": {
+      return R4B;
+    }
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `FHIR version ${fhirVersion} is not supported.`,
+        ),
+      );
+    }
+  }
+}
