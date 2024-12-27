@@ -49969,7 +49969,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id: string;
     }
@@ -50037,7 +50037,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id: string;
     }
@@ -50105,7 +50105,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
@@ -50161,7 +50161,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
     }
@@ -50217,7 +50217,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }

@@ -22,7 +22,7 @@ import { ResourceStore } from "./interface.js";
  * KafkaStore is a ResourceStore that uses Kafka as a backend for insertions.
  * It wraps a resourcestore for performing operations like read and history.
  */
-export class KafkaStore<CTX> implements ResourceStore<CTX> {
+export class KafkaWrapperStore<CTX> implements ResourceStore<CTX> {
   private readonly _store: ResourceStore<CTX>;
   private readonly _producer: Producer;
   constructor(store: ResourceStore<CTX>, producer: Producer) {

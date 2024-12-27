@@ -1,21 +1,25 @@
 import { Kafka, logLevel } from "kafkajs";
+import * as s from "zapatos/schema";
 
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
+import { TenantId } from "@iguhealth/jwt";
+
+import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { staticWorkerServices } from "../utilities.js";
+import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
 export default async function createStorageWorker() {
   const kafka = new Kafka({
     logLevel: logLevel.INFO,
-    brokers: ["localhost:9092"],
-    clientId: "resource",
+    brokers: process.env.KAFKA_BROKERS?.split(",") ?? [],
+    clientId: process.env.KAFKA_CLIENT_ID,
   });
 
-  // const workerId = "worker-1";
+  const workerId = "worker-1";
   const topic = "resources";
   const consumer = kafka.consumer({ groupId: "resource-storage" });
 
-  //   const store = new PostgresStore();
-  //   const services = staticWorkerServices(workerId);
+  const store = await createResourceStore({ type: "postgres" });
+  const services = staticWorkerServices(workerId);
 
   await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
@@ -25,13 +29,17 @@ export default async function createStorageWorker() {
     // },
     eachMessage: async ({ topic, partition, message }) => {
       if (message.value) {
-        const value = JSON.parse(message.value.toString());
-        console.log("INSERTING");
-        // await store.insert({ ...services, tenant: value.tenant }, [value]);
+        const value: s.resources.Insertable = JSON.parse(
+          message.value.toString(),
+        );
+
+        await store.insert({ ...services, tenant: value.tenant as TenantId }, [
+          associateVersionIdFromKafkaMessage(partition, message, value),
+        ]);
       }
 
       const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-      console.log(`- ${prefix} ${message.key}#${message.value}`);
+      console.log(`- ${prefix} ${message.key}`);
     },
   });
 

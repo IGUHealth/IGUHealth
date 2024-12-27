@@ -1,5 +1,4 @@
 import { Kafka, logLevel } from "kafkajs";
-import * as s from "zapatos/schema";
 
 import {
   AllResourceTypes,
@@ -13,22 +12,23 @@ import { TenantId } from "@iguhealth/jwt";
 import { createClient, createLogger } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 import { createPGPool } from "../../fhir-storage/pg.js";
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
-import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
+import createResourceStore from "../../fhir-storage/resource-stores/index.js";
+import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
+import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
-export default async function createWorker() {
+export default async function createIndexingWorker() {
   const kafka = new Kafka({
     logLevel: logLevel.INFO,
-    brokers: [`http://localhost:9092`],
-    clientId: "resource",
+    brokers: process.env.KAFKA_BROKERS?.split(",") ?? [],
+    clientId: process.env.KAFKA_CLIENT_ID,
   });
 
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     db: createPGPool(),
-    store: new PostgresStore(),
-    search: new PostgresSearchEngine(),
+    store: await createResourceStore({ type: "postgres" }),
+    search: await createSearchStore({ type: "postgres" }),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
     ...createClient(),
@@ -37,34 +37,34 @@ export default async function createWorker() {
   const topic = "resources";
   const consumer = kafka.consumer({ groupId: "resource-search-indexing" });
 
-  const run = async () => {
-    await consumer.connect();
-    await consumer.subscribe({ topic, fromBeginning: true });
-    await consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        if (message.value) {
-          const value: s.resources.Insertable = JSON.parse(
-            message.value.toString(),
-          );
+  await consumer.connect();
+  await consumer.subscribe({ topic, fromBeginning: true });
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      if (message.value) {
+        const value = associateVersionIdFromKafkaMessage(
+          partition,
+          message,
+          JSON.parse(message.value.toString()),
+        );
 
-          await iguhealthServices.search.index(
-            asRoot({
-              ...iguhealthServices,
-              tenant: value.tenant as TenantId,
-            }),
-            value.fhir_version === "r4" ? R4 : R4B,
-            value.resource as unknown as Resource<
-              FHIR_VERSION,
-              AllResourceTypes
-            >,
-          );
-        }
+        await iguhealthServices.search.index(
+          asRoot({
+            ...iguhealthServices,
+            tenant: value.tenant as TenantId,
+          }),
+          value.fhir_version === "r4" ? R4 : R4B,
+          value.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>,
+        );
+      }
 
-        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-        console.log(`- ${prefix} ${message.key}#${message.value}`);
-      },
-    });
+      const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
+      console.log(`- ${prefix} ${message.key}`);
+    },
+  });
+
+  return async () => {
+    await consumer.disconnect();
+    process.exit(0);
   };
-
-  return run;
 }
