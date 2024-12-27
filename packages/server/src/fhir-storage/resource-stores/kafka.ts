@@ -49,7 +49,11 @@ export class KafkaWrapperStore<CTX> implements ResourceStore<CTX> {
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     await this._producer.send({
       topic: "resources",
-      messages: data.map((d) => ({ value: JSON.stringify(d) })),
+      messages: data.map((d) => ({
+        key: (d.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
+          .id,
+        value: JSON.stringify(d),
+      })),
     });
 
     return data.map(
