@@ -23,9 +23,6 @@ export default async function createStorageWorker() {
   await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
   await consumer.run({
-    // eachBatch: async ({ batch }) => {
-    //   console.log(batch)
-    // },
     eachMessage: async ({ topic, partition, message }) => {
       if (message.value) {
         const value: s.resources.Insertable = JSON.parse(
