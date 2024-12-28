@@ -49969,7 +49969,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id: string;
     }
@@ -50037,7 +50037,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id: string;
     }
@@ -50105,7 +50105,7 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
       version_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
@@ -50161,9 +50161,9 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
-      version_id: string | db.Parameter<string> | db.SQLFragment;
+      version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -50217,9 +50217,9 @@ declare module 'zapatos/schema' {
       /**
       * **resources.version_id**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `(gen_random_uuid())::text`
       */
-      version_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      version_id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'resources_pkey';
     export type Column = keyof Selectable;
