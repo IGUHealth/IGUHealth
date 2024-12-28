@@ -185,14 +185,14 @@ async function patchResource<
     }
 
     const res = await store.insert(ctx, [
-      {
+      version({
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
         request_method: "PATCH",
         author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
         author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: newResource as unknown as db.JSONObject,
-      },
+      }),
     ]);
 
     const patchedResource = res[0] as Resource<Version, AllResourceTypes>;
@@ -255,14 +255,14 @@ async function updateResource<
   }
 
   const res = await store.insert(ctx, [
-    {
+    version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "PUT",
       author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-    },
+    }),
   ]);
 
   const updatedResource = res[0] as Resource<Version, AllResourceTypes>;
@@ -293,7 +293,7 @@ async function deleteResource<
     );
 
   await store.insert(ctx, [
-    {
+    version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "DELETE",
@@ -301,7 +301,7 @@ async function deleteResource<
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
       deleted: true,
-    },
+    }),
   ]);
 }
 
