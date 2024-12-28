@@ -1,0 +1,1 @@
+ALTER TABLE resources ALTER COLUMN version_id SET DEFAULT gen_random_uuid()::text;

@@ -15,7 +15,6 @@ import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
 import { toFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
 export default async function createIndexingWorker() {
   const kafka = new Kafka({
@@ -42,10 +41,8 @@ export default async function createIndexingWorker() {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       if (message.value) {
-        const value = associateVersionIdFromKafkaMessage(
-          partition,
-          message,
-          JSON.parse(message.value.toString()),
+        const value: s.resources.Insertable = JSON.parse(
+          message.value.toString(),
         );
 
         if (value.deleted === true) {

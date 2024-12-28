@@ -5,7 +5,6 @@ import { TenantId } from "@iguhealth/jwt";
 
 import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { staticWorkerServices } from "../utilities.js";
-import { associateVersionIdFromKafkaMessage } from "./utilities.js";
 
 export default async function createStorageWorker() {
   const kafka = new Kafka({
@@ -24,9 +23,6 @@ export default async function createStorageWorker() {
   await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: true });
   await consumer.run({
-    // eachBatch: async ({ batch }) => {
-    //   console.log(batch)
-    // },
     eachMessage: async ({ topic, partition, message }) => {
       if (message.value) {
         const value: s.resources.Insertable = JSON.parse(
@@ -34,7 +30,7 @@ export default async function createStorageWorker() {
         );
 
         await store.insert({ ...services, tenant: value.tenant as TenantId }, [
-          associateVersionIdFromKafkaMessage(partition, message, value),
+          value,
         ]);
       }
 

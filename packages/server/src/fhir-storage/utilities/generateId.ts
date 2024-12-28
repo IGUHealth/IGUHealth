@@ -6,7 +6,7 @@ import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 // Can't use _ for compliance.
 const _generateId = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-",
-  22,
+  26,
 );
 
 export function generateId(): id {
