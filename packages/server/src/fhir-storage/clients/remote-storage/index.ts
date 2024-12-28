@@ -1,5 +1,6 @@
 import jsonpatch, { Operation } from "fast-json-patch";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/interface";
@@ -57,6 +58,22 @@ type StorageState = {
   transaction_entry_limit: number;
 };
 
+function version(
+  insertable: Omit<s.resources.Insertable, "version_id">,
+): s.resources.Insertable {
+  const versionId = generateId();
+  const resource = insertable.resource as unknown as Resource<
+    FHIR_VERSION,
+    AllResourceTypes
+  >;
+  insertable.resource = {
+    ...resource,
+    meta: { ...resource.meta, versionId },
+  } as unknown as db.JSONObject;
+
+  return { ...insertable, version_id: versionId };
+}
+
 async function createResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
@@ -71,14 +88,14 @@ async function createResource<
   resource.id = generateId();
 
   const res = await store.insert(ctx, [
-    {
+    version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "POST",
       author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-    },
+    }),
   ]);
 
   return res[0] as Resource<Version, AllResourceTypes>;

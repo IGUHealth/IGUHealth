@@ -2,8 +2,9 @@ import { customAlphabet } from "nanoid";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { TenantId } from "@iguhealth/jwt";
+
+import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 
 // https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
 // Do not allow uppercase characters.
