@@ -1,24 +1,30 @@
 import { FHIRRequest, FHIRResponse } from "../types/index.js";
 
-export type MiddlewareAsyncChain<State, CTX> = (
-  ctx: { state: State; ctx: CTX; request: FHIRRequest },
+export type MiddlewareAsyncChain<
+  State,
+  CTX,
+  Request = FHIRRequest,
+  Response = FHIRResponse,
+> = (
+  ctx: { state: State; ctx: CTX; request: Request },
   next: MiddlewareAsync<State, CTX>,
 ) => Promise<{
   ctx: CTX;
   state: State;
-  response?: FHIRResponse;
-  request: FHIRRequest;
+  response?: Response;
+  request: Request;
 }>;
 
-export type MiddlewareAsync<State, CTX> = (ctx: {
-  state: State;
+export type MiddlewareAsync<
+  State,
+  CTX,
+  Request = FHIRRequest,
+  Response = FHIRResponse,
+> = (ctx: { state: State; ctx: CTX; request: Request }) => Promise<{
   ctx: CTX;
-  request: FHIRRequest;
-}) => Promise<{
-  ctx: CTX;
   state: State;
-  response?: FHIRResponse;
-  request: FHIRRequest;
+  response?: Response;
+  request: Request;
 }>;
 
 export function createMiddlewareAsync<State, CTX>(
