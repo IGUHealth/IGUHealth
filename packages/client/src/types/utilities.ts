@@ -41,7 +41,6 @@ export type Request<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
   level extends keyof RequestLevel,
 > = {
-  key?: string;
   fhirVersion: Version;
   level: RequestLevel[level];
   http?: {
