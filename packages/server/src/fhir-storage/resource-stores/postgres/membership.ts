@@ -41,23 +41,6 @@ type MembershipMiddlewareChain<State, CTX> = MiddlewareAsyncChain<
   undefined
 >;
 
-async function gateCheckSingleOwner(
-  ctx: Pick<IGUHealthServerCTX, "db" | "tenant">,
-) {
-  const owners = await db
-    .select("users", { tenant: ctx.tenant, role: "owner" })
-    .run(ctx.db);
-
-  if (owners.length !== 1) {
-    throw new OperationError(
-      outcomeError(
-        "invariant",
-        "Must have a single owner associated to a tenant.",
-      ),
-    );
-  }
-}
-
 function setInTransactionMiddleware<
   State,
   CTX extends { db: db.Queryable },
@@ -138,8 +121,7 @@ function updateUserTableMiddleware<
 
     switch (context.request.request_method) {
       case "POST": {
-        const res = await next(context);
-        const membership = getMembershipResource(res.request);
+        const membership = getMembershipResource(context.request);
 
         if (membership.resourceType !== "Membership") {
           throw new OperationError(
@@ -159,7 +141,8 @@ function updateUserTableMiddleware<
             outcomeError("invariant", "Failed to create user."),
           );
         }
-        return res;
+
+        return next(context);
       }
       case "DELETE": {
         const membership = getMembershipResource(context.request);
@@ -177,7 +160,6 @@ function updateUserTableMiddleware<
         return next(context);
       }
       case "PUT": {
-        const res = await next(context);
         const membership = getMembershipResource(context.request);
 
         const existingUser = await db
@@ -203,6 +185,8 @@ function updateUserTableMiddleware<
               membershipToUser(membership),
             );
           }
+
+          return next(context);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           if (
@@ -223,8 +207,6 @@ function updateUserTableMiddleware<
             );
           }
         }
-
-        return res;
       }
       default: {
         throw new OperationError(
@@ -236,6 +218,23 @@ function updateUserTableMiddleware<
       }
     }
   };
+}
+
+async function gateCheckSingleOwner(
+  ctx: Pick<IGUHealthServerCTX, "db" | "tenant">,
+) {
+  const owners = await db
+    .select("users", { tenant: ctx.tenant, role: "owner" })
+    .run(ctx.db);
+
+  if (owners.length !== 1) {
+    throw new OperationError(
+      outcomeError(
+        "invariant",
+        "Must have a single owner associated to a tenant.",
+      ),
+    );
+  }
 }
 
 function verifySingleOwnerMiddleware<
