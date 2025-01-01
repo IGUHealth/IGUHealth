@@ -24,7 +24,7 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";
-import { PostgresStore } from "./resource-stores/postgres.js";
+import { PostgresStore } from "./resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
 
 const sds = loadArtifacts({

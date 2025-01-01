@@ -17,14 +17,16 @@ import {
   R4TypeHistoryRequest,
 } from "@iguhealth/client/types";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
-import { toDBFHIRVersion } from "../utilities/version.js";
-import { ResourceStore } from "./interface.js";
-import { createFHIRURL } from "../../fhir-api/constants.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { toDBFHIRVersion } from "../../utilities/version.js";
+import { ResourceStore } from "../interface.js";
+import { createFHIRURL } from "../../../fhir-api/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
-import { deriveLimit } from "../utilities/search/parameters.js";
+import { deriveLimit } from "../../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { paramsWithComma } from "../utilities/sql.js";
+import { paramsWithComma } from "../../utilities/sql.js";
+import createAuthMembershipMiddleware from "./membership.js";
+import { FHIRTransaction } from "../../transactions.js";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -32,7 +34,6 @@ function processHistoryParameters(
 ): s.resources.Whereable {
   const sqlParams: s.resources.Whereable = {};
   const _since = parameters.find((p) => p.name === "_since");
-
 
   const invalidParameters = parameters.filter(
     (p) => validHistoryParameters.indexOf(p.name) === -1,
@@ -48,9 +49,7 @@ function processHistoryParameters(
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    const value =   dateFns.parseISO(
-        _since.value[0],
-      );
+    const value = dateFns.parseISO(_since.value[0]);
 
     if (!dateFns.isValid(value)) {
       throw new OperationError(
@@ -150,8 +149,9 @@ async function getHistory<
   return resourceHistory;
 }
 
-export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">>
-  implements ResourceStore<CTX>
+export class PostgresStore<
+  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
+> implements ResourceStore<CTX>
 {
   async read<Version extends FHIR_VERSION>(
     ctx: CTX,
@@ -231,14 +231,36 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">
     ctx: CTX,
     data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
-    const result = await db
-      .insert("resources", data, { returning: ["resource"] })
-      .run(ctx.db);
+    const mem = createAuthMembershipMiddleware();
+    return FHIRTransaction(
+      ctx,
+      db.IsolationLevel.RepeatableRead,
+      async (ctx) => {
+        const result = await db
+          .insert("resources", data, { returning: ["resource"] })
+          .run(ctx.db);
 
-    return result.map((r) => r.resource) as unknown as Resource<
-      Version,
-      AllResourceTypes
-    >[];
+        // Handle user table membership updates.
+        await Promise.all(
+          data
+            .filter(
+              (d) =>
+                (
+                  d.resource as unknown as Resource<
+                    FHIR_VERSION,
+                    AllResourceTypes
+                  >
+                ).resourceType === "Membership",
+            )
+            .map((insert) => mem({ state: {}, ctx, request: insert })),
+        );
+
+        return result.map((r) => r.resource) as unknown as Resource<
+          Version,
+          AllResourceTypes
+        >[];
+      },
+    );
   }
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,

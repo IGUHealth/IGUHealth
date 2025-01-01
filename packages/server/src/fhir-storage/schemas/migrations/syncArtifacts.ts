@@ -13,7 +13,7 @@ import { getRedisClient } from "../../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
 import RedisLock from "../../../synchronization/redis.lock.js";
 import { createPGPool } from "../../pg.js";
-import { PostgresStore } from "../../resource-stores/postgres.js";
+import { PostgresStore } from "../../resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
 
 function createCheckSum(value: unknown): string {
