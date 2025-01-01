@@ -131,8 +131,6 @@ function createAuthMiddleware<
         context.request,
       );
 
-      console.log(response);
-
       return {
         ...context,
         response,
