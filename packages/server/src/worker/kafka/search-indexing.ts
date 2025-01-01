@@ -15,6 +15,7 @@ import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
 import { toFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
+import { ERROR_QUEUE, RESOURCE_QUEUE } from "./index.js";
 
 export default async function createIndexingWorker() {
   const kafka = new Kafka({
@@ -33,52 +34,56 @@ export default async function createIndexingWorker() {
     ...createClient(),
   };
 
-  const topic = "resources";
+  const producer = kafka.producer();
   const consumer = kafka.consumer({ groupId: "resource-search-indexing" });
 
   await consumer.connect();
-  await consumer.subscribe({ topic, fromBeginning: true });
+  await consumer.subscribe({ topic: RESOURCE_QUEUE, fromBeginning: true });
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      if (message.value) {
-        const value: s.resources.Insertable = JSON.parse(
-          message.value.toString(),
-        );
-
-        if (value.deleted === true) {
-          const resource = value.resource as unknown as Resource<
-            FHIR_VERSION,
-            AllResourceTypes
-          >;
-          if (!resource.id) {
-            throw new Error("Resource ID is required for DELETE operation");
-          }
-          await iguhealthServices.search.removeIndex(
-            asRoot({
-              ...iguhealthServices,
-              tenant: value.tenant as TenantId,
-            }),
-            toFHIRVersion(value.fhir_version as s.fhir_version),
-            resource.id,
-            resource.resourceType,
+      try {
+        if (message.value) {
+          const value: s.resources.Insertable = JSON.parse(
+            message.value.toString(),
           );
-        } else {
-          await iguhealthServices.search.index(
-            asRoot({
-              ...iguhealthServices,
-              tenant: value.tenant as TenantId,
-            }),
-            toFHIRVersion(value.fhir_version as s.fhir_version),
-            value.resource as unknown as Resource<
+
+          if (value.deleted === true) {
+            const resource = value.resource as unknown as Resource<
               FHIR_VERSION,
               AllResourceTypes
-            >,
-          );
+            >;
+            if (!resource.id) {
+              throw new Error("Resource ID is required for DELETE operation");
+            }
+            await iguhealthServices.search.removeIndex(
+              asRoot({
+                ...iguhealthServices,
+                tenant: value.tenant as TenantId,
+              }),
+              toFHIRVersion(value.fhir_version as s.fhir_version),
+              resource.id,
+              resource.resourceType,
+            );
+          } else {
+            await iguhealthServices.search.index(
+              asRoot({
+                ...iguhealthServices,
+                tenant: value.tenant as TenantId,
+              }),
+              toFHIRVersion(value.fhir_version as s.fhir_version),
+              value.resource as unknown as Resource<
+                FHIR_VERSION,
+                AllResourceTypes
+              >,
+            );
+          }
         }
+        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
+        console.log(`- ${prefix} ${message.key}`);
+      } catch (e) {
+        console.error(e);
+        producer.send({ topic: ERROR_QUEUE, messages: [message] });
       }
-
-      const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-      console.log(`- ${prefix} ${message.key}`);
     },
   });
 

@@ -37,9 +37,9 @@ import { createDeployOperation } from "../fhir-operation-executors/providers/loc
 import { IdentityProviderRegistrationInvoke } from "../fhir-operation-executors/providers/local/ops/identity_provider/registration-info.js";
 import createOperationExecutioner from "../fhir-operation-executors/providers/middleware.js";
 import {
-  AUTH_METHODS_ALLOWED,
-  AUTH_RESOURCETYPES,
-  createAuthStorageClient,
+  MEMBERSHIP_METHODS_ALLOWED,
+  MEMBERSHIP_RESOURCE_TYPES,
+  createMembershipClient,
 } from "../fhir-storage/clients/auth-storage/index.js";
 import {
   MemoryParameter,
@@ -56,7 +56,7 @@ import { IGUHealthServerCTX } from "./types.js";
 type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
 
 const R4_SPECIAL_TYPES: FHIRArtifactTypes = {
-  AUTH: AUTH_RESOURCETYPES.map((resourceType) => ({ resourceType })),
+  AUTH: MEMBERSHIP_RESOURCE_TYPES.map((resourceType) => ({ resourceType })),
   MEMORY: [
     { resourceType: "StructureDefinition" as AllResourceTypes },
     {
@@ -258,10 +258,10 @@ export function createClient(): {
         r4: {
           levelsSupported: ["type", "instance"],
           resourcesSupported: R4_SPECIAL_TYPES.AUTH.map((m) => m.resourceType),
-          interactionsSupported: AUTH_METHODS_ALLOWED,
+          interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
         },
       },
-      source: createAuthStorageClient(remoteStorage),
+      source: createMembershipClient(remoteStorage),
     },
     {
       filter: {

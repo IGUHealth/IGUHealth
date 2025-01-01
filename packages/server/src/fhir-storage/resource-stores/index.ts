@@ -5,7 +5,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { ResourceStore } from "./interface.js";
 import { KafkaWrapperStore } from "./kafka.js";
-import { PostgresStore } from "./postgres.js";
+import { PostgresStore } from "./postgres/index.js";
 
 interface KafkaStoreConfig {
   kafka?: KafkaConfig;

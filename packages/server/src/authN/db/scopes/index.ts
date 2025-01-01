@@ -14,8 +14,8 @@ export async function getApprovedScope(
 ): Promise<Scope[]> {
   const approvedScopes = await db
     .selectOne("authorization_scopes", {
-      tenant: tenant,
-      client_id: client_id,
+      tenant,
+      client_id,
       user_id,
     })
     .run(pg);

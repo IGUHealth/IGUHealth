@@ -23,7 +23,7 @@ import {
 } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 import { createPGPool } from "../../fhir-storage/pg.js";
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres.js";
+import { PostgresStore } from "../../fhir-storage/resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
 import { FHIRTransaction } from "../../fhir-storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";

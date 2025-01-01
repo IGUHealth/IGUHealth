@@ -55,7 +55,9 @@ export function createMiddlewareAsync<
       return response;
     } else {
       if (options.logging) console.time(`${context.key}:${first.name}`);
-      const response = await first(context, async (v) => v);
+      const response = await first(context, async (ctx) => {
+        return ctx;
+      });
       if (options.logging) console.timeEnd(`${context.key}:${first.name}`);
       return response;
     }
