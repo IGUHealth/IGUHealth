@@ -254,7 +254,6 @@ export default function createAuthMembershipMiddleware<
   CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
 >(): MiddlewareAsync<State, CTX, s.resources.Insertable, undefined> {
   return createMiddlewareAsync([
-    setInTransactionMiddleware(),
     setEmailVerified(),
     updateUserTableMiddleware(),
     verifySingleOwnerMiddleware(),
