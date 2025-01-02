@@ -105,7 +105,7 @@ jobs:
           CLIENT_ID: test-client
           CLIENT_SECRET: mysecret
         run: |
-          yarn workspace @iguhealth/server cli admin tenant create -i test-system -t team -e test@iguhealth.app -p testing
+          yarn workspace @iguhealth/server cli admin tenant create -i test-system -t unlimited -e test@iguhealth.app -p testing
           yarn workspace @iguhealth/server cli admin client-app create -t test-system -i $CLIENT_ID -s $CLIENT_SECRET
           yarn workspace @iguhealth/server iguhealth config add-tenant \
            --name my-tenant \
