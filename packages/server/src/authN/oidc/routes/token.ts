@@ -27,7 +27,6 @@ import {
   KoaExtensions,
   asRoot,
 } from "../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
 import * as users from "../../db/users/index.js";
@@ -360,63 +359,58 @@ export function tokenPost<
 
     switch (tokenParameters.grant_type) {
       case "refresh_token": {
-        const tokenBody = await FHIRTransaction(
-          ctx.state.iguhealth,
-          db.IsolationLevel.Serializable,
-          async (fhirContext) => {
-            const code = await codes.search(
-              fhirContext.db,
-              fhirContext.tenant,
-              {
-                type: "refresh_token",
-                code: tokenParameters.refresh_token,
-              },
-            );
-
-            if (code.length !== 1 || code[0].is_expired)
-              throw new OIDCError({
-                error: "invalid_grant",
-                error_description: "Invalid code",
-              });
-
-            if (!code[0].client_id) {
-              throw new OIDCError({
-                error: "invalid_request",
-                error_description: "Invalid refresh token.",
-              });
-            }
-
-            const clientApplication = verifyClient(
-              tokenParameters,
-              await findClient(ctx, code[0].client_id),
-            );
-
-            const user = await users.get(
-              fhirContext.db,
-              fhirContext.tenant,
-              code[0].user_id,
-            );
-            if (!user)
-              throw new OIDCError({
-                error: "invalid_grant",
-                error_description: "Invalid user",
-              });
-
-            // Removes the old refresh token and issues a new one in tokenResponse.
-            await codes.remove(fhirContext.db, fhirContext.tenant, {
-              id: code[0].id,
-            });
-
-            const launchParameters = getLaunchParameters(code[0]);
-
-            return createTokenResponse({
-              user,
-              ctx: await asRoot(fhirContext),
-              clientApplication,
-              launchParameters,
-            });
+        const code = await codes.search(
+          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.tenant,
+          {
+            type: "refresh_token",
+            code: tokenParameters.refresh_token,
           },
         );
+
+        if (code.length !== 1 || code[0].is_expired)
+          throw new OIDCError({
+            error: "invalid_grant",
+            error_description: "Invalid code",
+          });
+
+        if (!code[0].client_id) {
+          throw new OIDCError({
+            error: "invalid_request",
+            error_description: "Invalid refresh token.",
+          });
+        }
+
+        const clientApplication = verifyClient(
+          tokenParameters,
+          await findClient(ctx, code[0].client_id),
+        );
+
+        const user = await users.get(
+          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.tenant,
+          code[0].user_id,
+        );
+        if (!user)
+          throw new OIDCError({
+            error: "invalid_grant",
+            error_description: "Invalid user",
+          });
+
+        // Removes the old refresh token and issues a new one in tokenResponse.
+        await codes.remove(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
+          id: code[0].id,
+        });
+
+        const launchParameters = getLaunchParameters(code[0]);
+
+        const tokenBody = await createTokenResponse({
+          user,
+          ctx: asRoot(ctx.state.iguhealth),
+          clientApplication,
+          launchParameters,
+        });
+
         ctx.body = tokenBody;
         ctx.status = 200;
         ctx.set("pragma", "no-cache");
@@ -431,72 +425,66 @@ export function tokenPost<
           await findClient(ctx, tokenParameters.client_id),
         );
 
-        const tokenBody = await FHIRTransaction(
-          ctx.state.iguhealth,
-          db.IsolationLevel.Serializable,
-          async (fhirContext) => {
-            const code = await codes.search(
-              fhirContext.db,
-              fhirContext.tenant,
-              {
-                type: "oauth2_code_grant",
-                code: tokenParameters.code,
-              },
-            );
-
-            if (code.length !== 1 || code[0].is_expired)
-              throw new OIDCError({
-                error: "invalid_grant",
-                error_description: "Invalid code",
-              });
-
-            // Ensure the code is bound to the same client
-            if (code[0].client_id !== clientApplication?.id)
-              throw new OIDCError({
-                error: "invalid_client",
-                error_description: "Client mismatch",
-              });
-
-            if (!verifyCodeChallenge(code[0], tokenParameters.code_verifier)) {
-              throw new OIDCError({
-                error: "invalid_request",
-                error_description: "Invalid code verifier",
-              });
-            }
-
-            if (code[0].redirect_uri !== tokenParameters.redirect_uri) {
-              throw new OIDCError({
-                error: "invalid_request",
-                error_description: "Invalid redirect uri",
-              });
-            }
-
-            const user = await users.get(
-              fhirContext.db,
-              fhirContext.tenant,
-              code[0].user_id,
-            );
-
-            if (!user)
-              throw new OIDCError({
-                error: "invalid_grant",
-                error_description: "Invalid user",
-              });
-
-            await codes.remove(fhirContext.db, fhirContext.tenant, {
-              id: code[0].id,
-            });
-
-            const launchParameters = getLaunchParameters(code[0]);
-
-            return createTokenResponse({
-              user,
-              ctx: await asRoot(fhirContext),
-              clientApplication,
-              launchParameters,
-            });
+        const code = await codes.search(
+          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.tenant,
+          {
+            type: "oauth2_code_grant",
+            code: tokenParameters.code,
           },
         );
+
+        if (code.length !== 1 || code[0].is_expired)
+          throw new OIDCError({
+            error: "invalid_grant",
+            error_description: "Invalid code",
+          });
+
+        // Ensure the code is bound to the same client
+        if (code[0].client_id !== clientApplication?.id)
+          throw new OIDCError({
+            error: "invalid_client",
+            error_description: "Client mismatch",
+          });
+
+        if (!verifyCodeChallenge(code[0], tokenParameters.code_verifier)) {
+          throw new OIDCError({
+            error: "invalid_request",
+            error_description: "Invalid code verifier",
+          });
+        }
+
+        if (code[0].redirect_uri !== tokenParameters.redirect_uri) {
+          throw new OIDCError({
+            error: "invalid_request",
+            error_description: "Invalid redirect uri",
+          });
+        }
+
+        const user = await users.get(
+          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.tenant,
+          code[0].user_id,
+        );
+
+        if (!user)
+          throw new OIDCError({
+            error: "invalid_grant",
+            error_description: "Invalid user",
+          });
+
+        await codes.remove(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
+          id: code[0].id,
+        });
+
+        const launchParameters = getLaunchParameters(code[0]);
+
+        const tokenBody = await createTokenResponse({
+          user,
+          ctx: await asRoot(ctx.state.iguhealth),
+          clientApplication,
+          launchParameters,
+        });
 
         ctx.body = tokenBody;
         ctx.status = 200;

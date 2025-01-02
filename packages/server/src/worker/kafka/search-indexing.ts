@@ -15,7 +15,7 @@ import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
 import { toFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import { ERROR_QUEUE, RESOURCE_QUEUE } from "./index.js";
+import { ERROR_QUEUE, RESOURCE_QUEUE } from "./constants.js";
 
 export default async function createIndexingWorker() {
   const kafka = new Kafka({
