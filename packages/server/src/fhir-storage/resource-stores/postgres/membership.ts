@@ -78,6 +78,7 @@ function setEmailVerified<
         if (membership.resourceType === "Membership") {
           const existingUser = await db
             .selectOne("users", {
+              tenant: context.ctx.tenant,
               fhir_user_id: membership.id as string,
             })
             .run(context.ctx.db);

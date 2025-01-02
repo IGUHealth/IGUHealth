@@ -1,7 +1,7 @@
 import React from "react";
 import validator from "validator";
 import * as db from "zapatos/db";
-import { users } from "zapatos/schema";
+import * as s from "zapatos/schema";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
@@ -18,11 +18,12 @@ import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
+import * as users from "../../db/users/index.js";
 
 async function findExistingOwner(
   pg: db.Queryable,
   email: string,
-): Promise<users.JSONSelectable | undefined> {
+): Promise<s.users.JSONSelectable | undefined> {
   const userOwner = await db.select("users", { email, role: "owner" }).run(pg);
   return userOwner[0];
 }
@@ -55,13 +56,9 @@ async function createOrRetrieveUser(
           }),
         );
 
-        const user: User[] = await db
-          .select(
-            "users",
-            { fhir_user_id: membership.id },
-            { columns: USER_QUERY_COLS },
-          )
-          .run(ctx.db);
+        const user: User[] = await users.search(ctx.db, tenant.id as TenantId, {
+          fhir_user_id: membership.id,
+        });
 
         if (!user[0]) {
           throw new OperationError(
