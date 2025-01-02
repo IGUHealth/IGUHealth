@@ -5,7 +5,7 @@ import { TenantId } from "@iguhealth/jwt";
 
 import createResourceStore from "../../fhir-storage/resource-stores/index.js";
 import { staticWorkerServices } from "../utilities.js";
-import { ERROR_QUEUE, RESOURCE_QUEUE } from "./index.js";
+import { ERROR_QUEUE, RESOURCE_QUEUE } from "./constants.js";
 
 export default async function createStorageWorker() {
   const kafka = new Kafka({

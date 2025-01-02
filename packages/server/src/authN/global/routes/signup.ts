@@ -43,7 +43,7 @@ async function createOrRetrieveUser(
         const tenant = await tenants.create(ctx, {});
 
         const membership = await ctx.client.create(
-          await asRoot({
+          asRoot({
             ...ctx,
             tenant: tenant.id as TenantId,
           }),
