@@ -12,7 +12,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
-import { USER_QUERY_COLS, User } from "../../db/users/index.js";
+import { User } from "../../db/users/index.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
