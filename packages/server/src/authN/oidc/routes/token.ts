@@ -404,9 +404,9 @@ export function tokenPost<
 
         const launchParameters = getLaunchParameters(code[0]);
 
-        const tokenBody = createTokenResponse({
+        const tokenBody = await createTokenResponse({
           user,
-          ctx: await asRoot(ctx.state.iguhealth),
+          ctx: asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,
         });
@@ -479,7 +479,7 @@ export function tokenPost<
 
         const launchParameters = getLaunchParameters(code[0]);
 
-        const tokenBody = createTokenResponse({
+        const tokenBody = await createTokenResponse({
           user,
           ctx: await asRoot(ctx.state.iguhealth),
           clientApplication,
