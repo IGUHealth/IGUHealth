@@ -215,7 +215,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
 
           await ctx.state.iguhealth.client.update(
-            await asRoot({
+            asRoot({
               ...fhirContext,
               tenant: update.tenant as TenantId,
             }),

@@ -11,6 +11,12 @@ import { OIDCRouteHandler } from "../../index.js";
 import { sessionSetUserLogin } from "../../session/user.js";
 import { getSessionInfo } from "./initiate.js";
 
+/**
+ * Creates an ID that is a combination of the IDP id and the sub from the IDPs idToken.
+ * @param idpId Federated IDP id
+ * @param sub The sub from the idToken
+ * @returns id for the federated user.
+ */
 function deriveID(idpId: id, sub: string) {
   // "+" "/" and "=" symbols must be replaced.
   // 1234567890abcdefghijklmnopqrstuvwxyz is default character set for nanoid.
@@ -102,8 +108,9 @@ export function federatedCallback(): OIDCRouteHandler {
 
         const id = deriveID(idpProvider.id as id, payload.sub as string);
 
+        // Update / create new user for IDP.
         const membership = await ctx.state.iguhealth.client.update(
-          await asRoot(ctx.state.iguhealth),
+          asRoot(ctx.state.iguhealth),
           R4,
           "Membership",
           id as id,
