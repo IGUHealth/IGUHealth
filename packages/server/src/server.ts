@@ -62,8 +62,9 @@ import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
+import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" with { type: "json" };
 
-loadEnv();
+loadEnv(IGUHealthEnvironmentSchema);
 
 function fhirResponseSetKoa(
   ctx: Koa.ParameterizedContext<

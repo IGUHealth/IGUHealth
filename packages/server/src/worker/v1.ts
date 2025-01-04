@@ -61,8 +61,9 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "./utilities.js";
+import IGUHealthEnvironmentSchema from "../json-schemas/schemas/environment.schema.json" with { type: "json" };
 
-loadEnv();
+loadEnv(IGUHealthEnvironmentSchema);
 
 if (process.env.NODE_ENV === "development") {
   await createCertsIfNoneExists(

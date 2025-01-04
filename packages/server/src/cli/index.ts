@@ -5,8 +5,9 @@ import { adminCommands } from "./commands/admin.js";
 import { generateCommands } from "./commands/generate.js";
 import { runCommands, terminateServices } from "./commands/run.js";
 import { terminologyCommands } from "./commands/terminology.js";
+import IGUHealthEnvironmentSchema from "../json-schemas/schemas/environment.schema.json" with { type: "json" };
 
-loadEnv();
+loadEnv(IGUHealthEnvironmentSchema);
 
 runCommands(program.command("run"));
 generateCommands(program.command("generate"));
