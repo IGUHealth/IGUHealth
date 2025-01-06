@@ -25,12 +25,12 @@ test("Testing", () => {
 
 // async function createTenant(tenant: string) {
 //   const pgClient = new pg.Client({
-//     user: process.env["RESOURCE_STORE_USERNAME"],
-//     password: process.env["RESOURCE_STORE_PASSWORD"],
-//     host: process.env["RESOURCE_STORE_HOST"],
-//     database: process.env["RESOURCE_STORE_NAME"],
-//     port: parseInt(process.env["RESOURCE_STORE_PORT"] || "5432"),
-//     ssl: process.env["RESOURCE_STORE_SSL"] === "true",
+//     user: process.env["RESOURCE_STORE_PG_USERNAME"],
+//     password: process.env["RESOURCE_STORE_PG_PASSWORD"],
+//     host: process.env["RESOURCE_STORE_PG_HOST"],
+//     database: process.env["RESOURCE_STORE_PG_NAME"],
+//     port: parseInt(process.env["RESOURCE_STORE_PG_PORT"] || "5432"),
+//     ssl: process.env["RESOURCE_STORE_PG_SSL"] === "true",
 //   });
 //   await pgClient.connect();
 //   try {

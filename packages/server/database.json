@@ -2,22 +2,22 @@
   "dev": {
     "driver": "pg",
     "user": {
-      "ENV": "RESOURCE_STORAGE_USERNAME"
+      "ENV": "RESOURCE_STORE_PG_USERNAME"
     },
     "password": {
-      "ENV": "RESOURCE_STORAGE_PASSWORD"
+      "ENV": "RESOURCE_STORE_PG_PASSWORD"
     },
     "host": {
-      "ENV": "RESOURCE_STORAGE_HOST"
+      "ENV": "RESOURCE_STORE_PG_HOST"
     },
     "database": {
-      "ENV": "RESOURCE_STORAGE_NAME"
+      "ENV": "RESOURCE_STORE_PG_NAME"
     },
     "port": {
-      "ENV": "RESOURCE_STORAGE_PORT"
+      "ENV": "RESOURCE_STORE_PG_PORT"
     },
     "ssl": {
-      "ENV": "RESOURCE_STORAGE_SSL"
+      "ENV": "RESOURCE_STORE_PG_SSL"
     },
     "schema": "my_schema"
   }

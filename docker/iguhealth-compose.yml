@@ -15,11 +15,11 @@ services:
     environment:
       - SESSION_COOKIE_SECRETS=session_secret
 
-      - RESOURCE_STORE_NAME=postgres
-      - RESOURCE_STORE_HOST=localhost
-      - RESOURCE_STORE_PORT=5432
-      - RESOURCE_STORE_PASSWORD=postgres
-      - RESOURCE_STORE_USERNAME=postgres
+      - RESOURCE_STORE_PG_NAME=postgres
+      - RESOURCE_STORE_PG_HOST=localhost
+      - RESOURCE_STORE_PG_PORT=5432
+      - RESOURCE_STORE_PG_PASSWORD=postgres
+      - RESOURCE_STORE_PG_USERNAME=postgres
 
       - SEARCH_STORE_NAME=postgres
       - SEARCH_STORE_HOST=localhost
@@ -42,11 +42,11 @@ services:
     environment:
       - SESSION_COOKIE_SECRETS=session_secret
 
-      - RESOURCE_STORE_NAME=postgres
-      - RESOURCE_STORE_HOST=localhost
-      - RESOURCE_STORE_PORT=5432
-      - RESOURCE_STORE_PASSWORD=postgres
-      - RESOURCE_STORE_USERNAME=postgres
+      - RESOURCE_STORE_PG_NAME=postgres
+      - RESOURCE_STORE_PG_HOST=localhost
+      - RESOURCE_STORE_PG_PORT=5432
+      - RESOURCE_STORE_PG_PASSWORD=postgres
+      - RESOURCE_STORE_PG_USERNAME=postgres
 
       - SEARCH_STORE_NAME=postgres
       - SEARCH_STORE_HOST=localhost
