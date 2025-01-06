@@ -7,7 +7,7 @@ import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
-import { FHIRTransaction } from "../../fhir-storage/transactions.js";
+import { Transaction } from "../../fhir-storage/transactions.js";
 import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
 import {
   IGUHealthWorkerCTX,
@@ -121,7 +121,7 @@ async function processTenant<Version extends FHIR_VERSION>(
     })),
   );
 
-  await FHIRTransaction(
+  await Transaction(
     workerContext,
     db.IsolationLevel.RepeatableRead,
     async (tenantContext) => {

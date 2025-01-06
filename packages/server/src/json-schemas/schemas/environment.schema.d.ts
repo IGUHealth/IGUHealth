@@ -5,182 +5,218 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface IGUHealthEnvironment {
-  /**
-   * The environment the server is running in
-   */
-  IGUHEALTH_ENVIRONMENT: string;
-  /**
-   * Secret used to sign session cookies
-   */
-  SESSION_COOKIE_SECRETS: string;
+export type IGUHealthEnvironment = ResourceStorePg &
+  SearchStorePg & {
+    /**
+     * The environment the server is running in
+     */
+    IGUHEALTH_ENVIRONMENT: string;
+    /**
+     * Secret used to sign session cookies
+     */
+    SESSION_COOKIE_SECRETS: string;
+    /**
+     * Resource storage type.
+     */
+    RESOURCE_STORE_TYPE: "postgres";
+    /**
+     * Search storage type.
+     */
+    SEARCH_STORE_TYPE: "postgres";
+    /**
+     * Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].
+     */
+    FHIR_STORAGE_ASYNC?: "true" | "false";
+    /**
+     * Kafka brokers
+     */
+    KAFKA_BROKERS: string;
+    /**
+     * Kafka client id
+     */
+    KAFKA_CLIENT_ID: string;
+    /**
+     * Redis host
+     */
+    REDIS_HOST: string;
+    /**
+     * Redis port
+     */
+    REDIS_PORT: string;
+    /**
+     * Whether Redis connection is SSL
+     */
+    REDIS_SSL?: "true" | "false";
+    /**
+     * Maximum total number of records to delete in a single conditional delete operation
+     */
+    FHIR_DELETE_CONDITIONAL_LIMIT?: string;
+    /**
+     * Current url where API is hosted from (used in operation execution clients).
+     */
+    API_URL: string;
+    /**
+     * AWS Region where you want lambdas to be executed from.
+     */
+    AWS_REGION?: string;
+    /**
+     * Execution role of lambda functions.
+     */
+    AWS_LAMBDA_ROLE?: string;
+    /**
+     * Access key id for lambda (must have permission to invoke and create lambda functions)
+     */
+    AWS_LAMBDA_ACCESS_KEY_ID?: string;
+    /**
+     * Access key secret for lambda (must have permission to invoke and create lambda functions).
+     */
+    AWS_LAMBDA_ACCESS_KEY_SECRET?: string;
+    /**
+     * ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages).
+     */
+    AWS_LAMBDA_LAYER_ARN?: string;
+    /**
+     * Sets the server to allow full public access when set to true.
+     */
+    AUTH_PUBLIC_ACCESS?: "true" | "false";
+    /**
+     * Sets whether to allow global signup for users.
+     */
+    AUTH_ALLOW_GLOBAL_SIGNUP?: "true" | "false";
+    /**
+     * Sets whether to allow tenant signup for users.
+     */
+    AUTH_ALLOW_TENANT_SIGNUP?: "true" | "false";
+    /**
+     * The issuer of the tokens
+     */
+    AUTH_ISSUER: string;
+    /**
+     * Location for local certifications for IGUHEALTH ISSUER
+     */
+    AUTH_LOCAL_CERTIFICATION_LOCATION: string;
+    /**
+     * The signing key used to generate new local tokens
+     */
+    AUTH_LOCAL_SIGNING_KEY: string;
+    /**
+     * Set the email provider.
+     */
+    EMAIL_PROVIDER?: "sendgrid";
+    /**
+     * Set the sendgrid api key (only used on email provider set to sendgrid).
+     */
+    EMAIL_SENDGRID_API_KEY?: string;
+    /**
+     * Set the email from address.
+     */
+    EMAIL_FROM?: string;
+    /**
+     * The type of encryption (used to encrypt user secrets)
+     */
+    ENCRYPTION_TYPE?: "aws";
+    /**
+     * KMS client access key ID
+     */
+    AWS_KMS_ACCESS_KEY_ID?: string;
+    /**
+     * KMS client access key secret
+     */
+    AWS_KMS_ACCESS_KEY_SECRET?: string;
+    /**
+     * KMS key used to generate data keys on keyring
+     */
+    AWS_ENCRYPTION_GENERATOR_KEY?: string;
+    /**
+     * Additional KMS key used for encryption
+     */
+    AWS_ENCRYPTION_KEY?: string;
+    /**
+     * Postgres transaction entry limit
+     */
+    POSTGRES_TRANSACTION_ENTRY_LIMIT?: string;
+    /**
+     * Sentry DSN URL for monitoring errors and performance.
+     */
+    SENTRY_SERVER_DSN?: string;
+    /**
+     * Sentry Worker for monitoring errors and performance on worker
+     */
+    SENTRY_WORKER_DSN?: string;
+    /**
+     * Sentry sample rate.
+     */
+    SENTRY_TRACES_SAMPLE_RATE?: string;
+    /**
+     * Sentry profiles rate.
+     */
+    SENTRY_PROFILES_SAMPLE_RATE?: string;
+    /**
+     * Redirect URI for admin app
+     */
+    ADMIN_APP_REDIRECT_URI?: string;
+    /**
+     * Whether behind proxy and server should use X-Forwarded-For header.
+     */
+    PROXY?: "true" | "false";
+    /**
+     * Header to derive the users IP address from
+     */
+    PROXY_IP_HEADER?: string;
+    [k: string]: unknown;
+  };
+
+export interface ResourceStorePg {
   /**
    * Postgres database name.
    */
-  FHIR_DATABASE_NAME: string;
+  RESOURCE_STORE_PG_NAME?: string;
   /**
    * Postgres host
    */
-  FHIR_DATABASE_HOST: string;
+  RESOURCE_STORE_PG_HOST?: string;
   /**
    * Postgres port
    */
-  FHIR_DATABASE_PORT: string;
+  RESOURCE_STORE_PG_PORT?: string;
   /**
    * postgres password
    */
-  FHIR_DATABASE_PASSWORD: string;
+  RESOURCE_STORE_PG_PASSWORD?: string;
   /**
    * postgres username
    */
-  FHIR_DATABASE_USERNAME: string;
+  RESOURCE_STORE_PG_USERNAME?: string;
   /**
    * Whether Postgres connection is SSL
    */
-  FHIR_DATABASE_SSL?: "true" | "false";
+  RESOURCE_STORE_PG_SSL?: "true" | "false";
+  [k: string]: unknown;
+}
+export interface SearchStorePg {
   /**
-   * Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].
+   * Postgres database name.
    */
-  FHIR_STORAGE_ASYNC?: "true" | "false";
+  SEARCH_STORE_PG_NAME?: string;
   /**
-   * Kafka host
+   * Postgres host
    */
-  KAFKA_HOST?: string;
+  SEARCH_STORE_PG_HOST?: string;
   /**
-   * Kafka brokers
+   * Postgres port
    */
-  KAFKA_BROKERS?: string;
+  SEARCH_STORE_PG_PORT?: string;
   /**
-   * Kafka client id
+   * postgres password
    */
-  KAFKA_CLIENT_ID?: string;
+  SEARCH_STORE_PG_PASSWORD?: string;
   /**
-   * Redis host
+   * postgres username
    */
-  REDIS_HOST: string;
+  SEARCH_STORE_PG_USERNAME?: string;
   /**
-   * Redis port
+   * Whether Postgres connection is SSL
    */
-  REDIS_PORT: string;
-  /**
-   * Whether Redis connection is SSL
-   */
-  REDIS_SSL?: "true" | "false";
-  /**
-   * Maximum total number of records to delete in a single conditional delete operation
-   */
-  FHIR_DELETE_CONDITIONAL_LIMIT?: string;
-  /**
-   * Current url where API is hosted from (used in operation execution clients).
-   */
-  API_URL: string;
-  /**
-   * AWS Region where you want lambdas to be executed from.
-   */
-  AWS_REGION?: string;
-  /**
-   * Execution role of lambda functions.
-   */
-  AWS_LAMBDA_ROLE?: string;
-  /**
-   * Access key id for lambda (must have permission to invoke and create lambda functions)
-   */
-  AWS_LAMBDA_ACCESS_KEY_ID?: string;
-  /**
-   * Access key secret for lambda (must have permission to invoke and create lambda functions).
-   */
-  AWS_LAMBDA_ACCESS_KEY_SECRET?: string;
-  /**
-   * ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages).
-   */
-  AWS_LAMBDA_LAYER_ARN?: string;
-  /**
-   * Sets the server to allow full public access when set to true.
-   */
-  AUTH_PUBLIC_ACCESS?: "true" | "false";
-  /**
-   * Sets whether to allow global signup for users.
-   */
-  AUTH_ALLOW_GLOBAL_SIGNUP?: "true" | "false";
-  /**
-   * Sets whether to allow tenant signup for users.
-   */
-  AUTH_ALLOW_TENANT_SIGNUP?: "true" | "false";
-  /**
-   * The issuer of the tokens
-   */
-  AUTH_ISSUER: string;
-  /**
-   * Location for local certifications for IGUHEALTH ISSUER
-   */
-  AUTH_LOCAL_CERTIFICATION_LOCATION: string;
-  /**
-   * The signing key used to generate new local tokens
-   */
-  AUTH_LOCAL_SIGNING_KEY: string;
-  /**
-   * Set the email provider.
-   */
-  EMAIL_PROVIDER?: "sendgrid";
-  /**
-   * Set the sendgrid api key (only used on email provider set to sendgrid).
-   */
-  EMAIL_SENDGRID_API_KEY?: string;
-  /**
-   * Set the email from address.
-   */
-  EMAIL_FROM?: string;
-  /**
-   * The type of encryption (used to encrypt user secrets)
-   */
-  ENCRYPTION_TYPE?: "aws";
-  /**
-   * KMS client access key ID
-   */
-  AWS_KMS_ACCESS_KEY_ID?: string;
-  /**
-   * KMS client access key secret
-   */
-  AWS_KMS_ACCESS_KEY_SECRET?: string;
-  /**
-   * KMS key used to generate data keys on keyring
-   */
-  AWS_ENCRYPTION_GENERATOR_KEY?: string;
-  /**
-   * Additional KMS key used for encryption
-   */
-  AWS_ENCRYPTION_KEY?: string;
-  /**
-   * Postgres transaction entry limit
-   */
-  POSTGRES_TRANSACTION_ENTRY_LIMIT?: string;
-  /**
-   * Sentry DSN URL for monitoring errors and performance.
-   */
-  SENTRY_SERVER_DSN?: string;
-  /**
-   * Sentry Worker for monitoring errors and performance on worker
-   */
-  SENTRY_WORKER_DSN?: string;
-  /**
-   * Sentry sample rate.
-   */
-  SENTRY_TRACES_SAMPLE_RATE?: string;
-  /**
-   * Sentry profiles rate.
-   */
-  SENTRY_PROFILES_SAMPLE_RATE?: string;
-  /**
-   * Redirect URI for admin app
-   */
-  ADMIN_APP_REDIRECT_URI?: string;
-  /**
-   * Whether behind proxy and server should use X-Forwarded-For header.
-   */
-  PROXY?: "true" | "false";
-  /**
-   * Header to derive the users IP address from
-   */
-  PROXY_IP_HEADER?: string;
+  SEARCH_STORE_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }

@@ -46,6 +46,7 @@ import { ResourceStore } from "../fhir-storage/resource-stores/interface.js";
 import { SearchEngine } from "../fhir-storage/search-stores/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
+import { Producer } from "kafkajs";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];
@@ -118,11 +119,21 @@ export interface UserContext {
   scope?: Scope[];
 }
 
+type KafkaQueue = {
+  type: "kafka";
+  producer: Producer;
+};
+
+export type Queue = KafkaQueue;
+
 export interface IGUHealthServerCTX {
   environment: string;
   // Server Information
   tenant: TenantId;
   user: UserContext;
+
+  // Queue
+  // queue: Queue;
 
   // FHIR Client
   client: FHIRClientAsync<IGUHealthServerCTX>;

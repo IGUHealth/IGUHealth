@@ -40,7 +40,7 @@ import logAuditEvent, {
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
 import { fitsSearchCriteria } from "../fhir-storage/clients/memory/search.js";
-import { FHIRTransaction } from "../fhir-storage/transactions.js";
+import { Transaction } from "../fhir-storage/transactions.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {
   SearchParameterResource,
@@ -592,7 +592,7 @@ async function createWorker(
           })),
         );
 
-        await FHIRTransaction(
+        await Transaction(
           ctx,
           db.IsolationLevel.RepeatableRead,
           async (txContext) => {

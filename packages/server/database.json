@@ -1,12 +1,24 @@
 {
   "dev": {
     "driver": "pg",
-    "user": { "ENV": "FHIR_DATABASE_USERNAME" },
-    "password": { "ENV": "FHIR_DATABASE_PASSWORD" },
-    "host": { "ENV": "FHIR_DATABASE_HOST" },
-    "database": { "ENV": "FHIR_DATABASE_NAME" },
-    "port": { "ENV": "FHIR_DATABASE_PORT" },
-    "ssl": { "ENV": "FHIR_DATABASE_SSL" },
+    "user": {
+      "ENV": "RESOURCE_STORE_PG_USERNAME"
+    },
+    "password": {
+      "ENV": "RESOURCE_STORE_PG_PASSWORD"
+    },
+    "host": {
+      "ENV": "RESOURCE_STORE_PG_HOST"
+    },
+    "database": {
+      "ENV": "RESOURCE_STORE_PG_NAME"
+    },
+    "port": {
+      "ENV": "RESOURCE_STORE_PG_PORT"
+    },
+    "ssl": {
+      "ENV": "RESOURCE_STORE_PG_SSL"
+    },
     "schema": "my_schema"
   }
 }

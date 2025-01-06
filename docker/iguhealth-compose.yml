@@ -14,11 +14,19 @@ services:
       - postgres
     environment:
       - SESSION_COOKIE_SECRETS=session_secret
-      - FHIR_DATABASE_NAME=iguhealth
-      - FHIR_DATABASE_HOST=postgres
-      - FHIR_DATABASE_PORT=5432
-      - FHIR_DATABASE_PASSWORD=postgres
-      - FHIR_DATABASE_USERNAME=postgres
+
+      - RESOURCE_STORE_PG_NAME=postgres
+      - RESOURCE_STORE_PG_HOST=localhost
+      - RESOURCE_STORE_PG_PORT=5432
+      - RESOURCE_STORE_PG_PASSWORD=postgres
+      - RESOURCE_STORE_PG_USERNAME=postgres
+
+      - SEARCH_STORE_NAME=postgres
+      - SEARCH_STORE_HOST=localhost
+      - SEARCH_STORE_PORT=5432
+      - SEARCH_STORE_PASSWORD=postgres
+      - SEARCH_STORE_USERNAME=postgres
+
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - API_URL=http://localhost:3000
@@ -33,11 +41,19 @@ services:
       - redis
     environment:
       - SESSION_COOKIE_SECRETS=session_secret
-      - FHIR_DATABASE_NAME=iguhealth
-      - FHIR_DATABASE_HOST=postgres
-      - FHIR_DATABASE_PORT=5432
-      - FHIR_DATABASE_PASSWORD=postgres
-      - FHIR_DATABASE_USERNAME=postgres
+
+      - RESOURCE_STORE_PG_NAME=postgres
+      - RESOURCE_STORE_PG_HOST=localhost
+      - RESOURCE_STORE_PG_PORT=5432
+      - RESOURCE_STORE_PG_PASSWORD=postgres
+      - RESOURCE_STORE_PG_USERNAME=postgres
+
+      - SEARCH_STORE_NAME=postgres
+      - SEARCH_STORE_HOST=localhost
+      - SEARCH_STORE_PORT=5432
+      - SEARCH_STORE_PASSWORD=postgres
+      - SEARCH_STORE_USERNAME=postgres
+
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - API_URL=http://localhost:3000

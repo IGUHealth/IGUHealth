@@ -4,12 +4,11 @@
 |------|-------------|----------|----------|
 | IGUHEALTH_ENVIRONMENT | The environment the server is running in | true | development |
 | SESSION_COOKIE_SECRETS | Secret used to sign session cookies | true | iguhealth |
-| FHIR_DATABASE_NAME | Postgres database name.  | true | iguhealth |
-| FHIR_DATABASE_HOST | Postgres host | true | localhost |
-| FHIR_DATABASE_PORT | Postgres port | true | 5432 |
-| FHIR_DATABASE_PASSWORD | postgres password | true |  |
-| FHIR_DATABASE_USERNAME | postgres username | true | postgres |
-| FHIR_DATABASE_SSL | Whether Postgres connection is SSL | false | false |
+| RESOURCE_STORE_TYPE | Resource storage type. | true |  |
+| SEARCH_STORE_TYPE | Search storage type. | true |  |
+| FHIR_STORAGE_ASYNC | Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue]. | false | true |
+| KAFKA_BROKERS | Kafka brokers | true |  |
+| KAFKA_CLIENT_ID | Kafka client id | true |  |
 | REDIS_HOST | Redis host | true | 127.0.0.1 |
 | REDIS_PORT | Redis port | true | 6379 |
 | REDIS_SSL | Whether Redis connection is SSL | false | false |

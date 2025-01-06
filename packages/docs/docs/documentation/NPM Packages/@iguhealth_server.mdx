@@ -8,12 +8,8 @@ sidebar_label: "@iguhealth/server"
 | name | description | required | defaults |
 |------|-------------|----------|----------|
 | SESSION_COOKIE_SECRETS | Secret used to sign session cookies | true | iguhealth |
-| FHIR_DATABASE_NAME | Postgres database name.  | true | iguhealth |
-| FHIR_DATABASE_HOST | Postgres host | true | localhost |
-| FHIR_DATABASE_PORT | Postgres port | true | 5432 |
-| FHIR_DATABASE_PASSWORD | postgres password | true |  |
-| FHIR_DATABASE_USERNAME | postgres username | true | postgres |
-| FHIR_DATABASE_SSL | Whether Postgres connection is SSL | false | false |
+| RESOURCE_STORE_TYPE | Resource storage type. | true |  |
+| SEARCH_STORE_TYPE | Search storage type. | true |  |
 | REDIS_HOST | Redis host | true | 127.0.0.1 |
 | REDIS_PORT | Redis port | true | 6379 |
 | REDIS_SSL | Whether Redis connection is SSL | false | false |

@@ -26,7 +26,7 @@ import { deriveLimit } from "../../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../../utilities/sql.js";
 import createAuthMembershipMiddleware from "./membership.js";
-import { FHIRTransaction } from "../../transactions.js";
+import { Transaction } from "../../transactions.js";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -232,35 +232,31 @@ export class PostgresStore<
     data: s.resources.Insertable[],
   ): Promise<Resource<Version, AllResourceTypes>[]> {
     const mem = createAuthMembershipMiddleware();
-    return FHIRTransaction(
-      ctx,
-      db.IsolationLevel.RepeatableRead,
-      async (ctx) => {
-        const result = await db
-          .insert("resources", data, { returning: ["resource"] })
-          .run(ctx.db);
+    return Transaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
+      const result = await db
+        .insert("resources", data, { returning: ["resource"] })
+        .run(ctx.db);
 
-        // Handle user table membership updates.
-        await Promise.all(
-          data
-            .filter(
-              (d) =>
-                (
-                  d.resource as unknown as Resource<
-                    FHIR_VERSION,
-                    AllResourceTypes
-                  >
-                ).resourceType === "Membership",
-            )
-            .map((insert) => mem({ state: {}, ctx, request: insert })),
-        );
+      // Handle user table membership updates.
+      await Promise.all(
+        data
+          .filter(
+            (d) =>
+              (
+                d.resource as unknown as Resource<
+                  FHIR_VERSION,
+                  AllResourceTypes
+                >
+              ).resourceType === "Membership",
+          )
+          .map((insert) => mem({ state: {}, ctx, request: insert })),
+      );
 
-        return result.map((r) => r.resource) as unknown as Resource<
-          Version,
-          AllResourceTypes
-        >[];
-      },
-    );
+      return result.map((r) => r.resource) as unknown as Resource<
+        Version,
+        AllResourceTypes
+      >[];
+    });
   }
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,

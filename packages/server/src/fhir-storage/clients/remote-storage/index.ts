@@ -44,7 +44,7 @@ import { validateResource } from "../../../fhir-operation-executors/providers/lo
 import { ResourceStore } from "../../resource-stores/interface.js";
 import { SearchEngine } from "../../search-stores/interface.js";
 import {
-  FHIRTransaction,
+  Transaction,
   buildTransactionTopologicalGraph,
 } from "../../transactions.js";
 import {
@@ -909,7 +909,7 @@ function createStorageMiddleware<
           ...new Array((transactionBundle.entry || []).length),
         ];
 
-        return FHIRTransaction(
+        return Transaction(
           context.ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx: IGUHealthServerCTX) => {
@@ -1034,7 +1034,7 @@ function createSynchronousIndexingMiddleware<
       case "update-request":
       case "patch-request":
       case "create-request": {
-        return FHIRTransaction(
+        return Transaction(
           context.ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {
@@ -1063,7 +1063,7 @@ function createSynchronousIndexingMiddleware<
         );
       }
       case "delete-request": {
-        return FHIRTransaction(
+        return Transaction(
           context.ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {

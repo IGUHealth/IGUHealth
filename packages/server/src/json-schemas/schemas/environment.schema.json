@@ -4,20 +4,27 @@
   "type": "object",
   "$id": "https://IGUHealth.app/environment-variables",
   "additionalProperties": true,
+  "allOf": [
+    {
+      "$ref": "#/$defs/resource-store-pg"
+    },
+    {
+      "$ref": "#/$defs/search-store-pg"
+    }
+  ],
   "required": [
     "AUTH_ISSUER",
     "API_URL",
-    "FHIR_DATABASE_NAME",
-    "FHIR_DATABASE_HOST",
-    "FHIR_DATABASE_PORT",
-    "FHIR_DATABASE_PASSWORD",
-    "FHIR_DATABASE_USERNAME",
     "REDIS_HOST",
     "REDIS_PORT",
+    "RESOURCE_STORE_TYPE",
+    "SEARCH_STORE_TYPE",
     "SESSION_COOKIE_SECRETS",
     "AUTH_LOCAL_CERTIFICATION_LOCATION",
     "AUTH_LOCAL_SIGNING_KEY",
-    "IGUHEALTH_ENVIRONMENT"
+    "IGUHEALTH_ENVIRONMENT",
+    "KAFKA_BROKERS",
+    "KAFKA_CLIENT_ID"
   ],
   "properties": {
     "IGUHEALTH_ENVIRONMENT": {
@@ -30,40 +37,19 @@
       "description": "Secret used to sign session cookies",
       "default": "iguhealth"
     },
-    "FHIR_DATABASE_NAME": {
+    "RESOURCE_STORE_TYPE": {
       "type": "string",
-      "description": "Postgres database name. ",
-      "default": "iguhealth"
-    },
-    "FHIR_DATABASE_HOST": {
-      "type": "string",
-      "description": "Postgres host",
-      "default": "localhost"
-    },
-    "FHIR_DATABASE_PORT": {
-      "type": "string",
-      "pattern": "[0-9]{4}",
-      "description": "Postgres port",
-      "default": "5432"
-    },
-    "FHIR_DATABASE_PASSWORD": {
-      "type": "string",
-      "description": "postgres password",
-      "default": ""
-    },
-    "FHIR_DATABASE_USERNAME": {
-      "type": "string",
-      "description": "postgres username",
-      "default": "postgres"
-    },
-    "FHIR_DATABASE_SSL": {
-      "type": "string",
+      "description": "Resource storage type.",
       "enum": [
-        "true",
-        "false"
-      ],
-      "description": "Whether Postgres connection is SSL",
-      "default": "false"
+        "postgres"
+      ]
+    },
+    "SEARCH_STORE_TYPE": {
+      "type": "string",
+      "description": "Search storage type.",
+      "enum": [
+        "postgres"
+      ]
     },
     "FHIR_STORAGE_ASYNC": {
       "type": "string",
@@ -73,10 +59,6 @@
       ],
       "description": "Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].",
       "default": "true"
-    },
-    "KAFKA_HOST": {
-      "type": "string",
-      "description": "Kafka host"
     },
     "KAFKA_BROKERS": {
       "type": "string",
@@ -253,6 +235,86 @@
       "type": "string",
       "description": "Header to derive the users IP address from",
       "default": "false"
+    }
+  },
+  "$defs": {
+    "resource-store-pg": {
+      "properties": {
+        "RESOURCE_STORE_PG_NAME": {
+          "type": "string",
+          "description": "Postgres database name. ",
+          "default": "iguhealth"
+        },
+        "RESOURCE_STORE_PG_HOST": {
+          "type": "string",
+          "description": "Postgres host",
+          "default": "localhost"
+        },
+        "RESOURCE_STORE_PG_PORT": {
+          "type": "string",
+          "pattern": "[0-9]{4}",
+          "description": "Postgres port",
+          "default": "5432"
+        },
+        "RESOURCE_STORE_PG_PASSWORD": {
+          "type": "string",
+          "description": "postgres password",
+          "default": ""
+        },
+        "RESOURCE_STORE_PG_USERNAME": {
+          "type": "string",
+          "description": "postgres username",
+          "default": "postgres"
+        },
+        "RESOURCE_STORE_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        }
+      }
+    },
+    "search-store-pg": {
+      "properties": {
+        "SEARCH_STORE_PG_NAME": {
+          "type": "string",
+          "description": "Postgres database name. ",
+          "default": "iguhealth"
+        },
+        "SEARCH_STORE_PG_HOST": {
+          "type": "string",
+          "description": "Postgres host",
+          "default": "localhost"
+        },
+        "SEARCH_STORE_PG_PORT": {
+          "type": "string",
+          "pattern": "[0-9]{4}",
+          "description": "Postgres port",
+          "default": "5432"
+        },
+        "SEARCH_STORE_PG_PASSWORD": {
+          "type": "string",
+          "description": "postgres password",
+          "default": ""
+        },
+        "SEARCH_STORE_PG_USERNAME": {
+          "type": "string",
+          "description": "postgres username",
+          "default": "postgres"
+        },
+        "SEARCH_STORE_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        }
+      }
     }
   }
 }

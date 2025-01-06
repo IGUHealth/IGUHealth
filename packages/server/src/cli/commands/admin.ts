@@ -25,7 +25,7 @@ import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 import { createPGPool } from "../../fhir-storage/pg.js";
 import { PostgresStore } from "../../fhir-storage/resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
-import { FHIRTransaction } from "../../fhir-storage/transactions.js";
+import { Transaction } from "../../fhir-storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
 
@@ -86,38 +86,34 @@ async function createTenant(
   },
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
-  return await FHIRTransaction(
-    ctx,
-    db.IsolationLevel.Serializable,
-    async (ctx) => {
-      const tenant = await tenants.create(ctx, await getTenant(ctx, options));
+  return await Transaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+    const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
-      const membership: Membership = await ctx.client.create(
-        await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
-        R4,
-        await getMembership(options),
-      );
+    const membership: Membership = await ctx.client.create(
+      await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+      R4,
+      await getMembership(options),
+    );
 
-      const password = options.password
-        ? options.password
-        : await inquirer.password({
-            message: "Enter root user password.",
-          });
+    const password = options.password
+      ? options.password
+      : await inquirer.password({
+          message: "Enter root user password.",
+        });
 
-      const user = await users.search(ctx.db, tenant.id as TenantId, {
-        fhir_user_id: membership.id as string,
-      });
+    const user = await users.search(ctx.db, tenant.id as TenantId, {
+      fhir_user_id: membership.id as string,
+    });
 
-      await users.update(ctx.db, tenant.id as TenantId, user[0].id, {
-        ...user[0],
-        password,
-        email_verified: true,
-      });
+    await users.update(ctx.db, tenant.id as TenantId, user[0].id, {
+      ...user[0],
+      password,
+      email_verified: true,
+    });
 
-      console.log(`Tenant created with id: '${tenant.id}'`);
-      console.log(`User created with email: '${user[0].email}'`);
-    },
-  );
+    console.log(`Tenant created with id: '${tenant.id}'`);
+    console.log(`User created with email: '${user[0].email}'`);
+  });
 }
 
 function tenantCommands(command: Command) {
