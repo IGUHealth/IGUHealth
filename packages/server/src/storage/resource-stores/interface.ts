@@ -22,7 +22,10 @@ import {
 //   | s.tenants.Insertable;
 
 export interface ResourceStore<CTX> {
-  insert<T extends s.resources.Insertable>(ctx: CTX, data: T): Promise<T>;
+  insert<T extends s.resources.Insertable>(
+    ctx: CTX,
+    data: T,
+  ): Promise<s.resources.JSONSelectable>;
 
   read<Version extends FHIR_VERSION>(
     ctx: CTX,

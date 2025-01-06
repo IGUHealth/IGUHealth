@@ -38,7 +38,7 @@ type MembershipMiddlewareChain<State, CTX> = MiddlewareAsyncChain<
   State,
   CTX,
   s.resources.Insertable,
-  s.resources.Insertable
+  s.resources.JSONSelectable
 >;
 
 function setInTransactionMiddleware<
@@ -243,13 +243,15 @@ function updateMembershipResourceMiddleware<
   CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
 >(): MembershipMiddlewareChain<State, CTX> {
   return async (context, next) => {
-    await db
+    const response = await db
       .insert("resources", context.request, {
         returning: ["resource"],
       })
       .run(context.ctx.db);
 
-    return next(context);
+    const res = next(context);
+
+    return { ...res, response };
   };
 }
 
@@ -261,7 +263,7 @@ function verifySingleOwnerMiddleware<
     const res = await next(context);
 
     await gateCheckSingleOwner(context.ctx);
-    return { ...res, response: context.request };
+    return res;
   };
 }
 
@@ -272,7 +274,7 @@ export default function createAuthMembershipMiddleware<
   State,
   CTX,
   s.resources.Insertable,
-  s.resources.Insertable
+  s.resources.JSONSelectable
 > {
   return createMiddlewareAsync([
     setEmailVerifiedMiddleware(),

@@ -236,7 +236,7 @@ export class PostgresStore<
   async insert<T extends s.resources.Insertable>(
     ctx: CTX,
     data: T,
-  ): Promise<T> {
+  ): Promise<s.resources.JSONSelectable> {
     switch (
       (data.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
         .resourceType
@@ -252,17 +252,14 @@ export class PostgresStore<
                 outcomeFatal("exception", "Failed to update user."),
               );
 
-            return insertion.response as T;
+            return insertion.response;
           },
         );
       }
 
       default: {
-        await db
-          .insert("resources", data, { returning: ["resource"] })
-          .run(ctx.db);
-
-        return data;
+        const response = await db.insert("resources", data).run(ctx.db);
+        return response;
       }
     }
   }

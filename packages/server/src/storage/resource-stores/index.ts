@@ -4,7 +4,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { ResourceStore } from "./interface.js";
-import { KafkaWrapperStore } from "./kafka.js";
+// import { KafkaWrapperStore } from "./kafka.js";
 import { PostgresStore } from "./postgres/index.js";
 
 interface KafkaStoreConfig {
@@ -37,14 +37,14 @@ export default async function createResourceStore<
 >(config: Storeconfig): Promise<ResourceStore<CTX>> {
   const internalStore = await _createInternalStore(config);
 
-  const kafkaConfig = config.kafka;
-  // Wrap with kafka if kafkaConfig is provided
-  if (kafkaConfig !== undefined) {
-    const kafka = new Kafka(kafkaConfig);
-    const producer = kafka.producer();
-    await producer.connect();
-    return new KafkaWrapperStore(internalStore, producer);
-  }
+  // const kafkaConfig = config.kafka;
+  // // Wrap with kafka if kafkaConfig is provided
+  // if (kafkaConfig !== undefined) {
+  //   const kafka = new Kafka(kafkaConfig);
+  //   const producer = kafka.producer();
+  //   await producer.connect();
+  //   return new KafkaWrapperStore(internalStore, producer);
+  // }
 
   return internalStore;
 }
