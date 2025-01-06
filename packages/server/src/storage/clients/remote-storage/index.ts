@@ -99,7 +99,7 @@ async function createResource<
     }),
   );
 
-  return res as Resource<Version, AllResourceTypes>;
+  return res.resource as unknown as Resource<Version, AllResourceTypes>;
 }
 
 async function getResourceById<
@@ -197,7 +197,10 @@ async function patchResource<
       }),
     );
 
-    const patchedResource = res as Resource<Version, AllResourceTypes>;
+    const patchedResource = res.resource as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >;
 
     return patchedResource;
   } catch (e) {
@@ -268,7 +271,10 @@ async function updateResource<
     }),
   );
 
-  const updatedResource = res as Resource<Version, AllResourceTypes>;
+  const updatedResource = res.resource as unknown as Resource<
+    Version,
+    AllResourceTypes
+  >;
 
   return {
     created: existingResource === undefined,

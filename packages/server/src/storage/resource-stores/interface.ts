@@ -15,14 +15,14 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
-export type Insertable =
-  | s.resources.Insertable
-  | s.authorization_code.Insertable
-  | s.authorization_scopes.Insertable
-  | s.tenants.Insertable;
+// export type Insertable =
+//   | s.resources.Insertable
+//   | s.authorization_code.Insertable
+//   | s.authorization_scopes.Insertable
+//   | s.tenants.Insertable;
 
 export interface ResourceStore<CTX> {
-  insert<T extends Insertable>(ctx: CTX, data: T): Promise<T>;
+  insert<T extends s.resources.Insertable>(ctx: CTX, data: T): Promise<T>;
 
   read<Version extends FHIR_VERSION>(
     ctx: CTX,
