@@ -252,12 +252,6 @@ export class PostgresStore<
                 outcomeFatal("exception", "Failed to update user."),
               );
 
-            await db
-              .insert("resources", insertion.response, {
-                returning: ["resource"],
-              })
-              .run(ctx.db);
-
             return insertion.response as T;
           },
         );

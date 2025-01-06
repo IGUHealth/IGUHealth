@@ -60,7 +60,7 @@ function setInTransactionMiddleware<
   };
 }
 
-function setEmailVerified<
+function setEmailVerifiedMiddleware<
   State,
   CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
 >(): MembershipMiddlewareChain<State, CTX> {
@@ -238,6 +238,21 @@ async function gateCheckSingleOwner(
   }
 }
 
+function updateMembershipResourceMiddleware<
+  State,
+  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
+>(): MembershipMiddlewareChain<State, CTX> {
+  return async (context, next) => {
+    await db
+      .insert("resources", context.request, {
+        returning: ["resource"],
+      })
+      .run(context.ctx.db);
+
+    return next(context);
+  };
+}
+
 function verifySingleOwnerMiddleware<
   State,
   CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
@@ -260,7 +275,8 @@ export default function createAuthMembershipMiddleware<
   s.resources.Insertable
 > {
   return createMiddlewareAsync([
-    setEmailVerified(),
+    setEmailVerifiedMiddleware(),
+    updateMembershipResourceMiddleware(),
     updateUserTableMiddleware(),
     verifySingleOwnerMiddleware(),
   ]);
