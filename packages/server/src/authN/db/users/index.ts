@@ -43,8 +43,8 @@ export async function getTenantClaims(
 }
 
 export type LoginErrors = "invalid-credentials" | "email-not-verified";
-type SuccessfulLogin = { type: "successful", user: User } 
-type FailedLogin = { type: "failed", errors: LoginErrors[] }
+type SuccessfulLogin = { type: "successful"; user: User };
+type FailedLogin = { type: "failed"; errors: LoginErrors[] };
 export type LoginResult = SuccessfulLogin | FailedLogin;
 
 export async function login<T extends keyof LoginParameters>(
@@ -74,10 +74,10 @@ export async function login<T extends keyof LoginParameters>(
 
       const user = usersFound[0];
 
-      if(user?.email_verified === false) {
-        return { type: "failed", errors: ["email-not-verified"]};
+      if (user?.email_verified === false) {
+        return { type: "failed", errors: ["email-not-verified"] };
       }
-      if(!user){
+      if (!user) {
         return { type: "failed", errors: ["invalid-credentials"] };
       }
       return { type: "successful", user: user };

@@ -216,12 +216,13 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
       ];
     }
 
-    default:
+    default: {
       throw new Error(
         `Unknown reference parameter of type '${
           value.meta()?.type
-        }' indexing '${parameter.url}'`,
+        }' with search parameter '${parameter.url}' for value '${value.getValue()}' indexing'`,
       );
+    }
   }
 }
 

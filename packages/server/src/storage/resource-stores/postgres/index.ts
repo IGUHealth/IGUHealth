@@ -7,7 +7,11 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 import {
   R4BHistoryInstanceRequest,
   R4BSystemHistoryRequest,
@@ -61,6 +65,8 @@ function processHistoryParameters(
 
   return sqlParams;
 }
+
+const mem = createAuthMembershipMiddleware();
 
 function historyLevelFilter(
   request:
@@ -227,36 +233,35 @@ export class PostgresStore<
     >;
   }
 
-  async insert<Version extends FHIR_VERSION>(
+  async insert<T extends s.resources.Insertable>(
     ctx: CTX,
-    data: s.resources.Insertable[],
-  ): Promise<Resource<Version, AllResourceTypes>[]> {
-    const mem = createAuthMembershipMiddleware();
-    return Transaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
-      const result = await db
-        .insert("resources", data, { returning: ["resource"] })
-        .run(ctx.db);
+    data: T,
+  ): Promise<s.resources.JSONSelectable> {
+    switch (
+      (data.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
+        .resourceType
+    ) {
+      case "Membership": {
+        return Transaction(
+          ctx,
+          db.IsolationLevel.RepeatableRead,
+          async (ctx) => {
+            const insertion = await mem({ state: {}, ctx, request: data });
+            if (!insertion.response)
+              throw new OperationError(
+                outcomeFatal("exception", "Failed to update user."),
+              );
 
-      // Handle user table membership updates.
-      await Promise.all(
-        data
-          .filter(
-            (d) =>
-              (
-                d.resource as unknown as Resource<
-                  FHIR_VERSION,
-                  AllResourceTypes
-                >
-              ).resourceType === "Membership",
-          )
-          .map((insert) => mem({ state: {}, ctx, request: insert })),
-      );
+            return insertion.response;
+          },
+        );
+      }
 
-      return result.map((r) => r.resource) as unknown as Resource<
-        Version,
-        AllResourceTypes
-      >[];
-    });
+      default: {
+        const response = await db.insert("resources", data).run(ctx.db);
+        return response;
+      }
+    }
   }
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,
