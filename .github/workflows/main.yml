@@ -36,17 +36,26 @@ jobs:
         run: yarn
       - name: Lint
         run: yarn eslint packages/server --quiet && yarn eslint packages/components --quiet && yarn eslint packages/admin-app --quiet
+
   server-tests:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: development
       API_URL: http://localhost:3000
       AUTH_ISSUER: http://localhost:3000
-      FHIR_DATABASE_NAME: postgres
-      FHIR_DATABASE_HOST: localhost
-      FHIR_DATABASE_PORT: 5432
-      FHIR_DATABASE_PASSWORD: "postgres"
-      FHIR_DATABASE_USERNAME: postgres
+
+      RESOURCE_STORE_NAME: postgres
+      RESOURCE_STORE_HOST: localhost
+      RESOURCE_STORE_PORT: 5432
+      RESOURCE_STORE_PASSWORD: postgres
+      RESOURCE_STORE_USERNAME: postgres
+
+      SEARCH_STORE_NAME: postgres
+      SEARCH_STORE_HOST: localhost
+      SEARCH_STORE_PORT: 5432
+      SEARCH_STORE_PASSWORD: postgres
+      SEARCH_STORE_USERNAME: postgres
+
       REDIS_HOST: localhost
       REDIS_PORT: 6379
       SESSION_COOKIE_SECRETS: "session-secret"
@@ -97,6 +106,7 @@ jobs:
 
       - name: Migrate
         run: yarn workspace @iguhealth/server migrate up
+
       - name: Load Terminology
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
 

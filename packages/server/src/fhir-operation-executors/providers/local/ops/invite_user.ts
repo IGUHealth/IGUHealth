@@ -21,7 +21,7 @@ import {
   EmailTemplateText,
 } from "../../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
+import { Transaction } from "../../../../fhir-storage/transactions.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(
@@ -32,7 +32,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
         outcomeError("exception", "Encryption provider not configured"),
       );
 
-    const [user, inviteCode] = await FHIRTransaction(
+    const [user, inviteCode] = await Transaction(
       ctx,
       db.IsolationLevel.Serializable,
       async (ctx) => {

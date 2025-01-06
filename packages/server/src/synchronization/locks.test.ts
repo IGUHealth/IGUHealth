@@ -48,11 +48,11 @@ test("Test PostgresLock", async () => {
   const lockId = "test-lock";
   const promises: Promise<void>[] = [];
   const lock = new PostgresLock({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    user: process.env["RESOURCE_STORE_USERNAME"],
+    password: process.env["RESOURCE_STORE_PASSWORD"],
+    host: process.env["RESOURCE_STORE_HOST"],
+    database: process.env["RESOURCE_STORE_NAME"],
+    port: parseInt(process.env["RESOURCE_STORE_PORT"] ?? "5432"),
   });
 
   for (let i = 0; i < 10; i++) {

@@ -18,7 +18,7 @@ For a list of environment variables that can be used see [here](../intro#start-t
 Running the FHIR Server `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth server`.
 
 ```bash
-docker run -p 3000:3000 --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth server
+docker run -p 3000:3000 --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env RESOURCE_STORAGE_NAME=testdb --env RESOURCE_STORAGE_PORT=5432 --env RESOURCE_STORAGE_USERNAME=postgres --env RESOURCE_STORAGE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth server
 ```
 
 #### Running a Worker (Subscription processing)
@@ -26,7 +26,7 @@ docker run -p 3000:3000 --env REDIS_HOST=docker.for.mac.host.internal --env REDI
 Running the a subscription worker `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth worker`.
 
 ```bash
-docker run  --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth worker
+docker run  --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env RESOURCE_STORAGE_NAME=testdb --env RESOURCE_STORAGE_PORT=5432 --env RESOURCE_STORAGE_USERNAME=postgres --env RESOURCE_STORAGE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth worker
 ```
 
 #### Running SQL Migrations (Setting up database IE creating tables etc.)
@@ -34,7 +34,7 @@ docker run  --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 
 Running database migrations `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth migrate`.
 
 ```bash
-docker run --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth migrate
+docker run --env RESOURCE_STORAGE_NAME=testdb --env RESOURCE_STORAGE_PORT=5432 --env RESOURCE_STORAGE_USERNAME=postgres --env RESOURCE_STORAGE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth migrate
 ```
 
 ## Configuring Kubernetes
@@ -116,27 +116,27 @@ spec:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: redis-port
-            - name: FHIR_DATABASE_NAME
+            - name: RESOURCE_STORAGE_NAME
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: fhir-db-name
-            - name: FHIR_DATABASE_HOST
+            - name: RESOURCE_STORAGE_HOST
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: fhir-db-host
-            - name: FHIR_DATABASE_PORT
+            - name: RESOURCE_STORAGE_PORT
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: fhir-db-port
-            - name: FHIR_DATABASE_USERNAME
+            - name: RESOURCE_STORAGE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: fhir-db-username
-            - name: FHIR_DATABASE_PASSWORD
+            - name: RESOURCE_STORAGE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets

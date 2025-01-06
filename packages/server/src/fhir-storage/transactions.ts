@@ -95,7 +95,7 @@ export async function buildTransactionTopologicalGraph<
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
 }
 
-export function FHIRTransaction<CTX extends Pick<IGUHealthServerCTX, "db">, R>(
+export function Transaction<CTX extends Pick<IGUHealthServerCTX, "db">, R>(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
   transaction: (ctx: CTX) => R,

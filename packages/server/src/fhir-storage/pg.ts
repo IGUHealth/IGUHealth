@@ -6,18 +6,18 @@ import pg from "pg";
  */
 export function createPGPool(): pg.Pool {
   const pool = new pg.Pool({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    user: process.env.RESOURCE_STORE_PG_USERNAME,
+    password: process.env.RESOURCE_STORE_PG_PASSWORD,
+    host: process.env.RESOURCE_STORE_PG_HOST,
+    database: process.env.RESOURCE_STORE_PG_NAME,
+    port: parseInt(process.env.RESOURCE_STORE_PG_PORT ?? "5432"),
     ssl:
-      process.env["FHIR_DATABASE_SSL"] === "true"
+      process.env.RESOURCE_STORE_PG_SSL === "true"
         ? {
             // Self signed certificate CA is not used.
             rejectUnauthorized: false,
-            host: process.env["FHIR_DATABASE_HOST"],
-            port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+            host: process.env.RESOURCE_STORE_PG_HOST,
+            port: parseInt(process.env.RESOURCE_STORE_PG_PORT ?? "5432"),
           }
         : false,
   });

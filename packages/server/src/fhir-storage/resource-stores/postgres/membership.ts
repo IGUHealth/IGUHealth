@@ -22,7 +22,7 @@ import {
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
-import { FHIRTransaction } from "../../transactions.js";
+import { Transaction } from "../../transactions.js";
 
 function getMembershipResource(request: s.resources.Insertable): Membership {
   const membership = request.resource as unknown as Membership;
@@ -46,7 +46,7 @@ function setInTransactionMiddleware<
   CTX extends { db: db.Queryable },
 >(): MembershipMiddlewareChain<State, CTX> {
   return async (context, next) => {
-    return FHIRTransaction(
+    return Transaction(
       context.ctx,
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {

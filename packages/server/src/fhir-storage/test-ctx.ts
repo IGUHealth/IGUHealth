@@ -1,5 +1,4 @@
 import path from "path";
-import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 import * as s from "zapatos/schema";
@@ -26,6 +25,7 @@ import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";
 import { PostgresStore } from "./resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
+import { createPGPool } from "./pg.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
@@ -57,22 +57,7 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
 
 export const testServices: IGUHealthServerCTX = {
   tenant: "tenant" as TenantId,
-  db: new pg.Pool({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-    ssl:
-      process.env["FHIR_DATABASE_SSL"] === "true"
-        ? {
-            // Self signed certificate CA is not used.
-            rejectUnauthorized: false,
-            host: process.env["FHIR_DATABASE_HOST"],
-            port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-          }
-        : false,
-  }),
+  db: createPGPool(),
   store: new PostgresStore(),
   search: new PostgresSearchEngine(),
   // @ts-ignore
