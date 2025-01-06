@@ -56,7 +56,7 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
     cmdOptions: {
       "sql-file": true,
-      "migrations-dir": "src/fhir-storage/schemas/migrations/db-migrate",
+      "migrations-dir": "src/storage/schemas/migrations/db-migrate",
     },
   });
 

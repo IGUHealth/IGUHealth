@@ -54,9 +54,9 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
-import { createPGPool } from "./fhir-storage/pg.js";
-import createResourceStore from "./fhir-storage/resource-stores/index.js";
-import { createSearchStore } from "./fhir-storage/search-stores/index.js";
+import { createPGPool } from "./storage/pg.js";
+import createResourceStore from "./storage/resource-stores/index.js";
+import { createSearchStore } from "./storage/search-stores/index.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";

@@ -7,7 +7,7 @@ import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { toDBFHIRVersion } from "../../fhir-storage/utilities/version.js";
+import { toDBFHIRVersion } from "../../storage/utilities/version.js";
 import { IGUHealthServerCTX } from "../types.js";
 import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 

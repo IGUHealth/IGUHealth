@@ -21,7 +21,7 @@ import {
   EmailTemplateText,
 } from "../../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { Transaction } from "../../../../fhir-storage/transactions.js";
+import { Transaction } from "../../../../storage/transactions.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(

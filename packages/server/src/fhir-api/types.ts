@@ -42,8 +42,8 @@ import {
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
-import { ResourceStore } from "../fhir-storage/resource-stores/interface.js";
-import { SearchEngine } from "../fhir-storage/search-stores/interface.js";
+import { ResourceStore } from "../storage/resource-stores/interface.js";
+import { SearchEngine } from "../storage/search-stores/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 import { Producer } from "kafkajs";

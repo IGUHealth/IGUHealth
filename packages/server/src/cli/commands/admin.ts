@@ -22,10 +22,10 @@ import {
   getRedisClient,
 } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { createPGPool } from "../../fhir-storage/pg.js";
-import { PostgresStore } from "../../fhir-storage/resource-stores/postgres/index.js";
-import { PostgresSearchEngine } from "../../fhir-storage/search-stores/postgres/index.js";
-import { Transaction } from "../../fhir-storage/transactions.js";
+import { createPGPool } from "../../storage/pg.js";
+import { PostgresStore } from "../../storage/resource-stores/postgres/index.js";
+import { PostgresSearchEngine } from "../../storage/search-stores/postgres/index.js";
+import { Transaction } from "../../storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
 

@@ -39,15 +39,15 @@ import logAuditEvent, {
   createAuditEvent,
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
-import { fitsSearchCriteria } from "../fhir-storage/clients/memory/search.js";
-import { Transaction } from "../fhir-storage/transactions.js";
-import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
+import { fitsSearchCriteria } from "../storage/clients/memory/search.js";
+import { Transaction } from "../storage/transactions.js";
+import { createResolverRemoteCanonical } from "../storage/utilities/canonical.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
-} from "../fhir-storage/utilities/search/parameters.js";
+} from "../storage/utilities/search/parameters.js";
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 import {
