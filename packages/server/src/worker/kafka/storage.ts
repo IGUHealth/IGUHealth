@@ -3,7 +3,7 @@ import * as s from "zapatos/schema";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import createResourceStore from "../../fhir-storage/resource-stores/index.js";
+import createResourceStore from "../../storage/resource-stores/index.js";
 import { staticWorkerServices } from "../utilities.js";
 import { ERROR_QUEUE, RESOURCE_QUEUE } from "./constants.js";
 

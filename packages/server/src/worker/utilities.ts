@@ -17,8 +17,8 @@ import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import RedisCache from "../cache/providers/redis.js";
 import { createLogger, getRedisClient } from "../fhir-api/index.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
-import { createArtifactMemoryDatabase } from "../fhir-storage/clients/memory/async.js";
-import { createPGPool } from "../fhir-storage/pg.js";
+import { createArtifactMemoryDatabase } from "../storage/clients/memory/async.js";
+import { createPGPool } from "../storage/pg.js";
 import RedisLock from "../synchronization/redis.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<

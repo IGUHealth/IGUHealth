@@ -9,7 +9,7 @@ import {
 
 import { SMARTResourceScope } from "../../authN/oidc/scopes/parse.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { searchResources } from "../../fhir-storage/utilities/search/parameters.js";
+import { searchResources } from "../../storage/utilities/search/parameters.js";
 
 // Pulled from patient compartments definition here: [https://hl7.org/fhir/R4/compartmentdefinition-patient.html].
 const patientCompartments: Record<string, string[] | undefined> = {

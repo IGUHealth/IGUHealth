@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import db, { doNothing } from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { createPGPool } from "../../fhir-storage/pg.js";
+import { createPGPool } from "../../storage/pg.js";
 
 async function createSystem(pg: db.Queryable, url: string) {
   return db

@@ -9,7 +9,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
-import { testServices } from "../../fhir-storage/test-ctx.js";
+import { testServices } from "../../storage/test-ctx.js";
 import createAuthorizationMiddleware from "./authorization.js";
 
 const authorizationMiddleware = createAuthorizationMiddleware();

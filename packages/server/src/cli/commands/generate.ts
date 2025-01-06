@@ -85,7 +85,7 @@ async function generateTypes() {
             }
           : false,
     },
-    outDir: "src/fhir-storage/schemas/generated",
+    outDir: "src/storage/schemas/generated",
   });
 }
 

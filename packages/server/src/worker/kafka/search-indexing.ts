@@ -10,10 +10,10 @@ import { TenantId } from "@iguhealth/jwt";
 
 import { createClient, createLogger } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { createPGPool } from "../../fhir-storage/pg.js";
-import createResourceStore from "../../fhir-storage/resource-stores/index.js";
-import { createSearchStore } from "../../fhir-storage/search-stores/index.js";
-import { toFHIRVersion } from "../../fhir-storage/utilities/version.js";
+import { createPGPool } from "../../storage/pg.js";
+import createResourceStore from "../../storage/resource-stores/index.js";
+import { createSearchStore } from "../../storage/search-stores/index.js";
+import { toFHIRVersion } from "../../storage/utilities/version.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import { ERROR_QUEUE, RESOURCE_QUEUE } from "./constants.js";
 

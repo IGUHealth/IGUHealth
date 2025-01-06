@@ -21,11 +21,11 @@ services:
       - RESOURCE_STORE_PG_PASSWORD=postgres
       - RESOURCE_STORE_PG_USERNAME=postgres
 
-      - SEARCH_STORE_NAME=postgres
-      - SEARCH_STORE_HOST=localhost
-      - SEARCH_STORE_PORT=5432
-      - SEARCH_STORE_PASSWORD=postgres
-      - SEARCH_STORE_USERNAME=postgres
+      - SEARCH_STORE_PG_NAME=postgres
+      - SEARCH_STORE_PG_HOST=localhost
+      - SEARCH_STORE_PG_PORT=5432
+      - SEARCH_STORE_PG_PASSWORD=postgres
+      - SEARCH_STORE_PG_USERNAME=postgres
 
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -48,11 +48,11 @@ services:
       - RESOURCE_STORE_PG_PASSWORD=postgres
       - RESOURCE_STORE_PG_USERNAME=postgres
 
-      - SEARCH_STORE_NAME=postgres
-      - SEARCH_STORE_HOST=localhost
-      - SEARCH_STORE_PORT=5432
-      - SEARCH_STORE_PASSWORD=postgres
-      - SEARCH_STORE_USERNAME=postgres
+      - SEARCH_STORE_PG_NAME=postgres
+      - SEARCH_STORE_PG_HOST=localhost
+      - SEARCH_STORE_PG_PORT=5432
+      - SEARCH_STORE_PG_PASSWORD=postgres
+      - SEARCH_STORE_PG_USERNAME=postgres
 
       - REDIS_HOST=redis
       - REDIS_PORT=6379

@@ -11,9 +11,9 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import analyze from "@iguhealth/fhirpath/analyze";
 
-import { toSQLString } from "../../fhir-storage/log_sql.js";
-import { getSp1Column } from "../../fhir-storage/search-stores/postgres/clauses/db_singular_clauses/shared.js";
-import { searchParameterToTableName } from "../../fhir-storage/utilities/search/parameters.js";
+import { toSQLString } from "../../storage/log_sql.js";
+import { getSp1Column } from "../../storage/search-stores/postgres/clauses/db_singular_clauses/shared.js";
+import { searchParameterToTableName } from "../../storage/utilities/search/parameters.js";
 
 export function getSp1Name(
   version: FHIR_VERSION,
