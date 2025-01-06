@@ -15,7 +15,15 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
+export type Insertable =
+  | s.resources.Insertable
+  | s.authorization_code.Insertable
+  | s.authorization_scopes.Insertable
+  | s.tenants.Insertable;
+
 export interface ResourceStore<CTX> {
+  insert<T extends Insertable>(ctx: CTX, data: T): Promise<T>;
+
   read<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
@@ -27,11 +35,6 @@ export interface ResourceStore<CTX> {
     fhirVersion: Version,
     id: id,
   ): Promise<Resource<Version, AllResourceTypes> | undefined>;
-
-  insert<Version extends FHIR_VERSION>(
-    ctx: CTX,
-    data: s.resources.Insertable[],
-  ): Promise<Resource<Version, AllResourceTypes>[]>;
 
   history<Version extends FHIR_VERSION>(
     ctx: CTX,

@@ -33,7 +33,7 @@ export default async function createStorageWorker() {
 
           await store.insert(
             { ...services, tenant: value.tenant as TenantId },
-            [value],
+            value,
           );
         }
         const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;

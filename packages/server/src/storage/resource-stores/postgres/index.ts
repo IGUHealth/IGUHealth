@@ -19,7 +19,7 @@ import {
 
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { toDBFHIRVersion } from "../../utilities/version.js";
-import { ResourceStore } from "../interface.js";
+import { Insertable, ResourceStore } from "../interface.js";
 import { createFHIRURL } from "../../../fhir-api/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../utilities/search/parameters.js";
@@ -227,10 +227,7 @@ export class PostgresStore<
     >;
   }
 
-  async insert<Version extends FHIR_VERSION>(
-    ctx: CTX,
-    data: s.resources.Insertable[],
-  ): Promise<Resource<Version, AllResourceTypes>[]> {
+  async insert<T extends Insertable>(ctx: CTX, data: T): Promise<T> {
     const mem = createAuthMembershipMiddleware();
     return Transaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
       const result = await db

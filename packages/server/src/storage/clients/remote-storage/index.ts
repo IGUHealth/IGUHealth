@@ -87,7 +87,8 @@ async function createResource<
 
   resource.id = generateId();
 
-  const res = await store.insert(ctx, [
+  const res = await store.insert(
+    ctx,
     version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
@@ -96,9 +97,9 @@ async function createResource<
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
     }),
-  ]);
+  );
 
-  return res[0] as Resource<Version, AllResourceTypes>;
+  return res as Resource<Version, AllResourceTypes>;
 }
 
 async function getResourceById<
@@ -184,7 +185,8 @@ async function patchResource<
       newResource.id = existingResource.id;
     }
 
-    const res = await store.insert(ctx, [
+    const res = await store.insert(
+      ctx,
       version({
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
@@ -193,9 +195,9 @@ async function patchResource<
         author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: newResource as unknown as db.JSONObject,
       }),
-    ]);
+    );
 
-    const patchedResource = res[0] as Resource<Version, AllResourceTypes>;
+    const patchedResource = res as Resource<Version, AllResourceTypes>;
 
     return patchedResource;
   } catch (e) {
@@ -254,7 +256,8 @@ async function updateResource<
     });
   }
 
-  const res = await store.insert(ctx, [
+  const res = await store.insert(
+    ctx,
     version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
@@ -263,9 +266,9 @@ async function updateResource<
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
     }),
-  ]);
+  );
 
-  const updatedResource = res[0] as Resource<Version, AllResourceTypes>;
+  const updatedResource = res as Resource<Version, AllResourceTypes>;
 
   return {
     created: existingResource === undefined,
@@ -292,7 +295,8 @@ async function deleteResource<
       ),
     );
 
-  await store.insert(ctx, [
+  await store.insert(
+    ctx,
     version({
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
@@ -302,7 +306,7 @@ async function deleteResource<
       resource: resource as unknown as db.JSONObject,
       deleted: true,
     }),
-  ]);
+  );
 }
 
 async function conditionalDelete(
