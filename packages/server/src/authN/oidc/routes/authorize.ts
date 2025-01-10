@@ -101,7 +101,7 @@ export function authorize(): OIDCRouteHandler {
       });
     }
     const approvedScopes = await scopes.getApprovedScope(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       client.id,
       userId,
@@ -159,7 +159,7 @@ export function authorize(): OIDCRouteHandler {
     }
 
     const code = await codes.create(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       {
         type: "oauth2_code_grant",

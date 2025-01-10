@@ -73,7 +73,7 @@ export function scopePOST(): OIDCRouteHandler {
             updateColumns: ["scope"],
           },
         )
-        .run(ctx.state.iguhealth.db);
+        .run(ctx.state.iguhealth.store.getClient());
 
       // Redirect back to get request which generates the code etc... as next step.
       const authorizeRoute = ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {

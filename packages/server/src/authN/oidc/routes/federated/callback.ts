@@ -126,7 +126,7 @@ export function federatedCallback(): OIDCRouteHandler {
         );
 
         const user = await users.search(
-          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           {
             fhir_user_id: membership.id,

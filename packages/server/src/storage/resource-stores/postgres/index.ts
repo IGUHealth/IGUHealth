@@ -9,8 +9,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
-  outcomeError,
-  outcomeFatal,
+  outcomeError
 } from "@iguhealth/operation-outcomes";
 import {
   R4BHistoryInstanceRequest,
@@ -29,8 +28,7 @@ import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../../utilities/sql.js";
-import createAuthMembershipMiddleware from "./membership.js";
-import { Transaction } from "../../transactions.js";
+
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -66,8 +64,6 @@ function processHistoryParameters(
   return sqlParams;
 }
 
-const mem = createAuthMembershipMiddleware();
-
 function historyLevelFilter(
   request:
     | R4HistoryInstanceRequest
@@ -100,7 +96,7 @@ function historyLevelFilter(
 }
 
 async function getHistory<
-  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
+  CTX extends Pick<IGUHealthServerCTX, "store" | "tenant">,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -124,7 +120,7 @@ async function getHistory<
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
 
-  const history = await historySQL.run(ctx.db);
+  const history = await historySQL.run(ctx.store.getClient());
 
   const resourceHistory = history.map((row) => {
     const resource = row.resource as unknown as Resource<
@@ -155,10 +151,13 @@ async function getHistory<
   return resourceHistory;
 }
 
-export class PostgresStore<
-  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
-> implements ResourceStore<CTX>
+export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
+  implements ResourceStore<CTX>
 {
+  private readonly _pgClient;
+  constructor(pgClient: db.Queryable) {
+    this._pgClient = pgClient;
+  }
   async read<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
@@ -176,7 +175,7 @@ export class PostgresStore<
     const res = (
       await db
         .select("resources", whereable, { columns: ["resource"] })
-        .run(ctx.db)
+        .run(this._pgClient)
     ).map((r) => r.resource) as unknown as Resource<
       Version,
       AllResourceTypes
@@ -226,7 +225,7 @@ export class PostgresStore<
           columns: ["resource"],
         },
       )
-      .run(ctx.db);
+      .run(this._pgClient);
 
     return result?.resource as unknown as Promise<
       Resource<Version, AllResourceTypes> | undefined
@@ -237,32 +236,10 @@ export class PostgresStore<
     ctx: CTX,
     data: T,
   ): Promise<s.resources.JSONSelectable> {
-    switch (
-      (data.resource as unknown as Resource<FHIR_VERSION, AllResourceTypes>)
-        .resourceType
-    ) {
-      case "Membership": {
-        return Transaction(
-          ctx,
-          db.IsolationLevel.RepeatableRead,
-          async (ctx) => {
-            const insertion = await mem({ state: {}, ctx, request: data });
-            if (!insertion.response)
-              throw new OperationError(
-                outcomeFatal("exception", "Failed to update user."),
-              );
-
-            return insertion.response;
-          },
-        );
-      }
-
-      default: {
-        const response = await db.insert("resources", data).run(ctx.db);
-        return response;
-      }
-    }
+    const response = await db.insert("resources", data).run(this._pgClient);
+    return response;
   }
+  
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,
     request:
@@ -274,10 +251,14 @@ export class PostgresStore<
       | R4BSystemHistoryRequest,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
     return getHistory(
-      ctx,
+      { ...ctx, store: this },
       request.fhirVersion,
       historyLevelFilter(request),
       request.parameters || [],
     );
+  }
+
+  getClient(): db.Queryable {
+    return this._pgClient;
   }
 }

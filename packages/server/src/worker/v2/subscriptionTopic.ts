@@ -7,7 +7,8 @@ import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
-import { Transaction } from "../../storage/transactions.js";
+import { getActiveTenants } from "../../authN/db/tenant.js";
+import { DBTransaction } from "../../storage/transactions.js";
 import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
 import {
   IGUHealthWorkerCTX,
@@ -17,7 +18,6 @@ import {
   tenantWorkerContext,
   workerTokenClaims,
 } from "../utilities.js";
-import { getActiveTenants } from "../../authN/db/tenant.js";
 
 type SubscriptionTopicVersion<FHIR_VERSION> = FHIR_VERSION extends R4
   ? Basic
@@ -111,7 +111,7 @@ async function processTenant<Version extends FHIR_VERSION>(
     );
 
   await ensureLocksCreated(
-    workerContext.db,
+    workerContext.store.getClient(),
     subscriptionTopics.map((st) => ({
       id: st.id as string,
       type: "subscriptiontopic",
@@ -121,12 +121,12 @@ async function processTenant<Version extends FHIR_VERSION>(
     })),
   );
 
-  await Transaction(
+  await DBTransaction(
     workerContext,
     db.IsolationLevel.RepeatableRead,
     async (tenantContext) => {
       const locksRetrieved = await getAvailableLocks(
-        tenantContext.db,
+        tenantContext.store.getClient(),
         tenantContext.tenant,
         "subscriptiontopic",
         subscriptionTopics.map((st) => st.id as string),
@@ -167,11 +167,11 @@ export default async function subscriptionTopicWorker(
   loopInterval = 500,
 ) {
   let isRunning = true;
-  const services = staticWorkerServices(workerID);
+  const services = await staticWorkerServices(workerID);
 
   while (isRunning) {
     try {
-      const activeTenants = await getActiveTenants(services.db);
+      const activeTenants = await getActiveTenants(services.store.getClient());
       const executingTenants: Record<TenantId, Promise<void>> = {};
       for (const tenant of activeTenants) {
         // Only process tenant if not already processing.

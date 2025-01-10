@@ -1,3 +1,5 @@
+import * as db from "zapatos/db";
+
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   AllResourceTypes,
@@ -14,11 +16,15 @@ import { executeSearchQuery } from "./search.js";
 export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
   implements SearchEngine<CTX>
 {
+  private readonly _pgClient;
+  constructor(pgClient: db.Queryable) {
+    this._pgClient = pgClient;
+  }
   async search(
     ctx: CTX,
     request: FHIRSearchRequest,
   ): Promise<{ total?: number; result: SearchResult[] }> {
-    const result = await executeSearchQuery(ctx, request);
+    const result = await executeSearchQuery(this._pgClient, ctx, request);
     return result;
   }
   index<Version extends FHIR_VERSION>(
@@ -26,7 +32,13 @@ export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
     fhirVersion: Version,
     resource: Resource<Version, AllResourceTypes>,
   ): Promise<void> {
-    return indexResource(ctx, fhirVersion, resource);
+    return db.transaction(
+      this._pgClient,
+      db.IsolationLevel.ReadCommitted,
+      async (txClient) => {
+        return indexResource(txClient, ctx, fhirVersion, resource);
+      },
+    );
   }
   removeIndex<Version extends FHIR_VERSION>(
     ctx: CTX,
@@ -34,6 +46,12 @@ export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
     id: id,
     resourceType: ResourceType<Version>,
   ): Promise<void> {
-    return removeIndices(ctx, fhirVersion, id, resourceType);
+    return db.transaction(
+      this._pgClient,
+      db.IsolationLevel.ReadCommitted,
+      async (txClient) => {
+        return removeIndices(txClient, ctx, fhirVersion, id, resourceType);
+      },
+    );
   }
 }

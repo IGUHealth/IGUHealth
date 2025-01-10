@@ -9,7 +9,7 @@ export const IguhealthDeleteScopeInvoke = InlineOperation(
   IguhealthDeleteScope.Op,
   async (ctx: IGUHealthServerCTX, _request, input) => {
     const deleteResult = await scopes.deleteUserScope(
-      ctx.db,
+      ctx.store.getClient(),
       ctx.tenant,
       input.client_id,
       ctx.user.payload.sub,

@@ -25,7 +25,7 @@ async function shouldSendPasswordReset(
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await codes.search(ctx.db, ctx.tenant, {
+  const existingCodes = await codes.search(ctx.store.getClient(), ctx.tenant, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -53,7 +53,11 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await createPasswordResetCode(ctx.db, ctx.tenant, user);
+  const code = await createPasswordResetCode(
+    ctx.store.getClient(),
+    ctx.tenant,
+    user,
+  );
 
   const emailVerificationURL = router.url(
     OIDC_ROUTES.PASSWORD_RESET_VERIFY_GET,

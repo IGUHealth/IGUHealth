@@ -1,0 +1,4 @@
+releases:
+  "@iguhealth/cli": minor
+  "@iguhealth/server": minor
+  "@iguhealth/testscript-runner": minor

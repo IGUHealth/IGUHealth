@@ -21,7 +21,7 @@ export async function create(
       ...model,
       id: tenantId,
     })
-    .run(ctx.db);
+    .run(ctx.store.getClient());
 
   return tenant;
 }

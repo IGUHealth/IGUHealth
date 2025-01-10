@@ -8,7 +8,7 @@ import InlineOperation from "../../interface.js";
 export const IguhealthDeleteRefreshTokenInvoke = InlineOperation(
   IguhealthDeleteRefreshToken.Op,
   async (ctx: IGUHealthServerCTX, _request, input) => {
-    await codes.remove(ctx.db, ctx.tenant, {
+    await codes.remove(ctx.store.getClient(), ctx.tenant, {
       user_id: ctx.user.payload.sub,
       type: "refresh_token",
       id: input.id,

@@ -18,13 +18,13 @@ import RedisCache from "../cache/providers/redis.js";
 import { createLogger, getRedisClient } from "../fhir-api/index.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { createArtifactMemoryDatabase } from "../storage/clients/memory/async.js";
-import { createPGPool } from "../storage/pg.js";
 import RedisLock from "../synchronization/redis.lock.js";
+import createResourceStore from "../storage/resource-stores/index.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
   | "tenant"
-  | "db"
+  | "store"
   | "logger"
   | "lock"
   | "cache"
@@ -57,10 +57,9 @@ export function workerTokenClaims(
 export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
-export function staticWorkerServices(
+export async function staticWorkerServices(
   workerID: string,
-): Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client"> {
-  const db = createPGPool();
+): Promise<Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">> {
   const redis = getRedisClient();
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
@@ -73,7 +72,7 @@ export function staticWorkerServices(
   return {
     resolveCanonical: sdArtifacts.resolveCanonical,
     resolveTypeToCanonical: sdArtifacts.resolveTypeToCanonical,
-    db,
+    store: await createResourceStore({ type: "postgres" }),
     logger,
     cache,
     lock,

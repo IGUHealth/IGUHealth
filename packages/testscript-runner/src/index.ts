@@ -847,6 +847,9 @@ async function runOperation<Version extends FHIR_VERSION>(
     const request = await operationToFHIRRequest(state, pointer);
     const response = await state.client.request({}, request);
 
+    // Hack because async so will wait a bit.
+    await new Promise((resolve) => setTimeout(() => resolve(undefined), 100));
+
     const result = {
       result: "pass" as code,
       message:

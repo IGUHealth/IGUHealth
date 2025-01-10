@@ -23,9 +23,8 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";
-import { PostgresStore } from "./resource-stores/postgres/index.js";
-import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
-import { createPGPool } from "./pg.js";
+import createResourceStore from "./resource-stores/index.js";
+import { createSearchStore } from "./search-stores/index.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
@@ -57,9 +56,8 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
 
 export const testServices: IGUHealthServerCTX = {
   tenant: "tenant" as TenantId,
-  db: createPGPool(),
-  store: new PostgresStore(),
-  search: new PostgresSearchEngine(),
+  store: await createResourceStore({ type: "postgres" }),
+  search: await createSearchStore({ type: "postgres" }),
   // @ts-ignore
   user: {
     payload: {

@@ -79,7 +79,7 @@
         {
           "assert": {
             "label": "01-ReadPatientOK",
-            "description": "Confirm patient created.",
+            "description": "Confirm patient conditionally updated.",
             "direction": "response",
             "resource": "Patient"
           }

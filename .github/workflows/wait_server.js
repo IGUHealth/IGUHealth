@@ -1,6 +1,6 @@
 async function checkServer() {
   const url = process.argv[2];
-  let pollTotal = process.argv[3] ?? 40;
+  let pollTotal = process.argv[3] ?? 80;
   let pollNumber = 0;
 
   let status = null;

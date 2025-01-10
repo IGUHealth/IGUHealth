@@ -47,9 +47,13 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await users.search(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
-      email,
-    })
+    await users.search(
+      ctx.state.iguhealth.store.getClient(),
+      ctx.state.iguhealth.tenant,
+      {
+        email,
+      },
+    )
   )[0];
   if (existingUser !== undefined) {
     await sendPasswordResetEmail(ctx.router, ctx.state.iguhealth, existingUser);
@@ -65,7 +69,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     );
 
     const user = await users.search(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,

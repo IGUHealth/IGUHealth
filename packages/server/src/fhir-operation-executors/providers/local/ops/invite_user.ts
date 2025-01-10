@@ -21,7 +21,7 @@ import {
   EmailTemplateText,
 } from "../../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
-import { Transaction } from "../../../../storage/transactions.js";
+import { DBTransaction } from "../../../../storage/transactions.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(
@@ -32,7 +32,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
         outcomeError("exception", "Encryption provider not configured"),
       );
 
-    const [user, inviteCode] = await Transaction(
+    const [user, inviteCode] = await DBTransaction(
       ctx,
       db.IsolationLevel.Serializable,
       async (ctx) => {
@@ -72,7 +72,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
           }
         }
 
-        const user = await users.search(ctx.db, ctx.tenant, {
+        const user = await users.search(ctx.store.getClient(), ctx.tenant, {
           fhir_user_id: membership.id,
         });
 
@@ -80,7 +80,11 @@ export const IguhealthInviteUserInvoke = InlineOperation(
           throw new OperationError(outcomeError("not-found", "User not found"));
         }
 
-        const code = await createPasswordResetCode(ctx.db, ctx.tenant, user[0]);
+        const code = await createPasswordResetCode(
+          ctx.store.getClient(),
+          ctx.tenant,
+          user[0],
+        );
         return [user, code];
       },
     );

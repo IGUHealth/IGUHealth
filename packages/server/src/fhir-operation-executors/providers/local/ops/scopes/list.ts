@@ -9,7 +9,7 @@ export const IguhealthListScopesInvoke = InlineOperation(
   IguhealthListScopes.Op,
   async (ctx: IGUHealthServerCTX) => {
     const approvedScopes = await scopes.getAllUserApprovedScopes(
-      ctx.db,
+      ctx.store.getClient(),
       ctx.tenant,
       ctx.user.payload.sub,
     );

@@ -3,8 +3,8 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
-import createIndexingWorker from "../../worker/kafka/search-indexing.js";
-import createStorageWorker from "../../worker/kafka/storage.js";
+import createIndexingWorker from "../../worker/kafka/consumers/search-indexing.js";
+import createStorageWorker from "../../worker/kafka/consumers/storage.js";
 import createWorker from "../../worker/v1.js";
 
 interface DBMigrate {
@@ -18,14 +18,17 @@ async function runServer(port: number) {
 
 type Services = {
   server?: Awaited<ReturnType<typeof runServer>>;
-  worker?: Awaited<ReturnType<typeof createWorker>>;
+  workers: Awaited<ReturnType<typeof createWorker>>[];
 };
 
-let runningServices: Services = {};
+let runningServices: Services = { workers: [] };
 
 export function terminateServices() {
   if (runningServices.server) runningServices.server.close();
-  if (runningServices.worker) runningServices.worker();
+  if (runningServices.workers) {
+    runningServices.workers.forEach((w) => w());
+    runningServices.workers = [];
+  }
 }
 
 const server: Parameters<Command["action"]>[0] = async (options) => {
@@ -40,15 +43,35 @@ const worker: Parameters<Command["action"]>[0] = async () => {
   terminateServices();
   runningServices = {
     ...runningServices,
-    worker: await createWorker(),
+    workers: [await createWorker()],
   };
 };
 
-const both: Parameters<Command["action"]>[0] = async (options) => {
-  terminateServices();
+const storageWorker: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
-    server: await runServer(options.port),
-    worker: await createWorker(),
+    workers: [...runningServices.workers, await createStorageWorker()],
+  };
+};
+
+const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
+  runningServices = {
+    workers: [...runningServices.workers, await createIndexingWorker()],
+  };
+};
+
+const all: Parameters<Command["action"]>[0] = async (options) => {
+  terminateServices();
+  const workers = await Promise.all([
+    createWorker(),
+    createStorageWorker(),
+    createIndexingWorker(),
+  ]);
+
+  const server = await runServer(options.port);
+
+  runningServices = {
+    server,
+    workers,
   };
 };
 
@@ -63,28 +86,16 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
   await dbmigrate.up();
 };
 
-const kafkaStorage: Parameters<Command["action"]>[0] = async () => {
-  runningServices = {
-    worker: await createStorageWorker(),
-  };
-};
-
-const kafkaIndexing: Parameters<Command["action"]>[0] = async () => {
-  runningServices = {
-    worker: await createIndexingWorker(),
-  };
-};
-
 function kafkaCommands(command: Command) {
   command
     .command("storage")
     .description("Storage kafka worker.")
-    .action(kafkaStorage);
+    .action(storageWorker);
 
   command
     .command("indexing")
     .description("Indexing kafka worker.")
-    .action(kafkaIndexing);
+    .action(searchIndexingWorker);
 }
 
 export function runCommands(command: Command) {
@@ -101,7 +112,7 @@ export function runCommands(command: Command) {
   command
     .command("both")
     .option("-p, --port <number>", "port to run on.", "3000")
-    .description("Run the server. And start up background worker.")
-    .action(both);
+    .description("Run the server. And start up background workers.")
+    .action(all);
   command.command("migrate").description("Run SQL migrations.").action(migrate);
 }

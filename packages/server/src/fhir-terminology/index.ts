@@ -175,7 +175,7 @@ async function getValueSetExpansion<Version extends FHIR_VERSION>(
         codeSystemConceptToValuesetExpansion(
           codeSystem.url,
           codeSystem.version,
-          await getConcepts(ctx.db, codeSystem),
+          await getConcepts(ctx.store.getClient(), codeSystem),
         ) ?? []
       );
     }
@@ -441,7 +441,11 @@ export class TerminologyProvider implements ITerminologyProvider {
       );
     }
 
-    const found = await findConcept(ctx.db, codeSystem, input.code);
+    const found = await findConcept(
+      ctx.store.getClient(),
+      codeSystem,
+      input.code,
+    );
 
     if (!found)
       throw new OperationError(

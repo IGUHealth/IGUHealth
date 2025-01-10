@@ -46,7 +46,8 @@ import { ResourceStore } from "../storage/resource-stores/interface.js";
 import { SearchEngine } from "../storage/search-stores/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
-import { Producer } from "kafkajs";
+import { IQueue, IQueueTransaction } from "../queue/interface.js";
+import { PostgresStore } from "../storage/resource-stores/postgres/index.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];
@@ -119,29 +120,20 @@ export interface UserContext {
   scope?: Scope[];
 }
 
-type KafkaQueue = {
-  type: "kafka";
-  producer: Producer;
-};
-
-export type Queue = KafkaQueue;
-
 export interface IGUHealthServerCTX {
   environment: string;
   // Server Information
   tenant: TenantId;
   user: UserContext;
 
-  // Queue
-  // queue: Queue;
+  queue: IQueue | IQueueTransaction;
 
   // FHIR Client
   client: FHIRClientAsync<IGUHealthServerCTX>;
 
   // Storage
-  db: db.Queryable;
   search: SearchEngine<IGUHealthServerCTX>;
-  store: ResourceStore<IGUHealthServerCTX>;
+  store: PostgresStore<Pick<IGUHealthServerCTX, "tenant">>;
 
   // Services
   cache?: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
