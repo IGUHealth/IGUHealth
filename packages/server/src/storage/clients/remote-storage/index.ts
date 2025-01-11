@@ -52,6 +52,8 @@ type StorageState = {
   transaction_entry_limit: number;
 };
 
+const AUTHOR_EXTENSION = "https://iguhealth.app/author";
+
 function version(
   insertable: Omit<s.resources.Insertable, "version_id">,
 ): s.resources.Insertable {
@@ -66,6 +68,17 @@ function version(
       ...resource.meta,
       versionId,
       lastUpdated: new Date().toISOString(),
+      // Filters meta extensions for author and places the author reference in the resource.
+      extension: (resource.meta?.extension ?? [])
+        .filter((e) => e.url !== AUTHOR_EXTENSION)
+        .concat([
+          {
+            url: AUTHOR_EXTENSION as id,
+            valueReference: {
+              reference: `${insertable.author_type}/${insertable.author_id}`,
+            },
+          },
+        ]),
     },
   } as unknown as db.JSONObject;
 
