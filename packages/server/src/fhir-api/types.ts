@@ -1,7 +1,6 @@
 import type { RouterParamContext } from "@koa/router";
 import type Koa from "koa";
 import type { Logger } from "pino";
-import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -42,12 +41,11 @@ import {
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
-import { ResourceStore } from "../storage/resource-stores/interface.js";
-import { SearchEngine } from "../storage/search-stores/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
-import type { Lock } from "../synchronization/interfaces.js";
 import { IQueue, IQueueTransaction } from "../queue/interface.js";
 import { PostgresStore } from "../storage/resource-stores/postgres/index.js";
+import { SearchEngine } from "../storage/search-stores/interface.js";
+import type { Lock } from "../synchronization/interfaces.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];

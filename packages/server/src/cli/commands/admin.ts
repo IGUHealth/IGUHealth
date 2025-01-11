@@ -15,7 +15,6 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import * as tenants from "../../authN/db/tenant.js";
-import * as users from "../../authN/db/users/index.js";
 import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
 import {
