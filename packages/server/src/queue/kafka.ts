@@ -1,45 +1,55 @@
-import { Producer, Transaction } from "kafkajs";
+import { Message as KafkaMessage, Producer, TopicMessages } from "kafkajs";
 import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
 import { IQueue, IQueueTransaction, Message } from "./interface.js";
 
-export class KafkaTransaction implements IQueue, IQueueTransaction {
-  private readonly _transaction: Transaction;
+export class KafkaBatch implements IQueue, IQueueTransaction {
+  private readonly _producer: Producer;
   private readonly _transactionKey: string;
-  constructor(transaction: Transaction) {
-    this._transaction = transaction;
+  private _messages: Record<string, KafkaMessage[]> = {};
+
+  constructor(producer: Producer) {
+    this._producer = producer;
     this._transactionKey = nanoid(24);
   }
-  commit(): Promise<void> {
-    return this._transaction.commit();
+  async commit(): Promise<void> {
+    const sendData: TopicMessages[] = Object.keys(this._messages).map(
+      (topic) => {
+        return {
+          topic: topic,
+          messages: this._messages[topic],
+        };
+      },
+    );
+
+    await this._producer.sendBatch({ topicMessages: sendData });
   }
-  abort(): Promise<void> {
-    return this._transaction.abort();
+  async abort(): Promise<void> {
+    this._messages = {};
   }
   async send(
     tenant: TenantId,
     topic: string,
     messages: Message[],
   ): Promise<void> {
-    await this._transaction.send({
-      topic: topic,
-      messages: messages.map((m) => ({
+    this._messages[topic] = (this._messages[topic] ?? []).concat(
+      messages.map((m) => ({
         ...m,
         key: this._transactionKey,
         headers: { tenant, ...m.headers },
         value: JSON.stringify(m.value),
       })),
-    });
+    );
   }
   // Just return the transaction itself.
   // This is a no-op because we are already in a transaction.
-  async transaction(): Promise<IQueueTransaction> {
+  async batch(): Promise<IQueueTransaction> {
     return this;
   }
 
-  isTransaction(): boolean {
+  isBatch(): boolean {
     return true;
   }
 }
@@ -66,12 +76,11 @@ export class KafkaQueue implements IQueue {
     });
   }
 
-  async transaction() {
-    const transaction = await this._producer.transaction();
-    return new KafkaTransaction(transaction);
+  async batch() {
+    return new KafkaBatch(this._producer);
   }
 
-  isTransaction(): boolean {
+  isBatch(): boolean {
     return false;
   }
 }

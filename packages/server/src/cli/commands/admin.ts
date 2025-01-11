@@ -27,7 +27,7 @@ import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
 import createResourceStore from "../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../storage/search-stores/index.js";
-import { QueueTansaction } from "../../storage/transactions.js";
+import { QueueBatch } from "../../storage/transactions.js";
 import RedisLock from "../../synchronization/redis.lock.js";
 import { MUTATIONS_QUEUE } from "../../worker/kafka/constants.js";
 
@@ -90,7 +90,7 @@ async function createTenant(
   },
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
-  return QueueTansaction(ctx, async (ctx) => {
+  return QueueBatch(ctx, async (ctx) => {
     const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
     const membership: Membership = await ctx.client.create(

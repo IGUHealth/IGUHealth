@@ -11,7 +11,6 @@ export default async function createQueue(): Promise<IQueue> {
         clientId: process.env.QUEUE_CLIENT_ID,
       });
       const producer = kafka.producer({
-        transactionalId: "server",
         allowAutoTopicCreation: true,
         createPartitioner: Partitioners.DefaultPartitioner,
       });
