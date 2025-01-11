@@ -30,7 +30,7 @@ import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { MUTATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { QueueTansaction } from "../../transactions.js";
+import { QueueBatch } from "../../transactions.js";
 import { createRemoteStorage } from "../remote-storage/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
@@ -105,7 +105,7 @@ function setInTransactionMiddleware<
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
-    return QueueTansaction(context.ctx, async (ctx) => {
+    return QueueBatch(context.ctx, async (ctx) => {
       const res = await next({
         ...context,
         ctx,

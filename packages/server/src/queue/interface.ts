@@ -78,8 +78,8 @@ export type Message = {
 
 export interface IQueue {
   send(tenant: TenantId, topic_id: string, messages: Message[]): Promise<void>;
-  transaction(): Promise<IQueueTransaction>;
-  isTransaction(): boolean;
+  batch(): Promise<IQueueTransaction>;
+  isBatch(): boolean;
 }
 
 export interface IQueueTransaction extends IQueue {
