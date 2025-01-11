@@ -16,7 +16,7 @@ import * as queue from "../../../queue/interface.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
-import { MUTATIONS_QUEUE } from "../constants.js";
+import { ERROR_QUEUE, MUTATIONS_QUEUE } from "../constants.js";
 
 function gateMutation<
   Type extends queue.IType,
@@ -90,26 +90,32 @@ export default async function createIndexingWorker() {
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
-      iguhealthServices.logger.info(
-        `[Indexing], Processing message ${message.key?.toString()}`,
-      );
+      try {
+        iguhealthServices.logger.info(
+          `[Indexing], Processing message ${message.key?.toString()}`,
+        );
 
-      if (message.value) {
-        const mutations: queue.Mutations = JSON.parse(message.value.toString());
-        for (const mutation of mutations) {
-          await handleMutation(iguhealthServices, mutation);
+        if (message.value) {
+          const mutations: queue.Mutations = JSON.parse(
+            message.value.toString(),
+          );
+          for (const mutation of mutations) {
+            await handleMutation(iguhealthServices, mutation);
+          }
         }
+
+        // Run manual commit to avoid reprocessing.
+        // Read https://kafka.js.org/docs/consuming#a-name-manual-commits-a-manual-committing
+        // Use + 1 on offset per above.
+        await consumer.commitOffsets([
+          { topic, partition, offset: (Number(message.offset) + 1).toString() },
+        ]);
+
+        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
+        console.log(`- ${prefix} ${message.key}`);
+      } catch (e) {
+        console.error(e);
       }
-
-      // Run manual commit to avoid reprocessing.
-      // Read https://kafka.js.org/docs/consuming#a-name-manual-commits-a-manual-committing
-      // Use + 1 on offset per above.
-      await consumer.commitOffsets([
-        { topic, partition, offset: (Number(message.offset) + 1).toString() },
-      ]);
-
-      const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-      console.log(`- ${prefix} ${message.key}`);
     },
   });
 

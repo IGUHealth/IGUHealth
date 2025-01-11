@@ -83,32 +83,38 @@ export default async function createStorageWorker() {
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
-      services.logger.info(
-        `[STORAGE], Processing message ${message.key?.toString()}`,
-      );
-
-      if (message.value) {
-        const mutations: queue.Mutations = JSON.parse(message.value.toString());
-        await DBTransaction(
-          services,
-          db.IsolationLevel.RepeatableRead,
-          async () => {
-            for (const mutation of mutations) {
-              await handleMutation(services, mutation);
-            }
-          },
+      try {
+        services.logger.info(
+          `[STORAGE], Processing message ${message.key?.toString()}`,
         );
+
+        if (message.value) {
+          const mutations: queue.Mutations = JSON.parse(
+            message.value.toString(),
+          );
+          await DBTransaction(
+            services,
+            db.IsolationLevel.RepeatableRead,
+            async () => {
+              for (const mutation of mutations) {
+                await handleMutation(services, mutation);
+              }
+            },
+          );
+        }
+
+        // Run manual commit to avoid reprocessing.
+        // Read https://kafka.js.org/docs/consuming#a-name-manual-commits-a-manual-committing
+        // Use + 1 on offset per above.
+        await consumer.commitOffsets([
+          { topic, partition, offset: (Number(message.offset) + 1).toString() },
+        ]);
+
+        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
+        console.log(`- ${prefix} ${message.key}`);
+      } catch (e) {
+        console.error(e);
       }
-
-      // Run manual commit to avoid reprocessing.
-      // Read https://kafka.js.org/docs/consuming#a-name-manual-commits-a-manual-committing
-      // Use + 1 on offset per above.
-      await consumer.commitOffsets([
-        { topic, partition, offset: (Number(message.offset) + 1).toString() },
-      ]);
-
-      const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-      console.log(`- ${prefix} ${message.key}`);
     },
   });
 
