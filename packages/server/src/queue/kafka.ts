@@ -25,7 +25,6 @@ export class KafkaBatch implements IQueue, IQueueTransaction {
     );
 
     await this._producer.sendBatch({ topicMessages: sendData });
-    return;
   }
   async abort(): Promise<void> {
     this._messages = {};
