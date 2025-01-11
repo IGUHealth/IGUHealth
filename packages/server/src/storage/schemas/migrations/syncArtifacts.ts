@@ -11,10 +11,10 @@ import RedisCache from "../../../cache/providers/redis.js";
 import { createClient, createLogger } from "../../../fhir-api/index.js";
 import { getRedisClient } from "../../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import createQueue from "../../../queue/index.js";
 import RedisLock from "../../../synchronization/redis.lock.js";
-import { createPGPool } from "../../pg.js";
-import { PostgresStore } from "../../resource-stores/postgres/index.js";
-import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
+import createResourceStore from "../../resource-stores/index.js";
+import { createSearchStore } from "../../search-stores/index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -30,9 +30,9 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
-    db: createPGPool(),
-    store: new PostgresStore(),
-    search: new PostgresSearchEngine(),
+    queue: await createQueue(),
+    store: await createResourceStore({ type: "postgres" }),
+    search: await createSearchStore({ type: "postgres" }),
     logger,
     lock: new RedisLock(redis),
     cache: new RedisCache(redis),

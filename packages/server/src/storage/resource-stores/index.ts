@@ -1,28 +1,38 @@
-import { Kafka, KafkaConfig } from "kafkajs";
-
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
-import { ResourceStore } from "./interface.js";
-// import { KafkaWrapperStore } from "./kafka.js";
+import { createResourceStorePool } from "../pg.js";
 import { PostgresStore } from "./postgres/index.js";
 
-interface KafkaStoreConfig {
-  kafka?: KafkaConfig;
-}
-
-interface PostgresStoreConfig extends KafkaStoreConfig {
+interface PostgresStoreConfig {
   type: "postgres";
 }
 
 export type Storeconfig = PostgresStoreConfig;
 
-async function _createInternalStore<
-  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
->(config: Storeconfig): Promise<ResourceStore<CTX>> {
+export default async function createResourceStore<
+  CTX extends Pick<IGUHealthServerCTX, "tenant">,
+>(config: Storeconfig): Promise<PostgresStore<CTX>> {
   switch (config.type) {
     case "postgres": {
-      return new PostgresStore();
+      return new PostgresStore(
+        createResourceStorePool({
+          user: process.env.RESOURCE_STORE_PG_USERNAME,
+          password: process.env.RESOURCE_STORE_PG_PASSWORD,
+          host: process.env.RESOURCE_STORE_PG_HOST,
+          database: process.env.RESOURCE_STORE_PG_NAME,
+          port: parseInt(process.env.RESOURCE_STORE_PG_PORT ?? "5432"),
+          ssl:
+            process.env.RESOURCE_STORE_PG_SSL === "true"
+              ? {
+                  // Self signed certificate CA is not used.
+                  rejectUnauthorized: false,
+                  host: process.env.RESOURCE_STORE_PG_HOST,
+                  port: parseInt(process.env.RESOURCE_STORE_PG_PORT ?? "5432"),
+                }
+              : false,
+        }),
+      );
     }
     default: {
       throw new OperationError(
@@ -30,21 +40,4 @@ async function _createInternalStore<
       );
     }
   }
-}
-
-export default async function createResourceStore<
-  CTX extends Pick<IGUHealthServerCTX, "db" | "tenant">,
->(config: Storeconfig): Promise<ResourceStore<CTX>> {
-  const internalStore = await _createInternalStore(config);
-
-  // const kafkaConfig = config.kafka;
-  // // Wrap with kafka if kafkaConfig is provided
-  // if (kafkaConfig !== undefined) {
-  //   const kafka = new Kafka(kafkaConfig);
-  //   const producer = kafka.producer();
-  //   await producer.connect();
-  //   return new KafkaWrapperStore(internalStore, producer);
-  // }
-
-  return internalStore;
 }

@@ -23,8 +23,9 @@
     "AUTH_LOCAL_CERTIFICATION_LOCATION",
     "AUTH_LOCAL_SIGNING_KEY",
     "IGUHEALTH_ENVIRONMENT",
-    "KAFKA_BROKERS",
-    "KAFKA_CLIENT_ID"
+    "QUEUE_TYPE",
+    "QUEUE_BROKERS",
+    "QUEUE_CLIENT_ID"
   ],
   "properties": {
     "IGUHEALTH_ENVIRONMENT": {
@@ -51,20 +52,18 @@
         "postgres"
       ]
     },
-    "FHIR_STORAGE_ASYNC": {
+    "QUEUE_TYPE": {
       "type": "string",
+      "description": "Queue Type.",
       "enum": [
-        "true",
-        "false"
-      ],
-      "description": "Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].",
-      "default": "true"
+        "kafka"
+      ]
     },
-    "KAFKA_BROKERS": {
+    "QUEUE_BROKERS": {
       "type": "string",
       "description": "Kafka brokers"
     },
-    "KAFKA_CLIENT_ID": {
+    "QUEUE_CLIENT_ID": {
       "type": "string",
       "description": "Kafka client id"
     },

@@ -54,6 +54,7 @@ type TestScriptState<Version extends FHIR_VERSION> = {
   latestResponse?: ResponseFixture;
   latestRequest?: RequestFixture;
   client: ReturnType<typeof createHTTPClient>;
+  timeout?: number;
 };
 
 type TestScriptAction<Version extends FHIR_VERSION> = NonNullable<
@@ -847,6 +848,11 @@ async function runOperation<Version extends FHIR_VERSION>(
     const request = await operationToFHIRRequest(state, pointer);
     const response = await state.client.request({}, request);
 
+    // Hack because async so will wait a bit.
+    await new Promise((resolve) =>
+      setTimeout(() => resolve(undefined), state.timeout ?? 0),
+    );
+
     const result = {
       result: "pass" as code,
       message:
@@ -1157,6 +1163,7 @@ export async function run<Version extends FHIR_VERSION>(
   client: ReturnType<typeof createHTTPClient>,
   version: Version,
   testScript: Resource<Version, "TestScript">,
+  timeout: number = 0,
 ): Promise<Resource<Version, "TestReport">> {
   const testReport = {
     testScript: { reference: `TestScript/${testScript.id}` },
@@ -1182,6 +1189,7 @@ export async function run<Version extends FHIR_VERSION>(
       fixtures: {},
       client,
       testScript,
+      timeout,
     },
     pointer,
   );

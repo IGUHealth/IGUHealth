@@ -20,7 +20,7 @@ export function userInfo(): OIDCRouteHandler {
       );
     }
     const user = await users.get(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       ctx.state.iguhealth.user.payload.sub,
     );

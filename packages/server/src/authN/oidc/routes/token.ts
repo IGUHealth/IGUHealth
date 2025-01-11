@@ -1,7 +1,7 @@
 import Ajv from "ajv";
 import type * as Koa from "koa";
 import crypto from "node:crypto";
-import * as db from "zapatos/db";
+import type * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import {
@@ -263,7 +263,7 @@ async function createTokenResponse({
     process.env.AUTH_LOCAL_SIGNING_KEY,
   );
   const approvedScopes = await scopes.getApprovedScope(
-    ctx.db,
+    ctx.store.getClient(),
     ctx.tenant,
     clientApplication.id as id,
     user.id,
@@ -324,7 +324,7 @@ async function createTokenResponse({
   if (approvedScopes.find((v) => v.type === "offline_access")) {
     body.refresh_token = (
       await createRefreshToken(
-        ctx.db,
+        ctx.store.getClient(),
         ctx.tenant,
         clientApplication,
         user,
@@ -360,7 +360,7 @@ export function tokenPost<
     switch (tokenParameters.grant_type) {
       case "refresh_token": {
         const code = await codes.search(
-          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           {
             type: "refresh_token",
@@ -387,7 +387,7 @@ export function tokenPost<
         );
 
         const user = await users.get(
-          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           code[0].user_id,
         );
@@ -398,9 +398,13 @@ export function tokenPost<
           });
 
         // Removes the old refresh token and issues a new one in tokenResponse.
-        await codes.remove(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
-          id: code[0].id,
-        });
+        await codes.remove(
+          ctx.state.iguhealth.store.getClient(),
+          ctx.state.iguhealth.tenant,
+          {
+            id: code[0].id,
+          },
+        );
 
         const launchParameters = getLaunchParameters(code[0]);
 
@@ -426,7 +430,7 @@ export function tokenPost<
         );
 
         const code = await codes.search(
-          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           {
             type: "oauth2_code_grant",
@@ -462,7 +466,7 @@ export function tokenPost<
         }
 
         const user = await users.get(
-          ctx.state.iguhealth.db,
+          ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           code[0].user_id,
         );
@@ -473,9 +477,13 @@ export function tokenPost<
             error_description: "Invalid user",
           });
 
-        await codes.remove(ctx.state.iguhealth.db, ctx.state.iguhealth.tenant, {
-          id: code[0].id,
-        });
+        await codes.remove(
+          ctx.state.iguhealth.store.getClient(),
+          ctx.state.iguhealth.tenant,
+          {
+            id: code[0].id,
+          },
+        );
 
         const launchParameters = getLaunchParameters(code[0]);
 

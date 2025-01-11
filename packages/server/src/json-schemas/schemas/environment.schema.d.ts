@@ -24,17 +24,17 @@ export type IGUHealthEnvironment = ResourceStorePg &
      */
     SEARCH_STORE_TYPE: "postgres";
     /**
-     * Determine whether to process storage operations [storage + indexing] in process or asynchronously on seperate processes [generally via queue].
+     * Queue Type.
      */
-    FHIR_STORAGE_ASYNC?: "true" | "false";
+    QUEUE_TYPE: "kafka";
     /**
      * Kafka brokers
      */
-    KAFKA_BROKERS: string;
+    QUEUE_BROKERS: string;
     /**
      * Kafka client id
      */
-    KAFKA_CLIENT_ID: string;
+    QUEUE_CLIENT_ID: string;
     /**
      * Redis host
      */

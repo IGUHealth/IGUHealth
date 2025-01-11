@@ -40,7 +40,7 @@ import logAuditEvent, {
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
 import { fitsSearchCriteria } from "../storage/clients/memory/search.js";
-import { Transaction } from "../storage/transactions.js";
+import { DBTransaction } from "../storage/transactions.js";
 import { createResolverRemoteCanonical } from "../storage/utilities/canonical.js";
 import {
   SearchParameterResource,
@@ -478,23 +478,29 @@ async function processSubscription(
         );
       }
 
-      await updateLock(ctx.db, ctx.tenant, "old_subscription", lock.id, {
-        value: JSON.stringify(
-          dateFns.format(
-            dateFns.max([
-              parsedDate,
-              getLatestTimestamp([
-                historyPoll[historyPoll.length - 1].resource as Resource<
-                  R4,
-                  AllResourceTypes
-                >,
+      await updateLock(
+        ctx.store.getClient(),
+        ctx.tenant,
+        "old_subscription",
+        lock.id,
+        {
+          value: JSON.stringify(
+            dateFns.format(
+              dateFns.max([
+                parsedDate,
+                getLatestTimestamp([
+                  historyPoll[historyPoll.length - 1].resource as Resource<
+                    R4,
+                    AllResourceTypes
+                  >,
+                ]),
+                1,
               ]),
-              1,
-            ]),
-            MILLISECOND_FORMAT,
+              MILLISECOND_FORMAT,
+            ),
           ),
-        ),
-      });
+        },
+      );
     }
   } catch (e) {
     logger.error(e);
@@ -539,84 +545,89 @@ async function createWorker(
   fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
-  const services = staticWorkerServices(workerID);
+  const services = await staticWorkerServices(workerID);
 
   let isRunning = true;
   const tenantOffsets: Record<TenantId, Date | null | undefined> = {};
   const totalSubsProcessAtATime = 5;
 
   services.logger.info(`Worker started with interval '${loopInterval}'`);
-  /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-  while (isRunning) {
-    try {
-      const activeTenants = await getActiveTenants(services.db);
-      for (const tenant of activeTenants) {
-        const tenantClaims = workerTokenClaims(workerID, tenant);
 
-        const ctx: IGUHealthWorkerCTX = tenantWorkerContext(
-          services,
-          tenant,
-          tenantClaims,
+  setTimeout(async () => {
+    /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
+    while (isRunning) {
+      try {
+        const activeTenants = await getActiveTenants(
+          services.store.getClient(),
         );
+        for (const tenant of activeTenants) {
+          const tenantClaims = workerTokenClaims(workerID, tenant);
 
-        const dateOffsetString: string = tenantOffsets[tenant]
-          ? dateFns.format(tenantOffsets[tenant], SECOND_FORMAT)
-          : dateFns.format(dateFns.fromUnixTime(0), SECOND_FORMAT);
+          const ctx: IGUHealthWorkerCTX = tenantWorkerContext(
+            services,
+            tenant,
+            tenantClaims,
+          );
 
-        const activeSubscriptions = (
-          await ctx.client.search_type({}, fhirVersion, "Subscription", [
-            { name: "status", value: ["active"] },
-            { name: "_count", value: [totalSubsProcessAtATime] },
-            {
-              name: "_lastUpdated",
-              value: [`gt${dateOffsetString}`],
+          const dateOffsetString: string = tenantOffsets[tenant]
+            ? dateFns.format(tenantOffsets[tenant], SECOND_FORMAT)
+            : dateFns.format(dateFns.fromUnixTime(0), SECOND_FORMAT);
+
+          const activeSubscriptions = (
+            await ctx.client.search_type({}, fhirVersion, "Subscription", [
+              { name: "status", value: ["active"] },
+              { name: "_count", value: [totalSubsProcessAtATime] },
+              {
+                name: "_lastUpdated",
+                value: [`gt${dateOffsetString}`],
+              },
+            ])
+          ).resources;
+
+          tenantOffsets[tenant] =
+            // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
+            // Set back to zero to loop over all active subscriptions again.
+            activeSubscriptions.length < totalSubsProcessAtATime
+              ? dateFns.fromUnixTime(0)
+              : getLatestTimestamp(activeSubscriptions);
+
+          await ensureLocksCreated(
+            ctx.store.getClient(),
+            activeSubscriptions.map((sub) => ({
+              id: sub.id as string,
+              type: "old_subscription",
+              fhir_version: fhirVersion,
+              tenant: ctx.tenant,
+              value: JSON.stringify(sub.meta?.lastUpdated),
+            })),
+          );
+
+          await DBTransaction(
+            ctx,
+            db.IsolationLevel.RepeatableRead,
+            async (txContext) => {
+              const locks = await getAvailableLocks(
+                txContext.store.getClient(),
+                txContext.tenant,
+                "old_subscription",
+                activeSubscriptions.map((sub) => sub.id as string),
+              );
+
+              await Promise.all(
+                locks.map((lock) =>
+                  processSubscription(workerID, txContext, fhirVersion, lock),
+                ),
+              );
             },
-          ])
-        ).resources;
-
-        tenantOffsets[tenant] =
-          // If less than totalSubsProcessAtATime count, then we have reached the end of list of active subscriptions.
-          // Set back to zero to loop over all active subscriptions again.
-          activeSubscriptions.length < totalSubsProcessAtATime
-            ? dateFns.fromUnixTime(0)
-            : getLatestTimestamp(activeSubscriptions);
-
-        await ensureLocksCreated(
-          ctx.db,
-          activeSubscriptions.map((sub) => ({
-            id: sub.id as string,
-            type: "old_subscription",
-            fhir_version: fhirVersion,
-            tenant: ctx.tenant,
-            value: JSON.stringify(sub.meta?.lastUpdated),
-          })),
-        );
-
-        await Transaction(
-          ctx,
-          db.IsolationLevel.RepeatableRead,
-          async (txContext) => {
-            const locks = await getAvailableLocks(
-              txContext.db,
-              txContext.tenant,
-              "old_subscription",
-              activeSubscriptions.map((sub) => sub.id as string),
-            );
-
-            await Promise.all(
-              locks.map((lock) =>
-                processSubscription(workerID, txContext, fhirVersion, lock),
-              ),
-            );
-          },
-        );
+          );
+        }
+      } catch (e) {
+        services.logger.error(e);
+      } finally {
+        await new Promise((resolve) => setTimeout(resolve, loopInterval));
       }
-    } catch (e) {
-      services.logger.error(e);
-    } finally {
-      await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
-  }
+  });
   return async () => {
     isRunning = false;
   };

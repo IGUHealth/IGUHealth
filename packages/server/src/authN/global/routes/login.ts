@@ -74,7 +74,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       },
       { columns: ["tenant", "role"] },
     )
-    .run(ctx.state.iguhealth.db);
+    .run(ctx.state.iguhealth.store.getClient());
 
   const tenantClaims: TenantClaim<s.user_role>[] = users.map((u) => ({
     id: u.tenant as TenantId,

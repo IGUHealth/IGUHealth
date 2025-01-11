@@ -270,6 +270,7 @@ async function getAllParametersForResource<
 }
 
 export async function removeIndices<Version extends FHIR_VERSION>(
+  pg: db.Queryable,
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   id: id,
@@ -282,7 +283,7 @@ export async function removeIndices<Version extends FHIR_VERSION>(
         tenant: ctx.tenant,
         r_id: id,
         resource_type: resourceType,
-      }}`.run(ctx.db),
+      }}`.run(pg),
     ...search_table_types.map((type) =>
       db.sql<
         | s.r4_number_idx.SQL
@@ -303,7 +304,7 @@ export async function removeIndices<Version extends FHIR_VERSION>(
         tenant: ctx.tenant,
         r_id: id,
         resource_type: resourceType,
-      }}`.run(ctx.db),
+      }}`.run(pg),
     ),
   ]);
 }
@@ -329,6 +330,7 @@ async function indexSingularParameters<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
+  pg: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   parameters: Resource<Version, "SearchParameter">[],
@@ -353,7 +355,6 @@ async function indexSingularParameters<
     );
 
     const result = await indexSingularParameter(
-      ctx,
       fhirVersion,
       parameter,
       evaluation,
@@ -371,7 +372,7 @@ async function indexSingularParameters<
         .upsert("r4_sp1_idx", [insertable], db.constraint("r4_sp1_idx_pkey"), {
           updateColumns: db.doNothing,
         })
-        .run(ctx.db);
+        .run(pg);
       return;
     }
     case R4B: {
@@ -384,7 +385,7 @@ async function indexSingularParameters<
             updateColumns: db.doNothing,
           },
         )
-        .run(ctx.db);
+        .run(pg);
       return;
     }
     default: {
@@ -393,11 +394,7 @@ async function indexSingularParameters<
   }
 }
 
-async function indexSingularParameter<
-  CTX extends IGUHealthServerCTX,
-  Version extends FHIR_VERSION,
->(
-  ctx: CTX,
+async function indexSingularParameter<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
   evaluation: IMetaValue<NonNullable<unknown>>[],
@@ -692,6 +689,7 @@ async function indexMultiSearchParameter<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
+  pg: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
@@ -738,7 +736,7 @@ async function indexMultiSearchParameter<
               db.constraint("quantity_idx_pkey"),
               { updateColumns: db.doNothing },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         case R4B: {
@@ -749,7 +747,7 @@ async function indexMultiSearchParameter<
               db.constraint("r4b_quantity_idx_pkey"),
               { updateColumns: db.doNothing },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         default: {
@@ -783,7 +781,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         case R4B: {
@@ -796,7 +794,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         default: {
@@ -831,7 +829,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -845,7 +843,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -881,7 +879,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -895,7 +893,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         default: {
@@ -929,7 +927,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -943,7 +941,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -978,7 +976,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         case R4B: {
@@ -991,7 +989,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
           return;
         }
         default: {
@@ -1026,7 +1024,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -1040,7 +1038,7 @@ async function indexMultiSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(ctx.db);
+            .run(pg);
 
           return;
         }
@@ -1068,6 +1066,7 @@ export default async function indexResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
+  pg: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -1082,6 +1081,7 @@ export default async function indexResource<
   }
 
   await removeIndices(
+    pg,
     ctx,
     fhirVersion,
     resource.id,
@@ -1104,11 +1104,17 @@ export default async function indexResource<
   }
 
   await Promise.all([
-    indexSingularParameters(ctx, fhirVersion, sp1Parameters, resource),
+    indexSingularParameters(pg, ctx, fhirVersion, sp1Parameters, resource),
     ...manyParameters
       .filter((v) => v.expression !== undefined)
       .map(async (searchParameter) =>
-        indexMultiSearchParameter(ctx, fhirVersion, searchParameter, resource),
+        indexMultiSearchParameter(
+          pg,
+          ctx,
+          fhirVersion,
+          searchParameter,
+          resource,
+        ),
       ),
   ]);
 }

@@ -357,6 +357,7 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
 }
 
 export async function executeSearchQuery<Request extends FHIRSearchRequest>(
+  pg: db.Queryable,
   ctx: IGUHealthServerCTX,
   fhirRequest: Request,
 ): Promise<{
@@ -370,7 +371,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
     ctx.logger.info(toSQLString(searchSQL));
   }
 
-  const result = await searchSQL.run(ctx.db);
+  const result = await searchSQL.run(pg);
 
   const total =
     // In case where nothing returned means that total_count col will not be present.
@@ -407,7 +408,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   if (includeParam) {
     searchResults = searchResults.concat(
       await processInclude(
-        ctx.db,
+        pg,
         ctx,
         request.fhirVersion,
         includeParam,

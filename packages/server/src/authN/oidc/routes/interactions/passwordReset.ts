@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-api/types.js";
-import { Transaction } from "../../../../storage/transactions.js";
+import { DBTransaction } from "../../../../storage/transactions.js";
 import * as views from "../../../../views/index.js";
 import * as codes from "../../../db/code/index.js";
 import * as users from "../../../db/users/index.js";
@@ -43,7 +43,7 @@ export function passwordResetGET(): OIDCRouteHandler {
     }
 
     const authorizationCodeSearch = await codes.search(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       {
         type: "password_reset",
@@ -174,7 +174,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
       return;
     }
     try {
-      await Transaction(
+      await DBTransaction(
         ctx.state.iguhealth,
         db.IsolationLevel.Serializable,
         async (fhirContext) => {
@@ -184,14 +184,14 @@ export function passwordResetPOST(): OIDCRouteHandler {
             );
           }
           const authorizationCode = await getAuthorizationCode(
-            fhirContext.db,
+            fhirContext.store.getClient(),
             fhirContext.tenant,
             body.code,
           );
           const email = (authorizationCode.meta as Record<string, string>)
             ?.email;
           const user = await users.get(
-            fhirContext.db,
+            fhirContext.store.getClient(),
             fhirContext.tenant,
             authorizationCode.user_id,
           );
@@ -203,7 +203,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           }
 
           const update = await users.update(
-            fhirContext.db,
+            fhirContext.store.getClient(),
             fhirContext.tenant,
             authorizationCode.user_id,
             {
@@ -225,9 +225,13 @@ export function passwordResetPOST(): OIDCRouteHandler {
             userToMembership(update),
           );
 
-          await codes.remove(fhirContext.db, fhirContext.tenant, {
-            code: body.code,
-          });
+          await codes.remove(
+            fhirContext.store.getClient(),
+            fhirContext.tenant,
+            {
+              code: body.code,
+            },
+          );
         },
       );
       const AdminAppURL = adminApp.redirectURL(ctx.state.iguhealth.tenant);
@@ -307,7 +311,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     }
 
     const usersWithEmail = await users.search(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       {
         email: email,

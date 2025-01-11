@@ -10,15 +10,9 @@ import {
 } from "@iguhealth/client/middleware";
 import {
   FHIRResponse,
-  R4BInstanceDeleteResponse,
-  R4BSystemDeleteResponse,
   R4BSystemSearchRequest,
-  R4BTypeDeleteResponse,
   R4BTypeSearchRequest,
-  R4InstanceDeleteResponse,
-  R4SystemDeleteResponse,
   R4SystemSearchRequest,
-  R4TypeDeleteResponse,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
@@ -41,10 +35,10 @@ import {
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
-import { ResourceStore } from "../../resource-stores/interface.js";
-import { SearchEngine } from "../../search-stores/interface.js";
+import { CreateMutation } from "../../../queue/interface.js";
+import { MUTATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import {
-  Transaction,
+  DBTransaction,
   buildTransactionTopologicalGraph,
 } from "../../transactions.js";
 import {
@@ -68,7 +62,11 @@ function version(
   >;
   insertable.resource = {
     ...resource,
-    meta: { ...resource.meta, versionId },
+    meta: {
+      ...resource.meta,
+      versionId,
+      lastUpdated: new Date().toISOString(),
+    },
   } as unknown as db.JSONObject;
 
   return { ...insertable, version_id: versionId };
@@ -78,7 +76,6 @@ async function createResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
-  store: ResourceStore<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -87,19 +84,29 @@ async function createResource<
 
   resource.id = generateId();
 
-  const res = await store.insert(
-    ctx,
-    version({
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "POST",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-    }),
-  );
+  const message = version({
+    tenant: ctx.tenant,
+    fhir_version: toDBFHIRVersion(fhirVersion),
+    request_method: "POST",
+    author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+    author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+    resource: resource as unknown as db.JSONObject,
+  });
 
-  return res.resource as unknown as Resource<Version, AllResourceTypes>;
+  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+    {
+      key: resource.id,
+      value: [
+        {
+          type: "resources",
+          interaction: "create",
+          value: message,
+        } as CreateMutation<"resources">,
+      ],
+    },
+  ]);
+
+  return message.resource as unknown as Resource<Version, AllResourceTypes>;
 }
 
 async function getResourceById<
@@ -138,7 +145,6 @@ async function patchResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
-  store: ResourceStore<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
@@ -185,19 +191,29 @@ async function patchResource<
       newResource.id = existingResource.id;
     }
 
-    const res = await store.insert(
-      ctx,
-      version({
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(fhirVersion),
-        request_method: "PATCH",
-        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        resource: newResource as unknown as db.JSONObject,
-      }),
-    );
+    const message = version({
+      tenant: ctx.tenant,
+      fhir_version: toDBFHIRVersion(fhirVersion),
+      request_method: "PATCH",
+      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      resource: newResource as unknown as db.JSONObject,
+    });
 
-    const patchedResource = res.resource as unknown as Resource<
+    await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+      {
+        key: newResource.id as id,
+        value: [
+          {
+            type: "resources",
+            interaction: "create",
+            value: message,
+          } as CreateMutation<"resources">,
+        ],
+      },
+    ]);
+
+    const patchedResource = message.resource as unknown as Resource<
       Version,
       AllResourceTypes
     >;
@@ -221,7 +237,6 @@ async function updateResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
-  store: ResourceStore<CTX>,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
@@ -259,19 +274,29 @@ async function updateResource<
     });
   }
 
-  const res = await store.insert(
-    ctx,
-    version({
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "PUT",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-    }),
-  );
+  const message = version({
+    tenant: ctx.tenant,
+    fhir_version: toDBFHIRVersion(fhirVersion),
+    request_method: "PUT",
+    author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+    author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+    resource: resource as unknown as db.JSONObject,
+  });
 
-  const updatedResource = res.resource as unknown as Resource<
+  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+    {
+      key: resource.id as id,
+      value: [
+        {
+          type: "resources",
+          interaction: "create",
+          value: message,
+        } as CreateMutation<"resources">,
+      ],
+    },
+  ]);
+
+  const updatedResource = message.resource as unknown as Resource<
     Version,
     AllResourceTypes
   >;
@@ -285,13 +310,7 @@ async function updateResource<
 async function deleteResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
->(
-  store: ResourceStore<CTX>,
-  ctx: CTX,
-  fhirVersion: Version,
-  resourceType: ResourceType<Version>,
-  id: id,
-) {
+>(ctx: CTX, fhirVersion: Version, resourceType: ResourceType<Version>, id: id) {
   const resource = await getResource(ctx, fhirVersion, resourceType, id);
   if (!resource)
     throw new OperationError(
@@ -301,23 +320,29 @@ async function deleteResource<
       ),
     );
 
-  await store.insert(
-    ctx,
-    version({
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "DELETE",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: resource as unknown as db.JSONObject,
-      deleted: true,
-    }),
-  );
+  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+    {
+      key: resource.id as id,
+      value: [
+        {
+          type: "resources",
+          interaction: "create",
+          value: version({
+            tenant: ctx.tenant,
+            fhir_version: toDBFHIRVersion(fhirVersion),
+            request_method: "DELETE",
+            author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+            author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+            resource: resource as unknown as db.JSONObject,
+            deleted: true,
+          }),
+        } as CreateMutation<"resources">,
+      ],
+    },
+  ]);
 }
 
 async function conditionalDelete(
-  store: ResourceStore<IGUHealthServerCTX>,
-  search: SearchEngine<IGUHealthServerCTX>,
   ctx: IGUHealthServerCTX,
   searchRequest:
     | R4TypeSearchRequest
@@ -334,7 +359,7 @@ async function conditionalDelete(
     { name: "_count", value: [limit] },
   ];
 
-  const result = await search.search(ctx, searchRequest);
+  const result = await ctx.search.search(ctx, searchRequest);
 
   if ((result.total ?? limit + 1) > limit)
     throw new OperationError(
@@ -344,7 +369,6 @@ async function conditionalDelete(
   const deletions = await Promise.all(
     result.result.map(async (typeId) => {
       await deleteResource(
-        store,
         ctx,
         searchRequest.fhirVersion,
         typeId.type,
@@ -556,7 +580,6 @@ function createStorageMiddleware<
             resource: context.request.resource,
             type: "create-response",
             body: await createResource(
-              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               context.request.body,
@@ -567,7 +590,6 @@ function createStorageMiddleware<
 
       case "patch-request": {
         const savedResource = await patchResource(
-          context.ctx.store,
           context.ctx,
           context.request.fhirVersion,
           context.request.resource,
@@ -623,6 +645,7 @@ function createStorageMiddleware<
                     request.body.resourceType,
                     request.body.id,
                   );
+
                   if (existingResource) {
                     throw new OperationError(
                       outcomeError(
@@ -633,7 +656,6 @@ function createStorageMiddleware<
                   }
 
                   const { resource, created } = await updateResource(
-                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body,
@@ -655,7 +677,6 @@ function createStorageMiddleware<
                   };
                 } else {
                   const resource = await createResource(
-                    context.ctx.store,
                     context.ctx,
                     request.fhirVersion,
                     request.body,
@@ -690,7 +711,6 @@ function createStorageMiddleware<
                   );
                 }
                 const { created, resource } = await updateResource(
-                  context.ctx.store,
                   context.ctx,
                   request.fhirVersion,
                   { ...request.body, id: foundResource.id },
@@ -721,7 +741,6 @@ function createStorageMiddleware<
           }
           case "instance": {
             const { created, resource } = await updateResource(
-              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               // Set the id for the request body to ensure that the resource is updated correctly.
@@ -758,7 +777,6 @@ function createStorageMiddleware<
         switch (context.request.level) {
           case "instance": {
             await deleteResource(
-              context.ctx.store,
               context.ctx,
               context.request.fhirVersion,
               context.request.resource,
@@ -783,18 +801,13 @@ function createStorageMiddleware<
               request: context.request,
               state: context.state,
               ctx: context.ctx,
-              response: await conditionalDelete(
-                context.ctx.store,
-                context.ctx.search,
-                context.ctx,
-                {
-                  type: "search-request",
-                  fhirVersion: context.request.fhirVersion,
-                  level: "type",
-                  resource: context.request.resource,
-                  parameters: context.request.parameters,
-                } as R4BTypeSearchRequest | R4TypeSearchRequest,
-              ),
+              response: await conditionalDelete(context.ctx, {
+                type: "search-request",
+                fhirVersion: context.request.fhirVersion,
+                level: "type",
+                resource: context.request.resource,
+                parameters: context.request.parameters,
+              } as R4BTypeSearchRequest | R4TypeSearchRequest),
             };
           }
           case "system": {
@@ -802,17 +815,12 @@ function createStorageMiddleware<
               request: context.request,
               state: context.state,
               ctx: context.ctx,
-              response: await conditionalDelete(
-                context.ctx.store,
-                context.ctx.search,
-                context.ctx,
-                {
-                  type: "search-request",
-                  fhirVersion: context.request.fhirVersion,
-                  level: "system",
-                  parameters: context.request.parameters,
-                } as R4BSystemSearchRequest | R4SystemSearchRequest,
-              ),
+              response: await conditionalDelete(context.ctx, {
+                type: "search-request",
+                fhirVersion: context.request.fhirVersion,
+                level: "system",
+                parameters: context.request.parameters,
+              } as R4BSystemSearchRequest | R4SystemSearchRequest),
             };
           }
           default: {
@@ -919,7 +927,7 @@ function createStorageMiddleware<
           ...new Array((transactionBundle.entry || []).length),
         ];
 
-        return Transaction(
+        return DBTransaction(
           context.ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx: IGUHealthServerCTX) => {
@@ -1032,118 +1040,17 @@ function createStorageMiddleware<
 }
 
 /**
- * Indexing middleware for searching. This happens within a single transaction if single postgres.
- * @returns
- */
-function createSynchronousIndexingMiddleware<
-  CTX extends IGUHealthServerCTX,
-  State extends StorageState,
->(): MiddlewareAsyncChain<State, CTX> {
-  return async function synchronousIndexingMiddleware(context, next) {
-    switch (context.request.type) {
-      case "update-request":
-      case "patch-request":
-      case "create-request": {
-        return Transaction(
-          context.ctx,
-          db.IsolationLevel.RepeatableRead,
-          async (ctx) => {
-            const response = await next({ ...context, ctx });
-            if (
-              ![
-                "patch-response",
-                "update-response",
-                "create-response",
-              ].includes(response.response?.type ?? "")
-            )
-              throw new OperationError(
-                outcomeFatal("exception", "Invalid response"),
-              );
-
-            await context.ctx.search.index(
-              ctx,
-              context.request.fhirVersion,
-              // Checked above for response type.
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (response.response as any)?.body,
-            );
-
-            return response;
-          },
-        );
-      }
-      case "delete-request": {
-        return Transaction(
-          context.ctx,
-          db.IsolationLevel.RepeatableRead,
-          async (ctx) => {
-            const response = await next(context);
-            if (response.response?.type !== "delete-response")
-              throw new OperationError(
-                outcomeFatal("exception", "Invalid response"),
-              );
-            switch (response.request.level) {
-              case "instance": {
-                const deleteResponse = response.response as
-                  | R4InstanceDeleteResponse
-                  | R4BInstanceDeleteResponse;
-
-                await context.ctx.search.removeIndex(
-                  ctx,
-                  deleteResponse.fhirVersion,
-                  deleteResponse.id,
-                  deleteResponse.resource,
-                );
-
-                return response;
-              }
-              case "type":
-              case "system": {
-                const deleteResponse = response.response as
-                  | R4TypeDeleteResponse
-                  | R4BTypeDeleteResponse
-                  | R4SystemDeleteResponse
-                  | R4BSystemDeleteResponse;
-
-                await Promise.all(
-                  (deleteResponse.deletions ?? []).map((deletion) =>
-                    context.ctx.search.removeIndex(
-                      ctx,
-                      deleteResponse.fhirVersion,
-                      deletion.id,
-                      deletion.type,
-                    ),
-                  ),
-                );
-
-                return response;
-              }
-            }
-          },
-        );
-      }
-      default: {
-        return next(context);
-      }
-    }
-  };
-}
-
-/**
  * Create a remote storage client.
  * @param param0 Options for the storage client.
  * @returns FHIRClient
  */
 export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit,
-  synchronousIndexing,
 }: {
   transaction_entry_limit: number;
   synchronousIndexing: boolean;
 }): FHIRClient<CTX> {
   const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [];
-  if (synchronousIndexing)
-    middleware.push(createSynchronousIndexingMiddleware());
   middleware.push(createStorageMiddleware());
 
   return new AsynchronousClient<StorageState, CTX>(

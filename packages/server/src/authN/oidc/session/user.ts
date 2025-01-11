@@ -17,7 +17,7 @@ export async function deserializeUser(
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
     const user = await users.get(
-      ctx.state.iguhealth.db,
+      ctx.state.iguhealth.store.getClient(),
       ctx.state.iguhealth.tenant,
       id,
     );
@@ -58,7 +58,7 @@ export async function sessionCredentialsLogin<
   credentials: users.LoginParameters[Method],
 ): Promise<users.LoginResult> {
   const result = await users.login(
-    ctx.state.iguhealth.db,
+    ctx.state.iguhealth.store.getClient(),
     ctx.state.iguhealth.tenant,
     method,
     credentials,

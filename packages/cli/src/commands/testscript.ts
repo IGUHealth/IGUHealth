@@ -31,10 +31,11 @@ function getAllFiles(location: string): string[] {
 async function executeTestScript<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   testScript: Resource<Version, "TestScript">,
+  timeout: number = 0,
 ): Promise<Resource<Version, "TestReport">> {
   const client = await createClient(CONFIG_LOCATION);
 
-  const report = await ts.run(logger, client, fhirVersion, testScript);
+  const report = await ts.run(logger, client, fhirVersion, testScript, timeout);
 
   return report;
 }
@@ -48,6 +49,11 @@ export function testscriptCommands(command: Command) {
     .option(
       "-e, --extension   <extension>",
       "Extensions to search for tests",
+      ".testscript.json",
+    )
+    .option(
+      "-t, --timeout   <timeout>",
+      "wait time between operations",
       ".testscript.json",
     )
     .option("--fhir-version <fhirVersion>", "FHIR Version to use", "4.0")
@@ -83,6 +89,7 @@ export function testscriptCommands(command: Command) {
             const report = await executeTestScript(
               options.fhirVersion,
               testScript,
+              parseInt(options.timeout ?? "0"),
             );
             output.entry?.push({ resource: report as any });
             if (report.result === "fail") {
@@ -95,6 +102,7 @@ export function testscriptCommands(command: Command) {
           const report = await executeTestScript(
             options.fhirVersion,
             testScript,
+            parseInt(options.timeout ?? "0"),
           );
           output.entry?.push({ resource: report as any });
           if (report.result === "fail") {

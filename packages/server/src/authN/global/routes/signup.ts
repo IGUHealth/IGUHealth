@@ -9,16 +9,16 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
-import { Transaction } from "../../../storage/transactions.js";
+import { DBTransaction } from "../../../storage/transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
 import { User } from "../../db/users/index.js";
+import * as users from "../../db/users/index.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
-import * as users from "../../db/users/index.js";
 
 async function findExistingOwner(
   pg: db.Queryable,
@@ -32,11 +32,11 @@ async function createOrRetrieveUser(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
   email: string,
 ): Promise<User> {
-  const existingOwner = await findExistingOwner(ctx.db, email);
+  const existingOwner = await findExistingOwner(ctx.store.getClient(), email);
   if (existingOwner) {
     return existingOwner;
   } else {
-    const user = await Transaction(
+    const user = await DBTransaction(
       ctx,
       db.IsolationLevel.Serializable,
       async (ctx) => {
@@ -56,9 +56,13 @@ async function createOrRetrieveUser(
           }),
         );
 
-        const user: User[] = await users.search(ctx.db, tenant.id as TenantId, {
-          fhir_user_id: membership.id,
-        });
+        const user: User[] = await users.search(
+          ctx.store.getClient(),
+          tenant.id as TenantId,
+          {
+            fhir_user_id: membership.id,
+          },
+        );
 
         if (!user[0]) {
           throw new OperationError(

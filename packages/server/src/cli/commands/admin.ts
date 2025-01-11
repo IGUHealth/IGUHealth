@@ -2,6 +2,7 @@ import * as inquirer from "@inquirer/prompts";
 import { Command } from "commander";
 import validator from "validator";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import {
   AccessPolicyV2,
@@ -14,7 +15,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import * as tenants from "../../authN/db/tenant.js";
-import * as users from "../../authN/db/users/index.js";
+import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
 import {
   createClient,
@@ -22,12 +23,13 @@ import {
   getRedisClient,
 } from "../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
-import { createPGPool } from "../../storage/pg.js";
-import { PostgresStore } from "../../storage/resource-stores/postgres/index.js";
-import { PostgresSearchEngine } from "../../storage/search-stores/postgres/index.js";
-import { Transaction } from "../../storage/transactions.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
+import createQueue from "../../queue/index.js";
+import createResourceStore from "../../storage/resource-stores/index.js";
+import { createSearchStore } from "../../storage/search-stores/index.js";
+import { QueueTansaction } from "../../storage/transactions.js";
 import RedisLock from "../../synchronization/redis.lock.js";
+import { MUTATIONS_QUEUE } from "../../worker/kafka/constants.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -42,7 +44,9 @@ async function getTenant(
   };
 
   if (!tenant.subscription_tier) {
-    const tiers = await db.select("subscription_tier", {}).run(ctx.db);
+    const tiers = await db
+      .select("subscription_tier", {})
+      .run(ctx.store.getClient());
 
     tenant.subscription_tier = await inquirer.select({
       message: "Select tenant tier",
@@ -86,11 +90,11 @@ async function createTenant(
   },
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
-  return await Transaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return QueueTansaction(ctx, async (ctx) => {
     const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
     const membership: Membership = await ctx.client.create(
-      await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+      asRoot({ ...ctx, tenant: tenant.id as TenantId }),
       R4,
       await getMembership(options),
     );
@@ -101,18 +105,36 @@ async function createTenant(
           message: "Enter root user password.",
         });
 
-    const user = await users.search(ctx.db, tenant.id as TenantId, {
-      fhir_user_id: membership.id as string,
-    });
-
-    await users.update(ctx.db, tenant.id as TenantId, user[0].id, {
-      ...user[0],
-      password,
+    const verifiedUser = {
+      ...membershipToUser(tenant.id as TenantId, membership),
       email_verified: true,
-    });
+      password,
+    };
+
+    await ctx.queue.send(tenant.id as TenantId, MUTATIONS_QUEUE, [
+      {
+        key: membership.id,
+        headers: {
+          tenant: tenant.id,
+        },
+        value: [
+          {
+            type: "users",
+            interaction: "update",
+            value: {
+              ...membershipToUser(tenant.id as TenantId, membership),
+              email_verified: true,
+              password,
+            },
+            constraint: ["tenant", "fhir_user_id"],
+            onConflict: Object.keys(verifiedUser) as s.users.Column[],
+          },
+        ],
+      },
+    ]);
 
     console.log(`Tenant created with id: '${tenant.id}'`);
-    console.log(`User created with email: '${user[0].email}'`);
+    console.log(`User created with email: '${membership.email}'`);
   });
 }
 
@@ -128,13 +150,13 @@ function tenantCommands(command: Command) {
       const redis = getRedisClient();
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
-        db: createPGPool(),
+        queue: await createQueue(),
         lock: new RedisLock(redis),
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
-        store: new PostgresStore(),
-        search: new PostgresSearchEngine(),
+        store: await createResourceStore({ type: "postgres" }),
+        search: await createSearchStore({ type: "postgres" }),
         ...createClient(),
       };
 
@@ -155,13 +177,13 @@ function clientAppCommands(command: Command) {
       const redis = getRedisClient();
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
-        db: createPGPool(),
+        queue: await createQueue(),
         lock: new RedisLock(redis),
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
-        store: new PostgresStore(),
-        search: new PostgresSearchEngine(),
+        store: await createResourceStore({ type: "postgres" }),
+        search: await createSearchStore({ type: "postgres" }),
         ...createClient(),
       };
 

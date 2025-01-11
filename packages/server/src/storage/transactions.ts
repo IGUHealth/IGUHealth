@@ -7,6 +7,7 @@ import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { PostgresStore } from "./resource-stores/postgres/index.js";
 
 function getTransactionFullUrls(
   transaction: Resource<FHIR_VERSION, "Bundle">,
@@ -95,12 +96,41 @@ export async function buildTransactionTopologicalGraph<
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
 }
 
-export function Transaction<CTX extends Pick<IGUHealthServerCTX, "db">, R>(
+export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
   transaction: (ctx: CTX) => R,
 ): Promise<R> {
-  return db.transaction(ctx.db, isolationLevel, async (client) => {
-    return transaction({ ...ctx, db: client });
-  });
+  return db.transaction(
+    ctx.store.getClient(),
+    isolationLevel,
+    async (client) => {
+      return transaction({ ...ctx, store: new PostgresStore(client) });
+    },
+  );
+}
+
+export async function QueueTansaction<
+  CTX extends Pick<IGUHealthServerCTX, "queue">,
+  R,
+>(ctx: CTX, transactionFN: (ctx: CTX) => R): Promise<R> {
+  // Avoid nesting transactions.
+  if (ctx.queue.isTransaction()) {
+    const res = await transactionFN(ctx);
+    return res;
+  }
+
+  const queueTransaction = await ctx.queue.transaction();
+  const transactionCTX = { ...ctx, queue: queueTransaction };
+
+  try {
+    const result = await transactionFN(transactionCTX);
+    await queueTransaction.commit();
+
+    return result;
+  } catch (e) {
+    console.error("FAILURE");
+    await queueTransaction.abort();
+    throw e;
+  }
 }

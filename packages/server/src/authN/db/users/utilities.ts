@@ -5,6 +5,7 @@ import {
   code,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 export function userToMembership(
@@ -25,9 +26,12 @@ export function userToMembership(
   return member;
 }
 
-export function membershipToUser(user: Membership): s.users.Insertable {
-  const fhir_user_id = user.id;
-  const fhir_user_versionid = user.meta?.versionId;
+export function membershipToUser(
+  tenant: TenantId,
+  membership: Membership,
+): s.users.Insertable {
+  const fhir_user_id = membership.id;
+  const fhir_user_versionid = membership.meta?.versionId;
 
   if (!fhir_user_id) {
     throw new OperationError(outcomeFatal("exception", "User id not found"));
@@ -40,16 +44,18 @@ export function membershipToUser(user: Membership): s.users.Insertable {
   }
 
   return {
-    email: user.email,
-    method: user.federated?.reference?.split("/")[1]
+    tenant: tenant,
+    email: membership.email,
+    method: membership.federated?.reference?.split("/")[1]
       ? "oidc-provider"
       : "email-password",
-    first_name: user.name?.given?.[0] ?? null,
-    last_name: user.name?.family ?? null,
-    role: user.role as s.user_role,
+    first_name: membership.name?.given?.[0] ?? null,
+    last_name: membership.name?.family ?? null,
+    role: membership.role as s.user_role,
     fhir_user_versionid: fhir_user_versionid,
     fhir_user_id,
-    fhir_provider_id: user.federated?.reference?.split("/")[1] ?? null,
+    fhir_provider_id: membership.federated?.reference?.split("/")[1] ?? null,
+    email_verified: membership.emailVerified,
   };
 }
 

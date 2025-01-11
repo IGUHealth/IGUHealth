@@ -8,10 +8,14 @@ import InlineOperation from "../../interface.js";
 export const IguhealthListRefreshTokensInvoke = InlineOperation(
   IguhealthListRefreshTokens.Op,
   async (ctx: IGUHealthServerCTX) => {
-    const refreshTokens = await codes.search(ctx.db, ctx.tenant, {
-      user_id: ctx.user.payload.sub,
-      type: "refresh_token",
-    });
+    const refreshTokens = await codes.search(
+      ctx.store.getClient(),
+      ctx.tenant,
+      {
+        user_id: ctx.user.payload.sub,
+        type: "refresh_token",
+      },
+    );
 
     return {
       "refresh-tokens": refreshTokens.map((refreshToken) => ({
