@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =

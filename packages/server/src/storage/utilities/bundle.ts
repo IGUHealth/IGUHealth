@@ -8,8 +8,8 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import { createFHIRURL } from "../../fhir-api/constants.js";
 import { fhirResponseToHTTPResponse } from "../../fhir-http/index.js";
+import { createFHIRURL } from "../../fhir-server/constants.js";
 
 export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
   version: Version,

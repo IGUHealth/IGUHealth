@@ -8,7 +8,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import * as parseScopes from "../../authN/oidc/scopes/parse.js";
-import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { generatePatientScopePolicy } from "./patient-scopes.js";
 
 /**

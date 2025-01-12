@@ -2,7 +2,7 @@ import * as Koa from "koa";
 
 import { R4 } from "@iguhealth/fhir-types/versions";
 
-import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
+import { KoaExtensions, asRoot } from "../../../fhir-server/types.js";
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.state.oidc.client.

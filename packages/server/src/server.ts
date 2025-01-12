@@ -43,16 +43,20 @@ import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
 import loadEnv from "./env.js";
 import {
-  createClient,
-  createLogger,
-  getRedisClient,
-} from "./fhir-api/index.js";
-import { IGUHealthServerCTX, KoaExtensions, asRoot } from "./fhir-api/types.js";
-import {
   deriveFHIRVersion,
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
+import {
+  createClient,
+  createLogger,
+  getRedisClient,
+} from "./fhir-server/index.js";
+import {
+  IGUHealthServerCTX,
+  KoaExtensions,
+  asRoot,
+} from "./fhir-server/types.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import createQueue from "./queue/index.js";
@@ -282,7 +286,9 @@ export default async function createServer(): Promise<
     );
 
     if (!tenant) {
-      throw new OperationError(outcomeError("not-found", "Tenant not found"));
+      throw new OperationError(
+        outcomeError("not-found", `Tenant '${ctx.params.tenant}' not found`),
+      );
     }
 
     ctx.state.iguhealth = {

@@ -1,14 +1,22 @@
 import * as s from "zapatos/schema";
 
+import {
+  R4BInvokeInstanceRequest,
+  R4BInvokeSystemRequest,
+  R4BInvokeTypeRequest,
+  R4InvokeInstanceRequest,
+  R4InvokeSystemRequest,
+  R4InvokeTypeRequest,
+} from "@iguhealth/client/lib/types";
 import { TenantId } from "@iguhealth/jwt";
-
-export type IType = keyof Insertables;
 
 type Insertables = {
   users: s.users.Insertable;
   tenants: s.tenants.Insertable;
   resources: s.resources.Insertable;
 };
+
+export type MutationType = keyof Insertables;
 
 type Whereables = {
   users: s.users.Whereable;
@@ -22,57 +30,73 @@ type Columns = {
   resources: s.resources.Column;
 };
 
-type Whereable<Type extends IType> = Whereables[Type];
+type Whereable<Type extends MutationType> = Whereables[Type];
 
-type Insertable<Type extends IType> = Insertables[Type];
+type Insertable<Type extends MutationType> = Insertables[Type];
 
-type Column<Type extends IType> = Columns[Type];
+type Column<Type extends MutationType> = Columns[Type];
 
-export type IInteraction = "create" | "delete" | "update";
+export type IType = "create" | "delete" | "update" | "invoke";
 
-interface IMutation<Type extends IType, Interaction extends IInteraction> {
+interface IOperation<Type extends IType> {
   type: Type;
-  interaction: Interaction;
 }
 
-export interface DeleteMutation<Type extends IType>
+interface IMutation<Resource extends MutationType, Interaction extends IType>
+  extends IOperation<Interaction> {
+  resource: Resource;
+}
+
+export interface DeleteOperation<Type extends MutationType>
   extends IMutation<Type, "delete"> {
   where: Whereable<Type>;
   singular?: boolean;
 }
 
-export interface UpdateMutation<Type extends IType>
+export interface UpdateOperation<Type extends MutationType>
   extends IMutation<Type, "update"> {
   constraint: Column<Type>[];
   value: Insertable<Type>;
   onConflict: Column<Type>[];
 }
 
-export interface CreateMutation<Type extends IType>
+export interface CreateOperation<Type extends MutationType>
   extends IMutation<Type, "create"> {
   value: Insertable<Type>;
 }
 
-type MutationMap<Type extends IType> = {
-  create: CreateMutation<Type>;
-  delete: DeleteMutation<Type>;
-  update: UpdateMutation<Type>;
+export interface InvokeOperation extends IOperation<"invoke"> {
+  value:
+    | R4BInvokeInstanceRequest
+    | R4BInvokeTypeRequest
+    | R4BInvokeSystemRequest
+    | R4InvokeInstanceRequest
+    | R4InvokeTypeRequest
+    | R4InvokeSystemRequest;
+}
+
+type OperationMap<Type extends MutationType> = {
+  create: CreateOperation<Type>;
+  delete: DeleteOperation<Type>;
+  update: UpdateOperation<Type>;
+  invoke: InvokeOperation;
 };
 
-export type Mutation<
-  Type extends IType,
-  Interaction extends IInteraction,
-> = MutationMap<Type>[Interaction];
+export type Operation<
+  Type extends MutationType,
+  Interaction extends IType,
+> = OperationMap<Type>[Interaction];
 
-export type Mutations = (
-  | CreateMutation<IType>
-  | DeleteMutation<IType>
-  | UpdateMutation<IType>
+export type Operations = (
+  | CreateOperation<MutationType>
+  | DeleteOperation<MutationType>
+  | UpdateOperation<MutationType>
+  | InvokeOperation
 )[];
 
 export type Message = {
   key?: string;
-  value: Mutations;
+  value: Operations;
   headers?: Record<string, string>;
 };
 

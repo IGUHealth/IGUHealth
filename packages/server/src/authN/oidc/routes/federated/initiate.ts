@@ -4,7 +4,7 @@ import { IdentityProvider, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../../fhir-api/types.js";
+import { asRoot } from "../../../../fhir-server/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { convertChallenge } from "../token.js";

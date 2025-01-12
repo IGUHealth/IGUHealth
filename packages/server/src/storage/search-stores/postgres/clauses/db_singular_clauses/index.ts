@@ -5,7 +5,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import { isSearchTableType } from "../../../../constants.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import dateClauses from "./date.js";

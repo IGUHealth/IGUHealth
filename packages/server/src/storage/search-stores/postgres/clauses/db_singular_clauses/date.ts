@@ -4,17 +4,17 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import {
   SearchParameterResource,
   parseValuePrefix,
 } from "../../../../utilities/search/parameters.js";
+import { getDateRange } from "../../utilities.js";
 import {
+  SEARCH_INDEX_WHEREABLE,
   getSp1Column,
   missingModifier,
-  SEARCH_INDEX_WHEREABLE,
 } from "./shared.js";
-import { getDateRange } from "../../utilities.js";
 
 export default function dateClauses(
   _ctx: IGUHealthServerCTX,

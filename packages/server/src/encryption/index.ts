@@ -5,7 +5,7 @@ import { Extension } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { EncryptionProvider } from "./provider/interface.js";
 import { AWSKMSProvider } from "./provider/kms.js";
 

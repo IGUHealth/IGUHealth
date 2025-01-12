@@ -4,7 +4,7 @@ import { IguhealthDeployOperation } from "@iguhealth/generated-ops/r4";
 import { Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { CustomCodeExecutor } from "../../interface.js";
 import InlineOperation from "../interface.js";
 

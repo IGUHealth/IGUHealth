@@ -6,8 +6,8 @@ import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import JSONPatchSchema from "../..//json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import { validateResource } from "../../fhir-operation-executors/providers/local/ops/resource_validate.js";
+import JSONPatchSchema from "../../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import { IGUHealthServerCTX, asRoot } from "../types.js";
 
 function getResourceTypeToValidate(

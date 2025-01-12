@@ -7,14 +7,13 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { determineEmailUpdate } from "./utilities.js";
 
 export const USER_QUERY_COLS = <const>[
-  "id",
+  "fhir_user_id",
   "tenant",
   "email",
   "first_name",
   "last_name",
   "email_verified",
   "role",
-  "fhir_user_id",
   "fhir_user_versionid",
 ];
 
@@ -94,7 +93,7 @@ export async function get(
   id: string,
 ): Promise<User | undefined> {
   const tenantUser: User | undefined = (await db
-    .selectOne("users", { id, tenant }, { columns: USER_QUERY_COLS })
+    .selectOne("users", { fhir_user_id: id, tenant }, { columns: USER_QUERY_COLS })
     .run(pg)) as User | undefined;
 
   return tenantUser;
@@ -127,7 +126,7 @@ export async function update(
   return db.serializable(pg, async (tx) => {
     const where: s.users.Whereable = {
       tenant,
-      id,
+      fhir_user_id: id,
     };
     const currentUser = await db.selectOne("users", where).run(tx);
     if (!currentUser)

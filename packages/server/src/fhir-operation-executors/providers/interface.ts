@@ -7,7 +7,7 @@ import {
 import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 
 export interface Payload<I> {
   ctx: {

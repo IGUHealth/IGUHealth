@@ -17,7 +17,7 @@ import {
 } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider as ITerminologyProvider } from "./interface.js";
 
 import ExpandInput = ValueSetExpand.Input;

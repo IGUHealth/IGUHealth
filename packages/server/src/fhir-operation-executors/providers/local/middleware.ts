@@ -12,7 +12,7 @@ import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { InlineOp } from "./interface.js";
 
 function createExecutor(): MiddlewareAsync<

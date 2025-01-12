@@ -8,7 +8,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { FHIRSearchRequest, SearchEngine, SearchResult } from "../interface.js";
 import indexResource, { removeIndices } from "./indexing.js";
 import { executeSearchQuery } from "./search.js";

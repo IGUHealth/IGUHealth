@@ -17,8 +17,8 @@ import {
   Subject,
 } from "@iguhealth/jwt/types";
 
-import { createTenantURL } from "../../../../fhir-api/constants.js";
-import { asRoot } from "../../../../fhir-api/types.js";
+import { createTenantURL } from "../../../../fhir-server/constants.js";
+import { asRoot } from "../../../../fhir-server/types.js";
 import resolveStatic from "../../../../resolveStatic.js";
 import { OIDC_ROUTES, getIssuer } from "../../constants.js";
 import { SYSTEM_APP } from "../../hardcodedClients/system-app.js";
@@ -86,7 +86,7 @@ export async function launchView<Version extends FHIR_VERSION>(
       process.env.AUTH_LOCAL_SIGNING_KEY,
     ),
     payload: {
-      sub: ctx.state.oidc.user?.id as Subject,
+      sub: ctx.state.oidc.user?.fhir_user_id as Subject,
       // So for a user to select a patient, they must have the user/Patient.s scope.
       scope: `${ctx.state.oidc.parameters.scope ?? ""} user/SearchParameter.rs`,
       iss: getIssuer(ctx.state.iguhealth.tenant),

@@ -5,7 +5,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import InlineOperation from "../interface.js";
 
 function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {

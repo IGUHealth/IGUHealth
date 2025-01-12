@@ -64,7 +64,7 @@ export function scopePOST(): OIDCRouteHandler {
             {
               tenant: ctx.state.iguhealth.tenant,
               client_id: ctx.state.oidc.client?.id as string,
-              user_id: ctx.state.oidc.user?.id as string,
+              user_id: ctx.state.oidc.user?.fhir_user_id as string,
               scope: parseScopes.toString(scopes),
             },
           ],

@@ -2,7 +2,7 @@ import Router from "@koa/router";
 
 import { ALGORITHMS } from "@iguhealth/jwt";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-server/types.js";
 import { JWKS_GET, OIDC_ROUTES, getIssuer } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 

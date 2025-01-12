@@ -1,79 +1,91 @@
 import React from "react";
 import validator from "validator";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
+import {
+  Membership,
+  Parameters,
+  id,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
-import { DBTransaction } from "../../../storage/transactions.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { QueueBatch } from "../../../storage/transactions.js";
 import * as views from "../../../views/index.js";
+import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import * as tenants from "../../db/tenant.js";
-import { User } from "../../db/users/index.js";
-import * as users from "../../db/users/index.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
-import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
+import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
 
 async function findExistingOwner(
-  pg: db.Queryable,
+  ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
   email: string,
-): Promise<s.users.JSONSelectable | undefined> {
-  const userOwner = await db.select("users", { email, role: "owner" }).run(pg);
-  return userOwner[0];
+): Promise<[TenantId, Membership] | undefined> {
+  const result = await db
+    .select("users", { email, role: "owner" })
+    .run(ctx.store.getClient());
+  const userOwner = result[0];
+  if (userOwner) {
+    const member = await ctx.client.read(
+      asRoot({ ...ctx, tenant: userOwner.tenant as TenantId }),
+      R4,
+      "Membership",
+      userOwner.fhir_user_id as id,
+    );
+    if (!member) {
+      throw new OperationError(
+        outcomeError("not-found", "Owner user not found."),
+      );
+    }
+
+    return [userOwner.tenant as TenantId, member];
+  }
+  return undefined;
 }
 
 async function createOrRetrieveUser(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
   email: string,
-): Promise<User> {
-  const existingOwner = await findExistingOwner(ctx.store.getClient(), email);
+): Promise<[TenantId, Membership]> {
+  const existingOwner = await findExistingOwner(ctx, email);
   if (existingOwner) {
     return existingOwner;
   } else {
-    const user = await DBTransaction(
-      ctx,
-      db.IsolationLevel.Serializable,
-      async (ctx) => {
-        const tenant = await tenants.create(ctx, {});
-
-        const membership = await ctx.client.create(
-          asRoot({
-            ...ctx,
-            tenant: tenant.id as TenantId,
-          }),
-          R4,
-          userToMembership({
-            role: "owner",
-            tenant: tenant.id,
-            email: email,
-            email_verified: false,
-          }),
-        );
-
-        const user: User[] = await users.search(
-          ctx.store.getClient(),
-          tenant.id as TenantId,
+    const tenantInsertion = await tenants.create(ctx, {});
+    await ctx.queue.send("system" as TenantId, OPERATIONS_QUEUE, [
+      {
+        value: [
           {
-            fhir_user_id: membership.id,
+            resource: "tenants",
+            type: "create",
+            value: tenantInsertion,
           },
-        );
-
-        if (!user[0]) {
-          throw new OperationError(
-            outcomeError("not-found", "User not found."),
-          );
-        }
-        return user[0];
+        ],
       },
+    ]);
+
+    const membership = await ctx.client.create(
+      asRoot({
+        ...ctx,
+        tenant: tenantInsertion.id as TenantId,
+      }),
+      R4,
+      userToMembership({
+        role: "owner",
+        tenant: tenantInsertion.id as TenantId,
+        email: email,
+        email_verified: false,
+      }),
     );
 
-    return user;
+    return [tenantInsertion.id as TenantId, membership];
   }
 }
 
@@ -117,29 +129,37 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     throw new OperationError(outcomeError("invalid", "Email is not valid."));
   }
 
-  const user = await createOrRetrieveUser(ctx.state.iguhealth, email);
+  await QueueBatch(ctx.state.iguhealth, async (iguhealth) => {
+    const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
+
+    await sendPasswordResetEmail(
+      { ...ctx.state.iguhealth, tenant },
+      membership,
+      {
+        email: {
+          acceptText: "Reset Password",
+          body: "To verify your email and set your password click below.",
+          subject: "IGUHealth Email Verification",
+        },
+      },
+    );
+
+    ctx.status = 200;
+    ctx.body = views.renderString(
+      React.createElement(Feedback, {
+        logo: "/public/img/logo.svg",
+        title: "IGUHealth",
+        header: "Email Verification",
+        content:
+          "An email will arrive in the next few minutes with the next steps to complete your registration.",
+      }),
+    );
+  });
 
   // Alert system admin of new user.
   await sendAlertEmail(
     ctx.state.iguhealth.emailProvider,
     "New User",
     `A new user with email '${email}' has signed up.`,
-  );
-
-  await sendPasswordResetEmail(
-    ctx.router,
-    { ...ctx.state.iguhealth, tenant: user.tenant as TenantId },
-    user,
-  );
-
-  ctx.status = 200;
-  ctx.body = views.renderString(
-    React.createElement(Feedback, {
-      logo: "/public/img/logo.svg",
-      title: "IGUHealth",
-      header: "Email Verification",
-      content:
-        "An email will arrive in the next few minutes with the next steps to complete your registration.",
-    }),
   );
 };

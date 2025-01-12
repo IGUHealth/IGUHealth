@@ -26,7 +26,7 @@ import {
   IGUHealthServerCTX,
   KoaExtensions,
   asRoot,
-} from "../../../fhir-api/types.js";
+} from "../../../fhir-server/types.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
 import * as users from "../../db/users/index.js";
@@ -227,7 +227,7 @@ async function createRefreshToken(
     client_id: client.id,
     tenant: tenant,
     // Should be safe to use here as is authenticated so user should be populated.
-    user_id: user.id,
+    user_id: user.fhir_user_id,
     expires_in,
     meta: launchParameters ? { launch: launchParameters } : undefined,
   });
@@ -266,7 +266,7 @@ async function createTokenResponse({
     ctx.store.getClient(),
     ctx.tenant,
     clientApplication.id as id,
-    user.id,
+    user.fhir_user_id,
   );
 
   const accesspolicies = await ctx.client.search_type(
@@ -283,7 +283,7 @@ async function createTokenResponse({
     patient: launchParameters?.Patient,
     encounter: launchParameters?.Encounter,
 
-    sub: user.id as Subject,
+    sub: user.fhir_user_id as Subject,
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
 

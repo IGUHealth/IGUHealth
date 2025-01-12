@@ -6,7 +6,7 @@ import {
 import { IOperation, Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { getOpCTX } from "../../utilities.js";
 import { validateInvocationContext } from "../../utilities.js";
 

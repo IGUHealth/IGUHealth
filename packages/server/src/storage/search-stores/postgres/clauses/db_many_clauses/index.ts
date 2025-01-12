@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import { isSearchTableType } from "../../../../constants.js";
 import {
   SearchParameterResource,

@@ -2,7 +2,7 @@ import { dateTime, id } from "@iguhealth/fhir-types/r4/types";
 import { IguhealthListRefreshTokens } from "@iguhealth/generated-ops/r4";
 
 import * as codes from "../../../../../authN/db/code/index.js";
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import InlineOperation from "../../interface.js";
 
 export const IguhealthListRefreshTokensInvoke = InlineOperation(

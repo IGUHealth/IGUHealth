@@ -21,15 +21,15 @@ import {
   createClient,
   createLogger,
   getRedisClient,
-} from "../../fhir-api/index.js";
-import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
+} from "../../fhir-server/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
 import createResourceStore from "../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../storage/search-stores/index.js";
 import { QueueBatch } from "../../storage/transactions.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { MUTATIONS_QUEUE } from "../../worker/kafka/constants.js";
+import { OPERATIONS_QUEUE } from "../../worker/kafka/constants.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -93,6 +93,18 @@ async function createTenant(
   return QueueBatch(ctx, async (ctx) => {
     const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
+    await ctx.queue.send("system" as TenantId, OPERATIONS_QUEUE, [
+      {
+        value: [
+          {
+            resource: "tenants",
+            type: "create",
+            value: tenant,
+          },
+        ],
+      },
+    ]);
+
     const membership: Membership = await ctx.client.create(
       asRoot({ ...ctx, tenant: tenant.id as TenantId }),
       R4,
@@ -111,16 +123,16 @@ async function createTenant(
       password,
     };
 
-    await ctx.queue.send(tenant.id as TenantId, MUTATIONS_QUEUE, [
+    await ctx.queue.send(tenant.id as TenantId, OPERATIONS_QUEUE, [
       {
         key: membership.id,
         headers: {
-          tenant: tenant.id,
+          tenant: tenant.id as string,
         },
         value: [
           {
-            type: "users",
-            interaction: "update",
+            resource: "users",
+            type: "update",
             value: {
               ...membershipToUser(tenant.id as TenantId, membership),
               email_verified: true,

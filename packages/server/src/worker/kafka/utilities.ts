@@ -9,6 +9,8 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
+import * as queue from "../../queue/interface.js";
+
 export function associateResourceVersionId<
   Version extends FHIR_VERSION,
   Type extends AllResourceTypes,
@@ -61,4 +63,15 @@ export function associateVersionIdFromKafkaMessage(
     };
   }
   return returnVal;
+}
+
+export function gateMutation<
+  Resource extends queue.MutationType,
+  Type extends Exclude<queue.IType, "invoke">,
+>(
+  resource: Resource,
+  type: Type,
+  mutation: queue.Operations[number],
+): mutation is queue.Operation<Resource, Type> {
+  return mutation.type === type && mutation.resource === resource;
 }

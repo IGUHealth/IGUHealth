@@ -19,7 +19,7 @@ import {
 } from "@iguhealth/jwt/types";
 
 import { IOCache } from "../cache/interface.js";
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";

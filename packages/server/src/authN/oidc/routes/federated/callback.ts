@@ -4,7 +4,7 @@ import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../../fhir-api/types.js";
+import { asRoot } from "../../../../fhir-server/types.js";
 import * as users from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
@@ -125,13 +125,27 @@ export function federatedCallback(): OIDCRouteHandler {
           },
         );
 
-        const user = await users.search(
+        let user = await users.search(
           ctx.state.iguhealth.store.getClient(),
           ctx.state.iguhealth.tenant,
           {
             fhir_user_id: membership.id,
           },
         );
+
+        // QFIX for waiting until the user is created as this happens async.
+        let retries = 5;
+        while (user[0] === undefined && retries > 0) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          user = await users.search(
+            ctx.state.iguhealth.store.getClient(),
+            ctx.state.iguhealth.tenant,
+            {
+              fhir_user_id: membership.id,
+            },
+          );
+          retries--;
+        }
 
         if (user[0] !== undefined) {
           sessionSetUserLogin(ctx, user[0]);

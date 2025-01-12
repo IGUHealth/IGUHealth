@@ -12,3 +12,4 @@ export * from "./ops/resource_validate.js";
 export * from "./ops/snapshot.js";
 export * from "./ops/usage_statistics.js";
 export * from "./ops/evaluate-policy.js";
+export * from "./ops/password-reset.js";

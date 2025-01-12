@@ -25,7 +25,7 @@ export function userInfo(): OIDCRouteHandler {
       ctx.state.iguhealth.user.payload.sub,
     );
     ctx.body = {
-      sub: user?.id,
+      sub: user?.fhir_user_id,
       given_name: user?.first_name ?? undefined,
       family_name: user?.last_name ?? undefined,
       email: user?.email ?? undefined,

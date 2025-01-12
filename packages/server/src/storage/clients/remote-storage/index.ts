@@ -32,11 +32,11 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
-import { CreateMutation } from "../../../queue/interface.js";
-import { MUTATIONS_QUEUE } from "../../../worker/kafka/constants.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
+import { CreateOperation } from "../../../queue/interface.js";
+import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import {
   DBTransaction,
   buildTransactionTopologicalGraph,
@@ -106,15 +106,15 @@ async function createResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
     {
       key: resource.id,
       value: [
         {
-          type: "resources",
-          interaction: "create",
+          resource: "resources",
+          type: "create",
           value: message,
-        } as CreateMutation<"resources">,
+        } as CreateOperation<"resources">,
       ],
     },
   ]);
@@ -213,15 +213,15 @@ async function patchResource<
       resource: newResource as unknown as db.JSONObject,
     });
 
-    await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+    await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
       {
         key: newResource.id as id,
         value: [
           {
-            type: "resources",
-            interaction: "create",
+            resource: "resources",
+            type: "create",
             value: message,
-          } as CreateMutation<"resources">,
+          } as CreateOperation<"resources">,
         ],
       },
     ]);
@@ -296,15 +296,15 @@ async function updateResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
     {
       key: resource.id as id,
       value: [
         {
-          type: "resources",
-          interaction: "create",
+          resource: "resources",
+          type: "create",
           value: message,
-        } as CreateMutation<"resources">,
+        } as CreateOperation<"resources">,
       ],
     },
   ]);
@@ -333,13 +333,13 @@ async function deleteResource<
       ),
     );
 
-  await ctx.queue.send(ctx.tenant, MUTATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
     {
       key: resource.id as id,
       value: [
         {
-          type: "resources",
-          interaction: "create",
+          resource: "resources",
+          type: "create",
           value: version({
             tenant: ctx.tenant,
             fhir_version: toDBFHIRVersion(fhirVersion),
@@ -349,7 +349,7 @@ async function deleteResource<
             resource: resource as unknown as db.JSONObject,
             deleted: true,
           }),
-        } as CreateMutation<"resources">,
+        } as CreateOperation<"resources">,
       ],
     },
   ]);

@@ -18,8 +18,8 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { getIssuer } from "../../../../authN/oidc/constants.js";
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
+import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import InlineOperation from "../interface.js";
 
 async function getUserSource(

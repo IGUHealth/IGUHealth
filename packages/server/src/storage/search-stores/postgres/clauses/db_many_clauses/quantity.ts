@@ -5,7 +5,7 @@ import { splitParameter } from "@iguhealth/client/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 

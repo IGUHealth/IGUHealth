@@ -5,7 +5,7 @@ import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 
 /**
  * Middleware to evaluate access policy access.

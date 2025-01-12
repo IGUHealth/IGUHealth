@@ -29,11 +29,11 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import logAuditEvent, {
   MINOR_FAILURE,
   createAuditEvent,
 } from "../../../fhir-logging/auditEvents.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { getOpCTX, validateInvocationContext } from "../../utilities.js";
 import { CustomCodeExecutor, Payload } from "../interface.js";
 

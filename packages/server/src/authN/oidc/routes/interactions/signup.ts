@@ -1,17 +1,23 @@
 import React from "react";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
-import { Membership } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  Membership,
+  Parameters,
+  id,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../../fhir-api/types.js";
+import { asRoot } from "../../../../fhir-server/types.js";
 import * as views from "../../../../views/index.js";
+import { OPERATIONS_QUEUE } from "../../../../worker/kafka/constants.js";
 import * as users from "../../../db/users/index.js";
+import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 import { sendAlertEmail } from "../../utilities/sendAlertEmail.js";
-import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
 export const signupGET = (): OIDCRouteHandler => async (ctx) => {
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_POST, {
@@ -55,11 +61,29 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       },
     )
   )[0];
+
   if (existingUser !== undefined) {
-    await sendPasswordResetEmail(ctx.router, ctx.state.iguhealth, existingUser);
+    const membership = await ctx.state.iguhealth.store.readLatestResourceById(
+      asRoot(ctx.state.iguhealth),
+      R4,
+      existingUser.fhir_user_id as id,
+    );
+    if (!membership || membership.resourceType !== "Membership") {
+      throw new OperationError(
+        outcomeError("exception", "Membership not found"),
+      );
+    }
+
+    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+      email: {
+        subject: "IGUHealth Email Verification",
+        body: "To verify your email and set your password click below.",
+        acceptText: "Reset Password",
+      },
+    });
   } else {
     const membership = await ctx.state.iguhealth.client.create(
-      await asRoot(ctx.state.iguhealth),
+      asRoot(ctx.state.iguhealth),
       R4,
       {
         resourceType: "Membership",
@@ -83,11 +107,14 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       "New User",
       `A new user with email '${user[0]?.email}' has signed up.`,
     );
-    await sendPasswordResetEmail(
-      ctx.router,
-      { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
-      user[0],
-    );
+
+    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+      email: {
+        subject: "IGUHealth Email Verification",
+        body: "To verify your email and set your password click below.",
+        acceptText: "Reset Password",
+      },
+    });
   }
 
   ctx.status = 200;

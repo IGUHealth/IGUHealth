@@ -15,7 +15,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 
 export async function resolveOperationDefinition<
   CTX,

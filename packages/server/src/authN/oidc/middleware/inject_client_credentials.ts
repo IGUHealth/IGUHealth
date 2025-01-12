@@ -1,6 +1,6 @@
 import * as Koa from "koa";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-server/types.js";
 import { getClientCredentials } from "../client_credentials_verification.js";
 
 /**
