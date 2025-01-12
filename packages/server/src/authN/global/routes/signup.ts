@@ -3,13 +3,8 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
-import {
-  Membership,
-  Parameters,
-  id,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 

@@ -1,18 +1,12 @@
 import React from "react";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
-import {
-  Membership,
-  Parameters,
-  id,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-server/types.js";
 import * as views from "../../../../views/index.js";
-import { OPERATIONS_QUEUE } from "../../../../worker/kafka/constants.js";
 import * as users from "../../../db/users/index.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";

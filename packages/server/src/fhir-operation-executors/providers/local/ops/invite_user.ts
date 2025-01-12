@@ -1,10 +1,7 @@
 import { FHIRRequest } from "@iguhealth/client/types";
-import { Membership, Parameters, id } from "@iguhealth/fhir-types/r4/types";
+import { Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import {
-  IguhealthInviteUser,
-  IguhealthPasswordReset,
-} from "@iguhealth/generated-ops/r4";
+import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 import {
   OperationError,
   outcomeError,
@@ -14,7 +11,6 @@ import {
 import { sendPasswordResetEmail } from "../../../../authN/sendPasswordReset.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { QueueBatch } from "../../../../storage/transactions.js";
-import { OPERATIONS_QUEUE } from "../../../../worker/kafka/constants.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(

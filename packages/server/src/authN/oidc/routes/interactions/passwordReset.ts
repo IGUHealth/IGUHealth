@@ -3,13 +3,8 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
-import {
-  OperationOutcome,
-  Parameters,
-  id,
-} from "@iguhealth/fhir-types/r4/types";
+import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
@@ -20,7 +15,6 @@ import {
 import { asRoot } from "../../../../fhir-server/types.js";
 import { DBTransaction } from "../../../../storage/transactions.js";
 import * as views from "../../../../views/index.js";
-import { OPERATIONS_QUEUE } from "../../../../worker/kafka/constants.js";
 import * as codes from "../../../db/code/index.js";
 import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
