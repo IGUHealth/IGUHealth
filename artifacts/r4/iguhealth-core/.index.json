@@ -26,6 +26,10 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "definitions/iguhealth/operation/password-reset.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
       "filename": "definitions/iguhealth/operation/refresh-tokens/delete.json",
       "resourceType": "OperationDefinition"
     },

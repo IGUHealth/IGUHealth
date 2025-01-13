@@ -1,4 +1,5 @@
 import * as s from "zapatos/schema";
+
 import {
   R4BHistoryInstanceRequest,
   R4BSystemHistoryRequest,
@@ -8,7 +9,6 @@ import {
   R4TypeHistoryRequest,
 } from "@iguhealth/client/types";
 import { id } from "@iguhealth/fhir-types/r4/types";
-
 import {
   AllResourceTypes,
   FHIR_VERSION,

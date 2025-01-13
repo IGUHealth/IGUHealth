@@ -3,7 +3,7 @@ import type * as Koa from "koa";
 
 import { multer } from "@iguhealth/koa-multipart-form";
 
-import { KoaExtensions } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-server/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
 import { clientInjectFHIRMiddleware } from "../oidc/middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";

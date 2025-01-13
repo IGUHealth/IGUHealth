@@ -91,7 +91,7 @@ export function authorize(): OIDCRouteHandler {
         redirect_uri: redirectUrl,
       });
     }
-    const userId = ctx.state.oidc.user?.id;
+    const userId = ctx.state.oidc.user?.fhir_user_id;
     if (!userId) {
       throw new OIDCError({
         error: "invalid_request",
@@ -166,7 +166,7 @@ export function authorize(): OIDCRouteHandler {
         client_id: client.id,
         tenant: ctx.state.iguhealth.tenant,
         // Should be safe to use here as is authenticated so user should be populated.
-        user_id: ctx.state.oidc.user?.id as string,
+        user_id: ctx.state.oidc.user?.fhir_user_id as string,
         pkce_code_challenge: code_challenge,
         redirect_uri: redirectUrl,
         pkce_code_challenge_method: code_challenge_method as "S256" | "plain",

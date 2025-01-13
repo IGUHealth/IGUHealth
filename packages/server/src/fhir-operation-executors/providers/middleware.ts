@@ -7,7 +7,7 @@ import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { resolveOperationDefinition } from "../utilities.js";
 import { CustomCodeExecutor } from "./interface.js";
 

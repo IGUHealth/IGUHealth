@@ -2,7 +2,7 @@ import { dateTime, id } from "@iguhealth/fhir-types/r4/types";
 import { IguhealthListScopes } from "@iguhealth/generated-ops/r4";
 
 import * as scopes from "../../../../../authN/db/scopes/index.js";
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import InlineOperation from "../../interface.js";
 
 export const IguhealthListScopesInvoke = InlineOperation(

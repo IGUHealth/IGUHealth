@@ -1,13 +1,14 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
+
 import { code } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
+import { isSearchParameterInSingularTable } from "../utilities.js";
 import { buildClausesManySQL } from "./db_many_clauses/index.js";
 import { buildClausesSingularSQL } from "./db_singular_clauses/index.js";
-import { isSearchParameterInSingularTable } from "../utilities.js";
 
 function buildParametersManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,

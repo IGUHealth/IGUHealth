@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import dotEnv from "dotenv";
 
-import { getRedisClient } from "../fhir-api/index.js";
+import { getRedisClient } from "../fhir-server/index.js";
 import PostgresLock from "./postgres.lock.js";
 import RedisLock from "./redis.lock.js";
 

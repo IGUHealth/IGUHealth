@@ -7,7 +7,7 @@ import {
 import * as fhirpath from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import dataConversion, {
   ResolveCanonical,
   SEARCH_TYPE,

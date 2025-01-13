@@ -2,7 +2,7 @@ import type Koa from "koa";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-server/types.js";
 import * as scopes from "../scopes/parse.js";
 import { OIDCError } from "./oauth_error_handling.js";
 

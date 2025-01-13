@@ -12,16 +12,16 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../../fhir-api/types.js";
+import { asRoot } from "../../../../fhir-server/types.js";
 import { DBTransaction } from "../../../../storage/transactions.js";
 import * as views from "../../../../views/index.js";
 import * as codes from "../../../db/code/index.js";
 import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
+import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { OIDCRouteHandler } from "../../index.js";
-import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
 function validatePasswordStrength(
   password: string,
@@ -352,11 +352,25 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    await sendPasswordResetEmail(
-      ctx.router,
-      { ...ctx.state.iguhealth, tenant: ctx.state.iguhealth.tenant },
-      user,
+    const membership = await ctx.state.iguhealth.store.readLatestResourceById(
+      ctx.state.iguhealth,
+      R4,
+      user.fhir_user_id as id,
     );
+
+    if (!membership || membership.resourceType !== "Membership") {
+      throw new OperationError(
+        outcomeFatal("invariant", "Membership not found for user."),
+      );
+    }
+
+    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+      email: {
+        subject: "IGUHealth Email Verification",
+        body: "To verify your email and set your password click below.",
+        acceptText: "Reset Password",
+      },
+    });
 
     ctx.status = 200;
     ctx.body = views.renderString(

@@ -8,7 +8,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { getIssuer } from "../../authN/oidc/constants.js";
-import { KoaExtensions } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-server/types.js";
 
 /**
  * Verify a users access to a given tenant based around JWT Claims

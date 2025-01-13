@@ -4,7 +4,7 @@ import { ClientApplication, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
+import { KoaExtensions, asRoot } from "../../../fhir-server/types.js";
 import getHardCodedClients from "../hardcodedClients/index.js";
 
 export async function findClient(

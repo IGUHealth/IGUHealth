@@ -1,63 +1,71 @@
-import { Kafka, Partitioners, logLevel } from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 import * as db from "zapatos/db";
 
 import { TenantId } from "@iguhealth/jwt";
 
+import createEmailProvider from "../../../email/index.js";
+import { createClient, createLogger } from "../../../fhir-server/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../fhir-terminology/index.js";
+import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
+import createResourceStore from "../../../storage/resource-stores/index.js";
+import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { DBTransaction } from "../../../storage/transactions.js";
-import { IGUHealthWorkerCTX, staticWorkerServices } from "../../utilities.js";
-import { MUTATIONS_QUEUE } from "../constants.js";
+import { OPERATIONS_QUEUE } from "../constants.js";
 
 async function handleCreateMutation(
-  ctx: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
-  mutation: queue.CreateMutation<queue.IType>,
+  ctx: Omit<IGUHealthServerCTX, "user">,
+  mutation: queue.CreateOperation<queue.MutationType>,
 ) {
-  if (mutation.type === "resources") {
+  if (mutation.resource === "resources") {
     return ctx.store.insert(
-      {
-        ...ctx,
-        tenant: (mutation as queue.CreateMutation<"resources">).value
-          .tenant as TenantId,
-      },
-      (mutation as queue.CreateMutation<"resources">).value,
+      ctx,
+      (mutation as queue.CreateOperation<"resources">).value,
     );
   } else {
-    const otherMutation: queue.CreateMutation<
-      Exclude<queue.IType, "resources">
-    > = mutation as queue.CreateMutation<Exclude<queue.IType, "resources">>;
+    const otherMutation: queue.CreateOperation<
+      Exclude<queue.MutationType, "resources">
+    > = mutation as queue.CreateOperation<
+      Exclude<queue.MutationType, "resources">
+    >;
     return db
-      .insert(otherMutation.type, [otherMutation.value])
+      .insert(otherMutation.resource, [otherMutation.value])
       .run(ctx.store.getClient());
   }
 }
 
 async function handleUpdateMutation(
-  ctx: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
-  mutation: queue.UpdateMutation<queue.IType>,
+  ctx: Omit<IGUHealthServerCTX, "user">,
+  mutation: queue.UpdateOperation<queue.MutationType>,
 ) {
   return db
-    .upsert(mutation.type, mutation.value, mutation.constraint, {
+    .upsert(mutation.resource, mutation.value, mutation.constraint, {
       updateColumns: mutation.onConflict,
     })
     .run(ctx.store.getClient());
 }
 
 async function handleDeleteMutation(
-  ctx: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
-  mutation: queue.DeleteMutation<queue.IType>,
+  ctx: Omit<IGUHealthServerCTX, "user">,
+  mutation: queue.DeleteOperation<queue.MutationType>,
 ) {
-  return db.deletes(mutation.type, mutation.where).run(ctx.store.getClient());
+  return db
+    .deletes(mutation.resource, mutation.where)
+    .run(ctx.store.getClient());
 }
 
 async function handleMutation(
-  ctx: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
-  mutation: queue.Mutations[number],
+  ctx: Omit<IGUHealthServerCTX, "user">,
+  mutation: queue.Operations[number],
 ) {
-  if (mutation.interaction === "create")
+  if (mutation.type === "invoke") {
+    await ctx.client.request(asRoot(ctx), mutation.value);
+  } else if (mutation.type === "create")
     await handleCreateMutation(ctx, mutation);
-  else if (mutation.interaction === "update")
+  else if (mutation.type === "update")
     await handleUpdateMutation(ctx, mutation);
-  else if (mutation.interaction === "delete")
+  else if (mutation.type === "delete")
     await handleDeleteMutation(ctx, mutation);
 }
 
@@ -68,36 +76,48 @@ export default async function createStorageWorker() {
     clientId: process.env.QUEUE_CLIENT_ID,
   });
 
-  const workerId = "kafka-worker-storage";
-  const producer = kafka.producer({
-    allowAutoTopicCreation: false,
-    createPartitioner: Partitioners.DefaultPartitioner,
-  });
-
-  await producer.connect();
   const consumer = kafka.consumer({ groupId: "storage" });
-  const services = await staticWorkerServices(workerId);
+  const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    queue: await createQueue(),
+    store: await createResourceStore({ type: "postgres" }),
+    search: await createSearchStore({ type: "postgres" }),
+    logger: createLogger(),
+    terminologyProvider: new TerminologyProvider(),
+    emailProvider: createEmailProvider(),
+    ...createClient(),
+  };
 
   await consumer.connect();
-  await consumer.subscribe({ topic: MUTATIONS_QUEUE, fromBeginning: true });
+  await consumer.subscribe({ topic: OPERATIONS_QUEUE, fromBeginning: true });
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
       try {
-        services.logger.info(
+        iguhealthServices.logger.info(
           `[STORAGE], Processing message ${message.key?.toString()}`,
         );
+        const tenantId = message.headers?.tenant?.toString() as
+          | TenantId
+          | undefined;
+
+        if (!tenantId) {
+          throw new Error("Tenant ID not found in message headers");
+        }
 
         if (message.value) {
-          const mutations: queue.Mutations = JSON.parse(
+          const mutations: queue.Operations = JSON.parse(
             message.value.toString(),
           );
           await DBTransaction(
-            services,
+            iguhealthServices,
             db.IsolationLevel.RepeatableRead,
             async () => {
               for (const mutation of mutations) {
-                await handleMutation(services, mutation);
+                await handleMutation(
+                  { ...iguhealthServices, tenant: tenantId },
+                  mutation,
+                );
               }
             },
           );

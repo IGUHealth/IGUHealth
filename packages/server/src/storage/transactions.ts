@@ -6,7 +6,7 @@ import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { PostgresStore } from "./resource-stores/postgres/index.js";
 
 function getTransactionFullUrls(
@@ -129,7 +129,6 @@ export async function QueueBatch<
 
     return result;
   } catch (e) {
-    console.error("FAILURE");
     await queueTransaction.abort();
     throw e;
   }

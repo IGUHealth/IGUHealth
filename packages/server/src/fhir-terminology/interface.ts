@@ -5,7 +5,7 @@ import {
   ValueSetValidateCode,
 } from "@iguhealth/generated-ops/r4";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 
 export interface TerminologyProvider {
   expand(

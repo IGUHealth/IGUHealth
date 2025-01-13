@@ -9,7 +9,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { isSearchTableType, search_table_types } from "../../constants.js";
 import {
   SearchParameterResult,

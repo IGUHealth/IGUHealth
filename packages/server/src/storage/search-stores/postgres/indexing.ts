@@ -19,7 +19,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import {
   SEARCH_TABLE_TYPES,
   search_table_types,

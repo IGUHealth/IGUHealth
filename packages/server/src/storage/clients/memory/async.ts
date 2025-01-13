@@ -21,7 +21,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { generateId } from "../../utilities/generateId.js";
 import {
   SearchParameterResource,

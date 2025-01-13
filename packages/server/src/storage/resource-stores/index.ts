@@ -1,6 +1,6 @@
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { createResourceStorePool } from "../pg.js";
 import { PostgresStore } from "./postgres/index.js";
 

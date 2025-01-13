@@ -24,7 +24,7 @@ import {
   IGUHealthServerCTX,
   KoaExtensions,
   asRoot,
-} from "../fhir-api/types.js";
+} from "../fhir-server/types.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,

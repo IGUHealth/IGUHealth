@@ -15,11 +15,11 @@ import {
 import { getIssuer } from "../authN/oidc/constants.js";
 import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import RedisCache from "../cache/providers/redis.js";
-import { createLogger, getRedisClient } from "../fhir-api/index.js";
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { createLogger, getRedisClient } from "../fhir-server/index.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { createArtifactMemoryDatabase } from "../storage/clients/memory/async.js";
-import RedisLock from "../synchronization/redis.lock.js";
 import createResourceStore from "../storage/resource-stores/index.js";
+import RedisLock from "../synchronization/redis.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,

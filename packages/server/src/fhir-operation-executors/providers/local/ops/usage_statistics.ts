@@ -6,8 +6,8 @@ import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/r4";
 import {
   getResourceCountTotal,
   getTenantLimits,
-} from "../../../../fhir-api/middleware/usageCheck.js";
-import { IGUHealthServerCTX } from "../../../../fhir-api/types.js";
+} from "../../../../fhir-server/middleware/usageCheck.js";
+import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthUsageStatisticsInvoke = InlineOperation(

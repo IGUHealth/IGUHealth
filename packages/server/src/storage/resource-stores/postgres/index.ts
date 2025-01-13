@@ -6,6 +6,7 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
+
 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
@@ -20,10 +21,10 @@ import {
   R4TypeHistoryRequest,
 } from "@iguhealth/client/types";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { ResourceStore } from "../interface.js";
-import { createFHIRURL } from "../../../fhir-api/constants.js";
+import { createFHIRURL } from "../../../fhir-server/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
@@ -207,7 +208,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
     return returnOrdered;
   }
 
-  async readLatestResourceById<Version extends FHIR_VERSION>(
+  async readLatestResourceById<Version extends FHIR_VERSION, >(
     ctx: CTX,
     fhirVersion: Version,
     id: id,
@@ -227,9 +228,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       )
       .run(this._pgClient);
 
-    return result?.resource as unknown as Promise<
-      Resource<Version, AllResourceTypes> | undefined
-    >;
+    return result?.resource as unknown as Promise<Resource<Version, AllResourceTypes> | undefined>;
   }
 
   async insert<T extends s.resources.Insertable>(

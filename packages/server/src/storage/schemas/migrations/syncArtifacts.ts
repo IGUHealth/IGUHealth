@@ -8,9 +8,9 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import RedisCache from "../../../cache/providers/redis.js";
-import { createClient, createLogger } from "../../../fhir-api/index.js";
-import { getRedisClient } from "../../../fhir-api/index.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { createClient, createLogger } from "../../../fhir-server/index.js";
+import { getRedisClient } from "../../../fhir-server/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import RedisLock from "../../../synchronization/redis.lock.js";
 import createResourceStore from "../../resource-stores/index.js";

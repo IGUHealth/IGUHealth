@@ -51106,12 +51106,6 @@ declare module 'zapatos/schema' {
       */
       first_name: string | null;
       /**
-      * **users.id**
-      * - `text` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
       * **users.last_name**
       * - `text` in database
       * - Nullable, no default
@@ -51144,9 +51138,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant: string | null;
+      tenant: string;
       /**
       * **users.updated_at**
       * - `timestamptz` in database
@@ -51198,12 +51192,6 @@ declare module 'zapatos/schema' {
       */
       first_name: string | null;
       /**
-      * **users.id**
-      * - `text` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
       * **users.last_name**
       * - `text` in database
       * - Nullable, no default
@@ -51236,9 +51224,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant: string | null;
+      tenant: string;
       /**
       * **users.updated_at**
       * - `timestamptz` in database
@@ -51290,12 +51278,6 @@ declare module 'zapatos/schema' {
       */
       first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.id**
-      * - `text` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **users.last_name**
       * - `text` in database
       * - Nullable, no default
@@ -51328,7 +51310,7 @@ declare module 'zapatos/schema' {
       /**
       * **users.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -51382,12 +51364,6 @@ declare module 'zapatos/schema' {
       */
       first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **users.id**
-      * - `text` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
       * **users.last_name**
       * - `text` in database
       * - Nullable, no default
@@ -51420,9 +51396,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **users.updated_at**
       * - `timestamptz` in database
@@ -51474,12 +51450,6 @@ declare module 'zapatos/schema' {
       */
       first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **users.id**
-      * - `text` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
       * **users.last_name**
       * - `text` in database
       * - Nullable, no default
@@ -51512,9 +51482,9 @@ declare module 'zapatos/schema' {
       /**
       * **users.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **users.updated_at**
       * - `timestamptz` in database
@@ -51522,7 +51492,7 @@ declare module 'zapatos/schema' {
       */
       updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'owner_unique_idx' | 'tenant_owners_pkey' | 'unique_email' | 'unique_fhir_user' | 'unique_fhir_user_versionid';
+    export type UniqueIndex = 'owner_unique_idx' | 'unique_email' | 'unique_fhir_user' | 'unique_fhir_user_versionid' | 'users_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

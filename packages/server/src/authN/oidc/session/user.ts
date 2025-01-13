@@ -7,7 +7,7 @@ import { OIDCRouteHandler } from "../index.js";
 import { USER_SESSION_KEY } from "./constants.js";
 
 export function serializeUser(user: users.User): string {
-  return user.id;
+  return user.fhir_user_id;
 }
 
 export async function deserializeUser(

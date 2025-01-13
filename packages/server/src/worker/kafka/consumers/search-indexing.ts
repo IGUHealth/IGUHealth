@@ -8,30 +8,20 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
-import { createClient, createLogger } from "../../../fhir-api/index.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-api/types.js";
+import { createClient, createLogger } from "../../../fhir-server/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
-import { ERROR_QUEUE, MUTATIONS_QUEUE } from "../constants.js";
-
-function gateMutation<
-  Type extends queue.IType,
-  Interaction extends queue.IInteraction,
->(
-  type: Type,
-  interaction: Interaction,
-  mutation: queue.Mutations[number],
-): mutation is queue.Mutation<Type, Interaction> {
-  return mutation.type === type && mutation.interaction === interaction;
-}
+import { OPERATIONS_QUEUE } from "../constants.js";
+import { gateMutation } from "../utilities.js";
 
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
-  mutation: queue.Mutations[number],
+  mutation: queue.Operations[number],
 ) {
   if (gateMutation("resources", "create", mutation)) {
     if (mutation.value.deleted === true) {
@@ -86,7 +76,7 @@ export default async function createIndexingWorker() {
 
   const consumer = kafka.consumer({ groupId: "resource-search-indexing" });
   await consumer.connect();
-  await consumer.subscribe({ topic: MUTATIONS_QUEUE, fromBeginning: true });
+  await consumer.subscribe({ topic: OPERATIONS_QUEUE, fromBeginning: true });
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
@@ -96,7 +86,7 @@ export default async function createIndexingWorker() {
         );
 
         if (message.value) {
-          const mutations: queue.Mutations = JSON.parse(
+          const mutations: queue.Operations = JSON.parse(
             message.value.toString(),
           );
           for (const mutation of mutations) {

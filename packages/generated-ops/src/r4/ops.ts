@@ -5464,6 +5464,77 @@ export namespace IguhealthMessagePost {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthPasswordReset {
+  export type Input = {
+    email: {
+      subject: fhirTypes.string;
+      body: fhirTypes.string;
+      acceptText: fhirTypes.string;
+    };
+  };
+  export type Output = fhirTypes.OperationOutcome;
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-password-reset",
+    url: "https://iguhealth.app/OperationDefinition/password-reset",
+    version: "4.0.1",
+    name: "Password Reset",
+    status: "draft",
+    kind: "operation",
+    date: "2025-01-08T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Password Reset for a user.",
+    code: "password-reset",
+    system: false,
+    type: false,
+    instance: true,
+    resource: ["Membership"],
+    parameter: [
+      {
+        name: "email",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "email content",
+        part: [
+          {
+            name: "subject",
+            use: "in",
+            min: 1,
+            max: "1",
+            documentation: "Subject for the email.",
+            type: "string",
+          },
+          {
+            name: "body",
+            use: "in",
+            min: 1,
+            max: "1",
+            documentation: "Body for the email.",
+            type: "string",
+          },
+          {
+            name: "acceptText",
+            use: "in",
+            min: 1,
+            max: "1",
+            documentation: "Button text for the password reset.",
+            type: "string",
+          },
+        ],
+      },
+      {
+        name: "return",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "The result of the operation.",
+        type: "OperationOutcome",
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
 export namespace IguhealthDeleteRefreshToken {
   export type Input = { id: fhirTypes.id };
   export type Output = fhirTypes.OperationOutcome;

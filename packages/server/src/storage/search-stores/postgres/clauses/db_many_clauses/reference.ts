@@ -5,7 +5,7 @@ import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { getSp1Name } from "../../../../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import { canonicalColumns as r4CanonicalColumns } from "../../../../schemas/generated/sp1-parameters/r4.sp1parameters.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { isSearchParameterInSingularTable } from "../../utilities.js";

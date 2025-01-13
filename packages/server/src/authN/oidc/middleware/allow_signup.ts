@@ -1,6 +1,6 @@
 import * as Koa from "koa";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-server/types.js";
 
 /**
  * Inject Tenant management into the context.

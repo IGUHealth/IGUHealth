@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 
-import { KoaExtensions } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-server/types.js";
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
 

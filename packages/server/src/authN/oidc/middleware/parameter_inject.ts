@@ -3,7 +3,7 @@ import * as Koa from "koa";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaExtensions } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-server/types.js";
 
 type Parameters = KoaExtensions.OIDC["oidc"]["parameters"];
 type ParameterKey = keyof Parameters;
