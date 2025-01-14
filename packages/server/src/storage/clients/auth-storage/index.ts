@@ -43,6 +43,10 @@ export const MEMBERSHIP_METHODS_ALLOWED: FHIRRequest["type"][] = [
   "history-request",
 ];
 
+type AuthState = {
+  fhirDB: ReturnType<typeof createRemoteStorage>;
+};
+
 async function customValidationMembership(
   membership: Membership,
 ): Promise<void> {
@@ -75,9 +79,7 @@ async function gateCheckAtLeastOneOwner(ctx: IGUHealthServerCTX) {
 }
 
 function validateOwnershipMiddleware<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
@@ -99,9 +101,7 @@ function validateOwnershipMiddleware<
 }
 
 function setInTransactionMiddleware<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
@@ -121,9 +121,7 @@ function setInTransactionMiddleware<
  * @returns MiddlewareAsyncChain
  */
 function limitOwnershipEdits<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
@@ -188,9 +186,7 @@ function customValidationMembershipMiddleware<
 }
 
 function setEmailVerified<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
@@ -233,9 +229,7 @@ function setEmailVerified<
 }
 
 function updateUserTableMiddleware<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
@@ -373,9 +367,7 @@ function updateUserTableMiddleware<
 }
 
 function createAuthMiddleware<
-  State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
-  },
+  State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
@@ -400,10 +392,7 @@ function createAuthMiddleware<
 }
 
 export function createMembershipClient<CTX extends IGUHealthServerCTX>(
-  fhirDB: ReturnType<typeof createRemoteStorage>,
+  state: AuthState,
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<
-    { fhirDB: ReturnType<typeof createRemoteStorage> },
-    CTX
-  >({ fhirDB }, createAuthMiddleware());
+  return new AsynchronousClient<AuthState, CTX>(state, createAuthMiddleware());
 }

@@ -58,16 +58,14 @@ type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
 
 const R4_SPECIAL_TYPES: FHIRArtifactTypes = {
   AUTH: MEMBERSHIP_RESOURCE_TYPES.map((resourceType) => ({ resourceType })),
-  MEMORY: [
+  ARTIFACTS: [
     { resourceType: "StructureDefinition" as AllResourceTypes },
     {
       resourceType: "SearchParameter" as AllResourceTypes,
       // Don't want to load other searchparameters which could conflict with base for now.
       onlyPackages: [
         "@iguhealth/hl7.fhir.r4.core",
-        "@iguhealth/hl7.fhir.r4b.core",
         "@iguhealth/iguhealth.fhir.r4.core",
-        "@iguhealth/iguhealth.fhir.r4b.core",
       ],
     },
     { resourceType: "ValueSet" as AllResourceTypes },
@@ -89,9 +87,15 @@ const R4B_SPECIAL_TYPES: FHIRArtifactTypes = {
     // "SubscriptionStatus",
     { resourceType: "OperationDefinition" as AllResourceTypes },
   ],
-  MEMORY: [
+  ARTIFACTS: [
     { resourceType: "StructureDefinition" as AllResourceTypes },
-    { resourceType: "SearchParameter" as AllResourceTypes },
+    {
+      resourceType: "SearchParameter" as AllResourceTypes,
+      onlyPackages: [
+        "@iguhealth/hl7.fhir.r4b.core",
+        "@iguhealth/iguhealth.fhir.r4b.core",
+      ],
+    },
     { resourceType: "ValueSet" as AllResourceTypes },
     { resourceType: "CodeSystem" as AllResourceTypes },
   ],
@@ -173,8 +177,8 @@ export function createClient(): {
   resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
 } {
   const memSource = createArtifactMemoryDatabase({
-    r4: R4_SPECIAL_TYPES.MEMORY,
-    r4b: R4B_SPECIAL_TYPES.MEMORY,
+    r4: R4_SPECIAL_TYPES.ARTIFACTS,
+    r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
   });
 
   const remoteStorage = createRemoteStorage({
@@ -240,14 +244,14 @@ export function createClient(): {
       filter: {
         r4: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.MEMORY.map(
+          resourcesSupported: R4_SPECIAL_TYPES.ARTIFACTS.map(
             (m) => m.resourceType,
           ),
           interactionsSupported: ["read-request", "search-request"],
         },
         r4b: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_SPECIAL_TYPES.MEMORY.map(
+          resourcesSupported: R4B_SPECIAL_TYPES.ARTIFACTS.map(
             (m) => m.resourceType,
           ),
           interactionsSupported: ["read-request", "search-request"],
@@ -263,7 +267,7 @@ export function createClient(): {
           interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
         },
       },
-      source: createMembershipClient(remoteStorage),
+      source: createMembershipClient({ fhirDB: remoteStorage }),
     },
     {
       filter: {

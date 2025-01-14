@@ -51,7 +51,7 @@ function createValidationMiddleware<State>(): MiddlewareAsyncChain<
       case "invoke-request":
       case "transaction-request": {
         const outcome = await validateResource(
-          await asRoot(context.ctx),
+          asRoot(context.ctx),
           context.request.fhirVersion,
           getResourceTypeToValidate(context.request),
           {

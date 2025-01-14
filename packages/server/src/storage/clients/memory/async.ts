@@ -512,6 +512,7 @@ export class Memory<CTX extends IGUHealthServerCTX>
   public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
   public transaction: FHIRClientAsync<CTX>["transaction"];
   public batch: FHIRClientAsync<CTX>["batch"];
+
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
   public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
