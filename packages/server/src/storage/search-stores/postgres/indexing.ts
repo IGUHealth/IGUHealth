@@ -261,7 +261,7 @@ async function getAllParametersForResource<
 
   return (
     await ctx.client.search_type(
-      await asRoot(ctx),
+      asRoot(ctx),
       fhirVersion,
       "SearchParameter",
       parameters,

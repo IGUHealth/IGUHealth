@@ -200,7 +200,7 @@ function clientAppCommands(command: Command) {
       };
 
       const transaction = await services.client.transaction(
-        await asRoot({ ...services, tenant: options.tenant }),
+        asRoot({ ...services, tenant: options.tenant }),
         R4,
         {
           resourceType: "Bundle",

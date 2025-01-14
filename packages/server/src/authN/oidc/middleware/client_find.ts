@@ -22,7 +22,7 @@ export async function findClient(
     default: {
       try {
         const clientApp = await ctx.state.iguhealth.client.read(
-          await asRoot(ctx.state.iguhealth),
+          asRoot(ctx.state.iguhealth),
           R4,
           "ClientApplication",
           clientId as id,

@@ -320,7 +320,7 @@ export default async function createServer(): Promise<
   // Seperating as this should be a public endpoint for capabilities.
   tenantAPIV1Router.get("/fhir/:fhirVersion/metadata", async (ctx) => {
     ctx.body = await ctx.state.iguhealth.client.capabilities(
-      await asRoot(ctx.state.iguhealth),
+      asRoot(ctx.state.iguhealth),
       deriveFHIRVersion(ctx.params.fhirVersion),
     );
   });

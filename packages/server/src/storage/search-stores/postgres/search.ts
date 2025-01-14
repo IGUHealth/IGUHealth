@@ -48,7 +48,7 @@ async function fhirSearchRequesttoInteralRequest<
     async (resourceTypes, name) =>
       findSearchParameter(
         ctx.client,
-        await asRoot(ctx),
+        asRoot(ctx),
         request.fhirVersion,
         resourceTypes,
         name,
@@ -172,7 +172,7 @@ async function processInclude<Version extends FHIR_VERSION>(
         const resourceType = include[0] as ResourceType<Version>;
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
-          await asRoot(ctx),
+          asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           [
@@ -278,7 +278,7 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
     .filter((v): v is SearchParameterResource => v.type === "resource")
     .concat(
       await getParameterForLatestId(
-        await asRoot(ctx),
+        asRoot(ctx),
         request.fhirVersion,
         request.resourceTypes,
       ),
