@@ -13,7 +13,7 @@ import validateOperationsAllowed from "../../middleware/validate-operations-allo
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { createRemoteStorage } from "../remote-storage/index.js";
 
-export const TERMINOLOGY_RESOURCETYPES: ResourceType[] = [
+export const TERMINOLOGY_RESOURCE_TYPES: ResourceType[] = [
   "ValueSet",
   "CodeSystem",
 ];
@@ -29,11 +29,11 @@ function createTerminologyMiddleware<
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    validateResourceTypesAllowedMiddleware(TERMINOLOGY_RESOURCETYPES),
+    validateResourceTypesAllowedMiddleware(TERMINOLOGY_RESOURCE_TYPES),
     validateOperationsAllowed(TERMINOLOGY_METHODS_ALLOWED),
     async (context) => {
       const response = await context.state.fhirDB.request(
-        await asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
+        asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
         context.request,
       );
 

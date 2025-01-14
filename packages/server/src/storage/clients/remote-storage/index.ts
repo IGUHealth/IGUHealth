@@ -35,10 +35,9 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { CreateOperation } from "../../../queue/interface.js";
 import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import {
-  DBTransaction,
+  QueueBatch,
   buildTransactionTopologicalGraph,
 } from "../../transactions.js";
 import {
@@ -94,7 +93,6 @@ async function createResource<
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<Resource<Version, AllResourceTypes>> {
   // For creation force new id.
-
   resource.id = generateId();
 
   const message = version({
@@ -114,7 +112,7 @@ async function createResource<
           resource: "resources",
           type: "create",
           value: message,
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -221,7 +219,7 @@ async function patchResource<
             resource: "resources",
             type: "create",
             value: message,
-          } as CreateOperation<"resources">,
+          },
         ],
       },
     ]);
@@ -304,7 +302,7 @@ async function updateResource<
           resource: "resources",
           type: "create",
           value: message,
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -349,7 +347,7 @@ async function deleteResource<
             resource: resource as unknown as db.JSONObject,
             deleted: true,
           }),
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -940,105 +938,101 @@ function createStorageMiddleware<
           ...new Array((transactionBundle.entry || []).length),
         ];
 
-        return DBTransaction(
-          context.ctx,
-          db.IsolationLevel.RepeatableRead,
-          async (ctx: IGUHealthServerCTX) => {
-            for (const index of order) {
-              const entry = transactionBundle.entry?.[parseInt(index)];
-              if (!entry)
-                throw new OperationError(
-                  outcomeFatal(
-                    "exception",
-                    "invalid entry in transaction processing.",
-                  ),
-                );
-
-              if (!entry.request?.method) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.method found at index '${index}'`,
-                  ),
-                );
-              }
-              if (!entry.request?.url) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.url found at index '${index}'`,
-                  ),
-                );
-              }
-
-              const fhirRequest = httpRequestToFHIRRequest(
-                context.request.fhirVersion,
-                {
-                  url: entry.request?.url || "",
-                  method: entry.request?.method,
-                  body: entry.resource,
-                },
+        return QueueBatch(context.ctx, async (ctx: IGUHealthServerCTX) => {
+          for (const index of order) {
+            const entry = transactionBundle.entry?.[parseInt(index)];
+            if (!entry)
+              throw new OperationError(
+                outcomeFatal(
+                  "exception",
+                  "invalid entry in transaction processing.",
+                ),
               );
 
-              const fhirResponse = await ctx.client.request(ctx, fhirRequest);
-
-              const responseEntry = fhirResponseToBundleEntry(
-                ctx.tenant,
-                fhirResponse,
+            if (!entry.request?.method) {
+              throw new OperationError(
+                outcomeError(
+                  "invalid",
+                  `No request.method found at index '${index}'`,
+                ),
               );
-              responseEntries[parseInt(index)] = responseEntry;
-              // Generate patches to update the transaction references.
-              const patches = entry.fullUrl
-                ? (locationsToUpdate[entry.fullUrl] || []).map(
-                    (loc): Operation => {
-                      if (!responseEntry.response?.location)
-                        throw new OperationError(
-                          outcomeFatal(
-                            "exception",
-                            "response location not found during transaction processing",
-                          ),
-                        );
-                      return {
-                        path: `/${loc.join("/")}`,
-                        op: "replace",
-                        value: {
-                          reference: responseEntry.response?.location,
-                        },
-                      };
-                    },
-                  )
-                : [];
-
-              // End of loop and operation
-              // Now update transaction bundle with applied references.
-              transactionBundle = jsonpatch.applyPatch(
-                transactionBundle,
-                patches,
-              ).newDocument;
+            }
+            if (!entry.request?.url) {
+              throw new OperationError(
+                outcomeError(
+                  "invalid",
+                  `No request.url found at index '${index}'`,
+                ),
+              );
             }
 
-            const transactionResponse: Resource<
-              typeof context.request.fhirVersion,
-              "Bundle"
-            > = {
-              resourceType: "Bundle",
-              type: "transaction-response" as code,
-              entry: responseEntries,
-            };
+            const fhirRequest = httpRequestToFHIRRequest(
+              context.request.fhirVersion,
+              {
+                url: entry.request?.url || "",
+                method: entry.request?.method,
+                body: entry.resource,
+              },
+            );
 
-            return {
-              state: context.state,
-              ctx: context.ctx,
-              request: context.request,
-              response: {
-                fhirVersion: context.request.fhirVersion,
-                type: "transaction-response",
-                level: "system",
-                body: transactionResponse,
-              } as FHIRResponse,
-            };
-          },
-        );
+            const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+
+            const responseEntry = fhirResponseToBundleEntry(
+              ctx.tenant,
+              fhirResponse,
+            );
+            responseEntries[parseInt(index)] = responseEntry;
+            // Generate patches to update the transaction references.
+            const patches = entry.fullUrl
+              ? (locationsToUpdate[entry.fullUrl] || []).map(
+                  (loc): Operation => {
+                    if (!responseEntry.response?.location)
+                      throw new OperationError(
+                        outcomeFatal(
+                          "exception",
+                          "response location not found during transaction processing",
+                        ),
+                      );
+                    return {
+                      path: `/${loc.join("/")}`,
+                      op: "replace",
+                      value: {
+                        reference: responseEntry.response?.location,
+                      },
+                    };
+                  },
+                )
+              : [];
+
+            // End of loop and operation
+            // Now update transaction bundle with applied references.
+            transactionBundle = jsonpatch.applyPatch(
+              transactionBundle,
+              patches,
+            ).newDocument;
+          }
+
+          const transactionResponse: Resource<
+            typeof context.request.fhirVersion,
+            "Bundle"
+          > = {
+            resourceType: "Bundle",
+            type: "transaction-response" as code,
+            entry: responseEntries,
+          };
+
+          return {
+            state: context.state,
+            ctx: context.ctx,
+            request: context.request,
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              type: "transaction-response",
+              level: "system",
+              body: transactionResponse,
+            } as FHIRResponse,
+          };
+        });
       }
       default: {
         throw new OperationError(
@@ -1063,8 +1057,9 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit: number;
   synchronousIndexing: boolean;
 }): FHIRClient<CTX> {
-  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [];
-  middleware.push(createStorageMiddleware());
+  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [
+    createStorageMiddleware(),
+  ];
 
   return new AsynchronousClient<StorageState, CTX>(
     {
