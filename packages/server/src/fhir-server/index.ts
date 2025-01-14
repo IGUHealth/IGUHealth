@@ -177,8 +177,8 @@ export function createClient(): {
   resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
 } {
   const memSource = createArtifactMemoryDatabase({
-    r4: R4_SPECIAL_TYPES.MEMORY,
-    r4b: R4B_SPECIAL_TYPES.MEMORY,
+    r4: R4_SPECIAL_TYPES.ARTIFACTS,
+    r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
   });
 
   const remoteStorage = createRemoteStorage({
@@ -244,14 +244,14 @@ export function createClient(): {
       filter: {
         r4: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.MEMORY.map(
+          resourcesSupported: R4_SPECIAL_TYPES.ARTIFACTS.map(
             (m) => m.resourceType,
           ),
           interactionsSupported: ["read-request", "search-request"],
         },
         r4b: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_SPECIAL_TYPES.MEMORY.map(
+          resourcesSupported: R4B_SPECIAL_TYPES.ARTIFACTS.map(
             (m) => m.resourceType,
           ),
           interactionsSupported: ["read-request", "search-request"],
