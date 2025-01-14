@@ -235,8 +235,14 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
     ctx: CTX,
     data: T,
   ): Promise<s.resources.JSONSelectable> {
-    const response = await db.insert("resources", data).run(this._pgClient);
-    return response;
+    const res = await  db.upsert(
+            "resources",
+            [data],
+            db.constraint("resources_pkey"),
+            { updateColumns: Object.keys(data) as s.resources.Column[] },
+          ).run(this._pgClient);
+
+    return res[0];
   }
   
   async history<Version extends FHIR_VERSION>(
