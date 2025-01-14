@@ -270,7 +270,7 @@ async function createTokenResponse({
   );
 
   const accesspolicies = await ctx.client.search_type(
-    await asRoot(ctx),
+    asRoot(ctx),
     R4,
     "AccessPolicyV2",
     [{ name: "link", value: [user.fhir_user_id as id] }],
@@ -489,7 +489,7 @@ export function tokenPost<
 
         const tokenBody = await createTokenResponse({
           user,
-          ctx: await asRoot(ctx.state.iguhealth),
+          ctx: asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,
         });

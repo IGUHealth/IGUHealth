@@ -74,7 +74,7 @@ export async function verifyBasicAuth<
     }
 
     const clientApplication = await ctx.state.iguhealth.client.read(
-      await asRoot(ctx.state.iguhealth),
+      asRoot(ctx.state.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,
@@ -153,11 +153,10 @@ async function findResourceAndAccessPolicies<
       accessPolicies: [],
     };
 
-  const [member, ...accessPolicies] = await ctx.store.read(
-    await asRoot(ctx),
-    R4,
-    [memberVersionId, ...accessPolicyVersionIds],
-  );
+  const [member, ...accessPolicies] = await ctx.store.read(asRoot(ctx), R4, [
+    memberVersionId,
+    ...accessPolicyVersionIds,
+  ]);
 
   if (member?.resourceType !== memberType) {
     throw new OperationError(
@@ -187,7 +186,7 @@ async function userResourceAndAccessPolicies(
     case "ClientApplication":
     case "OperationDefinition": {
       return findResourceAndAccessPolicies(
-        await asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
+        asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
         user[CUSTOM_CLAIMS.RESOURCE_TYPE],
         user[CUSTOM_CLAIMS.RESOURCE_ID],
         user[CUSTOM_CLAIMS.RESOURCE_VERSION_ID],
@@ -221,7 +220,7 @@ export const associateUserToIGUHealth: Koa.Middleware<
   }
 
   const { resource, accessPolicies } = await userResourceAndAccessPolicies(
-    await asRoot(ctx.state.iguhealth),
+    asRoot(ctx.state.iguhealth),
     ctx.state.__user__,
   );
 

@@ -15,7 +15,7 @@ export function identityProvidersInject(): Koa.Middleware<
 > {
   return async (ctx, next) => {
     const identityProviders = await ctx.state.iguhealth.client.search_type(
-      await asRoot(ctx.state.iguhealth),
+      asRoot(ctx.state.iguhealth),
       R4,
       "IdentityProvider",
       [{ name: "status", value: ["active"] }],

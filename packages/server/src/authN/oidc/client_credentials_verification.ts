@@ -74,7 +74,7 @@ export async function createClientCredentialToken(
   );
 
   const policies = await ctx.client.search_type(
-    await asRoot(ctx),
+    asRoot(ctx),
     R4,
     "AccessPolicyV2",
     [{ name: "link", value: [client.id as id] }],

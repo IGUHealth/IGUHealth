@@ -101,7 +101,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
 
           try {
             const res = await client.conditionalUpdate(
-              await asRoot(iguhealthServices),
+              asRoot(iguhealthServices),
               fhirVersion,
               type,
               `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
