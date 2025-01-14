@@ -35,7 +35,6 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { CreateOperation } from "../../../queue/interface.js";
 import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import {
   DBTransaction,
@@ -94,7 +93,6 @@ async function createResource<
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<Resource<Version, AllResourceTypes>> {
   // For creation force new id.
-
   resource.id = generateId();
 
   const message = version({
@@ -114,7 +112,7 @@ async function createResource<
           resource: "resources",
           type: "create",
           value: message,
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -221,7 +219,7 @@ async function patchResource<
             resource: "resources",
             type: "create",
             value: message,
-          } as CreateOperation<"resources">,
+          },
         ],
       },
     ]);
@@ -304,7 +302,7 @@ async function updateResource<
           resource: "resources",
           type: "create",
           value: message,
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -349,7 +347,7 @@ async function deleteResource<
             resource: resource as unknown as db.JSONObject,
             deleted: true,
           }),
-        } as CreateOperation<"resources">,
+        },
       ],
     },
   ]);
@@ -1063,8 +1061,9 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit: number;
   synchronousIndexing: boolean;
 }): FHIRClient<CTX> {
-  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [];
-  middleware.push(createStorageMiddleware());
+  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [
+    createStorageMiddleware(),
+  ];
 
   return new AsynchronousClient<StorageState, CTX>(
     {
