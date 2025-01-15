@@ -1,13 +1,30 @@
 import { TenantId } from "@iguhealth/jwt";
 
-export type Topic<T extends TenantId> = `${T}_operations` | `${T}_error`;
+export type TopicType = "operations" | "error";
 
-export const OPERATIONS_QUEUE = <T extends TenantId>(tenant: T): Topic<T> =>
-  `${tenant}_operations`;
+declare const __tenant: unique symbol;
+declare const __topicType: unique symbol;
+export type TenantTopic<
+  Tenant extends TenantId,
+  Type extends TopicType,
+> = `${Tenant}_${Type}` & {
+  [__tenant]: Tenant;
+  [__topicType]: Type;
+};
 
-export const OPERATION_PATTERN = new RegExp(
-  OPERATIONS_QUEUE("(.*)" as TenantId),
-);
+export const Topic = <Tenant extends TenantId, Type extends TopicType>(
+  tenant: Tenant,
+  type: Type,
+): TenantTopic<Tenant, Type> =>
+  `${tenant}_${type}` as TenantTopic<Tenant, Type>;
 
-export const ERROR_QUEUE = <T extends TenantId>(tenant: T): Topic<T> =>
-  `${tenant}_error`;
+export function TOPIC_PATTERN(type: TopicType): RegExp {
+  return new RegExp(Topic("(.*)" as TenantId, type));
+}
+
+export function meta<Tenant extends TenantId, Type extends TopicType>(
+  topic: TenantTopic<Tenant, TopicType>,
+): { tenant: Tenant; type: Type } {
+  const [tenant, type] = topic.split("_") as [Tenant, Type];
+  return { tenant, type };
+}

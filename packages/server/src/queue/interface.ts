@@ -10,7 +10,7 @@ import {
 } from "@iguhealth/client/lib/types";
 import { TenantId } from "@iguhealth/jwt";
 
-import { Topic } from "./topics.js";
+import { TenantTopic, TopicType } from "./topics.js";
 
 type Insertables = {
   users: s.users.Insertable;
@@ -103,9 +103,9 @@ export type Message = {
 };
 
 export interface IQueue {
-  send<T extends TenantId>(
+  send<T extends TenantId, Topic extends TopicType>(
     tenant: T,
-    topic_id: Topic<T>,
+    topic_id: TenantTopic<T, Topic>,
     messages: Message[],
   ): Promise<void>;
   batch(): Promise<IQueueBatch>;
