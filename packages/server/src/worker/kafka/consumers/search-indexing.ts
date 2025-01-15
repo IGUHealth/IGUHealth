@@ -13,7 +13,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
-import { OPERATIONS_QUEUE, OPERATION_PATTERN } from "../../../queue/topics.js";
+import { OPERATION_PATTERN } from "../../../queue/topics.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
