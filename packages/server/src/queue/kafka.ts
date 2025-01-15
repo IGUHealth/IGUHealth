@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IQueue, IQueueBatch, Message } from "./interface.js";
-import { Topic } from "./topics.js";
+import { TenantTopic, TopicType } from "./topics.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;
@@ -30,9 +30,9 @@ export class KafkaBatch implements IQueue, IQueueBatch {
   async abort(): Promise<void> {
     this._messages = {};
   }
-  async send<T extends TenantId>(
-    tenant: T,
-    topic: Topic<T>,
+  async send<Tenant extends TenantId, Topic extends TopicType>(
+    tenant: Tenant,
+    topic: TenantTopic<Tenant, Topic>,
     messages: Message[],
   ): Promise<void> {
     this._messages[topic] = (this._messages[topic] ?? []).concat(
@@ -62,9 +62,9 @@ export class KafkaQueue implements IQueue {
     this._producer = producer;
   }
 
-  async send<T extends TenantId>(
-    tenant: T,
-    topic: Topic<T>,
+  async send<Tenant extends TenantId, Topic extends TopicType>(
+    tenant: Tenant,
+    topic: TenantTopic<Tenant, Topic>,
     messages: Message[],
   ): Promise<void> {
     await this._producer.send({

@@ -9,7 +9,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { OPERATIONS_QUEUE } from "../../../queue/topics.js";
+import { OperationsTopic, Topic } from "../../../queue/topics.js";
 import { QueueBatch } from "../../../storage/transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
@@ -56,7 +56,7 @@ async function createOrRetrieveUser(
     const tenantInsertion = await tenants.create(ctx, {});
     await ctx.queue.send(
       tenantInsertion.id as TenantId,
-      OPERATIONS_QUEUE(tenantInsertion.id as TenantId),
+      Topic(tenantInsertion.id as TenantId, OperationsTopic),
       [
         {
           value: [

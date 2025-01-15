@@ -9,7 +9,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
-import { OPERATION_PATTERN } from "../../../queue/topics.js";
+import { OperationsTopic, TOPIC_PATTERN } from "../../../queue/topics.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { DBTransaction } from "../../../storage/transactions.js";
@@ -89,7 +89,10 @@ export default async function createStorageWorker() {
   };
 
   await consumer.connect();
-  await consumer.subscribe({ topic: OPERATION_PATTERN, fromBeginning: true });
+  await consumer.subscribe({
+    topic: TOPIC_PATTERN(OperationsTopic),
+    fromBeginning: true,
+  });
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {

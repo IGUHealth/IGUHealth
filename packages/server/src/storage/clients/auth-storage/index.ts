@@ -27,7 +27,7 @@ import {
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OPERATIONS_QUEUE } from "../../../queue/topics.js";
+import { OperationsTopic, Topic } from "../../../queue/topics.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { QueueBatch } from "../../transactions.js";
@@ -254,7 +254,7 @@ function updateUserTableMiddleware<
         try {
           await context.ctx.queue.send(
             context.ctx.tenant,
-            OPERATIONS_QUEUE(context.ctx.tenant),
+            Topic(context.ctx.tenant, OperationsTopic),
             [
               {
                 headers: {
@@ -301,7 +301,7 @@ function updateUserTableMiddleware<
 
             await context.ctx.queue.send(
               context.ctx.tenant,
-              OPERATIONS_QUEUE(context.ctx.tenant),
+              Topic(context.ctx.tenant, OperationsTopic),
               [
                 {
                   headers: {
@@ -342,7 +342,7 @@ function updateUserTableMiddleware<
         const user = membershipToUser(context.ctx.tenant, membership);
         await context.ctx.queue.send(
           context.ctx.tenant,
-          OPERATIONS_QUEUE(context.ctx.tenant),
+          Topic(context.ctx.tenant, OperationsTopic),
           [
             {
               headers: {
