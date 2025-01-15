@@ -27,7 +27,7 @@ import {
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
+import { OPERATIONS_QUEUE } from "../../../queue/topics.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { QueueBatch } from "../../transactions.js";
@@ -252,20 +252,24 @@ function updateUserTableMiddleware<
         }
 
         try {
-          await context.ctx.queue.send(context.ctx.tenant, OPERATIONS_QUEUE, [
-            {
-              headers: {
-                tenant: context.ctx.tenant,
-              },
-              value: [
-                {
-                  resource: "users",
-                  type: "create",
-                  value: membershipToUser(context.ctx.tenant, membership),
+          await context.ctx.queue.send(
+            context.ctx.tenant,
+            OPERATIONS_QUEUE(context.ctx.tenant),
+            [
+              {
+                headers: {
+                  tenant: context.ctx.tenant,
                 },
-              ],
-            },
-          ]);
+                value: [
+                  {
+                    resource: "users",
+                    type: "create",
+                    value: membershipToUser(context.ctx.tenant, membership),
+                  },
+                ],
+              },
+            ],
+          );
         } catch (e) {
           context.ctx.logger.error(e);
           throw new OperationError(
@@ -295,24 +299,28 @@ function updateUserTableMiddleware<
 
             const res = await next(context);
 
-            await context.ctx.queue.send(context.ctx.tenant, OPERATIONS_QUEUE, [
-              {
-                headers: {
-                  tenant: context.ctx.tenant,
-                },
-                value: [
-                  {
-                    resource: "users",
-                    type: "delete",
-                    singular: true,
-                    where: {
-                      tenant: context.ctx.tenant,
-                      fhir_user_id: membership.id,
-                    },
+            await context.ctx.queue.send(
+              context.ctx.tenant,
+              OPERATIONS_QUEUE(context.ctx.tenant),
+              [
+                {
+                  headers: {
+                    tenant: context.ctx.tenant,
                   },
-                ],
-              },
-            ]);
+                  value: [
+                    {
+                      resource: "users",
+                      type: "delete",
+                      singular: true,
+                      where: {
+                        tenant: context.ctx.tenant,
+                        fhir_user_id: membership.id,
+                      },
+                    },
+                  ],
+                },
+              ],
+            );
 
             return res;
           }
@@ -332,22 +340,26 @@ function updateUserTableMiddleware<
           .body as Membership;
 
         const user = membershipToUser(context.ctx.tenant, membership);
-        await context.ctx.queue.send(context.ctx.tenant, OPERATIONS_QUEUE, [
-          {
-            headers: {
-              tenant: context.ctx.tenant,
-            },
-            value: [
-              {
-                resource: "users",
-                type: "update",
-                value: user,
-                constraint: ["tenant", "fhir_user_id"],
-                onConflict: Object.keys(user) as s.users.Column[],
+        await context.ctx.queue.send(
+          context.ctx.tenant,
+          OPERATIONS_QUEUE(context.ctx.tenant),
+          [
+            {
+              headers: {
+                tenant: context.ctx.tenant,
               },
-            ],
-          },
-        ]);
+              value: [
+                {
+                  resource: "users",
+                  type: "update",
+                  value: user,
+                  constraint: ["tenant", "fhir_user_id"],
+                  onConflict: Object.keys(user) as s.users.Column[],
+                },
+              ],
+            },
+          ],
+        );
 
         return res;
       }

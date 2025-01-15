@@ -25,11 +25,11 @@ import {
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
+import { OPERATIONS_QUEUE } from "../../queue/topics.js";
 import createResourceStore from "../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../storage/search-stores/index.js";
 import { QueueBatch } from "../../storage/transactions.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { OPERATIONS_QUEUE } from "../../worker/kafka/constants.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -93,17 +93,21 @@ async function createTenant(
   return QueueBatch(ctx, async (ctx) => {
     const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
-    await ctx.queue.send("system" as TenantId, OPERATIONS_QUEUE, [
-      {
-        value: [
-          {
-            resource: "tenants",
-            type: "create",
-            value: tenant,
-          },
-        ],
-      },
-    ]);
+    await ctx.queue.send(
+      tenant.id as TenantId,
+      OPERATIONS_QUEUE(tenant.id as TenantId),
+      [
+        {
+          value: [
+            {
+              resource: "tenants",
+              type: "create",
+              value: tenant,
+            },
+          ],
+        },
+      ],
+    );
 
     const membership: Membership = await ctx.client.create(
       asRoot({ ...ctx, tenant: tenant.id as TenantId }),
@@ -123,27 +127,31 @@ async function createTenant(
       password,
     };
 
-    await ctx.queue.send(tenant.id as TenantId, OPERATIONS_QUEUE, [
-      {
-        key: membership.id,
-        headers: {
-          tenant: tenant.id as string,
-        },
-        value: [
-          {
-            resource: "users",
-            type: "update",
-            value: {
-              ...membershipToUser(tenant.id as TenantId, membership),
-              email_verified: true,
-              password,
-            },
-            constraint: ["tenant", "fhir_user_id"],
-            onConflict: Object.keys(verifiedUser) as s.users.Column[],
+    await ctx.queue.send(
+      tenant.id as TenantId,
+      OPERATIONS_QUEUE(tenant.id as TenantId),
+      [
+        {
+          key: membership.id,
+          headers: {
+            tenant: tenant.id as string,
           },
-        ],
-      },
-    ]);
+          value: [
+            {
+              resource: "users",
+              type: "update",
+              value: {
+                ...membershipToUser(tenant.id as TenantId, membership),
+                email_verified: true,
+                password,
+              },
+              constraint: ["tenant", "fhir_user_id"],
+              onConflict: Object.keys(verifiedUser) as s.users.Column[],
+            },
+          ],
+        },
+      ],
+    );
 
     console.log(`Tenant created with id: '${tenant.id}'`);
     console.log(`User created with email: '${membership.email}'`);
