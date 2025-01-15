@@ -25,7 +25,7 @@ import {
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
-import { Topic } from "../../queue/topics.js";
+import { OperationsTopic, Topic } from "../../queue/topics.js";
 import createResourceStore from "../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../storage/search-stores/index.js";
 import { QueueBatch } from "../../storage/transactions.js";
@@ -95,7 +95,7 @@ async function createTenant(
 
     await ctx.queue.send(
       tenant.id as TenantId,
-      Topic(tenant.id as TenantId, "operations"),
+      Topic(tenant.id as TenantId, OperationsTopic),
       [
         {
           value: [
@@ -129,7 +129,7 @@ async function createTenant(
 
     await ctx.queue.send(
       tenant.id as TenantId,
-      Topic(tenant.id as TenantId, "operations"),
+      Topic(tenant.id as TenantId, OperationsTopic),
       [
         {
           key: membership.id,

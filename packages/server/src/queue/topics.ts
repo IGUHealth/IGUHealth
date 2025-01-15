@@ -2,6 +2,9 @@ import { TenantId } from "@iguhealth/jwt";
 
 export type TopicType = "operations" | "error";
 
+export const OperationsTopic: TopicType = "operations";
+export const ErrorsTopic: TopicType = "error";
+
 declare const __tenant: unique symbol;
 declare const __topicType: unique symbol;
 export type TenantTopic<
