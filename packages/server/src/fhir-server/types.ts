@@ -42,7 +42,7 @@ import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
-import { IQueue, IQueueTransaction } from "../queue/interface.js";
+import { IQueue, IQueueBatch } from "../queue/interface.js";
 import { PostgresStore } from "../storage/resource-stores/postgres/index.js";
 import { SearchEngine } from "../storage/search-stores/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
@@ -124,7 +124,7 @@ export interface IGUHealthServerCTX {
   tenant: TenantId;
   user: UserContext;
 
-  queue: IQueue | IQueueTransaction;
+  queue: IQueue | IQueueBatch;
 
   // FHIR Client
   client: FHIRClientAsync<IGUHealthServerCTX>;

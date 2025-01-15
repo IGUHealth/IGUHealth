@@ -3,9 +3,10 @@ import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IQueue, IQueueTransaction, Message } from "./interface.js";
+import { IQueue, IQueueBatch, Message } from "./interface.js";
+import { Topic } from "./topics.js";
 
-export class KafkaBatch implements IQueue, IQueueTransaction {
+export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;
   private readonly _transactionKey: string;
   private _messages: Record<string, KafkaMessage[]> = {};
@@ -29,9 +30,9 @@ export class KafkaBatch implements IQueue, IQueueTransaction {
   async abort(): Promise<void> {
     this._messages = {};
   }
-  async send(
-    tenant: TenantId,
-    topic: string,
+  async send<T extends TenantId>(
+    tenant: T,
+    topic: Topic<T>,
     messages: Message[],
   ): Promise<void> {
     this._messages[topic] = (this._messages[topic] ?? []).concat(
@@ -45,7 +46,7 @@ export class KafkaBatch implements IQueue, IQueueTransaction {
   }
   // Just return the transaction itself.
   // This is a no-op because we are already in a transaction.
-  async batch(): Promise<IQueueTransaction> {
+  async batch(): Promise<IQueueBatch> {
     return this;
   }
 
@@ -61,9 +62,9 @@ export class KafkaQueue implements IQueue {
     this._producer = producer;
   }
 
-  async send(
-    tenant: TenantId,
-    topic: string,
+  async send<T extends TenantId>(
+    tenant: T,
+    topic: Topic<T>,
     messages: Message[],
   ): Promise<void> {
     await this._producer.send({

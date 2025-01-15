@@ -9,9 +9,9 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { OPERATIONS_QUEUE } from "../../../queue/topics.js";
 import { QueueBatch } from "../../../storage/transactions.js";
 import * as views from "../../../views/index.js";
-import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
 import * as tenants from "../../db/tenant.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
@@ -54,17 +54,21 @@ async function createOrRetrieveUser(
     return existingOwner;
   } else {
     const tenantInsertion = await tenants.create(ctx, {});
-    await ctx.queue.send("system" as TenantId, OPERATIONS_QUEUE, [
-      {
-        value: [
-          {
-            resource: "tenants",
-            type: "create",
-            value: tenantInsertion,
-          },
-        ],
-      },
-    ]);
+    await ctx.queue.send(
+      tenantInsertion.id as TenantId,
+      OPERATIONS_QUEUE(tenantInsertion.id as TenantId),
+      [
+        {
+          value: [
+            {
+              resource: "tenants",
+              type: "create",
+              value: tenantInsertion,
+            },
+          ],
+        },
+      ],
+    );
 
     const membership = await ctx.client.create(
       asRoot({

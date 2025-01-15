@@ -35,7 +35,7 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OPERATIONS_QUEUE } from "../../../worker/kafka/constants.js";
+import { OPERATIONS_QUEUE } from "../../../queue/topics.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,
@@ -104,7 +104,7 @@ async function createResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE(ctx.tenant), [
     {
       key: resource.id,
       value: [
@@ -211,7 +211,7 @@ async function patchResource<
       resource: newResource as unknown as db.JSONObject,
     });
 
-    await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
+    await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE(ctx.tenant), [
       {
         key: newResource.id as id,
         value: [
@@ -294,7 +294,7 @@ async function updateResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE(ctx.tenant), [
     {
       key: resource.id as id,
       value: [
@@ -331,7 +331,7 @@ async function deleteResource<
       ),
     );
 
-  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE, [
+  await ctx.queue.send(ctx.tenant, OPERATIONS_QUEUE(ctx.tenant), [
     {
       key: resource.id as id,
       value: [

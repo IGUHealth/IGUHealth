@@ -13,10 +13,10 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
+import { OPERATIONS_QUEUE, OPERATION_PATTERN } from "../../../queue/topics.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
-import { OPERATIONS_QUEUE } from "../constants.js";
 import { gateMutation } from "../utilities.js";
 
 async function handleMutation(
@@ -76,7 +76,7 @@ export default async function createIndexingWorker() {
 
   const consumer = kafka.consumer({ groupId: "resource-search-indexing" });
   await consumer.connect();
-  await consumer.subscribe({ topic: OPERATIONS_QUEUE, fromBeginning: true });
+  await consumer.subscribe({ topic: OPERATION_PATTERN, fromBeginning: true });
   await consumer.run({
     autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
