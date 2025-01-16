@@ -8,6 +8,6 @@
     "description": "IGUHealth performance tests",
     "type": "module",
     "dependencies": {
-        "artillery": "^2.0.20"
+        "artillery": "^2.0.22"
     }
 }

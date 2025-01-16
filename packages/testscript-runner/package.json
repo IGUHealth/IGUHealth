@@ -11,11 +11,11 @@
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
     "@iguhealth/x-fhir-query": "workspace:^",
-    "pino": "^9.5.0"
+    "pino": "^9.6.0"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
-    "typescript": "5.7.2"
+    "typescript": "5.7.3"
   },
   "scripts": {
     "build": "tsc",
