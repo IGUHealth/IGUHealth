@@ -16835,6 +16835,7 @@ const RAW_RUNTIME_STATE =
           ["dotenv", "npm:16.4.7"],\
           ["fast-json-patch", "npm:3.1.1"],\
           ["glob", "npm:11.0.1"],\
+          ["helmet", "npm:8.0.0"],\
           ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["ioredis", "npm:5.4.2"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
@@ -39194,6 +39195,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["helmet", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/helmet-npm-8.0.0-ba86ece81a-cf30579d1d.zip/node_modules/helmet/",\
+        "packageDependencies": [\
+          ["helmet", "npm:8.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["help-me", [\
       ["npm:5.0.0", {\
         "packageLocation": "./.yarn/cache/help-me-npm-5.0.0-6239bd310f-5f99bd91da.zip/node_modules/help-me/",\
@@ -42986,7 +42996,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["koa-helmet", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:7.1.0"],\
           ["@types/helmet", null],\
-          ["helmet", null]\
+          ["helmet", "npm:8.0.0"]\
         ],\
         "packagePeers": [\
           "@types/helmet",\

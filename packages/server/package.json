@@ -71,6 +71,7 @@
     "dotenv": "^16.4.7",
     "fast-json-patch": "3.1.1",
     "glob": "^11.0.1",
+    "helmet": "^8.0.0",
     "hl7.fhir.us.core": "4.0.0",
     "ioredis": "5.4.2",
     "jose": "^5.9.6",
