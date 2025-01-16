@@ -218,7 +218,10 @@ export function generateMetaData<Version extends FHIR_VERSION>(
   sds: Resource<Version, "StructureDefinition">[],
 ): MetaV2Compiled {
   const metav2compiled = sds
+    // Filter out constraints
     .filter((sd) => sd.derivation !== "constraint")
+    // Logicals are not concrete types
+    .filter((sd) => sd.kind !== "logical")
     .reduce((acc: MetaV2Compiled, sd) => {
       acc[sd.type] = SDToMetaData(sd);
       return acc;
