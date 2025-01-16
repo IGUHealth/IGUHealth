@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IQueue, IQueueBatch, Message } from "./interface.js";
-import { TenantTopic, TopicType } from "./tenant/topics.js";
+import { TenantTopic, TopicType } from "./topics/tenants.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;

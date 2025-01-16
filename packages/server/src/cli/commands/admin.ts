@@ -25,7 +25,7 @@ import {
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
-import { OperationsTopic, Topic } from "../../queue/tenant/topics.js";
+import { OperationsTopic, Topic } from "../../queue/topics/tenants.js";
 import createResourceStore from "../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../storage/search-stores/index.js";
 import { QueueBatch } from "../../storage/transactions.js";

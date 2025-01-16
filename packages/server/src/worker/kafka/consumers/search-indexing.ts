@@ -16,7 +16,7 @@ import * as queue from "../../../queue/interface.js";
 import {
   OperationsTopic,
   TOPIC_PATTERN,
-} from "../../../queue/tenant/topics.js";
+} from "../../../queue/topics/tenants.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
