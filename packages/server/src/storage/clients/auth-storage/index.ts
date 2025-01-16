@@ -27,7 +27,7 @@ import {
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../../../queue/topics.js";
+import { OperationsTopic, Topic } from "../../../queue/tenant/topics.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { QueueBatch } from "../../transactions.js";

@@ -3,7 +3,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../queue/topics.js";
+import { OperationsTopic, Topic } from "../queue/tenant/topics.js";
 
 export async function sendPasswordResetEmail(
   ctx: Pick<IGUHealthServerCTX, "queue" | "tenant">,

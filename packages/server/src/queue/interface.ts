@@ -10,7 +10,7 @@ import {
 } from "@iguhealth/client/lib/types";
 import { TenantId } from "@iguhealth/jwt";
 
-import { TenantTopic, TopicType } from "./topics.js";
+import { TenantTopic, TopicType } from "./tenant/topics.js";
 
 type Insertables = {
   users: s.users.Insertable;
