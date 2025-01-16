@@ -98,7 +98,6 @@ import Tabs from "@theme/Tabs";
  | type | token | The type of resources the group contains | Group.type  
  | value | token | Value held by characteristic | (Group.characteristic.value.ofType(CodeableConcept)) / (Group.characteristic.value.ofType(boolean))  
  | characteristic-value | composite | A composite of both characteristic and value | Group.characteristic  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

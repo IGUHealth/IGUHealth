@@ -107,7 +107,6 @@ import Tabs from "@theme/Tabs";
  | severity | token | mild / moderate / severe (of event as a whole) | AllergyIntolerance.reaction.severity  
  | type | token | Multiple Resources: * [AllergyIntolerance](allergyintolerance.html): allergy / intolerance - Underlying mechanism (if known)* [Composition](composition.html): Kind of composition (LOINC if possible)* [DocumentManifest](documentmanifest.html): Kind of document set* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)* [Encounter](encounter.html): Specific type of encounter* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management | AllergyIntolerance.type / Composition.type / DocumentManifest.type / DocumentReference.type / Encounter.type / EpisodeOfCare.type  
  | verification-status | token | unconfirmed / confirmed / refuted / entered-in-error | AllergyIntolerance.verificationStatus  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

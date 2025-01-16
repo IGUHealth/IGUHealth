@@ -76,7 +76,6 @@ import Tabs from "@theme/Tabs";
  | identifier | token | Business identifier | Basic.identifier  
  | patient | reference | Identifies the focus of this resource | Basic.subject.where(resolve() is Patient)  
  | subject | reference | Identifies the focus of this resource | Basic.subject  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

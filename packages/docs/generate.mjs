@@ -132,6 +132,7 @@ ${metaProperties(structureDefinition)}\n
 async function generateFHIRDocumentation() {
   const r4StructureDefinitions = r4Artifacts
     .filter((r) => r.resourceType === "StructureDefinition")
+    .filter((sd) => sd.derivation !== "constraint")
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4StructureDefinitions) {
@@ -145,6 +146,7 @@ async function generateFHIRDocumentation() {
 
   const r4bStructureDefinitions = r4bArtifacts
     .filter((r) => r.resourceType === "StructureDefinition")
+    .filter((sd) => sd.derivation !== "constraint")
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4bStructureDefinitions) {
