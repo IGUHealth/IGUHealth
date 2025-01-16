@@ -152,7 +152,6 @@ import Tabs from "@theme/Tabs";
  | special-arrangement | token | Wheelchair, translator, stretcher, etc. | Encounter.hospitalization.specialArrangement  
  | status | token | planned / arrived / triaged / in-progress / onleave / finished / cancelled + | Encounter.status  
  | subject | reference | The patient or group present at the encounter | Encounter.subject  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

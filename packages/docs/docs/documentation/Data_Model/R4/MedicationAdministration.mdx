@@ -111,7 +111,6 @@ import Tabs from "@theme/Tabs";
  | request | reference | The identity of a request to list administrations from | MedicationAdministration.request  
  | status | token | Multiple Resources: * [MedicationAdministration](medicationadministration.html): MedicationAdministration event status (for example one of active/paused/completed/nullified)* [MedicationDispense](medicationdispense.html): Returns dispenses with a specified dispense status* [MedicationRequest](medicationrequest.html): Status of the prescription* [MedicationStatement](medicationstatement.html): Return statements that match the given status | MedicationAdministration.status / MedicationDispense.status / MedicationRequest.status / MedicationStatement.status  
  | subject | reference | The identity of the individual or group to list administrations for | MedicationAdministration.subject  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

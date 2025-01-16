@@ -48677,7 +48677,7 @@ export default {
     {
       "_type_": "type",
       "type": "code",
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",

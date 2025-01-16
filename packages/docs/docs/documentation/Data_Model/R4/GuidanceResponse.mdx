@@ -84,7 +84,6 @@ import Tabs from "@theme/Tabs";
  | patient | reference | The identity of a patient to search for guidance response results | GuidanceResponse.subject.where(resolve() is Patient)  
  | request | token | The identifier of the request associated with the response | GuidanceResponse.requestIdentifier  
  | subject | reference | The subject that the guidance response is about | GuidanceResponse.subject  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

@@ -44896,135 +44896,6 @@ export default {
       "cardinality": "array"
     }
   ],
-  "MetadataResource": [
-    {
-      "_type_": "complex",
-      "type": "MetadataResource",
-      "properties": {
-        "id": 1,
-        "meta": 2,
-        "implicitRules": 3,
-        "language": 4,
-        "text": 5,
-        "contained": 6,
-        "extension": 7,
-        "modifierExtension": 8,
-        "url": 9,
-        "version": 10,
-        "name": 11,
-        "title": 12,
-        "status": 13,
-        "experimental": 14,
-        "date": 15,
-        "publisher": 16,
-        "contact": 17,
-        "description": 18,
-        "useContext": 19,
-        "jurisdiction": 20
-      },
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "http://hl7.org/fhirpath/System.String",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "Meta",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "uri",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "code",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "Narrative",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "Resource",
-      "cardinality": "array"
-    },
-    {
-      "_type_": "type",
-      "type": "Extension",
-      "cardinality": "array"
-    },
-    {
-      "_type_": "type",
-      "type": "Extension",
-      "cardinality": "array"
-    },
-    {
-      "_type_": "type",
-      "type": "uri",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "string",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "string",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "string",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "code",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "boolean",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "dateTime",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "string",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "ContactDetail",
-      "cardinality": "array"
-    },
-    {
-      "_type_": "type",
-      "type": "markdown",
-      "cardinality": "single"
-    },
-    {
-      "_type_": "type",
-      "type": "UsageContext",
-      "cardinality": "array"
-    },
-    {
-      "_type_": "type",
-      "type": "CodeableConcept",
-      "cardinality": "array"
-    }
-  ],
   "Element": [
     {
       "_type_": "complex",
@@ -48044,7 +47915,7 @@ export default {
     {
       "_type_": "type",
       "type": "code",
-      "cardinality": "array"
+      "cardinality": "single"
     },
     {
       "_type_": "type",

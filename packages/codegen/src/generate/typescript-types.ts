@@ -369,17 +369,16 @@ export function generateTypes<Version extends FHIR_VERSION>(
   >,
 ): string {
   const primitiveSDs = structureDefinitions.filter(
-    (sd) => sd.kind === "primitive-type",
+    (sd) => sd.kind === "primitive-type" && sd.derivation !== "constraint",
   );
 
   const complexSDs = structureDefinitions
     .filter((sd) => sd.kind === "complex-type")
-    .filter((type) => type)
     .filter((sd) => sd.derivation !== "constraint");
 
-  const resourceSDs = structureDefinitions.filter(
-    (sd) => sd.kind === "resource",
-  );
+  const resourceSDs = structureDefinitions
+    .filter((sd) => sd.kind === "resource")
+    .filter((sd) => sd.derivation !== "constraint");
 
   const typescriptTypes: string = primitiveSDs
     .map(primitiveToTypescriptType)

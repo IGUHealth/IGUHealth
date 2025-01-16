@@ -16,16 +16,17 @@ export function generateSets<Version extends FHIR_VERSION>(
   >,
 ): string {
   // Ignore templates for now during type generation.
-  structureDefinitions = structureDefinitions.filter(
-    (sd) => sd.kind !== "logical",
-  );
+  structureDefinitions = structureDefinitions
+    .filter((sd) => sd.kind !== "logical")
+    .filter((sd) => sd.derivation !== "constraint");
 
-  const primitiveTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "primitive-type",
-  );
-  const complexTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "complex-type",
-  );
+  const primitiveTypes = structureDefinitions
+    .filter((sd) => sd.kind === "primitive-type")
+    .filter((sd) => sd.derivation !== "constraint");
+
+  const complexTypes = structureDefinitions
+    .filter((sd) => sd.kind === "complex-type")
+    .filter((sd) => sd.derivation !== "constraint");
   const resourceTypes = structureDefinitions.filter(
     (sd) => sd.kind === "resource",
   );

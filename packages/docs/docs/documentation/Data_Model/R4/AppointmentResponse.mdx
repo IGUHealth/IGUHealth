@@ -80,7 +80,6 @@ import Tabs from "@theme/Tabs";
  | part-status | token | The participants acceptance status for this appointment | AppointmentResponse.participantStatus  
  | patient | reference | This Response is for this Patient | AppointmentResponse.actor.where(resolve() is Patient)  
  | practitioner | reference | This Response is for this Practitioner | AppointmentResponse.actor.where(resolve() is Practitioner)  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

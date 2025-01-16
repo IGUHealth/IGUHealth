@@ -99,7 +99,6 @@ import Tabs from "@theme/Tabs";
  | patient | reference | The Person links to this Patient | Person.link.target.where(resolve() is Patient)  
  | practitioner | reference | The Person links to this Practitioner | Person.link.target.where(resolve() is Practitioner)  
  | relatedperson | reference | The Person links to this RelatedPerson | Person.link.target.where(resolve() is RelatedPerson)  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

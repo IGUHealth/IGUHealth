@@ -128,7 +128,6 @@ import Tabs from "@theme/Tabs";
  | security-label | token | Security Labels that define affected resources | Consent.provision.securityLabel  
  | source-reference | reference | Search by reference to a Consent, DocumentReference, Contract  or QuestionnaireResponse | Consent.source.ofType(Reference)  
  | status | token | draft / proposed / active / rejected / inactive / entered-in-error | Consent.status  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

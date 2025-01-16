@@ -82,7 +82,6 @@ import Tabs from "@theme/Tabs";
  | organization | reference | The organization that is managing the endpoint | Endpoint.managingOrganization  
  | payload-type | token | The type of content that may be used at this endpoint (e.g. XDS Discharge summaries) | Endpoint.payloadType  
  | status | token | The current status of the Endpoint (usually expected to be active) | Endpoint.status  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 

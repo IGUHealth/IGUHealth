@@ -95,7 +95,6 @@ import Tabs from "@theme/Tabs";
  | start-date | date | When goal pursuit begins | (Goal.start.ofType(date))  
  | subject | reference | Who this goal is intended for | Goal.subject  
  | target-date | date | Reach goal on or before | (Goal.target.due.ofType(date))  
- | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
 
