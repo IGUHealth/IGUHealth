@@ -359,7 +359,6 @@ export default async function createServer(): Promise<
             "form-action": null,
             "style-src": ["'self'", `'nonce-${ctx.state.corsNonce}'`],
             "script-src": ["'self'", `'nonce-${ctx.state.corsNonce}'`],
-            "default-src": "none",
             "connect-src": ["'self'"],
           },
         },
