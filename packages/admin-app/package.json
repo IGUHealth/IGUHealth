@@ -28,9 +28,9 @@
     "@testing-library/user-event": "^14.5.2",
     "classnames": "^2.5.1",
     "codemirror": "^6.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.2",
     "react-scripts": "^5.0.1",
     "react-window": "^1.8.11",
     "recoil": "^0.7.7",
@@ -64,8 +64,8 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
     "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.4.17"
   }

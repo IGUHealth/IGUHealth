@@ -8,9 +8,9 @@
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
-    "@types/react": "^18.3.18",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@types/react": "^19.0.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -21,7 +21,7 @@
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/react-dom": "^18.3.5",
+    "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
     "postcss": "^8.5.1",
