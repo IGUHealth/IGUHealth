@@ -53,38 +53,40 @@ async function createOrRetrieveUser(
   if (existingOwner) {
     return existingOwner;
   } else {
-    const tenantInsertion = await tenants.create(ctx, {});
-    await ctx.queue.send(
-      tenantInsertion.id as TenantId,
-      Topic(tenantInsertion.id as TenantId, OperationsTopic),
-      [
-        {
-          value: [
-            {
-              resource: "tenants",
-              type: "create",
-              value: tenantInsertion,
-            },
-          ],
-        },
-      ],
-    );
+    return QueueBatch(ctx, async (ctx) => {
+      const tenantInsertion = await tenants.create(ctx, {});
+      await ctx.queue.send(
+        tenantInsertion.id as TenantId,
+        Topic(tenantInsertion.id as TenantId, OperationsTopic),
+        [
+          {
+            value: [
+              {
+                resource: "tenants",
+                type: "create",
+                value: tenantInsertion,
+              },
+            ],
+          },
+        ],
+      );
 
-    const membership = await ctx.client.create(
-      asRoot({
-        ...ctx,
-        tenant: tenantInsertion.id as TenantId,
-      }),
-      R4,
-      userToMembership({
-        role: "owner",
-        tenant: tenantInsertion.id as TenantId,
-        email: email,
-        email_verified: false,
-      }),
-    );
+      const membership = await ctx.client.create(
+        asRoot({
+          ...ctx,
+          tenant: tenantInsertion.id as TenantId,
+        }),
+        R4,
+        userToMembership({
+          role: "owner",
+          tenant: tenantInsertion.id as TenantId,
+          email: email,
+          email_verified: false,
+        }),
+      );
 
-    return [tenantInsertion.id as TenantId, membership];
+      return [tenantInsertion.id as TenantId, membership];
+    });
   }
 }
 

@@ -3,8 +3,8 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
-import createIndexingWorker from "../../worker/kafka/consumers/search-indexing.js";
-import createStorageWorker from "../../worker/kafka/consumers/storage.js";
+import createIndexingWorker from "../../worker/kafka/consumers/base/search-indexing.js";
+import createStorageWorker from "../../worker/kafka/consumers/base/storage.js";
 import createWorker from "../../worker/v1.js";
 
 interface DBMigrate {

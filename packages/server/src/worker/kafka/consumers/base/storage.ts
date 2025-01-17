@@ -3,19 +3,19 @@ import * as db from "zapatos/db";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import createEmailProvider from "../../../email/index.js";
-import { createClient, createLogger } from "../../../fhir-server/index.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../fhir-terminology/index.js";
-import createQueue from "../../../queue/index.js";
-import * as queue from "../../../queue/interface.js";
+import createEmailProvider from "../../../../email/index.js";
+import { createClient, createLogger } from "../../../../fhir-server/index.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
+import createQueue from "../../../../queue/index.js";
+import * as queue from "../../../../queue/interface.js";
 import {
   OperationsTopic,
   TOPIC_PATTERN,
-} from "../../../queue/topics/tenants.js";
-import createResourceStore from "../../../storage/resource-stores/index.js";
-import { createSearchStore } from "../../../storage/search-stores/index.js";
-import { DBTransaction } from "../../../storage/transactions.js";
+} from "../../../../queue/topics/tenants.js";
+import createResourceStore from "../../../../storage/resource-stores/index.js";
+import { createSearchStore } from "../../../../storage/search-stores/index.js";
+import { DBTransaction } from "../../../../storage/transactions.js";
 
 async function handleCreateMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
