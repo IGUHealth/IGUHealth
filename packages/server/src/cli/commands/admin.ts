@@ -10,6 +10,7 @@ import {
   ClientApplication,
   Membership,
   code,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
@@ -91,27 +92,10 @@ async function createTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
   return QueueBatch(ctx, async (ctx) => {
-    const tenant = await tenants.create(ctx, await getTenant(ctx, options));
-
-    await ctx.queue.send(
-      tenant.id as TenantId,
-      Topic(tenant.id as TenantId, OperationsTopic),
-      [
-        {
-          value: [
-            {
-              resource: "tenants",
-              type: "create",
-              value: tenant,
-            },
-          ],
-        },
-      ],
-    );
-
-    const membership: Membership = await ctx.client.create(
-      asRoot({ ...ctx, tenant: tenant.id as TenantId }),
-      R4,
+    // const tenant = await tenants.create(ctx, await getTenant(ctx, options));
+    const [tenant, membership] = await tenants.create(
+      ctx,
+      {},
       await getMembership(options),
     );
 
@@ -151,6 +135,18 @@ async function createTenant(
           ],
         },
       ],
+    );
+
+    // Set email verified as true after update.
+    await ctx.client.update(
+      asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+      R4,
+      "Membership",
+      membership.id as id,
+      {
+        ...membership,
+        emailVerified: true,
+      },
     );
 
     console.log(`Tenant created with id: '${tenant.id}'`);

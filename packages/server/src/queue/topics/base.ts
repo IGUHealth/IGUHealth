@@ -1,1 +1,1 @@
-export type BASE = "base";
+export type ROOT_TOPIC = "base";
