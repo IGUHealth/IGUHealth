@@ -12,31 +12,13 @@ import { TenantId } from "@iguhealth/jwt";
 
 import { TenantTopic, TopicType } from "./topics/tenants.js";
 
-type Insertables = {
-  users: s.users.Insertable;
-  tenants: s.tenants.Insertable;
-  resources: s.resources.Insertable;
-};
+export type MutationType = Extract<s.Table, "users" | "tenants" | "resources">;
 
-export type MutationType = keyof Insertables;
+type Whereable<Type extends MutationType> = s.WhereableForTable<Type>;
 
-type Whereables = {
-  users: s.users.Whereable;
-  tenants: s.tenants.Whereable;
-  resources: s.resources.Whereable;
-};
+type Insertable<Type extends MutationType> = s.InsertableForTable<Type>;
 
-type Columns = {
-  users: s.users.Column;
-  tenants: s.tenants.Column;
-  resources: s.resources.Column;
-};
-
-type Whereable<Type extends MutationType> = Whereables[Type];
-
-type Insertable<Type extends MutationType> = Insertables[Type];
-
-type Column<Type extends MutationType> = Columns[Type];
+type Column<Type extends MutationType> = s.ColumnForTable<Type>;
 
 export type IType = "create" | "delete" | "update" | "invoke";
 

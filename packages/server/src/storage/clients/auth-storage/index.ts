@@ -1,14 +1,9 @@
 import validator from "validator";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import {
-  FHIRRequest,
-  R4CreateResponse,
-  R4UpdateResponse,
-} from "@iguhealth/client/lib/types";
+import { FHIRRequest } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
   MiddlewareAsyncChain,
@@ -22,12 +17,8 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  determineEmailUpdate,
-  membershipToUser,
-} from "../../../authN/db/users/utilities.js";
+import { determineEmailUpdate } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../../../queue/topics/tenants.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { QueueBatch } from "../../transactions.js";
@@ -228,156 +219,6 @@ function setEmailVerified<
   };
 }
 
-function updateUserTableMiddleware<
-  State extends AuthState,
-  CTX extends IGUHealthServerCTX,
->(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
-    // Skip and run other middleware if not membership.
-    if (
-      !("resource" in context.request) ||
-      "Membership" !== context.request.resource
-    ) {
-      return next(context);
-    }
-
-    switch (context.request.type) {
-      case "create-request": {
-        const res = await next(context);
-        const membership = (res.response as R4CreateResponse)?.body;
-        if (membership.resourceType !== "Membership") {
-          throw new OperationError(
-            outcomeError("invariant", "Invalid resource type."),
-          );
-        }
-
-        try {
-          await context.ctx.queue.send(
-            context.ctx.tenant,
-            Topic(context.ctx.tenant, OperationsTopic),
-            [
-              {
-                headers: {
-                  tenant: context.ctx.tenant,
-                },
-                value: [
-                  {
-                    resource: "users",
-                    type: "create",
-                    value: membershipToUser(context.ctx.tenant, membership),
-                  },
-                ],
-              },
-            ],
-          );
-        } catch (e) {
-          context.ctx.logger.error(e);
-          throw new OperationError(
-            outcomeError("invariant", "Failed to create user."),
-          );
-        }
-
-        return res;
-      }
-      case "delete-request": {
-        switch (context.request.level) {
-          case "instance": {
-            const id = context.request.id;
-
-            const membership = await context.state.fhirDB.read(
-              context.ctx,
-              R4,
-              "Membership",
-              id,
-            );
-
-            if (!membership) {
-              throw new OperationError(
-                outcomeError("not-found", "Membership not found."),
-              );
-            }
-
-            const res = await next(context);
-
-            await context.ctx.queue.send(
-              context.ctx.tenant,
-              Topic(context.ctx.tenant, OperationsTopic),
-              [
-                {
-                  headers: {
-                    tenant: context.ctx.tenant,
-                  },
-                  value: [
-                    {
-                      resource: "users",
-                      type: "delete",
-                      singular: true,
-                      where: {
-                        tenant: context.ctx.tenant,
-                        fhir_user_id: membership.id,
-                      },
-                    },
-                  ],
-                },
-              ],
-            );
-
-            return res;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                "Only instance level delete is supported for auth types.",
-              ),
-            );
-          }
-        }
-      }
-      case "update-request": {
-        const res = await next(context);
-        const membership = (res.response as R4UpdateResponse)
-          .body as Membership;
-
-        const user = membershipToUser(context.ctx.tenant, membership);
-        await context.ctx.queue.send(
-          context.ctx.tenant,
-          Topic(context.ctx.tenant, OperationsTopic),
-          [
-            {
-              headers: {
-                tenant: context.ctx.tenant,
-              },
-              value: [
-                {
-                  resource: "users",
-                  type: "update",
-                  value: user,
-                  constraint: ["tenant", "fhir_user_id"],
-                  onConflict: Object.keys(user) as s.users.Column[],
-                },
-              ],
-            },
-          ],
-        );
-
-        return res;
-      }
-
-      case "read-request":
-      case "search-request":
-      case "history-request": {
-        return next(context);
-      }
-      default: {
-        throw new OperationError(
-          outcomeFatal("invariant", "Invalid request type."),
-        );
-      }
-    }
-  };
-}
-
 function createAuthMiddleware<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
@@ -388,7 +229,6 @@ function createAuthMiddleware<
     customValidationMembershipMiddleware(),
     setInTransactionMiddleware(),
     setEmailVerified(),
-    updateUserTableMiddleware(),
     limitOwnershipEdits(),
     validateOwnershipMiddleware(),
     async (context) => {

@@ -46,6 +46,7 @@ import {
   MemoryParameter,
   createArtifactMemoryDatabase,
 } from "../storage/clients/memory/async.js";
+import sendtoQueue from "../storage/clients/queue.js";
 import { createRemoteStorage } from "../storage/clients/remote-storage/index.js";
 import RouterClient from "../storage/clients/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
@@ -182,11 +183,16 @@ export function createClient(): {
   });
 
   const remoteStorage = createRemoteStorage({
-    synchronousIndexing:
-      (process.env.FHIR_STORAGE_ASYNC ?? "false") === "false",
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
+    middleware: [
+      async (context, next) => {
+        const res = await next(context);
+        if (res.response) await sendtoQueue(context.ctx, res.response);
+        return res;
+      },
+    ],
   });
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
