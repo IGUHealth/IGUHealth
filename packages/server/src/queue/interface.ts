@@ -12,31 +12,7 @@ import { TenantId } from "@iguhealth/jwt";
 
 import { TenantTopic, TopicType } from "./topics/tenants.js";
 
-type Insertables = {
-  users: s.users.Insertable;
-  tenants: s.tenants.Insertable;
-  resources: s.resources.Insertable;
-};
-
-export type MutationType = keyof Insertables;
-
-type Whereables = {
-  users: s.users.Whereable;
-  tenants: s.tenants.Whereable;
-  resources: s.resources.Whereable;
-};
-
-type Columns = {
-  users: s.users.Column;
-  tenants: s.tenants.Column;
-  resources: s.resources.Column;
-};
-
-type Whereable<Type extends MutationType> = Whereables[Type];
-
-type Insertable<Type extends MutationType> = Insertables[Type];
-
-type Column<Type extends MutationType> = Columns[Type];
+export type MutationType = Extract<s.Table, "users" | "tenants" | "resources">;
 
 export type IType = "create" | "delete" | "update" | "invoke";
 
@@ -51,20 +27,20 @@ interface IMutation<Resource extends MutationType, Interaction extends IType>
 
 export interface DeleteOperation<Type extends MutationType>
   extends IMutation<Type, "delete"> {
-  where: Whereable<Type>;
+  where: s.WhereableForTable<Type>;
   singular?: boolean;
 }
 
 export interface UpdateOperation<Type extends MutationType>
   extends IMutation<Type, "update"> {
-  constraint: Column<Type>[];
-  value: Insertable<Type>;
-  onConflict: Column<Type>[];
+  constraint: s.ColumnForTable<Type>[];
+  value: s.InsertableForTable<Type>;
+  onConflict: s.ColumnForTable<Type>[];
 }
 
 export interface CreateOperation<Type extends MutationType>
   extends IMutation<Type, "create"> {
-  value: Insertable<Type>;
+  value: s.InsertableForTable<Type>;
 }
 
 export interface InvokeOperation extends IOperation<"invoke"> {
