@@ -336,6 +336,11 @@ function createResponseToQueueOperationMiddleware<
   };
 }
 
+function deriveKey(response: FHIRResponse): id | undefined {
+  if ("body" in response) return response.body.id as id;
+  return undefined;
+}
+
 function createSendToQueueMiddleware<
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<unknown, CTX, FHIRResponse, queue.Operations> {
@@ -349,6 +354,7 @@ function createSendToQueueMiddleware<
         Topic(context.ctx.tenant, "operations"),
         [
           {
+            key: deriveKey(res.request),
             headers: {
               tenant: context.ctx.tenant,
             },
