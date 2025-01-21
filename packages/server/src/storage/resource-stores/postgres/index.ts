@@ -205,7 +205,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       returnOrdered[index] = resource;
     });
 
-    return returnOrdered;
+    return returnOrdered.filter(r => r !== undefined);
   }
 
   async readLatestResourceById<Version extends FHIR_VERSION, >(

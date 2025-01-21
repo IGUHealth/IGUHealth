@@ -512,6 +512,7 @@ function createStorageMiddleware<
           context.ctx,
           context.request,
         );
+
         const resources = await context.ctx.store.read(
           context.ctx,
           context.request.fhirVersion,
