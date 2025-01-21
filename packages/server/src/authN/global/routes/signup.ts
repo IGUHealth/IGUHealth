@@ -56,7 +56,7 @@ async function createOrRetrieveUser(
     const tenantInsertion = await tenants.create(ctx, {});
     await ctx.queue.send(
       tenantInsertion.id as TenantId,
-      Topic(tenantInsertion.id as TenantId, OperationsTopic),
+      Topic(OperationsTopic),
       [
         {
           value: [

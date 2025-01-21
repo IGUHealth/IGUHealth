@@ -104,7 +104,7 @@ async function createResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, Topic(ctx.tenant, OperationsTopic), [
+  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
       key: resource.id,
       value: [
@@ -211,7 +211,7 @@ async function patchResource<
       resource: newResource as unknown as db.JSONObject,
     });
 
-    await ctx.queue.send(ctx.tenant, Topic(ctx.tenant, OperationsTopic), [
+    await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
       {
         key: newResource.id as id,
         value: [
@@ -294,7 +294,7 @@ async function updateResource<
     resource: resource as unknown as db.JSONObject,
   });
 
-  await ctx.queue.send(ctx.tenant, Topic(ctx.tenant, OperationsTopic), [
+  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
       key: resource.id as id,
       value: [
@@ -331,7 +331,7 @@ async function deleteResource<
       ),
     );
 
-  await ctx.queue.send(ctx.tenant, Topic(ctx.tenant, OperationsTopic), [
+  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
       key: resource.id as id,
       value: [

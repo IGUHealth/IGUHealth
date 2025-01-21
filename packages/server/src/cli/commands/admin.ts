@@ -93,21 +93,17 @@ async function createTenant(
   return QueueBatch(ctx, async (ctx) => {
     const tenant = await tenants.create(ctx, await getTenant(ctx, options));
 
-    await ctx.queue.send(
-      tenant.id as TenantId,
-      Topic(tenant.id as TenantId, OperationsTopic),
-      [
-        {
-          value: [
-            {
-              resource: "tenants",
-              type: "create",
-              value: tenant,
-            },
-          ],
-        },
-      ],
-    );
+    await ctx.queue.send(tenant.id as TenantId, Topic(OperationsTopic), [
+      {
+        value: [
+          {
+            resource: "tenants",
+            type: "create",
+            value: tenant,
+          },
+        ],
+      },
+    ]);
 
     const membership: Membership = await ctx.client.create(
       asRoot({ ...ctx, tenant: tenant.id as TenantId }),
@@ -127,31 +123,27 @@ async function createTenant(
       password,
     };
 
-    await ctx.queue.send(
-      tenant.id as TenantId,
-      Topic(tenant.id as TenantId, OperationsTopic),
-      [
-        {
-          key: membership.id,
-          headers: {
-            tenant: tenant.id as string,
-          },
-          value: [
-            {
-              resource: "users",
-              type: "update",
-              value: {
-                ...membershipToUser(tenant.id as TenantId, membership),
-                email_verified: true,
-                password,
-              },
-              constraint: ["tenant", "fhir_user_id"],
-              onConflict: Object.keys(verifiedUser) as s.users.Column[],
-            },
-          ],
+    await ctx.queue.send(tenant.id as TenantId, Topic(OperationsTopic), [
+      {
+        key: membership.id,
+        headers: {
+          tenant: tenant.id as string,
         },
-      ],
-    );
+        value: [
+          {
+            resource: "users",
+            type: "update",
+            value: {
+              ...membershipToUser(tenant.id as TenantId, membership),
+              email_verified: true,
+              password,
+            },
+            constraint: ["tenant", "fhir_user_id"],
+            onConflict: Object.keys(verifiedUser) as s.users.Column[],
+          },
+        ],
+      },
+    ]);
 
     console.log(`Tenant created with id: '${tenant.id}'`);
     console.log(`User created with email: '${membership.email}'`);
