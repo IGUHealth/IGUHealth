@@ -95,8 +95,6 @@ export async function launchView<Version extends FHIR_VERSION>(
       [CUSTOM_CLAIMS.TENANT]: ctx.state.iguhealth.tenant,
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
       [CUSTOM_CLAIMS.RESOURCE_ID]: ctx.state.oidc.user?.fhir_user_id as id,
-      [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]:
-        ctx.state.oidc.user?.fhir_user_versionid.toString() as id,
       [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: accesspolicies.resources
         .map((p) => p.meta?.versionId)
         .filter((v) => v !== undefined),

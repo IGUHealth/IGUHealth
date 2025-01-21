@@ -134,7 +134,6 @@ async function findResourceAndAccessPolicies<
   ctx: IGUHealthServerCTX,
   memberType: Type,
   memberId: id,
-  memberVersionId: id,
   accessPolicyVersionIds: id[],
 ): Promise<{
   resource?: Resource<R4, Type>;
@@ -153,9 +152,9 @@ async function findResourceAndAccessPolicies<
       accessPolicies: [],
     };
 
-  const [member, ...accessPolicies] = await ctx.store.read(asRoot(ctx), R4, [
-    memberVersionId,
-    ...accessPolicyVersionIds,
+  const [member, accessPolicies] = await Promise.all([
+    ctx.store.readLatestResourceById(asRoot(ctx), R4, memberId),
+    ctx.store.read(asRoot(ctx), R4, accessPolicyVersionIds),
   ]);
 
   if (member?.resourceType !== memberType) {
@@ -189,7 +188,6 @@ async function userResourceAndAccessPolicies(
         asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
         user[CUSTOM_CLAIMS.RESOURCE_TYPE],
         user[CUSTOM_CLAIMS.RESOURCE_ID],
-        user[CUSTOM_CLAIMS.RESOURCE_VERSION_ID],
         user[CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS],
       );
     }
@@ -256,7 +254,6 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
     scope: "user/*.*",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: PUBLIC_APP.resourceType,
     [CUSTOM_CLAIMS.RESOURCE_ID]: PUBLIC_APP.id as id,
-    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: PUBLIC_APP.meta?.versionId as id,
     [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: [],
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",

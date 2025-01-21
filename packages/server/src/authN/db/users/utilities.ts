@@ -16,10 +16,6 @@ export function userToMembership(
     resourceType: "Membership",
     emailVerified: user.email_verified ? user.email_verified : false,
     email: user.email,
-    name: {
-      given: user.first_name ? [user.first_name] : [],
-      family: user.last_name ?? "",
-    },
     role: (user.role ? user.role : "member") as code,
   };
 
@@ -49,10 +45,7 @@ export function membershipToUser(
     method: membership.federated?.reference?.split("/")[1]
       ? "oidc-provider"
       : "email-password",
-    first_name: membership.name?.given?.[0] ?? null,
-    last_name: membership.name?.family ?? null,
     role: membership.role as s.user_role,
-    fhir_user_versionid: fhir_user_versionid,
     fhir_user_id,
     fhir_provider_id: membership.federated?.reference?.split("/")[1] ?? null,
     email_verified: membership.emailVerified,
