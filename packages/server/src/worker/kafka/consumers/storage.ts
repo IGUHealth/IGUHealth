@@ -18,21 +18,7 @@ async function handleCreateMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.CreateOperation<queue.MutationType>,
 ) {
-  if (mutation.resource === "resources") {
-    return ctx.store.insert(
-      ctx,
-      (mutation as queue.CreateOperation<"resources">).value,
-    );
-  } else {
-    const otherMutation: queue.CreateOperation<
-      Exclude<queue.MutationType, "resources">
-    > = mutation as queue.CreateOperation<
-      Exclude<queue.MutationType, "resources">
-    >;
-    return db
-      .insert(otherMutation.resource, [otherMutation.value])
-      .run(ctx.store.getClient());
-  }
+  return ctx.store.insert(ctx, mutation.resource, mutation.value);
 }
 
 async function handleUpdateMutation(

@@ -15,19 +15,16 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 
-// export type Insertable =
-//   | s.resources.Insertable
-//   | s.authorization_code.Insertable
-//   | s.authorization_scopes.Insertable
-//   | s.tenants.Insertable;
+export type Insertable = Extract<s.Table, "users" | "resources" | "tenants">;
 
 export interface ResourceStore<CTX> {
-  insert<T extends s.resources.Insertable>(
+  insert<T extends Insertable>(
     ctx: CTX,
-    data: T,
-  ): Promise<s.resources.JSONSelectable>;
+    type: T,
+    data: s.InsertableForTable<T>,
+  ): Promise<s.JSONSelectableForTable<T>>;
 
-  read<Version extends FHIR_VERSION>(
+  readResourcesByVersionId<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     version_ids: id[],
