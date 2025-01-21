@@ -303,7 +303,7 @@ async function createTokenResponse({
     }),
     id_token: idTokenPayload
       ? await createToken<IDTokenPayload<s.user_role>>({
-          signingKey: signingKey,
+          signingKey,
           payload: { ...accessTokenPayload, ...idTokenPayload },
           expiresIn: tokenExiration,
         })
