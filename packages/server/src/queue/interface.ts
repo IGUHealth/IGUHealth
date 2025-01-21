@@ -10,7 +10,7 @@ import {
 } from "@iguhealth/client/lib/types";
 import { TenantId } from "@iguhealth/jwt";
 
-import { TenantTopic, TopicType } from "./topics/tenants.js";
+import { OperationTopic, TopicType } from "./topics/tenants.js";
 
 export type MutationType = Extract<s.Table, "users" | "tenants" | "resources">;
 
@@ -81,7 +81,7 @@ export type Message = {
 export interface IQueue {
   send<T extends TenantId, Topic extends TopicType>(
     tenant: T,
-    topic_id: TenantTopic<T, Topic>,
+    topic_id: OperationTopic<Topic>,
     messages: Message[],
   ): Promise<void>;
   batch(): Promise<IQueueBatch>;

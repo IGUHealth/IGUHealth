@@ -10,7 +10,7 @@ export async function sendPasswordResetEmail(
   membership: Membership,
   input: IguhealthPasswordReset.Input,
 ): Promise<void> {
-  await ctx.queue.send(ctx.tenant, Topic(ctx.tenant, OperationsTopic), [
+  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
       value: [
         {

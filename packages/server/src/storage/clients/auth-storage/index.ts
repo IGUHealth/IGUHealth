@@ -254,12 +254,9 @@ function updateUserTableMiddleware<
         try {
           await context.ctx.queue.send(
             context.ctx.tenant,
-            Topic(context.ctx.tenant, OperationsTopic),
+            Topic(OperationsTopic),
             [
               {
-                headers: {
-                  tenant: context.ctx.tenant,
-                },
                 value: [
                   {
                     resource: "users",
@@ -301,7 +298,7 @@ function updateUserTableMiddleware<
 
             await context.ctx.queue.send(
               context.ctx.tenant,
-              Topic(context.ctx.tenant, OperationsTopic),
+              Topic(OperationsTopic),
               [
                 {
                   headers: {
@@ -342,7 +339,7 @@ function updateUserTableMiddleware<
         const user = membershipToUser(context.ctx.tenant, membership);
         await context.ctx.queue.send(
           context.ctx.tenant,
-          Topic(context.ctx.tenant, OperationsTopic),
+          Topic(OperationsTopic),
           [
             {
               headers: {
