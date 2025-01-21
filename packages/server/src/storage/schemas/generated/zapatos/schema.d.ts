@@ -51094,24 +51094,6 @@ declare module 'zapatos/schema' {
       */
       fhir_user_id: string;
       /**
-      * **users.fhir_user_versionid**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      fhir_user_versionid: string;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
       * **users.method**
       * - `text` in database
       * - `NOT NULL`, default: `'email-password'::text`
@@ -51123,12 +51105,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       password: string | null;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
       /**
       * **users.role**
       * - `user_role` in database
@@ -51180,24 +51156,6 @@ declare module 'zapatos/schema' {
       */
       fhir_user_id: string;
       /**
-      * **users.fhir_user_versionid**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      fhir_user_versionid: string;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
       * **users.method**
       * - `text` in database
       * - `NOT NULL`, default: `'email-password'::text`
@@ -51209,12 +51167,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       password: string | null;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
       /**
       * **users.role**
       * - `user_role` in database
@@ -51266,24 +51218,6 @@ declare module 'zapatos/schema' {
       */
       fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.fhir_user_versionid**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      fhir_user_versionid?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **users.method**
       * - `text` in database
       * - `NOT NULL`, default: `'email-password'::text`
@@ -51295,12 +51229,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.role**
       * - `user_role` in database
@@ -51352,24 +51280,6 @@ declare module 'zapatos/schema' {
       */
       fhir_user_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **users.fhir_user_versionid**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      fhir_user_versionid: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **users.method**
       * - `text` in database
       * - `NOT NULL`, default: `'email-password'::text`
@@ -51381,12 +51291,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.role**
       * - `user_role` in database
@@ -51438,24 +51342,6 @@ declare module 'zapatos/schema' {
       */
       fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **users.fhir_user_versionid**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      fhir_user_versionid?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
       * **users.method**
       * - `text` in database
       * - `NOT NULL`, default: `'email-password'::text`
@@ -51467,12 +51353,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.role**
       * - `user_role` in database
@@ -51492,7 +51372,7 @@ declare module 'zapatos/schema' {
       */
       updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'owner_unique_idx' | 'unique_email' | 'unique_fhir_user' | 'unique_fhir_user_versionid' | 'users_pkey';
+    export type UniqueIndex = 'owner_unique_idx' | 'unique_email' | 'unique_fhir_user' | 'users_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

@@ -68,7 +68,6 @@ async function getUserSource(
         "role" in resource ? (resource.role as s.user_role) : "member",
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
       [CUSTOM_CLAIMS.RESOURCE_ID]: resource.id as id,
-      [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: resource.meta?.versionId as id,
       [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: policies.resources
         .map((p) => p.meta?.versionId)
         .filter((v) => v !== undefined),

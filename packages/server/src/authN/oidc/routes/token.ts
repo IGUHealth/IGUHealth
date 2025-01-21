@@ -6,6 +6,7 @@ import * as s from "zapatos/schema";
 
 import {
   ClientApplication,
+  Membership,
   canonical,
   code,
   id,
@@ -157,8 +158,7 @@ function verifyTokenParameters(body: unknown): body is OAuth2TokenBody {
 }
 
 async function getIDTokenPayload(
-  iguhealth: IGUHealthServerCTX,
-  user: users.User,
+  member: Membership,
   approvedScopes: parseScopes.Scope[],
 ): Promise<
   | Pick<
@@ -178,27 +178,21 @@ async function getIDTokenPayload(
 
   const idTokenPayload: Partial<IDTokenPayload<s.user_role>> = {};
   if (approvedScopes.find((v) => v.type === "email")) {
-    idTokenPayload.email = user.email;
-    idTokenPayload.email_verified = user.email_verified
-      ? user.email_verified
+    idTokenPayload.email = member.email;
+    idTokenPayload.email_verified = member.emailVerified
+      ? member.emailVerified
       : false;
   }
   if (approvedScopes.find((v) => v.type === "profile")) {
-    idTokenPayload.name = [user.first_name, user.last_name]
+    idTokenPayload.name = [...(member.name?.given ?? []), member.name?.family]
       .filter((v) => v !== null && v !== undefined)
       .join(" ");
-    idTokenPayload.given_name = user.first_name ?? undefined;
-    idTokenPayload.family_name = user.last_name ?? undefined;
+    idTokenPayload.given_name = member.name?.given?.join(" ") ?? undefined;
+    idTokenPayload.family_name = member.name?.family ?? undefined;
   }
-  if (user.fhir_user_id && approvedScopes.find((v) => v.type === "fhirUser")) {
-    const membership = await iguhealth.client.read(
-      iguhealth,
-      R4,
-      "Membership",
-      user.fhir_user_id as id,
-    );
-    if (membership?.link) {
-      idTokenPayload.fhirUser = membership.link.reference as canonical;
+  if (approvedScopes.find((v) => v.type === "fhirUser")) {
+    if (member?.link) {
+      idTokenPayload.fhirUser = member.link.reference as canonical;
     }
   }
 
@@ -218,7 +212,7 @@ async function createRefreshToken(
   pg: db.Queryable,
   tenant: TenantId,
   client: ClientApplication,
-  user: users.User,
+  member: Membership,
   launchParameters?: ResolvedLaunchParameters,
   expires_in: string = "12 hours",
 ): Promise<codes.AuthorizationCode> {
@@ -227,7 +221,7 @@ async function createRefreshToken(
     client_id: client.id,
     tenant: tenant,
     // Should be safe to use here as is authenticated so user should be populated.
-    user_id: user.fhir_user_id,
+    user_id: member.id as id,
     expires_in,
     meta: launchParameters ? { launch: launchParameters } : undefined,
   });
@@ -248,12 +242,12 @@ type Oauth2TokenBodyResponse = {
 };
 
 async function createTokenResponse({
-  user,
+  member,
   ctx,
   clientApplication,
   launchParameters,
 }: {
-  user: users.User;
+  member: Membership;
   ctx: IGUHealthServerCTX;
   clientApplication: ClientApplication;
   launchParameters?: ResolvedLaunchParameters;
@@ -266,14 +260,14 @@ async function createTokenResponse({
     ctx.store.getClient(),
     ctx.tenant,
     clientApplication.id as id,
-    user.fhir_user_id,
+    member.id as id,
   );
 
   const accesspolicies = await ctx.client.search_type(
     asRoot(ctx),
     R4,
     "AccessPolicyV2",
-    [{ name: "link", value: [user.fhir_user_id as id] }],
+    [{ name: "link", value: [member.id as id] }],
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
@@ -283,21 +277,19 @@ async function createTokenResponse({
     patient: launchParameters?.Patient,
     encounter: launchParameters?.Encounter,
 
-    sub: user.fhir_user_id as Subject,
+    sub: member.id as string as Subject,
     aud: clientApplication.id as id,
     scope: parseScopes.toString(approvedScopes),
 
-    [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
-    [CUSTOM_CLAIMS.ROLE]: user.role,
+    [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
+    [CUSTOM_CLAIMS.ROLE]: member.role as s.user_role,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-    [CUSTOM_CLAIMS.RESOURCE_ID]: (user.fhir_user_id as id) ?? undefined,
-    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]:
-      user.fhir_user_versionid.toString() as id,
+    [CUSTOM_CLAIMS.RESOURCE_ID]: member.id as id,
     [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: accesspolicies.resources
       .map((r) => r.meta?.versionId)
       .filter((v) => v !== undefined),
   };
-  const idTokenPayload = await getIDTokenPayload(ctx, user, approvedScopes);
+  const idTokenPayload = await getIDTokenPayload(member, approvedScopes);
   const tokenExiration = "1h";
 
   const body = {
@@ -327,7 +319,7 @@ async function createTokenResponse({
         ctx.store.getClient(),
         ctx.tenant,
         clientApplication,
-        user,
+        member,
         launchParameters,
       )
     ).code;
@@ -386,12 +378,14 @@ export function tokenPost<
           await findClient(ctx, code[0].client_id),
         );
 
-        const user = await users.get(
-          ctx.state.iguhealth.store.getClient(),
-          ctx.state.iguhealth.tenant,
-          code[0].user_id,
+        const member = await ctx.state.iguhealth.client.read(
+          asRoot(ctx.state.iguhealth),
+          R4,
+          "Membership",
+          code[0].user_id as id,
         );
-        if (!user)
+
+        if (!member)
           throw new OIDCError({
             error: "invalid_grant",
             error_description: "Invalid user",
@@ -409,7 +403,7 @@ export function tokenPost<
         const launchParameters = getLaunchParameters(code[0]);
 
         const tokenBody = await createTokenResponse({
-          user,
+          member,
           ctx: asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,
@@ -465,13 +459,14 @@ export function tokenPost<
           });
         }
 
-        const user = await users.get(
-          ctx.state.iguhealth.store.getClient(),
-          ctx.state.iguhealth.tenant,
-          code[0].user_id,
+        const member = await ctx.state.iguhealth.client.read(
+          asRoot(ctx.state.iguhealth),
+          R4,
+          "Membership",
+          code[0].user_id as id,
         );
 
-        if (!user)
+        if (!member)
           throw new OIDCError({
             error: "invalid_grant",
             error_description: "Invalid user",
@@ -488,7 +483,7 @@ export function tokenPost<
         const launchParameters = getLaunchParameters(code[0]);
 
         const tokenBody = await createTokenResponse({
-          user,
+          member,
           ctx: asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,

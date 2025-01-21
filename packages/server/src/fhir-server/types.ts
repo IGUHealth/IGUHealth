@@ -171,7 +171,6 @@ function createRootClaims(
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: clientApp.resourceType,
     [CUSTOM_CLAIMS.ROLE]: "owner",
     [CUSTOM_CLAIMS.TENANT]: tenant,
-    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: clientApp.meta?.versionId as id,
     [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: [],
   };
 }

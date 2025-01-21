@@ -1,6 +1,8 @@
+import { R4 } from "@iguhealth/fhir-types/versions";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import * as users from "../../db/users/index.js";
+import { asRoot } from "../../../fhir-server/types.js";
 import { OIDCRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
@@ -19,16 +21,19 @@ export function userInfo(): OIDCRouteHandler {
         outcomeError("forbidden", "User is not authenticated."),
       );
     }
-    const user = await users.get(
-      ctx.state.iguhealth.store.getClient(),
-      ctx.state.iguhealth.tenant,
-      ctx.state.iguhealth.user.payload.sub,
+
+    const membership = await ctx.state.iguhealth.client.read(
+      asRoot(ctx.state.iguhealth),
+      R4,
+      "Membership",
+      ctx.state.iguhealth.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
     );
+
     ctx.body = {
-      sub: user?.fhir_user_id,
-      given_name: user?.first_name ?? undefined,
-      family_name: user?.last_name ?? undefined,
-      email: user?.email ?? undefined,
+      sub: membership?.id,
+      given_name: membership?.name?.given?.join(" "),
+      family_name: membership?.name?.family,
+      email: membership?.email,
     } as UserInfoResponse;
 
     await next();

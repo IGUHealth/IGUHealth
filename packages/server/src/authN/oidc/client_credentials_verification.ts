@@ -87,7 +87,6 @@ export async function createClientCredentialToken(
     [CUSTOM_CLAIMS.ROLE]: "member",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
     [CUSTOM_CLAIMS.RESOURCE_ID]: client.id as id,
-    [CUSTOM_CLAIMS.RESOURCE_VERSION_ID]: client.meta?.versionId as id,
     [CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS]: policies.resources
       .map((p) => p.meta?.versionId)
       .filter((v) => v !== undefined),
