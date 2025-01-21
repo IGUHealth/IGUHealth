@@ -53,15 +53,13 @@ type StorageState = {
 
 const AUTHOR_EXTENSION = "https://iguhealth.app/author";
 
-function version(
-  insertable: Omit<s.resources.Insertable, "version_id">,
-): s.resources.Insertable {
+function version<R extends Resource<FHIR_VERSION, AllResourceTypes>>(
+  ctx: IGUHealthServerCTX,
+  resource: R,
+): R {
   const versionId = generateId();
-  const resource = insertable.resource as unknown as Resource<
-    FHIR_VERSION,
-    AllResourceTypes
-  >;
-  insertable.resource = {
+
+  return {
     ...resource,
     meta: {
       ...resource.meta,
@@ -74,14 +72,12 @@ function version(
           {
             url: AUTHOR_EXTENSION as id,
             valueReference: {
-              reference: `${insertable.author_type}/${insertable.author_id}`,
+              reference: `${ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE]}/${ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID]}`,
             },
           },
         ]),
     },
-  } as unknown as db.JSONObject;
-
-  return { ...insertable, version_id: versionId };
+  };
 }
 
 async function createResource<
@@ -95,14 +91,14 @@ async function createResource<
   // For creation force new id.
   resource.id = generateId();
 
-  const message = version({
+  const message = {
     tenant: ctx.tenant,
     fhir_version: toDBFHIRVersion(fhirVersion),
     request_method: "POST",
     author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
     author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    resource: resource as unknown as db.JSONObject,
-  });
+    resource: version(ctx, resource) as unknown as db.JSONObject,
+  };
 
   await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
@@ -202,14 +198,14 @@ async function patchResource<
       newResource.id = existingResource.id;
     }
 
-    const message = version({
+    const message = {
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "PATCH",
       author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: newResource as unknown as db.JSONObject,
-    });
+      resource: version(ctx, newResource) as unknown as db.JSONObject,
+    };
 
     await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
       {
@@ -285,14 +281,14 @@ async function updateResource<
     });
   }
 
-  const message = version({
+  const message = {
     tenant: ctx.tenant,
     fhir_version: toDBFHIRVersion(fhirVersion),
     request_method: "PUT",
     author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
     author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    resource: resource as unknown as db.JSONObject,
-  });
+    resource: version(ctx, resource) as unknown as db.JSONObject,
+  };
 
   await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
     {
@@ -338,15 +334,15 @@ async function deleteResource<
         {
           resource: "resources",
           type: "create",
-          value: version({
+          value: {
             tenant: ctx.tenant,
             fhir_version: toDBFHIRVersion(fhirVersion),
             request_method: "DELETE",
             author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
             author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-            resource: resource as unknown as db.JSONObject,
+            resource: version(ctx, resource) as unknown as db.JSONObject,
             deleted: true,
-          }),
+          },
         },
       ],
     },
