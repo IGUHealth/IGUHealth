@@ -6,12 +6,8 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
-
 } from "@iguhealth/fhir-types/versions";
-import {
-  OperationError,
-  outcomeError
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   R4BHistoryInstanceRequest,
   R4BSystemHistoryRequest,
@@ -23,13 +19,12 @@ import {
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { toDBFHIRVersion } from "../../utilities/version.js";
-import { ResourceStore } from "../interface.js";
+import { Insertable, ResourceStore } from "../interface.js";
 import { createFHIRURL } from "../../../fhir-server/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../utilities/search/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../../utilities/sql.js";
-
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -159,7 +154,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
   constructor(pgClient: db.Queryable) {
     this._pgClient = pgClient;
   }
-  async read<Version extends FHIR_VERSION>(
+  async readResourcesByVersionId<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     version_ids: string[],
@@ -176,7 +171,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
     const res = (
       await db
         .select("resources", whereable, { columns: ["resource"] })
-        .run(this._pgClient)
+        .run(this.getClient())
     ).map((r) => r.resource) as unknown as Resource<
       Version,
       AllResourceTypes
@@ -205,10 +200,10 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       returnOrdered[index] = resource;
     });
 
-    return returnOrdered.filter(r => r !== undefined);
+    return returnOrdered.filter((r) => r !== undefined);
   }
 
-  async readLatestResourceById<Version extends FHIR_VERSION, >(
+  async readLatestResourceById<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
     id: id,
@@ -226,25 +221,46 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
           columns: ["resource"],
         },
       )
-      .run(this._pgClient);
+      .run(this.getClient());
 
-    return result?.resource as unknown as Promise<Resource<Version, AllResourceTypes> | undefined>;
+    return result?.resource as unknown as Promise<
+      Resource<Version, AllResourceTypes> | undefined
+    >;
   }
 
-  async insert<T extends s.resources.Insertable>(
+  async insert<T extends Insertable>(
     ctx: CTX,
-    data: T,
-  ): Promise<s.resources.JSONSelectable> {
-    const res = await  db.upsert(
+    type: T,
+    data: s.InsertableForTable<T>,
+  ): Promise<s.JSONSelectableForTable<T>> {
+    switch (type) {
+      case "resources": {
+        const res = await db
+          .upsert(
             "resources",
-            [data],
+            [data as s.InsertableForTable<"resources">],
             db.constraint("resources_pkey"),
-            { updateColumns: Object.keys(data) as s.resources.Column[] },
-          ).run(this._pgClient);
+            {
+              updateColumns: Object.keys(data) as s.resources.Column[],
+            },
+          )
+          .run(this.getClient());
 
-    return res[0];
+        return res[0] as unknown as s.JSONSelectableForTable<T>;
+      }
+      case "users":
+      case "tenants": {
+        const res = await db.insert(type, [data]).run(this.getClient());
+        return res[0];
+      }
+      default: {
+        throw new OperationError(
+          outcomeError("invalid", `Invalid insertion type '${type}'`),
+        );
+      }
+    }
   }
-  
+
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,
     request:

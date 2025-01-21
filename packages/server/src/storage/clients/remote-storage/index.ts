@@ -453,7 +453,7 @@ function createStorageMiddleware<
         };
       }
       case "vread-request": {
-        const foundResources = await context.ctx.store.read(
+        const foundResources = await context.ctx.store.readResourcesByVersionId(
           context.ctx,
           context.request.fhirVersion,
           [context.request.versionId as id],
@@ -513,7 +513,7 @@ function createStorageMiddleware<
           context.request,
         );
 
-        const resources = await context.ctx.store.read(
+        const resources = await context.ctx.store.readResourcesByVersionId(
           context.ctx,
           context.request.fhirVersion,
           result.result.map((r) => r.version_id),
