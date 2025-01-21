@@ -152,17 +152,10 @@ async function findResourceAndAccessPolicies<
       accessPolicies: [],
     };
 
-  const member = await ctx.store.readLatestResourceById(
-    asRoot(ctx),
-    R4,
-    memberId,
-  );
-
-  const [...accessPolicies] = await ctx.store.read(
-    asRoot(ctx),
-    R4,
-    accessPolicyVersionIds,
-  );
+  const [member, accessPolicies] = await Promise.all([
+    ctx.store.readLatestResourceById(asRoot(ctx), R4, memberId),
+    ctx.store.read(asRoot(ctx), R4, accessPolicyVersionIds),
+  ]);
 
   if (member?.resourceType !== memberType) {
     throw new OperationError(
