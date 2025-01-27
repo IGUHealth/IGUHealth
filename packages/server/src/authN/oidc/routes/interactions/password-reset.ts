@@ -32,6 +32,13 @@ function validatePasswordStrength(
       "Password must be at least 8 characters long.",
     );
   }
+  // See https://www.postgresql.org/docs/current/pgcrypto.html because of bf 2a size limit.
+  if (password.length > 72) {
+    return outcomeError(
+      "invalid",
+      "Password must be less than 72 characters long.",
+    );
+  }
   return undefined;
 }
 
