@@ -25,11 +25,16 @@ async function handleUpdateMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.UpdateOperation<queue.MutationType>,
 ) {
-  return db
-    .upsert(mutation.resource, mutation.value, mutation.constraint, {
+  const sql = db.upsert(
+    mutation.resource,
+    mutation.value,
+    mutation.constraint,
+    {
       updateColumns: mutation.onConflict,
-    })
-    .run(ctx.store.getClient());
+    },
+  );
+
+  return sql.run(ctx.store.getClient());
 }
 
 async function handleDeleteMutation(
