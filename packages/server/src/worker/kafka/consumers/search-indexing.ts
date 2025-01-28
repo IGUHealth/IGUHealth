@@ -91,7 +91,7 @@ export default async function createIndexingWorker() {
   const stop = await createKafkaConsumer(
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
-    "storage" as ConsumerGroupID,
+    "indexing" as ConsumerGroupID,
     async (ctx, { topic, partition, message }) => {
       try {
         await handler(ctx, { message, topic, partition });
