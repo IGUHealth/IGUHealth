@@ -42838,10 +42838,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["katex", [\
-      ["npm:0.16.10", {\
-        "packageLocation": "./.yarn/cache/katex-npm-0.16.10-4839f14dbd-3670340123.zip/node_modules/katex/",\
+      ["npm:0.16.21", {\
+        "packageLocation": "./.yarn/cache/katex-npm-0.16.21-d89dc4b84d-db1094c528.zip/node_modules/katex/",\
         "packageDependencies": [\
-          ["katex", "npm:0.16.10"],\
+          ["katex", "npm:0.16.21"],\
           ["commander", "npm:8.3.0"]\
         ],\
         "linkType": "HARD"\
@@ -44347,7 +44347,7 @@ const RAW_RUNTIME_STATE =
           ["dayjs", "npm:1.11.11"],\
           ["dompurify", "npm:3.1.6"],\
           ["elkjs", "npm:0.9.3"],\
-          ["katex", "npm:0.16.10"],\
+          ["katex", "npm:0.16.21"],\
           ["khroma", "npm:2.1.0"],\
           ["lodash-es", "npm:4.17.21"],\
           ["mdast-util-from-markdown", "npm:1.3.1"],\
