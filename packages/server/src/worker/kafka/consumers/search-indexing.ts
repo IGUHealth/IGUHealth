@@ -1,4 +1,3 @@
-import { Kafka, logLevel } from "kafkajs";
 import * as s from "zapatos/schema";
 
 import {
@@ -13,11 +12,17 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
-import { OperationsTopic, Topic } from "../../../queue/topics/tenants.js";
+import {
+  ConsumerGroupID,
+  OperationsTopic,
+  TENANT_TOPIC_PATTERN,
+} from "../../../queue/topics/index.js";
 import createResourceStore from "../../../storage/resource-stores/index.js";
 import { createSearchStore } from "../../../storage/search-stores/index.js";
 import { toFHIRVersion } from "../../../storage/utilities/version.js";
 import { gateMutation } from "../utilities.js";
+import { MessageHandler } from "../types.js";
+import createKafkaConsumer from "../local.js";
 
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
@@ -57,13 +62,22 @@ async function handleMutation(
   }
 }
 
-export default async function createIndexingWorker() {
-  const kafka = new Kafka({
-    logLevel: logLevel.INFO,
-    brokers: process.env.QUEUE_BROKERS?.split(",") ?? [],
-    clientId: process.env.QUEUE_CLIENT_ID,
-  });
+const handler: MessageHandler<
+  Omit<IGUHealthServerCTX, "user" | "tenant">
+> = async (iguhealthServices, { message }) => {
+  iguhealthServices.logger.info(
+    `[Indexing], Processing message ${message.key?.toString()}`,
+  );
 
+  if (message.value) {
+    const mutations: queue.Operations = JSON.parse(message.value.toString());
+    for (const mutation of mutations) {
+      await handleMutation(iguhealthServices, mutation);
+    }
+  }
+};
+
+export default async function createIndexingWorker() {
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
@@ -74,46 +88,18 @@ export default async function createIndexingWorker() {
     ...createClient(),
   };
 
-  const consumer = kafka.consumer({ groupId: "resource-search-indexing" });
-  await consumer.connect();
-  await consumer.subscribe({
-    topic: Topic(OperationsTopic),
-    fromBeginning: true,
-  });
-  await consumer.run({
-    autoCommit: false,
-    eachMessage: async ({ topic, partition, message }) => {
+  const stop = await createKafkaConsumer(
+    iguhealthServices,
+    TENANT_TOPIC_PATTERN(OperationsTopic),
+    "indexing" as ConsumerGroupID,
+    async (ctx, { topic, partition, message }) => {
       try {
-        iguhealthServices.logger.info(
-          `[Indexing], Processing message ${message.key?.toString()}`,
-        );
-
-        if (message.value) {
-          const mutations: queue.Operations = JSON.parse(
-            message.value.toString(),
-          );
-          for (const mutation of mutations) {
-            await handleMutation(iguhealthServices, mutation);
-          }
-        }
-
-        // Run manual commit to avoid reprocessing.
-        // Read https://kafka.js.org/docs/consuming#a-name-manual-commits-a-manual-committing
-        // Use + 1 on offset per above.
-        await consumer.commitOffsets([
-          { topic, partition, offset: (Number(message.offset) + 1).toString() },
-        ]);
-
-        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-        console.log(`- ${prefix} ${message.key}`);
+        await handler(ctx, { message, topic, partition });
       } catch (e) {
         console.error(e);
       }
     },
-  });
+  );
 
-  return async () => {
-    await consumer.disconnect();
-    process.exit(0);
-  };
+  return stop;
 }

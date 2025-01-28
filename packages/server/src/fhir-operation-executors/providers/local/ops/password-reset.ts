@@ -144,6 +144,7 @@ export const IguhealthPasswordResetInvoke = InlineOperation(
     );
 
     if (!membership || membership.resourceType !== "Membership") {
+      ctx.logger.error("Membership not found", request.id);
       return outcomeError("not-found", "User was not found");
     }
 

@@ -9,7 +9,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../../../queue/topics/tenants.js";
+import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import { QueueBatch } from "../../../storage/transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
@@ -18,6 +18,7 @@ import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
+import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 
 async function findExistingOwner(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -53,38 +54,66 @@ async function createOrRetrieveUser(
   if (existingOwner) {
     return existingOwner;
   } else {
-    const tenantInsertion = await tenants.create(ctx, {});
-    await ctx.queue.send(
-      tenantInsertion.id as TenantId,
-      Topic(OperationsTopic),
-      [
-        {
-          value: [
+    const result: [TenantId, Membership] = await QueueBatch(
+      ctx,
+      async (ctx) => {
+        const tenantInsertion = await tenants.create(ctx, {});
+        const tenantId = tenantInsertion.id as TenantId;
+
+        await ctx.queue.send(DYNAMIC_TOPIC, [
+          {
+            value: [
+              {
+                resource: "tenants",
+                type: "create",
+                value: tenantInsertion,
+              },
+            ],
+          },
+        ]);
+
+        await ctx.queue.sendTenant(
+          tenantId,
+          TenantTopic(tenantId, OperationsTopic),
+          [
             {
-              resource: "tenants",
-              type: "create",
-              value: tenantInsertion,
+              value: [
+                {
+                  resource: "tenants",
+                  type: "create",
+                  value: tenantInsertion,
+                },
+              ],
             },
           ],
-        },
-      ],
+        );
+
+        const membership = await ctx.client.create(
+          asRoot({
+            ...ctx,
+            tenant: tenantInsertion.id as TenantId,
+          }),
+          R4,
+          userToMembership({
+            role: "owner",
+            tenant: tenantInsertion.id as TenantId,
+            email: email,
+            email_verified: false,
+          }),
+        );
+
+        return [tenantInsertion.id as TenantId, membership];
+      },
     );
 
-    const membership = await ctx.client.create(
-      asRoot({
-        ...ctx,
-        tenant: tenantInsertion.id as TenantId,
-      }),
-      R4,
-      userToMembership({
-        role: "owner",
-        tenant: tenantInsertion.id as TenantId,
-        email: email,
-        email_verified: false,
-      }),
+    // Alert system admin of new user.
+    await sendAlertEmail(
+      ctx.emailProvider,
+      "New User",
+      `A new user with email '${email}' has signed up.`,
     );
 
-    return [tenantInsertion.id as TenantId, membership];
+    return result;
   }
 }
 
@@ -131,17 +160,13 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   await QueueBatch(ctx.state.iguhealth, async (iguhealth) => {
     const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
 
-    await sendPasswordResetEmail(
-      { ...ctx.state.iguhealth, tenant },
-      membership,
-      {
-        email: {
-          acceptText: "Reset Password",
-          body: "To verify your email and set your password click below.",
-          subject: "IGUHealth Email Verification",
-        },
+    await sendPasswordResetEmail({ ...iguhealth, tenant }, membership, {
+      email: {
+        acceptText: "Reset Password",
+        body: "To verify your email and set your password click below.",
+        subject: "IGUHealth Email Verification",
       },
-    );
+    });
 
     ctx.status = 200;
     ctx.body = views.renderString(
@@ -154,11 +179,4 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       }),
     );
   });
-
-  // Alert system admin of new user.
-  await sendAlertEmail(
-    ctx.state.iguhealth.emailProvider,
-    "New User",
-    `A new user with email '${email}' has signed up.`,
-  );
 };

@@ -27,7 +27,7 @@ import {
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../../../queue/topics/tenants.js";
+import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { QueueBatch } from "../../transactions.js";
@@ -252,9 +252,9 @@ function updateUserTableMiddleware<
         }
 
         try {
-          await context.ctx.queue.send(
+          await context.ctx.queue.sendTenant(
             context.ctx.tenant,
-            Topic(OperationsTopic),
+            TenantTopic(context.ctx.tenant, OperationsTopic),
             [
               {
                 value: [
@@ -296,9 +296,9 @@ function updateUserTableMiddleware<
 
             const res = await next(context);
 
-            await context.ctx.queue.send(
+            await context.ctx.queue.sendTenant(
               context.ctx.tenant,
-              Topic(OperationsTopic),
+              TenantTopic(context.ctx.tenant, OperationsTopic),
               [
                 {
                   headers: {
@@ -337,9 +337,9 @@ function updateUserTableMiddleware<
           .body as Membership;
 
         const user = membershipToUser(context.ctx.tenant, membership);
-        await context.ctx.queue.send(
+        await context.ctx.queue.sendTenant(
           context.ctx.tenant,
-          Topic(OperationsTopic),
+          TenantTopic(context.ctx.tenant, OperationsTopic),
           [
             {
               headers: {
@@ -387,7 +387,7 @@ function createAuthMiddleware<
     setEmailVerified(),
     updateUserTableMiddleware(),
     limitOwnershipEdits(),
-    validateOwnershipMiddleware(),
+    // validateOwnershipMiddleware(),
     async (context) => {
       return {
         ...context,

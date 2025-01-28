@@ -34,7 +34,7 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, Topic } from "../../../queue/topics/tenants.js";
+import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,
@@ -99,18 +99,22 @@ async function createResource<
     resource: version(ctx, resource) as unknown as db.JSONObject,
   };
 
-  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
-    {
-      key: resource.id,
-      value: [
-        {
-          resource: "resources",
-          type: "create",
-          value: message,
-        },
-      ],
-    },
-  ]);
+  await ctx.queue.sendTenant(
+    ctx.tenant,
+    TenantTopic(ctx.tenant, OperationsTopic),
+    [
+      {
+        key: resource.id,
+        value: [
+          {
+            resource: "resources",
+            type: "create",
+            value: message,
+          },
+        ],
+      },
+    ],
+  );
 
   return message.resource as unknown as Resource<Version, AllResourceTypes>;
 }
@@ -206,18 +210,22 @@ async function patchResource<
       resource: version(ctx, newResource) as unknown as db.JSONObject,
     };
 
-    await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
-      {
-        key: newResource.id as id,
-        value: [
-          {
-            resource: "resources",
-            type: "create",
-            value: message,
-          },
-        ],
-      },
-    ]);
+    await ctx.queue.sendTenant(
+      ctx.tenant,
+      TenantTopic(ctx.tenant, OperationsTopic),
+      [
+        {
+          key: newResource.id as id,
+          value: [
+            {
+              resource: "resources",
+              type: "create",
+              value: message,
+            },
+          ],
+        },
+      ],
+    );
 
     const patchedResource = message.resource as unknown as Resource<
       Version,
@@ -289,18 +297,22 @@ async function updateResource<
     resource: version(ctx, resource) as unknown as db.JSONObject,
   };
 
-  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
-    {
-      key: resource.id as id,
-      value: [
-        {
-          resource: "resources",
-          type: "create",
-          value: message,
-        },
-      ],
-    },
-  ]);
+  await ctx.queue.sendTenant(
+    ctx.tenant,
+    TenantTopic(ctx.tenant, OperationsTopic),
+    [
+      {
+        key: resource.id as id,
+        value: [
+          {
+            resource: "resources",
+            type: "create",
+            value: message,
+          },
+        ],
+      },
+    ],
+  );
 
   const updatedResource = message.resource as unknown as Resource<
     Version,
@@ -326,26 +338,30 @@ async function deleteResource<
       ),
     );
 
-  await ctx.queue.send(ctx.tenant, Topic(OperationsTopic), [
-    {
-      key: resource.id as id,
-      value: [
-        {
-          resource: "resources",
-          type: "create",
-          value: {
-            tenant: ctx.tenant,
-            fhir_version: toDBFHIRVersion(fhirVersion),
-            request_method: "DELETE",
-            author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-            author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-            resource: version(ctx, resource) as unknown as db.JSONObject,
-            deleted: true,
+  await ctx.queue.sendTenant(
+    ctx.tenant,
+    TenantTopic(ctx.tenant, OperationsTopic),
+    [
+      {
+        key: resource.id as id,
+        value: [
+          {
+            resource: "resources",
+            type: "create",
+            value: {
+              tenant: ctx.tenant,
+              fhir_version: toDBFHIRVersion(fhirVersion),
+              request_method: "DELETE",
+              author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+              author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+              resource: version(ctx, resource) as unknown as db.JSONObject,
+              deleted: true,
+            },
           },
-        },
-      ],
-    },
-  ]);
+        ],
+      },
+    ],
+  );
 }
 
 async function conditionalDelete(
