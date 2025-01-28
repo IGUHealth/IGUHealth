@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IQueue, IQueueBatch, Message } from "./interface.js";
-import { OperationTopic, TopicType } from "./topics/tenants.js";
+import { TenantTopic, Topic, TopicType } from "./topics/index.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;
@@ -30,18 +30,25 @@ export class KafkaBatch implements IQueue, IQueueBatch {
   async abort(): Promise<void> {
     this._messages = {};
   }
-  async send<Tenant extends TenantId, Topic extends TopicType>(
-    tenant: Tenant,
-    topic: OperationTopic<Topic>,
-    messages: Message[],
-  ): Promise<void> {
+
+  async send<T extends Topic>(topic: T, messages: Message[]): Promise<void> {
     this._messages[topic] = (this._messages[topic] ?? []).concat(
       messages.map((m) => ({
         ...m,
         key: this._transactionKey,
-        headers: { tenant, ...m.headers },
         value: JSON.stringify(m.value),
       })),
+    );
+  }
+
+  async sendTenant<Tenant extends TenantId, Topic extends TopicType>(
+    tenant: Tenant,
+    topic: TenantTopic<Tenant, Topic>,
+    messages: Message[],
+  ): Promise<void> {
+    this.send(
+      topic,
+      messages.map((m) => ({ ...m, headers: { tenant, ...m.headers } })),
     );
   }
   // Just return the transaction itself.
@@ -62,19 +69,28 @@ export class KafkaQueue implements IQueue {
     this._producer = producer;
   }
 
-  async send<Tenant extends TenantId, Topic extends TopicType>(
-    tenant: Tenant,
-    topic: OperationTopic<Topic>,
-    messages: Message[],
-  ): Promise<void> {
+  async send<T extends Topic>(topic: T, messages: Message[]): Promise<void> {
     await this._producer.send({
       topic: topic,
       messages: messages.map((m) => ({
         ...m,
-        headers: { tenant, ...m.headers },
         value: JSON.stringify(m.value),
       })),
     });
+  }
+
+  async sendTenant<Tenant extends TenantId, Topic extends TopicType>(
+    tenant: Tenant,
+    topic: TenantTopic<Tenant, Topic>,
+    messages: Message[],
+  ): Promise<void> {
+    await this.send(
+      topic,
+      messages.map((m) => ({
+        ...m,
+        headers: { tenant, ...m.headers },
+      })),
+    );
   }
 
   async batch() {

@@ -1,15 +1,9 @@
 import { Command } from "commander";
-// @ts-ignore
-import DBMigrate from "db-migrate";
 
 import createServer from "../../server.js";
 import createIndexingWorker from "../../worker/kafka/consumers/search-indexing.js";
 import createStorageWorker from "../../worker/kafka/consumers/storage.js";
 import createWorker from "../../worker/v1.js";
-
-interface DBMigrate {
-  up: () => Promise<void>;
-}
 
 async function runServer(port: number) {
   const server = await createServer();
@@ -61,29 +55,19 @@ const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
 
 const all: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
-  const workers = await Promise.all([
-    createWorker(),
+  let workers: Array<() => Promise<void>> = await Promise.all([
     createStorageWorker(),
     createIndexingWorker(),
   ]);
 
   const server = await runServer(options.port);
 
+  workers = workers.concat([await createWorker()]);
+
   runningServices = {
     server,
     workers,
   };
-};
-
-const migrate: Parameters<Command["action"]>[0] = async () => {
-  const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
-    cmdOptions: {
-      "sql-file": true,
-      "migrations-dir": "src/storage/schemas/migrations/db-migrate",
-    },
-  });
-
-  await dbmigrate.up();
 };
 
 function kafkaCommands(command: Command) {
@@ -114,5 +98,4 @@ export function runCommands(command: Command) {
     .option("-p, --port <number>", "port to run on.", "3000")
     .description("Run the server. And start up background workers.")
     .action(all);
-  command.command("migrate").description("Run SQL migrations.").action(migrate);
 }

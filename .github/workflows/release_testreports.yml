@@ -80,7 +80,7 @@ jobs:
         run: sh install.sh
 
       - name: Migrate
-        run: yarn workspace @iguhealth/server migrate up
+        run: yarn workspace @iguhealth/server migrate
       - name: Load Terminology
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
 
