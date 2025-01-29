@@ -275,6 +275,14 @@ function createMemoryMiddleware<
                 } as FHIRResponse,
               };
             }
+            default: {
+              throw new OperationError(
+                outcomeError(
+                  "not-supported",
+                  `Search level not supported for level`,
+                ),
+              );
+            }
           }
         }
         case "update-request": {
