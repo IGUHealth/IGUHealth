@@ -13,9 +13,9 @@ import {
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
-import createResourceStore from "../../../storage/resource-stores/index.js";
-import { createSearchStore } from "../../../storage/search-stores/index.js";
-import { DBTransaction } from "../../../storage/transactions.js";
+import createResourceStore from "../../../resource-stores/index.js";
+import { createSearchStore } from "../../../search-stores/index.js";
+import { DBTransaction } from "../../../transactions.js";
 import { MessageHandler } from "../types.js";
 import createKafkaConsumer from "../local.js";
 

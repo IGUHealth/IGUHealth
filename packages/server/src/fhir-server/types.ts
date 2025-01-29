@@ -43,8 +43,8 @@ import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import { IQueue, IQueueBatch } from "../queue/interface.js";
-import { PostgresStore } from "../storage/resource-stores/postgres/index.js";
-import { SearchEngine } from "../storage/search-stores/interface.js";
+import { PostgresStore } from "../resource-stores/postgres/index.js";
+import { SearchEngine } from "../search-stores/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {

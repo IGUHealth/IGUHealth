@@ -41,13 +41,13 @@ import {
   MEMBERSHIP_METHODS_ALLOWED,
   MEMBERSHIP_RESOURCE_TYPES,
   createMembershipClient,
-} from "../storage/clients/auth-storage/index.js";
+} from "../fhir-clients/clients/auth-storage/index.js";
 import {
   MemoryParameter,
   createArtifactMemoryDatabase,
-} from "../storage/clients/memory/async.js";
-import { createRemoteStorage } from "../storage/clients/remote-storage/index.js";
-import RouterClient from "../storage/clients/router/index.js";
+} from "../fhir-clients/clients/memory/async.js";
+import { createRemoteStorage } from "../fhir-clients/clients/remote-storage/index.js";
+import RouterClient from "../fhir-clients/clients/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";

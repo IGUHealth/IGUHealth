@@ -21,7 +21,7 @@
     "watch-css": "yarn postcss --watch -o public/css/index.css index.css ",
     "ci": "yarn cli run both",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
-    "db-migrate": "db-migrate --sql-file -m src/storage/schemas/migrations/db-migrate/",
+    "db-migrate": "db-migrate --sql-file -m src/migrations/postgres/db-migrate/",
     "migrate": "yarn cli migrate all",
     "watch": "yarn inject-version && yarn migrate && yarn tsx watch src/cli/index.ts run both",
     "watch_server": "yarn inject-version && yarn migrate && yarn tsx watch src/cli/index.ts run server",

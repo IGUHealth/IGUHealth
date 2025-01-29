@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import db, { doNothing } from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import createResourceStore from "../../storage/resource-stores/index.js";
+import createResourceStore from "../../resource-stores/index.js";
 
 async function createSystem(pg: db.Queryable, url: string) {
   return db

@@ -21,6 +21,6 @@ module.exports = {
     "rollup.config.js",
     "postcss.config.js",
     "*.test.ts",
-    "packages/server/src/storage/schemas/migrations/db-migrate/",
+    "packages/server/src/migrations/postgres/db-migrate/",
   ],
 };

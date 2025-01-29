@@ -17,9 +17,9 @@ import {
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
-import createResourceStore from "../../../storage/resource-stores/index.js";
-import { createSearchStore } from "../../../storage/search-stores/index.js";
-import { toFHIRVersion } from "../../../storage/utilities/version.js";
+import createResourceStore from "../../../resource-stores/index.js";
+import { createSearchStore } from "../../../search-stores/index.js";
+import { toFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { gateMutation } from "../utilities.js";
 import { MessageHandler } from "../types.js";
 import createKafkaConsumer from "../local.js";

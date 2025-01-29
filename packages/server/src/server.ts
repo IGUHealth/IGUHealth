@@ -60,8 +60,8 @@ import {
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import createQueue from "./queue/index.js";
-import createResourceStore from "./storage/resource-stores/index.js";
-import { createSearchStore } from "./storage/search-stores/index.js";
+import createResourceStore from "./resource-stores/index.js";
+import { createSearchStore } from "./search-stores/index.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
