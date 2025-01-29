@@ -125,20 +125,6 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest>(
   return passedinTypes as ResourceType<Request["fhirVersion"]>[];
 }
 
-/*
- * Returns resourceTypes to perform a search which involves concating
- * Given type with heirarchy of inherited types (DomainResource, Resource)
- */
-export function typesToSearch(
-  resourceTypes: ResourceType<FHIR_VERSION>[],
-): (ResourceType<FHIR_VERSION> | string)[] {
-  const searchTypes = ["Resource", "DomainResource"];
-  if (resourceTypes.length > 0) {
-    return searchTypes.concat(resourceTypes);
-  }
-  return searchTypes;
-}
-
 async function associateChainedParameters(
   parsedParameter: SearchParameterResource,
   resolveSearchParameter: (
