@@ -60,46 +60,6 @@ async function customValidationMembership(
   }
 }
 
-async function gateCheckAtLeastOneOwner(ctx: IGUHealthServerCTX) {
-  const owners = await ctx.client.search_type(ctx, R4, "Membership", [
-    {
-      name: "role",
-      value: ["owner"],
-    },
-  ]);
-
-  if (owners.resources.length !== 1) {
-    throw new OperationError(
-      outcomeError(
-        "invariant",
-        "Must have a single owner associated to a tenant.",
-      ),
-    );
-  }
-}
-
-function validateOwnershipMiddleware<
-  State extends AuthState,
-  CTX extends IGUHealthServerCTX,
->(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
-    const res = await next(context);
-
-    switch (context.request.type) {
-      case "delete-request":
-      case "update-request":
-      case "patch-request": {
-        await gateCheckAtLeastOneOwner(context.ctx);
-        return res;
-      }
-      case "create-request":
-      default: {
-        return res;
-      }
-    }
-  };
-}
-
 function setInTransactionMiddleware<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
@@ -148,7 +108,45 @@ function limitOwnershipEdits<
         }
         return res;
       }
-      case "delete-response":
+      case "delete-response": {
+        switch (context.request.level) {
+          case "instance": {
+            const id = context.request.id;
+
+            const membership = await context.state.fhirDB.read(
+              context.ctx,
+              R4,
+              "Membership",
+              id,
+            );
+
+            if (!membership) {
+              throw new OperationError(
+                outcomeError("not-found", "Membership not found."),
+              );
+            }
+
+            if (
+              membership.role === "owner" &&
+              context.ctx.user.payload["https://iguhealth.app/role"] !== "owner"
+            ) {
+              throw new OperationError(
+                outcomeError("forbidden", "Only owners can delete owners."),
+              );
+            }
+
+            return res;
+          }
+          default: {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                "Only instance level delete is supported for auth types.",
+              ),
+            );
+          }
+        }
+      }
       case "error-response":
       case "vread-response":
       case "history-response":
