@@ -10,7 +10,7 @@ import {
 
 import { sendPasswordResetEmail } from "../../../../authN/sendPasswordReset.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { QueueBatch } from "../../../../storage/transactions.js";
+import { QueueBatch } from "../../../../transactions.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(

@@ -8,7 +8,7 @@ import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
 import { getActiveTenants } from "../../authN/db/tenant.js";
-import { DBTransaction } from "../../storage/transactions.js";
+import { DBTransaction } from "../../transactions.js";
 import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
 import {
   IGUHealthWorkerCTX,

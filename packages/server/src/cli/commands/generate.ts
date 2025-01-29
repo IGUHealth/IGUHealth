@@ -85,7 +85,7 @@ async function generateTypes() {
             }
           : false,
     },
-    outDir: "src/storage/schemas/generated",
+    outDir: "src/migrations/postgres",
   });
 }
 
