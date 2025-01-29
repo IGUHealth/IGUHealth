@@ -2,30 +2,15 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { canonicalColumns as r4CanonicalColumns } from "../../../../migrations/sp1-parameters/r4.sp1parameters.js";
 import { SearchParameterResource } from "../../../parameters.js";
-import { isSearchParameterInSingularTable } from "../../utilities.js";
 import { getSp1Column } from "../db_singular_clauses/shared.js";
 import buildParametersSQL from "../index.js";
 import { missingModifier } from "./shared.js";
-
-function canonicalSP1SQL(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
-): db.SQLFragment {
-  const column = getSp1Column(
-    fhirVersion,
-    "uri",
-    parameter.searchParameter.url,
-  );
-  return db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
-      (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${column} = ${db.param(parameter.value[0])})`;
-}
 
 function getCanonicalColumns(
   fhirVersion: FHIR_VERSION,

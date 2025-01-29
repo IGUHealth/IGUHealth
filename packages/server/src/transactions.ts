@@ -113,7 +113,7 @@ export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
 export async function QueueBatch<
   CTX extends Pick<IGUHealthServerCTX, "queue">,
   R,
->(ctx: CTX, batchFN: (ctx: CTX) => R): Promise<R> {
+>(ctx: CTX, batchFN: (ctx: CTX) => Promise<R>): Promise<R> {
   // Avoid nesting transactions.
   if (ctx.queue.isBatch()) {
     const res = await batchFN(ctx);
