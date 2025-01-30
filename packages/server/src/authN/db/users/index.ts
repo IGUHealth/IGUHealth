@@ -4,8 +4,6 @@ import type * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { determineEmailUpdate } from "./utilities.js";
-
 export const USER_QUERY_COLS = <const>[
   "fhir_user_id",
   "tenant",
@@ -90,7 +88,11 @@ export async function get(
   id: string,
 ): Promise<User | undefined> {
   const tenantUser: User | undefined = (await db
-    .selectOne("users", { fhir_user_id: id, tenant }, { columns: USER_QUERY_COLS })
+    .selectOne(
+      "users",
+      { fhir_user_id: id, tenant },
+      { columns: USER_QUERY_COLS },
+    )
     .run(pg)) as User | undefined;
 
   return tenantUser;
@@ -109,7 +111,7 @@ export async function search(
 export async function create(
   pg: db.Queryable,
   tenant: TenantId,
-  user: s.users.Insertable,
+  user: Omit<s.users.Insertable, "password">,
 ): Promise<User> {
   return await db.insert("users", { ...user, tenant }).run(pg);
 }
@@ -117,30 +119,25 @@ export async function create(
 export async function update(
   pg: db.Queryable,
   tenant: TenantId,
-  id: string,
-  update: s.users.Updatable,
+  update: s.users.Insertable,
 ): Promise<User> {
   return db.serializable(pg, async (tx) => {
-    const where: s.users.Whereable = {
-      tenant,
-      fhir_user_id: id,
-    };
-    const currentUser = await db.selectOne("users", where).run(tx);
-    if (!currentUser)
-      throw new OperationError(outcomeError("not-found", "User not found."));
+    if (update.password) {
+      update.password = db.sql<s.users.SQL>`crypt(${db.param(update.password)}, gen_salt('bf'))`;
+    }
 
-    const updatedUser = await db
-      .update(
-        "users",
-        {
-          ...update,
-          tenant,
-          email_verified: determineEmailUpdate(update, currentUser),
-        },
-        where,
-      )
+    const updatedUser: s.users.Insertable = {
+      ...update,
+      tenant,
+    };
+
+    const result = await db
+      .upsert("users", [updatedUser], ["tenant", "fhir_user_id"], {
+        updateColumns: Object.keys(updatedUser) as s.users.Column[],
+      })
       .run(tx);
-    return updatedUser[0];
+
+    return result[0];
   });
 }
 

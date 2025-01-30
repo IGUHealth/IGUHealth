@@ -7,22 +7,22 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
+import { toFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
 import {
-  ConsumerGroupID,
+  IConsumerGroupID,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
-import { toFHIRVersion } from "../../../fhir-clients/utilities/version.js";
-import { gateMutation } from "../utilities.js";
-import { MessageHandler } from "../types.js";
 import createKafkaConsumer from "../local.js";
+import { MessageHandler } from "../types.js";
+import { gateMutation } from "../utilities.js";
 
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
@@ -91,7 +91,7 @@ export default async function createIndexingWorker() {
   const stop = await createKafkaConsumer(
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
-    "indexing" as ConsumerGroupID,
+    "indexing" as IConsumerGroupID,
     async (ctx, { topic, partition, message }) => {
       try {
         await handler(ctx, { message, topic, partition });

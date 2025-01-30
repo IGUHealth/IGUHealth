@@ -1,5 +1,6 @@
 import { TenantId } from "@iguhealth/jwt";
-import { Topic, TopicPattern } from "./index.js";
+
+import { ITopic, ITopicPattern } from "./index.js";
 
 export type TopicType = "operations" | "error";
 
@@ -8,13 +9,10 @@ export const ErrorsTopic: TopicType = "error";
 
 declare const __tenant: unique symbol;
 declare const __topicType: unique symbol;
-export type TenantTopic<
-  Tenant extends TenantId,
-  Type extends TopicType,
-> = `${Tenant}_${Type}` & {
+export type TenantTopic<Tenant extends TenantId, Type extends TopicType> = {
   [__tenant]: Tenant;
   [__topicType]: Type;
-} & Topic;
+} & ITopic;
 
 export const TenantTopic = <Tenant extends TenantId, Type extends TopicType>(
   tenant: Tenant,
@@ -22,8 +20,8 @@ export const TenantTopic = <Tenant extends TenantId, Type extends TopicType>(
 ): TenantTopic<Tenant, Type> =>
   `${tenant}_${type}` as TenantTopic<Tenant, Type>;
 
-export function TENANT_TOPIC_PATTERN(type: TopicType): TopicPattern {
-  return new RegExp(TenantTopic("(.*)" as TenantId, type)) as TopicPattern;
+export function TENANT_TOPIC_PATTERN(type: TopicType): ITopicPattern {
+  return new RegExp(TenantTopic("(.*)" as TenantId, type)) as ITopicPattern;
 }
 
 export function meta<Tenant extends TenantId, Type extends TopicType>(

@@ -25,7 +25,7 @@ export function userToMembership(
 export function membershipToUser(
   tenant: TenantId,
   membership: Membership,
-): s.users.Insertable {
+): Omit<s.users.Insertable, "password"> {
   const fhir_user_id = membership.id;
   const fhir_user_versionid = membership.meta?.versionId;
 
@@ -61,9 +61,9 @@ export function membershipToUser(
  * @returns whether email is verified.
  */
 export function determineEmailUpdate(
-  update: Pick<s.users.Updatable, "email" | "email_verified">,
+  update: Pick<s.users.Insertable, "email" | "email_verified">,
   current: s.users.JSONSelectable | undefined,
-): s.users.Updatable["email_verified"] {
+): s.users.Insertable["email_verified"] {
   // If email has changed.
   if (!current) return false;
   if (update.email !== current.email) return false;

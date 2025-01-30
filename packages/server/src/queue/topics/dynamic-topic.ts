@@ -1,3 +1,7 @@
-import { Topic } from "./index.js";
+import { ITopic } from "./index.js";
 
-export const DYNAMIC_TOPIC: Topic = "dynamic" as Topic;
+export type DynamicTopic = ITopic & {
+  __dynamic: true;
+};
+
+export const DYNAMIC_TOPIC: DynamicTopic = "dynamic" as DynamicTopic;

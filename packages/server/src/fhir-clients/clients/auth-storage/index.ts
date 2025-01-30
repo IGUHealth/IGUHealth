@@ -1,6 +1,5 @@
 import validator from "validator";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
@@ -22,15 +21,15 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import * as users from "../../../authN/db/users/index.js";
 import {
   determineEmailUpdate,
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
+import { QueueBatch } from "../../../transactions.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { QueueBatch } from "../../../transactions.js";
 import { createRemoteStorage } from "../remote-storage/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
@@ -250,20 +249,12 @@ function updateUserTableMiddleware<
         }
 
         try {
-          await context.ctx.queue.sendTenant(
+          await users.create(
+            context.ctx.store.getClient(),
             context.ctx.tenant,
-            TenantTopic(context.ctx.tenant, OperationsTopic),
-            [
-              {
-                value: [
-                  {
-                    resource: "users",
-                    type: "create",
-                    value: membershipToUser(context.ctx.tenant, membership),
-                  },
-                ],
-              },
-            ],
+            {
+              ...membershipToUser(context.ctx.tenant, membership),
+            },
           );
         } catch (e) {
           context.ctx.logger.error(e);
@@ -294,27 +285,13 @@ function updateUserTableMiddleware<
 
             const res = await next(context);
 
-            await context.ctx.queue.sendTenant(
+            await users.remove(
+              context.ctx.store.getClient(),
               context.ctx.tenant,
-              TenantTopic(context.ctx.tenant, OperationsTopic),
-              [
-                {
-                  headers: {
-                    tenant: context.ctx.tenant,
-                  },
-                  value: [
-                    {
-                      resource: "users",
-                      type: "delete",
-                      singular: true,
-                      where: {
-                        tenant: context.ctx.tenant,
-                        fhir_user_id: membership.id,
-                      },
-                    },
-                  ],
-                },
-              ],
+              {
+                tenant: context.ctx.tenant,
+                fhir_user_id: membership.id,
+              },
             );
 
             return res;
@@ -335,25 +312,10 @@ function updateUserTableMiddleware<
           .body as Membership;
 
         const user = membershipToUser(context.ctx.tenant, membership);
-        await context.ctx.queue.sendTenant(
+        await users.update(
+          context.ctx.store.getClient(),
           context.ctx.tenant,
-          TenantTopic(context.ctx.tenant, OperationsTopic),
-          [
-            {
-              headers: {
-                tenant: context.ctx.tenant,
-              },
-              value: [
-                {
-                  resource: "users",
-                  type: "update",
-                  value: user,
-                  constraint: ["tenant", "fhir_user_id"],
-                  onConflict: Object.keys(user) as s.users.Column[],
-                },
-              ],
-            },
-          ],
+          user,
         );
 
         return res;

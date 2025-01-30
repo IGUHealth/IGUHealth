@@ -13,13 +13,17 @@ const generateTenantId = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
 export async function create(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
   model: Partial<s.tenants.Insertable>,
-): Promise<s.tenants.Insertable> {
+): Promise<s.tenants.JSONSelectable> {
   const tenantId = typeof model.id === "string" ? model.id : generateTenantId();
 
-  return {
-    ...model,
-    id: tenantId,
-  };
+  const res = await db
+    .insert("tenants", {
+      ...model,
+      id: tenantId,
+    })
+    .run(ctx.store.getClient());
+
+  return res;
 }
 
 export async function getTenant(

@@ -9,46 +9,21 @@ import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
 import {
-  ConsumerGroupID,
+  IConsumerGroupID,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import { DBTransaction } from "../../../transactions.js";
-import { MessageHandler } from "../types.js";
 import createKafkaConsumer from "../local.js";
+import { MessageHandler } from "../types.js";
 
 async function handleCreateMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.CreateOperation<queue.MutationType>,
 ) {
   return ctx.store.insert(ctx, mutation.resource, mutation.value);
-}
-
-async function handleUpdateMutation(
-  ctx: Omit<IGUHealthServerCTX, "user">,
-  mutation: queue.UpdateOperation<queue.MutationType>,
-) {
-  const sql = db.upsert(
-    mutation.resource,
-    mutation.value,
-    mutation.constraint,
-    {
-      updateColumns: mutation.onConflict,
-    },
-  );
-
-  return sql.run(ctx.store.getClient());
-}
-
-async function handleDeleteMutation(
-  ctx: Omit<IGUHealthServerCTX, "user">,
-  mutation: queue.DeleteOperation<queue.MutationType>,
-) {
-  return db
-    .deletes(mutation.resource, mutation.where)
-    .run(ctx.store.getClient());
 }
 
 async function handleMutation(
@@ -59,10 +34,6 @@ async function handleMutation(
     await ctx.client.request(asRoot(ctx), mutation.value);
   } else if (mutation.type === "create") {
     await handleCreateMutation(ctx, mutation);
-  } else if (mutation.type === "update") {
-    await handleUpdateMutation(ctx, mutation);
-  } else if (mutation.type === "delete") {
-    await handleDeleteMutation(ctx, mutation);
   }
 }
 
@@ -110,7 +81,7 @@ export default async function createStorageWorker() {
   const stop = await createKafkaConsumer(
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
-    "storage" as ConsumerGroupID,
+    "storage" as IConsumerGroupID,
     async (ctx, { topic, partition, message }) => {
       try {
         await handler(ctx, { topic, partition, message });
