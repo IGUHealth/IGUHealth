@@ -30,7 +30,7 @@ import { TenantTopic } from "../../queue/topics/index.js";
 import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { QueueBatch } from "../../transactions.js";
+import { DBTransaction, QueueBatch } from "../../transactions.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -92,8 +92,38 @@ async function createTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
   return QueueBatch(ctx, async (ctx) => {
-    const tenant = await tenants.create(ctx, await getTenant(ctx, options));
-    const tenantId = tenant.id as TenantId;
+    const [tenant, membership] = await DBTransaction(
+      ctx,
+      db.IsolationLevel.RepeatableRead,
+      async (ctx) => {
+        const tenant = await tenants.create(ctx, await getTenant(ctx, options));
+        const membership: Membership = await ctx.client.create(
+          asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+          R4,
+          await getMembership(options),
+        );
+
+        const password = options.password
+          ? options.password
+          : await inquirer.password({
+              message: "Enter root user password.",
+            });
+
+        const verifiedUser = {
+          ...membershipToUser(tenant.id as TenantId, membership),
+          email_verified: true,
+          password,
+        };
+
+        await users.update(
+          ctx.store.getClient(),
+          tenant.id as TenantId,
+          verifiedUser,
+        );
+
+        return [tenant, membership];
+      },
+    );
 
     await ctx.queue.send(DYNAMIC_TOPIC, [
       {
@@ -104,26 +134,6 @@ async function createTenant(
         },
       },
     ]);
-
-    const membership: Membership = await ctx.client.create(
-      asRoot({ ...ctx, tenant: tenantId }),
-      R4,
-      await getMembership(options),
-    );
-
-    const password = options.password
-      ? options.password
-      : await inquirer.password({
-          message: "Enter root user password.",
-        });
-
-    const verifiedUser = {
-      ...membershipToUser(tenantId, membership),
-      email_verified: true,
-      password,
-    };
-
-    await users.update(ctx.store.getClient(), tenantId, verifiedUser);
 
     console.log(`Tenant created with id: '${tenant.id}'`);
     console.log(`User created with email: '${membership.email}'`);

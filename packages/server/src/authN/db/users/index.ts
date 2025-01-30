@@ -113,7 +113,7 @@ export async function create(
   tenant: TenantId,
   user: Omit<s.users.Insertable, "password">,
 ): Promise<User> {
-  return await db.insert("users", { ...user, tenant }).run(pg);
+  return db.insert("users", { ...user, tenant }).run(pg);
 }
 
 export async function update(

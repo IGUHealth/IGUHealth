@@ -11,7 +11,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 import { TenantTopic } from "../../../queue/topics/index.js";
-import { QueueBatch } from "../../../transactions.js";
+import { DBTransaction, QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
 import { userToMembership } from "../../db/users/utilities.js";
@@ -57,7 +57,28 @@ async function createOrRetrieveUser(
     const result: [TenantId, Membership] = await QueueBatch(
       ctx,
       async (ctx) => {
-        const tenant = await tenants.create(ctx, {});
+        const [membership, tenant] = await DBTransaction(
+          ctx,
+          db.IsolationLevel.RepeatableRead,
+          async (ctx) => {
+            const tenant = await tenants.create(ctx, {});
+            const membership = await ctx.client.create(
+              asRoot({
+                ...ctx,
+                tenant: tenant.id as TenantId,
+              }),
+              R4,
+              userToMembership({
+                role: "owner",
+                tenant: tenant.id as TenantId,
+                email: email,
+                email_verified: false,
+              }),
+            );
+
+            return [membership, tenant];
+          },
+        );
 
         await ctx.queue.send(DYNAMIC_TOPIC, [
           {
@@ -68,20 +89,6 @@ async function createOrRetrieveUser(
             },
           },
         ]);
-
-        const membership = await ctx.client.create(
-          asRoot({
-            ...ctx,
-            tenant: tenant.id as TenantId,
-          }),
-          R4,
-          userToMembership({
-            role: "owner",
-            tenant: tenant.id as TenantId,
-            email: email,
-            email_verified: false,
-          }),
-        );
 
         return [tenant.id as TenantId, membership];
       },
