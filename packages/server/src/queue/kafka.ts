@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IQueue, IQueueBatch, Message, TenantMessage } from "./interface.js";
+import { IQueue, IQueueBatch, Message } from "./interface.js";
 import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {

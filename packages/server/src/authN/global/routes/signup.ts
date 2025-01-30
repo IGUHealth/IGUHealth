@@ -10,7 +10,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
-import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
+import { TenantTopic } from "../../../queue/topics/index.js";
 import { QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
