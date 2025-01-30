@@ -2,7 +2,6 @@ import * as inquirer from "@inquirer/prompts";
 import { Command } from "commander";
 import validator from "validator";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import {
   AccessPolicyV2,
@@ -15,6 +14,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import * as tenants from "../../authN/db/tenant.js";
+import * as users from "../../authN/db/users/index.js";
 import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
 import {
@@ -25,12 +25,12 @@ import {
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
+import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { OperationsTopic, TenantTopic } from "../../queue/topics/index.js";
 import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
-import { QueueBatch } from "../../transactions.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
+import { QueueBatch } from "../../transactions.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -97,31 +97,13 @@ async function createTenant(
 
     await ctx.queue.send(DYNAMIC_TOPIC, [
       {
-        value: [
-          {
-            resource: "tenants",
-            type: "create",
-            value: tenant,
-          },
-        ],
+        value: {
+          action: "subscribe",
+          topic: TenantTopic(tenant.id as TenantId, "operations"),
+          consumer_groups: ["storage", "search-indexing"],
+        },
       },
     ]);
-
-    await ctx.queue.sendTenant(
-      tenantId,
-      TenantTopic(tenantId, OperationsTopic),
-      [
-        {
-          value: [
-            {
-              resource: "tenants",
-              type: "create",
-              value: tenant,
-            },
-          ],
-        },
-      ],
-    );
 
     const membership: Membership = await ctx.client.create(
       asRoot({ ...ctx, tenant: tenantId }),
@@ -141,27 +123,7 @@ async function createTenant(
       password,
     };
 
-    await ctx.queue.sendTenant(
-      tenantId,
-      TenantTopic(tenantId, OperationsTopic),
-      [
-        {
-          key: membership.id,
-          headers: {
-            tenant: tenant.id as string,
-          },
-          value: [
-            {
-              resource: "users",
-              type: "update",
-              value: verifiedUser,
-              constraint: ["tenant", "fhir_user_id"],
-              onConflict: Object.keys(verifiedUser) as s.users.Column[],
-            },
-          ],
-        },
-      ],
-    );
+    await users.update(ctx.store.getClient(), tenantId, verifiedUser);
 
     console.log(`Tenant created with id: '${tenant.id}'`);
     console.log(`User created with email: '${membership.email}'`);

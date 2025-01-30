@@ -212,8 +212,8 @@ export function passwordResetPOST(): OIDCRouteHandler {
           const update = await users.update(
             fhirContext.store.getClient(),
             fhirContext.tenant,
-            authorizationCode.user_id,
             {
+              ...user,
               email,
               password: body.password,
               // Password reset goes through email so we can assume email is verified.

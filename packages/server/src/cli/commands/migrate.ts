@@ -1,10 +1,11 @@
 import { Command } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
+import { Admin } from "kafkajs";
+
 import { createKafkaClient } from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import { Topic } from "../../queue/topics/index.js";
-import { Admin } from "kafkajs";
+import { ITopic } from "../../queue/topics/index.js";
 
 interface DBMigrate {
   up: () => Promise<void>;
@@ -27,7 +28,7 @@ const postgres: Parameters<Command["action"]>[0] = async () => {
  * @param topic Topic to check
  * @returns true|false if the topic exists
  */
-async function doesKafkaTopicExist(admin: Admin, topic: Topic) {
+async function doesKafkaTopicExist(admin: Admin, topic: ITopic) {
   // The admin client will throw an exception if any of the provided topics do not already exist.
   try {
     await admin.fetchTopicMetadata({ topics: [topic] });

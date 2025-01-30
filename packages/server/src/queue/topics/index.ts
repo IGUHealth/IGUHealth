@@ -1,15 +1,15 @@
 export * from "./tenant-topics.js";
 
 declare const __topic: unique symbol;
-export type Topic = string & {
+export type ITopic = string & {
   [__topic]: boolean;
 };
 
-export type TopicPattern = RegExp & {
+export type ITopicPattern = RegExp & {
   [__topic]: boolean;
 };
 
 declare const __consumer: unique symbol;
-export type ConsumerGroupID = string & {
+export type IConsumerGroupID = string & {
   [__consumer]: boolean;
 };

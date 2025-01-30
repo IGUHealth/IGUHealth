@@ -10,11 +10,12 @@ import {
 } from "@iguhealth/client/lib/types";
 import { TenantId } from "@iguhealth/jwt";
 
-import { TenantTopic, Topic, TopicType } from "./topics/index.js";
+import { DynamicTopic } from "./topics/dynamic-topic.js";
+import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
 
-export type MutationType = Extract<s.Table, "users" | "tenants" | "resources">;
+export type MutationType = Extract<s.Table, "resources">;
 
-export type IType = "create" | "delete" | "update" | "invoke";
+export type IType = "create" | "invoke";
 
 interface IOperation<Type extends IType> {
   type: Type;
@@ -23,19 +24,6 @@ interface IOperation<Type extends IType> {
 interface IMutation<Resource extends MutationType, Interaction extends IType>
   extends IOperation<Interaction> {
   resource: Resource;
-}
-
-export interface DeleteOperation<Type extends MutationType>
-  extends IMutation<Type, "delete"> {
-  where: s.WhereableForTable<Type>;
-  singular?: boolean;
-}
-
-export interface UpdateOperation<Type extends MutationType>
-  extends IMutation<Type, "update"> {
-  constraint: s.ColumnForTable<Type>[];
-  value: s.InsertableForTable<Type>;
-  onConflict: s.ColumnForTable<Type>[];
 }
 
 export interface CreateOperation<Type extends MutationType>
@@ -55,8 +43,7 @@ export interface InvokeOperation extends IOperation<"invoke"> {
 
 type OperationMap<Type extends MutationType> = {
   create: CreateOperation<Type>;
-  delete: DeleteOperation<Type>;
-  update: UpdateOperation<Type>;
+
   invoke: InvokeOperation;
 };
 
@@ -65,27 +52,47 @@ export type Operation<
   Interaction extends IType,
 > = OperationMap<Type>[Interaction];
 
-export type Operations = (
-  | CreateOperation<MutationType>
-  | DeleteOperation<MutationType>
-  | UpdateOperation<MutationType>
-  | InvokeOperation
-)[];
+export type Operations = (CreateOperation<MutationType> | InvokeOperation)[];
 
-export type Message = {
+export interface IMessage {
   key?: string;
-  value: Operations;
   headers?: Record<string, string>;
-};
+}
+
+export interface TenantMessage extends IMessage {
+  value: Operations;
+}
+
+export interface DynamicMessage extends IMessage {
+  value: {
+    action: "subscribe";
+    topic: ITopic;
+    consumer_groups: string[];
+  };
+}
+
+export type Message<T extends ITopic> =
+  T extends TenantTopic<TenantId, TopicType>
+    ? TenantMessage
+    : T extends DynamicTopic
+      ? DynamicMessage
+      : never;
 
 export interface IQueue {
-  send<T extends Topic>(topic_id: T, messages: Message[]): Promise<void>;
-  sendTenant<T extends TenantId, Topic extends TopicType>(
-    tenant: T,
-    topic_id: TenantTopic<T, Topic>,
-    messages: Message[],
+  send<T extends ITopic>(topic_id: T, messages: Message<T>[]): Promise<void>;
+
+  sendTenant<
+    Tenant extends TenantId,
+    Type extends TopicType,
+    T extends TenantTopic<Tenant, Type>,
+  >(
+    tenant: Tenant,
+    topic: T,
+    messages: Message<T>[],
   ): Promise<void>;
+
   batch(): Promise<IQueueBatch>;
+
   isBatch(): boolean;
 }
 

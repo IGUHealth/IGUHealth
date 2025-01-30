@@ -9,6 +9,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import { QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
@@ -18,7 +19,6 @@ import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
-import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 
 async function findExistingOwner(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -57,52 +57,33 @@ async function createOrRetrieveUser(
     const result: [TenantId, Membership] = await QueueBatch(
       ctx,
       async (ctx) => {
-        const tenantInsertion = await tenants.create(ctx, {});
-        const tenantId = tenantInsertion.id as TenantId;
+        const tenant = await tenants.create(ctx, {});
 
         await ctx.queue.send(DYNAMIC_TOPIC, [
           {
-            value: [
-              {
-                resource: "tenants",
-                type: "create",
-                value: tenantInsertion,
-              },
-            ],
+            value: {
+              action: "subscribe",
+              topic: TenantTopic(tenant.id as TenantId, "operations"),
+              consumer_groups: ["storage", "search-indexing"],
+            },
           },
         ]);
-
-        await ctx.queue.sendTenant(
-          tenantId,
-          TenantTopic(tenantId, OperationsTopic),
-          [
-            {
-              value: [
-                {
-                  resource: "tenants",
-                  type: "create",
-                  value: tenantInsertion,
-                },
-              ],
-            },
-          ],
-        );
 
         const membership = await ctx.client.create(
           asRoot({
             ...ctx,
-            tenant: tenantInsertion.id as TenantId,
+            tenant: tenant.id as TenantId,
           }),
           R4,
           userToMembership({
             role: "owner",
-            tenant: tenantInsertion.id as TenantId,
+            tenant: tenant.id as TenantId,
             email: email,
             email_verified: false,
           }),
         );
 
-        return [tenantInsertion.id as TenantId, membership];
+        return [tenant.id as TenantId, membership];
       },
     );
 

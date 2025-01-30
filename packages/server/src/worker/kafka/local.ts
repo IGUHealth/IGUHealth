@@ -1,23 +1,24 @@
 import { Consumer, Kafka } from "kafkajs";
-import { MessageHandler } from "./types.js";
-import {
-  ConsumerGroupID,
-  Topic,
-  TopicPattern,
-} from "../../queue/topics/index.js";
-import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import { createKafkaClient } from "../../queue/index.js";
 
-async function listTopics(kafka: Kafka, pattern: RegExp): Promise<Topic[]> {
+import { createKafkaClient } from "../../queue/index.js";
+import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
+import {
+  IConsumerGroupID,
+  ITopic,
+  ITopicPattern,
+} from "../../queue/topics/index.js";
+import { MessageHandler } from "./types.js";
+
+async function listTopics(kafka: Kafka, pattern: RegExp): Promise<ITopic[]> {
   return (await kafka.admin().listTopics()).filter((t) =>
     pattern.test(t),
-  ) as Topic[];
+  ) as ITopic[];
 }
 
 async function dynamicTopicsSubscriber(
   kafka: Kafka,
-  groupId: ConsumerGroupID,
-  dynamicTopic: Topic,
+  groupId: IConsumerGroupID,
+  dynamicTopic: ITopic,
   messageHandler: MessageHandler<unknown>,
 ) {
   const dynamicConsumer = kafka.consumer({ groupId });
@@ -37,7 +38,7 @@ async function dynamicTopicsSubscriber(
 async function startConsumer<CTX>(
   consumer: Consumer,
   ctx: CTX,
-  topic: Topic[],
+  topic: ITopic[],
   handler: MessageHandler<CTX>,
 ): Promise<() => Promise<void>> {
   // For no topics just ignore.
@@ -75,16 +76,16 @@ async function startConsumer<CTX>(
 async function handlePattern<CTX>(
   kafka: Kafka,
   consumer: Consumer,
-  topic: TopicPattern,
+  topic: ITopicPattern,
   ctx: CTX,
-  consumerGroupId: ConsumerGroupID,
+  consumerGroupId: IConsumerGroupID,
   handler: MessageHandler<CTX>,
 ) {
   const topics = await listTopics(kafka, topic);
   let stop = await startConsumer(consumer, ctx, topics, handler);
   const stopDynamicConsumer = await dynamicTopicsSubscriber(
     kafka,
-    ("dynamic_" + consumerGroupId) as ConsumerGroupID,
+    ("dynamic_" + consumerGroupId) as IConsumerGroupID,
     DYNAMIC_TOPIC,
     async () => {
       await stop();
@@ -102,8 +103,8 @@ async function handlePattern<CTX>(
 
 export default async function createKafkaConsumer<CTX>(
   ctx: CTX,
-  topic: Topic | TopicPattern,
-  consumerGroupId: ConsumerGroupID,
+  topic: ITopic | ITopicPattern,
+  consumerGroupId: IConsumerGroupID,
   handler: MessageHandler<CTX>,
 ): Promise<() => Promise<void>> {
   const kafka = createKafkaClient();
