@@ -9,7 +9,7 @@ import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
 import {
-  IConsumerGroupID,
+  Consumers,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
@@ -81,7 +81,7 @@ export default async function createStorageWorker() {
   const stop = await createKafkaConsumer(
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
-    "storage" as IConsumerGroupID,
+    Consumers.Storage,
     async (ctx, { topic, partition, message }) => {
       try {
         await handler(ctx, { topic, partition, message });
