@@ -73,6 +73,12 @@ async function startConsumer<CTX>(
   return stop;
 }
 
+function dynamicConsumerGroupID(
+  consumerGroupId: IConsumerGroupID,
+): IConsumerGroupID {
+  return ("dynamic_" + consumerGroupId) as IConsumerGroupID;
+}
+
 async function handlePattern<CTX>(
   kafka: Kafka,
   consumer: Consumer,
@@ -85,7 +91,7 @@ async function handlePattern<CTX>(
   let stop = await startConsumer(consumer, ctx, topics, handler);
   const stopDynamicConsumer = await dynamicTopicsSubscriber(
     kafka,
-    ("dynamic_" + consumerGroupId) as IConsumerGroupID,
+    dynamicConsumerGroupID(consumerGroupId),
     DYNAMIC_TOPIC,
     async () => {
       await stop();
