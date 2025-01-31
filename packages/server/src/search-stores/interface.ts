@@ -1,3 +1,7 @@
+import {
+  SystemSearchRequest,
+  TypeSearchRequest,
+} from "@iguhealth/client/types";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -5,18 +9,10 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import {
-  R4BSystemSearchRequest,
-  R4BTypeSearchRequest,
-  R4SystemSearchRequest,
-  R4TypeSearchRequest,
-} from "@iguhealth/client/types";
 
 export type FHIRSearchRequest =
-  | R4SystemSearchRequest
-  | R4TypeSearchRequest
-  | R4BSystemSearchRequest
-  | R4BTypeSearchRequest;
+  | SystemSearchRequest<FHIR_VERSION>
+  | TypeSearchRequest<FHIR_VERSION>;
 
 export type SearchResult = { version_id: id; id: id; type: AllResourceTypes };
 

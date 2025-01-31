@@ -1,6 +1,6 @@
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { FHIRRequest } from "@iguhealth/client/types";
 import { AccessPolicyV2, code, id } from "@iguhealth/fhir-types/r4/types";
-import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
+import { AllResourceTypes, FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -86,7 +86,7 @@ const patientCompartments: Record<string, string[] | undefined> = {
 
 function getResourceFilter(
   id: string,
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): NonNullable<AccessPolicyV2["attribute"]>[number] {
   if (!("resource" in request)) {
     throw new OperationError(outcomeFatal("exception", "Invalid request"));
@@ -121,7 +121,7 @@ function getResourceFilter(
 export async function generatePatientScopePolicy(
   ctx: IGUHealthServerCTX,
   scope: SMARTResourceScope,
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): Promise<AccessPolicyV2> {
   if (scope.level !== "patient") {
     throw new OperationError(outcomeFatal("exception", "Invalid scope level"));

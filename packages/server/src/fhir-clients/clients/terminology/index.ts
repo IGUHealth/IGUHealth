@@ -6,6 +6,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
@@ -17,10 +18,8 @@ export const TERMINOLOGY_RESOURCE_TYPES: ResourceType[] = [
   "ValueSet",
   "CodeSystem",
 ];
-export const TERMINOLOGY_METHODS_ALLOWED: FHIRRequest["type"][] = [
-  "read-request",
-  "search-request",
-];
+export const TERMINOLOGY_METHODS_ALLOWED: FHIRRequest<FHIR_VERSION>["type"][] =
+  ["read-request", "search-request"];
 
 function createTerminologyMiddleware<
   State extends {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Bundle, id } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
@@ -6,10 +7,9 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { AsynchronousClient } from "../index.js";
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
 import {
+  FHIRErrorResponse,
   FHIRRequest,
   FHIRResponse,
-  R4BFHIRErrorResponse,
-  R4FHIRErrorResponse,
 } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
@@ -71,7 +71,7 @@ export const deriveIGUHealthVersionedURL = (
 async function toHTTPRequest(
   state: HTTPClientState,
   context: HTTPContext,
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): Promise<{
   url: string;
   headers?: Record<string, string>;
@@ -284,12 +284,12 @@ async function toHTTPRequest(
   }
 }
 
-export class ResponseError extends Error {
-  private readonly _request: FHIRRequest;
-  private readonly _response: R4FHIRErrorResponse | R4BFHIRErrorResponse;
+export class ResponseError<Version extends FHIR_VERSION> extends Error {
+  private readonly _request: FHIRRequest<Version>;
+  private readonly _response: FHIRErrorResponse<Version>;
   constructor(
-    request: FHIRRequest,
-    response: R4FHIRErrorResponse | R4BFHIRErrorResponse,
+    request: FHIRRequest<Version>,
+    response: FHIRErrorResponse<Version>,
   ) {
     super();
     this._request = request;
@@ -303,14 +303,14 @@ export class ResponseError extends Error {
   }
 }
 
-export function isResponseError(e: unknown): e is ResponseError {
+export function isResponseError(e: unknown): e is ResponseError<FHIR_VERSION> {
   return e instanceof ResponseError;
 }
 
-async function httpResponseToFHIRResponse(
-  request: FHIRRequest,
+async function httpResponseToFHIRResponse<Version extends FHIR_VERSION>(
+  request: FHIRRequest<Version>,
   response: Response,
-): Promise<FHIRResponse> {
+): Promise<FHIRResponse<Version>> {
   if (response.status >= 400) {
     switch (response.status) {
       case 401: {
@@ -371,7 +371,7 @@ async function httpResponseToFHIRResponse(
             operation: request.operation,
             level: "system",
             body: parameters,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "type": {
           return {
@@ -381,7 +381,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             resource: request.resource,
             body: parameters,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "instance": {
           return {
@@ -392,7 +392,7 @@ async function httpResponseToFHIRResponse(
             resource: request.resource,
             id: request.id,
             body: parameters,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -408,7 +408,7 @@ async function httpResponseToFHIRResponse(
         resource: request.resource,
         id: request.id,
         body: resource,
-      } as FHIRResponse;
+      } as FHIRResponse<Version>;
     }
 
     case "vread-request": {
@@ -423,7 +423,7 @@ async function httpResponseToFHIRResponse(
         id: request.id,
         versionId: request.versionId,
         body: vresource,
-      } as FHIRResponse;
+      } as FHIRResponse<Version>;
     }
     case "update-request": {
       if (!response.body)
@@ -439,7 +439,7 @@ async function httpResponseToFHIRResponse(
             resource: request.resource,
             id: request.id,
             body: uresource,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "type": {
           const location = response.headers.get("Location") ?? "";
@@ -451,7 +451,7 @@ async function httpResponseToFHIRResponse(
             resource: request.resource,
             id: parts[parts.length - 1] as id,
             body: uresource,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         default: {
           throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -469,7 +469,7 @@ async function httpResponseToFHIRResponse(
         resource: request.resource,
         id: request.id,
         body: presource,
-      } as FHIRResponse;
+      } as FHIRResponse<Version>;
     }
 
     case "delete-request": {
@@ -481,7 +481,7 @@ async function httpResponseToFHIRResponse(
             level: "instance",
             resource: request.resource,
             id: request.id,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "type": {
           return {
@@ -490,7 +490,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             resource: request.resource,
             parameters: request.parameters,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "system": {
           return {
@@ -498,7 +498,7 @@ async function httpResponseToFHIRResponse(
             type: "delete-response",
             level: "system",
             parameters: request.parameters,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -516,7 +516,7 @@ async function httpResponseToFHIRResponse(
             type: "history-response",
             level: "system",
             body: bundle,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "type": {
           return {
@@ -525,7 +525,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             resource: request.resource,
             body: bundle,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "instance": {
           return {
@@ -535,7 +535,7 @@ async function httpResponseToFHIRResponse(
             resource: request.resource,
             id: request.id,
             body: bundle,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -551,7 +551,7 @@ async function httpResponseToFHIRResponse(
         level: "type",
         resource: request.resource,
         body: resource,
-      } as FHIRResponse;
+      } as FHIRResponse<Version>;
     }
 
     case "search-request": {
@@ -566,7 +566,7 @@ async function httpResponseToFHIRResponse(
             level: "system",
             parameters: request.parameters,
             body: bundle,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
         case "type": {
           return {
@@ -576,7 +576,7 @@ async function httpResponseToFHIRResponse(
             parameters: request.parameters,
             resource: request.resource,
             body: bundle,
-          } as FHIRResponse;
+          } as FHIRResponse<Version>;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));

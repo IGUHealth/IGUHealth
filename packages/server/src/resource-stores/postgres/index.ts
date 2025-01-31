@@ -9,12 +9,9 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
-  R4BHistoryInstanceRequest,
-  R4BSystemHistoryRequest,
-  R4BTypeHistoryRequest,
-  R4HistoryInstanceRequest,
-  R4SystemHistoryRequest,
-  R4TypeHistoryRequest,
+  HistoryInstanceRequest,
+  SystemHistoryRequest,
+  TypeHistoryRequest,
 } from "@iguhealth/client/types";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
@@ -62,12 +59,9 @@ function processHistoryParameters(
 
 function historyLevelFilter(
   request:
-    | R4HistoryInstanceRequest
-    | R4TypeHistoryRequest
-    | R4SystemHistoryRequest
-    | R4BHistoryInstanceRequest
-    | R4BTypeHistoryRequest
-    | R4BSystemHistoryRequest,
+    | HistoryInstanceRequest<FHIR_VERSION>
+    | TypeHistoryRequest<FHIR_VERSION>
+    | SystemHistoryRequest<FHIR_VERSION>,
 ): s.resources.Whereable {
   switch (request.level) {
     case "instance": {
@@ -264,12 +258,9 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
   async history<Version extends FHIR_VERSION>(
     ctx: CTX,
     request:
-      | R4HistoryInstanceRequest
-      | R4TypeHistoryRequest
-      | R4SystemHistoryRequest
-      | R4BHistoryInstanceRequest
-      | R4BTypeHistoryRequest
-      | R4BSystemHistoryRequest,
+      | HistoryInstanceRequest<FHIR_VERSION>
+      | TypeHistoryRequest<FHIR_VERSION>
+      | SystemHistoryRequest<FHIR_VERSION>,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
     return getHistory(
       { ...ctx, store: this },

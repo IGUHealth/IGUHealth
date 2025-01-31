@@ -88,7 +88,7 @@ export function searchParameterToTableName<
 }
 
 // Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
-function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
+function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION>): string[] {
   switch (request.type) {
     case "search-request": {
       if (request.level === "type") return [request.resource];
@@ -102,7 +102,7 @@ function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
   }
 }
 
-export function deriveResourceTypeFilter<Request extends FHIRRequest>(
+export function deriveResourceTypeFilter<Request extends FHIRRequest<FHIR_VERSION>>(
   request: Request,
 ): ResourceType<Request["fhirVersion"]>[] {
   const passedinTypes = _deriveResourceTypeFilter(

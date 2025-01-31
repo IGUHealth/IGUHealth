@@ -1,4 +1,4 @@
-import { R4FHIRRequest, R4InvokeRequest } from "@iguhealth/client/types";
+import { FHIRRequest, InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
   Parameters,
@@ -9,6 +9,7 @@ import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { getOpCTX } from "../../utilities.js";
 import { validateInvocationContext } from "../../utilities.js";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 type Input<T> = T extends IOperation<infer Input, unknown> ? Input : never;
 type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
@@ -16,13 +17,13 @@ type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
 export class InlineOp<T, V> extends Operation<T, V> {
   private _execute: (
     ctx: IGUHealthServerCTX,
-    request: R4InvokeRequest,
+    request: InvokeRequest<R4>,
   ) => Promise<Parameters>;
   constructor(
     definition: OperationDefinition,
     execute: (
       ctx: IGUHealthServerCTX,
-      request: R4InvokeRequest,
+      request: InvokeRequest<R4>,
     ) => Promise<Parameters>,
   ) {
     super(definition);
@@ -30,7 +31,7 @@ export class InlineOp<T, V> extends Operation<T, V> {
   }
   execute(
     ctx: IGUHealthServerCTX,
-    request: R4InvokeRequest,
+    request: InvokeRequest<R4>,
   ): Promise<Parameters> {
     return this._execute(ctx, request);
   }
@@ -42,13 +43,13 @@ export default function InlineOperation<
   op: OP,
   executor: (
     ctx: IGUHealthServerCTX,
-    request: R4FHIRRequest,
+    request: FHIRRequest<R4>,
     v: Input<OP>,
   ) => Promise<Output<OP>>,
 ): InlineOp<Input<OP>, Output<OP>> {
   return new InlineOp(
     op.operationDefinition,
-    async (ctx: IGUHealthServerCTX, request: R4InvokeRequest) => {
+    async (ctx: IGUHealthServerCTX, request: InvokeRequest<R4>) => {
       const invocationOperationOutcome = validateInvocationContext(
         op.operationDefinition,
         request,

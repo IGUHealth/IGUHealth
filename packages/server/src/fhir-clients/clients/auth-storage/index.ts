@@ -2,19 +2,19 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import {
-  FHIRRequest,
-  R4CreateResponse,
-  R4UpdateResponse,
-} from "@iguhealth/client/lib/types";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   MiddlewareAsync,
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
+import {
+  CreateResponse,
+  FHIRRequest,
+  UpdateResponse,
+} from "@iguhealth/client/types";
 import { Membership, ResourceType } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -33,7 +33,7 @@ import validateResourceTypesAllowedMiddleware from "../../middleware/validate-re
 import { createRemoteStorage } from "../remote-storage/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
-export const MEMBERSHIP_METHODS_ALLOWED: FHIRRequest["type"][] = [
+export const MEMBERSHIP_METHODS_ALLOWED: FHIRRequest<FHIR_VERSION>["type"][] = [
   "create-request",
   "delete-request",
   "read-request",
@@ -241,7 +241,7 @@ function updateUserTableMiddleware<
     switch (context.request.type) {
       case "create-request": {
         const res = await next(context);
-        const membership = (res.response as R4CreateResponse)?.body;
+        const membership = (res.response as CreateResponse<R4>)?.body;
         if (membership.resourceType !== "Membership") {
           throw new OperationError(
             outcomeError("invariant", "Invalid resource type."),
@@ -308,7 +308,7 @@ function updateUserTableMiddleware<
       }
       case "update-request": {
         const res = await next(context);
-        const membership = (res.response as R4UpdateResponse)
+        const membership = (res.response as UpdateResponse<R4>)
           .body as Membership;
 
         const user = membershipToUser(context.ctx.tenant, membership);

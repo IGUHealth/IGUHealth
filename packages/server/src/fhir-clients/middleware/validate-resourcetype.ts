@@ -1,10 +1,9 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { ResourceType } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export default function validateResourceTypesAllowedMiddleware<State, CTX>(
-  typesAllowed: ResourceType[],
+  typesAllowed: ResourceType<FHIR_VERSION>[],
 ): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
     if (context.request.level === "system") {

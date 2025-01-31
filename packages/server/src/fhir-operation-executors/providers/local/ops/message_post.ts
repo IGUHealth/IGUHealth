@@ -2,7 +2,7 @@ import { Kafka } from "kafkajs";
 
 import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4, Resource } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import { IguhealthMessagePost } from "@iguhealth/generated-ops/r4";
 import {
   OperationError,
@@ -68,7 +68,11 @@ async function postMessageBroker(
 
 export const IguhealthMessagePostInvoke = InlineOperation(
   IguhealthMessagePost.Op,
-  async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
+  async (
+    ctx: IGUHealthServerCTX,
+    request: FHIRRequest<FHIR_VERSION>,
+    input,
+  ) => {
     switch (request.level) {
       case "instance": {
         switch (request.resource) {

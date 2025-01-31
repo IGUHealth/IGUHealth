@@ -1,6 +1,11 @@
 import { FHIRRequest } from "@iguhealth/client/types";
 import { integer } from "@iguhealth/fhir-types/r4/types";
-import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
+import {
+  FHIR_VERSION,
+  R4,
+  R4B,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/r4";
 
 import {
@@ -12,7 +17,11 @@ import InlineOperation from "../interface.js";
 
 export const IguhealthUsageStatisticsInvoke = InlineOperation(
   IguhealthUsageStatistics.Op,
-  async (ctx: IGUHealthServerCTX, _request: FHIRRequest, _input) => {
+  async (
+    ctx: IGUHealthServerCTX,
+    _request: FHIRRequest<FHIR_VERSION>,
+    _input,
+  ) => {
     const r4Limits = await getTenantLimits(
       ctx.store.getClient(),
       ctx.tenant,

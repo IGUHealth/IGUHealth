@@ -28,7 +28,7 @@ export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
 
 export function fhirResponseToBundleEntry(
   tenant: TenantId,
-  fhirResponse: FHIRResponse,
+  fhirResponse: FHIRResponse<FHIR_VERSION>,
 ): BundleEntry {
   const httpResponse = fhirResponseToHTTPResponse(fhirResponse);
   return {

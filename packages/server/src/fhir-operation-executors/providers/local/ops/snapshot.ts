@@ -81,7 +81,11 @@ async function generateSnapshot(
 
 export const StructureDefinitionSnapshotInvoke = InlineOperation(
   StructureDefinitionSnapshot.Op,
-  async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
+  async (
+    ctx: IGUHealthServerCTX,
+    request: FHIRRequest<FHIR_VERSION>,
+    input,
+  ) => {
     if (!input.definition && !input.url) {
       throw new OperationError(
         outcomeError(

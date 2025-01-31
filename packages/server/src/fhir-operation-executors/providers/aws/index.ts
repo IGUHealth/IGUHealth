@@ -14,12 +14,13 @@ import {
 } from "@aws-sdk/client-resource-groups-tagging-api";
 import AdmZip from "adm-zip";
 
-import { R4InvokeRequest, R4InvokeResponse } from "@iguhealth/client/lib/types";
+import { InvokeRequest, InvokeResponse } from "@iguhealth/client/lib/types";
 import {
   OperationDefinition,
   OperationOutcome,
   Parameters,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
@@ -105,7 +106,7 @@ function getLambdaFunctionName(
 async function createPayload<I, O>(
   ctx: IGUHealthServerCTX,
   op: Operation<I, O>,
-  request: R4InvokeRequest,
+  request: InvokeRequest<R4>,
 ): Promise<Payload<I>> {
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
@@ -335,8 +336,8 @@ export class AWSLambdaExecutioner implements CustomCodeExecutor {
   async execute<I, O>(
     ctx: IGUHealthServerCTX,
     operation: Operation<I, O>,
-    request: R4InvokeRequest,
-  ): Promise<R4InvokeResponse> {
+    request: InvokeRequest<R4>,
+  ): Promise<InvokeResponse<R4>> {
     const invocationContextOperation = validateInvocationContext(
       operation.operationDefinition,
       request,

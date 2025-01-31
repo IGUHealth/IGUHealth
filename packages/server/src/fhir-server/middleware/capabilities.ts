@@ -124,7 +124,7 @@ function createCapabilitiesMiddleware<State>(): MiddlewareAsyncChain<
             context.request.fhirVersion,
             context.ctx.client,
           ),
-        } as FHIRResponse,
+        } as FHIRResponse<typeof context.request.fhirVersion>,
       };
     }
 

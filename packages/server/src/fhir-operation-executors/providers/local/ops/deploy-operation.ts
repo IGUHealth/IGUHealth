@@ -1,5 +1,5 @@
 import { FHIRRequest } from "@iguhealth/client/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthDeployOperation } from "@iguhealth/generated-ops/r4";
 import { Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -13,7 +13,11 @@ export function createDeployOperation(
 ): ReturnType<typeof InlineOperation> {
   return InlineOperation(
     IguhealthDeployOperation.Op,
-    async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
+    async (
+      ctx: IGUHealthServerCTX,
+      request: FHIRRequest<FHIR_VERSION>,
+      input,
+    ) => {
       switch (request.level) {
         case "instance": {
           switch (request.resource) {

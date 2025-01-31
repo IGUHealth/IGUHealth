@@ -1,12 +1,9 @@
 import * as s from "zapatos/schema";
 
 import {
-  R4BHistoryInstanceRequest,
-  R4BSystemHistoryRequest,
-  R4BTypeHistoryRequest,
-  R4HistoryInstanceRequest,
-  R4SystemHistoryRequest,
-  R4TypeHistoryRequest,
+  HistoryInstanceRequest,
+  SystemHistoryRequest,
+  TypeHistoryRequest,
 } from "@iguhealth/client/types";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -39,11 +36,8 @@ export interface ResourceStore<CTX> {
   history<Version extends FHIR_VERSION>(
     ctx: CTX,
     request:
-      | R4BHistoryInstanceRequest
-      | R4BSystemHistoryRequest
-      | R4BTypeHistoryRequest
-      | R4HistoryInstanceRequest
-      | R4SystemHistoryRequest
-      | R4TypeHistoryRequest,
+      | HistoryInstanceRequest<FHIR_VERSION>
+      | SystemHistoryRequest<FHIR_VERSION>
+      | TypeHistoryRequest<FHIR_VERSION>,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>>;
 }

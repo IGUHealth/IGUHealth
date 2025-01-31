@@ -22,13 +22,13 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { generateId } from "../../utilities/generateId.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
 } from "../../../search-stores/parameters.js";
+import { generateId } from "../../utilities/generateId.js";
 import { fitsSearchCriteria } from "./search.js";
 import { InternalData } from "./types.js";
 
@@ -164,7 +164,7 @@ function createMemoryMiddleware<
                     resourceType: "Bundle",
                     entry: [],
                   },
-                } as FHIRResponse,
+                } as FHIRResponse<FHIR_VERSION>,
               };
             }
             case "type": {
@@ -272,7 +272,7 @@ function createMemoryMiddleware<
                     resourceType: "Bundle",
                     entry: result.map((r) => ({ resource: r })),
                   },
-                } as FHIRResponse,
+                } as FHIRResponse<FHIR_VERSION>,
               };
             }
             default: {
@@ -312,7 +312,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse,
+            } as FHIRResponse<FHIR_VERSION>,
           };
         }
         case "create-request": {
@@ -337,7 +337,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse,
+            } as FHIRResponse<FHIR_VERSION>,
           };
         }
         case "read-request": {
@@ -362,7 +362,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse,
+            } as FHIRResponse<FHIR_VERSION>,
           };
         }
         default:
