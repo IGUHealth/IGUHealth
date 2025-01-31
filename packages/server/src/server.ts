@@ -408,7 +408,6 @@ export default async function createServer(): Promise<
           method: ctx.method,
           url: ctx.url,
           responseTime: rt,
-          body: ctx.body,
         });
       }
     })
