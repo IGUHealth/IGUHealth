@@ -1,53 +1,57 @@
-import * as s from "zapatos/schema";
-
 import {
-  InvokeInstanceRequest,
-  InvokeSystemRequest,
-  InvokeTypeRequest,
+  CreateRequest,
+  CreateResponse,
+  DeleteRequest,
+  DeleteResponse,
+  InvokeRequest,
+  PatchRequest,
+  PatchResponse,
+  UpdateRequest,
+  UpdateResponse,
 } from "@iguhealth/client/lib/types";
+import { Reference } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
 import { DynamicTopic } from "./topics/dynamic-topic.js";
 import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
 
-export type MutationType = Extract<s.Table, "resources">;
-
-export type IType = "create" | "invoke";
-
-interface IOperation<Type extends IType> {
-  type: Type;
+interface IOperation {
+  author: Reference;
 }
 
-interface IMutation<Resource extends MutationType, Interaction extends IType>
-  extends IOperation<Interaction> {
-  resource: Resource;
+interface CreateOperation<Version extends FHIR_VERSION> extends IOperation {
+  request: CreateRequest<Version>;
+  response: CreateResponse<Version>;
 }
 
-export interface CreateOperation<Type extends MutationType>
-  extends IMutation<Type, "create"> {
-  value: s.InsertableForTable<Type>;
+interface UpdateOperation<Version extends FHIR_VERSION> extends IOperation {
+  request: UpdateRequest<Version>;
+  response: UpdateResponse<Version>;
 }
 
-export interface InvokeOperation extends IOperation<"invoke"> {
-  value:
-    | InvokeInstanceRequest<FHIR_VERSION>
-    | InvokeTypeRequest<FHIR_VERSION>
-    | InvokeSystemRequest<FHIR_VERSION>;
+interface PatchOperation<Version extends FHIR_VERSION> extends IOperation {
+  request: PatchRequest<Version>;
+  response: PatchResponse<Version>;
 }
 
-type OperationMap<Type extends MutationType> = {
-  create: CreateOperation<Type>;
+interface DeleteOperation<Version extends FHIR_VERSION> extends IOperation {
+  request: DeleteRequest<Version>;
+  response: DeleteResponse<Version>;
+}
 
-  invoke: InvokeOperation;
-};
+interface InvokeOperation<Version extends FHIR_VERSION> extends IOperation {
+  request: InvokeRequest<Version>;
+}
 
-export type Operation<
-  Type extends MutationType,
-  Interaction extends IType,
-> = OperationMap<Type>[Interaction];
+export type Operation<Version extends FHIR_VERSION> =
+  | CreateOperation<Version>
+  | UpdateOperation<Version>
+  | DeleteOperation<Version>
+  | InvokeOperation<Version>
+  | PatchOperation<Version>;
 
-export type Operations = (CreateOperation<MutationType> | InvokeOperation)[];
+export type Operations = Operation<FHIR_VERSION>[];
 
 export interface IMessage {
   key?: string;

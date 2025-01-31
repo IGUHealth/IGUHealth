@@ -1,4 +1,5 @@
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+
 import { FHIRRequest, FHIRResponse } from "../types/index.js";
 
 export type MiddlewareAsyncChain<
@@ -26,6 +27,7 @@ export type MiddlewareAsync<
   key?: string;
   state: State;
   ctx: CTX;
+  response?: Response;
   request: Request;
 }) => Promise<{
   key?: string;

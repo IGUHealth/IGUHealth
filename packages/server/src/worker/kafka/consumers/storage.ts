@@ -1,8 +1,10 @@
 import * as db from "zapatos/db";
 
 import { TenantId } from "@iguhealth/jwt";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import createEmailProvider from "../../../email/index.js";
+import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
@@ -19,21 +21,53 @@ import { DBTransaction } from "../../../transactions.js";
 import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 
-async function handleCreateMutation(
-  ctx: Omit<IGUHealthServerCTX, "user">,
-  mutation: queue.CreateOperation<queue.MutationType>,
-) {
-  return ctx.store.insert(ctx, mutation.resource, mutation.value);
-}
-
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.Operations[number],
 ) {
-  if (mutation.type === "invoke") {
-    await ctx.client.request(asRoot(ctx), mutation.value);
-  } else if (mutation.type === "create") {
-    await handleCreateMutation(ctx, mutation);
+  switch (mutation.request.type) {
+    case "create-request": {
+      await ctx.store.insert(ctx, "resources", {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+        request_method: "POST",
+        author_type: mutation.author.reference?.split("/")[0] as string,
+        author_id: mutation.author.reference?.split("/")[1] as string,
+        resource: mutation.response.resource as unknown as db.JSONObject,
+      });
+    }
+
+    case "update-request": {
+      ctx.store.insert(ctx, "resources", mutation.request.value);
+    }
+
+    case "patch-request": {
+      ctx.store.insert(ctx, "resources", mutation.request.value);
+    }
+
+    case "delete-request": {
+      ctx.store.insert(ctx, "resources", {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+        request_method: "DELETE",
+        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        resource: mutation.response.resource as unknown as db.JSONObject,
+        deleted: true,
+      });
+    }
+
+    case "invoke-request": {
+      await ctx.client.request(asRoot(ctx), mutation.request);
+    }
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Operation type '${mutation.request.type}' is not supported in this consumer.`,
+        ),
+      );
+    }
   }
 }
 
