@@ -6,36 +6,37 @@ export type RequestLevel = {
   type: "type";
 };
 
-export type RequestInteractionTypes = {
-  read: "read-request";
-  vread: "vread-request";
-  update: "update-request";
-  patch: "patch-request";
-  delete: "delete-request";
-  history: "history-request";
-  create: "create-request";
-  search: "search-request";
-  capabilities: "capabilities-request";
-  batch: "batch-request";
-  transaction: "transaction-request";
-  invoke: "invoke-request";
-};
+export type Interaction =
+  | "read"
+  | "vread"
+  | "update"
+  | "patch"
+  | "delete"
+  | "history"
+  | "create"
+  | "search"
+  | "capabilities"
+  | "batch"
+  | "transaction"
+  | "invoke";
 
-export type ResponseInteractionTypes = {
-  error: "error-response";
-  read: "read-response";
-  vread: "vread-response";
-  update: "update-response";
-  patch: "patch-response";
-  delete: "delete-response";
-  history: "history-response";
-  create: "create-response";
-  search: "search-response";
-  capabilities: "capabilities-response";
-  batch: "batch-response";
-  transaction: "transaction-response";
-  invoke: "invoke-response";
-};
+export type RequestType = { [I in Interaction]: `${I}-request` };
+
+export type ResponseType = {
+  [I in Interaction]: `${I}-response`;
+} & { error: "error-response" };
+
+export function RequestType(
+  interaction: Interaction,
+): RequestType[keyof RequestType] {
+  return `${interaction}-request`;
+}
+
+export function ResponseType(
+  interaction: Interaction | "error",
+): ResponseType[keyof ResponseType] {
+  return `${interaction}-response`;
+}
 
 export type Request<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
