@@ -5,7 +5,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
-  ConditinalUpdateRequest,
+  ConditionalUpdateRequest,
   FHIRRequest,
   FHIRResponse,
   InstanceHistoryResponse,
@@ -139,7 +139,7 @@ export function findSource<T>(
           "not-supported",
           `No source found with support for operation '${
             request.type
-          }' for type '${(request as ConditinalUpdateRequest<FHIR_VERSION>).resource}'`,
+          }' for type '${(request as ConditionalUpdateRequest<FHIR_VERSION>).resource}'`,
         ),
       );
     if (found.length > 1 && found[0].score === found[1].score) {
@@ -147,7 +147,7 @@ export function findSource<T>(
         outcomeError(
           "invalid",
           `Conflicting sources found for request '${request.type}' for type '${
-            (request as ConditinalUpdateRequest<FHIR_VERSION>).resource
+            (request as ConditionalUpdateRequest<FHIR_VERSION>).resource
           }'`,
         ),
       );
@@ -368,7 +368,7 @@ function createRouterMiddleware<
               "not-supported",
               `No source found with support for operation '${
                 context.request.type
-              }' for type '${(context.request as ConditinalUpdateRequest<FHIR_VERSION>).resource}'`,
+              }' for type '${(context.request as ConditionalUpdateRequest<FHIR_VERSION>).resource}'`,
             ),
           );
         const source = sources[0];

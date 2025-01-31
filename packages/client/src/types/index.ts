@@ -1,9 +1,9 @@
+import { code, id } from "@iguhealth/fhir-types/r4/types";
 import {
-  ResourceType,
   FHIR_VERSION,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { code, id } from "@iguhealth/fhir-types/r4/types";
 
 import type { ParsedParameter } from "../url.js";
 import {
@@ -38,7 +38,7 @@ export interface VersionReadRequest<Version extends FHIR_VERSION>
   versionId: string;
 }
 
-export interface UpdateRequest<Version extends FHIR_VERSION>
+export interface InstanceUpdateRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
   type: RequestInteractionTypes["update"];
   body: Resource<Version, ResourceType<Version>>;
@@ -80,7 +80,7 @@ export interface CreateRequest<Version extends FHIR_VERSION>
   body: Resource<Version, ResourceType<Version>>;
 }
 
-export interface ConditinalUpdateRequest<Version extends FHIR_VERSION>
+export interface ConditionalUpdateRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   type: RequestInteractionTypes["update"];
   parameters: ParsedParameter<string | number>[];
@@ -169,7 +169,7 @@ export type FHIRRequest<Version extends FHIR_VERSION> =
   | SystemHistoryRequest<Version>
   | SystemSearchRequest<Version>
   | SystemDeleteRequest<Version>
-  | ConditinalUpdateRequest<Version>;
+  | ConditionalUpdateRequest<Version>;
 
 export interface ReadResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
@@ -305,6 +305,19 @@ export type InvokeRequest<Version extends FHIR_VERSION> =
   | InvokeInstanceRequest<Version>
   | InvokeTypeRequest<Version>
   | InvokeSystemRequest<Version>;
+
+export type DeleteRequest<Version extends FHIR_VERSION> =
+  | InstanceDeleteRequest<Version>
+  | TypeDeleteRequest<Version>
+  | SystemDeleteRequest<Version>;
+export type DeleteResponse<Version extends FHIR_VERSION> =
+  | InstanceDeleteResponse<Version>
+  | TypeDeleteResponse<Version>
+  | SystemDeleteResponse<Version>;
+
+export type UpdateRequest<Version extends FHIR_VERSION> =
+  | InstanceUpdateRequest<Version>
+  | ConditionalUpdateRequest<Version>;
 
 interface ErrorResponse<
   Version extends FHIR_VERSION,
