@@ -29,13 +29,13 @@ export type ResponseType = {
 export function RequestType(
   interaction: Interaction,
 ): RequestType[keyof RequestType] {
-  return `${interaction}-request` as RequestType[keyof RequestType];
+  return `${interaction}-request`;
 }
 
 export function ResponseType(
   interaction: Interaction | "error",
 ): ResponseType[keyof ResponseType] {
-  return `${interaction}-response` as ResponseType[keyof ResponseType];
+  return `${interaction}-response`;
 }
 
 export type Request<
