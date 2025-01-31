@@ -1,4 +1,5 @@
 import { AsynchronousClient } from "@iguhealth/client";
+import { InvokeRequest } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
@@ -43,7 +44,7 @@ function middleware(
                   response: await provider.execute(
                     context.ctx,
                     op,
-                    context.request,
+                    context.request as InvokeRequest<R4>,
                   ),
                 };
               }

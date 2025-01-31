@@ -1,6 +1,6 @@
 import { FHIRRequest } from "@iguhealth/client/types";
 import { Membership, id } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 import {
   OperationError,
@@ -15,7 +15,11 @@ import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(
   IguhealthInviteUser.Op,
-  async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
+  async (
+    ctx: IGUHealthServerCTX,
+    request: FHIRRequest<FHIR_VERSION>,
+    input,
+  ) => {
     if (!ctx.emailProvider)
       throw new OperationError(
         outcomeError("exception", "Encryption provider not configured"),

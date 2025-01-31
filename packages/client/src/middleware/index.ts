@@ -1,10 +1,11 @@
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { FHIRRequest, FHIRResponse } from "../types/index.js";
 
 export type MiddlewareAsyncChain<
   State,
   CTX,
-  Request = FHIRRequest,
-  Response = FHIRResponse,
+  Request = FHIRRequest<FHIR_VERSION>,
+  Response = FHIRResponse<FHIR_VERSION>,
 > = (
   ctx: { key?: string; state: State; ctx: CTX; request: Request },
   next: MiddlewareAsync<State, CTX, Request, Response>,
@@ -19,8 +20,8 @@ export type MiddlewareAsyncChain<
 export type MiddlewareAsync<
   State,
   CTX,
-  Request = FHIRRequest,
-  Response = FHIRResponse,
+  Request = FHIRRequest<FHIR_VERSION>,
+  Response = FHIRResponse<FHIR_VERSION>,
 > = (ctx: {
   key?: string;
   state: State;
@@ -37,8 +38,8 @@ export type MiddlewareAsync<
 export function createMiddlewareAsync<
   State,
   CTX,
-  Request = FHIRRequest,
-  Response = FHIRResponse,
+  Request = FHIRRequest<FHIR_VERSION>,
+  Response = FHIRResponse<FHIR_VERSION>,
 >(
   middleware: MiddlewareAsyncChain<State, CTX, Request, Response>[],
   options: { logging?: boolean } = { logging: false },

@@ -11,7 +11,7 @@ import JSONPatchSchema from "../../json-schemas/schemas/jsonpatch.schema.json" w
 import { IGUHealthServerCTX, asRoot } from "../types.js";
 
 function getResourceTypeToValidate(
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): ResourceType<FHIR_VERSION> {
   switch (request.type) {
     case "create-request":

@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import { FHIRRequest<FHIR_VERSION>, FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   AccessPolicyV2,
   Patient,
@@ -79,7 +79,7 @@ test("Authorization test for read access on resource based on type and method", 
             level: "instance",
             resource: "Patient",
             id: "1",
-          } as FHIRRequest,
+          } as FHIRRequest<FHIR_VERSION>,
         },
         responder,
       )
@@ -105,7 +105,7 @@ test("Authorization test for read access on resource based on type and method", 
             type: "search-request",
             level: "type",
             resource: "Patient",
-          } as FHIRRequest,
+          } as FHIRRequest<FHIR_VERSION>,
         },
         responder,
       );

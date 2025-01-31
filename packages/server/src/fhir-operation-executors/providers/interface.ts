@@ -1,10 +1,10 @@
-import { R4InvokeRequest, R4InvokeResponse } from "@iguhealth/client/lib/types";
+import { InvokeRequest, InvokeResponse } from "@iguhealth/client/lib/types";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import {
   OperationOutcome,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
@@ -14,7 +14,7 @@ export interface Payload<I> {
     SEC_TOKEN: string;
     API_URL: string;
     tenant: IGUHealthServerCTX["tenant"];
-    level: FHIRRequest["level"];
+    level: FHIRRequest<FHIR_VERSION>["level"];
     resourceType?: ResourceType<R4>;
     id?: id;
   };
@@ -31,6 +31,6 @@ export interface CustomCodeExecutor {
   execute<I, O>(
     ctx: IGUHealthServerCTX,
     operation: Operation<I, O>,
-    input: R4InvokeRequest,
-  ): Promise<R4InvokeResponse>;
+    input: InvokeRequest<R4>,
+  ): Promise<InvokeResponse<R4>>;
 }

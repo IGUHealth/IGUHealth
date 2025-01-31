@@ -9,10 +9,8 @@ import {
 } from "@iguhealth/client/middleware";
 import {
   FHIRResponse,
-  R4BSystemSearchRequest,
-  R4BTypeSearchRequest,
-  R4SystemSearchRequest,
-  R4TypeSearchRequest,
+  SystemSearchRequest,
+  TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -367,10 +365,8 @@ async function deleteResource<
 async function conditionalDelete(
   ctx: IGUHealthServerCTX,
   searchRequest:
-    | R4TypeSearchRequest
-    | R4BTypeSearchRequest
-    | R4SystemSearchRequest
-    | R4BSystemSearchRequest,
+    | TypeSearchRequest<FHIR_VERSION>
+    | SystemSearchRequest<FHIR_VERSION>,
 ) {
   const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
   searchRequest.parameters = [
@@ -412,7 +408,7 @@ async function conditionalDelete(
             resource: searchRequest.resource,
             parameters: searchRequest.parameters,
             deletions,
-          } as FHIRResponse;
+          } as FHIRResponse<(typeof searchRequest)["fhirVersion"]>;
         }
         default: {
           throw new OperationError(
@@ -428,7 +424,7 @@ async function conditionalDelete(
         level: "system",
         parameters: searchRequest.parameters,
         deletions,
-      } as FHIRResponse;
+      } as FHIRResponse<(typeof searchRequest)["fhirVersion"]>;
     }
   }
 }
@@ -465,7 +461,7 @@ function createStorageMiddleware<
             resource: context.request.resource,
             id: context.request.id,
             body: resource,
-          } as FHIRResponse,
+          } as FHIRResponse<typeof context.request.fhirVersion>,
         };
       }
       case "vread-request": {
@@ -520,7 +516,7 @@ function createStorageMiddleware<
             id: context.request.id,
             versionId: context.request.versionId,
             body: foundResource,
-          } as FHIRResponse,
+          } as FHIRResponse<typeof context.request.fhirVersion>,
         };
       }
       case "search-request": {
@@ -558,7 +554,7 @@ function createStorageMiddleware<
                     ),
                   ),
                 },
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           case "type": {
@@ -584,7 +580,7 @@ function createStorageMiddleware<
                     ),
                   ),
                 },
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           default: {
@@ -598,7 +594,7 @@ function createStorageMiddleware<
           state: context.state,
           ctx: context.ctx,
           response: {
-            fhirVersion: R4,
+            fhirVersion: context.request.fhirVersion,
             level: "type",
             resource: context.request.resource,
             type: "create-response",
@@ -607,7 +603,7 @@ function createStorageMiddleware<
               context.request.fhirVersion,
               context.request.body,
             ),
-          } as FHIRResponse,
+          } as FHIRResponse<typeof context.request.fhirVersion>,
         };
       }
 
@@ -625,13 +621,13 @@ function createStorageMiddleware<
           state: context.state,
           ctx: context.ctx,
           response: {
-            fhirVersion: R4,
+            fhirVersion: context.request.fhirVersion,
             level: "instance",
             resource: context.request.resource,
             id: context.request.id,
             type: "patch-response",
             body: savedResource,
-          } as FHIRResponse,
+          } as FHIRResponse<typeof context.request.fhirVersion>,
         };
       }
       case "update-request": {
@@ -653,7 +649,7 @@ function createStorageMiddleware<
                 ),
                 { name: "_count", value: [2] },
               ],
-            } as R4TypeSearchRequest | R4BTypeSearchRequest);
+            } as TypeSearchRequest<FHIR_VERSION>);
             switch (result.result.length) {
               // No matches, no id provided:
               //   The server creates the resource.
@@ -696,7 +692,7 @@ function createStorageMiddleware<
                       type: "update-response",
                       created: created,
                       body: resource,
-                    } as FHIRResponse,
+                    } as FHIRResponse<typeof context.request.fhirVersion>,
                   };
                 } else {
                   const resource = await createResource(
@@ -715,7 +711,7 @@ function createStorageMiddleware<
                       id: resource.id,
                       type: "update-response",
                       body: resource,
-                    } as FHIRResponse,
+                    } as FHIRResponse<typeof context.request.fhirVersion>,
                   };
                 }
               }
@@ -750,7 +746,7 @@ function createStorageMiddleware<
                     created,
                     type: "update-response",
                     body: resource,
-                  } as FHIRResponse,
+                  } as FHIRResponse<typeof context.request.fhirVersion>,
                 };
               }
               // Multiple matches: The server returns a 412 Precondition
@@ -786,7 +782,7 @@ function createStorageMiddleware<
                 type: "update-response",
                 created: created,
                 body: resource,
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           default: {
@@ -816,7 +812,7 @@ function createStorageMiddleware<
                 level: "instance",
                 resource: context.request.resource,
                 id: context.request.id,
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           case "type": {
@@ -830,7 +826,7 @@ function createStorageMiddleware<
                 level: "type",
                 resource: context.request.resource,
                 parameters: context.request.parameters,
-              } as R4BTypeSearchRequest | R4TypeSearchRequest),
+              } as TypeSearchRequest<FHIR_VERSION>),
             };
           }
           case "system": {
@@ -843,7 +839,7 @@ function createStorageMiddleware<
                 fhirVersion: context.request.fhirVersion,
                 level: "system",
                 parameters: context.request.parameters,
-              } as R4BSystemSearchRequest | R4SystemSearchRequest),
+              } as SystemSearchRequest<FHIR_VERSION>),
             };
           }
           default: {
@@ -877,7 +873,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           case "type": {
@@ -895,7 +891,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           case "system": {
@@ -912,7 +908,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse,
+              } as FHIRResponse<typeof context.request.fhirVersion>,
             };
           }
           default: {
@@ -1042,7 +1038,7 @@ function createStorageMiddleware<
               type: "transaction-response",
               level: "system",
               body: transactionResponse,
-            } as FHIRResponse,
+            } as FHIRResponse<typeof context.request.fhirVersion>,
           };
         });
       }

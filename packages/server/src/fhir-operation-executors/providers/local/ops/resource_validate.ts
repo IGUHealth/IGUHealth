@@ -1,4 +1,4 @@
-import { R4BTypeInteraction, R4TypeInteraction } from "@iguhealth/client/types";
+import { TypeInteraction } from "@iguhealth/client/types";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
@@ -84,7 +84,7 @@ export const ResourceValidateInvoke = InlineOperation(
     return validateResource(
       ctx,
       request.fhirVersion,
-      (request as R4TypeInteraction | R4BTypeInteraction).resource,
+      (request as TypeInteraction<FHIR_VERSION>).resource,
       input,
     );
   },

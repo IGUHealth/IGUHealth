@@ -43,7 +43,7 @@ export async function getTenantLimits(
 async function checkTenantUsage(
   pg: db.Queryable,
   tenant: TenantId,
-  fhirRequest: FHIRRequest,
+  fhirRequest: FHIRRequest<FHIR_VERSION>,
 ): Promise<void> {
   switch (fhirRequest.type) {
     case "create-request": {

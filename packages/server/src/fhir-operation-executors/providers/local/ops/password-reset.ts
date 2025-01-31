@@ -4,7 +4,7 @@ import * as db from "zapatos/db";
 
 import { FHIRRequest } from "@iguhealth/client/types";
 import { Membership } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthPasswordReset } from "@iguhealth/generated-ops/r4";
 import { TenantId } from "@iguhealth/jwt";
 import { outcomeError, outcomeInfo } from "@iguhealth/operation-outcomes";
@@ -122,7 +122,11 @@ async function sendPasswordResetEmail(
 
 export const IguhealthPasswordResetInvoke = InlineOperation(
   IguhealthPasswordReset.Op,
-  async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
+  async (
+    ctx: IGUHealthServerCTX,
+    request: FHIRRequest<FHIR_VERSION>,
+    input,
+  ) => {
     if (request.level !== "instance") {
       return outcomeError(
         "invalid",

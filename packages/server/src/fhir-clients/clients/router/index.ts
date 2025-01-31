@@ -5,19 +5,23 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  ConditinalUpdateRequest,
   FHIRRequest,
   FHIRResponse,
-  R4BConditinalUpdateRequest,
-  R4ConditinalUpdateRequest,
-  R4InstanceHistoryResponse,
-  R4SystemHistoryResponse,
-  R4SystemSearchResponse,
-  R4TypeHistoryResponse,
-  R4TypeSearchResponse,
+  InstanceHistoryResponse,
+  SystemHistoryResponse,
+  SystemSearchResponse,
+  TypeHistoryResponse,
+  TypeSearchResponse,
 } from "@iguhealth/client/types";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { R4, R4B } from "@iguhealth/fhir-types/versions";
+import {
+  FHIR_VERSION,
+  R4,
+  R4B,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   isOperationError,
@@ -28,20 +32,20 @@ import {
 
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
 import { deriveResourceTypeFilter } from "../../../search-stores/parameters.js";
+import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
 
-type InteractionSupported = FHIRRequest["type"];
+type InteractionSupported = FHIRRequest<FHIR_VERSION>["type"];
 type InteractionsSupported = InteractionSupported[];
 
 type R4Filter = {
-  levelsSupported?: FHIRRequest["level"][];
+  levelsSupported?: FHIRRequest<FHIR_VERSION>["level"][];
   resourcesSupported?: r4.ResourceType[];
   interactionsSupported?: InteractionsSupported;
 };
 
 type R4BFilter = {
-  levelsSupported?: FHIRRequest["level"][];
+  levelsSupported?: FHIRRequest<FHIR_VERSION>["level"][];
   resourcesSupported?: r4b.ResourceType[];
   interactionsSupported?: InteractionsSupported;
 };
@@ -50,7 +54,7 @@ type Source<CTX> = {
   filter?: {
     r4?: R4Filter;
     r4b?: R4BFilter;
-    useSource?: (request: FHIRRequest) => boolean;
+    useSource?: (request: FHIRRequest<FHIR_VERSION>) => boolean;
   };
 
   source: FHIRClient<CTX>;
@@ -61,7 +65,7 @@ type Sources<CTX> = Source<CTX>[];
  ** Sets of requests like search will touch multiple sources.
  ** Mutations though should only resolve to a single source.
  */
-function getIsMultiSourced(request: FHIRRequest): boolean {
+function getIsMultiSourced(request: FHIRRequest<FHIR_VERSION>): boolean {
   switch (request.type) {
     case "search-request":
     case "history-request":
@@ -82,7 +86,7 @@ function getIsMultiSourced(request: FHIRRequest): boolean {
 
 function getFilter<T>(
   source: Source<T>,
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): R4Filter | R4BFilter {
   switch (request.fhirVersion) {
     case R4:
@@ -102,7 +106,7 @@ function getFilter<T>(
 
 export function findSource<T>(
   sources: Sources<T>,
-  request: FHIRRequest,
+  request: FHIRRequest<FHIR_VERSION>,
 ): Sources<T> {
   const isMultiSourced = getIsMultiSourced(request);
   let found: { source: Source<T>; score: number }[] = [];
@@ -135,7 +139,7 @@ export function findSource<T>(
           "not-supported",
           `No source found with support for operation '${
             request.type
-          }' for type '${(request as R4BConditinalUpdateRequest).resource}'`,
+          }' for type '${(request as ConditinalUpdateRequest<FHIR_VERSION>).resource}'`,
         ),
       );
     if (found.length > 1 && found[0].score === found[1].score) {
@@ -143,7 +147,7 @@ export function findSource<T>(
         outcomeError(
           "invalid",
           `Conflicting sources found for request '${request.type}' for type '${
-            (request as R4BConditinalUpdateRequest).resource
+            (request as ConditinalUpdateRequest<FHIR_VERSION>).resource
           }'`,
         ),
       );
@@ -179,7 +183,11 @@ function createRouterMiddleware<
             ),
           )
         ).filter(
-          (res): res is R4TypeSearchResponse | R4SystemSearchResponse =>
+          (
+            res,
+          ): res is
+            | TypeSearchResponse<FHIR_VERSION>
+            | SystemSearchResponse<FHIR_VERSION> =>
             res.type === "search-response",
         );
 
@@ -195,9 +203,9 @@ function createRouterMiddleware<
                 (acc: number | undefined, res) =>
                   res.body.total ? (acc ?? 0) + res.body.total : undefined,
                 undefined,
-              ) as r4.unsignedInt | undefined,
+              ),
               entry,
-            },
+            } as Resource<FHIR_VERSION, "Bundle">,
           },
         };
       }
@@ -212,9 +220,10 @@ function createRouterMiddleware<
           (
             res,
           ): res is
-            | R4SystemHistoryResponse
-            | R4TypeHistoryResponse
-            | R4InstanceHistoryResponse => res.type === "history-response",
+            | SystemHistoryResponse<FHIR_VERSION>
+            | TypeHistoryResponse<FHIR_VERSION>
+            | InstanceHistoryResponse<FHIR_VERSION> =>
+            res.type === "history-response",
         );
 
         const entry = responses.map((b) => b.body.entry ?? []).flat();
@@ -227,7 +236,7 @@ function createRouterMiddleware<
               resourceType: "Bundle",
               type: "history" as r4.code,
               entry,
-            },
+            } as Resource<FHIR_VERSION, "Bundle">,
           },
         };
       }
@@ -249,7 +258,8 @@ function createRouterMiddleware<
             }),
           )
         ).filter(
-          (response): response is FHIRResponse => response !== undefined,
+          (response): response is FHIRResponse<FHIR_VERSION> =>
+            response !== undefined,
         );
 
         if (responses.length > 1)
@@ -312,6 +322,8 @@ function createRouterMiddleware<
                     },
                   };
                 }
+
+                console.error(e);
                 return {
                   response: {
                     status: "500",
@@ -336,7 +348,7 @@ function createRouterMiddleware<
               type: "batch-response" as r4.code | r4b.code,
               entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
             } as r4b.Bundle | r4.Bundle,
-          } as FHIRResponse,
+          } as FHIRResponse<FHIR_VERSION>,
         };
       }
       // Mutations and invocations should only have one source
@@ -356,7 +368,7 @@ function createRouterMiddleware<
               "not-supported",
               `No source found with support for operation '${
                 context.request.type
-              }' for type '${(context.request as R4ConditinalUpdateRequest).resource}'`,
+              }' for type '${(context.request as ConditinalUpdateRequest<FHIR_VERSION>).resource}'`,
             ),
           );
         const source = sources[0];

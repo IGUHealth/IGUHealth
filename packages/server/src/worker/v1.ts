@@ -6,6 +6,7 @@ import * as dateFns from "date-fns";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { FHIRRequest } from "@iguhealth/client/lib/types";
 import {
   Bundle,
   BundleEntry,
@@ -32,6 +33,7 @@ import {
 
 import { getActiveTenants } from "../authN/db/tenant.js";
 import loadEnv from "../env.js";
+import { fitsSearchCriteria } from "../fhir-clients/clients/memory/search.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -39,8 +41,7 @@ import logAuditEvent, {
   createAuditEvent,
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
-import { fitsSearchCriteria } from "../fhir-clients/clients/memory/search.js";
-import { DBTransaction } from "../transactions.js";
+import * as Sentry from "../monitoring/sentry.js";
 import { createResolverRemoteCanonical } from "../search-stores/canonical.js";
 import {
   SearchParameterResource,
@@ -48,7 +49,7 @@ import {
   findSearchParameter,
   parametersWithMetaAssociated,
 } from "../search-stores/parameters.js";
-import * as Sentry from "../monitoring/sentry.js";
+import { DBTransaction } from "../transactions.js";
 import { LIB_VERSION } from "../version.js";
 import {
   ensureLocksCreated,
@@ -319,7 +320,7 @@ async function processSubscription(
     const request = httpRequestToFHIRRequest("r4", {
       url: subscription.criteria,
       method: "GET",
-    });
+    }) as FHIRRequest<R4>;
 
     if (request.type !== "search-request") {
       throw new OperationError(

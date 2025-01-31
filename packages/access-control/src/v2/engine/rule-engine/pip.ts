@@ -17,7 +17,7 @@ import {
   OperationDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -65,7 +65,7 @@ async function processAttribute<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Attribute | undefined, any>,
-): Promise<FHIRResponse> {
+): Promise<FHIRResponse<FHIR_VERSION>> {
   const attribute = pt.get(loc, policy);
   if (!attribute) {
     throw new Error("Attribute not found on loc.");
@@ -202,12 +202,12 @@ async function processAttribute<CTX, Role>(
 type PiPResult<CTX, Role> = {
   context: PolicyContext<CTX, Role>;
   attribute:
-    | FHIRRequest
+    | FHIRRequest<FHIR_VERSION>
     | {
         payload: AccessTokenPayload<Role>;
         resource: OperationDefinition | ClientApplication | Membership;
       }
-    | FHIRResponse;
+    | FHIRResponse<FHIR_VERSION>;
 };
 
 async function retrieveAttribute<CTX, Role>(

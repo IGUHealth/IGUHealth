@@ -1,13 +1,11 @@
 import * as s from "zapatos/schema";
 
 import {
-  R4BInvokeInstanceRequest,
-  R4BInvokeSystemRequest,
-  R4BInvokeTypeRequest,
-  R4InvokeInstanceRequest,
-  R4InvokeSystemRequest,
-  R4InvokeTypeRequest,
+  InvokeInstanceRequest,
+  InvokeSystemRequest,
+  InvokeTypeRequest,
 } from "@iguhealth/client/lib/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
 import { DynamicTopic } from "./topics/dynamic-topic.js";
@@ -33,12 +31,9 @@ export interface CreateOperation<Type extends MutationType>
 
 export interface InvokeOperation extends IOperation<"invoke"> {
   value:
-    | R4BInvokeInstanceRequest
-    | R4BInvokeTypeRequest
-    | R4BInvokeSystemRequest
-    | R4InvokeInstanceRequest
-    | R4InvokeTypeRequest
-    | R4InvokeSystemRequest;
+    | InvokeInstanceRequest<FHIR_VERSION>
+    | InvokeTypeRequest<FHIR_VERSION>
+    | InvokeSystemRequest<FHIR_VERSION>;
 }
 
 type OperationMap<Type extends MutationType> = {

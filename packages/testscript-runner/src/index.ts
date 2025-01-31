@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger } from "pino";
 
 import createHTTPClient, { isResponseError } from "@iguhealth/client/http";
@@ -14,6 +15,7 @@ import {
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
+  DataType,
   FHIR_VERSION,
   Resource,
   ResourceType,
@@ -32,12 +34,12 @@ type ResourceFixture<Version extends FHIR_VERSION> = {
 
 type ResponseFixture = {
   type: "response";
-  data: FHIRResponse;
+  data: FHIRResponse<FHIR_VERSION>;
 };
 
 type RequestFixture = {
   type: "request";
-  data: FHIRRequest;
+  data: FHIRRequest<FHIR_VERSION>;
 };
 
 type Fixture<Version extends FHIR_VERSION> =
@@ -257,7 +259,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
     | undefined,
     any
   >,
-): Promise<FHIRRequest> {
+): Promise<FHIRRequest<Version>> {
   // See https://hl7.org/fhir/r4/valueset-testscript-operation-codes.html
 
   const operation = get(pointer, state.testScript);
@@ -306,7 +308,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             id: target.id,
             operation: op as code,
             body: parameters,
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         case operation.resource !== undefined: {
           return {
@@ -316,7 +318,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             resource: operation.resource,
             operation: op as code,
             body: parameters,
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         default: {
           return {
@@ -325,7 +327,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             type: "invoke-request",
             operation: op,
             body: parameters,
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
       }
     }
@@ -345,7 +347,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
           operation.resource ??
           (target?.resourceType as unknown as ResourceType<Version>),
         id: target?.id as id,
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
     case "create": {
       if (!operation.sourceId)
@@ -359,7 +361,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         type: "create-request",
         resource: operation.resource ?? target.resourceType,
         body: target,
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
     case "patch": {
       if (!operation.targetId)
@@ -380,7 +382,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
           (target?.resourceType as unknown as ResourceType<Version>),
         id: target?.id as id,
         body: getPatches(state, operation.sourceId),
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
     case "vread": {
       if (!operation.targetId)
@@ -396,7 +398,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         id: target?.id as id,
         versionId: getFixtureResource(state, operation.targetId)?.meta
           ?.versionId as id,
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
 
     case "update": {
@@ -425,7 +427,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
               await evaluateVariables(state, pointer, operation.params),
             ),
             body: source,
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         case operation.targetId !== undefined: {
           const target = getFixtureResource(state, operation.targetId);
@@ -438,7 +440,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
               (target?.resourceType as unknown as ResourceType<Version>),
             id: target?.id as id,
             body: getFixtureResource(state, operation.sourceId),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         default: {
           throw new OperationError(
@@ -460,7 +462,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             type: "delete-request",
             resource: operation.resource ?? target?.resourceType,
             id: target?.id as id,
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         case operation.resource !== undefined: {
           return {
@@ -471,7 +473,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         case operation.params !== undefined: {
           return {
@@ -481,7 +483,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         default: {
           throw new OperationError(
@@ -501,7 +503,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
           parameters: parseQuery(
             await evaluateVariables(state, pointer, operation.params ?? ""),
           ),
-        } as FHIRRequest;
+        } as FHIRRequest<Version>;
       } else {
         return {
           fhirVersion: state.version,
@@ -510,7 +512,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
           parameters: parseQuery(
             await evaluateVariables(state, pointer, operation.params ?? ""),
           ),
-        } as FHIRRequest;
+        } as FHIRRequest<Version>;
       }
     }
     case "batch": {
@@ -535,7 +537,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         level: "system",
         type: "batch-request",
         body: batch,
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
     case "transaction": {
       if (!operation.sourceId)
@@ -562,7 +564,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
         level: "system",
         type: "transaction-request",
         body: transaction,
-      } as FHIRRequest;
+      } as FHIRRequest<Version>;
     }
     case "history": {
       switch (true) {
@@ -579,7 +581,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         case operation.resource !== undefined: {
           return {
@@ -590,7 +592,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
         default: {
           return {
@@ -600,7 +602,7 @@ async function operationToFHIRRequest<Version extends FHIR_VERSION>(
             parameters: parseQuery(
               await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
-          } as FHIRRequest;
+          } as FHIRRequest<Version>;
         }
       }
     }
@@ -804,8 +806,8 @@ async function runAssertion<Version extends FHIR_VERSION>(
 function associateResponseRequestVariables<Version extends FHIR_VERSION>(
   _fixtures: TestScriptState<Version>["fixtures"],
   operation: NonNullable<TestScriptAction<Version>["operation"]>,
-  request: FHIRRequest,
-  response: FHIRResponse,
+  request: FHIRRequest<FHIR_VERSION>,
+  response: FHIRResponse<Version>,
 ) {
   let fixtures = { ..._fixtures };
   if (operation.responseId) {
@@ -1171,9 +1173,9 @@ export async function run<Version extends FHIR_VERSION>(
     resourceType: "TestReport",
   } as Resource<Version, "TestReport">;
 
-  const pointer = fhirPointer<Version, ResourceType<Version>>(
+  const pointer = fhirPointer<Version, DataType<Version>>(
     version,
-    "TestScript" as ResourceType<Version>,
+    "TestScript" as DataType<Version>,
     testScript.id as id,
   ) as unknown as Loc<
     Resource<Version, "TestScript">,

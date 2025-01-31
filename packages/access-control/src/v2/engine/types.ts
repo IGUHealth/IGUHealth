@@ -5,6 +5,7 @@ import {
   Membership,
   OperationDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload } from "@iguhealth/jwt";
 
 export type Result<CTX, Role, Result> = {
@@ -16,13 +17,13 @@ export interface PolicyContext<CTX, Role> {
   clientCTX: CTX;
   client: FHIRClientAsync<CTX>;
   environment: {
-    request: FHIRRequest;
+    request: FHIRRequest<FHIR_VERSION>;
     user: {
       payload: AccessTokenPayload<Role>;
       resource: Membership | ClientApplication | OperationDefinition;
     };
   };
   attributes: {
-    [key: string]: FHIRResponse;
+    [key: string]: FHIRResponse<FHIR_VERSION>;
   };
 }

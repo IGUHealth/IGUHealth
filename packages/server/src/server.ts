@@ -17,6 +17,7 @@ import { fileURLToPath } from "url";
 
 import { FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   createCertsIfNoneExists,
   getJWKS,
@@ -73,7 +74,7 @@ function fhirResponseSetKoa(
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >,
-  response: FHIRResponse,
+  response: FHIRResponse<FHIR_VERSION>,
 ) {
   const httpResponse = fhirResponseToHTTPResponse(response);
   ctx.status = httpResponse.status;
@@ -407,6 +408,7 @@ export default async function createServer(): Promise<
           method: ctx.method,
           url: ctx.url,
           responseTime: rt,
+          body: ctx.body,
         });
       }
     })

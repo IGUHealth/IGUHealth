@@ -4,6 +4,7 @@
  **  - Because sets of operations are used in path critical flows like $validate may be to slow.
  */
 import { AsynchronousClient } from "@iguhealth/client";
+import { InvokeRequest } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
@@ -37,7 +38,7 @@ function createExecutor(): MiddlewareAsync<
                 if (op.code === context.request.operation) {
                   const parameterOutput = await op.execute(
                     context.ctx,
-                    context.request,
+                    context.request as InvokeRequest<R4>,
                   );
                   return {
                     ...context,

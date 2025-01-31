@@ -10,15 +10,16 @@ export const R4B: R4B = "4.3";
 export const FHIR_VERSIONS_SUPPORTED: [R4, R4B] = [R4, R4B];
 export type FHIR_VERSION = (typeof FHIR_VERSIONS_SUPPORTED)[number];
 
+type ResourceTypeMap = {
+  [R4]: r4.ResourceType;
+  [R4B]: r4b.ResourceType;
+};
+
 export type ResourceType<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
-> = Version extends R4
-  ? r4.ResourceType
-  : Version extends R4B
-    ? r4b.ResourceType
-    : never;
+> = ResourceTypeMap[Version];
 
-export type AllResourceTypes = r4.ResourceType | r4b.ResourceType;
+export type AllResourceTypes = ResourceType<FHIR_VERSION>;
 
 export type Resource<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
