@@ -32,7 +32,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (!res.response) throw new Error("No Response was returned.");
     if (res.response.fhirVersion !== res.request.fhirVersion)
       throw new Error(
-        `FHIR Version mismatch '${JSON.stringify(res.response)}' !== '${JSON.stringify(res.request)}'`,
+        `FHIR Version mismatch '${res.response.fhirVersion}' !== '${res.request.fhirVersion}'`,
       );
 
     return res.response as FHIRResponse<Version>;
