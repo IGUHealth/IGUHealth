@@ -1,15 +1,16 @@
 import { expect, test } from "@jest/globals";
 
-import { FHIRRequest<FHIR_VERSION>, FHIRResponse } from "@iguhealth/client/lib/types";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   AccessPolicyV2,
   Patient,
   code,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { testServices } from "../../fhir-clients/test-ctx.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import createAuthorizationMiddleware from "./authorization.js";
 
 const authorizationMiddleware = createAuthorizationMiddleware();
@@ -64,7 +65,7 @@ test("Authorization test for read access on resource based on type and method", 
           resourceType: "Patient",
           id: "1",
         } as Patient,
-      } as FHIRResponse,
+      } as FHIRResponse<FHIR_VERSION>,
     };
   };
 
