@@ -8,9 +8,9 @@ import {
 import type { ParsedParameter } from "../url.js";
 import {
   Request,
-  RequestInteractionTypes,
   RequestLevel,
-  ResponseInteractionTypes,
+  RequestType,
+  ResponseType,
 } from "./utilities.js";
 
 export interface InstanceInteraction<Version extends FHIR_VERSION>
@@ -29,60 +29,60 @@ export interface SystemInteraction<Version extends FHIR_VERSION>
 
 export interface ReadRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["read"];
+  type: RequestType["read"];
 }
 
 export interface VersionReadRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["vread"];
+  type: RequestType["vread"];
   versionId: string;
 }
 
 export interface InstanceUpdateRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["update"];
+  type: RequestType["update"];
   body: Resource<Version, ResourceType<Version>>;
 }
 
 // TODO - implement patch type
 export interface PatchRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["patch"];
+  type: RequestType["patch"];
   body: unknown;
 }
 
 export interface InstanceDeleteRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["delete"];
+  type: RequestType["delete"];
 }
 
 export interface TypeDeleteRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: RequestInteractionTypes["delete"];
+  type: RequestType["delete"];
 }
 
 export interface SystemDeleteRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: RequestInteractionTypes["delete"];
+  type: RequestType["delete"];
 }
 
 export interface HistoryInstanceRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["history"];
+  type: RequestType["history"];
   parameters?: ParsedParameter<string | number>[];
 }
 
 export interface CreateRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: RequestInteractionTypes["create"];
+  type: RequestType["create"];
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface ConditionalUpdateRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: RequestInteractionTypes["update"];
+  type: RequestType["update"];
   parameters: ParsedParameter<string | number>[];
   body: Resource<Version, ResourceType<Version>>;
 }
@@ -90,61 +90,61 @@ export interface ConditionalUpdateRequest<Version extends FHIR_VERSION>
 export interface TypeSearchRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: RequestInteractionTypes["search"];
+  type: RequestType["search"];
 }
 
 export interface TypeHistoryRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: RequestInteractionTypes["history"];
+  type: RequestType["history"];
   parameters?: ParsedParameter<string | number>[];
 }
 
 export interface CapabilitiesRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: RequestInteractionTypes["capabilities"];
+  type: RequestType["capabilities"];
 }
 
 export interface BatchRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: RequestInteractionTypes["batch"];
+  type: RequestType["batch"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface TransactionRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: RequestInteractionTypes["transaction"];
+  type: RequestType["transaction"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface SystemHistoryRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: RequestInteractionTypes["history"];
+  type: RequestType["history"];
   parameters?: ParsedParameter<string | number>[];
 }
 
 export interface SystemSearchRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: RequestInteractionTypes["search"];
+  type: RequestType["search"];
 }
 
 export interface InvokeInstanceRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: RequestInteractionTypes["invoke"];
+  type: RequestType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
 
 export interface InvokeTypeRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: RequestInteractionTypes["invoke"];
+  type: RequestType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
 
 export interface InvokeSystemRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: RequestInteractionTypes["invoke"];
+  type: RequestType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
@@ -173,20 +173,20 @@ export type FHIRRequest<Version extends FHIR_VERSION> =
 
 export interface ReadResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["read"];
+  type: ResponseType["read"];
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface VersionReadResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["vread"];
+  type: ResponseType["vread"];
   versionId: string;
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface UpdateResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["update"];
+  type: ResponseType["update"];
   created?: boolean;
   body: Resource<Version, ResourceType<Version>>;
 }
@@ -194,19 +194,19 @@ export interface UpdateResponse<Version extends FHIR_VERSION>
 // TODO - implement patch type
 export interface PatchResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["patch"];
+  type: ResponseType["patch"];
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface InstanceDeleteResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["delete"];
+  type: ResponseType["delete"];
 }
 
 export interface TypeDeleteResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: ResponseInteractionTypes["delete"];
+  type: ResponseType["delete"];
   // For conditional deletes include the ids of the resources that were deleted.
   deletions?: { id: id; type: ResourceType<Version> }[];
 }
@@ -214,84 +214,84 @@ export interface TypeDeleteResponse<Version extends FHIR_VERSION>
 export interface SystemDeleteResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: ResponseInteractionTypes["delete"];
+  type: ResponseType["delete"];
   // For conditional deletes include the ids of the resources that were deleted.
   deletions?: { id: id; type: ResourceType<Version> }[];
 }
 
 export interface InstanceHistoryResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["history"];
+  type: ResponseType["history"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface CreateResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: ResponseInteractionTypes["create"];
+  type: ResponseType["create"];
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface TypeSearchResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: ResponseInteractionTypes["search"];
+  type: ResponseType["search"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface TypeHistoryResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: ResponseInteractionTypes["history"];
+  type: ResponseType["history"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface CapabilitiesResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: ResponseInteractionTypes["capabilities"];
+  type: ResponseType["capabilities"];
   body: Resource<Version, "CapabilityStatement">;
 }
 
 export interface BatchResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: ResponseInteractionTypes["batch"];
+  type: ResponseType["batch"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface TransactionResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: ResponseInteractionTypes["transaction"];
+  type: ResponseType["transaction"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface SystemHistoryResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: ResponseInteractionTypes["history"];
+  type: ResponseType["history"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface SystemSearchResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
-  type: ResponseInteractionTypes["search"];
+  type: ResponseType["search"];
   body: Resource<Version, "Bundle">;
 }
 
 export interface InvokeInstanceResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
-  type: ResponseInteractionTypes["invoke"];
+  type: ResponseType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
 
 export interface InvokeTypeResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  type: ResponseInteractionTypes["invoke"];
+  type: ResponseType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
 
 export interface InvokeSystemResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  type: ResponseInteractionTypes["invoke"];
+  type: ResponseType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
 }
@@ -323,7 +323,7 @@ interface ErrorResponse<
   Version extends FHIR_VERSION,
   Level extends keyof RequestLevel,
 > extends Request<Version, Level> {
-  type: ResponseInteractionTypes["error"];
+  type: ResponseType["error"];
   body: Resource<Version, "OperationOutcome">;
 }
 
