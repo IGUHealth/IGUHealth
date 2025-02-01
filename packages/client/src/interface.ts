@@ -8,7 +8,11 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 
-import type { FHIRRequest, FHIRResponse } from "./types/index.js";
+import type {
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
+} from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 
 export type FHIRClient<CTX> = FHIRClientAsync<CTX>;
@@ -23,10 +27,10 @@ export type InvokeParameter<
     : Resource<FHIRVersion, "Parameters">;
 
 export interface FHIRClientAsync<CTX> {
-  request<Version extends FHIR_VERSION>(
+  request<Version extends FHIR_VERSION, I extends AllInteractions>(
     ctx: CTX,
-    request: FHIRRequest<Version>,
-  ): Promise<FHIRResponse<Version>>;
+    request: FHIRRequest<Version, I>,
+  ): Promise<FHIRResponse<Version, I | "error">>;
   capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,

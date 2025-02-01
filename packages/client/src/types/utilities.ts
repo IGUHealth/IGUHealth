@@ -6,35 +6,40 @@ export type RequestLevel = {
   type: "type";
 };
 
-export type Interaction =
-  | "read"
-  | "vread"
-  | "update"
-  | "patch"
-  | "delete"
-  | "history"
-  | "create"
-  | "search"
-  | "capabilities"
-  | "batch"
-  | "transaction"
-  | "invoke";
+export type Interaction = {
+  read: "read";
+  vread: "vread";
+  update: "update";
+  patch: "patch";
+  delete: "delete";
+  history: "history";
+  create: "create";
+  search: "search";
+  capabilities: "capabilities";
+  batch: "batch";
+  transaction: "transaction";
+  invoke: "invoke";
+};
 
-export type RequestType = { [I in Interaction]: `${I}-request` };
+export type AllInteractions = Interaction[keyof Interaction];
+
+export type RequestType = {
+  [I in Interaction[keyof Interaction]]: `${I}-request`;
+};
 
 export type ResponseType = {
-  [I in Interaction]: `${I}-response`;
+  [I in Interaction[keyof Interaction]]: `${I}-response`;
 } & { error: "error-response" };
 
 export function RequestType(
-  interaction: Interaction,
-): RequestType[keyof RequestType] {
+  interaction: Interaction[keyof Interaction],
+): RequestType[AllInteractions] {
   return `${interaction}-request`;
 }
 
 export function ResponseType(
-  interaction: Interaction | "error",
-): ResponseType[keyof ResponseType] {
+  interaction: Interaction[keyof Interaction] | "error",
+): ResponseType[AllInteractions | "error"] {
   return `${interaction}-response`;
 }
 

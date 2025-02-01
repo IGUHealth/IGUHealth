@@ -1,4 +1,4 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -10,7 +10,7 @@ export const ValueSetExpandInvoke = InlineOperation(
   ValueSetExpand.Op,
   async (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<FHIR_VERSION>,
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     input,
   ) => {
     if (!ctx.terminologyProvider)

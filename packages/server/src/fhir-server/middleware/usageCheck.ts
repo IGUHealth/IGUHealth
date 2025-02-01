@@ -1,15 +1,15 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 import { toDBFHIRVersion } from "../../fhir-clients/utilities/version.js";
 import { IGUHealthServerCTX } from "../types.js";
-import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 
 export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   pg: db.Queryable,
@@ -43,7 +43,7 @@ export async function getTenantLimits(
 async function checkTenantUsage(
   pg: db.Queryable,
   tenant: TenantId,
-  fhirRequest: FHIRRequest<FHIR_VERSION>,
+  fhirRequest: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): Promise<void> {
   switch (fhirRequest.type) {
     case "create-request": {

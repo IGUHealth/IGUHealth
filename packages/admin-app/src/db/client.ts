@@ -3,7 +3,7 @@ import { atom } from "recoil";
 import { AsynchronousClient } from "@iguhealth/client";
 import createHTTPClient, { HTTPContext } from "@iguhealth/client/http";
 import { createMiddlewareAsync } from "@iguhealth/client/middleware";
-import { FHIRResponse } from "@iguhealth/client/types";
+import { AllInteractions, FHIRResponse } from "@iguhealth/client/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 type CachedClient = AsynchronousClient<
@@ -22,7 +22,10 @@ export const getClient = atom<ReturnType<typeof createAdminAppClient>>({
   dangerouslyAllowMutability: true,
 });
 
-const cachedResponse: Record<string, Promise<FHIRResponse<FHIR_VERSION>>> = {};
+const cachedResponse: Record<
+  string,
+  Promise<FHIRResponse<FHIR_VERSION, AllInteractions | "error">>
+> = {};
 
 /*
  ** Cache select calls for performance improvements (notably expansions).

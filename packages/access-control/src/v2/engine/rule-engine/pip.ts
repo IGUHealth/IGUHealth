@@ -7,7 +7,11 @@
  * */
 
 import { parseQuery } from "@iguhealth/client/lib/url";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
+import {
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
+} from "@iguhealth/client/types";
 import * as pt from "@iguhealth/fhir-pointer";
 import {
   AccessPolicyV2,
@@ -65,7 +69,7 @@ async function processAttribute<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Attribute | undefined, any>,
-): Promise<FHIRResponse<FHIR_VERSION>> {
+): Promise<FHIRResponse<FHIR_VERSION, AllInteractions>> {
   const attribute = pt.get(loc, policy);
   if (!attribute) {
     throw new Error("Attribute not found on loc.");
@@ -202,12 +206,12 @@ async function processAttribute<CTX, Role>(
 type PiPResult<CTX, Role> = {
   context: PolicyContext<CTX, Role>;
   attribute:
-    | FHIRRequest<FHIR_VERSION>
+    | FHIRRequest<FHIR_VERSION, AllInteractions>
     | {
         payload: AccessTokenPayload<Role>;
         resource: OperationDefinition | ClientApplication | Membership;
       }
-    | FHIRResponse<FHIR_VERSION>;
+    | FHIRResponse<FHIR_VERSION, AllInteractions>;
 };
 
 async function retrieveAttribute<CTX, Role>(

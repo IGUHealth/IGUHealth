@@ -1,5 +1,9 @@
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import {
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
+} from "@iguhealth/client/lib/types";
 import {
   ClientApplication,
   Membership,
@@ -17,13 +21,13 @@ export interface PolicyContext<CTX, Role> {
   clientCTX: CTX;
   client: FHIRClientAsync<CTX>;
   environment: {
-    request: FHIRRequest<FHIR_VERSION>;
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>;
     user: {
       payload: AccessTokenPayload<Role>;
       resource: Membership | ClientApplication | OperationDefinition;
     };
   };
   attributes: {
-    [key: string]: FHIRResponse<FHIR_VERSION>;
+    [key: string]: FHIRResponse<FHIR_VERSION, AllInteractions>;
   };
 }

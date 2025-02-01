@@ -408,7 +408,7 @@ async function conditionalDelete(
             resource: searchRequest.resource,
             parameters: searchRequest.parameters,
             deletions,
-          } as FHIRResponse<(typeof searchRequest)["fhirVersion"]>;
+          } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
         }
         default: {
           throw new OperationError(
@@ -424,7 +424,7 @@ async function conditionalDelete(
         level: "system",
         parameters: searchRequest.parameters,
         deletions,
-      } as FHIRResponse<(typeof searchRequest)["fhirVersion"]>;
+      } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
     }
   }
 }
@@ -461,7 +461,7 @@ function createStorageMiddleware<
             resource: context.request.resource,
             id: context.request.id,
             body: resource,
-          } as FHIRResponse<typeof context.request.fhirVersion>,
+          } as FHIRResponse<typeof context.request.fhirVersion, "read">,
         };
       }
       case "vread-request": {
@@ -516,7 +516,7 @@ function createStorageMiddleware<
             id: context.request.id,
             versionId: context.request.versionId,
             body: foundResource,
-          } as FHIRResponse<typeof context.request.fhirVersion>,
+          } as FHIRResponse<typeof context.request.fhirVersion, "vread">,
         };
       }
       case "search-request": {
@@ -554,7 +554,7 @@ function createStorageMiddleware<
                     ),
                   ),
                 },
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "search">,
             };
           }
           case "type": {
@@ -580,7 +580,7 @@ function createStorageMiddleware<
                     ),
                   ),
                 },
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "search">,
             };
           }
           default: {
@@ -603,7 +603,7 @@ function createStorageMiddleware<
               context.request.fhirVersion,
               context.request.body,
             ),
-          } as FHIRResponse<typeof context.request.fhirVersion>,
+          } as FHIRResponse<typeof context.request.fhirVersion, "create">,
         };
       }
 
@@ -627,7 +627,7 @@ function createStorageMiddleware<
             id: context.request.id,
             type: "patch-response",
             body: savedResource,
-          } as FHIRResponse<typeof context.request.fhirVersion>,
+          } as FHIRResponse<typeof context.request.fhirVersion, "patch">,
         };
       }
       case "update-request": {
@@ -692,7 +692,10 @@ function createStorageMiddleware<
                       type: "update-response",
                       created: created,
                       body: resource,
-                    } as FHIRResponse<typeof context.request.fhirVersion>,
+                    } as FHIRResponse<
+                      typeof context.request.fhirVersion,
+                      "update"
+                    >,
                   };
                 } else {
                   const resource = await createResource(
@@ -711,7 +714,10 @@ function createStorageMiddleware<
                       id: resource.id,
                       type: "update-response",
                       body: resource,
-                    } as FHIRResponse<typeof context.request.fhirVersion>,
+                    } as FHIRResponse<
+                      typeof context.request.fhirVersion,
+                      "update"
+                    >,
                   };
                 }
               }
@@ -746,7 +752,10 @@ function createStorageMiddleware<
                     created,
                     type: "update-response",
                     body: resource,
-                  } as FHIRResponse<typeof context.request.fhirVersion>,
+                  } as FHIRResponse<
+                    typeof context.request.fhirVersion,
+                    "update"
+                  >,
                 };
               }
               // Multiple matches: The server returns a 412 Precondition
@@ -782,7 +791,7 @@ function createStorageMiddleware<
                 type: "update-response",
                 created: created,
                 body: resource,
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "update">,
             };
           }
           default: {
@@ -812,7 +821,7 @@ function createStorageMiddleware<
                 level: "instance",
                 resource: context.request.resource,
                 id: context.request.id,
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "delete">,
             };
           }
           case "type": {
@@ -873,7 +882,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "history">,
             };
           }
           case "type": {
@@ -891,7 +900,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "history">,
             };
           }
           case "system": {
@@ -908,7 +917,7 @@ function createStorageMiddleware<
                   type: "history",
                   entry: history,
                 },
-              } as FHIRResponse<typeof context.request.fhirVersion>,
+              } as FHIRResponse<typeof context.request.fhirVersion, "history">,
             };
           }
           default: {
@@ -1038,7 +1047,10 @@ function createStorageMiddleware<
               type: "transaction-response",
               level: "system",
               body: transactionResponse,
-            } as FHIRResponse<typeof context.request.fhirVersion>,
+            } as FHIRResponse<
+              typeof context.request.fhirVersion,
+              "transaction"
+            >,
           };
         });
       }

@@ -6,7 +6,7 @@ import * as dateFns from "date-fns";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/lib/types";
 import {
   Bundle,
   BundleEntry,
@@ -320,7 +320,7 @@ async function processSubscription(
     const request = httpRequestToFHIRRequest("r4", {
       url: subscription.criteria,
       method: "GET",
-    }) as FHIRRequest<R4>;
+    }) as FHIRRequest<R4, AllInteractions>;
 
     if (request.type !== "search-request") {
       throw new OperationError(

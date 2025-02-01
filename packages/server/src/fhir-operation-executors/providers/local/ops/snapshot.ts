@@ -1,4 +1,4 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { StructureDefinition, canonical } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
@@ -83,7 +83,7 @@ export const StructureDefinitionSnapshotInvoke = InlineOperation(
   StructureDefinitionSnapshot.Op,
   async (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<FHIR_VERSION>,
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     input,
   ) => {
     if (!input.definition && !input.url) {

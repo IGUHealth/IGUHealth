@@ -15,7 +15,7 @@ import zlib from "node:zlib";
 import React from "react";
 import { fileURLToPath } from "url";
 
-import { FHIRResponse } from "@iguhealth/client/types";
+import { AllInteractions, FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
@@ -74,7 +74,7 @@ function fhirResponseSetKoa(
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >,
-  response: FHIRResponse<FHIR_VERSION>,
+  response: FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 ) {
   const httpResponse = fhirResponseToHTTPResponse(response);
   ctx.status = httpResponse.status;

@@ -1,4 +1,4 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthDeployOperation } from "@iguhealth/generated-ops/r4";
 import { Operation } from "@iguhealth/operation-execution";
@@ -15,7 +15,7 @@ export function createDeployOperation(
     IguhealthDeployOperation.Op,
     async (
       ctx: IGUHealthServerCTX,
-      request: FHIRRequest<FHIR_VERSION>,
+      request: FHIRRequest<FHIR_VERSION, AllInteractions>,
       input,
     ) => {
       switch (request.level) {

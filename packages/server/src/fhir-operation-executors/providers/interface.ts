@@ -1,10 +1,13 @@
-import { InvokeRequest, InvokeResponse } from "@iguhealth/client/lib/types";
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import {
+  InvokeRequest,
+  InvokeResponse,
+  RequestLevel,
+} from "@iguhealth/client/lib/types";
 import {
   OperationOutcome,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { FHIR_VERSION, R4, ResourceType } from "@iguhealth/fhir-types/versions";
+import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
@@ -14,7 +17,7 @@ export interface Payload<I> {
     SEC_TOKEN: string;
     API_URL: string;
     tenant: IGUHealthServerCTX["tenant"];
-    level: FHIRRequest<FHIR_VERSION>["level"];
+    level: RequestLevel[keyof RequestLevel];
     resourceType?: ResourceType<R4>;
     id?: id;
   };

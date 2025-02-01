@@ -1,5 +1,5 @@
 import { FHIRClientAsync } from "@iguhealth/client/interface";
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
@@ -88,7 +88,7 @@ export function searchParameterToTableName<
 }
 
 // Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
-function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION>): string[] {
+function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION, AllInteractions>): string[] {
   switch (request.type) {
     case "search-request": {
       if (request.level === "type") return [request.resource];
@@ -102,7 +102,7 @@ function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION>): string[]
   }
 }
 
-export function deriveResourceTypeFilter<Request extends FHIRRequest<FHIR_VERSION>>(
+export function deriveResourceTypeFilter<Request extends FHIRRequest<FHIR_VERSION, AllInteractions>>(
   request: Request,
 ): ResourceType<Request["fhirVersion"]>[] {
   const passedinTypes = _deriveResourceTypeFilter(

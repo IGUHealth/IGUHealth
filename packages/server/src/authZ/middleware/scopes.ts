@@ -1,6 +1,7 @@
 import v2AccessControl from "@iguhealth/access-control/v2";
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -10,7 +11,6 @@ import {
 import * as parseScopes from "../../authN/oidc/scopes/parse.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { generatePatientScopePolicy } from "./patient-scopes.js";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 /**
  * Note that request types like patch and update-request will be treated as update. Same with read vread and history + search.
@@ -19,7 +19,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
  * @returns https://build.fhir.org/ig/HL7/smart-app-launch/scopes-and-launch-context.html resource scope type from request type.
  */
 function requestTypeToScope(
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): keyof parseScopes.SMARTResourceScope["permissions"] {
   switch (request.type) {
     case "create-request": {
@@ -53,7 +53,7 @@ function requestTypeToScope(
 
 function fitsResourceType(
   scope: parseScopes.SMARTResourceScope,
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): boolean {
   if (scope.scope === "all") return true;
   if (request.level === "type" || request.level === "instance") {
@@ -73,7 +73,7 @@ const smartScopeLevelWeight: Record<
 
 function getHighestValueScopeForRequest(
   scopes: parseScopes.Scope[],
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): parseScopes.SMARTResourceScope | undefined {
   const smartScopes = scopes
     .filter(

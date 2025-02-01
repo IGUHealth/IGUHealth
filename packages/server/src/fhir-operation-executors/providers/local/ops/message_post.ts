@@ -1,6 +1,6 @@
 import { Kafka } from "kafkajs";
 
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import { IguhealthMessagePost } from "@iguhealth/generated-ops/r4";
@@ -70,7 +70,7 @@ export const IguhealthMessagePostInvoke = InlineOperation(
   IguhealthMessagePost.Op,
   async (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<FHIR_VERSION>,
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     input,
   ) => {
     switch (request.level) {

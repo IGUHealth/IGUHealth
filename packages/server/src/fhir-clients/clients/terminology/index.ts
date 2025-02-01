@@ -1,12 +1,11 @@
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { AllInteractions, RequestType } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { ResourceType } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
@@ -18,8 +17,10 @@ export const TERMINOLOGY_RESOURCE_TYPES: ResourceType[] = [
   "ValueSet",
   "CodeSystem",
 ];
-export const TERMINOLOGY_METHODS_ALLOWED: FHIRRequest<FHIR_VERSION>["type"][] =
-  ["read-request", "search-request"];
+export const TERMINOLOGY_METHODS_ALLOWED: RequestType[AllInteractions][] = [
+  "read-request",
+  "search-request",
+];
 
 function createTerminologyMiddleware<
   State extends {
