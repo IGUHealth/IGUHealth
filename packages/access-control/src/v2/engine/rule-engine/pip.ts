@@ -69,7 +69,7 @@ async function processAttribute<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Attribute | undefined, any>,
-): Promise<FHIRResponse<FHIR_VERSION, AllInteractions>> {
+): Promise<FHIRResponse<FHIR_VERSION, AllInteractions | "error">> {
   const attribute = pt.get(loc, policy);
   if (!attribute) {
     throw new Error("Attribute not found on loc.");
@@ -211,7 +211,7 @@ type PiPResult<CTX, Role> = {
         payload: AccessTokenPayload<Role>;
         resource: OperationDefinition | ClientApplication | Membership;
       }
-    | FHIRResponse<FHIR_VERSION, AllInteractions>;
+    | FHIRResponse<FHIR_VERSION, AllInteractions | "error">;
 };
 
 async function retrieveAttribute<CTX, Role>(

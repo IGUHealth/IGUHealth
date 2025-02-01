@@ -28,6 +28,6 @@ export interface PolicyContext<CTX, Role> {
     };
   };
   attributes: {
-    [key: string]: FHIRResponse<FHIR_VERSION, AllInteractions>;
+    [key: string]: FHIRResponse<FHIR_VERSION, AllInteractions | "error">;
   };
 }
