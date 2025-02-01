@@ -1,4 +1,8 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import {
+  AllInteractions,
+  FHIRRequest,
+  RequestType,
+} from "@iguhealth/client/types";
 import {
   AccessPolicy,
   AccessPolicyAccess,
@@ -20,7 +24,7 @@ import {
  */
 function validateFHIRResourceTypeAccess(
   policyAccess: AccessPolicyAccess,
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): boolean {
   switch (request.level) {
     case "system": {
@@ -91,7 +95,7 @@ function validateFHIRResourceTypeAccess(
  */
 function accessPolicyMethodToRequestType(
   method: code | undefined,
-): FHIRRequest<FHIR_VERSION>["type"] | undefined {
+): RequestType[AllInteractions] | undefined {
   switch (method) {
     case "vread":
       return "vread-request";
@@ -130,7 +134,7 @@ function accessPolicyMethodToRequestType(
  */
 function validateFHIRMethodAccess(
   policyAccess: AccessPolicyAccess,
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): boolean {
   return (
     accessPolicyMethodToRequestType(policyAccess.fhir?.method) === request.type
@@ -146,7 +150,7 @@ function validateFHIRMethodAccess(
  */
 function evaluateAccessPolicies(
   policies: AccessPolicy[],
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): boolean {
   for (const accessPolicy of policies ?? []) {
     switch (accessPolicy.type) {
@@ -190,7 +194,7 @@ export default function evaluatePolicy<
 >(
   user: AccessTokenPayload<role>,
   accessPolicies: AccessPolicy[],
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): boolean {
   if (
     user[CUSTOM_CLAIMS.ROLE] === "admin" ||

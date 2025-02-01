@@ -1,7 +1,11 @@
 import * as dateTzs from "@date-fns/tz";
 import * as dateFns from "date-fns";
 
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
+import {
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
+} from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
@@ -14,7 +18,11 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  issueToStatusCode,
+  outcomeError,
+} from "@iguhealth/operation-outcomes";
 
 /*
  ** For Summary of types see:
@@ -112,7 +120,7 @@ function parseRequest1Empty<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   switch (request.method) {
     case "POST": {
       if (!isBundle(fhirVersion, request.body)) {
@@ -183,7 +191,7 @@ function parseRequest1NonEmpty<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   switch (true) {
     case urlPieces[0].startsWith("$"): {
       switch (request.method) {
@@ -312,7 +320,7 @@ function parseRequest1<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   if (urlPieces[0] === "") {
     return parseRequest1Empty(fhirVersion, urlPieces, request);
   } else {
@@ -335,7 +343,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   const resourceType = urlPieces[0];
   if (verifyResourceType(fhirVersion, resourceType)) {
     switch (true) {
@@ -452,7 +460,7 @@ function parseRequest3<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   if (verifyResourceType(fhirVersion, urlPieces[0])) {
     switch (true) {
       case urlPieces[2].startsWith("$"): {
@@ -512,7 +520,7 @@ function parseRequest4<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   _request: HTTPRequest,
-): FHIRRequest<Version> {
+): FHIRRequest<Version, AllInteractions> {
   if (
     verifyResourceType(fhirVersion, urlPieces[0]) &&
     urlPieces[2] === "_history"
@@ -547,7 +555,7 @@ export function deriveFHIRVersion(fhirVersion: string): FHIR_VERSION {
 export function httpRequestToFHIRRequest(
   fhirVersionUrlChunk: string,
   request: HTTPRequest,
-): FHIRRequest<FHIR_VERSION> {
+): FHIRRequest<FHIR_VERSION, AllInteractions> {
   const urlPieces = request.url.split("?")[0].split("/");
   const fhirVersion = deriveFHIRVersion(fhirVersionUrlChunk);
 
@@ -590,7 +598,7 @@ function lastModified(instant: r4.instant | undefined): string | undefined {
 }
 
 export function fhirResponseToHTTPResponse(
-  fhirResponse: FHIRResponse<FHIR_VERSION>,
+  fhirResponse: FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 ): HTTPResponse {
   // https://github.com/koajs/koa/blob/master/docs/api/response.md#object
   // Will default to application/json unless specified.
@@ -680,6 +688,16 @@ export function fhirResponseToHTTPResponse(
         status: 200,
         body: fhirResponse.body,
       };
+
+    case "error-response": {
+      return {
+        headers: {
+          ...headers,
+        },
+        status: issueToStatusCode(fhirResponse.body.issue[0]),
+        body: fhirResponse.body,
+      };
+    }
   }
 
   throw new OperationError(

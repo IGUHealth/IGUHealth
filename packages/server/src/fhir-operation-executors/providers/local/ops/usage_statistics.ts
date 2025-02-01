@@ -1,4 +1,4 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { integer } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
@@ -19,7 +19,7 @@ export const IguhealthUsageStatisticsInvoke = InlineOperation(
   IguhealthUsageStatistics.Op,
   async (
     ctx: IGUHealthServerCTX,
-    _request: FHIRRequest<FHIR_VERSION>,
+    _request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     _input,
   ) => {
     const r4Limits = await getTenantLimits(

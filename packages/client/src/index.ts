@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Parameters, code, id } from "@iguhealth/fhir-types/r4/types";
+import { code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -11,7 +11,11 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import type { FHIRClientAsync, InvokeParameter } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
-import type { FHIRRequest, FHIRResponse } from "./types/index.js";
+import type {
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
+} from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
 
@@ -23,10 +27,10 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     this.middleware = middleware;
   }
 
-  async request<Version extends FHIR_VERSION>(
+  async request<Version extends FHIR_VERSION, I extends AllInteractions>(
     ctx: CTX,
-    request: FHIRRequest<Version>,
-  ): Promise<FHIRResponse<Version>> {
+    request: FHIRRequest<Version, I>,
+  ): Promise<FHIRResponse<Version, I | "error">> {
     const res = await this.middleware({ ctx, state: this.state, request });
     this.state = res.state;
     if (!res.response) throw new Error("No Response was returned.");
@@ -35,17 +39,20 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         `FHIR Version mismatch '${res.response.fhirVersion}' !== '${res.request.fhirVersion}'`,
       );
 
-    return res.response as FHIRResponse<Version>;
+    return res.response as FHIRResponse<Version, I | "error">;
   }
   async capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
   ): Promise<Resource<FHIRVersion, "CapabilityStatement">> {
-    const response = await this.request(ctx, {
-      fhirVersion,
-      type: "capabilities-request",
-      level: "system",
-    });
+    const response = await this.request<typeof fhirVersion, "capabilities">(
+      ctx,
+      {
+        fhirVersion,
+        type: "capabilities-request",
+        level: "system",
+      },
+    );
     if (response.type !== "capabilities-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, "CapabilityStatement">;
@@ -94,13 +101,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       typeof parameters === "string" || parameters === undefined
         ? parseQuery(parameters)
         : parameters;
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "search">(ctx, {
       fhirVersion,
       type: "search-request",
       level: "type",
       resource: type,
       parameters: parsedParameters,
-    } as FHIRRequest<Version>);
+    });
     if (response.type !== "search-response")
       throw new Error(`Unexpected response type '${response.type}'`);
     return {
@@ -115,13 +122,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     FHIRVersion extends FHIR_VERSION,
     T extends Resource<FHIRVersion, AllResourceTypes>,
   >(ctx: CTX, fhirVersion: FHIRVersion, resource: T): Promise<T> {
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "create">(ctx, {
       fhirVersion,
       type: "create-request",
       level: "type",
       resource: resource.resourceType as ResourceType<FHIRVersion>,
       body: resource as any,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "create-response")
       throw new Error("Unexpected response type");
     return response.body as any as T;
@@ -142,14 +149,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         : parameters
           ? parameters
           : [];
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "update">(ctx, {
       fhirVersion,
       type: "update-request",
       level: "type",
       resource: resourceType,
       parameters: parsedParameters,
       body: resource,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "update-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T>;
@@ -166,14 +173,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   ): Promise<Resource<FHIRVersion, T>> {
     if (resource.id === undefined)
       throw new Error("Cannot update resource without id");
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "update">(ctx, {
       fhirVersion,
       type: "update-request",
       level: "instance",
       resource: resourceType,
       id,
       body: resource,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "update-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T>;
@@ -188,14 +195,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     id: NonNullable<Resource<FHIRVersion, ResourceType<FHIRVersion>>["id"]>,
     patches: any,
   ): Promise<Resource<FHIRVersion, T>> {
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "patch">(ctx, {
       fhirVersion,
       type: "patch-request",
       level: "instance",
       resource: resourceType,
       id: id,
       body: patches,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "patch-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T>;
@@ -209,13 +216,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, ResourceType<FHIRVersion>>["id"]>,
   ): Promise<Resource<FHIRVersion, T> | undefined> {
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "read">(ctx, {
       fhirVersion,
       type: "read-request",
       level: "instance",
       resource: resourceType,
       id: id,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "read-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T> | undefined;
@@ -232,14 +239,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       Resource<FHIRVersion, ResourceType<FHIRVersion>>["id"]
     >,
   ): Promise<Resource<FHIRVersion, T> | undefined> {
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "vread">(ctx, {
       fhirVersion,
       type: "vread-request",
       level: "instance",
       resource: resourceType,
       id: id,
       versionId: versionId,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "vread-response")
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T> | undefined;
@@ -253,13 +260,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, ResourceType<FHIRVersion>>["id"]>,
   ): Promise<void> {
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "delete">(ctx, {
       fhirVersion,
       type: "delete-request",
       level: "instance",
       resource: resourceType,
       id: id,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
@@ -278,13 +285,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         : parameters
           ? parameters
           : [];
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "delete">(ctx, {
       fhirVersion,
       type: "delete-request",
       level: "type",
       resource: resourceType,
       parameters: parsedParameters,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
@@ -299,12 +306,12 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         : parameters
           ? parameters
           : [];
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "delete">(ctx, {
       fhirVersion,
       type: "delete-request",
       level: "system",
       parameters: parsedParameters,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
@@ -345,13 +352,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         : parameters
           ? parameters
           : [];
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "history">(ctx, {
       fhirVersion,
       type: "history-request",
       level: "type",
       resource: resourceType,
       parameters: parsedParameters,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
     return response.body.entry ?? [];
@@ -372,14 +379,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         : parameters
           ? parameters
           : [];
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "history">(ctx, {
       fhirVersion,
       type: "history-request",
       level: "instance",
       resource: resourceType,
       id: id as id,
       parameters: parsedParameters,
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
     return response.body.entry ?? [];
@@ -391,24 +398,27 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     Output extends InvokeParameter<FHIRVersion, Op, "Output">,
   >(op: Op, ctx: CTX, fhirVersion: FHIRVersion, input: Input): Promise<Output> {
     if (typeof op === "string") {
-      const response = await this.request(ctx, {
+      const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
         fhirVersion,
         type: "invoke-request",
         level: "system",
         operation: op,
         body: input,
-      } as FHIRRequest<FHIRVersion>);
+      });
 
       return (response as unknown as Record<string, unknown>).body as Output;
     }
 
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
       fhirVersion,
       type: "invoke-request",
       level: "system",
       operation: op.code,
-      body: op.parseToParameters("in", input) as Parameters,
-    } as FHIRRequest<FHIRVersion>);
+      body: op.parseToParameters("in", input) as Resource<
+        FHIRVersion,
+        "Parameters"
+      >,
+    });
 
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -428,26 +438,26 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     input: Input,
   ): Promise<Output> {
     if (typeof op === "string") {
-      const response = await this.request(ctx, {
+      const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
         fhirVersion,
         type: "invoke-request",
         level: "type",
         resource: resourceType,
         operation: op,
         body: input,
-      } as FHIRRequest<FHIRVersion>);
+      });
 
       return (response as unknown as Record<string, unknown>).body as Output;
     }
 
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
       fhirVersion,
       type: "invoke-request",
       level: "type",
       operation: op.code,
       resource: resourceType,
       body: op.parseToParameters("in", input),
-    } as FHIRRequest<FHIRVersion>);
+    });
 
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -468,7 +478,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     input: Input,
   ): Promise<Output> {
     if (typeof op === "string") {
-      const response = await this.request(ctx, {
+      const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
         fhirVersion,
         type: "invoke-request",
         level: "instance",
@@ -476,12 +486,12 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         resource: resourceType,
         id,
         body: input,
-      } as FHIRRequest<FHIRVersion>);
+      });
 
       return (response as unknown as Record<string, unknown>).body as Output;
     }
 
-    const response = await this.request(ctx, {
+    const response = await this.request<typeof fhirVersion, "invoke">(ctx, {
       fhirVersion,
       type: "invoke-request",
       level: "instance",
@@ -489,7 +499,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       resource: resourceType,
       id,
       body: op.parseToParameters("in", input),
-    } as FHIRRequest<FHIRVersion>);
+    });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
     return op.parseToObject("out", response.body);
@@ -508,7 +518,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "transaction-request",
       level: "system",
       body: bundle,
-    } as FHIRRequest<FHIRVersion>);
+    });
 
     if (response.type !== "transaction-response") {
       throw new OperationError(
@@ -531,7 +541,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "batch-request",
       level: "system",
       body: bundle,
-    } as FHIRRequest<FHIRVersion>);
+    });
 
     if (response.type !== "batch-response") {
       throw new OperationError(

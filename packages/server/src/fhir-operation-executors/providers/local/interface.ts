@@ -1,15 +1,19 @@
-import { FHIRRequest, InvokeRequest } from "@iguhealth/client/types";
+import {
+  AllInteractions,
+  FHIRRequest,
+  InvokeRequest,
+} from "@iguhealth/client/types";
 import {
   OperationDefinition,
   Parameters,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { IOperation, Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { getOpCTX } from "../../utilities.js";
 import { validateInvocationContext } from "../../utilities.js";
-import { R4 } from "@iguhealth/fhir-types/versions";
 
 type Input<T> = T extends IOperation<infer Input, unknown> ? Input : never;
 type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
@@ -43,7 +47,7 @@ export default function InlineOperation<
   op: OP,
   executor: (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<R4>,
+    request: FHIRRequest<R4, AllInteractions>,
     v: Input<OP>,
   ) => Promise<Output<OP>>,
 ): InlineOp<Input<OP>, Output<OP>> {

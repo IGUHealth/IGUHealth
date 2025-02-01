@@ -9,12 +9,13 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  AllInteractions,
   CreateResponse,
-  FHIRRequest,
+  RequestType,
   UpdateResponse,
 } from "@iguhealth/client/types";
 import { Membership, ResourceType } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -33,7 +34,7 @@ import validateResourceTypesAllowedMiddleware from "../../middleware/validate-re
 import { createRemoteStorage } from "../remote-storage/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
-export const MEMBERSHIP_METHODS_ALLOWED: FHIRRequest<FHIR_VERSION>["type"][] = [
+export const MEMBERSHIP_METHODS_ALLOWED: RequestType[AllInteractions][] = [
   "create-request",
   "delete-request",
   "read-request",

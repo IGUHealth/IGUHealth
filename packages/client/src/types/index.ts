@@ -7,11 +7,14 @@ import {
 
 import type { ParsedParameter } from "../url.js";
 import {
+  Interaction,
   Request,
   RequestLevel,
   RequestType,
   ResponseType,
 } from "./utilities.js";
+
+export * from "./utilities.js";
 
 export interface InstanceInteraction<Version extends FHIR_VERSION>
   extends Request<Version, "instance"> {
@@ -148,28 +151,6 @@ export interface InvokeSystemRequest<Version extends FHIR_VERSION>
   operation: code;
   body: Resource<Version, "Parameters">;
 }
-
-export type FHIRRequest<Version extends FHIR_VERSION> =
-  | InvokeInstanceRequest<Version>
-  | InvokeTypeRequest<Version>
-  | InvokeSystemRequest<Version>
-  | ReadRequest<Version>
-  | VersionReadRequest<Version>
-  | UpdateRequest<Version>
-  | PatchRequest<Version>
-  | HistoryInstanceRequest<Version>
-  | InstanceDeleteRequest<Version>
-  | CreateRequest<Version>
-  | TypeSearchRequest<Version>
-  | TypeHistoryRequest<Version>
-  | TypeDeleteRequest<Version>
-  | CapabilitiesRequest<Version>
-  | BatchRequest<Version>
-  | TransactionRequest<Version>
-  | SystemHistoryRequest<Version>
-  | SystemSearchRequest<Version>
-  | SystemDeleteRequest<Version>
-  | ConditionalUpdateRequest<Version>;
 
 export interface ReadResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
@@ -315,6 +296,22 @@ export type DeleteResponse<Version extends FHIR_VERSION> =
   | TypeDeleteResponse<Version>
   | SystemDeleteResponse<Version>;
 
+export type HistoryRequest<Version extends FHIR_VERSION> =
+  | HistoryInstanceRequest<Version>
+  | TypeHistoryRequest<Version>
+  | SystemHistoryRequest<Version>;
+export type HistoryResponse<Version extends FHIR_VERSION> =
+  | InstanceHistoryResponse<Version>
+  | TypeHistoryResponse<Version>
+  | SystemHistoryResponse<Version>;
+
+export type SearchRequest<Version extends FHIR_VERSION> =
+  | TypeSearchRequest<Version>
+  | SystemSearchRequest<Version>;
+export type SearchResponse<Version extends FHIR_VERSION> =
+  | TypeSearchResponse<Version>
+  | SystemSearchResponse<Version>;
+
 export type UpdateRequest<Version extends FHIR_VERSION> =
   | InstanceUpdateRequest<Version>
   | ConditionalUpdateRequest<Version>;
@@ -332,24 +329,43 @@ export type FHIRErrorResponse<Version extends FHIR_VERSION> =
   | ErrorResponse<Version, "type">
   | ErrorResponse<Version, "instance">;
 
-export type FHIRResponse<Version extends FHIR_VERSION> =
-  | FHIRErrorResponse<Version>
-  | InvokeInstanceResponse<Version>
-  | InvokeTypeResponse<Version>
-  | InvokeSystemResponse<Version>
-  | ReadResponse<Version>
-  | VersionReadResponse<Version>
-  | UpdateResponse<Version>
-  | PatchResponse<Version>
-  | InstanceHistoryResponse<Version>
-  | InstanceDeleteResponse<Version>
-  | CreateResponse<Version>
-  | TypeSearchResponse<Version>
-  | TypeHistoryResponse<Version>
-  | TypeDeleteResponse<Version>
-  | CapabilitiesResponse<Version>
-  | BatchResponse<Version>
-  | TransactionResponse<Version>
-  | SystemHistoryResponse<Version>
-  | SystemSearchResponse<Version>
-  | SystemDeleteResponse<Version>;
+type InteractionToRequest<Version extends FHIR_VERSION> = {
+  invoke: InvokeRequest<Version>;
+  read: ReadRequest<Version>;
+  vread: VersionReadRequest<Version>;
+  update: UpdateRequest<Version>;
+  patch: PatchRequest<Version>;
+  delete: DeleteRequest<Version>;
+  history: HistoryRequest<Version>;
+  create: CreateRequest<Version>;
+  search: SearchRequest<Version>;
+  capabilities: CapabilitiesRequest<Version>;
+  batch: BatchRequest<Version>;
+  transaction: TransactionRequest<Version>;
+};
+
+export type FHIRRequest<
+  Version extends FHIR_VERSION,
+  I extends Interaction[keyof Interaction],
+> = InteractionToRequest<Version>[I];
+
+type InteractionToResponse<Version extends FHIR_VERSION> = {
+  error: FHIRErrorResponse<Version>;
+  invoke: InvokeResponse<Version>;
+  read: ReadResponse<Version>;
+  vread: VersionReadResponse<Version>;
+  update: UpdateResponse<Version>;
+  patch: PatchResponse<Version>;
+  history: HistoryResponse<Version>;
+  delete: DeleteResponse<Version>;
+  create: CreateResponse<Version>;
+  capabilities: CapabilitiesResponse<Version>;
+  batch: BatchResponse<Version>;
+  transaction: TransactionResponse<Version>;
+  search: SearchResponse<Version>;
+};
+
+export type FHIRResponse<
+  Version extends FHIR_VERSION,
+  I extends Interaction[keyof Interaction] | "error",
+> = InteractionToResponse<Version>[I];

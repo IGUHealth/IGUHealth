@@ -2,7 +2,7 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import * as db from "zapatos/db";
 
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { Membership } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthPasswordReset } from "@iguhealth/generated-ops/r4";
@@ -124,7 +124,7 @@ export const IguhealthPasswordResetInvoke = InlineOperation(
   IguhealthPasswordReset.Op,
   async (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<FHIR_VERSION>,
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     input,
   ) => {
     if (request.level !== "instance") {

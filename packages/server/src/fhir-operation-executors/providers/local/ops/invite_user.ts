@@ -1,4 +1,4 @@
-import { FHIRRequest } from "@iguhealth/client/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
@@ -17,7 +17,7 @@ export const IguhealthInviteUserInvoke = InlineOperation(
   IguhealthInviteUser.Op,
   async (
     ctx: IGUHealthServerCTX,
-    request: FHIRRequest<FHIR_VERSION>,
+    request: FHIRRequest<FHIR_VERSION, AllInteractions>,
     input,
   ) => {
     if (!ctx.emailProvider)

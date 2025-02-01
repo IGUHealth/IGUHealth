@@ -164,7 +164,7 @@ function createMemoryMiddleware<
                     resourceType: "Bundle",
                     entry: [],
                   },
-                } as FHIRResponse<FHIR_VERSION>,
+                } as FHIRResponse<FHIR_VERSION, "search">,
               };
             }
             case "type": {
@@ -272,7 +272,7 @@ function createMemoryMiddleware<
                     resourceType: "Bundle",
                     entry: result.map((r) => ({ resource: r })),
                   },
-                } as FHIRResponse<FHIR_VERSION>,
+                } as FHIRResponse<FHIR_VERSION, "search">,
               };
             }
             default: {
@@ -312,7 +312,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse<FHIR_VERSION>,
+            } as FHIRResponse<FHIR_VERSION, "update">,
           };
         }
         case "create-request": {
@@ -337,7 +337,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse<FHIR_VERSION>,
+            } as FHIRResponse<FHIR_VERSION, "create">,
           };
         }
         case "read-request": {
@@ -362,7 +362,7 @@ function createMemoryMiddleware<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
-            } as FHIRResponse<FHIR_VERSION>,
+            } as FHIRResponse<FHIR_VERSION, "read">,
           };
         }
         default:

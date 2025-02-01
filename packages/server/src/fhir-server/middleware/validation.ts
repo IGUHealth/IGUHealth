@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { AllInteractions, FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
@@ -11,7 +11,7 @@ import JSONPatchSchema from "../../json-schemas/schemas/jsonpatch.schema.json" w
 import { IGUHealthServerCTX, asRoot } from "../types.js";
 
 function getResourceTypeToValidate(
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): ResourceType<FHIR_VERSION> {
   switch (request.type) {
     case "create-request":

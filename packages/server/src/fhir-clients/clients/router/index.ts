@@ -5,10 +5,12 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  AllInteractions,
   ConditionalUpdateRequest,
   FHIRRequest,
   FHIRResponse,
   InstanceHistoryResponse,
+  RequestType,
   SystemHistoryResponse,
   SystemSearchResponse,
   TypeHistoryResponse,
@@ -35,17 +37,17 @@ import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { deriveResourceTypeFilter } from "../../../search-stores/parameters.js";
 import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
 
-type InteractionSupported = FHIRRequest<FHIR_VERSION>["type"];
+type InteractionSupported = RequestType[AllInteractions];
 type InteractionsSupported = InteractionSupported[];
 
 type R4Filter = {
-  levelsSupported?: FHIRRequest<FHIR_VERSION>["level"][];
+  levelsSupported?: FHIRRequest<FHIR_VERSION, AllInteractions>["level"][];
   resourcesSupported?: r4.ResourceType[];
   interactionsSupported?: InteractionsSupported;
 };
 
 type R4BFilter = {
-  levelsSupported?: FHIRRequest<FHIR_VERSION>["level"][];
+  levelsSupported?: FHIRRequest<FHIR_VERSION, AllInteractions>["level"][];
   resourcesSupported?: r4b.ResourceType[];
   interactionsSupported?: InteractionsSupported;
 };
@@ -54,7 +56,9 @@ type Source<CTX> = {
   filter?: {
     r4?: R4Filter;
     r4b?: R4BFilter;
-    useSource?: (request: FHIRRequest<FHIR_VERSION>) => boolean;
+    useSource?: (
+      request: FHIRRequest<FHIR_VERSION, AllInteractions>,
+    ) => boolean;
   };
 
   source: FHIRClient<CTX>;
@@ -65,7 +69,9 @@ type Sources<CTX> = Source<CTX>[];
  ** Sets of requests like search will touch multiple sources.
  ** Mutations though should only resolve to a single source.
  */
-function getIsMultiSourced(request: FHIRRequest<FHIR_VERSION>): boolean {
+function getIsMultiSourced(
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
+): boolean {
   switch (request.type) {
     case "search-request":
     case "history-request":
@@ -86,7 +92,7 @@ function getIsMultiSourced(request: FHIRRequest<FHIR_VERSION>): boolean {
 
 function getFilter<T>(
   source: Source<T>,
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): R4Filter | R4BFilter {
   switch (request.fhirVersion) {
     case R4:
@@ -106,7 +112,7 @@ function getFilter<T>(
 
 export function findSource<T>(
   sources: Sources<T>,
-  request: FHIRRequest<FHIR_VERSION>,
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
 ): Sources<T> {
   const isMultiSourced = getIsMultiSourced(request);
   let found: { source: Source<T>; score: number }[] = [];
@@ -258,7 +264,7 @@ function createRouterMiddleware<
             }),
           )
         ).filter(
-          (response): response is FHIRResponse<FHIR_VERSION> =>
+          (response): response is FHIRResponse<FHIR_VERSION, AllInteractions> =>
             response !== undefined,
         );
 
@@ -348,7 +354,7 @@ function createRouterMiddleware<
               type: "batch-response" as r4.code | r4b.code,
               entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
             } as r4b.Bundle | r4.Bundle,
-          } as FHIRResponse<FHIR_VERSION>,
+          } as FHIRResponse<FHIR_VERSION, "batch">,
         };
       }
       // Mutations and invocations should only have one source

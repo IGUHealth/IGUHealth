@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import { Bundle, code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/lib/versions";
 
-import { FHIRResponse } from "../types/index.js";
+import { AllInteractions, FHIRResponse } from "../types/index.js";
 import type { ParsedParameter } from "../url";
 import { createMiddlewareAsync } from "./index.js";
 
@@ -26,7 +26,7 @@ test("Test middleware Async", async () => {
                 },
               })),
             } as Bundle,
-          } as FHIRResponse<FHIR_VERSION>,
+          } as FHIRResponse<FHIR_VERSION, AllInteractions>,
         };
       }
       return {

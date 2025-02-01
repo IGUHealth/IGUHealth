@@ -1,4 +1,4 @@
-import { FHIRResponse } from "@iguhealth/client/types";
+import { AllInteractions, FHIRResponse } from "@iguhealth/client/types";
 import { BundleEntry, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -28,7 +28,7 @@ export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
 
 export function fhirResponseToBundleEntry(
   tenant: TenantId,
-  fhirResponse: FHIRResponse<FHIR_VERSION>,
+  fhirResponse: FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 ): BundleEntry {
   const httpResponse = fhirResponseToHTTPResponse(fhirResponse);
   return {
