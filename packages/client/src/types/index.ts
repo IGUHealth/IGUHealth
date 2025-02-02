@@ -1,5 +1,6 @@
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   Resource,
   ResourceType,
@@ -182,22 +183,23 @@ export interface PatchResponse<Version extends FHIR_VERSION>
 export interface InstanceDeleteResponse<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
   type: ResponseType["delete"];
+  deletion?: Resource<Version, AllResourceTypes>;
 }
 
 export interface TypeDeleteResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
   type: ResponseType["delete"];
-  // For conditional deletes include the ids of the resources that were deleted.
-  deletions?: { id: id; type: ResourceType<Version> }[];
+  // For conditional deletes include the resources that were deleted.
+  deletion?: Resource<Version, AllResourceTypes>[];
 }
 
 export interface SystemDeleteResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   parameters: ParsedParameter<string | number>[];
   type: ResponseType["delete"];
-  // For conditional deletes include the ids of the resources that were deleted.
-  deletions?: { id: id; type: ResourceType<Version> }[];
+  // For conditional deletes include the resources that were deleted.
+  deletion?: Resource<Version, AllResourceTypes>[];
 }
 
 export interface InstanceHistoryResponse<Version extends FHIR_VERSION>

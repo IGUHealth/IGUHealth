@@ -269,7 +269,12 @@ async function updateResource<
 async function deleteResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
->(ctx: CTX, fhirVersion: Version, resourceType: ResourceType<Version>, id: id) {
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  resourceType: ResourceType<Version>,
+  id: id,
+): Promise<Resource<Version, ResourceType<Version>>> {
   const resource = await getResource(ctx, fhirVersion, resourceType, id);
   if (!resource)
     throw new OperationError(
@@ -278,6 +283,8 @@ async function deleteResource<
         `'${resourceType}' with id '${id}' was not found`,
       ),
     );
+
+  return version(ctx, resource);
 }
 
 async function conditionalDelete(
@@ -302,15 +309,14 @@ async function conditionalDelete(
       outcomeError("too-costly", "The operation is too costly to perform."),
     );
 
-  const deletions = await Promise.all(
+  const deletion = await Promise.all(
     result.result.map(async (typeId) => {
-      await deleteResource(
+      return deleteResource(
         ctx,
         searchRequest.fhirVersion,
         typeId.type,
         typeId.id,
       );
-      return typeId;
     }),
   );
 
@@ -325,7 +331,7 @@ async function conditionalDelete(
             level: "type",
             resource: searchRequest.resource,
             parameters: searchRequest.parameters,
-            deletions,
+            deletion,
           } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
         }
         default: {
@@ -341,7 +347,7 @@ async function conditionalDelete(
         type: "delete-response",
         level: "system",
         parameters: searchRequest.parameters,
-        deletions,
+        deletion,
       } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
     }
   }
@@ -723,7 +729,7 @@ function createStorageMiddleware<
       case "delete-request": {
         switch (context.request.level) {
           case "instance": {
-            await deleteResource(
+            const deletion = await deleteResource(
               context.ctx,
               context.request.fhirVersion,
               context.request.resource,
@@ -740,6 +746,7 @@ function createStorageMiddleware<
                 level: "instance",
                 resource: context.request.resource,
                 id: context.request.id,
+                deletion,
               } as FHIRResponse<typeof context.request.fhirVersion, "delete">,
             });
           }

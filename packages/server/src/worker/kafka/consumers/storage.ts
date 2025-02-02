@@ -39,16 +39,39 @@ async function handleMutation(
     }
 
     case queue.isOperationType("update", mutation): {
-      ctx.store.insert(ctx, "resources", mutation.request.value);
+      await ctx.store.insert(ctx, "resources", {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+        request_method: "PUT",
+        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+        resource: mutation.response.body as unknown as db.JSONObject,
+      });
       return;
     }
 
     case queue.isOperationType("patch", mutation): {
-      ctx.store.insert(ctx, "resources", mutation.request.value);
+      await ctx.store.insert(ctx, "resources", {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+        request_method: "PATCH",
+        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+        resource: mutation.response.body as unknown as db.JSONObject,
+      });
       return;
     }
 
     case queue.isOperationType("delete", mutation): {
+      switch (mutation.response.level) {
+        case "instance": {
+        }
+        case "system": {
+        }
+        case "type": {
+        }
+      }
+
       ctx.store.insert(ctx, "resources", {
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
