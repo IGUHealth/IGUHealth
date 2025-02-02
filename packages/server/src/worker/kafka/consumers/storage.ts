@@ -1,6 +1,6 @@
 import * as db from "zapatos/db";
 
-import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import createEmailProvider from "../../../email/index.js";

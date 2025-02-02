@@ -1,5 +1,3 @@
-import * as s from "zapatos/schema";
-
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { createClient, createLogger } from "../../../fhir-server/index.js";
