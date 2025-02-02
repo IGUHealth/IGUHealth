@@ -1025,7 +1025,8 @@ function sendQueueMiddleweare<
                 {
                   type: toInteraction(res.request.type),
                   request: res.request,
-                  response: res.response as any,
+                  // @ts-ignore
+                  response: res.response,
                   author: {
                     [CUSTOM_CLAIMS.RESOURCE_TYPE]:
                       res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
