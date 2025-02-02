@@ -148,7 +148,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   await QueueBatch(ctx.state.iguhealth, async (iguhealth) => {
     const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
 
-    await sendPasswordResetEmail({ ...iguhealth, tenant }, membership, {
+    await sendPasswordResetEmail(asRoot({ ...iguhealth, tenant }), membership, {
       email: {
         acceptText: "Reset Password",
         body: "To verify your email and set your password click below.",

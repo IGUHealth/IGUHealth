@@ -1,53 +1,44 @@
-import * as s from "zapatos/schema";
-
 import {
-  InvokeInstanceRequest,
-  InvokeSystemRequest,
-  InvokeTypeRequest,
+  AllInteractions,
+  FHIRRequest,
+  FHIRResponse,
 } from "@iguhealth/client/lib/types";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
 
 import { DynamicTopic } from "./topics/dynamic-topic.js";
 import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
 
-export type MutationType = Extract<s.Table, "resources">;
+interface IOperation {
+  author: {
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: TOKEN_RESOURCE_TYPES;
+    [CUSTOM_CLAIMS.RESOURCE_ID]: id;
+  };
+}
 
-export type IType = "create" | "invoke";
+export type MutationTypes = Extract<
+  AllInteractions,
+  "create" | "update" | "delete" | "invoke" | "patch"
+>;
 
-interface IOperation<Type extends IType> {
+export interface Operation<
+  Version extends FHIR_VERSION,
+  Type extends MutationTypes,
+> extends IOperation {
   type: Type;
+  request: FHIRRequest<Version, Type>;
+  response: Type extends "invoke" ? undefined : FHIRResponse<Version, Type>;
 }
 
-interface IMutation<Resource extends MutationType, Interaction extends IType>
-  extends IOperation<Interaction> {
-  resource: Resource;
+export function isOperationType<I extends MutationTypes>(
+  interaction: I,
+  operation: Operation<FHIR_VERSION, MutationTypes>,
+): operation is Operation<FHIR_VERSION, I> {
+  return operation.type === interaction;
 }
 
-export interface CreateOperation<Type extends MutationType>
-  extends IMutation<Type, "create"> {
-  value: s.InsertableForTable<Type>;
-}
-
-export interface InvokeOperation extends IOperation<"invoke"> {
-  value:
-    | InvokeInstanceRequest<FHIR_VERSION>
-    | InvokeTypeRequest<FHIR_VERSION>
-    | InvokeSystemRequest<FHIR_VERSION>;
-}
-
-type OperationMap<Type extends MutationType> = {
-  create: CreateOperation<Type>;
-
-  invoke: InvokeOperation;
-};
-
-export type Operation<
-  Type extends MutationType,
-  Interaction extends IType,
-> = OperationMap<Type>[Interaction];
-
-export type Operations = (CreateOperation<MutationType> | InvokeOperation)[];
+export type Operations = Operation<FHIR_VERSION, MutationTypes>[];
 
 export interface IMessage {
   key?: string;

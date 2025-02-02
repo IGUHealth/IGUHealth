@@ -371,7 +371,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
       email: {
         subject: "IGUHealth Email Verification",
         body: "To verify your email and set your password click below.",
