@@ -1,13 +1,7 @@
 import * as s from "zapatos/schema";
 
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  Resource,
-} from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-import { toFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
@@ -22,42 +16,48 @@ import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
-import { gateMutation } from "../utilities.js";
+import { getTenantId } from "../utilities.js";
 
 async function handleMutation(
-  ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
+  ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.Operations[number],
 ) {
-  if (gateMutation("resources", "create", mutation)) {
-    if (mutation.value.deleted === true) {
-      const resource = mutation.value.resource as unknown as Resource<
-        FHIR_VERSION,
-        AllResourceTypes
-      >;
-      if (!resource.id) {
-        throw new Error("Resource ID is required for DELETE operation");
-      }
-      await ctx.search.removeIndex(
-        asRoot({
-          ...ctx,
-          tenant: mutation.value.tenant as TenantId,
-        }),
-        toFHIRVersion(mutation.value.fhir_version as s.fhir_version),
-        resource.id,
-        resource.resourceType,
-      );
-    } else {
+  switch (true) {
+    case queue.isOperationType("create", mutation):
+    case queue.isOperationType("update", mutation):
+    case queue.isOperationType("patch", mutation): {
       await ctx.search.index(
-        asRoot({
-          ...ctx,
-          tenant: mutation.value.tenant as TenantId,
-        }),
-        toFHIRVersion(mutation.value.fhir_version as s.fhir_version),
-        mutation.value.resource as unknown as Resource<
-          FHIR_VERSION,
-          AllResourceTypes
-        >,
+        asRoot(ctx),
+        mutation.response.fhirVersion,
+        mutation.response.body,
       );
+      return;
+    }
+    case queue.isOperationType("delete", mutation): {
+      switch (mutation.response.level) {
+        case "instance": {
+          await ctx.search.removeIndex(
+            asRoot(ctx),
+            mutation.response.fhirVersion,
+            mutation.response.id,
+            mutation.response.resource,
+          );
+          return;
+        }
+        case "type":
+        case "system": {
+          await Promise.all(
+            (mutation.response.deletion ?? []).map(async (r) => {
+              await ctx.search.removeIndex(
+                asRoot(ctx),
+                mutation.response.fhirVersion,
+                r.id as id,
+                r.resourceType,
+              );
+            }),
+          );
+        }
+      }
     }
   }
 }
@@ -69,10 +69,15 @@ const handler: MessageHandler<
     `[Indexing], Processing message ${message.key?.toString()}`,
   );
 
+  const tenantId = getTenantId(message);
+
   if (message.value) {
     const mutations: queue.Operations = JSON.parse(message.value.toString());
     for (const mutation of mutations) {
-      await handleMutation(iguhealthServices, mutation);
+      await handleMutation(
+        { ...iguhealthServices, tenant: tenantId },
+        mutation,
+      );
     }
   }
 };

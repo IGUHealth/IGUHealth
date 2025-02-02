@@ -8,6 +8,7 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 
 export function associateResourceVersionId<
   Version extends FHIR_VERSION,
@@ -61,4 +62,14 @@ export function associateVersionIdFromKafkaMessage(
     };
   }
   return returnVal;
+}
+
+export function getTenantId(message: KafkaMessage): TenantId {
+  const tenantId = message.headers?.tenant?.toString() as TenantId | undefined;
+
+  if (!tenantId) {
+    throw new Error("Tenant ID not found in message headers");
+  }
+
+  return tenantId;
 }

@@ -20,6 +20,7 @@ import { createSearchStore } from "../../../search-stores/index.js";
 import { DBTransaction } from "../../../transactions.js";
 import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
+import { getTenantId } from "../utilities.js";
 
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
@@ -105,6 +106,7 @@ async function handleMutation(
           throw new OperationError(
             outcomeError(
               "not-supported",
+              // @ts-ignore
               `Deletion level '${mutation.response.level}' is not supported.`,
             ),
           );
@@ -134,11 +136,7 @@ const handler: MessageHandler<
   iguhealthServices.logger.info(
     `[STORAGE], Processing message ${message.key?.toString()}`,
   );
-  const tenantId = message.headers?.tenant?.toString() as TenantId | undefined;
-
-  if (!tenantId) {
-    throw new Error("Tenant ID not found in message headers");
-  }
+  const tenantId = getTenantId(message);
 
   if (message.value) {
     const mutations: queue.Operations = JSON.parse(message.value.toString());
