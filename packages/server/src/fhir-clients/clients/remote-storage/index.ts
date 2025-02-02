@@ -91,7 +91,7 @@ async function createResource<
   // For creation force new id.
   resource.id = generateId();
 
-  return resource as unknown as Resource<Version, AllResourceTypes>;
+  return version(ctx, resource);
 }
 
 async function getResourceById<
@@ -176,19 +176,7 @@ async function patchResource<
       newResource.id = existingResource.id;
     }
 
-    const message = {
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "PATCH",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: version(ctx, newResource) as unknown as db.JSONObject,
-    };
-
-    const patchedResource = message.resource as unknown as Resource<
-      Version,
-      AllResourceTypes
-    >;
+    const patchedResource = version(ctx, newResource);
 
     return patchedResource;
   } catch (e) {
@@ -246,19 +234,7 @@ async function updateResource<
     });
   }
 
-  const message = {
-    tenant: ctx.tenant,
-    fhir_version: toDBFHIRVersion(fhirVersion),
-    request_method: "PUT",
-    author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-    author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    resource: version(ctx, resource) as unknown as db.JSONObject,
-  };
-
-  const updatedResource = message.resource as unknown as Resource<
-    Version,
-    AllResourceTypes
-  >;
+  const updatedResource = version(ctx, resource);
 
   return {
     created: existingResource === undefined,
