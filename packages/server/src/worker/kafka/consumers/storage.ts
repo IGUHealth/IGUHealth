@@ -63,25 +63,53 @@ async function handleMutation(
     }
 
     case queue.isOperationType("delete", mutation): {
+      if (!mutation.response.deletion) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            "Deletion operation must return a deletion object.",
+          ),
+        );
+      }
       switch (mutation.response.level) {
         case "instance": {
+          await ctx.store.insert(ctx, "resources", {
+            tenant: ctx.tenant,
+            fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+            request_method: "DELETE",
+            author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+            author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+            resource: mutation.response.deletion as unknown as db.JSONObject,
+            deleted: true,
+          });
+          return;
         }
+        case "type":
         case "system": {
+          await Promise.all(
+            (mutation.response.deletion ?? []).map(async (resourceToDelete) => {
+              await ctx.store.insert(ctx, "resources", {
+                tenant: ctx.tenant,
+                fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
+                request_method: "DELETE",
+                author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+                author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+                resource: resourceToDelete as unknown as db.JSONObject,
+                deleted: true,
+              });
+            }),
+          );
+          return;
         }
-        case "type": {
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `Deletion level '${mutation.response.level}' is not supported.`,
+            ),
+          );
         }
       }
-
-      ctx.store.insert(ctx, "resources", {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-        request_method: "DELETE",
-        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-        resource: mutation.response.body,
-        deleted: true,
-      });
-      return;
     }
 
     case queue.isOperationType("invoke", mutation): {
