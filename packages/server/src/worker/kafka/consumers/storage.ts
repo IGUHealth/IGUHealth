@@ -1,6 +1,7 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -46,53 +47,46 @@ function insertion(
   };
 }
 
+function toMethod(
+  response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,
+): "POST" | "PUT" | "DELETE" | "PATCH" {
+  switch (response.type) {
+    case "create-response":
+      return "POST";
+    case "patch-response":
+      return "PATCH";
+    case "update-response":
+      return "PUT";
+    case "delete-response":
+      return "DELETE";
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Operation type '${response.type}' is not supported in this consumer.`,
+        ),
+      );
+    }
+  }
+}
+
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.Operations[number],
 ) {
   switch (true) {
-    case queue.isOperationType("create", mutation): {
-      await ctx.store.insert(
-        ctx,
-        "resources",
-        insertion(
-          ctx.tenant,
-          mutation.response.fhirVersion,
-          "POST",
-          mutation.author,
-          mutation.response.body,
-        ),
-      );
-      return;
-    }
-
-    case queue.isOperationType("update", mutation): {
-      await ctx.store.insert(
-        ctx,
-        "resources",
-        insertion(
-          ctx.tenant,
-          mutation.response.fhirVersion,
-          "PUT",
-          mutation.author,
-          mutation.response.body,
-        ),
-      );
-      return;
-    }
-
+    case queue.isOperationType("create", mutation):
+    case queue.isOperationType("update", mutation):
     case queue.isOperationType("patch", mutation): {
-      await ctx.store.insert(
-        ctx,
-        "resources",
-        insertion(
-          ctx.tenant,
-          mutation.response.fhirVersion,
-          "PATCH",
-          mutation.author,
-          mutation.response.body,
-        ),
-      );
+      await ctx.store.insert(ctx, "resources", {
+        tenant: ctx.tenant,
+        fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+        request_method: toMethod(mutation.response),
+        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+        resource: mutation.response.body as unknown as db.JSONObject,
+        deleted: false,
+      });
       return;
     }
 
@@ -107,34 +101,30 @@ async function handleMutation(
       }
       switch (mutation.response.level) {
         case "instance": {
-          await ctx.store.insert(
-            ctx,
-            "resources",
-            insertion(
-              ctx.tenant,
-              mutation.response.fhirVersion,
-              "DELETE",
-              mutation.author,
-              mutation.response.deletion,
-            ),
-          );
+          await ctx.store.insert(ctx, "resources", {
+            tenant: ctx.tenant,
+            fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+            request_method: toMethod(mutation.response),
+            author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+            author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+            resource: mutation.response.deletion as unknown as db.JSONObject,
+            deleted: true,
+          });
           return;
         }
         case "type":
         case "system": {
           await Promise.all(
             (mutation.response.deletion ?? []).map(async (resourceToDelete) => {
-              await ctx.store.insert(
-                ctx,
-                "resources",
-                insertion(
-                  ctx.tenant,
-                  mutation.response.fhirVersion,
-                  "DELETE",
-                  mutation.author,
-                  resourceToDelete,
-                ),
-              );
+              await ctx.store.insert(ctx, "resources", {
+                tenant: ctx.tenant,
+                fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+                request_method: toMethod(mutation.response),
+                author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+                author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
+                resource: resourceToDelete as unknown as db.JSONObject,
+                deleted: true,
+              });
             }),
           );
           return;

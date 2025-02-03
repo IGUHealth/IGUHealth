@@ -1,5 +1,4 @@
 import jsonpatch, { Operation } from "fast-json-patch";
-import * as db from "zapatos/db";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/interface";
