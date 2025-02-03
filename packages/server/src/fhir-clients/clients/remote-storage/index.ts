@@ -8,9 +8,12 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  AllInteractions,
+  FHIRRequest,
   FHIRResponse,
   SystemSearchRequest,
   TypeSearchRequest,
+  toInteraction,
 } from "@iguhealth/client/types";
 import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -88,33 +91,7 @@ async function createResource<
   // For creation force new id.
   resource.id = generateId();
 
-  const message = {
-    tenant: ctx.tenant,
-    fhir_version: toDBFHIRVersion(fhirVersion),
-    request_method: "POST",
-    author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-    author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    resource: version(ctx, resource) as unknown as db.JSONObject,
-  };
-
-  await ctx.queue.sendTenant(
-    ctx.tenant,
-    TenantTopic(ctx.tenant, OperationsTopic),
-    [
-      {
-        key: resource.id,
-        value: [
-          {
-            resource: "resources",
-            type: "create",
-            value: message,
-          },
-        ],
-      },
-    ],
-  );
-
-  return message.resource as unknown as Resource<Version, AllResourceTypes>;
+  return version(ctx, resource);
 }
 
 async function getResourceById<
@@ -199,36 +176,7 @@ async function patchResource<
       newResource.id = existingResource.id;
     }
 
-    const message = {
-      tenant: ctx.tenant,
-      fhir_version: toDBFHIRVersion(fhirVersion),
-      request_method: "PATCH",
-      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-      resource: version(ctx, newResource) as unknown as db.JSONObject,
-    };
-
-    await ctx.queue.sendTenant(
-      ctx.tenant,
-      TenantTopic(ctx.tenant, OperationsTopic),
-      [
-        {
-          key: newResource.id as id,
-          value: [
-            {
-              resource: "resources",
-              type: "create",
-              value: message,
-            },
-          ],
-        },
-      ],
-    );
-
-    const patchedResource = message.resource as unknown as Resource<
-      Version,
-      AllResourceTypes
-    >;
+    const patchedResource = version(ctx, newResource);
 
     return patchedResource;
   } catch (e) {
@@ -286,36 +234,7 @@ async function updateResource<
     });
   }
 
-  const message = {
-    tenant: ctx.tenant,
-    fhir_version: toDBFHIRVersion(fhirVersion),
-    request_method: "PUT",
-    author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-    author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    resource: version(ctx, resource) as unknown as db.JSONObject,
-  };
-
-  await ctx.queue.sendTenant(
-    ctx.tenant,
-    TenantTopic(ctx.tenant, OperationsTopic),
-    [
-      {
-        key: resource.id as id,
-        value: [
-          {
-            resource: "resources",
-            type: "create",
-            value: message,
-          },
-        ],
-      },
-    ],
-  );
-
-  const updatedResource = message.resource as unknown as Resource<
-    Version,
-    AllResourceTypes
-  >;
+  const updatedResource = version(ctx, resource);
 
   return {
     created: existingResource === undefined,
@@ -326,7 +245,12 @@ async function updateResource<
 async function deleteResource<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
->(ctx: CTX, fhirVersion: Version, resourceType: ResourceType<Version>, id: id) {
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  resourceType: ResourceType<Version>,
+  id: id,
+): Promise<Resource<Version, ResourceType<Version>>> {
   const resource = await getResource(ctx, fhirVersion, resourceType, id);
   if (!resource)
     throw new OperationError(
@@ -336,30 +260,7 @@ async function deleteResource<
       ),
     );
 
-  await ctx.queue.sendTenant(
-    ctx.tenant,
-    TenantTopic(ctx.tenant, OperationsTopic),
-    [
-      {
-        key: resource.id as id,
-        value: [
-          {
-            resource: "resources",
-            type: "create",
-            value: {
-              tenant: ctx.tenant,
-              fhir_version: toDBFHIRVersion(fhirVersion),
-              request_method: "DELETE",
-              author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-              author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-              resource: version(ctx, resource) as unknown as db.JSONObject,
-              deleted: true,
-            },
-          },
-        ],
-      },
-    ],
-  );
+  return version(ctx, resource);
 }
 
 async function conditionalDelete(
@@ -384,15 +285,14 @@ async function conditionalDelete(
       outcomeError("too-costly", "The operation is too costly to perform."),
     );
 
-  const deletions = await Promise.all(
+  const deletion = await Promise.all(
     result.result.map(async (typeId) => {
-      await deleteResource(
+      return deleteResource(
         ctx,
         searchRequest.fhirVersion,
         typeId.type,
         typeId.id,
       );
-      return typeId;
     }),
   );
 
@@ -407,7 +307,7 @@ async function conditionalDelete(
             level: "type",
             resource: searchRequest.resource,
             parameters: searchRequest.parameters,
-            deletions,
+            deletion,
           } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
         }
         default: {
@@ -423,7 +323,7 @@ async function conditionalDelete(
         type: "delete-response",
         level: "system",
         parameters: searchRequest.parameters,
-        deletions,
+        deletion,
       } as FHIRResponse<typeof searchRequest.fhirVersion, "delete">;
     }
   }
@@ -433,7 +333,7 @@ function createStorageMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends StorageState,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function storageMiddleware(context) {
+  return async function storageMiddleware(context, next) {
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
@@ -450,7 +350,8 @@ function createStorageMiddleware<
             ),
           );
         }
-        return {
+
+        return next({
           state: context.state,
           ctx: context.ctx,
           request: context.request,
@@ -462,7 +363,7 @@ function createStorageMiddleware<
             id: context.request.id,
             body: resource,
           } as FHIRResponse<typeof context.request.fhirVersion, "read">,
-        };
+        });
       }
       case "vread-request": {
         const foundResources = await context.ctx.store.readResourcesByVersionId(
@@ -504,7 +405,7 @@ function createStorageMiddleware<
           );
         }
 
-        return {
+        return next({
           state: context.state,
           ctx: context.ctx,
           request: context.request,
@@ -517,7 +418,7 @@ function createStorageMiddleware<
             versionId: context.request.versionId,
             body: foundResource,
           } as FHIRResponse<typeof context.request.fhirVersion, "vread">,
-        };
+        });
       }
       case "search-request": {
         const result = await context.ctx.search.search(
@@ -533,7 +434,7 @@ function createStorageMiddleware<
 
         switch (context.request.level) {
           case "system": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -555,10 +456,10 @@ function createStorageMiddleware<
                   ),
                 },
               } as FHIRResponse<typeof context.request.fhirVersion, "search">,
-            };
+            });
           }
           case "type": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -581,7 +482,7 @@ function createStorageMiddleware<
                   ),
                 },
               } as FHIRResponse<typeof context.request.fhirVersion, "search">,
-            };
+            });
           }
           default: {
             throw new Error("Invalid search level");
@@ -589,7 +490,7 @@ function createStorageMiddleware<
         }
       }
       case "create-request": {
-        return {
+        return next({
           request: context.request,
           state: context.state,
           ctx: context.ctx,
@@ -604,7 +505,7 @@ function createStorageMiddleware<
               context.request.body,
             ),
           } as FHIRResponse<typeof context.request.fhirVersion, "create">,
-        };
+        });
       }
 
       case "patch-request": {
@@ -616,7 +517,7 @@ function createStorageMiddleware<
           context.request.body as Operation[],
         );
 
-        return {
+        return next({
           request: context.request,
           state: context.state,
           ctx: context.ctx,
@@ -628,7 +529,7 @@ function createStorageMiddleware<
             type: "patch-response",
             body: savedResource,
           } as FHIRResponse<typeof context.request.fhirVersion, "patch">,
-        };
+        });
       }
       case "update-request": {
         switch (context.request.level) {
@@ -680,7 +581,7 @@ function createStorageMiddleware<
                     request.body,
                   );
 
-                  return {
+                  return next({
                     request: context.request,
                     state: context.state,
                     ctx: context.ctx,
@@ -696,14 +597,14 @@ function createStorageMiddleware<
                       typeof context.request.fhirVersion,
                       "update"
                     >,
-                  };
+                  });
                 } else {
                   const resource = await createResource(
                     context.ctx,
                     request.fhirVersion,
                     request.body,
                   );
-                  return {
+                  return next({
                     request: context.request,
                     state: context.state,
                     ctx: context.ctx,
@@ -718,7 +619,7 @@ function createStorageMiddleware<
                       typeof context.request.fhirVersion,
                       "update"
                     >,
-                  };
+                  });
                 }
               }
               // One Match, no resource id provided OR (resource id provided and it matches the found resource):
@@ -740,7 +641,7 @@ function createStorageMiddleware<
                   request.fhirVersion,
                   { ...request.body, id: foundResource.id },
                 );
-                return {
+                return next({
                   request: context.request,
                   state: context.state,
                   ctx: context.ctx,
@@ -756,7 +657,7 @@ function createStorageMiddleware<
                     typeof context.request.fhirVersion,
                     "update"
                   >,
-                };
+                });
               }
               // Multiple matches: The server returns a 412 Precondition
               // Failed error indicating the client's criteria were not selective enough preferably with an OperationOutcome
@@ -779,7 +680,7 @@ function createStorageMiddleware<
               },
             );
 
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -792,7 +693,7 @@ function createStorageMiddleware<
                 created: created,
                 body: resource,
               } as FHIRResponse<typeof context.request.fhirVersion, "update">,
-            };
+            });
           }
           default: {
             throw new OperationError(
@@ -804,14 +705,14 @@ function createStorageMiddleware<
       case "delete-request": {
         switch (context.request.level) {
           case "instance": {
-            await deleteResource(
+            const deletion = await deleteResource(
               context.ctx,
               context.request.fhirVersion,
               context.request.resource,
               context.request.id,
             );
 
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -821,11 +722,12 @@ function createStorageMiddleware<
                 level: "instance",
                 resource: context.request.resource,
                 id: context.request.id,
+                deletion,
               } as FHIRResponse<typeof context.request.fhirVersion, "delete">,
-            };
+            });
           }
           case "type": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -836,10 +738,10 @@ function createStorageMiddleware<
                 resource: context.request.resource,
                 parameters: context.request.parameters,
               } as TypeSearchRequest<FHIR_VERSION>),
-            };
+            });
           }
           case "system": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -849,7 +751,7 @@ function createStorageMiddleware<
                 level: "system",
                 parameters: context.request.parameters,
               } as SystemSearchRequest<FHIR_VERSION>),
-            };
+            });
           }
           default: {
             throw new OperationError(
@@ -867,7 +769,7 @@ function createStorageMiddleware<
 
         switch (context.request.level) {
           case "instance": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -883,10 +785,10 @@ function createStorageMiddleware<
                   entry: history,
                 },
               } as FHIRResponse<typeof context.request.fhirVersion, "history">,
-            };
+            });
           }
           case "type": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -901,10 +803,10 @@ function createStorageMiddleware<
                   entry: history,
                 },
               } as FHIRResponse<typeof context.request.fhirVersion, "history">,
-            };
+            });
           }
           case "system": {
-            return {
+            return next({
               request: context.request,
               state: context.state,
               ctx: context.ctx,
@@ -918,7 +820,7 @@ function createStorageMiddleware<
                   entry: history,
                 },
               } as FHIRResponse<typeof context.request.fhirVersion, "history">,
-            };
+            });
           }
           default: {
             throw new OperationError(
@@ -1038,7 +940,7 @@ function createStorageMiddleware<
             entry: responseEntries,
           };
 
-          return {
+          return next({
             state: context.state,
             ctx: context.ctx,
             request: context.request,
@@ -1051,7 +953,7 @@ function createStorageMiddleware<
               typeof context.request.fhirVersion,
               "transaction"
             >,
-          };
+          });
         });
       }
       default: {
@@ -1061,6 +963,86 @@ function createStorageMiddleware<
             `Requests of type '${context.request.type}' are not yet supported`,
           ),
         );
+      }
+    }
+  };
+}
+
+function confirmTypeResponse<
+  I extends AllInteractions,
+  Version extends FHIR_VERSION,
+>(
+  req: FHIRRequest<Version, I>,
+  res: FHIRResponse<FHIR_VERSION, AllInteractions>,
+): res is FHIRResponse<Version, I> {
+  return (
+    req.fhirVersion === res.fhirVersion &&
+    req.type.replace("-request", "") === res?.type.replace("-response", "")
+  );
+}
+
+function sendQueueMiddleweare<
+  CTX extends IGUHealthServerCTX,
+  State extends StorageState,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async function storageMiddleware(context, next) {
+    const res = await next(context);
+
+    switch (res.request.type) {
+      case "create-request":
+      case "delete-request":
+      case "update-request":
+      case "patch-request":
+      case "invoke-request": {
+        if (res.response?.type === "error-response") {
+          return res;
+        }
+
+        if (!res.response) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `Response not found for request type '${res.request.type}'`,
+            ),
+          );
+        }
+
+        if (!confirmTypeResponse(res.request, res.response)) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `Response type does not match request type.`,
+            ),
+          );
+        }
+
+        await context.ctx.queue.sendTenant(
+          res.ctx.tenant,
+          TenantTopic(res.ctx.tenant, OperationsTopic),
+          [
+            {
+              value: [
+                {
+                  type: toInteraction(res.request.type),
+                  request: res.request,
+                  // @ts-ignore
+                  response: res.response,
+                  author: {
+                    [CUSTOM_CLAIMS.RESOURCE_TYPE]:
+                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+                    [CUSTOM_CLAIMS.RESOURCE_ID]:
+                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+                  },
+                },
+              ],
+            },
+          ],
+        );
+
+        return res;
+      }
+      default: {
+        return res;
       }
     }
   };
@@ -1077,14 +1059,12 @@ export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit: number;
   synchronousIndexing: boolean;
 }): FHIRClient<CTX> {
-  const middleware: MiddlewareAsyncChain<StorageState, CTX>[] = [
-    createStorageMiddleware(),
-  ];
-
   return new AsynchronousClient<StorageState, CTX>(
     {
       transaction_entry_limit,
     },
-    createMiddlewareAsync(middleware, { logging: false }),
+    createMiddlewareAsync([createStorageMiddleware(), sendQueueMiddleweare()], {
+      logging: false,
+    }),
   );
 }

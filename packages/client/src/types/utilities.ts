@@ -21,6 +21,12 @@ export type Interaction = {
   invoke: "invoke";
 };
 
+export function toInteraction<I extends AllInteractions>(
+  r: RequestType[I] | ResponseType[I],
+): I {
+  return r.split("-")[0] as I;
+}
+
 export type AllInteractions = Interaction[keyof Interaction];
 
 export type RequestType = {

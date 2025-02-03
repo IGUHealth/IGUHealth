@@ -68,7 +68,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       );
     }
 
-    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
       email: {
         subject: "IGUHealth Email Verification",
         body: "To verify your email and set your password click below.",
@@ -101,7 +101,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       `A new user with email '${user[0]?.email}' has signed up.`,
     );
 
-    await sendPasswordResetEmail(ctx.state.iguhealth, membership, {
+    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
       email: {
         subject: "IGUHealth Email Verification",
         body: "To verify your email and set your password click below.",

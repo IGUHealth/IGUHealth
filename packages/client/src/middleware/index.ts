@@ -27,6 +27,7 @@ export type MiddlewareAsync<
   key?: string;
   state: State;
   ctx: CTX;
+  response?: Response;
   request: Request;
 }) => Promise<{
   key?: string;

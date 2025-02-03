@@ -1,12 +1,13 @@
 import { Membership, Parameters, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { OperationsTopic, TenantTopic } from "../queue/topics/index.js";
 
 export async function sendPasswordResetEmail(
-  ctx: Pick<IGUHealthServerCTX, "queue" | "tenant">,
+  ctx: Pick<IGUHealthServerCTX, "queue" | "tenant" | "user">,
   membership: Membership,
   input: IguhealthPasswordReset.Input,
 ): Promise<void> {
@@ -18,8 +19,14 @@ export async function sendPasswordResetEmail(
         key: membership.id as id,
         value: [
           {
+            author: {
+              [CUSTOM_CLAIMS.RESOURCE_TYPE]:
+                ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+              [CUSTOM_CLAIMS.RESOURCE_ID]:
+                ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+            },
             type: "invoke",
-            value: {
+            request: {
               level: "instance",
               fhirVersion: R4,
               resource: "Membership",
@@ -31,6 +38,7 @@ export async function sendPasswordResetEmail(
                 input,
               ) as Parameters,
             },
+            response: undefined,
           },
         ],
       },

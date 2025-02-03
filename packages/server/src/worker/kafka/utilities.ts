@@ -8,8 +8,7 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-
-import * as queue from "../../queue/interface.js";
+import { TenantId } from "@iguhealth/jwt";
 
 export function associateResourceVersionId<
   Version extends FHIR_VERSION,
@@ -65,13 +64,12 @@ export function associateVersionIdFromKafkaMessage(
   return returnVal;
 }
 
-export function gateMutation<
-  Resource extends queue.MutationType,
-  Type extends Exclude<queue.IType, "invoke">,
->(
-  resource: Resource,
-  type: Type,
-  mutation: queue.Operations[number],
-): mutation is queue.Operation<Resource, Type> {
-  return mutation.type === type && mutation.resource === resource;
+export function getTenantId(message: KafkaMessage): TenantId {
+  const tenantId = message.headers?.tenant?.toString() as TenantId | undefined;
+
+  if (!tenantId) {
+    throw new Error("Tenant ID not found in message headers");
+  }
+
+  return tenantId;
 }
