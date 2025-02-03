@@ -29,24 +29,6 @@ import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";
 
-function insertion(
-  tenant: TenantId,
-  fhirVersion: FHIR_VERSION,
-  method: "POST" | "PUT" | "DELETE" | "PATCH",
-  author: queue.Operations[number]["author"],
-  resource: Resource<FHIR_VERSION, AllResourceTypes>,
-): s.resources.Insertable {
-  return {
-    tenant: tenant,
-    fhir_version: toDBFHIRVersion(fhirVersion),
-    request_method: method,
-    author_type: author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-    author_id: author[CUSTOM_CLAIMS.RESOURCE_ID],
-    resource: resource as unknown as db.JSONObject,
-    deleted: method === "DELETE",
-  };
-}
-
 function toMethod(
   response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,
 ): "POST" | "PUT" | "DELETE" | "PATCH" {
