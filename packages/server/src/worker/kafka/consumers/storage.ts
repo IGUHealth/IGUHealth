@@ -1,6 +1,12 @@
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
-import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
+import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import createEmailProvider from "../../../email/index.js";
@@ -22,44 +28,71 @@ import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";
 
+function insertion(
+  tenant: TenantId,
+  fhirVersion: FHIR_VERSION,
+  method: "POST" | "PUT" | "DELETE" | "PATCH",
+  author: queue.Operations[number]["author"],
+  resource: Resource<FHIR_VERSION, AllResourceTypes>,
+): s.resources.Insertable {
+  return {
+    tenant: tenant,
+    fhir_version: toDBFHIRVersion(fhirVersion),
+    request_method: method,
+    author_type: author[CUSTOM_CLAIMS.RESOURCE_TYPE],
+    author_id: author[CUSTOM_CLAIMS.RESOURCE_ID],
+    resource: resource as unknown as db.JSONObject,
+    deleted: method === "DELETE",
+  };
+}
+
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
   mutation: queue.Operations[number],
 ) {
   switch (true) {
     case queue.isOperationType("create", mutation): {
-      await ctx.store.insert(ctx, "resources", {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-        request_method: "POST",
-        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-        resource: mutation.response.body as unknown as db.JSONObject,
-      });
+      await ctx.store.insert(
+        ctx,
+        "resources",
+        insertion(
+          ctx.tenant,
+          mutation.response.fhirVersion,
+          "POST",
+          mutation.author,
+          mutation.response.body,
+        ),
+      );
       return;
     }
 
     case queue.isOperationType("update", mutation): {
-      await ctx.store.insert(ctx, "resources", {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-        request_method: "PUT",
-        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-        resource: mutation.response.body as unknown as db.JSONObject,
-      });
+      await ctx.store.insert(
+        ctx,
+        "resources",
+        insertion(
+          ctx.tenant,
+          mutation.response.fhirVersion,
+          "PUT",
+          mutation.author,
+          mutation.response.body,
+        ),
+      );
       return;
     }
 
     case queue.isOperationType("patch", mutation): {
-      await ctx.store.insert(ctx, "resources", {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-        request_method: "PATCH",
-        author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-        resource: mutation.response.body as unknown as db.JSONObject,
-      });
+      await ctx.store.insert(
+        ctx,
+        "resources",
+        insertion(
+          ctx.tenant,
+          mutation.response.fhirVersion,
+          "PATCH",
+          mutation.author,
+          mutation.response.body,
+        ),
+      );
       return;
     }
 
@@ -74,30 +107,34 @@ async function handleMutation(
       }
       switch (mutation.response.level) {
         case "instance": {
-          await ctx.store.insert(ctx, "resources", {
-            tenant: ctx.tenant,
-            fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-            request_method: "DELETE",
-            author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-            author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-            resource: mutation.response.deletion as unknown as db.JSONObject,
-            deleted: true,
-          });
+          await ctx.store.insert(
+            ctx,
+            "resources",
+            insertion(
+              ctx.tenant,
+              mutation.response.fhirVersion,
+              "DELETE",
+              mutation.author,
+              mutation.response.deletion,
+            ),
+          );
           return;
         }
         case "type":
         case "system": {
           await Promise.all(
             (mutation.response.deletion ?? []).map(async (resourceToDelete) => {
-              await ctx.store.insert(ctx, "resources", {
-                tenant: ctx.tenant,
-                fhir_version: toDBFHIRVersion(mutation.request.fhirVersion),
-                request_method: "DELETE",
-                author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
-                author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
-                resource: resourceToDelete as unknown as db.JSONObject,
-                deleted: true,
-              });
+              await ctx.store.insert(
+                ctx,
+                "resources",
+                insertion(
+                  ctx.tenant,
+                  mutation.response.fhirVersion,
+                  "DELETE",
+                  mutation.author,
+                  resourceToDelete,
+                ),
+              );
             }),
           );
           return;
