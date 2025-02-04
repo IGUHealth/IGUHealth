@@ -141,6 +141,9 @@ jobs:
         run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -t 500
 
       - name: Subscription Testscripts
+        env:
+          CLIENT_ID: test-client
+          CLIENT_SECRET: mysecret
         run: |
           yarn workspace @iguhealth/server cli admin tenant create -i test-system2 -t unlimited -e test2@iguhealth.app -p testing
           yarn workspace @iguhealth/server cli admin client-app create -t test-system2 -i $CLIENT_ID -s $CLIENT_SECRET
