@@ -34,11 +34,7 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import {
-  ITopicMessage,
-  OperationsTopic,
-  TenantTopic,
-} from "../../../queue/topics/index.js";
+import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,

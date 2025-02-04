@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IMessage, IQueue, IQueueBatch } from "./interface.js";
+import { IQueue, IQueueBatch } from "./interface.js";
 import {
   ITopic,
   ITopicMessage,
