@@ -1,5 +1,6 @@
 import { TenantId } from "@iguhealth/jwt";
 
+import { TenantMessage } from "../interface.js";
 import { ITopic, ITopicPattern } from "./index.js";
 
 export type TopicType = "operations" | "error";
@@ -12,7 +13,7 @@ declare const __topicType: unique symbol;
 export type TenantTopic<Tenant extends TenantId, Type extends TopicType> = {
   [__tenant]: Tenant;
   [__topicType]: Type;
-} & ITopic;
+} & ITopic<TenantMessage>;
 
 export const TenantTopic = <Tenant extends TenantId, Type extends TopicType>(
   tenant: Tenant,

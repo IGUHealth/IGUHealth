@@ -1,0 +1,45 @@
+{
+    "id": "qr-subscription-check-to",
+    "title": "Confirm QR Subscription payload received.",
+    "resourceType": "TestScript",
+    "test": [
+        {
+            "id": "verify-qr",
+            "name": "Verify QR",
+            "description": "Verifies QR existance the from.testscript.json script",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "search"
+                        },
+                        "resource": "QuestionnaireResponse",
+                        "params": "_tag=qr-subscription-check-test"
+                    }
+                },
+                {
+                    "assert": {
+                        "expression": "Bundle.entry.resource.type().type",
+                        "operator": "contains",
+                        "value": "QuestionnaireResponse"
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "params": "_tag=qr-subscription-check-test",
+                    "description": "Cleanup"
+                }
+            }
+        ]
+    }
+}

@@ -19,6 +19,7 @@ export async function sendPasswordResetEmail(
         key: membership.id as id,
         value: [
           {
+            fhirVersion: R4,
             author: {
               [CUSTOM_CLAIMS.RESOURCE_TYPE]:
                 ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],

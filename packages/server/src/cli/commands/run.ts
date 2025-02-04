@@ -3,7 +3,7 @@ import { Command } from "commander";
 import createServer from "../../server.js";
 import createIndexingWorker from "../../worker/kafka/consumers/search-indexing.js";
 import createStorageWorker from "../../worker/kafka/consumers/storage.js";
-import createWorker from "../../worker/v1.js";
+import createSubscriptionWorker from "../../worker/kafka/consumers/subscription-v1/index.js";
 
 async function runServer(port: number) {
   const server = await createServer();
@@ -12,7 +12,7 @@ async function runServer(port: number) {
 
 type Services = {
   server?: Awaited<ReturnType<typeof runServer>>;
-  workers: Awaited<ReturnType<typeof createWorker>>[];
+  workers: Awaited<ReturnType<typeof createSubscriptionWorker>>[];
 };
 
 let runningServices: Services = { workers: [] };
@@ -37,7 +37,7 @@ const worker: Parameters<Command["action"]>[0] = async () => {
   terminateServices();
   runningServices = {
     ...runningServices,
-    workers: [await createWorker()],
+    workers: [await createSubscriptionWorker()],
   };
 };
 
@@ -55,14 +55,12 @@ const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
 
 const all: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
-  let workers: Array<() => Promise<void>> = await Promise.all([
+  const [server, ...workers] = await Promise.all([
+    runServer(options.port),
     createStorageWorker(),
     createIndexingWorker(),
+    createSubscriptionWorker(),
   ]);
-
-  const server = await runServer(options.port);
-
-  workers = workers.concat([await createWorker()]);
 
   runningServices = {
     server,

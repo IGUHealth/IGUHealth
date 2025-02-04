@@ -1,4 +1,4 @@
-import jsonpatch, { Operation } from "fast-json-patch";
+import jsonpatch, { Operation as JSONPatchOperation } from "fast-json-patch";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/interface";
@@ -44,7 +44,6 @@ import {
   fhirResponseToBundleEntry,
 } from "../../utilities/bundle.js";
 import { generateId } from "../../utilities/generateId.js";
-import { toDBFHIRVersion } from "../../utilities/version.js";
 
 type StorageState = {
   transaction_entry_limit: number;
@@ -133,7 +132,7 @@ async function patchResource<
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: id,
-  patches: Operation[],
+  patches: JSONPatchOperation[],
 ): Promise<Resource<Version, AllResourceTypes>> {
   const existingResource = await getResource(
     ctx,
@@ -513,7 +512,7 @@ function createStorageMiddleware<
           context.request.fhirVersion,
           context.request.resource,
           context.request.id,
-          context.request.body as Operation[],
+          context.request.body as JSONPatchOperation[],
         );
 
         return next({
@@ -903,7 +902,7 @@ function createStorageMiddleware<
             // Generate patches to update the transaction references.
             const patches = entry.fullUrl
               ? (locationsToUpdate[entry.fullUrl] || []).map(
-                  (loc): Operation => {
+                  (loc): JSONPatchOperation => {
                     if (!responseEntry.response?.location)
                       throw new OperationError(
                         outcomeFatal(
@@ -1022,10 +1021,11 @@ function sendQueueMiddleweare<
             {
               value: [
                 {
+                  fhirVersion: res.response.fhirVersion,
                   type: toInteraction(res.request.type),
                   request: res.request,
-                  // @ts-ignore
-                  response: res.response,
+                  // eslint-disable-next-line
+                  response: res.response as any,
                   author: {
                     [CUSTOM_CLAIMS.RESOURCE_TYPE]:
                       res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
