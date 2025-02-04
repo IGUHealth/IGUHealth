@@ -7,8 +7,12 @@ import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
 
-import { DynamicTopic } from "./topics/dynamic-topic.js";
-import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
+import {
+  ITopic,
+  ITopicMessage,
+  TenantTopic,
+  TopicType,
+} from "./topics/index.js";
 
 interface IOperation {
   author: {
@@ -26,6 +30,7 @@ export interface Operation<
   Version extends FHIR_VERSION,
   Type extends MutationTypes,
 > extends IOperation {
+  fhirVersion: Version;
   type: Type;
   request: FHIRRequest<Version, Type>;
   response: Type extends "invoke" ? undefined : FHIRResponse<Version, Type>;
@@ -40,32 +45,25 @@ export function isOperationType<I extends MutationTypes>(
 
 export type Operations = Operation<FHIR_VERSION, MutationTypes>[];
 
-export interface IMessage {
+export interface IMessage<Value> {
   key?: string;
   headers?: Record<string, string>;
+  value: Value;
 }
 
-export interface TenantMessage extends IMessage {
-  value: Operations;
-}
+export type TenantMessage = IMessage<Operations>;
 
-export interface DynamicMessage extends IMessage {
-  value: {
-    action: "subscribe";
-    topic: ITopic;
-    consumer_groups: string[];
-  };
-}
-
-export type Message<T extends ITopic> =
-  T extends TenantTopic<TenantId, TopicType>
-    ? TenantMessage
-    : T extends DynamicTopic
-      ? DynamicMessage
-      : never;
+export type DynamicMessage = IMessage<{
+  action: "subscribe";
+  topic: ITopic;
+  consumer_groups: string[];
+}>;
 
 export interface IQueue {
-  send<T extends ITopic>(topic_id: T, messages: Message<T>[]): Promise<void>;
+  send<T extends ITopic>(
+    topic_id: T,
+    messages: ITopicMessage<T>[],
+  ): Promise<void>;
 
   sendTenant<
     Tenant extends TenantId,
@@ -74,7 +72,7 @@ export interface IQueue {
   >(
     tenant: Tenant,
     topic: T,
-    messages: Message<T>[],
+    messages: ITopicMessage<T>[],
   ): Promise<void>;
 
   batch(): Promise<IQueueBatch>;

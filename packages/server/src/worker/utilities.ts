@@ -15,9 +15,9 @@ import {
 import { getIssuer } from "../authN/oidc/constants.js";
 import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import RedisCache from "../cache/providers/redis.js";
+import { createArtifactMemoryDatabase } from "../fhir-clients/clients/memory/async.js";
 import { createLogger, getRedisClient } from "../fhir-server/index.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { createArtifactMemoryDatabase } from "../fhir-clients/clients/memory/async.js";
 import createResourceStore from "../resource-stores/index.js";
 import RedisLock from "../synchronization/redis.lock.js";
 

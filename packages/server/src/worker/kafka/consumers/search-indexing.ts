@@ -95,12 +95,14 @@ export default async function createIndexingWorker() {
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
     Consumers.SearchIndexing,
-    async (ctx, { topic, partition, message }) => {
-      try {
-        await handler(ctx, { message, topic, partition });
-      } catch (e) {
-        console.error(e);
-      }
+    {
+      eachMessage: async (ctx, { topic, partition, message }) => {
+        try {
+          await handler(ctx, { message, topic, partition });
+        } catch (e) {
+          console.error(e);
+        }
+      },
     },
   );
 

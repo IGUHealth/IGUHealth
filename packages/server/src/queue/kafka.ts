@@ -3,8 +3,13 @@ import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IQueue, IQueueBatch, Message } from "./interface.js";
-import { ITopic, TenantTopic, TopicType } from "./topics/index.js";
+import { IMessage, IQueue, IQueueBatch } from "./interface.js";
+import {
+  ITopic,
+  ITopicMessage,
+  TenantTopic,
+  TopicType,
+} from "./topics/index.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;
@@ -33,7 +38,7 @@ export class KafkaBatch implements IQueue, IQueueBatch {
 
   async send<T extends ITopic>(
     topic: T,
-    messages: Message<T>[],
+    messages: ITopicMessage<T>[],
   ): Promise<void> {
     this._messages[topic] = (this._messages[topic] ?? []).concat(
       messages.map((m) => ({
@@ -48,7 +53,7 @@ export class KafkaBatch implements IQueue, IQueueBatch {
     Tenant extends TenantId,
     Type extends TopicType,
     T extends TenantTopic<Tenant, Type>,
-  >(tenant: Tenant, topic: T, messages: Message<T>[]): Promise<void> {
+  >(tenant: Tenant, topic: T, messages: ITopicMessage<T>[]): Promise<void> {
     this.send(
       topic,
       messages.map((m) => ({ ...m, headers: { tenant, ...m.headers } })),
@@ -74,7 +79,7 @@ export class KafkaQueue implements IQueue {
 
   async send<T extends ITopic>(
     topic: T,
-    messages: Message<T>[],
+    messages: ITopicMessage<T>[],
   ): Promise<void> {
     await this._producer.send({
       topic: topic,
@@ -89,7 +94,7 @@ export class KafkaQueue implements IQueue {
     Tenant extends TenantId,
     Type extends TopicType,
     T extends TenantTopic<Tenant, Type>,
-  >(tenant: Tenant, topic: T, messages: Message<T>[]): Promise<void> {
+  >(tenant: Tenant, topic: T, messages: ITopicMessage<T>[]): Promise<void> {
     await this.send(
       topic,
       messages.map((m) => ({

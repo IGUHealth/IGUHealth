@@ -1,13 +1,8 @@
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { FHIRResponse } from "@iguhealth/client/lib/types";
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  Resource,
-} from "@iguhealth/fhir-types/versions";
-import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import createEmailProvider from "../../../email/index.js";
@@ -180,12 +175,14 @@ export default async function createStorageWorker() {
     iguhealthServices,
     TENANT_TOPIC_PATTERN(OperationsTopic),
     Consumers.Storage,
-    async (ctx, { topic, partition, message }) => {
-      try {
-        await handler(ctx, { topic, partition, message });
-      } catch (e) {
-        console.error(e);
-      }
+    {
+      eachMessage: async (ctx, { topic, partition, message }) => {
+        try {
+          await handler(ctx, { topic, partition, message });
+        } catch (e) {
+          console.error(e);
+        }
+      },
     },
   );
 

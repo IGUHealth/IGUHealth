@@ -1,0 +1,123 @@
+{
+    "id": "qr-subscription-check-from",
+    "title": "Simple subscription test check",
+    "description": "Creates a subscription for QR resources and sends to a test system.",
+    "resourceType": "TestScript",
+    "contained": [
+        {
+            "id": "qr-subscription",
+            "reason": "QR POST BACK",
+            "status": "active",
+            "channel": {
+                "type": "rest-hook",
+                "endpoint": "http://localhost:3000/w/test-system2/api/v1/fhir/r4/QuestionnaireResponse",
+                "header": [
+                    "Authorization: Basic c3Vic2NyaXB0aW9uLXRlc3Q6c2VjcmV0"
+                ]
+            },
+            "criteria": "QuestionnaireResponse",
+            "language": "en",
+            "resourceType": "Subscription",
+            "meta": {
+                "tag": [
+                    {
+                        "code": "qr-subscription-check-test"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "qr-1",
+            "resourceType": "QuestionnaireResponse",
+            "status": "completed",
+            "identifier": {
+                "system": "iguhealth-system",
+                "value": "test-qr"
+            },
+            "meta": {
+                "tag": [
+                    {
+                        "code": "qr-subscription-check-test"
+                    }
+                ]
+            }
+        }
+    ],
+    "fixture": [
+        {
+            "id": "subscription-1",
+            "resource": {
+                "reference": "#qr-subscription"
+            }
+        },
+        {
+            "id": "qr-1",
+            "resource": {
+                "reference": "#qr-1"
+            }
+        }
+    ],
+    "setup": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "create"
+                    },
+                    "resource": "Subscription",
+                    "sourceId": "subscription-1",
+                    "responseId": "create-response"
+                }
+            },
+            {
+                "assert": {
+                    "label": "01-ReadOK",
+                    "direction": "response",
+                    "resource": "Subscription"
+                }
+            }
+        ]
+    },
+    "test": [
+        {
+            "id": "send-qr",
+            "name": "Send QR",
+            "description": "Creates a QR which should get triggerd in Subscription.",
+            "action": [
+                {
+                    "operation": {
+                        "type": {
+                            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                            "code": "create"
+                        },
+                        "resource": "QuestionnaireResponse",
+                        "sourceId": "qr-1",
+                        "responseId": "qr-response"
+                    }
+                },
+                {
+                    "assert": {
+                        "label": "01-ReadQROK",
+                        "direction": "response",
+                        "resource": "QuestionnaireResponse"
+                    }
+                }
+            ]
+        }
+    ],
+    "teardown": {
+        "action": [
+            {
+                "operation": {
+                    "type": {
+                        "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+                        "code": "delete"
+                    },
+                    "params": "_tag=qr-subscription-check-test",
+                    "description": "Cleanup"
+                }
+            }
+        ]
+    }
+}

@@ -7,7 +7,7 @@ import {
   ITopic,
   ITopicPattern,
 } from "../../queue/topics/index.js";
-import { MessageHandler } from "./types.js";
+import { Handler, MessageHandler } from "./types.js";
 
 async function listTopics(kafka: Kafka, pattern: RegExp): Promise<ITopic[]> {
   return (await kafka.admin().listTopics()).filter((t) =>
@@ -35,11 +35,20 @@ async function dynamicTopicsSubscriber(
   };
 }
 
+function prefix(
+  topic: string,
+  partition: number,
+  offset: string,
+  timestamp: string,
+) {
+  return `${topic}[${partition} | ${offset}] / ${timestamp}`;
+}
+
 async function startConsumer<CTX>(
   consumer: Consumer,
   ctx: CTX,
   topic: ITopic[],
-  handler: MessageHandler<CTX>,
+  handler: Handler<CTX>,
 ): Promise<() => Promise<void>> {
   // For no topics just ignore.
   if (topic.length === 0)
@@ -54,15 +63,32 @@ async function startConsumer<CTX>(
   });
 
   await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      try {
-        await handler(ctx, { topic, partition, message });
-        const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
-        console.log(`- ${prefix} ${message.key}`);
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    eachMessage:
+      "eachMessage" in handler
+        ? async ({ topic, partition, message }) => {
+            try {
+              await handler.eachMessage(ctx, { topic, partition, message });
+              console.log(
+                `- ${prefix(topic, partition, message.offset, message.timestamp)} ${message.key}`,
+              );
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        : undefined,
+    eachBatch:
+      "eachBatch" in handler
+        ? async ({ batch }) => {
+            try {
+              await handler.eachBatch(ctx, { batch });
+              console.log(
+                `- ${prefix(batch.topic, batch.partition, batch.messages?.[0]?.offset, batch.messages?.[0]?.timestamp)} ${batch.messages.length} messages`,
+              );
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        : undefined,
   });
 
   const stop = async () => {
@@ -85,7 +111,7 @@ async function handlePattern<CTX>(
   topic: ITopicPattern,
   ctx: CTX,
   consumerGroupId: IConsumerGroupID,
-  handler: MessageHandler<CTX>,
+  handler: Handler<CTX>,
 ) {
   const topics = await listTopics(kafka, topic);
   let stop = await startConsumer(consumer, ctx, topics, handler);
@@ -96,7 +122,6 @@ async function handlePattern<CTX>(
     async () => {
       await stop();
       const topics = await listTopics(kafka, topic);
-
       stop = await startConsumer(consumer, ctx, topics, handler);
     },
   );
@@ -111,7 +136,7 @@ export default async function createKafkaConsumer<CTX>(
   ctx: CTX,
   topic: ITopic | ITopicPattern,
   consumerGroupId: IConsumerGroupID,
-  handler: MessageHandler<CTX>,
+  handler: Handler<CTX>,
 ): Promise<() => Promise<void>> {
   const kafka = createKafkaClient();
 
