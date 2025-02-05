@@ -8,6 +8,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
 
 import {
+  IConsumerGroupID,
   ITopic,
   ITopicMessage,
   TenantTopic,
@@ -56,7 +57,7 @@ export type TenantMessage = IMessage<Operations>;
 export type DynamicMessage = IMessage<{
   action: "subscribe";
   topic: ITopic;
-  consumer_groups: string[];
+  consumer_groups: IConsumerGroupID[];
 }>;
 
 export interface IQueue {

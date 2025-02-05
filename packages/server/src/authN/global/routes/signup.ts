@@ -10,7 +10,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
-import { TenantTopic } from "../../../queue/topics/index.js";
+import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
 import { DBTransaction, QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
@@ -85,7 +85,11 @@ async function createOrRetrieveUser(
             value: {
               action: "subscribe",
               topic: TenantTopic(tenant.id as TenantId, "operations"),
-              consumer_groups: ["storage", "search-indexing"],
+              consumer_groups: [
+                Consumers.Storage,
+                Consumers.SearchIndexing,
+                Consumers.SubscriptionV1,
+              ],
             },
           },
         ]);
