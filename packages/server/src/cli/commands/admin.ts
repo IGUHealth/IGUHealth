@@ -26,7 +26,7 @@ import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import { TenantTopic } from "../../queue/topics/index.js";
+import { Consumers, TenantTopic } from "../../queue/topics/index.js";
 import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
@@ -130,7 +130,11 @@ async function createTenant(
         value: {
           action: "subscribe",
           topic: TenantTopic(tenant.id as TenantId, "operations"),
-          consumer_groups: ["storage", "search-indexing"],
+          consumer_groups: [
+            Consumers.Storage,
+            Consumers.SearchIndexing,
+            Consumers.SubscriptionV1,
+          ],
         },
       },
     ]);
