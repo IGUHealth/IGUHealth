@@ -6,8 +6,11 @@ import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { createClient, createLogger } from "../../../fhir-server/index.js";
-import { getRedisClient } from "../../../fhir-server/index.js";
+import {
+  createClient,
+  createLogger,
+  getRedisClient,
+} from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
