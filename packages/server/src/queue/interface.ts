@@ -8,10 +8,10 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
 
 import {
+  FHIRTopic,
   IConsumerGroupID,
   ITopic,
   ITopicMessage,
-  TenantTopic,
   TopicType,
 } from "./topics/index.js";
 
@@ -44,7 +44,10 @@ export function isOperationType<I extends MutationTypes>(
   return operation.type === interaction;
 }
 
-export type Operations = Operation<FHIR_VERSION, MutationTypes>[];
+export type Operations<Version extends FHIR_VERSION> = Operation<
+  Version,
+  MutationTypes
+>[];
 
 export interface IMessage<Value> {
   key?: string;
@@ -52,11 +55,13 @@ export interface IMessage<Value> {
   value: Value;
 }
 
-export type TenantMessage = IMessage<Operations>;
+export type FHIRMessage<Version extends FHIR_VERSION> = IMessage<
+  Operations<Version>
+>;
 
-export type DynamicMessage = IMessage<{
+export type SubscribeMessage = IMessage<{
   action: "subscribe";
-  topic: ITopic;
+  topic: ITopic[];
   consumer_groups: IConsumerGroupID[];
 }>;
 
@@ -69,7 +74,8 @@ export interface IQueue {
   sendTenant<
     Tenant extends TenantId,
     Type extends TopicType,
-    T extends TenantTopic<Tenant, Type>,
+    Version extends FHIR_VERSION,
+    T extends FHIRTopic<Tenant, Version, Type>,
   >(
     tenant: Tenant,
     topic: T,

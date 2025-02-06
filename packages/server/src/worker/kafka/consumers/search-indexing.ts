@@ -1,4 +1,5 @@
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
@@ -7,8 +8,8 @@ import createQueue from "../../../queue/index.js";
 import * as queue from "../../../queue/interface.js";
 import {
   Consumers,
+  FHIR_TOPIC_PATTERN,
   OperationsTopic,
-  TENANT_TOPIC_PATTERN,
 } from "../../../queue/topics/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
@@ -18,7 +19,7 @@ import { getTenantId } from "../utilities.js";
 
 async function handleMutation(
   ctx: Omit<IGUHealthServerCTX, "user">,
-  mutation: queue.Operations[number],
+  mutation: queue.Operations<FHIR_VERSION>[number],
 ) {
   switch (true) {
     case queue.isOperationType("create", mutation):
@@ -70,7 +71,9 @@ const handler: MessageHandler<
   const tenantId = getTenantId(message);
 
   if (message.value) {
-    const mutations: queue.Operations = JSON.parse(message.value.toString());
+    const mutations: queue.Operations<FHIR_VERSION> = JSON.parse(
+      message.value.toString(),
+    );
     for (const mutation of mutations) {
       await handleMutation(
         { ...iguhealthServices, tenant: tenantId },
@@ -93,7 +96,7 @@ export default async function createIndexingWorker() {
 
   const stop = await createKafkaConsumer(
     iguhealthServices,
-    TENANT_TOPIC_PATTERN(OperationsTopic),
+    FHIR_TOPIC_PATTERN(OperationsTopic),
     Consumers.SearchIndexing,
     {
       eachMessage: async (ctx, { topic, partition, message }) => {

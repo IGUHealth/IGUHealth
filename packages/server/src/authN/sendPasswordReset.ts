@@ -4,7 +4,7 @@ import { IguhealthPasswordReset } from "@iguhealth/generated-ops/lib/r4/ops";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { OperationsTopic, TenantTopic } from "../queue/topics/index.js";
+import { FHIRTopic, OperationsTopic } from "../queue/topics/index.js";
 
 export async function sendPasswordResetEmail(
   ctx: Pick<IGUHealthServerCTX, "queue" | "tenant" | "user">,
@@ -13,7 +13,7 @@ export async function sendPasswordResetEmail(
 ): Promise<void> {
   await ctx.queue.sendTenant(
     ctx.tenant,
-    TenantTopic(ctx.tenant, OperationsTopic),
+    FHIRTopic(ctx.tenant, R4, OperationsTopic),
     [
       {
         key: membership.id as id,
