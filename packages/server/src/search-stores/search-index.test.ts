@@ -19,7 +19,6 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
-import spoof from "@iguhealth/meta-value/spoof";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
   fhirVersion: Version,

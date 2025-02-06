@@ -51,10 +51,10 @@ export function findPackageLocation(startDir: string) {
       const currentPath = path.join(dir, "package.json");
       const content = readFileSync(currentPath, { encoding: "utf8" });
       JSON.parse(content);
-      return dir;
+      return currentPath;
     } catch (e) {
-      if (!(e instanceof TypeError) || !("code" in e)) throw e;
-      if (e.code !== "ENOENT") throw e;
+      if (!(e instanceof Error) || !("code" in e)) throw e;
+      if (e.code !== "ENOENT" && e.code !== "ENOTDIR") throw e;
     }
     prevDir = dir;
     dir = path.resolve(dir, "..");
@@ -89,6 +89,7 @@ export default function loadArtifacts<
 }): Resource<Version, T>[] {
   const packageLocation = findPackageLocation(currentDirectory);
   const requirer = createRequire(packageLocation);
+
   const packageJSON: PackageJSON = requirer("./package.json");
 
   let deps = { ...packageJSON.dependencies };
