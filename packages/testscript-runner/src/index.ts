@@ -1075,6 +1075,8 @@ async function runTeardown<Version extends FHIR_VERSION>(
     teardownResults.push({ operation: output.result });
   }
 
+  state.logger.info({ message: "teardown results:", teardownResults });
+
   return { state: curState, result: { action: teardownResults } };
 }
 
@@ -1214,6 +1216,8 @@ export async function run<Version extends FHIR_VERSION>(
     return testReport;
   } finally {
     const output = await runTeardown(state, descend(pointer, "teardown"));
+    state = output.state;
+    testReport.result = state.result as code;
     testReport.teardown = output.result;
   }
 }
