@@ -52,9 +52,10 @@ export function findPackageLocation(startDir: string) {
       const content = readFileSync(currentPath, { encoding: "utf8" });
       JSON.parse(content);
       return currentPath;
-    } catch (e) {
-      if (!(e instanceof Error) || !("code" in e)) throw e;
-      if (e.code !== "ENOENT" && e.code !== "ENOTDIR") throw e;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((error as any).code !== "ENOENT" && (error as any).code !== "ENOTDIR")
+        throw error;
     }
     prevDir = dir;
     dir = path.resolve(dir, "..");
