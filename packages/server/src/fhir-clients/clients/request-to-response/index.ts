@@ -7,12 +7,9 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
-  AllInteractions,
-  FHIRRequest,
   FHIRResponse,
   SystemSearchRequest,
   TypeSearchRequest,
-  toInteraction,
 } from "@iguhealth/client/types";
 import { code, id, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -34,7 +31,6 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,
@@ -45,7 +41,7 @@ import {
 } from "../../utilities/bundle.js";
 import { generateId } from "../../utilities/generateId.js";
 
-type StorageState = {
+type RequestResponseState = {
   transaction_entry_limit: number;
 };
 
@@ -327,9 +323,9 @@ async function conditionalDelete(
   }
 }
 
-function createStorageMiddleware<
+function createRequestToResponseMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends StorageState,
+  State extends RequestResponseState,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function storageMiddleware(context, next) {
     switch (context.request.type) {
@@ -966,104 +962,27 @@ function createStorageMiddleware<
   };
 }
 
-function confirmTypeResponse<
-  I extends AllInteractions,
-  Version extends FHIR_VERSION,
->(
-  req: FHIRRequest<Version, I>,
-  res: FHIRResponse<FHIR_VERSION, AllInteractions>,
-): res is FHIRResponse<Version, I> {
-  return (
-    req.fhirVersion === res.fhirVersion &&
-    req.type.replace("-request", "") === res?.type.replace("-response", "")
-  );
-}
-
-function sendQueueMiddleweare<
-  CTX extends IGUHealthServerCTX,
-  State extends StorageState,
->(): MiddlewareAsyncChain<State, CTX> {
-  return async function storageMiddleware(context, next) {
-    const res = await next(context);
-
-    switch (res.request.type) {
-      case "create-request":
-      case "delete-request":
-      case "update-request":
-      case "patch-request":
-      case "invoke-request": {
-        if (res.response?.type === "error-response") {
-          return res;
-        }
-
-        if (!res.response) {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `Response not found for request type '${res.request.type}'`,
-            ),
-          );
-        }
-
-        if (!confirmTypeResponse(res.request, res.response)) {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `Response type does not match request type.`,
-            ),
-          );
-        }
-
-        await context.ctx.queue.sendTenant(
-          res.ctx.tenant,
-          TenantTopic(res.ctx.tenant, OperationsTopic),
-          [
-            {
-              value: [
-                {
-                  fhirVersion: res.response.fhirVersion,
-                  type: toInteraction(res.request.type),
-                  request: res.request,
-                  // eslint-disable-next-line
-                  response: res.response as any,
-                  author: {
-                    [CUSTOM_CLAIMS.RESOURCE_TYPE]:
-                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-                    [CUSTOM_CLAIMS.RESOURCE_ID]:
-                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-                  },
-                },
-              ],
-            },
-          ],
-        );
-
-        return res;
-      }
-      default: {
-        return res;
-      }
-    }
-  };
-}
-
 /**
  * Create a remote storage client.
  * @param param0 Options for the storage client.
  * @returns FHIRClient
  */
-export function createRemoteStorage<CTX extends IGUHealthServerCTX>({
+export function createRequestToResponse<CTX extends IGUHealthServerCTX>({
   transaction_entry_limit,
+  middleware = [],
 }: {
   transaction_entry_limit: number;
-  synchronousIndexing: boolean;
+  middleware: MiddlewareAsyncChain<RequestResponseState, CTX>[];
 }): FHIRClient<CTX> {
-  return new AsynchronousClient<StorageState, CTX>(
+  return new AsynchronousClient<RequestResponseState, CTX>(
     {
       transaction_entry_limit,
     },
-    createMiddlewareAsync([createStorageMiddleware(), sendQueueMiddleweare()], {
-      logging: false,
-    }),
+    createMiddlewareAsync(
+      [createRequestToResponseMiddleware(), ...middleware],
+      {
+        logging: false,
+      },
+    ),
   );
 }

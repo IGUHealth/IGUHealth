@@ -198,21 +198,6 @@ function createMemoryMiddleware<
                   context.request.resource,
                 ),
               );
-              // : ((resourceTypes.length > 0
-              //     ? resourceTypes
-              //     : Object.keys(
-              //         context.state.data[context.request.fhirVersion],
-              //       )
-              //   )
-              //     .map((k) =>
-              //       Object.values(
-              //         context.state.data[context.request.fhirVersion][
-              //           k as AllResourceTypes
-              //         ] ?? {},
-              //       ),
-              //     )
-              //     .flat() as r4.Resource[]);
-
               let result = [];
               for (const resource of resourceSet || []) {
                 // Performance opt and removes issue of recursion with search parameter queries.

@@ -8,9 +8,20 @@
       "id": "patient-chalmers",
       "resourceType": "Patient",
       "meta": {
-        "tag": [{ "code": "fullurl-test" }]
+        "tag": [
+          {
+            "code": "fullurl-test"
+          }
+        ]
       },
-      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+      "name": [
+        {
+          "family": "Chalmers",
+          "given": [
+            "Peter"
+          ]
+        }
+      ]
     }
   ],
   "fixture": [

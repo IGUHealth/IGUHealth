@@ -11,7 +11,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { createRemoteStorage } from "../remote-storage/index.js";
+import { createRemoteStorage } from "../request-to-response/index.js";
 
 export const TERMINOLOGY_RESOURCE_TYPES: ResourceType[] = [
   "ValueSet",
