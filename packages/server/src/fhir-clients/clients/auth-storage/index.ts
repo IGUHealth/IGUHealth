@@ -31,7 +31,7 @@ import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { QueueBatch } from "../../../transactions.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { createRemoteStorage } from "../request-to-response/index.js";
+import { createRequestToResponse } from "../request-to-response/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
 export const MEMBERSHIP_METHODS_ALLOWED: RequestType[AllInteractions][] = [
@@ -44,7 +44,7 @@ export const MEMBERSHIP_METHODS_ALLOWED: RequestType[AllInteractions][] = [
 ];
 
 type AuthState = {
-  fhirDB: ReturnType<typeof createRemoteStorage>;
+  fhirDB: ReturnType<typeof createRequestToResponse>;
 };
 
 async function customValidationMembership(
@@ -165,7 +165,7 @@ function limitOwnershipEdits<
 
 function customValidationMembershipMiddleware<
   State extends {
-    fhirDB: ReturnType<typeof createRemoteStorage>;
+    fhirDB: ReturnType<typeof createRequestToResponse>;
   },
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
