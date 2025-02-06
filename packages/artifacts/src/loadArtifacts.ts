@@ -1,4 +1,6 @@
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import path from "node:path";
 
 import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -40,6 +42,27 @@ function flattenOrInclude<
   return [];
 }
 
+export function findPackageLocation(startDir: string) {
+  let dir = startDir,
+    prevDir;
+
+  do {
+    try {
+      const currentPath = path.join(dir, "package.json");
+      const content = readFileSync(currentPath, { encoding: "utf8" });
+      JSON.parse(content);
+      return dir;
+    } catch (e) {
+      if (!(e instanceof TypeError) || !("code" in e)) throw e;
+      if (e.code !== "ENOENT") throw e;
+    }
+    prevDir = dir;
+    dir = path.resolve(dir, "..");
+  } while (dir !== prevDir);
+
+  throw new Error("Could not find package.json");
+}
+
 /**
  * Interface used to search dependencies for .index.json files and load their contents.
  * @param options Artifact Load options
@@ -51,19 +74,20 @@ export default function loadArtifacts<
 >({
   fhirVersion,
   resourceType,
-  packageLocation,
   silence,
   loadDevelopmentPackages,
   onlyPackages,
+  currentDirectory,
 }: {
   // Only support R4 and R4B for now.
   fhirVersion: Version;
   resourceType: T;
-  packageLocation: string;
   silence?: boolean;
   loadDevelopmentPackages?: boolean;
   onlyPackages?: string[];
+  currentDirectory: string;
 }): Resource<Version, T>[] {
+  const packageLocation = findPackageLocation(currentDirectory);
   const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
 

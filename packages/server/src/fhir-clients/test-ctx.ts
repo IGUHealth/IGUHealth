@@ -1,4 +1,3 @@
-import path from "path";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 import * as s from "zapatos/schema";
@@ -21,16 +20,16 @@ import {
 import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
-import { Lock } from "../synchronization/interfaces.js";
-import { Memory } from "./clients/memory/async.js";
 import createResourceStore from "../resource-stores/index.js";
 import { createSearchStore } from "../search-stores/index.js";
+import { Lock } from "../synchronization/interfaces.js";
+import { Memory } from "./clients/memory/async.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+  currentDirectory: fileURLToPath(import.meta.url),
   silence: true,
 });
 

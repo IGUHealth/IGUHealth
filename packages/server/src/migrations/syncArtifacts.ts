@@ -1,5 +1,4 @@
 import crypto from "node:crypto";
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -12,9 +11,9 @@ import { createClient, createLogger } from "../fhir-server/index.js";
 import { getRedisClient } from "../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../fhir-server/types.js";
 import createQueue from "../queue/index.js";
-import RedisLock from "../synchronization/redis.lock.js";
 import createResourceStore from "../resource-stores/index.js";
 import { createSearchStore } from "../search-stores/index.js";
+import RedisLock from "../synchronization/redis.lock.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -47,10 +46,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
       const resources = loadArtifacts({
         fhirVersion,
         resourceType: type,
-        packageLocation: path.join(
-          fileURLToPath(import.meta.url),
-          "../../../../../../../",
-        ),
+        currentDirectory: fileURLToPath(import.meta.url),
         silence: false,
       });
 
