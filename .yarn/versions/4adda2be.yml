@@ -1,0 +1,4 @@
+releases:
+  "@iguhealth/cli": patch
+  "@iguhealth/server": patch
+  "@iguhealth/testscript-runner": patch
