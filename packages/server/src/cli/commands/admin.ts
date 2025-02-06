@@ -10,7 +10,7 @@ import {
   Membership,
   code,
 } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import * as tenants from "../../authN/db/tenant.js";
@@ -26,7 +26,7 @@ import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import { Consumers, TenantTopic } from "../../queue/topics/index.js";
+import { Consumers, FHIRTopic } from "../../queue/topics/index.js";
 import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
@@ -129,7 +129,10 @@ async function createTenant(
       {
         value: {
           action: "subscribe",
-          topic: TenantTopic(tenant.id as TenantId, "operations"),
+          topic: [
+            FHIRTopic(tenant.id as TenantId, R4, "operations"),
+            FHIRTopic(tenant.id as TenantId, R4B, "operations"),
+          ],
           consumer_groups: [
             Consumers.Storage,
             Consumers.SearchIndexing,

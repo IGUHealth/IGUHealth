@@ -10,6 +10,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { fitsSearchCriteria } from "../../../../fhir-clients/clients/memory/search.js";
+import { toDBFHIRVersion } from "../../../../fhir-clients/utilities/version.js";
 import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
 import logAuditEvent, {
   SERIOUS_FAILURE,
@@ -22,9 +23,9 @@ import createQueue from "../../../../queue/index.js";
 import * as queue from "../../../../queue/interface.js";
 import { Consumers } from "../../../../queue/topics/index.js";
 import {
+  FHIR_TOPIC_PATTERN,
   OperationsTopic,
-  TENANT_TOPIC_PATTERN,
-} from "../../../../queue/topics/tenant-topics.js";
+} from "../../../../queue/topics/tenants.js";
 import createResourceStore from "../../../../resource-stores/index.js";
 import { createResolverRemoteCanonical } from "../../../../search-stores/canonical.js";
 import { createSearchStore } from "../../../../search-stores/index.js";
@@ -43,7 +44,7 @@ import { handleSubscriptionPayload } from "./handle-payload.js";
 async function processSubscription(
   ctx: Omit<IGUHealthServerCTX, "user">,
   subscription: Resource<R4, "Subscription">,
-  mutations: queue.Operations,
+  mutations: queue.Operations<R4>,
 ) {
   try {
     const request = httpRequestToFHIRRequest("r4", {
@@ -78,10 +79,6 @@ async function processSubscription(
     );
 
     const resources = mutations
-      .filter(
-        (m): m is queue.Operation<R4, queue.MutationTypes> =>
-          m.fhirVersion === R4,
-      )
       .map((m) => {
         switch (m.response?.type) {
           case "create-response":
@@ -194,9 +191,9 @@ const handler: BatchHandler<
     ],
   );
 
-  const operations: queue.Operations = batch.messages
+  const operations: queue.Operations<R4> = batch.messages
     ?.filter(filterNullableMessages)
-    .map((m) => JSON.parse(m.value.toString()) as queue.Operations[number])
+    .map((m) => JSON.parse(m.value.toString()) as queue.Operations<R4>[number])
     .flat();
 
   for (const subscription of subscriptions.resources) {
@@ -221,7 +218,7 @@ export default async function createSubscriptionV1Worker() {
 
   const stop = await createKafkaConsumer(
     iguhealthServices,
-    TENANT_TOPIC_PATTERN(OperationsTopic),
+    FHIR_TOPIC_PATTERN(OperationsTopic, toDBFHIRVersion(R4)),
     Consumers.SubscriptionV1,
     {
       eachBatch: async (ctx, { batch }) => {

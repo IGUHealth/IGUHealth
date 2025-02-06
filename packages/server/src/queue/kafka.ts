@@ -1,15 +1,11 @@
 import { Message as KafkaMessage, Producer, TopicMessages } from "kafkajs";
 import { nanoid } from "nanoid";
 
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IQueue, IQueueBatch } from "./interface.js";
-import {
-  ITopic,
-  ITopicMessage,
-  TenantTopic,
-  TopicType,
-} from "./topics/index.js";
+import { FHIRTopic, ITopic, ITopicMessage, TopicType } from "./topics/index.js";
 
 export class KafkaBatch implements IQueue, IQueueBatch {
   private readonly _producer: Producer;
@@ -52,7 +48,8 @@ export class KafkaBatch implements IQueue, IQueueBatch {
   async sendTenant<
     Tenant extends TenantId,
     Type extends TopicType,
-    T extends TenantTopic<Tenant, Type>,
+    Version extends FHIR_VERSION,
+    T extends FHIRTopic<Tenant, Version, Type>,
   >(tenant: Tenant, topic: T, messages: ITopicMessage<T>[]): Promise<void> {
     this.send(
       topic,
@@ -93,7 +90,8 @@ export class KafkaQueue implements IQueue {
   async sendTenant<
     Tenant extends TenantId,
     Type extends TopicType,
-    T extends TenantTopic<Tenant, Type>,
+    Version extends FHIR_VERSION,
+    T extends FHIRTopic<Tenant, Version, Type>,
   >(tenant: Tenant, topic: T, messages: ITopicMessage<T>[]): Promise<void> {
     await this.send(
       topic,

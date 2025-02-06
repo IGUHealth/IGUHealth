@@ -34,7 +34,7 @@ import {
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { OperationsTopic, TenantTopic } from "../../../queue/topics/index.js";
+import { FHIRTopic, OperationsTopic } from "../../../queue/topics/index.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,
@@ -1016,7 +1016,7 @@ function sendQueueMiddleweare<
 
         await context.ctx.queue.sendTenant(
           res.ctx.tenant,
-          TenantTopic(res.ctx.tenant, OperationsTopic),
+          FHIRTopic(res.ctx.tenant, res.response.fhirVersion, OperationsTopic),
           [
             {
               value: [

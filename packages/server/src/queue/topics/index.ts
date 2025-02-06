@@ -1,16 +1,15 @@
 import { IMessage } from "../interface.js";
 
-export * from "./tenant-topics.js";
+export * from "./tenants.js";
 
-declare const __topic: unique symbol;
 declare const __message_type: unique symbol;
 export type ITopic<M extends IMessage<unknown> = IMessage<unknown>> = string & {
-  [__topic]: boolean;
   [__message_type]: M;
 };
 
 export type ITopicMessage<T> = T extends ITopic<infer M> ? M : never;
 
+declare const __topic: unique symbol;
 export type ITopicPattern = RegExp & {
   [__topic]: boolean;
 };

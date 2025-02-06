@@ -4,13 +4,13 @@ import * as db from "zapatos/db";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
-import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
+import { Consumers, FHIRTopic } from "../../../queue/topics/index.js";
 import { DBTransaction, QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
 import * as tenants from "../../db/tenant.js";
@@ -84,7 +84,10 @@ async function createOrRetrieveUser(
           {
             value: {
               action: "subscribe",
-              topic: TenantTopic(tenant.id as TenantId, "operations"),
+              topic: [
+                FHIRTopic(tenant.id as TenantId, R4, "operations"),
+                FHIRTopic(tenant.id as TenantId, R4B, "operations"),
+              ],
               consumer_groups: [
                 Consumers.Storage,
                 Consumers.SearchIndexing,

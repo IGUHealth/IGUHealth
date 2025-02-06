@@ -1,8 +1,9 @@
-import { DynamicMessage } from "../interface.js";
+import { SubscribeMessage } from "../interface.js";
 import { ITopic } from "./index.js";
 
-export type DynamicTopic = ITopic<DynamicMessage> & {
-  __dynamic: true;
+declare const __dynamic: unique symbol;
+export type SubscribeTopic = ITopic<SubscribeMessage> & {
+  [__dynamic]: true;
 };
 
-export const DYNAMIC_TOPIC: DynamicTopic = "dynamic" as DynamicTopic;
+export const DYNAMIC_TOPIC: SubscribeTopic = "dynamic" as SubscribeTopic;
