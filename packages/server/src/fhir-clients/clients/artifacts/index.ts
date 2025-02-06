@@ -1,17 +1,11 @@
 import { AsynchronousClient } from "@iguhealth/client";
-import {
-  MiddlewareAsyncChain,
-  createMiddlewareAsync,
-} from "@iguhealth/client/middleware";
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  ResourceType,
-} from "@iguhealth/fhir-types/versions";
+import { FHIRClient } from "@iguhealth/client/lib/interface";
+import { createMiddlewareAsync } from "@iguhealth/client/middleware";
+import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { FHIRClient } from "@iguhealth/client/lib/interface";
+import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 
 const ArtifactTypes: AllResourceTypes[] = [
   "CodeSystem",
@@ -29,13 +23,13 @@ type ArtifactConfig = {
  * @param param0 Options for the storage client.
  * @returns FHIRClient
  */
-export function createRequestToResponse<CTX extends IGUHealthServerCTX>({artifactTenant}: ArtifactConfig): FHIRClient<CTX> {
-  return new AsynchronousClient<, CTX>(
-    {
-      transaction_entry_limit,
-    },
+export function createRequestToResponse<CTX extends IGUHealthServerCTX>(
+  artifactConfig: ArtifactConfig,
+): FHIRClient<CTX> {
+  return new AsynchronousClient<ArtifactConfig, CTX>(
+    artifactConfig,
     createMiddlewareAsync(
-      [createRequestToResponseMiddleware(), ...middleware],
+      [validateResourceTypesAllowedMiddleware(ArtifactTypes)],
       {
         logging: false,
       },
