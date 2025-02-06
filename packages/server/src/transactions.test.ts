@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -32,7 +31,7 @@ function loadResources(
         fhirVersion: R4,
         loadDevelopmentPackages: true,
         resourceType,
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
+        currentDirectory: fileURLToPath(import.meta.url),
         silence: true,
       }),
     )

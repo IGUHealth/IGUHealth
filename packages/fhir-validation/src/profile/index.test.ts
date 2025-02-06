@@ -1,6 +1,5 @@
 import { expect, test } from "@jest/globals";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
@@ -35,8 +34,8 @@ function createMemoryDatabase(
       fhirVersion: R4,
       loadDevelopmentPackages: true,
       resourceType: resourceType,
-      packageLocation: path.join(fileURLToPath(import.meta.url), "../.."),
       silence: true,
+      currentDirectory: fileURLToPath(import.meta.url),
       onlyPackages: [
         "hl7.fhir.us.core",
         "@iguhealth/hl7.fhir.r4.core",

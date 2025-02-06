@@ -29,7 +29,7 @@ function load<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
   return loadArtifacts({
     fhirVersion,
     resourceType,
-    packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+    currentDirectory: fileURLToPath(import.meta.url),
     onlyPackages: [
       "@iguhealth/iguhealth.fhir.r4.core",
       "@iguhealth/iguhealth.fhir.r4b.core",

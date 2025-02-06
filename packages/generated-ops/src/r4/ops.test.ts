@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "node:path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -23,7 +22,7 @@ const sds = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+  currentDirectory: fileURLToPath(import.meta.url),
 });
 
 test("Test ValueSet Expands", async () => {

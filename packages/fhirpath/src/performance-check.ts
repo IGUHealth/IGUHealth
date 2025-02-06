@@ -1,4 +1,3 @@
-import path from "node:path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -10,7 +9,7 @@ const searchParameters = loadArtifacts({
   fhirVersion: R4,
   resourceType: "SearchParameter",
   loadDevelopmentPackages: true,
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+  currentDirectory: fileURLToPath(import.meta.url),
 }).filter((s) => s.expression);
 
 console.time("v2");

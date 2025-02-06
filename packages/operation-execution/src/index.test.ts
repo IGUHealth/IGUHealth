@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -31,14 +30,14 @@ const operationDefinitions = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "OperationDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+  currentDirectory: fileURLToPath(import.meta.url),
 });
 
 const structureDefinitions = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+  currentDirectory: fileURLToPath(import.meta.url),
 });
 
 const valueSetExpandOp = operationDefinitions.find(

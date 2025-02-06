@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -23,7 +22,7 @@ function getArtifactResources<Version extends FHIR_VERSION>(
         fhirVersion,
         loadDevelopmentPackages: true,
         resourceType,
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        currentDirectory: fileURLToPath(import.meta.url),
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
         onlyPackages: [
           "@iguhealth/hl7.fhir.r4.core",

@@ -31,7 +31,7 @@ export function codeGenerationCommands(command: Command) {
       const structureDefinitions = loadArtifacts({
         fhirVersion: options.version as FHIR_VERSION,
         resourceType: "StructureDefinition",
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+        currentDirectory: fileURLToPath(import.meta.url),
       });
 
       mkdirSync(path.join(options.output, ".."), { recursive: true });
@@ -59,7 +59,7 @@ export function codeGenerationCommands(command: Command) {
       const structureDefinitions = loadArtifacts({
         fhirVersion: options.version as FHIR_VERSION,
         resourceType: "StructureDefinition",
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+        currentDirectory: fileURLToPath(import.meta.url),
       });
 
       mkdirSync(options.output, { recursive: true });
@@ -86,7 +86,7 @@ export function codeGenerationCommands(command: Command) {
       const operationDefinitions = loadArtifacts({
         fhirVersion: options.version,
         resourceType: "OperationDefinition",
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+        currentDirectory: fileURLToPath(import.meta.url),
       });
 
       mkdirSync(options.output, { recursive: true });

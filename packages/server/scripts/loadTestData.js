@@ -1,4 +1,3 @@
-import path from "node:path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -27,7 +26,7 @@ async function loadTestData() {
       const resources = loadArtifacts({
         resourceType,
         loadDevelopmentPackages: true,
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        currentDirectory: fileURLToPath(import.meta.url),
         silence: true,
       });
 

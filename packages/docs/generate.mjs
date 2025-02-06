@@ -10,9 +10,9 @@ const r4Artifacts = ["StructureDefinition", "SearchParameter"]
     loadArtifacts({
       loadDevelopmentPackages: true,
       resourceType: resourceType,
-      packageLocation: path.join(fileURLToPath(import.meta.url), "."),
       silence: false,
       fhirVersion: R4,
+      currentDirectory: fileURLToPath(import.meta.url),
     }),
   )
   .flat();
@@ -22,9 +22,9 @@ const r4bArtifacts = ["StructureDefinition", "SearchParameter"]
     loadArtifacts({
       loadDevelopmentPackages: true,
       resourceType: resourceType,
-      packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
       silence: false,
       fhirVersion: R4B,
+      currentDirectory: fileURLToPath(import.meta.url),
     }),
   )
   .flat();

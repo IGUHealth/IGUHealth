@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -20,7 +19,7 @@ const artifactParameters = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "SearchParameter",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  currentDirectory: fileURLToPath(import.meta.url),
   onlyPackages: [
     "@iguhealth/hl7.fhir.r4.core",
     "@iguhealth/hl7.fhir.r4b.core",
@@ -33,7 +32,7 @@ const sds = loadArtifacts({
   fhirVersion: R4,
   loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
+  currentDirectory: fileURLToPath(import.meta.url),
   silence: true,
 });
 

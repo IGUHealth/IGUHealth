@@ -16,15 +16,15 @@ export default function loadArtifacts<
 >({
   fhirVersion,
   resourceType,
-  packageLocation,
   silence,
+  currentDirectory,
   onlyPackages,
 }: {
   // Only support R4 and R4B for now.
   fhirVersion: Version;
   resourceType: T;
-  packageLocation: string;
   silence?: boolean;
+  currentDirectory: string;
   onlyPackages?: string[];
 }): Resource<Version, T>[];
 ```

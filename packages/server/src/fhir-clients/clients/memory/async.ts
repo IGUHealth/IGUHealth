@@ -1,4 +1,3 @@
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -572,10 +571,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
       loadArtifacts({
         fhirVersion: R4,
         silence: true,
-        packageLocation: path.join(
-          fileURLToPath(import.meta.url),
-          "../../../../../",
-        ),
+        currentDirectory: fileURLToPath(import.meta.url),
         ...config,
       }),
     )
@@ -597,10 +593,7 @@ export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
       loadArtifacts({
         fhirVersion: R4B,
         silence: true,
-        packageLocation: path.join(
-          fileURLToPath(import.meta.url),
-          "../../../../../",
-        ),
+        currentDirectory: fileURLToPath(import.meta.url),
         ...config,
       }),
     )

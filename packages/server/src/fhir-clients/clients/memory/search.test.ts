@@ -1,5 +1,4 @@
 import { expect, test } from "@jest/globals";
-import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -27,10 +26,7 @@ async function createMemoryDatabase(
         fhirVersion: R4,
         resourceType,
         loadDevelopmentPackages: true,
-        packageLocation: path.join(
-          fileURLToPath(import.meta.url),
-          "../../../../",
-        ),
+        currentDirectory: fileURLToPath(import.meta.url),
         onlyPackages: [
           "@iguhealth/hl7.fhir.r4.core",
           "@iguhealth/hl7.fhir.r4b.core",
