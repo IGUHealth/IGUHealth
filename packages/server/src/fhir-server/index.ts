@@ -16,6 +16,18 @@ import {
   createInjectScopesMiddleware,
   createValidateScopesMiddleware,
 } from "../authZ/middleware/scopes.js";
+import {
+  MEMBERSHIP_METHODS_ALLOWED,
+  MEMBERSHIP_RESOURCE_TYPES,
+  createMembershipClient,
+} from "../fhir-clients/clients/auth-storage/index.js";
+import {
+  MemoryParameter,
+  createArtifactMemoryDatabase,
+} from "../fhir-clients/clients/memory/async.js";
+import { createRequestToResponse } from "../fhir-clients/clients/request-to-response/index.js";
+import RouterClient from "../fhir-clients/clients/router/index.js";
+import sendQueueMiddleweare from "../fhir-clients/middleware/send-to-queue.js";
 import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
   CodeSystemLookupInvoke,
@@ -37,17 +49,6 @@ import InlineExecutioner from "../fhir-operation-executors/providers/local/middl
 import { createDeployOperation } from "../fhir-operation-executors/providers/local/ops/deploy-operation.js";
 import { IdentityProviderRegistrationInvoke } from "../fhir-operation-executors/providers/local/ops/identity_provider/registration-info.js";
 import createOperationExecutioner from "../fhir-operation-executors/providers/middleware.js";
-import {
-  MEMBERSHIP_METHODS_ALLOWED,
-  MEMBERSHIP_RESOURCE_TYPES,
-  createMembershipClient,
-} from "../fhir-clients/clients/auth-storage/index.js";
-import {
-  MemoryParameter,
-  createArtifactMemoryDatabase,
-} from "../fhir-clients/clients/memory/async.js";
-import { createRemoteStorage } from "../fhir-clients/clients/remote-storage/index.js";
-import RouterClient from "../fhir-clients/clients/router/index.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
@@ -181,12 +182,11 @@ export function createClient(): {
     r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
   });
 
-  const remoteStorage = createRemoteStorage({
-    synchronousIndexing:
-      (process.env.FHIR_STORAGE_ASYNC ?? "false") === "false",
+  const tenantStorage = createRequestToResponse({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
+    middleware: [sendQueueMiddleweare()],
   });
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
@@ -267,7 +267,7 @@ export function createClient(): {
           interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
         },
       },
-      source: createMembershipClient({ fhirDB: remoteStorage }),
+      source: createMembershipClient({ fhirDB: tenantStorage }),
     },
     {
       filter: {
@@ -304,7 +304,7 @@ export function createClient(): {
           ],
         },
       },
-      source: remoteStorage,
+      source: tenantStorage,
     },
   ]);
 

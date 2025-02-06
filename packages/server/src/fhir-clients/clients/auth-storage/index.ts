@@ -31,7 +31,7 @@ import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { QueueBatch } from "../../../transactions.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { createRemoteStorage } from "../remote-storage/index.js";
+import { createRemoteStorage } from "../request-to-response/index.js";
 
 export const MEMBERSHIP_RESOURCE_TYPES: ResourceType[] = ["Membership"];
 export const MEMBERSHIP_METHODS_ALLOWED: RequestType[AllInteractions][] = [
