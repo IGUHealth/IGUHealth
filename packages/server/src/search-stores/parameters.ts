@@ -278,6 +278,7 @@ export async function parametersWithMetaAssociated(
         type: "resource",
         searchParameter: searchParameter,
       };
+
       return associateChainedParameters(param, resolveSearchParameter);
     }),
   );
