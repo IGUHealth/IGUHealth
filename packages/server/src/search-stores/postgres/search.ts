@@ -67,36 +67,6 @@ async function fhirSearchRequesttoInteralRequest<
   };
 }
 
-/**
- * Returns Parameter for _id search parameter that is not missing (allows filter for latest).
- * @param ctx Server context (should be system as this is returning Parameter for latest)
- * @param resourceTypes The resource Types to search for
- * @param resourceParameters Current search parameters
- * @returns
- */
-async function getParameterForLatestId<Version extends FHIR_VERSION>(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: Version,
-  resourceTypes: ResourceType<Version>[],
-): Promise<SearchParameterResource<Version>[]> {
-  const idParameter = (
-    await parametersWithMetaAssociated(
-      async (resourceTypes, code) =>
-        await findSearchParameter(
-          ctx.client,
-          ctx,
-          fhirVersion,
-          resourceTypes,
-          code,
-        ),
-      resourceTypes,
-      [{ name: "_id", modifier: "missing", value: ["false"] }],
-    )
-  ).filter((v): v is SearchParameterResource<Version> => v.type === "resource");
-
-  return idParameter;
-}
-
 async function processRevInclude<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
@@ -277,15 +247,9 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
     })[]
   >
 > {
-  const resourceParameters = request.parameters
-    .filter((v): v is SearchParameterResource<Version> => v.type === "resource")
-    .concat(
-      await getParameterForLatestId(
-        asRoot(ctx),
-        request.fhirVersion,
-        request.resourceTypes,
-      ),
-    );
+  const resourceParameters = request.parameters.filter(
+    (v): v is SearchParameterResource<Version> => v.type === "resource",
+  );
 
   const parametersResult = request.parameters.filter(
     (v): v is SearchParameterResult => v.type === "result",
