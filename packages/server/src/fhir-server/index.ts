@@ -182,7 +182,7 @@ export function createClient(): {
     r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
   });
 
-  const tenantStorage = createRequestToResponse({
+  const storage = createRequestToResponse({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
@@ -267,7 +267,7 @@ export function createClient(): {
           interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
         },
       },
-      source: createMembershipClient({ fhirDB: tenantStorage }),
+      source: createMembershipClient({ fhirDB: storage }),
     },
     {
       filter: {
@@ -304,7 +304,7 @@ export function createClient(): {
           ],
         },
       },
-      source: tenantStorage,
+      source: storage,
     },
   ]);
 
