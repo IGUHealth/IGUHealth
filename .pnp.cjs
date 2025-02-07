@@ -16825,6 +16825,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
           ["@iguhealth/smart-launch", "workspace:packages/smart-launch"],\
           ["@inquirer/prompts", "npm:5.5.0"],\
           ["@jest/globals", "npm:29.7.0"],\

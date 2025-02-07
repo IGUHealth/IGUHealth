@@ -2,7 +2,7 @@
   "name": "@iguhealth/search-parameters",
   "type": "module",
   "scripts": {
-    "generate": "yarn node ./lib/cli/index.js generate all",
+    "generate": "echo 'no generation code'",
     "build": "yarn generate && tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
@@ -23,5 +23,9 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "typescript": "5.7.3"
+  },
+  "exports": {
+    "./api/load": "./lib/api/load.js",
+    "./api/sp1.parameters": "./lib/api/sp1.parameters.js"
   }
 }

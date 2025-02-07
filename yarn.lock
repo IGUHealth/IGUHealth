@@ -10023,7 +10023,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/search-parameters@workspace:packages/search-parameters":
+"@iguhealth/search-parameters@workspace:^, @iguhealth/search-parameters@workspace:packages/search-parameters":
   version: 0.0.0-use.local
   resolution: "@iguhealth/search-parameters@workspace:packages/search-parameters"
   dependencies:
@@ -10078,6 +10078,7 @@ __metadata:
     "@iguhealth/meta-value": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
+    "@iguhealth/search-parameters": "workspace:^"
     "@iguhealth/smart-launch": "workspace:^"
     "@inquirer/prompts": "npm:^5.5.0"
     "@jest/globals": "npm:^29.7.0"
