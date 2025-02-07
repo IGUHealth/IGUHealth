@@ -7,6 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
+import { FHIRSearchRequest, SearchResult } from "../interface.js";
 import { toSQLString } from "../log-sql.js";
 import {
   ParameterType,
@@ -19,7 +20,6 @@ import {
   searchParameterToTableName,
 } from "../parameters.js";
 import * as sqlUtils from "../sql.js";
-import { FHIRSearchRequest, SearchResult } from "../interface.js";
 import buildParametersSQL from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
@@ -181,6 +181,7 @@ async function processInclude<Version extends FHIR_VERSION>(
             { name: "base", value: [resourceType] },
           ],
         );
+
         if (includeParameterSearchParam.resources.length === 0)
           throw new OperationError(
             outcomeError(
