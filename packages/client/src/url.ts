@@ -58,12 +58,12 @@ export function unescapeParameter(parameter: string): string {
   );
 }
 
-export type ParsedParameter<T> = {
+export interface ParsedParameter<T> {
   name: string;
   value: T[];
   modifier?: string;
   chains?: string[];
-};
+}
 
 /**
  * Given a query string create complex FHIR Query object.

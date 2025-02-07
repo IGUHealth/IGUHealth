@@ -16,15 +16,15 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { isSearchTableType, search_table_types } from "./constants.js";
 
-export type SearchParameterResource = ParsedParameter<string | number> & {
+export interface SearchParameterResource extends ParsedParameter<string | number>  {
   type: "resource";
   searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
   chainedParameters?: Resource<FHIR_VERSION, "SearchParameter">[][];
-};
+}
 
-export type SearchParameterResult = ParsedParameter<string | number> & {
+export interface SearchParameterResult extends ParsedParameter<string | number>  {
   type: "result";
-};
+}
 
 export type ParameterType = SearchParameterResource | SearchParameterResult;
 
