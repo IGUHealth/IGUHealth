@@ -188,6 +188,7 @@ export function createClient(): {
     ),
     middleware: [sendQueueMiddleweare()],
   });
+
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
     AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,

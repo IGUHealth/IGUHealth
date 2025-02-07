@@ -1,3 +1,4 @@
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type SPECIAL_CHARACTER = "\\" | "|" | "$" | ",";
@@ -64,6 +65,26 @@ export interface ParsedParameter<T> {
   modifier?: string;
   chains?: string[];
 }
+
+export interface SearchParameterResource<Version extends FHIR_VERSION>
+  extends ParsedParameter<string | number> {
+  type: "resource";
+  searchParameter: Resource<Version, "SearchParameter">;
+  chainedParameters?: Resource<Version, "SearchParameter">[][];
+}
+
+export interface SearchParameterResult
+  extends ParsedParameter<string | number> {
+  type: "result";
+}
+
+export type MetaParameter<Version extends FHIR_VERSION> =
+  | SearchParameterResource<Version>
+  | SearchParameterResult;
+
+export type Parameters<Version extends FHIR_VERSION> =
+  | ParsedParameter<string | number>[]
+  | MetaParameter<Version>[];
 
 /**
  * Given a query string create complex FHIR Query object.
