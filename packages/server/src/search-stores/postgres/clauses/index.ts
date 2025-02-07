@@ -1,11 +1,11 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { code } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { SearchParameterResource } from "../../parameters.js";
 import { isSearchParameterInSingularTable } from "../utilities.js";
 import { buildClausesManySQL } from "./db_many_clauses/index.js";
 import { buildClausesSingularSQL } from "./db_singular_clauses/index.js";
@@ -13,7 +13,7 @@ import { buildClausesSingularSQL } from "./db_singular_clauses/index.js";
 function buildParametersManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameters: SearchParameterResource[],
+  parameters: SearchParameterResource<Version>[],
   columns: s.Column[] = [],
 ): db.SQLFragment[] {
   const groups = Object.groupBy(parameters, (p) => p.searchParameter.type);
@@ -32,11 +32,14 @@ function buildParametersManySQL<Version extends FHIR_VERSION>(
   return res;
 }
 
-function splitSingular(
+function splitSingular<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameters: SearchParameterResource[],
-): { singular: SearchParameterResource[]; many: SearchParameterResource[] } {
+  fhirVersion: Version,
+  parameters: SearchParameterResource<Version>[],
+): {
+  singular: SearchParameterResource<Version>[];
+  many: SearchParameterResource<Version>[];
+} {
   const singular = [];
   const many = [];
 
@@ -53,10 +56,10 @@ function splitSingular(
   return { singular, many };
 }
 
-export default function buildParametersSQL(
+export default function buildParametersSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameters: SearchParameterResource[],
+  fhirVersion: Version,
+  parameters: SearchParameterResource<Version>[],
   columns: s.Column[] = [],
 ): db.SQLFragment[] {
   const { singular, many } = splitSingular(ctx, fhirVersion, parameters);

@@ -1,13 +1,13 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { canonicalColumns as r4CanonicalColumns } from "../../../../migrations/sp1-parameters/r4.sp1parameters.js";
-import { SearchParameterResource } from "../../../parameters.js";
 import { getSp1Column } from "../db_singular_clauses/shared.js";
 import buildParametersSQL from "../index.js";
 import { missingModifier } from "./shared.js";
@@ -30,10 +30,10 @@ function getCanonicalColumns(
   return columns;
 }
 
-function getCanonicalSearchSQL(
+function getCanonicalSearchSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment | undefined {
   const base = parameter.searchParameter.target;
   const columns = getCanonicalColumns(fhirVersion, base ?? []);
@@ -51,8 +51,8 @@ function getCanonicalSearchSQL(
 }
 
 function isChainParameter(
-  parameter: SearchParameterResource,
-): parameter is SearchParameterResource & {
+  parameter: SearchParameterResource<FHIR_VERSION>,
+): parameter is SearchParameterResource<FHIR_VERSION> & {
   chainedParameters: SearchParameter[][];
 } {
   if (parameter.chainedParameters && parameter.chainedParameters.length > 0)
@@ -63,7 +63,7 @@ function isChainParameter(
 function chainSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameter: SearchParameterResource & {
+  parameter: SearchParameterResource<Version> & {
     chainedParameters: SearchParameter[][];
   },
 ): db.SQLFragment<boolean | null, never> {
@@ -130,7 +130,7 @@ function chainSQL<Version extends FHIR_VERSION>(
 function sqlParameterValue<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameter: SearchParameterResource,
+  parameter: SearchParameterResource<Version>,
   parameterValue: string | number,
 ) {
   const findCanonicalSQL = getCanonicalSearchSQL(ctx, fhirVersion, parameter);
@@ -168,7 +168,7 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
 export default function referenceClauses<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameter: SearchParameterResource,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
     case "missing": {

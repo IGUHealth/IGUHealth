@@ -1,15 +1,13 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { isSearchTableType } from "../../../constants.js";
-import {
-  SearchParameterResource,
-  searchParameterToTableName,
-} from "../../../parameters.js";
+import { searchParameterToTableName } from "../../../parameters.js";
 import { intersect } from "../../../sql.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
@@ -21,10 +19,10 @@ import uriClauses from "./uri.js";
 
 const PARAMETER_CLAUSES: Record<
   string,
-  (
+  <Version extends FHIR_VERSION>(
     ctx: IGUHealthServerCTX,
-    fhirVersion: FHIR_VERSION,
-    parameter: SearchParameterResource,
+    fhirVersion: Version,
+    parameter: SearchParameterResource<Version>,
   ) => db.SQLFragment<boolean | null, unknown>
 > = {
   token: tokenClauses,
@@ -39,7 +37,7 @@ const PARAMETER_CLAUSES: Record<
 export function buildClausesManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameters: SearchParameterResource[],
+  parameters: SearchParameterResource<Version>[],
   columns: s.Column[] = [],
 ): db.SQLFragment | undefined {
   if (parameters.length === 0) {

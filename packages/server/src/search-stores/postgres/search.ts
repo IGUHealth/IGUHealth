@@ -1,6 +1,11 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import {
+  MetaParameter,
+  SearchParameterResource,
+  SearchParameterResult,
+} from "@iguhealth/client/lib/url";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -10,9 +15,6 @@ import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { FHIRSearchRequest, SearchResult } from "../interface.js";
 import { toSQLString } from "../log-sql.js";
 import {
-  ParameterType,
-  SearchParameterResource,
-  SearchParameterResult,
   deriveLimit,
   deriveResourceTypeFilter,
   findSearchParameter,
@@ -26,7 +28,7 @@ import { deriveSortQuery } from "./sort.js";
 type InteralSearchRequest<Version extends FHIR_VERSION> = {
   resourceTypes: ResourceType<Version>[];
   fhirVersion: Version;
-  parameters: ParameterType[];
+  parameters: MetaParameter<Version>[];
 };
 
 /**
@@ -76,7 +78,7 @@ async function getParameterForLatestId<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceTypes: ResourceType<Version>[],
-): Promise<SearchParameterResource[]> {
+): Promise<SearchParameterResource<Version>[]> {
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, code) =>
@@ -90,7 +92,7 @@ async function getParameterForLatestId<Version extends FHIR_VERSION>(
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
-  ).filter((v): v is SearchParameterResource => v.type === "resource");
+  ).filter((v): v is SearchParameterResource<Version> => v.type === "resource");
 
   return idParameter;
 }
@@ -276,7 +278,7 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
   >
 > {
   const resourceParameters = request.parameters
-    .filter((v): v is SearchParameterResource => v.type === "resource")
+    .filter((v): v is SearchParameterResource<Version> => v.type === "resource")
     .concat(
       await getParameterForLatestId(
         asRoot(ctx),

@@ -1,6 +1,6 @@
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
-import { ParsedParameter } from "@iguhealth/client/url";
+import { MetaParameter, ParsedParameter, SearchParameterResource, SearchParameterResult } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
@@ -15,18 +15,6 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { isSearchTableType, search_table_types } from "./constants.js";
-
-export type SearchParameterResource = ParsedParameter<string | number> & {
-  type: "resource";
-  searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
-  chainedParameters?: Resource<FHIR_VERSION, "SearchParameter">[][];
-};
-
-export type SearchParameterResult = ParsedParameter<string | number> & {
-  type: "result";
-};
-
-export type ParameterType = SearchParameterResource | SearchParameterResult;
 
 export function deriveLimit(
   range: [number, number],
@@ -125,18 +113,18 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest<FHIR_VERSIO
   return passedinTypes as ResourceType<Request["fhirVersion"]>[];
 }
 
-async function associateChainedParameters(
-  parsedParameter: SearchParameterResource,
+async function associateChainedParameters<Version extends FHIR_VERSION>(
+  parsedParameter: SearchParameterResource<Version>,
   resolveSearchParameter: (
     resourceTypes: AllResourceTypes[],
     name: string,
-  ) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>,
-): Promise<SearchParameterResource> {
+  ) => Promise<Resource<Version, "SearchParameter">[]>,
+): Promise<SearchParameterResource<Version>> {
   if (!parsedParameter.chains) return parsedParameter;
 
   // All middle chains should be references.
   let last = [parsedParameter.searchParameter];
-  const chainedParameters: Resource<FHIR_VERSION, "SearchParameter">[][] = [];
+  const chainedParameters: Resource<Version, "SearchParameter">[][] = [];
 
   for (const chain of parsedParameter.chains) {
     const targets = last
@@ -236,11 +224,11 @@ type ResolveSearchParameter = (
   name: string,
 ) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>;
 
-export async function parametersWithMetaAssociated(
+export async function parametersWithMetaAssociated<Version extends FHIR_VERSION>(
   resolveSearchParameter: ResolveSearchParameter,
   resourceTypes: AllResourceTypes[],
   parameters: ParsedParameter<string | number>[],
-): Promise<ParameterType[]> {
+): Promise<MetaParameter<Version>[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
       if (isSearchResultParameter(p)) {
@@ -273,10 +261,10 @@ export async function parametersWithMetaAssociated(
         );
 
       const searchParameter = searchParameterSearchResult[0];
-      const param: SearchParameterResource = {
+      const param: SearchParameterResource<Version> = {
         ...p,
         type: "resource",
-        searchParameter: searchParameter,
+        searchParameter: searchParameter as Resource<Version, "SearchParameter">,
       };
 
       return associateChainedParameters(param, resolveSearchParameter);

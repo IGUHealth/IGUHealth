@@ -6,7 +6,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import type { ParsedParameter } from "../url.js";
+import type { Parameters } from "../url.js";
 import {
   Interaction,
   Request,
@@ -62,20 +62,20 @@ export interface InstanceDeleteRequest<Version extends FHIR_VERSION>
 
 export interface TypeDeleteRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: RequestType["delete"];
 }
 
 export interface SystemDeleteRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: RequestType["delete"];
 }
 
 export interface HistoryInstanceRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
   type: RequestType["history"];
-  parameters?: ParsedParameter<string | number>[];
+  parameters?: Parameters<Version>;
 }
 
 export interface CreateRequest<Version extends FHIR_VERSION>
@@ -87,20 +87,20 @@ export interface CreateRequest<Version extends FHIR_VERSION>
 export interface ConditionalUpdateRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   type: RequestType["update"];
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   body: Resource<Version, ResourceType<Version>>;
 }
 
 export interface TypeSearchRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: RequestType["search"];
 }
 
 export interface TypeHistoryRequest<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
   type: RequestType["history"];
-  parameters?: ParsedParameter<string | number>[];
+  parameters?: Parameters<Version>;
 }
 
 export interface CapabilitiesRequest<Version extends FHIR_VERSION>
@@ -123,12 +123,12 @@ export interface TransactionRequest<Version extends FHIR_VERSION>
 export interface SystemHistoryRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
   type: RequestType["history"];
-  parameters?: ParsedParameter<string | number>[];
+  parameters?: Parameters<Version>;
 }
 
 export interface SystemSearchRequest<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: RequestType["search"];
 }
 
@@ -188,7 +188,7 @@ export interface InstanceDeleteResponse<Version extends FHIR_VERSION>
 
 export interface TypeDeleteResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: ResponseType["delete"];
   // For conditional deletes include the resources that were deleted.
   deletion?: Resource<Version, AllResourceTypes>[];
@@ -196,7 +196,7 @@ export interface TypeDeleteResponse<Version extends FHIR_VERSION>
 
 export interface SystemDeleteResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: ResponseType["delete"];
   // For conditional deletes include the resources that were deleted.
   deletion?: Resource<Version, AllResourceTypes>[];
@@ -216,7 +216,7 @@ export interface CreateResponse<Version extends FHIR_VERSION>
 
 export interface TypeSearchResponse<Version extends FHIR_VERSION>
   extends TypeInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: ResponseType["search"];
   body: Resource<Version, "Bundle">;
 }
@@ -253,7 +253,7 @@ export interface SystemHistoryResponse<Version extends FHIR_VERSION>
 
 export interface SystemSearchResponse<Version extends FHIR_VERSION>
   extends SystemInteraction<Version> {
-  parameters: ParsedParameter<string | number>[];
+  parameters: Parameters<Version>;
   type: ResponseType["search"];
   body: Resource<Version, "Bundle">;
 }

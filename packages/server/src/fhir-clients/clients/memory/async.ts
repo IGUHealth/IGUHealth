@@ -5,6 +5,10 @@ import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import { FHIRResponse } from "@iguhealth/client/lib/types";
 import {
+  SearchParameterResource,
+  SearchParameterResult,
+} from "@iguhealth/client/lib/url";
+import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
@@ -22,8 +26,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import {
-  SearchParameterResource,
-  SearchParameterResult,
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
 } from "../../../search-stores/parameters.js";
@@ -51,9 +53,9 @@ async function resolveParameter<Version extends FHIR_VERSION>(
   return params;
 }
 
-function checkSearchParameter(
-  searchParameter: Resource<FHIR_VERSION, "SearchParameter">,
-  resourceParameters: SearchParameterResource[],
+function checkSearchParameter<Version extends FHIR_VERSION>(
+  searchParameter: Resource<Version, "SearchParameter">,
+  resourceParameters: SearchParameterResource<Version>[],
 ) {
   for (const resourceParameter of resourceParameters) {
     switch (resourceParameter.name) {
@@ -187,7 +189,8 @@ function createMemoryMiddleware<
 
               // Standard parameters
               const resourceParameters = parameters.filter(
-                (v): v is SearchParameterResource => v.type === "resource",
+                (v): v is SearchParameterResource<FHIR_VERSION> =>
+                  v.type === "resource",
               );
 
               const resourceSet = Object.values(

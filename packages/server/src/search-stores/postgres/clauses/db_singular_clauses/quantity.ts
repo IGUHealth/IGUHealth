@@ -1,18 +1,17 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { splitParameter } from "@iguhealth/client/url";
+import { SearchParameterResource, splitParameter } from "@iguhealth/client/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { SearchParameterResource } from "../../../parameters.js";
 import { getSp1Column, missingModifier } from "./shared.js";
 
-export default function quantityClauses(
+export default function quantityClauses<Version extends FHIR_VERSION>(
   _ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   const columnName = getSp1Column(
     fhirVersion,

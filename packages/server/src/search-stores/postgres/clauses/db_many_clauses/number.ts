@@ -1,21 +1,18 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import {
-  SearchParameterResource,
-  getDecimalPrecision,
-  parseValuePrefix,
-} from "../../../parameters.js";
+import { getDecimalPrecision, parseValuePrefix } from "../../../parameters.js";
 import { missingModifier } from "./shared.js";
 
-export default function numberClauses(
+export default function numberClauses<Version extends FHIR_VERSION>(
   _ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
     case "missing": {

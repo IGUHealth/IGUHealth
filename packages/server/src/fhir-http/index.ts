@@ -363,7 +363,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
             throw new OperationError(
               outcomeError(
                 "not-supported",
-                "Operation GET requests not yet supported",
+                "Operation GET requests are not yet supported",
               ),
             );
           }
