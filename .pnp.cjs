@@ -139,6 +139,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/performance-testing"\
     },\
     {\
+      "name": "@iguhealth/search-parameters",\
+      "reference": "workspace:packages/search-parameters"\
+    },\
+    {\
       "name": "@iguhealth/server",\
       "reference": "workspace:packages/server"\
     },\
@@ -188,6 +192,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/performance-testing", ["workspace:packages/performance-testing"]],\
+    ["@iguhealth/search-parameters", ["workspace:packages/search-parameters"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
     ["@iguhealth/smart-launch", ["workspace:packages/smart-launch"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
@@ -16758,6 +16763,18 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@iguhealth/performance-testing", "workspace:packages/performance-testing"],\
           ["artillery", "npm:2.0.22"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/search-parameters", [\
+      ["workspace:packages/search-parameters", {\
+        "packageLocation": "./packages/search-parameters/",\
+        "packageDependencies": [\
+          ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
+          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"]\
         ],\
         "linkType": "SOFT"\
       }]\
