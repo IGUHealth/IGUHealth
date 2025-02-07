@@ -16772,9 +16772,14 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/search-parameters/",\
         "packageDependencies": [\
           ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
+          ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
-          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"]\
+          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
+          ["@types/node", "npm:22.10.7"],\
+          ["commander", "npm:13.1.0"],\
+          ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -32468,6 +32473,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/commander-npm-12.1.0-65c868e907-cdaeb672d9.zip/node_modules/commander/",\
         "packageDependencies": [\
           ["commander", "npm:12.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:13.1.0", {\
+        "packageLocation": "./.yarn/cache/commander-npm-13.1.0-bdbbfaaf9d-d3b4b79e6b.zip/node_modules/commander/",\
+        "packageDependencies": [\
+          ["commander", "npm:13.1.0"]\
         ],\
         "linkType": "HARD"\
       }],\

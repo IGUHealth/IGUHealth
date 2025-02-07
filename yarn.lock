@@ -10027,9 +10027,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/search-parameters@workspace:packages/search-parameters"
   dependencies:
+    "@iguhealth/artifacts": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^"
+    "@types/node": "npm:^22.10.7"
+    commander: "npm:^13.1.0"
+    typescript: "npm:5.7.3"
   languageName: unknown
   linkType: soft
 
@@ -22045,6 +22050,13 @@ __metadata:
   version: 12.1.0
   resolution: "commander@npm:12.1.0"
   checksum: 10/cdaeb672d979816853a4eed7f1310a9319e8b976172485c2a6b437ed0db0a389a44cfb222bfbde772781efa9f215bdd1b936f80d6b249485b465c6cb906e1f93
+  languageName: node
+  linkType: hard
+
+"commander@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "commander@npm:13.1.0"
+  checksum: 10/d3b4b79e6be8471ddadacbb8cd441fe82154d7da7393b50e76165a9e29ccdb74fa911a186437b9a211d0fc071db6051915c94fb8ef16d77511d898e9dbabc6af
   languageName: node
   linkType: hard
 
