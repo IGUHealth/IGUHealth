@@ -152,11 +152,14 @@ function toURIParameters(value: IMetaValue<NonNullable<unknown>>): string[] {
   }
 }
 
-export type ResolveCanonical = <FHIRVersion extends FHIR_VERSION>(
+export type ResolveCanonical = <
+  FHIRVersion extends FHIR_VERSION,
+  Types extends ResourceType<FHIRVersion>[],
+>(
   fhirVersion: FHIRVersion,
-  types: ResourceType<FHIRVersion>[],
+  types: Types,
   url: canonical,
-) => Promise<Resource<FHIRVersion, ResourceType<FHIRVersion>> | undefined>;
+) => Promise<Resource<FHIRVersion, Types[number]> | undefined>;
 
 async function toReferenceRemote<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -198,7 +201,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
       const resource = resolveCanonical
         ? await resolveCanonical(
             fhirVersion,
-            parameter.target as ResourceType<FHIR_VERSION>[],
+            parameter.target as ResourceType<typeof fhirVersion>[],
             value.getValue().toString() as canonical,
           )
         : undefined;
