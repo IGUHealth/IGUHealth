@@ -10029,11 +10029,17 @@ __metadata:
   dependencies:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^"
+    "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
+    "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^"
+    "@jest/globals": "npm:^29.7.0"
     "@types/node": "npm:^22.10.7"
     commander: "npm:^13.1.0"
+    jest: "npm:^29.7.0"
+    ts-jest: "npm:^29.2.5"
     typescript: "npm:5.7.3"
   languageName: unknown
   linkType: soft

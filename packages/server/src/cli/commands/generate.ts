@@ -109,20 +109,6 @@ const writeSP1TSCode = async <Version extends FHIR_VERSION>(
 const generateSP1Typescript: Parameters<Command["action"]>[0] = async (
   options,
 ) => {
-  const r4SearchParameters = load(R4, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4bSearchParameters = load(R4B, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
   const r4_set = await generateSP1Sets(R4, r4SearchParameters);
   const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
 

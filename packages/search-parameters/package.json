@@ -2,19 +2,26 @@
   "name": "@iguhealth/search-parameters",
   "type": "module",
   "scripts": {
-    "generate": "yarn node ./lib/cli/index.js generate canonicals",
-    "build": "tsc"
+    "generate": "yarn node ./lib/cli/index.js generate all",
+    "build": "yarn generate && tsc",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
-    "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^"
+    "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": "workspace:^",
+    "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
+    "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^"
   },
   "devDependencies": {
-    "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
+    "@jest/globals": "^29.7.0",
     "@types/node": "^22.10.7",
     "commander": "^13.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "typescript": "5.7.3"
   }
 }
