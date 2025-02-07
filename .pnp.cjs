@@ -139,6 +139,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/performance-testing"\
     },\
     {\
+      "name": "@iguhealth/search-parameters",\
+      "reference": "workspace:packages/search-parameters"\
+    },\
+    {\
       "name": "@iguhealth/server",\
       "reference": "workspace:packages/server"\
     },\
@@ -188,6 +192,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/performance-testing", ["workspace:packages/performance-testing"]],\
+    ["@iguhealth/search-parameters", ["workspace:packages/search-parameters"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
     ["@iguhealth/smart-launch", ["workspace:packages/smart-launch"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
@@ -16762,6 +16767,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@iguhealth/search-parameters", [\
+      ["workspace:packages/search-parameters", {\
+        "packageLocation": "./packages/search-parameters/",\
+        "packageDependencies": [\
+          ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
+          ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
+          ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
+          ["@iguhealth/iguhealth.fhir.r4b.core", "workspace:artifacts/r4b/iguhealth-core"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/node", "npm:22.10.7"],\
+          ["commander", "npm:13.1.0"],\
+          ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
+          ["ts-jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.2.5"],\
+          ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@iguhealth/server", [\
       ["workspace:packages/server", {\
         "packageLocation": "./packages/server/",\
@@ -16797,6 +16825,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
           ["@iguhealth/smart-launch", "workspace:packages/smart-launch"],\
           ["@inquirer/prompts", "npm:5.5.0"],\
           ["@jest/globals", "npm:29.7.0"],\
@@ -32451,6 +32480,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/commander-npm-12.1.0-65c868e907-cdaeb672d9.zip/node_modules/commander/",\
         "packageDependencies": [\
           ["commander", "npm:12.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:13.1.0", {\
+        "packageLocation": "./.yarn/cache/commander-npm-13.1.0-bdbbfaaf9d-d3b4b79e6b.zip/node_modules/commander/",\
+        "packageDependencies": [\
+          ["commander", "npm:13.1.0"]\
         ],\
         "linkType": "HARD"\
       }],\

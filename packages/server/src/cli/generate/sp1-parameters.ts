@@ -9,11 +9,10 @@ import {
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import analyze from "@iguhealth/fhirpath/analyze";
 
 import { toSQLString } from "../../search-stores/log-sql.js";
-import { getSp1Column } from "../../search-stores/postgres/clauses/db_singular_clauses/shared.js";
 import { searchParameterToTableName } from "../../search-stores/parameters.js";
+import { getSp1Column } from "../../search-stores/postgres/clauses/db_singular_clauses/shared.js";
 
 export function getSp1Name(
   version: FHIR_VERSION,
@@ -29,119 +28,6 @@ export function getSp1Name(
       throw new Error(`Unsupported FHIR version: ${version}`);
     }
   }
-}
-
-type SP1_Tables = Set<uri>;
-
-async function getParameterCardinality<Version extends FHIR_VERSION>(
-  version: Version,
-  searchParameter: Resource<Version, "SearchParameter">,
-): Promise<"unknown" | "single" | "array"> {
-  for (const base of searchParameter.base) {
-    const evalResult = await analyze(
-      version,
-      base as unknown as uri,
-      searchParameter.expression as string,
-    );
-
-    if (evalResult.length === 0) {
-      return "unknown";
-    }
-
-    for (const v of evalResult) {
-      const cardinality = "cardinality" in v ? v.cardinality() : "unknown";
-      if (cardinality === "array" || cardinality === "unknown") {
-        return cardinality;
-      }
-
-      const types = v.types();
-      if (!types) {
-        return "unknown";
-      }
-      for (const meta of types) {
-        switch (meta.type) {
-          case "http://hl7.org/fhirpath/System.String":
-          case "markdown":
-          case "string":
-          case "code":
-          case "boolean":
-          case "id":
-          case "uri":
-          case "url":
-          case "uuid":
-          case "canonical":
-          case "decimal":
-          case "integer":
-          case "instant":
-          case "date":
-          case "dateTime":
-          case "Identifier":
-          case "ContactPoint":
-          case "Reference":
-          case "Coding":
-          case "Period":
-          case "Range":
-          case "Age":
-          case "Money":
-          case "Duration":
-          case "Quantity": {
-            break;
-          }
-          case "CodeableReference":
-          case "HumanName":
-          case "Address":
-          case "CodeableConcept":
-          case "Timing": {
-            return "array";
-          }
-          case "SampledData":
-          case undefined: {
-            console.log("invalid Type", searchParameter.expression);
-            return "unknown";
-          }
-          default: {
-            throw new Error(
-              `Unsupported type for:'${meta.type}' expression:'${searchParameter.expression}'`,
-            );
-          }
-        }
-      }
-    }
-  }
-
-  return "single";
-}
-
-async function generateSP1MetaSets<Version extends FHIR_VERSION>(
-  version: Version,
-  searchParameters: Resource<Version, "SearchParameter">[],
-): Promise<Readonly<SP1_Tables>> {
-  const res: SP1_Tables = new Set();
-  for (const parameter of searchParameters) {
-    switch (parameter.type) {
-      // Skipping references as singular for now.
-      case "reference": {
-        break;
-      }
-      default: {
-        const cardinality = await getParameterCardinality(version, parameter);
-        switch (cardinality) {
-          case "unknown":
-          case "array": {
-            break;
-          }
-          case "single": {
-            res.add(parameter.url);
-            break;
-          }
-          default: {
-            throw new Error(`Unsupported cardinality: ${cardinality}`);
-          }
-        }
-      }
-    }
-  }
-  return res;
 }
 
 function capitalize(str: string) {
@@ -552,11 +438,3 @@ export function sp1Migration<Version extends FHIR_VERSION>(
   }
   return sql;
 }
-
-export const generateSP1Sets = async <Version extends FHIR_VERSION>(
-  version: Version,
-  searchParameters: Resource<Version, "SearchParameter">[],
-) => {
-  const set = await generateSP1MetaSets(version, searchParameters);
-  return set;
-};

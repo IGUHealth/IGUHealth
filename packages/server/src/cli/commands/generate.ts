@@ -3,41 +3,22 @@ import { glob } from "glob";
 import { compileFromFile } from "json-schema-to-typescript";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import * as generateSQL from "zapatos/generate";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   FHIR_VERSION,
   R4,
   R4B,
   Resource,
-  ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import { loadParameters } from "@iguhealth/search-parameters/api/load";
+import { generateSP1Sets } from "@iguhealth/search-parameters/api/sp1.parameters";
 
 import {
   generateSP1SQLTable,
-  generateSP1Sets,
   generateSP1TSCode,
   sp1Migration,
 } from "../generate/sp1-parameters.js";
-
-function load<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
-  fhirVersion: Version,
-  resourceType: Type,
-): Resource<Version, Type>[] {
-  return loadArtifacts({
-    fhirVersion,
-    resourceType,
-    currentDirectory: fileURLToPath(import.meta.url),
-    onlyPackages: [
-      "@iguhealth/iguhealth.fhir.r4.core",
-      "@iguhealth/iguhealth.fhir.r4b.core",
-      "@iguhealth/hl7.fhir.r4.core",
-      "@iguhealth/hl7.fhir.r4b.core",
-    ],
-  });
-}
 
 function generateReadme() {
   const schema = JSON.parse(
@@ -109,19 +90,8 @@ const writeSP1TSCode = async <Version extends FHIR_VERSION>(
 const generateSP1Typescript: Parameters<Command["action"]>[0] = async (
   options,
 ) => {
-  const r4SearchParameters = load(R4, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4bSearchParameters = load(R4B, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
+  const r4SearchParameters = loadParameters(R4);
+  const r4bSearchParameters = loadParameters(R4B);
 
   const r4_set = await generateSP1Sets(R4, r4SearchParameters);
   const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
@@ -142,19 +112,8 @@ const generateSP1Typescript: Parameters<Command["action"]>[0] = async (
 };
 
 const generateSP1SQL: Parameters<Command["action"]>[0] = async (options) => {
-  const r4SearchParameters = load(R4, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4bSearchParameters = load(R4B, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
+  const r4SearchParameters = loadParameters(R4);
+  const r4bSearchParameters = loadParameters(R4B);
 
   const r4_set = await generateSP1Sets(R4, r4SearchParameters);
   const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
@@ -171,19 +130,8 @@ const generateSP1SQL: Parameters<Command["action"]>[0] = async (options) => {
 const generateSQLMigration: Parameters<Command["action"]>[0] = async (
   options,
 ) => {
-  const r4SearchParameters = load(R4, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
-
-  const r4bSearchParameters = load(R4B, "SearchParameter").filter(
-    (p) =>
-      p.expression !== undefined &&
-      p.type !== "special" &&
-      p.type !== "composite",
-  );
+  const r4SearchParameters = loadParameters(R4);
+  const r4bSearchParameters = loadParameters(R4B);
 
   const r4_set = await generateSP1Sets(R4, r4SearchParameters);
   const r4b_set = await generateSP1Sets(R4B, r4bSearchParameters);
