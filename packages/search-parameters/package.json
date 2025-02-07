@@ -1,6 +1,7 @@
 {
   "name": "@iguhealth/search-parameters",
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "generate": "echo 'no generation code'",
     "build": "yarn generate && tsc",
