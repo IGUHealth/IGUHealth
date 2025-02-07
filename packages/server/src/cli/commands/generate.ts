@@ -3,16 +3,13 @@ import { glob } from "glob";
 import { compileFromFile } from "json-schema-to-typescript";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import * as generateSQL from "zapatos/generate";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   FHIR_VERSION,
   R4,
   R4B,
   Resource,
-  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { loadParameters } from "@iguhealth/search-parameters/api/load";
 import { generateSP1Sets } from "@iguhealth/search-parameters/api/sp1.parameters";
