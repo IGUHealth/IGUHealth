@@ -1,6 +1,7 @@
 import { KafkaMessage } from "kafkajs";
 
 import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { code, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { AllResourceTypes, R4, Resource } from "@iguhealth/fhir-types/versions";
 import {
@@ -29,7 +30,6 @@ import createResourceStore from "../../../../resource-stores/index.js";
 import { createResolverRemoteCanonical } from "../../../../search-stores/canonical.js";
 import { createSearchStore } from "../../../../search-stores/index.js";
 import {
-  SearchParameterResource,
   deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
@@ -74,7 +74,7 @@ async function processSubscription(
     ); // Standard parameters
 
     const resourceParameters = parameters.filter(
-      (v): v is SearchParameterResource => v.type === "resource",
+      (v): v is SearchParameterResource<R4> => v.type === "resource",
     );
 
     const resources = mutations

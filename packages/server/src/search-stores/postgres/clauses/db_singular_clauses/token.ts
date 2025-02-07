@@ -1,17 +1,16 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { splitParameter } from "@iguhealth/client/url";
+import { SearchParameterResource, splitParameter } from "@iguhealth/client/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { SearchParameterResource } from "../../../parameters.js";
 import { getSp1Column, missingModifier } from "./shared.js";
 
-export default function tokenClauses(
+export default function tokenClauses<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   const columnName = getSp1Column(
     fhirVersion,

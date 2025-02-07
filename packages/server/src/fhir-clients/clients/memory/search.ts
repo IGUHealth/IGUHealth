@@ -1,3 +1,4 @@
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -12,7 +13,6 @@ import dataConversion, {
   ResolveCanonical,
   SEARCH_TYPE,
 } from "../../../search-stores/dataConversion.js";
-import { SearchParameterResource } from "../../../search-stores/parameters.js";
 import fitsCriteria from "./search/fitsCriteria.js";
 
 interface MemorySearchCTX {
@@ -24,11 +24,14 @@ interface MemorySearchCTX {
   resolveRemoteCanonical?: ResolveCanonical;
 }
 
-async function expressionSearch<CTX extends MemorySearchCTX>(
+async function expressionSearch<
+  CTX extends MemorySearchCTX,
+  Version extends FHIR_VERSION,
+>(
   ctx: CTX,
-  fhirVersion: FHIR_VERSION,
-  resource: Resource<FHIR_VERSION, AllResourceTypes>,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  resource: Resource<Version, AllResourceTypes>,
+  parameter: SearchParameterResource<Version>,
 ) {
   if (!parameter.searchParameter.expression)
     throw new OperationError(
@@ -92,11 +95,14 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
   }
 }
 
-function checkParameterWithResource<CTX extends MemorySearchCTX>(
+function checkParameterWithResource<
+  CTX extends MemorySearchCTX,
+  Version extends FHIR_VERSION,
+>(
   ctx: CTX,
-  fhirVersion: FHIR_VERSION,
-  resource: Resource<FHIR_VERSION, AllResourceTypes>,
-  parameter: SearchParameterResource,
+  fhirVersion: Version,
+  resource: Resource<Version, AllResourceTypes>,
+  parameter: SearchParameterResource<Version>,
 ) {
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
@@ -121,11 +127,14 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
   }
 }
 
-export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
+export async function fitsSearchCriteria<
+  CTX extends MemorySearchCTX,
+  Version extends FHIR_VERSION,
+>(
   ctx: CTX,
-  fhirVersion: FHIR_VERSION,
-  resource: Resource<FHIR_VERSION, AllResourceTypes>,
-  parameters: SearchParameterResource[],
+  fhirVersion: Version,
+  resource: Resource<Version, AllResourceTypes>,
+  parameters: SearchParameterResource<Version>[],
 ) {
   for (const param of parameters) {
     if (!(await checkParameterWithResource(ctx, fhirVersion, resource, param)))

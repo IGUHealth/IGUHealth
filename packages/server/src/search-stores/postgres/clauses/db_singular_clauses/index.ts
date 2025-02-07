@@ -1,13 +1,13 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
 import { isSearchTableType } from "../../../constants.js";
-import { SearchParameterResource } from "../../../parameters.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";
@@ -17,10 +17,10 @@ import uriClauses from "./uri.js";
 
 const PARAMETER_CLAUSES: Record<
   string,
-  (
+  <Version extends FHIR_VERSION>(
     ctx: IGUHealthServerCTX,
-    fhirVersion: FHIR_VERSION,
-    parameter: SearchParameterResource,
+    fhirVersion: Version,
+    parameter: SearchParameterResource<Version>,
   ) => db.SQLFragment<boolean | null, unknown>
 > = {
   token: tokenClauses,
@@ -34,7 +34,7 @@ const PARAMETER_CLAUSES: Record<
 export function buildClausesSingularSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  parameters: SearchParameterResource[],
+  parameters: SearchParameterResource<Version>[],
   columns: s.Column[] = [],
 ): db.SQLFragment[] {
   if (parameters.length === 0) {

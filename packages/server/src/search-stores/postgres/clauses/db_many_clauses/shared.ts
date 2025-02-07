@@ -1,10 +1,11 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { SearchParameterResource } from "../../../parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
   | s.r4_date_idx.Whereable
@@ -20,7 +21,7 @@ export type SEARCH_INDEX_VALUE_BASED =
 
 export function missingModifier(
   _ctx: IGUHealthServerCTX,
-  parameter: SearchParameterResource,
+  parameter: SearchParameterResource<FHIR_VERSION>,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map((value): SEARCH_INDEX_WHEREABLE => {

@@ -1,16 +1,16 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { SearchParameterResource } from "../../../parameters.js";
 import { missingModifier } from "./shared.js";
 
-export default function stringClauses(
+export default function stringClauses<Version extends FHIR_VERSION>(
   _ctx: IGUHealthServerCTX,
-  _fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+  _fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
     case "missing":

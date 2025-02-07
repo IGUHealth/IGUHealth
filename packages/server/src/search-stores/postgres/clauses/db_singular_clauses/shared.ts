@@ -1,13 +1,13 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as r4Sp1Parameters from "../../../../migrations/sp1-parameters/r4.sp1parameters.js";
 import * as r4bSp1Parameters from "../../../../migrations/sp1-parameters/r4b.sp1parameters.js";
-import { SearchParameterResource } from "../../../parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
   | s.r4_sp1_idx.Whereable
@@ -94,9 +94,9 @@ export function getSp1Column<
   return returnVal as ColumnType[Version][Type];
 }
 
-export function missingModifier(
-  fhirVersion: FHIR_VERSION,
-  parameter: SearchParameterResource,
+export function missingModifier<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  parameter: SearchParameterResource<Version>,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map(

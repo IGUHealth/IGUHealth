@@ -1,6 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { SearchParameterResult } from "@iguhealth/client/lib/url";
 import {
   FHIR_VERSION,
   Resource,
@@ -11,11 +12,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { isSearchTableType, search_table_types } from "../constants.js";
-import {
-  SearchParameterResult,
-  searchParameterToTableName,
-  searchResources,
-} from "../parameters.js";
+import { searchParameterToTableName, searchResources } from "../parameters.js";
 import { getSp1Column } from "./clauses/db_singular_clauses/shared.js";
 import { isSearchParameterInSingularTable } from "./utilities.js";
 
