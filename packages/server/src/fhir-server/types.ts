@@ -16,9 +16,9 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
-  AllResourceTypes,
   FHIR_VERSION,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   AccessToken,
@@ -149,13 +149,13 @@ export interface IGUHealthServerCTX {
   ) => Promise<canonical | undefined>;
 
   resolveCanonical: <
-    FHIRVersion extends FHIR_VERSION,
-    Type extends AllResourceTypes,
+    Version extends FHIR_VERSION,
+    Type extends ResourceType<Version>,
   >(
-    fhirVersion: FHIRVersion,
+    fhirVersion: Version,
     type: Type,
     url: canonical,
-  ) => Promise<Resource<FHIRVersion, Type> | undefined>;
+  ) => Promise<Resource<Version, Type> | undefined>;
 }
 
 function createRootClaims(
