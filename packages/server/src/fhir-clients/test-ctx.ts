@@ -10,6 +10,7 @@ import {
   R4,
   R4B,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
@@ -71,13 +72,17 @@ export const testServices: IGUHealthServerCTX = {
   cache: new TestCache(),
   resolveCanonical: async <
     Version extends FHIR_VERSION,
-    Type extends AllResourceTypes,
+    Type extends ResourceType<Version>,
+    URL extends canonical | canonical[],
+    Return extends URL extends canonical[]
+      ? Resource<Version, Type>[]
+      : Resource<Version, Type> | undefined,
   >(
     version: Version,
     type: Type,
-    url: canonical,
-  ) => {
-    return sds.find((sd) => sd.url === url) as Resource<Version, Type>;
+    url: URL,
+  ): Promise<Return> => {
+    return sds.find((sd) => sd.url === url) as Return;
   },
   resolveTypeToCanonical: async (_fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);
