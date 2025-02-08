@@ -32,7 +32,7 @@ async function expressionSearch<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
   parameter: SearchParameterResource<Version>,
-) {
+): Promise<boolean> {
   if (!parameter.searchParameter.expression)
     throw new OperationError(
       outcomeError(
@@ -92,10 +92,13 @@ async function expressionSearch<
         ),
       );
     }
+    default: {
+      return false;
+    }
   }
 }
 
-function checkParameterWithResource<
+async function checkParameterWithResource<
   CTX extends MemorySearchCTX,
   Version extends FHIR_VERSION,
 >(
@@ -103,7 +106,7 @@ function checkParameterWithResource<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
   parameter: SearchParameterResource<Version>,
-) {
+): Promise<boolean> {
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
     case "url": {
