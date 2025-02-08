@@ -5,7 +5,6 @@ import * as s from "zapatos/schema";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { canonical, uri } from "@iguhealth/fhir-types/r4/types";
 import {
-  AllResourceTypes,
   FHIR_VERSION,
   R4,
   R4B,
