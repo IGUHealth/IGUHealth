@@ -109,7 +109,7 @@ function getVersionedDB<Version extends FHIR_VERSION>(
   >;
 }
 
-function getResourceType<
+function getResourcesOfType<
   Version extends FHIR_VERSION,
   T extends AllResourceTypes,
 >(
@@ -194,7 +194,7 @@ function createMemoryMiddleware<
               );
 
               const resourceSet = Object.values(
-                getResourceType(
+                getResourcesOfType(
                   context.state.data,
                   context.request.fhirVersion,
                   context.request.resource,
@@ -393,6 +393,23 @@ function createURLMap<Version extends FHIR_VERSION>(
   return versionedMap;
 }
 
+function resolveCanonical<
+  Version extends FHIR_VERSION,
+  Type extends ResourceType<Version>,
+>(
+  fhirVersion: Version,
+  type: Type,
+  data: MemoryData,
+  versionedMap: Map<AllResourceTypes, Map<string, string>>,
+  url: r4.canonical,
+): Resource<Version, Type> | undefined {
+  const id = versionedMap.get(type)?.get(url);
+
+  return (
+    id ? getResourcesOfType(data, fhirVersion, type)?.[id as r4.id] : undefined
+  ) as Resource<Version, Type>;
+}
+
 function createResolveCanonical(
   data: MemoryData,
 ): IGUHealthServerCTX["resolveCanonical"] {
@@ -400,21 +417,33 @@ function createResolveCanonical(
   const r4bMap = createURLMap(data, R4B);
 
   return async <
-    FHIRVersion extends FHIR_VERSION,
-    Type extends AllResourceTypes,
+    Version extends FHIR_VERSION,
+    Type extends ResourceType<Version>,
+    URL extends r4.canonical | r4.canonical[],
+    Return extends URL extends r4.canonical[]
+      ? Resource<Version, Type>[]
+      : Resource<Version, Type> | undefined,
   >(
-    fhirVersion: FHIRVersion,
+    fhirVersion: Version,
     type: Type,
-    url: r4.canonical,
-  ) => {
+    url: URL,
+  ): Promise<Return> => {
     const versionedMap = fhirVersion === R4 ? r4Map : r4bMap;
+    if (Array.isArray(url)) {
+      return url
+        .map((url) =>
+          resolveCanonical(fhirVersion, type, data, versionedMap, url),
+        )
+        .filter((r) => r !== undefined) as unknown as Return;
+    }
 
-    const id = versionedMap.get(type)?.get(url);
-    getResourceType(data, fhirVersion, type);
-
-    return (
-      id ? getResourceType(data, fhirVersion, type)?.[id as r4.id] : undefined
-    ) as Resource<FHIRVersion, Type>;
+    return resolveCanonical(
+      fhirVersion,
+      type,
+      data,
+      versionedMap,
+      url,
+    ) as unknown as Return;
   };
 }
 
