@@ -22,7 +22,8 @@ import {
   searchParameterToTableName,
 } from "../parameters.js";
 import * as sqlUtils from "../sql.js";
-import buildParametersSQL from "./clauses/index.js";
+import { singularSQLClauses } from "./clauses/db_singular_clauses/index.js";
+import buildParametersSQL, { splitSingular } from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
 type InteralSearchRequest<Version extends FHIR_VERSION> = {
@@ -255,11 +256,18 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
     (v): v is SearchParameterResult => v.type === "result",
   );
 
-  const parameterClauses = buildParametersSQL(
-    ctx,
+  const { singular, many } = splitSingular(
     request.fhirVersion,
     resourceParameters,
   );
+
+  const singularClauses = singularSQLClauses(
+    ctx,
+    request.fhirVersion,
+    singular,
+  );
+
+  const manyClauses = buildParametersSQL(ctx, request.fhirVersion, many);
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
@@ -291,12 +299,12 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
   >`
       SELECT ${db.mapWithSeparator(cols, db.sql`, `, (c) => db.raw(c))}
       FROM ${root_table_name} 
-      ${parameterClauses.map((q, i) => {
+      ${manyClauses.map((q, i) => {
         const queryAlias = db.raw(`query${i}`);
         return db.sql` JOIN (${q}) as ${queryAlias} ON ${queryAlias}.${"r_version_id"}=${root_table_name}.${"r_version_id"}`;
       })}
       
-      WHERE ${root_table_name}.${"tenant"} = ${db.param(ctx.tenant)}
+      WHERE ${db.conditions.and({ tenant: ctx.tenant }, ...singularClauses)}
       AND ${root_table_name}.${"resource_type"} ${
         request.resourceTypes.length > 0
           ? db.sql`in (${sqlUtils.paramsWithComma(request.resourceTypes)})`

@@ -8,7 +8,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { isSearchParameterInSingularTable } from "../utilities.js";
 import { buildClausesManySQL } from "./db_many_clauses/index.js";
-import { buildClausesSingularSQL } from "./db_singular_clauses/index.js";
+import { singularTableSearch } from "./db_singular_clauses/index.js";
 
 function buildParametersManySQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
@@ -63,12 +63,7 @@ export default function buildParametersSQL<Version extends FHIR_VERSION>(
 ): db.SQLFragment[] {
   const { singular, many } = splitSingular(fhirVersion, parameters);
 
-  const singularSQL = buildClausesSingularSQL(
-    ctx,
-    fhirVersion,
-    singular,
-    columns,
-  );
+  const singularSQL = singularTableSearch(ctx, fhirVersion, singular, columns);
 
   const manySQL = buildParametersManySQL(ctx, fhirVersion, many, columns);
 

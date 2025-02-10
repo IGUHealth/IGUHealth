@@ -31,12 +31,11 @@ const PARAMETER_CLAUSES: Record<
   quantity: quantityClauses,
 };
 
-export function buildClausesSingularSQL<Version extends FHIR_VERSION>(
+export function singularSQLClauses<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameters: SearchParameterResource<Version>[],
-  columns: s.Column[] = [],
-): db.SQLFragment[] {
+): db.SQLFragment<boolean | null, unknown>[] {
   if (parameters.length === 0) {
     return [];
   }
@@ -52,8 +51,6 @@ export function buildClausesSingularSQL<Version extends FHIR_VERSION>(
     );
   }
 
-  const searchTable = getSp1Name(fhirVersion);
-
   const conditions = parameters.map(
     (parameter): db.SQLFragment<boolean | null, unknown> => {
       const searchParameter = parameter.searchParameter;
@@ -65,11 +62,25 @@ export function buildClausesSingularSQL<Version extends FHIR_VERSION>(
     },
   );
 
+  return conditions;
+}
+
+export function singularTableSearch<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  parameters: SearchParameterResource<Version>[],
+  columns: s.Column[] = [],
+) {
+  if (parameters.length === 0) return [];
+  const searchTable = getSp1Name(fhirVersion);
+
+  const conditions = singularSQLClauses(ctx, fhirVersion, parameters);
+
   return [
     db.sql<s.r4_sp1_idx.SQL | s.r4b_sp1_idx.SQL>`
-  SELECT ${columns.length === 0 ? "r_version_id" : db.cols(columns)} 
-  FROM ${searchTable}
-  WHERE ${db.conditions.and({ tenant: ctx.tenant }, ...conditions)}
-  `,
+      SELECT ${columns.length === 0 ? "r_version_id" : db.cols(columns)} 
+      FROM ${searchTable}
+      WHERE ${db.conditions.and({ tenant: ctx.tenant }, ...conditions)}
+      `,
   ];
 }
