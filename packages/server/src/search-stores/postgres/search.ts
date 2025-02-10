@@ -37,7 +37,7 @@ type InteralSearchRequest<Version extends FHIR_VERSION> = {
  * @param request A FHIR Search Request
  * @returns Object with parameter metadata and derived resourcetype filters.
  */
-async function fhirSearchRequesttoInteralRequest<
+async function fhirSearchRequesttoInternalRequest<
   Request extends FHIRSearchRequest,
 >(
   ctx: IGUHealthServerCTX,
@@ -331,7 +331,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   total?: number;
   result: SearchResult[];
 }> {
-  const request = await fhirSearchRequesttoInteralRequest(ctx, fhirRequest);
+  const request = await fhirSearchRequesttoInternalRequest(ctx, fhirRequest);
   const searchSQL = await deriveResourceSearchSQL(ctx, request);
 
   if (process.env.LOG_SQL) {
@@ -362,6 +362,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   const revIncludeParam = request.parameters.find(
     (p) => p.name === "_revinclude" && p.type === "result",
   ) as SearchParameterResult | undefined;
+
   if (revIncludeParam) {
     searchResults = searchResults.concat(
       await processRevInclude(
