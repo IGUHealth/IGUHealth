@@ -32,8 +32,7 @@ function buildParametersManySQL<Version extends FHIR_VERSION>(
   return res;
 }
 
-function splitSingular<Version extends FHIR_VERSION>(
-  ctx: IGUHealthServerCTX,
+export function splitSingular<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameters: SearchParameterResource<Version>[],
 ): {
@@ -62,7 +61,7 @@ export default function buildParametersSQL<Version extends FHIR_VERSION>(
   parameters: SearchParameterResource<Version>[],
   columns: s.Column[] = [],
 ): db.SQLFragment[] {
-  const { singular, many } = splitSingular(ctx, fhirVersion, parameters);
+  const { singular, many } = splitSingular(fhirVersion, parameters);
 
   const singularSQL = buildClausesSingularSQL(
     ctx,
