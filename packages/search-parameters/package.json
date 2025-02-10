@@ -28,6 +28,7 @@
   },
   "exports": {
     "./api/load": "./lib/api/load.js",
-    "./api/sp1.parameters": "./lib/api/sp1.parameters.js"
+    "./api/sp1.parameters": "./lib/api/sp1.parameters.js",
+    "./generated/canonical-map": "./lib/generated/canonical-map.js"
   }
 }
