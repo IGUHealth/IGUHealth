@@ -7,12 +7,6 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-async function createCanonicalMap<Version extends FHIR_VERSION>(
-  fhirVersion: Version,
-  resourceTypes: ResourceType<Version>[],
-  name: string,
-) {}
-
 type SearchParameterCanonicalHash = {
   [n in FHIR_VERSION]: Partial<
     Record<ResourceType<n>, Record<code, canonical>>
@@ -22,10 +16,12 @@ type SearchParameterCanonicalHash = {
 export async function createHash<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameters: Resource<Version, "SearchParameter">[],
+  startingHash?: SearchParameterCanonicalHash,
 ): Promise<SearchParameterCanonicalHash> {
   const hash: SearchParameterCanonicalHash = {
     [R4]: {},
     [R4B]: {},
+    ...startingHash,
   };
 
   for (const parameter of parameters) {
