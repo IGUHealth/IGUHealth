@@ -19,6 +19,9 @@ test("Resolution of parameters", async () => {
   expect(resolveCanonical(R4, ["Resource"], "_filter" as code)).toEqual(
     undefined,
   );
+  expect(resolveCanonical(R4, ["DomainResource"], "_text" as code)).toEqual(
+    "http://hl7.org/fhir/SearchParameter/DomainResource-text",
+  );
 
   // R4Bs
   expect(resolveCanonical(R4B, ["Patient"], "active" as code)).toEqual(
@@ -29,5 +32,8 @@ test("Resolution of parameters", async () => {
   );
   expect(resolveCanonical(R4B, ["Resource"], "_filter" as code)).toEqual(
     "http://hl7.org/fhir/SearchParameter/Resource-filter",
+  );
+  expect(resolveCanonical(R4B, ["DomainResource"], "_text" as code)).toEqual(
+    "http://hl7.org/fhir/SearchParameter/DomainResource-text",
   );
 });
