@@ -7,9 +7,12 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-type SearchParameterCanonicalHash = {
+export type SearchParameterCanonicalHash = {
   [n in FHIR_VERSION]: Partial<
-    Record<ResourceType<n>, Record<code, canonical>>
+    Record<
+      ResourceType<n> | "DomainResource" | "Resource",
+      Record<code, canonical>
+    >
   >;
 };
 
