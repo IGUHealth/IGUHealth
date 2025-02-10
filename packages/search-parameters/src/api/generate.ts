@@ -19,7 +19,7 @@ type SearchParameterCanonicalHash = {
   >;
 };
 
-async function createHash<Version extends FHIR_VERSION>(
+export async function createHash<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameters: Resource<Version, "SearchParameter">[],
 ): Promise<SearchParameterCanonicalHash> {
