@@ -3,7 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "generate": "yarn node ./lib/cli/index.js generate canonical-map --output ./src/generated/canonical-map.ts",
+    "_generate-canonical-map": "yarn node ./lib/cli/index.js generate canonical-map --output ./src/generated/canonical-map.ts",
+    "_generate-parameters": "yarn node ./lib/cli/index.js generate special-parameters --output ./src/generated/search-parameters.ts",
+    "generate": "yarn _generate-canonical-map && yarn _generate-parameters",
     "build": "tsc && yarn generate && tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
