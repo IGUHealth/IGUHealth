@@ -15,6 +15,7 @@ export default {
       _source: "http://hl7.org/fhir/SearchParameter/Resource-source",
       _tag: "http://hl7.org/fhir/SearchParameter/Resource-tag",
       "_iguhealth-author": "https:/iguhealth.app/fhir/SearchParameter/author",
+      _type: "http://hl7.org/fhir/SearchParameter/Resource-type",
     },
     Account: {
       identifier: "http://hl7.org/fhir/SearchParameter/Account-identifier",
