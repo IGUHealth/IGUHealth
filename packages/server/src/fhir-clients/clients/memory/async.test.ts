@@ -150,7 +150,7 @@ test("artifactParameters", async () => {
     )
   ).resources;
 
-  expect(parameters.length).toEqual(33);
+  expect(parameters.length).toEqual(34);
 
   expect(
     (
@@ -182,6 +182,7 @@ test("artifactParameters", async () => {
     "_source",
     "_tag",
     "_iguhealth-author",
+    "_type",
   ]);
 
   expect(
