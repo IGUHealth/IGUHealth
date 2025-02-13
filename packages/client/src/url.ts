@@ -70,7 +70,7 @@ export interface SearchParameterResource<Version extends FHIR_VERSION>
   extends ParsedParameter<string | number> {
   type: "resource";
   searchParameter: Resource<Version, "SearchParameter">;
-  chainedParameters?: Resource<Version, "SearchParameter">[][];
+  chainedParameters?: Resource<Version, "SearchParameter">[];
 }
 
 export interface SearchParameterResult

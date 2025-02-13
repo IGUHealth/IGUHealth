@@ -1,8 +1,10 @@
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -15,6 +17,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
+import { createArtifactMemoryDatabase } from "../memory/async.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -26,8 +29,37 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
   types: ResourceType<Version>[],
 ) {
   const redis = getRedisClient();
-  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
+  const { client } = createClient();
   const logger = createLogger();
+  const memSource = createArtifactMemoryDatabase({
+    r4: [
+      { resourceType: "StructureDefinition" as AllResourceTypes },
+      {
+        resourceType: "SearchParameter" as AllResourceTypes,
+        // Don't want to load other searchparameters which could conflict with base for now.
+        onlyPackages: [
+          "@iguhealth/hl7.fhir.r4.core",
+          "@iguhealth/iguhealth.fhir.r4.core",
+        ],
+      },
+      { resourceType: "ValueSet" as AllResourceTypes },
+      { resourceType: "CodeSystem" as AllResourceTypes },
+    ],
+    r4b: [
+      { resourceType: "StructureDefinition" as AllResourceTypes },
+      {
+        resourceType: "SearchParameter" as AllResourceTypes,
+        // Don't want to load other searchparameters which could conflict with base for now.
+        onlyPackages: [
+          "@iguhealth/hl7.fhir.r4b.core",
+          "@iguhealth/iguhealth.fhir.r4b.core",
+        ],
+      },
+      { resourceType: "ValueSet" as AllResourceTypes },
+      { resourceType: "CodeSystem" as AllResourceTypes },
+    ],
+  });
+
   const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
@@ -35,19 +67,21 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
     search: await createSearchStore({ type: "postgres" }),
     logger,
     client,
-    resolveCanonical,
-    resolveTypeToCanonical,
+    resolveCanonical: memSource.resolveCanonical,
+    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
     tenant,
   };
 
   const result = Promise.all(
-    types.map((type) => {
-      const resources = loadArtifacts({
-        fhirVersion,
-        resourceType: type,
-        currentDirectory: fileURLToPath(import.meta.url),
-        silence: false,
-      });
+    types.map(async (type) => {
+      const resources = (
+        await memSource.search_type(
+          asRoot(iguhealthServices),
+          fhirVersion,
+          type,
+          [{ name: "_count", value: [5000] }],
+        )
+      ).resources;
 
       logger.info({ [`COUNT ${type}`]: resources.length });
       if (new Set(resources.map((r) => r.id)).size !== resources.length) {
@@ -112,7 +146,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
                 return;
               }
             }
-            logger.error(error);
+            logger.error({ resource: resource, error });
             throw error;
           }
         }),

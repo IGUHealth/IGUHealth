@@ -2,12 +2,15 @@ import { Redis } from "ioredis";
 import { pino } from "pino";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { canonical, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
+  FHIR_VERSION,
   R4,
   R4B,
+  Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
@@ -21,10 +24,7 @@ import {
   MEMBERSHIP_RESOURCE_TYPES,
   createMembershipClient,
 } from "../fhir-clients/clients/auth-storage/index.js";
-import {
-  MemoryParameter,
-  createArtifactMemoryDatabase,
-} from "../fhir-clients/clients/memory/async.js";
+import { MemoryParameter } from "../fhir-clients/clients/memory/async.js";
 import { createRequestToResponse } from "../fhir-clients/clients/request-to-response/index.js";
 import RouterClient from "../fhir-clients/clients/router/index.js";
 import sendQueueMiddleweare from "../fhir-clients/middleware/send-to-queue.js";
@@ -60,17 +60,14 @@ type FHIRArtifactTypes = Record<string, MemoryParameter[]>;
 const R4_SPECIAL_TYPES: FHIRArtifactTypes = {
   AUTH: MEMBERSHIP_RESOURCE_TYPES.map((resourceType) => ({ resourceType })),
   ARTIFACTS: [
-    { resourceType: "StructureDefinition" as AllResourceTypes },
-    {
-      resourceType: "SearchParameter" as AllResourceTypes,
-      // Don't want to load other searchparameters which could conflict with base for now.
-      onlyPackages: [
-        "@iguhealth/hl7.fhir.r4.core",
-        "@iguhealth/iguhealth.fhir.r4.core",
-      ],
-    },
-    { resourceType: "ValueSet" as AllResourceTypes },
-    { resourceType: "CodeSystem" as AllResourceTypes },
+    // {
+    //   resourceType: "SearchParameter" as AllResourceTypes,
+    //   // Don't want to load other searchparameters which could conflict with base for now.
+    //   onlyPackages: [
+    //     "@iguhealth/hl7.fhir.r4.core",
+    //     "@iguhealth/iguhealth.fhir.r4.core",
+    //   ],
+    // },
   ],
 };
 const R4_ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
@@ -82,23 +79,15 @@ const R4_DB_TYPES: ResourceType<R4>[] = (
 );
 
 const R4B_SPECIAL_TYPES: FHIRArtifactTypes = {
-  DISSALLOWED: [
-    // "Subscription",
-    // "SubscriptionTopic",
-    // "SubscriptionStatus",
-    { resourceType: "OperationDefinition" as AllResourceTypes },
-  ],
+  DISSALLOWED: [{ resourceType: "OperationDefinition" as AllResourceTypes }],
   ARTIFACTS: [
-    { resourceType: "StructureDefinition" as AllResourceTypes },
-    {
-      resourceType: "SearchParameter" as AllResourceTypes,
-      onlyPackages: [
-        "@iguhealth/hl7.fhir.r4b.core",
-        "@iguhealth/iguhealth.fhir.r4b.core",
-      ],
-    },
-    { resourceType: "ValueSet" as AllResourceTypes },
-    { resourceType: "CodeSystem" as AllResourceTypes },
+    // {
+    //   resourceType: "SearchParameter" as AllResourceTypes,
+    //   onlyPackages: [
+    //     "@iguhealth/hl7.fhir.r4b.core",
+    //     "@iguhealth/iguhealth.fhir.r4b.core",
+    //   ],
+    // },
   ],
 };
 
@@ -177,11 +166,6 @@ export function createClient(): {
   resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
   resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
 } {
-  const memSource = createArtifactMemoryDatabase({
-    r4: R4_SPECIAL_TYPES.ARTIFACTS,
-    r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
-  });
-
   const storage = createRequestToResponse({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
@@ -196,6 +180,7 @@ export function createClient(): {
     AWS_ROLE: process.env.AWS_LAMBDA_ROLE as string,
     AWS_LAMBDA_LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
+
   const lambdaSource = createOperationExecutioner(executioner);
   const inlineSource = InlineExecutioner([
     createDeployOperation(executioner),
@@ -240,25 +225,6 @@ export function createClient(): {
         },
       },
       source: lambdaSource,
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.ARTIFACTS.map(
-            (m) => m.resourceType,
-          ),
-          interactionsSupported: ["read-request", "search-request"],
-        },
-        r4b: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_SPECIAL_TYPES.ARTIFACTS.map(
-            (m) => m.resourceType,
-          ),
-          interactionsSupported: ["read-request", "search-request"],
-        },
-      },
-      source: memSource,
     },
     {
       filter: {
@@ -310,8 +276,26 @@ export function createClient(): {
   ]);
 
   return {
-    resolveCanonical: memSource.resolveCanonical,
-    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
+    resolveCanonical: async <
+      Version extends FHIR_VERSION,
+      Type extends ResourceType<Version>,
+      URL extends canonical | canonical[],
+      Return extends URL extends canonical[]
+        ? Resource<Version, Type>[]
+        : Resource<Version, Type> | undefined,
+    >(
+      fhirVersion: Version,
+      type: Type,
+      url: URL,
+    ): Promise<Return> => {
+      throw new Error();
+    },
+    resolveTypeToCanonical: (
+      version: FHIR_VERSION,
+      type: uri,
+    ): Promise<canonical | undefined> => {
+      throw new Error();
+    },
     client,
   };
 }

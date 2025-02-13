@@ -31,7 +31,6 @@ import { createResolverRemoteCanonical } from "../../../../search-stores/canonic
 import { createSearchStore } from "../../../../search-stores/index.js";
 import {
   deriveResourceTypeFilter,
-  findSearchParameter,
   parametersWithMetaAssociated,
 } from "../../../../search-stores/parameters.js";
 import { workerTokenClaims } from "../../../utilities.js";
@@ -67,8 +66,8 @@ async function processSubscription(
     request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
     const parameters = await parametersWithMetaAssociated(
-      async (resourceTypes, name) =>
-        await findSearchParameter(ctx.client, {}, R4, resourceTypes, name),
+      asRoot(ctx),
+      request.fhirVersion,
       resourceTypes,
       request.parameters,
     ); // Standard parameters

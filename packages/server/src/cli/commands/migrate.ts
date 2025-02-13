@@ -6,6 +6,9 @@ import { Admin } from "kafkajs";
 import { createKafkaClient } from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { ITopic } from "../../queue/topics/index.js";
+import syncArtifacts from "../../fhir-clients/clients/artifacts/load.js";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 
 interface DBMigrate {
   up: () => Promise<void>;
@@ -56,6 +59,21 @@ const kafka: Parameters<Command["action"]>[0] = async () => {
   }
 };
 
+const loadArtifacts: Parameters<Command["action"]>[0] = async () => {
+  syncArtifacts(R4, "iguhealth" as TenantId, [
+    "SearchParameter",
+    "StructureDefinition",
+    "ValueSet",
+    "CodeSystem",
+  ]);
+  syncArtifacts(R4B, "iguhealth" as TenantId, [
+    "SearchParameter",
+    "StructureDefinition",
+    "ValueSet",
+    "CodeSystem",
+  ]);
+};
+
 export function migrateCommands(command: Command) {
   command
     .command("postgres")
@@ -68,10 +86,16 @@ export function migrateCommands(command: Command) {
     .action(kafka);
 
   command
+    .command("artifacts")
+    .description("Run artifact migrations.")
+    .action(loadArtifacts);
+
+  command
     .command("all")
     .description("Run all migrations.")
     .action(async () => {
       await postgres();
       await kafka();
+      await loadArtifacts();
     });
 }

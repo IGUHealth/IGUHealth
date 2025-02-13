@@ -2,8 +2,8 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { SearchParameterResource } from "@iguhealth/client/lib/url";
-import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { code, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
@@ -50,10 +50,10 @@ function getCanonicalSearchSQL<Version extends FHIR_VERSION>(
   (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${conditions})`;
 }
 
-function isChainParameter(
-  parameter: SearchParameterResource<FHIR_VERSION>,
-): parameter is SearchParameterResource<FHIR_VERSION> & {
-  chainedParameters: SearchParameter[][];
+function isChainParameter<Version extends FHIR_VERSION>(
+  parameter: SearchParameterResource<Version>,
+): parameter is SearchParameterResource<Version> & {
+  chainedParameters: Resource<Version, "SearchParameter">[];
 } {
   if (parameter.chainedParameters && parameter.chainedParameters.length > 0)
     return true;
@@ -64,49 +64,40 @@ function chainSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource<Version> & {
-    chainedParameters: SearchParameter[][];
+    chainedParameters: Resource<Version, "SearchParameter">[];
   },
 ): db.SQLFragment<boolean | null, never> {
   const referenceParameters = [
-    [parameter.searchParameter],
+    parameter.searchParameter,
     ...parameter.chainedParameters.slice(0, -1),
   ];
 
-  const sqlCHAIN = referenceParameters.map((parameters) => {
-    const res = parameters.map((p): db.SQLFragment => {
-      return buildParametersSQL(
-        ctx,
-        fhirVersion,
-        [
-          {
-            type: "resource",
-            name: p.name,
-            searchParameter: p,
-            modifier: "missing",
-            value: ["false"],
-          },
-        ],
-        ["r_id", "reference_id"],
-      )[0];
-    });
-    return db.sql`(${db.mapWithSeparator(res, db.sql` UNION `, (c) => c)})`;
+  const sqlCHAIN = referenceParameters.map((p) => {
+    return buildParametersSQL(
+      ctx,
+      fhirVersion,
+      [
+        {
+          type: "resource",
+          name: p.name,
+          searchParameter: p,
+          modifier: "missing",
+          value: ["false"],
+        },
+      ],
+      ["r_id", "reference_id"],
+    )[0];
   });
 
-  const lastParameters =
+  const lastParameter =
     parameter.chainedParameters[parameter.chainedParameters.length - 1];
 
-  const lastResult = db.sql`(${db.mapWithSeparator(
-    lastParameters.map((p) => {
-      return buildParametersSQL(
-        ctx,
-        fhirVersion,
-        [{ ...parameter, searchParameter: p }],
-        ["r_id"],
-      )[0];
-    }),
-    db.sql` UNION `,
-    (c) => c,
-  )})`;
+  const lastResult = buildParametersSQL(
+    ctx,
+    fhirVersion,
+    [{ ...parameter, searchParameter: lastParameter }],
+    ["r_id"],
+  )[0];
 
   const referencesSQL = [...sqlCHAIN, lastResult]
     // Reverse as we want to start from initial value and then chain up to the last reference ID.
