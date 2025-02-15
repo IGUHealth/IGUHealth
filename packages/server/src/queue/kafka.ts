@@ -1,4 +1,9 @@
-import { Message as KafkaMessage, Producer, TopicMessages } from "kafkajs";
+import {
+  CompressionTypes,
+  Message as KafkaMessage,
+  Producer,
+  TopicMessages,
+} from "kafkajs";
 import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
@@ -30,7 +35,10 @@ export class KafkaBatch implements IQueue, IQueueBatch {
       },
     );
 
-    await this._producer.sendBatch({ topicMessages: sendData });
+    await this._producer.sendBatch({
+      compression: CompressionTypes.GZIP,
+      topicMessages: sendData,
+    });
   }
   async abort(): Promise<void> {
     this._messages = {};
@@ -82,6 +90,7 @@ export class KafkaQueue implements IQueue {
     messages: ITopicMessage<T>[],
   ): Promise<void> {
     await this._producer.send({
+      compression: CompressionTypes.GZIP,
       topic: topic,
       messages: messages.map((m) => ({
         ...m,
