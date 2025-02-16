@@ -52,6 +52,7 @@ export async function createHash<Version extends FHIR_VERSION>(
 export async function getSearchParameterSearchParameter<
   Version extends FHIR_VERSION,
 >(
+  version: Version,
   parameters: Resource<Version, "SearchParameter">[],
 ): Promise<Resource<Version, "SearchParameter">[]> {
   const searchParameters = parameters.filter(
