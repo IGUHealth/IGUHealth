@@ -77,13 +77,14 @@ export const testServices: IGUHealthServerCTX = {
       ? Resource<Version, Type>[]
       : Resource<Version, Type> | undefined,
   >(
+    _ctx: IGUHealthServerCTX,
     version: Version,
     type: Type,
     url: URL,
   ): Promise<Return> => {
     return sds.find((sd) => sd.url === url) as Return;
   },
-  resolveTypeToCanonical: async (_fhirVersion, type: uri) => {
+  resolveTypeToCanonical: async (_ctx, _fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);
     return sd?.url as canonical;
   },

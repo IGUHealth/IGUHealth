@@ -36,6 +36,7 @@ async function generateSnapshot(
     ? (
         (
           await ctx.resolveCanonical(
+            ctx,
             fhirVersion,
             "StructureDefinition",
             sd.baseDefinition,
@@ -99,6 +100,7 @@ export const StructureDefinitionSnapshotInvoke = InlineOperation(
       input.definition
         ? input.definition
         : await ctx.resolveCanonical(
+            ctx,
             request.fhirVersion,
             "StructureDefinition",
             input.url as canonical,

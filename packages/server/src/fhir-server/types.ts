@@ -144,6 +144,7 @@ export interface IGUHealthServerCTX {
 
   // Utilities
   resolveTypeToCanonical: (
+    ctx: this,
     fhirVersion: FHIR_VERSION,
     type: uri,
   ) => Promise<canonical | undefined>;
@@ -153,6 +154,7 @@ export interface IGUHealthServerCTX {
     Type extends ResourceType<Version>,
     URL extends canonical | canonical[],
   >(
+    ctx: this,
     fhirVersion: Version,
     type: Type,
     url: URL,
