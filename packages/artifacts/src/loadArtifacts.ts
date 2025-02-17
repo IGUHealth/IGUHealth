@@ -111,7 +111,7 @@ export default function loadArtifacts<
         return depPackage.fhirVersions?.some((version: string) =>
           version.startsWith(fhirVersion),
         );
-      } catch (e) {
+      } catch (_e) {
         return false;
       }
     })
@@ -132,10 +132,15 @@ export default function loadArtifacts<
             : indexFile.files;
           return fileInfos
             .map((r) => {
+              const fileLoc = requirer.resolve(`${d}/${r.filename}`);
               return flattenOrInclude(
                 fhirVersion,
                 resourceType,
-                requirer(`${d}/${r.filename}`),
+                JSON.parse(
+                  readFileSync(fileLoc, {
+                    encoding: "utf8",
+                  }),
+                ),
               );
             })
             .flat();
