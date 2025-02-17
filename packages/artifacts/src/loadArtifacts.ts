@@ -132,12 +132,15 @@ export default function loadArtifacts<
             : indexFile.files;
           return fileInfos
             .map((r) => {
+              const fileLoc = requirer.resolve(`${d}/${r.filename}`);
               return flattenOrInclude(
                 fhirVersion,
                 resourceType,
-                readFileSync(requirer.resolve(`${d}/${r.filename}`), {
-                  encoding: "utf8",
-                }),
+                JSON.parse(
+                  readFileSync(fileLoc, {
+                    encoding: "utf8",
+                  }),
+                ),
               );
             })
             .flat();
