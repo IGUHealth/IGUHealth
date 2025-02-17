@@ -8,10 +8,10 @@ test("VALIDATION OUTPUT", async () => {
     {
       fhirVersion: R4,
       level: "system",
-      resolveCanonical(fhirVersion, type, url) {
+      async resolveCanonical(fhirVersion, type, url) {
         return undefined;
       },
-      resolveTypeToCanonical(fhirVersion, type) {
+      async resolveTypeToCanonical(fhirVersion, type) {
         return undefined;
       },
     },
@@ -26,11 +26,11 @@ test("VALIDATION OUTPUT", async () => {
     {
       fhirVersion: R4,
       level: "system",
-      resolveCanonical(fhirVersion, type, url) {
+      async resolveCanonical(fhirVersion, type, url) {
         console.log(type);
         return undefined;
       },
-      resolveTypeToCanonical(fhirVersion, type) {
+      async resolveTypeToCanonical(fhirVersion, type) {
         console.log(type);
         return undefined;
       },
@@ -54,10 +54,10 @@ test("VALIDATION OUTPUT", async () => {
     {
       fhirVersion: R4,
       level: "system",
-      resolveCanonical(fhirVersion, type, url) {
+      async resolveCanonical(fhirVersion, type, url) {
         return undefined;
       },
-      resolveTypeToCanonical(fhirVersion, type) {
+      async resolveTypeToCanonical(fhirVersion, type) {
         return undefined;
       },
     },

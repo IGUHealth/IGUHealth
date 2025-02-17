@@ -21,6 +21,7 @@ import {
 
 import { testServices } from "./fhir-clients/test-ctx.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
+import { IGUHealthServerCTX } from "./fhir-server/types.js";
 
 function loadResources(
   resourceTypes: ResourceType<R4>[],
@@ -43,18 +44,11 @@ const resources = loadResources(["StructureDefinition"]);
 
 const CTX = {
   ...testServices,
-  resolveCanonical<
-    FHIRVersion extends FHIR_VERSION,
-    Type extends ResourceType<FHIRVersion>,
-  >(
-    fhirVersion: FHIRVersion,
-    type: Type,
-    url: canonical,
-  ): Resource<FHIRVersion, Type> | undefined {
+  resolveCanonical(ctx, fhirVersion, type, url) {
     // @ts-ignore
     const sd = resources.find((sd) => sd.url === url);
     if (!sd) throw new Error(`Could not resolve url ${url}`);
-    return sd as Resource<FHIRVersion, Type> | undefined;
+    return sd as any;
   },
 };
 

@@ -157,6 +157,7 @@ async function getValueSetExpansion<Version extends FHIR_VERSION>(
     }
     case include.system !== undefined: {
       const codeSystem = await ctx.resolveCanonical(
+        ctx,
         fhirVersion,
         "CodeSystem",
         include.system as canonical,
@@ -267,7 +268,7 @@ async function resolveValueSet<Version extends FHIR_VERSION>(
     const [url, url_version] = splitParameter(input.url, "|");
     const version = url_version ? url_version : input.valueSetVersion;
 
-    return ctx.resolveCanonical(fhirVersion, "ValueSet", url as canonical);
+    return ctx.resolveCanonical(ctx, fhirVersion, "ValueSet", url as canonical);
   }
 }
 
@@ -426,6 +427,7 @@ export class TerminologyProvider implements ITerminologyProvider {
     }
     const codeSystem = input.system
       ? await ctx.resolveCanonical(
+          ctx,
           fhirVersion,
           "CodeSystem",
           input.system as canonical,

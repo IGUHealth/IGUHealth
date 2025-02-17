@@ -424,6 +424,7 @@ function createResolveCanonical(
       ? Resource<Version, Type>[]
       : Resource<Version, Type> | undefined,
   >(
+    ctx: IGUHealthServerCTX,
     fhirVersion: Version,
     type: Type,
     url: URL,
@@ -449,7 +450,7 @@ function createResolveCanonical(
 
 function createResolveTypeToCanonical(
   data: MemoryData,
-): (version: FHIR_VERSION, type: r4.uri) => Promise<r4.canonical | undefined> {
+): IGUHealthServerCTX["resolveTypeToCanonical"] {
   const r4Map = (
     Object.values(
       data?.[R4]?.["StructureDefinition"] ?? {},
@@ -483,7 +484,11 @@ function createResolveTypeToCanonical(
     new Map(),
   );
 
-  return async (version: FHIR_VERSION, type: r4.uri) => {
+  return async (
+    ctx: IGUHealthServerCTX,
+    version: FHIR_VERSION,
+    type: r4.uri,
+  ) => {
     switch (version) {
       case R4: {
         return r4Map.get(type);

@@ -1,6 +1,11 @@
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
-import { MetaParameter, ParsedParameter, SearchParameterResource, SearchParameterResult } from "@iguhealth/client/url";
+import {
+  MetaParameter,
+  ParsedParameter,
+  SearchParameterResource,
+  SearchParameterResult,
+} from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
@@ -76,7 +81,9 @@ export function searchParameterToTableName<
 }
 
 // Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
-function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION, AllInteractions>): string[] {
+function _deriveResourceTypeFilter(
+  request: FHIRRequest<FHIR_VERSION, AllInteractions>,
+): string[] {
   switch (request.type) {
     case "search-request": {
       if (request.level === "type") return [request.resource];
@@ -90,9 +97,9 @@ function _deriveResourceTypeFilter(request: FHIRRequest<FHIR_VERSION, AllInterac
   }
 }
 
-export function deriveResourceTypeFilter<Request extends FHIRRequest<FHIR_VERSION, AllInteractions>>(
-  request: Request,
-): ResourceType<Request["fhirVersion"]>[] {
+export function deriveResourceTypeFilter<
+  Request extends FHIRRequest<FHIR_VERSION, AllInteractions>,
+>(request: Request): ResourceType<Request["fhirVersion"]>[] {
   const passedinTypes = _deriveResourceTypeFilter(
     request,
   ) as ResourceType<FHIR_VERSION>[];
@@ -224,7 +231,9 @@ type ResolveSearchParameter = (
   name: string,
 ) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>;
 
-export async function parametersWithMetaAssociated<Version extends FHIR_VERSION>(
+export async function parametersWithMetaAssociated<
+  Version extends FHIR_VERSION,
+>(
   resolveSearchParameter: ResolveSearchParameter,
   resourceTypes: AllResourceTypes[],
   parameters: ParsedParameter<string | number>[],
@@ -264,7 +273,10 @@ export async function parametersWithMetaAssociated<Version extends FHIR_VERSION>
       const param: SearchParameterResource<Version> = {
         ...p,
         type: "resource",
-        searchParameter: searchParameter as Resource<Version, "SearchParameter">,
+        searchParameter: searchParameter as Resource<
+          Version,
+          "SearchParameter"
+        >,
       };
 
       return associateChainedParameters(param, resolveSearchParameter);
