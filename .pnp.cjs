@@ -28042,6 +28042,13 @@ const RAW_RUNTIME_STATE =
           ["@types/trusted-types", "npm:2.0.3"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:2.0.7", {\
+        "packageLocation": "./.yarn/cache/@types-trusted-types-npm-2.0.7-a07fc44f59-8e4202766a.zip/node_modules/@types/trusted-types/",\
+        "packageDependencies": [\
+          ["@types/trusted-types", "npm:2.0.7"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@types/ua-parser-js", [\
@@ -35562,10 +35569,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["dompurify", [\
-      ["npm:3.1.6", {\
-        "packageLocation": "./.yarn/cache/dompurify-npm-3.1.6-344fd47e23-036844bc9b.zip/node_modules/dompurify/",\
+      ["npm:3.2.4", {\
+        "packageLocation": "./.yarn/cache/dompurify-npm-3.2.4-d8ea6c7c6a-98570c5338.zip/node_modules/dompurify/",\
         "packageDependencies": [\
-          ["dompurify", "npm:3.1.6"]\
+          ["dompurify", "npm:3.2.4"],\
+          ["@types/trusted-types", "npm:2.0.7"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -44382,7 +44390,7 @@ const RAW_RUNTIME_STATE =
           ["d3-sankey", "npm:0.12.3"],\
           ["dagre-d3-es", "npm:7.0.10"],\
           ["dayjs", "npm:1.11.11"],\
-          ["dompurify", "npm:3.1.6"],\
+          ["dompurify", "npm:3.2.4"],\
           ["elkjs", "npm:0.9.3"],\
           ["katex", "npm:0.16.10"],\
           ["khroma", "npm:2.1.0"],\
