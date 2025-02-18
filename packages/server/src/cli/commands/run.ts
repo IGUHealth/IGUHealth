@@ -68,7 +68,7 @@ const all: Parameters<Command["action"]>[0] = async (options) => {
   };
 };
 
-function kafkaCommands(command: Command) {
+function workers(command: Command) {
   command
     .command("storage")
     .description("Storage kafka worker.")
@@ -78,18 +78,21 @@ function kafkaCommands(command: Command) {
     .command("indexing")
     .description("Indexing kafka worker.")
     .action(searchIndexingWorker);
+
+  command
+    .command("subscription")
+    .description("Subscription kafka worker.")
+    .action(worker);
 }
 
 export function runCommands(command: Command) {
-  kafkaCommands(command.command("kafka-worker"));
+  workers(command.command("worker"));
 
   command
     .command("server")
     .option("-p, --port <number>", "port to run on.", "3000")
     .description("Run the server.")
     .action(server);
-
-  command.command("worker").description("Run a worker.").action(worker);
 
   command
     .command("both")
