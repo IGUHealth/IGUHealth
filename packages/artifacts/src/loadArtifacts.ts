@@ -116,40 +116,34 @@ export default function loadArtifacts<
       }
     })
     .map((d) => {
-      try {
-        if (!silence)
-          console.log(
-            ` '${d}' Loading package contents from .index.json for resourceType '${resourceType}'`,
-          );
-        const indexFile: IndexFile | undefined = requirer(`${d}/.index.json`);
-        if (indexFile?.files) {
-          const fileInfos = resourceType
-            ? indexFile.files.filter(
-                (metaInfo) =>
-                  metaInfo.resourceType &&
-                  resourceType === metaInfo.resourceType,
-              )
-            : indexFile.files;
-          return fileInfos
-            .map((r) => {
-              const fileLoc = requirer.resolve(`${d}/${r.filename}`);
-              return flattenOrInclude(
-                fhirVersion,
-                resourceType,
-                JSON.parse(
-                  readFileSync(fileLoc, {
-                    encoding: "utf8",
-                  }),
-                ),
-              );
-            })
-            .flat();
-        }
-        return [];
-      } catch (e) {
-        console.error(e);
-        return [];
+      if (!silence)
+        console.log(
+          ` '${d}' Loading package contents from .index.json for resourceType '${resourceType}'`,
+        );
+      const indexFile: IndexFile | undefined = requirer(`${d}/.index.json`);
+      if (indexFile?.files) {
+        const fileInfos = resourceType
+          ? indexFile.files.filter(
+              (metaInfo) =>
+                metaInfo.resourceType && resourceType === metaInfo.resourceType,
+            )
+          : indexFile.files;
+        return fileInfos
+          .map((r) => {
+            const fileLoc = requirer.resolve(`${d}/${r.filename}`);
+            return flattenOrInclude(
+              fhirVersion,
+              resourceType,
+              JSON.parse(
+                readFileSync(fileLoc, {
+                  encoding: "utf8",
+                }),
+              ),
+            );
+          })
+          .flat();
       }
+      return [];
     })
     .flat();
 }
