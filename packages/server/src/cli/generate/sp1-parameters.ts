@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS ${getSp1Name(version)} (
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
 
 
-  UNIQUE (tenant, r_id),
+  UNIQUE (tenant, resource_type, r_id),
   CONSTRAINT sp1_fk_resource
       FOREIGN KEY(r_version_id) 
 	REFERENCES resources(version_id)
