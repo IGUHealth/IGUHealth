@@ -6,6 +6,7 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
@@ -197,17 +198,19 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
     return returnOrdered.filter((r) => r !== undefined);
   }
 
-  async readLatestResourceById<Version extends FHIR_VERSION>(
+  async readLatestResourceById<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
     ctx: CTX,
     fhirVersion: Version,
+    resourceType: Type,
     id: id,
-  ): Promise<Resource<Version, AllResourceTypes> | undefined> {
+  ): Promise<Resource<Version, Type> | undefined> {
     const result = await db
       .selectOne(
         "resources",
         {
           tenant: ctx.tenant,
           id: id,
+          resource_type: resourceType,
           fhir_version: toDBFHIRVersion(fhirVersion),
         },
         {
@@ -218,7 +221,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       .run(this.getClient());
 
     return result?.resource as unknown as Promise<
-      Resource<Version, AllResourceTypes> | undefined
+      Resource<Version, Type> | undefined
     >;
   }
 

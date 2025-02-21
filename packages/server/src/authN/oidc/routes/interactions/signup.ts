@@ -60,6 +60,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     const membership = await ctx.state.iguhealth.store.readLatestResourceById(
       asRoot(ctx.state.iguhealth),
       R4,
+      "Membership",
       existingUser.fhir_user_id as id,
     );
     if (!membership || membership.resourceType !== "Membership") {

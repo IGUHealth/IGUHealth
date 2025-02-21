@@ -362,6 +362,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     const membership = await ctx.state.iguhealth.store.readLatestResourceById(
       ctx.state.iguhealth,
       R4,
+      "Membership",
       user.fhir_user_id as id,
     );
 

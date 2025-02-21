@@ -153,7 +153,7 @@ async function findResourceAndAccessPolicies<
     };
 
   const [member, accessPolicies] = await Promise.all([
-    ctx.store.readLatestResourceById(asRoot(ctx), R4, memberId),
+    ctx.store.readLatestResourceById(asRoot(ctx), R4, "Membership", memberId),
     ctx.store.readResourcesByVersionId(asRoot(ctx), R4, accessPolicyVersionIds),
   ]);
 
