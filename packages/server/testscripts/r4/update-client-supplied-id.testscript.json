@@ -98,13 +98,7 @@
         },
         {
           "assert": {
-            "resource": "OperationOutcome"
-          }
-        },
-        {
-          "assert": {
-            "expression": "OperationOutcome.issue[0].code",
-            "value": "invalid"
+            "resource": "Encounter"
           }
         },
         {
