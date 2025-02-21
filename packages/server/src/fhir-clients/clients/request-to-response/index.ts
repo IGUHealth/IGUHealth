@@ -91,12 +91,19 @@ async function createResource<
 async function getResourceById<
   CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
+  Type extends ResourceType<Version>,
 >(
   ctx: CTX,
   fhirVersion: Version,
+  type: Type,
   id: id,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
-  const resource = await ctx.store.readLatestResourceById(ctx, fhirVersion, id);
+  const resource = await ctx.store.readLatestResourceById(
+    ctx,
+    fhirVersion,
+    type,
+    id,
+  );
 
   return resource;
 }
@@ -111,7 +118,7 @@ async function getResource<
   resourceType: Type,
   id: id,
 ): Promise<Resource<Version, Type> | undefined> {
-  const resource = await getResourceById(ctx, fhirVersion, id);
+  const resource = await getResourceById(ctx, fhirVersion, resourceType, id);
 
   if (resource === undefined || resource.resourceType !== resourceType) {
     return undefined;
@@ -193,17 +200,22 @@ async function updateResource<
 >(
   ctx: CTX,
   fhirVersion: Version,
-  resource: Resource<Version, AllResourceTypes>,
+  resource: Resource<Version, ResourceType<Version>>,
 ): Promise<{
   created: boolean;
-  resource: Resource<Version, AllResourceTypes>;
+  resource: Resource<Version, ResourceType<Version>>;
 }> {
   if (!resource.id)
     throw new OperationError(
       outcomeError("invalid", "Resource id not found on resource"),
     );
 
-  const existingResource = await getResourceById(ctx, fhirVersion, resource.id);
+  const existingResource = await getResourceById(
+    ctx,
+    fhirVersion,
+    resource.resourceType as ResourceType<Version>,
+    resource.id,
+  );
 
   if (
     existingResource &&

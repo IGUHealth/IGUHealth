@@ -10,6 +10,7 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
 export type Insertable = Extract<s.Table, "users" | "resources" | "tenants">;
@@ -27,11 +28,15 @@ export interface ResourceStore<CTX> {
     version_ids: id[],
   ): Promise<Resource<Version, AllResourceTypes>[]>;
 
-  readLatestResourceById<Version extends FHIR_VERSION>(
+  readLatestResourceById<
+    Version extends FHIR_VERSION,
+    Type extends ResourceType<Version>,
+  >(
     ctx: CTX,
     fhirVersion: Version,
+    type: Type,
     id: id,
-  ): Promise<Resource<Version, AllResourceTypes> | undefined>;
+  ): Promise<Resource<Version, Type> | undefined>;
 
   history<Version extends FHIR_VERSION>(
     ctx: CTX,
