@@ -81,14 +81,9 @@ export async function validateProfileCanonical(
     path_ ??
     pointer(ctx.fhirVersion, profile?.type as AllDataTypes, "id" as id);
 
+  // If we can't resolve profile just ignore for now.
   if (!profile) {
-    throw new OperationError(
-      outcomeFatal(
-        "not-found",
-        `Unable to resolve canonical for profile '${profileURL}'`,
-        [toJSONPointer(path)],
-      ),
-    );
+    return [];
   }
 
   const issues = await validateProfile(ctx, profile, root, path);

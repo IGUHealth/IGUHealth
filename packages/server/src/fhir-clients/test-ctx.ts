@@ -72,17 +72,17 @@ export const testServices: IGUHealthServerCTX = {
   resolveCanonical: async <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
-    URL extends canonical | canonical[],
-    Return extends URL extends canonical[]
-      ? Resource<Version, Type>[]
-      : Resource<Version, Type> | undefined,
+    URL extends canonical[],
   >(
     _ctx: IGUHealthServerCTX,
     version: Version,
     type: Type,
     url: URL,
-  ): Promise<Return> => {
-    return sds.find((sd) => sd.url === url) as Return;
+  ): Promise<Resource<Version, Type>[]> => {
+    return sds.filter((sd) => url.includes(sd.url as canonical)) as Resource<
+      Version,
+      Type
+    >[];
   },
   resolveTypeToCanonical: async (_ctx, _fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);

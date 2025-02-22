@@ -128,20 +128,25 @@ export default function loadArtifacts<
                 metaInfo.resourceType && resourceType === metaInfo.resourceType,
             )
           : indexFile.files;
-        return fileInfos
+
+        const result = fileInfos
           .map((r) => {
             const fileLoc = requirer.resolve(`${d}/${r.filename}`);
-            return flattenOrInclude(
+            const fileContent = new TextDecoder("utf-8", {
+              fatal: true,
+            }).decode(readFileSync(fileLoc));
+
+            const result = flattenOrInclude(
               fhirVersion,
               resourceType,
-              JSON.parse(
-                readFileSync(fileLoc, {
-                  encoding: "utf8",
-                }),
-              ),
+              JSON.parse(fileContent),
             );
+
+            return result;
           })
           .flat();
+
+        return result;
       }
       return [];
     })

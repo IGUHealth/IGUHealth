@@ -22,6 +22,8 @@ import {
   createLogger,
   getRedisClient,
 } from "../../fhir-server/index.js";
+import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
+import resolveTypeToCanonical from "../../fhir-server/resolvers/resolveTypeToCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/index.js";
@@ -163,7 +165,9 @@ function tenantCommands(command: Command) {
         terminologyProvider: new TerminologyProvider(),
         store: await createResourceStore({ type: "postgres" }),
         search: await createSearchStore({ type: "postgres" }),
-        ...createClient(),
+        resolveCanonical,
+        resolveTypeToCanonical,
+        client: createClient(),
       };
 
       await createTenant(options, services);
@@ -190,7 +194,9 @@ function clientAppCommands(command: Command) {
         terminologyProvider: new TerminologyProvider(),
         store: await createResourceStore({ type: "postgres" }),
         search: await createSearchStore({ type: "postgres" }),
-        ...createClient(),
+        client: createClient(),
+        resolveCanonical,
+        resolveTypeToCanonical,
       };
 
       const transaction = await services.client.transaction(

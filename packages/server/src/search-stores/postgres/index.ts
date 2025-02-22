@@ -7,6 +7,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import { OperationError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { FHIRSearchRequest, SearchEngine, SearchResult } from "../interface.js";
@@ -24,8 +25,15 @@ export class PostgresSearchEngine<CTX extends IGUHealthServerCTX>
     ctx: CTX,
     request: FHIRSearchRequest,
   ): Promise<{ total?: number; result: SearchResult[] }> {
-    const result = await executeSearchQuery(this._pgClient, ctx, request);
-    return result;
+    try {
+      const result = await executeSearchQuery(this._pgClient, ctx, request);
+      return result;
+    } catch (e) {
+      if (e instanceof OperationError) {
+        console.error(JSON.stringify(e.operationOutcome));
+      }
+      throw e;
+    }
   }
   index<Version extends FHIR_VERSION>(
     ctx: CTX,
