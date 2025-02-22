@@ -333,44 +333,31 @@ async function indexSingularParameters<
     };
   }
 
-  try {
-    switch (fhirVersion) {
-      case R4: {
-        await db
-          .upsert(
-            "r4_sp1_idx",
-            [insertable],
-            db.constraint("r4_sp1_idx_pkey"),
-            {
-              updateColumns: db.doNothing,
-            },
-          )
-          .run(pg);
-        return;
-      }
-      case R4B: {
-        await db
-          .upsert(
-            "r4b_sp1_idx",
-            [insertable],
-            db.constraint("r4b_sp1_idx_pkey"),
-            {
-              updateColumns: db.doNothing,
-            },
-          )
-          .run(pg);
-        return;
-      }
-      default: {
-        throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
-      }
+  switch (fhirVersion) {
+    case R4: {
+      await db
+        .upsert("r4_sp1_idx", [insertable], db.constraint("r4_sp1_idx_pkey"), {
+          updateColumns: db.doNothing,
+        })
+        .run(pg);
+      return;
     }
-  } catch (e) {
-    ctx.logger.error({
-      message: "Failed to index singular",
-      value: JSON.stringify(insertable),
-    });
-    throw e;
+    case R4B: {
+      await db
+        .upsert(
+          "r4b_sp1_idx",
+          [insertable],
+          db.constraint("r4b_sp1_idx_pkey"),
+          {
+            updateColumns: db.doNothing,
+          },
+        )
+        .run(pg);
+      return;
+    }
+    default: {
+      throw new Error(`Unsupported FHIR version: ${fhirVersion}`);
+    }
   }
 }
 
@@ -686,367 +673,359 @@ async function indexMultiSearchParameter<
     },
   );
 
-  try {
-    switch (parameter.type) {
-      case "composite": {
-        // const _composite_indexes = await dataConversion<Version, "composite">(
-        //   fhirVersion,
-        //   parameter,
-        //   evaluation,
-        //   (fhirVersion, types, url) =>
-        //     ctx.resolveCanonical(fhirVersion, types[0], url),
-        // );
-        return;
-      }
-      case "quantity": {
-        const quantity_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "quantity",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_quantity_idx",
-                quantity_indexes,
-                db.constraint("quantity_idx_pkey"),
-                { updateColumns: db.doNothing },
-              )
-              .run(pg);
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_quantity_idx",
-                quantity_indexes as s.r4b_quantity_idx.Insertable[],
-                db.constraint("r4b_quantity_idx_pkey"),
-                { updateColumns: db.doNothing },
-              )
-              .run(pg);
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-      case "date": {
-        const date_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "date",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_date_idx",
-                date_indexes,
-                db.constraint("date_idx_pkey"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_date_idx",
-                date_indexes as s.r4b_date_idx.Insertable[],
-                db.constraint("r4b_date_idx_pkey"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-
-      case "reference": {
-        const reference_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "reference",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_reference_idx",
-                reference_indexes,
-                db.constraint("reference_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_reference_idx",
-                reference_indexes as s.r4b_reference_idx.Insertable[],
-                db.constraint("r4b_reference_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-      case "uri": {
-        const uri_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "uri",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_uri_idx",
-                uri_indexes,
-                db.constraint("uri_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_uri_idx",
-                uri_indexes as s.r4b_uri_idx.Insertable[],
-                db.constraint("r4b_uri_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-      case "token": {
-        const token_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "token",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_token_idx",
-                token_indexes,
-                db.constraint("token_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_token_idx",
-                token_indexes as s.r4b_token_idx.Insertable[],
-                db.constraint("r4b_token_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-      case "number": {
-        const number_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "number",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_number_idx",
-                number_indexes,
-                db.constraint("number_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_number_idx",
-                number_indexes as s.r4b_number_idx.Insertable[],
-                db.constraint("r4b_number_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-
-      case "string": {
-        const string_indexes = await toInsertableIndex(
-          ctx,
-          fhirVersion,
-          "string",
-          parameter,
-          resource,
-          evaluation,
-        );
-
-        switch (fhirVersion) {
-          case R4: {
-            await db
-              .upsert(
-                "r4_string_idx",
-                string_indexes,
-                db.constraint("string_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          case R4B: {
-            await db
-              .upsert(
-                "r4b_string_idx",
-                string_indexes as s.r4b_string_idx.Insertable[],
-                db.constraint("r4b_string_idx_unique"),
-                {
-                  updateColumns: db.doNothing,
-                },
-              )
-              .run(pg);
-
-            return;
-          }
-          default: {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `FHIR version ${fhirVersion} is not supported.`,
-              ),
-            );
-          }
-        }
-      }
-      default:
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `Parameters of type '${parameter.type}' are not yet supported.`,
-          ),
-        );
+  switch (parameter.type) {
+    case "composite": {
+      // const _composite_indexes = await dataConversion<Version, "composite">(
+      //   fhirVersion,
+      //   parameter,
+      //   evaluation,
+      //   (fhirVersion, types, url) =>
+      //     ctx.resolveCanonical(fhirVersion, types[0], url),
+      // );
+      return;
     }
-  } catch (e) {
-    ctx.logger.error({
-      message: "Failed to index multiple",
-      value: JSON.stringify(evaluation.map((e) => e.getValue())),
-    });
-    throw e;
+    case "quantity": {
+      const quantity_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "quantity",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_quantity_idx",
+              quantity_indexes,
+              db.constraint("quantity_idx_pkey"),
+              { updateColumns: db.doNothing },
+            )
+            .run(pg);
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_quantity_idx",
+              quantity_indexes as s.r4b_quantity_idx.Insertable[],
+              db.constraint("r4b_quantity_idx_pkey"),
+              { updateColumns: db.doNothing },
+            )
+            .run(pg);
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+    case "date": {
+      const date_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "date",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_date_idx",
+              date_indexes,
+              db.constraint("date_idx_pkey"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_date_idx",
+              date_indexes as s.r4b_date_idx.Insertable[],
+              db.constraint("r4b_date_idx_pkey"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+
+    case "reference": {
+      const reference_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "reference",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_reference_idx",
+              reference_indexes,
+              db.constraint("reference_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_reference_idx",
+              reference_indexes as s.r4b_reference_idx.Insertable[],
+              db.constraint("r4b_reference_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+    case "uri": {
+      const uri_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "uri",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_uri_idx",
+              uri_indexes,
+              db.constraint("uri_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_uri_idx",
+              uri_indexes as s.r4b_uri_idx.Insertable[],
+              db.constraint("r4b_uri_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+    case "token": {
+      const token_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "token",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_token_idx",
+              token_indexes,
+              db.constraint("token_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_token_idx",
+              token_indexes as s.r4b_token_idx.Insertable[],
+              db.constraint("r4b_token_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+    case "number": {
+      const number_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "number",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_number_idx",
+              number_indexes,
+              db.constraint("number_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_number_idx",
+              number_indexes as s.r4b_number_idx.Insertable[],
+              db.constraint("r4b_number_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+
+    case "string": {
+      const string_indexes = await toInsertableIndex(
+        ctx,
+        fhirVersion,
+        "string",
+        parameter,
+        resource,
+        evaluation,
+      );
+
+      switch (fhirVersion) {
+        case R4: {
+          await db
+            .upsert(
+              "r4_string_idx",
+              string_indexes,
+              db.constraint("string_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        case R4B: {
+          await db
+            .upsert(
+              "r4b_string_idx",
+              string_indexes as s.r4b_string_idx.Insertable[],
+              db.constraint("r4b_string_idx_unique"),
+              {
+                updateColumns: db.doNothing,
+              },
+            )
+            .run(pg);
+
+          return;
+        }
+        default: {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `FHIR version ${fhirVersion} is not supported.`,
+            ),
+          );
+        }
+      }
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Parameters of type '${parameter.type}' are not yet supported.`,
+        ),
+      );
   }
 }
 
