@@ -139,10 +139,10 @@ jobs:
            --client-secret $CLIENT_SECRET
 
       - name: R4 TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 1000
 
       - name: R4B TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -t 1000
 
       - name: Subscription Testscripts
         env:
