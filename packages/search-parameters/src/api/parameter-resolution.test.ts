@@ -9,35 +9,38 @@ test("Resolution of parameters", async () => {
   // R4
   expect(
     resolveParameterCodeToCanonical(R4, ["Patient"], "active" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/Patient-active");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/Patient-active"]);
   expect(
     resolveParameterCodeToCanonical(R4, ["Patient"], "bad-param" as code),
-  ).toEqual(undefined);
-  expect(() =>
+  ).toEqual([]);
+  expect(
     resolveParameterCodeToCanonical(
       R4,
       ["Patient", "Practitioner"],
       "name" as code,
     ),
-  ).toThrow();
+  ).toEqual([
+    "http://hl7.org/fhir/SearchParameter/Patient-name",
+    "http://hl7.org/fhir/SearchParameter/Practitioner-name",
+  ]);
   expect(
     resolveParameterCodeToCanonical(R4, ["Resource"], "_filter" as code),
-  ).toEqual(undefined);
+  ).toEqual([]);
   expect(
     resolveParameterCodeToCanonical(R4, ["DomainResource"], "_text" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/DomainResource-text");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/DomainResource-text"]);
 
   // R4Bs
   expect(
     resolveParameterCodeToCanonical(R4B, ["Patient"], "active" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/Patient-active");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/Patient-active"]);
   expect(
     resolveParameterCodeToCanonical(R4B, ["SubscriptionTopic"], "date" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/SubscriptionTopic-date");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/SubscriptionTopic-date"]);
   expect(
     resolveParameterCodeToCanonical(R4B, ["Resource"], "_filter" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/Resource-filter");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/Resource-filter"]);
   expect(
     resolveParameterCodeToCanonical(R4B, ["DomainResource"], "_text" as code),
-  ).toEqual("http://hl7.org/fhir/SearchParameter/DomainResource-text");
+  ).toEqual(["http://hl7.org/fhir/SearchParameter/DomainResource-text"]);
 });
