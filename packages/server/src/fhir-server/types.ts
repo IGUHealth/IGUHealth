@@ -13,7 +13,6 @@ import {
   canonical,
   code,
   id,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
