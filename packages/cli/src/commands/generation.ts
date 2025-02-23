@@ -7,6 +7,7 @@ import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
 import { generateMetaData } from "@iguhealth/codegen/generate/meta-data";
 import generateOps from "@iguhealth/codegen/generate/operation-definition";
 import { generateSets } from "@iguhealth/codegen/generate/sets";
+import { generateTypeToCanonicalMap } from "@iguhealth/codegen/generate/type-to-canonical";
 import { generateTypes } from "@iguhealth/codegen/generate/typescript-types";
 import { StructureDefinition } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
@@ -41,6 +42,29 @@ export function codeGenerationCommands(command: Command) {
         options.output,
         "// Do not this code is generated \nexport default " +
           JSON.stringify(metadata, null, 2),
+      );
+    });
+
+  command
+    .command("type-to-canonical")
+    .description("Generate type to canonical url for SD.")
+    .requiredOption("-o, --output <output>", "output file")
+    .option("-v, --version <version>", "FHIR Profiles to use", R4)
+    .action(async (options) => {
+      const structureDefinitions = loadArtifacts({
+        fhirVersion: options.version as FHIR_VERSION,
+        resourceType: "StructureDefinition",
+        currentDirectory: fileURLToPath(import.meta.url),
+      });
+
+      mkdirSync(path.join(options.output, ".."), { recursive: true });
+      const typeToCanonical = generateTypeToCanonicalMap(structureDefinitions);
+
+      writeFileSync(
+        options.output,
+        "// Do not this code is generated \nexport default " +
+          JSON.stringify(typeToCanonical, null, 2) +
+          " as Record<string, string>",
       );
     });
 

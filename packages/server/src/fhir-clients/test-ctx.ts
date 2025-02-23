@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import * as s from "zapatos/schema";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { canonical, uri } from "@iguhealth/fhir-types/r4/types";
+import { canonical } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
   R4,
@@ -83,10 +83,6 @@ export const testServices: IGUHealthServerCTX = {
     url: URL,
   ): Promise<Return> => {
     return sds.find((sd) => sd.url === url) as Return;
-  },
-  resolveTypeToCanonical: async (_ctx, _fhirVersion, type: uri) => {
-    const sd = sds.find((sd) => sd.type === type);
-    return sd?.url as canonical;
   },
   lock: new TestLock(),
 };

@@ -7,6 +7,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { resolveTypeToCanonical } from "@iguhealth/meta-value";
 import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -52,7 +53,7 @@ export async function resolveTypeToStructureDefinition(
   ctx: ValidationCTX,
   type: uri,
 ): Promise<Resource<FHIR_VERSION, "StructureDefinition">> {
-  const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
+  const canonical = resolveTypeToCanonical(ctx.fhirVersion, type);
 
   if (!canonical) {
     throw new OperationError(

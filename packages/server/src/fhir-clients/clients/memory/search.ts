@@ -17,7 +17,6 @@ import fitsCriteria from "./search/fitsCriteria.js";
 
 interface MemorySearchCTX {
   resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
-  resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
   /*
    ** Used to resolve remote canonicals in the toReference function.
    */

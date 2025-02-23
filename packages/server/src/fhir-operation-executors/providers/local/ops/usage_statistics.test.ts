@@ -11,9 +11,6 @@ test("VALIDATION OUTPUT", async () => {
       async resolveCanonical(fhirVersion, type, url) {
         return undefined;
       },
-      async resolveTypeToCanonical(fhirVersion, type) {
-        return undefined;
-      },
     },
     "out",
     { statistics: [] },
@@ -27,10 +24,6 @@ test("VALIDATION OUTPUT", async () => {
       fhirVersion: R4,
       level: "system",
       async resolveCanonical(fhirVersion, type, url) {
-        console.log(type);
-        return undefined;
-      },
-      async resolveTypeToCanonical(fhirVersion, type) {
         console.log(type);
         return undefined;
       },
@@ -55,9 +48,6 @@ test("VALIDATION OUTPUT", async () => {
       fhirVersion: R4,
       level: "system",
       async resolveCanonical(fhirVersion, type, url) {
-        return undefined;
-      },
-      async resolveTypeToCanonical(fhirVersion, type) {
         return undefined;
       },
     },

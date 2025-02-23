@@ -13,7 +13,6 @@ import {
   canonical,
   code,
   id,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
@@ -143,12 +142,6 @@ export interface IGUHealthServerCTX {
   emailProvider?: EmailProvider;
 
   // Utilities
-  resolveTypeToCanonical: (
-    ctx: this,
-    fhirVersion: FHIR_VERSION,
-    type: uri,
-  ) => Promise<canonical | undefined>;
-
   resolveCanonical: <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
