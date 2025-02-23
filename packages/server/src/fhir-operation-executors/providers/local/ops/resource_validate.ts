@@ -51,8 +51,6 @@ export const validateResource = async (
           },
           resolveCanonical: async (fhirVersion, type, url) =>
             (await ctx.resolveCanonical(ctx, fhirVersion, type, [url]))[0],
-          resolveTypeToCanonical: (version, type) =>
-            ctx.resolveTypeToCanonical(ctx, version, type),
         },
         resourceType as r4.uri,
         input.resource,

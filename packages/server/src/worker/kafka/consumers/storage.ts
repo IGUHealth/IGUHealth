@@ -9,7 +9,6 @@ import createEmailProvider from "../../../email/index.js";
 import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
-import resolveTypeToCanonical from "../../../fhir-server/resolvers/resolveTypeToCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
@@ -174,7 +173,6 @@ export default async function createStorageWorker() {
     emailProvider: createEmailProvider(),
     client: createClient(),
     resolveCanonical,
-    resolveTypeToCanonical,
   };
 
   const stop = await createKafkaConsumer(

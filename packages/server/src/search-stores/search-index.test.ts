@@ -50,34 +50,6 @@ const r4ArtifactResources = getArtifactResources(R4, [
   ...r4Sets.resourceTypes.values(),
 ] as ResourceType<R4>[]);
 
-async function resolveTypeToCanonical(
-  _fhirVersion: FHIR_VERSION,
-  type: uri,
-): Promise<canonical | undefined> {
-  const sd = r4ArtifactResources.find(
-    (resource) =>
-      resource.resourceType === "StructureDefinition" && resource.type === type,
-  );
-
-  return (sd as StructureDefinition)?.url as canonical;
-}
-
-async function resolveCanonical<
-  Version extends FHIR_VERSION,
-  Type extends AllResourceTypes,
->(
-  fhirVersion: Version,
-  type: Type,
-  url: canonical,
-): Promise<Resource<Version, Type> | undefined> {
-  const foundSD = r4ArtifactResources.find(
-    (resource) =>
-      resource.resourceType === "StructureDefinition" && resource.url === url,
-  );
-
-  return foundSD as Resource<Version, Type> | undefined;
-}
-
 test.each(
   [...r4Sets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
 )(`R4 Testing indexing resourceType '%s'`, async (resourceType) => {

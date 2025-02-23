@@ -2,7 +2,6 @@ import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
-import resolveTypeToCanonical from "../../../fhir-server/resolvers/resolveTypeToCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
@@ -94,7 +93,6 @@ export default async function createIndexingWorker() {
     terminologyProvider: new TerminologyProvider(),
     client: createClient(),
     resolveCanonical,
-    resolveTypeToCanonical,
   };
 
   const stop = await createKafkaConsumer(

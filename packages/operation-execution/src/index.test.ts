@@ -15,7 +15,11 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
-import { OperationError, outcome } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcome,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import {
   IOperation,
@@ -243,9 +247,6 @@ test("execution", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
-    async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
-    },
     level: "instance",
   };
 
@@ -311,9 +312,6 @@ test("paramValidation", async () => {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as Resource<FHIRVersion, Type> | undefined;
-    },
-    async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
     },
     level: "instance",
   };
@@ -541,10 +539,6 @@ test("Test invalid resource validation", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
-    async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
-      if (!type) throw new Error("Could not resolve type undefined");
-      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
-    },
     level: "instance",
   };
 
@@ -564,5 +558,12 @@ test("Test invalid resource validation", async () => {
 
   expect(
     invoke(operation, ctx, { payload: "asdf" } as unknown),
-  ).rejects.toThrow(new Error("Could not resolve type undefined"));
+  ).rejects.toThrow(
+    new OperationError(
+      outcomeFatal(
+        "structure",
+        "Unable to resolve canonical for type 'undefined'",
+      ),
+    ),
+  );
 });

@@ -39,13 +39,6 @@ test("Test ValueSet Expands", async () => {
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd as Resource<FHIRVersion, Type>;
     },
-    async resolveTypeToCanonical(
-      version: FHIR_VERSION,
-      type: uri,
-    ): Promise<canonical> {
-      if (!type) throw new Error("Could not resolve type undefined");
-      return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
-    },
     level: "instance",
     fhirVersion: R4,
   };

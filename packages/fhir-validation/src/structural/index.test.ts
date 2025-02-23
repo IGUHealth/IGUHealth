@@ -69,12 +69,6 @@ const memDatabase = createMemoryDatabase([
 
 const CTX: ValidationCTX = {
   fhirVersion: R4,
-  resolveTypeToCanonical: async (
-    version: FHIR_VERSION,
-    type: uri,
-  ): Promise<canonical> => {
-    return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
-  },
   resolveCanonical: async <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,

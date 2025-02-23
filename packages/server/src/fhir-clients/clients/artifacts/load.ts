@@ -113,17 +113,12 @@ async function syncType<Version extends FHIR_VERSION>(
 
 async function createServices(
   tenant: TenantId,
-): Promise<
-  Omit<
-    IGUHealthServerCTX,
-    "resolveCanonical" | "resolveTypeToCanonical" | "user"
-  >
-> {
+): Promise<Omit<IGUHealthServerCTX, "resolveCanonical" | "user">> {
   const logger = createLogger();
 
   const iguhealthServices: Omit<
     IGUHealthServerCTX,
-    "user" | "resolveCanonical" | "resolveTypeToCanonical"
+    "user" | "resolveCanonical"
   > = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
@@ -150,7 +145,6 @@ export default async function syncArtifacts(
   const iguhealthServices = {
     ...(await createServices(tenant)),
     resolveCanonical: memSource.resolveCanonical,
-    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
   };
   const r4Types: ResourceType<R4>[] = config.r4.map((r) => r.resourceType);
   const r4bTypes: ResourceType<R4B>[] = config.r4b.map((r) => r.resourceType);
@@ -196,7 +190,6 @@ export async function artifactStatus(
   const iguhealthServices = {
     ...(await createServices(tenant)),
     resolveCanonical: memSource.resolveCanonical,
-    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
   };
 
   for (const resourceConfig of config.r4) {

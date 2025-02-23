@@ -31,7 +31,6 @@ export type IGUHealthWorkerCTX = Pick<
   | "tenant"
   | "user"
   | "resolveCanonical"
-  | "resolveTypeToCanonical"
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(
@@ -70,7 +69,6 @@ export async function staticWorkerServices(
 
   return {
     resolveCanonical: sdArtifacts.resolveCanonical,
-    resolveTypeToCanonical: sdArtifacts.resolveTypeToCanonical,
     store: await createResourceStore({ type: "postgres" }),
     logger,
     cache,

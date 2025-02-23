@@ -18,7 +18,6 @@ import logAuditEvent, {
 } from "../../../../fhir-logging/auditEvents.js";
 import { createClient, createLogger } from "../../../../fhir-server/index.js";
 import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
-import resolveTypeToCanonical from "../../../../fhir-server/resolvers/resolveTypeToCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
 import createQueue from "../../../../queue/index.js";
@@ -120,7 +119,6 @@ async function processSubscription(
         await fitsSearchCriteria(
           {
             resolveCanonical: ctx.resolveCanonical,
-            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
             resolveRemoteCanonical: createResolverRemoteCanonical(
               ctx.client,
               ctx,
@@ -219,7 +217,6 @@ export default async function createSubscriptionV1Worker() {
     terminologyProvider: new TerminologyProvider(),
     client: createClient(),
     resolveCanonical,
-    resolveTypeToCanonical,
   };
 
   const stop = await createKafkaConsumer(
