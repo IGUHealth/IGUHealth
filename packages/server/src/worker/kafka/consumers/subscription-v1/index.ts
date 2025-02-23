@@ -119,7 +119,6 @@ async function processSubscription(
         await fitsSearchCriteria(
           {
             resolveCanonical: ctx.resolveCanonical,
-            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
             resolveRemoteCanonical: createResolverRemoteCanonical(
               ctx.client,
               ctx,

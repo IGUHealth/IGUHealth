@@ -37,10 +37,6 @@ export type ElementLoc = Loc<
 
 export interface ValidationCTX {
   fhirVersion: FHIR_VERSION;
-  resolveTypeToCanonical<Version extends FHIR_VERSION>(
-    version: Version,
-    type: uri,
-  ): Promise<canonical | undefined>;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
     Type extends ResourceType<FHIRVersion>,

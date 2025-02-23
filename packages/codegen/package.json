@@ -29,6 +29,7 @@
   ],
   "exports": {
     ".": "./lib/index.js",
+    "./generate/type-to-canonical": "./lib/generate/type-to-canonical.js",
     "./generate/meta-data": "./lib/generate/meta-data.js",
     "./generate/operation-definition": "./lib/generate/operation-definition.js",
     "./generate/sets": "./lib/generate/sets.js",

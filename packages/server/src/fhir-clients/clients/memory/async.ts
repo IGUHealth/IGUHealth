@@ -448,66 +448,8 @@ function createResolveCanonical(
   };
 }
 
-function createResolveTypeToCanonical(
-  data: MemoryData,
-): IGUHealthServerCTX["resolveTypeToCanonical"] {
-  const r4Map = (
-    Object.values(
-      data?.[R4]?.["StructureDefinition"] ?? {},
-    ) as r4.StructureDefinition[]
-  ).reduce(
-    (acc: Map<r4.uri, r4.canonical>, resource: r4.StructureDefinition) => {
-      if (
-        resource?.type &&
-        resource?.url &&
-        // Ignore profiles which will be constraints on the base definition.
-        resource.derivation !== "constraint"
-      ) {
-        acc.set(resource.type, resource.url as r4.canonical);
-      }
-      return acc;
-    },
-    new Map(),
-  );
-
-  const r4bMap = (
-    Object.values(
-      data?.[R4B]?.["StructureDefinition"] ?? {},
-    ) as r4b.StructureDefinition[]
-  ).reduce(
-    (acc: Map<r4b.uri, r4b.canonical>, resource: r4b.StructureDefinition) => {
-      if (resource?.type && resource?.url) {
-        acc.set(resource.type, resource.url as r4b.canonical);
-      }
-      return acc;
-    },
-    new Map(),
-  );
-
-  return async (
-    ctx: IGUHealthServerCTX,
-    version: FHIR_VERSION,
-    type: r4.uri,
-  ) => {
-    switch (version) {
-      case R4: {
-        return r4Map.get(type);
-      }
-      case R4B: {
-        return r4bMap.get(type);
-      }
-      default: {
-        throw new OperationError(
-          outcomeError("not-supported", "FHIR version not supported yet."),
-        );
-      }
-    }
-  };
-}
-
 interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
   resolveCanonical: ReturnType<typeof createResolveCanonical>;
-  resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
 }
 
 type MemoryData = {
@@ -543,7 +485,6 @@ export class Memory<CTX extends IGUHealthServerCTX>
   public batch: FHIRClientAsync<CTX>["batch"];
 
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
-  public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
   constructor(partialData: Partial<MemoryData>) {
     const data: MemoryData = {
@@ -587,7 +528,6 @@ export class Memory<CTX extends IGUHealthServerCTX>
     this.batch = this._client.batch.bind(this._client);
 
     this.resolveCanonical = createResolveCanonical(data);
-    this.resolveTypeToCanonical = createResolveTypeToCanonical(data);
   }
 }
 

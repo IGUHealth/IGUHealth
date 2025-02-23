@@ -26,7 +26,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
   types: ResourceType<Version>[],
 ) {
   const redis = getRedisClient();
-  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
+  const { client, resolveCanonical } = createClient();
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
@@ -36,7 +36,6 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
     logger,
     client,
     resolveCanonical,
-    resolveTypeToCanonical,
     tenant,
   };
 

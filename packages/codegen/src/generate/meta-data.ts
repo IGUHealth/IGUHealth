@@ -6,6 +6,7 @@ import {
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { traversalBottomUp } from "../sdTraversal.js";
+import { filterSDForTypes } from "../utilities.js";
 
 function createFPPrimitiveNode(type: uri): MetaNode[] {
   return [
@@ -217,15 +218,13 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
 export function generateMetaData<Version extends FHIR_VERSION>(
   sds: Resource<Version, "StructureDefinition">[],
 ): MetaV2Compiled {
-  const metav2compiled = sds
-    // Filter out constraints
-    .filter((sd) => sd.derivation !== "constraint")
-    // Logicals are not concrete types
-    .filter((sd) => sd.kind !== "logical")
-    .reduce((acc: MetaV2Compiled, sd) => {
+  const metav2compiled = filterSDForTypes(sds).reduce(
+    (acc: MetaV2Compiled, sd) => {
       acc[sd.type] = SDToMetaData(sd);
       return acc;
-    }, {} as MetaV2Compiled);
+    },
+    {} as MetaV2Compiled,
+  );
 
   return addFPPrimitiveNodes(metav2compiled);
 }

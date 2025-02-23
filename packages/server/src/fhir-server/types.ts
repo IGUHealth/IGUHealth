@@ -143,12 +143,6 @@ export interface IGUHealthServerCTX {
   emailProvider?: EmailProvider;
 
   // Utilities
-  resolveTypeToCanonical: (
-    ctx: this,
-    fhirVersion: FHIR_VERSION,
-    type: uri,
-  ) => Promise<canonical | undefined>;
-
   resolveCanonical: <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,

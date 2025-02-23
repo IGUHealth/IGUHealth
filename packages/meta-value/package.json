@@ -11,7 +11,9 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
-    "generate": "yarn node ../cli/lib/iguhealth.js generate meta --output src/v2/generated/r4.ts && yarn node ../cli/lib/iguhealth.js generate meta --version 4.3 --output src/v2/generated/r4b.ts",
+    "_generate_meta": "yarn node ../cli/lib/iguhealth.js generate meta --output src/v2/generated/meta/r4.ts && yarn node ../cli/lib/iguhealth.js generate meta --version 4.3 --output src/v2/generated/meta/r4b.ts",
+    "_generate_type_canonical": "yarn node ../cli/lib/iguhealth.js generate type-to-canonical --output src/v2/generated/type-canonical/r4.ts && yarn node ../cli/lib/iguhealth.js generate type-to-canonical --version 4.3 --output src/v2/generated/type-canonical/r4b.ts",
+    "generate": "yarn _generate_meta && yarn _generate_type_canonical",
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
@@ -38,6 +40,7 @@
     "lib/**"
   ],
   "exports": {
+    ".": "./lib/index.js",
     "./v2": "./lib/v2/index.js",
     "./meta": "./lib/v2/meta.js",
     "./spoof": "./lib/v2/spoof.js",

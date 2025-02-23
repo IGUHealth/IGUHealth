@@ -175,7 +175,6 @@ function createFHIRClient(sources: RouterState["sources"]) {
 export function createClient(): {
   client: FHIRClientAsync<IGUHealthServerCTX>;
   resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
-  resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
 } {
   const memSource = createArtifactMemoryDatabase({
     r4: R4_SPECIAL_TYPES.ARTIFACTS,
@@ -311,7 +310,6 @@ export function createClient(): {
 
   return {
     resolveCanonical: memSource.resolveCanonical,
-    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
     client,
   };
 }

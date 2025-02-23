@@ -84,9 +84,5 @@ export const testServices: IGUHealthServerCTX = {
   ): Promise<Return> => {
     return sds.find((sd) => sd.url === url) as Return;
   },
-  resolveTypeToCanonical: async (_ctx, _fhirVersion, type: uri) => {
-    const sd = sds.find((sd) => sd.type === type);
-    return sd?.url as canonical;
-  },
   lock: new TestLock(),
 };
