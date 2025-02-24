@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Bundle, id } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  R4B,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AsynchronousClient } from "../index.js";
@@ -24,6 +30,10 @@ export type HTTPClientState = {
 export type HTTPContext = {
   headers?: Record<string, string>;
 };
+
+function isBundle(value: unknown): value is Bundle {
+  return (value as Record<string, unknown>)?.resourceType === "Bundle";
+}
 
 function parametersToQueryString(
   parameters: ParsedParameter<string | number>[],
@@ -279,6 +289,18 @@ async function toHTTPRequest(
         url: invokeURL,
         method: "POST",
         body: JSON.stringify(request.body),
+        headers,
+      };
+    }
+    case "canonical-request": {
+      const queryString = parametersToQueryString([
+        { name: "url", value: request.canonical },
+      ]);
+
+      const url = new URL(`${request.resource}?${queryString}`, FHIRUrl).href;
+      return {
+        url,
+        method: "GET",
         headers,
       };
     }
@@ -616,6 +638,30 @@ async function httpResponseToFHIRResponse<Version extends FHIR_VERSION>(
         type: "transaction-response",
         level: "system",
         body: transaction,
+      };
+    }
+
+    case "canonical-request": {
+      if (!response.body)
+        throw new OperationError(outcomeError("exception", "No response body"));
+      const canonical = await response.json();
+      if (!isBundle(canonical))
+        throw new OperationError(
+          outcomeError(
+            "exception",
+            "Expected a Bundle response for canonical resolution.",
+          ),
+        );
+      return {
+        fhirVersion: request.fhirVersion,
+        type: "canonical-response",
+        level: "system",
+        body: (canonical.entry ?? [])
+          .map((e) => e.resource)
+          .filter((e) => e !== undefined) as Resource<
+          Version,
+          AllResourceTypes
+        >[],
       };
     }
   }

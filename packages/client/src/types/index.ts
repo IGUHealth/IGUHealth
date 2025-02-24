@@ -8,6 +8,7 @@ import {
 
 import type { Parameters } from "../url.js";
 import {
+  AllInteractions,
   Interaction,
   Request,
   RequestLevel,
@@ -384,5 +385,5 @@ type InteractionToResponse<Version extends FHIR_VERSION> = {
 
 export type FHIRResponse<
   Version extends FHIR_VERSION,
-  I extends Interaction[keyof Interaction] | "error",
+  I extends AllInteractions | "error",
 > = InteractionToResponse<Version>[I];
