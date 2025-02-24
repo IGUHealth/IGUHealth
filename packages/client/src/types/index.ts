@@ -1,4 +1,4 @@
-import { code, id } from "@iguhealth/fhir-types/r4/types";
+import { canonical, code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -30,6 +30,13 @@ export interface TypeInteraction<Version extends FHIR_VERSION>
 
 export interface SystemInteraction<Version extends FHIR_VERSION>
   extends Request<Version, "system"> {}
+
+export interface CanonicalRequest<Version extends FHIR_VERSION>
+  extends SystemInteraction<Version> {
+  resource: ResourceType<Version>[];
+  type: RequestType["canonical"];
+  canonical: canonical[];
+}
 
 export interface ReadRequest<Version extends FHIR_VERSION>
   extends InstanceInteraction<Version> {
@@ -151,6 +158,12 @@ export interface InvokeSystemRequest<Version extends FHIR_VERSION>
   type: RequestType["invoke"];
   operation: code;
   body: Resource<Version, "Parameters">;
+}
+
+export interface CanonicalResponse<Version extends FHIR_VERSION>
+  extends SystemInteraction<Version> {
+  type: ResponseType["canonical"];
+  body: Resource<Version, AllResourceTypes>[];
 }
 
 export interface ReadResponse<Version extends FHIR_VERSION>
@@ -344,6 +357,7 @@ type InteractionToRequest<Version extends FHIR_VERSION> = {
   capabilities: CapabilitiesRequest<Version>;
   batch: BatchRequest<Version>;
   transaction: TransactionRequest<Version>;
+  canonical: CanonicalRequest<Version>;
 };
 
 export type FHIRRequest<
@@ -365,6 +379,7 @@ type InteractionToResponse<Version extends FHIR_VERSION> = {
   batch: BatchResponse<Version>;
   transaction: TransactionResponse<Version>;
   search: SearchResponse<Version>;
+  canonical: CanonicalResponse<Version>;
 };
 
 export type FHIRResponse<

@@ -7,6 +7,7 @@ export type RequestLevel = {
 };
 
 export type Interaction = {
+  canonical: "canonical";
   read: "read";
   vread: "vread";
   update: "update";

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { code, id } from "@iguhealth/fhir-types/r4/types";
+import { canonical, code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -7,7 +7,11 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import type { IOperation } from "@iguhealth/operation-execution";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import type { FHIRClientAsync, InvokeParameter } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
@@ -18,6 +22,10 @@ import type {
 } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
+
+function handleErrorResponse(response: FHIRResponse<FHIR_VERSION, "error">) {
+  throw new OperationError(response.body);
+}
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   private state: State;
@@ -41,6 +49,39 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
 
     return res.response as FHIRResponse<Version, I | "error">;
   }
+
+  async resolveCanonical<
+    Version extends FHIR_VERSION,
+    Type extends ResourceType<Version>,
+  >(
+    ctx: CTX,
+    fhirVersion: Version,
+    type: Type,
+    url: canonical[],
+  ): Promise<Resource<Version, Type>[]> {
+    const response = await this.request<typeof fhirVersion, "canonical">(ctx, {
+      fhirVersion,
+      level: "system",
+      type: "canonical-request",
+      resource: [type],
+      canonical: url,
+    });
+
+    switch (response.type) {
+      case "error-response": {
+        throw new OperationError(response.body);
+      }
+      case "canonical-response": {
+        return response.body as Resource<Version, Type>[];
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invalid", "Invalid response type."),
+        );
+      }
+    }
+  }
+
   async capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -53,17 +94,28 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         level: "system",
       },
     );
-    if (response.type !== "capabilities-response")
-      throw new Error("Unexpected response type");
-    return response.body as Resource<FHIRVersion, "CapabilityStatement">;
+
+    switch (response.type) {
+      case "error-response": {
+        throw new OperationError(response.body);
+      }
+      case "capabilities-response": {
+        return response.body as Resource<FHIRVersion, "CapabilityStatement">;
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invalid", "Invalid response type."),
+        );
+      }
+    }
   }
-  async search_system<FHIRVersion extends FHIR_VERSION>(
+  async search_system<Version extends FHIR_VERSION>(
     ctx: CTX,
-    fhirVersion: FHIRVersion,
+    fhirVersion: Version,
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{
     total?: number;
-    resources: Resource<FHIRVersion, ResourceType<FHIRVersion>>[];
+    resources: Resource<Version, ResourceType<Version>>[];
   }> {
     const parsedParameters: ParsedParameter<string | number>[] =
       typeof parameters === "string" || parameters === undefined
@@ -75,15 +127,26 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       level: "system",
       parameters: parsedParameters,
     });
-    if (response.type !== "search-response")
-      throw new Error("Unexpected response type");
-    return {
-      total: response.body.total,
-      resources: response.body.entry?.map((e) => e.resource) as Resource<
-        FHIRVersion,
-        ResourceType<FHIRVersion>
-      >[],
-    };
+
+    switch (response.type) {
+      case "error-response": {
+        throw new OperationError(response.body);
+      }
+      case "search-response": {
+        return {
+          total: response.body.total,
+          resources: response.body.entry?.map((e) => e.resource) as Resource<
+            Version,
+            ResourceType<Version>
+          >[],
+        };
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invalid", "Invalid response type."),
+        );
+      }
+    }
   }
   async search_type<
     Version extends FHIR_VERSION,
@@ -108,15 +171,26 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       resource: type,
       parameters: parsedParameters,
     });
-    if (response.type !== "search-response")
-      throw new Error(`Unexpected response type '${response.type}'`);
-    return {
-      total: response.body.total,
-      resources: response.body.entry?.map((e) => e.resource) as Resource<
-        Version,
-        T
-      >[],
-    };
+
+    switch (response.type) {
+      case "error-response": {
+        throw new OperationError(response.body);
+      }
+      case "search-response": {
+        return {
+          total: response.body.total,
+          resources: response.body.entry?.map((e) => e.resource) as Resource<
+            Version,
+            ResourceType<Version>
+          >[],
+        };
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invalid", "Invalid response type."),
+        );
+      }
+    }
   }
   async create<
     FHIRVersion extends FHIR_VERSION,

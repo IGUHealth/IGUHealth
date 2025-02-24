@@ -1,8 +1,9 @@
 import { OperationOutcome, code } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 export class OperationError extends Error {
-  public readonly operationOutcome: OperationOutcome;
-  constructor(operationOutcome: OperationOutcome) {
+  public readonly operationOutcome: Resource<FHIR_VERSION, "OperationOutcome">;
+  constructor(operationOutcome: Resource<FHIR_VERSION, "OperationOutcome">) {
     super();
     this.operationOutcome = operationOutcome;
   }

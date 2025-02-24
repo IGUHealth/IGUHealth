@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { canonical, code } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -31,6 +31,17 @@ export interface FHIRClientAsync<CTX> {
     ctx: CTX,
     request: FHIRRequest<Version, I>,
   ): Promise<FHIRResponse<Version, I | "error">>;
+
+  resolveCanonical: <
+    Version extends FHIR_VERSION,
+    Type extends ResourceType<Version>,
+  >(
+    ctx: CTX,
+    fhirVersion: Version,
+    type: Type,
+    url: canonical[],
+  ) => Promise<Resource<Version, Type>[]>;
+
   capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
