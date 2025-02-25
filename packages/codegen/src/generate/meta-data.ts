@@ -3,7 +3,7 @@ import {
   ElementDefinitionType,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { Data, FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { traversalBottomUp } from "../sdTraversal.js";
 import { filterSDForTypes } from "../utilities.js";
@@ -11,9 +11,9 @@ import { filterSDForTypes } from "../utilities.js";
 function createFPPrimitiveNode(type: uri): MetaNode[] {
   return [
     {
-      _type_: "complex",
+      _type_: "fp-primitive",
       type,
-      cardinality: "array",
+      cardinality: "single",
     },
   ];
 }
@@ -45,9 +45,17 @@ export interface TypeChoiceNode {
   cardinality: "array" | "single";
   fields: Record<string, uri>;
 }
+
+export interface FPPrimitiveNode {
+  _type_: "fp-primitive";
+  type: uri;
+  cardinality: "single";
+}
+
 export interface ElementNode {
   _type_: "complex";
   type: uri;
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
   cardinality: "array" | "single";
   properties?: Record<string, number>;
 }
@@ -56,7 +64,12 @@ export interface TypeNode {
   type: uri;
   cardinality: "array" | "single";
 }
-export type MetaNode = ElementNode | TypeNode | TypeChoiceNode;
+export type MetaNode =
+  | ElementNode
+  | TypeNode
+  | TypeChoiceNode
+  | FPPrimitiveNode;
+
 export interface MetaV2Compiled {
   [key: string]: Array<MetaNode>;
 }
@@ -104,6 +117,18 @@ function getElementField(element: ElementDefinition, type?: string) {
   return (element.type ?? []).length > 1 ? field.replace("[x]", "") : field;
 }
 
+function getAllTypeChoice(
+  beginning: string,
+  element: ElementDefinition,
+): Partial<ElementDefinition> {
+  return Object.keys(element)
+    .filter((k): k is keyof ElementDefinition => k.startsWith(beginning))
+    .reduce((acc: Record<string, unknown>, k) => {
+      acc[k] = element[k];
+      return acc;
+    }, {});
+}
+
 function createSingularNode(
   element: ElementDefinition,
   type: ElementDefinitionType | undefined,
@@ -121,6 +146,21 @@ function createSingularNode(
   return {
     _type_: "complex",
     type: type?.code as uri,
+    definition: {
+      path: element.path,
+      min: element.min,
+      max: element.max,
+      ...getAllTypeChoice("pattern", element),
+      ...getAllTypeChoice("minValue", element),
+      ...getAllTypeChoice("maxValue", element),
+      maxLength: element.maxLength,
+      binding: element.binding
+        ? {
+            strength: element.binding.strength,
+            valueSet: element.binding.valueSet,
+          }
+        : undefined,
+    },
     properties: children.reduce((acc: Record<string, number>, k) => {
       acc[k.field] = k.index;
       return acc;
