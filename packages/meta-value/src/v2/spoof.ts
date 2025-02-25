@@ -1,3 +1,4 @@
+import { FPPrimitiveNode } from "@iguhealth/codegen/generate/meta-data";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bsets from "@iguhealth/fhir-types/r4b/sets";
@@ -35,6 +36,7 @@ function descendMeta(
     case nextMeta._type_ === "typechoice": {
       return { base, meta: nextMeta, field };
     }
+    case nextMeta._type_ === "fp-primitive":
     case nextMeta._type_ === "complex": {
       return { base, meta: nextMeta, field };
     }
@@ -59,14 +61,14 @@ export function isResourceType(version: FHIR_VERSION, type: string) {
 export class SpoofMetaValueV2<T> implements IMetaValue<T> {
   private readonly _fhirVersion: FHIR_VERSION;
   private readonly _base: uri;
-  private readonly _meta: ElementNode | TypeChoiceNode;
+  private readonly _meta: ElementNode | TypeChoiceNode | FPPrimitiveNode;
   private readonly _nestedCardinality: "single" | "array";
 
   constructor(
     fhirVersion: FHIR_VERSION,
     base: uri,
     fullCardinality: "single" | "array",
-    meta: ElementNode | TypeChoiceNode,
+    meta: ElementNode | TypeChoiceNode | FPPrimitiveNode,
   ) {
     this._fhirVersion = fhirVersion;
     this._base = base;
@@ -101,7 +103,10 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
   }
 
   meta(): TypeInfo | undefined {
-    if (this._meta._type_ === "complex") {
+    if (
+      this._meta._type_ === "complex" ||
+      this._meta._type_ === "fp-primitive"
+    ) {
       return {
         type: this._meta.type,
         fhirVersion: this._fhirVersion,
@@ -152,12 +157,19 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
       case "typechoice": {
         return Object.values(this._meta.fields).includes(type as uri);
       }
+      case "fp-primitive": {
+        return this._meta.type === type;
+      }
     }
   }
 
   descend(field: string | number): IMetaValue<unknown> | undefined {
     if (this._meta._type_ === "typechoice") {
       throw new Error("Cannot descend on a type choice");
+    }
+
+    if (this._meta._type_ === "fp-primitive") {
+      return undefined;
     }
 
     if (typeof field === "number") {
