@@ -4,6 +4,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Resource",
+      "definition": {
+        "path": "Resource",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -37,6 +42,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Account",
+      "definition": {
+        "path": "Account",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -133,6 +143,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Account.coverage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -180,6 +195,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Account.guarantor",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -230,6 +250,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ActivityDefinition",
+      "definition": {
+        "path": "ActivityDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -521,6 +546,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ActivityDefinition.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -601,6 +631,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ActivityDefinition.dynamicValue",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 60,
         "extension": 61,
@@ -640,6 +675,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AdverseEvent",
+      "definition": {
+        "path": "AdverseEvent",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -795,6 +835,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AdverseEvent.suspectEntity",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -827,6 +872,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AdverseEvent.suspectEntity.causality",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -893,6 +943,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AllergyIntolerance",
+      "definition": {
+        "path": "AllergyIntolerance",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1045,6 +1100,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AllergyIntolerance.reaction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -1114,6 +1174,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Appointment",
+      "definition": {
+        "path": "Appointment",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1291,6 +1356,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Appointment.participant",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -1353,6 +1423,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AppointmentResponse",
+      "definition": {
+        "path": "AppointmentResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1458,6 +1533,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AuditEvent",
+      "definition": {
+        "path": "AuditEvent",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1564,6 +1644,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AuditEvent.agent",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -1645,6 +1730,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AuditEvent.agent.network",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -1687,6 +1777,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AuditEvent.source",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -1730,6 +1825,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AuditEvent.entity",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -1804,6 +1904,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AuditEvent.entity.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 57,
         "extension": 58,
@@ -1846,6 +1951,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Basic",
+      "definition": {
+        "path": "Basic",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1933,6 +2043,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Binary",
+      "definition": {
+        "path": "Binary",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -1984,6 +2099,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BiologicallyDerivedProduct",
+      "definition": {
+        "path": "BiologicallyDerivedProduct",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -2085,6 +2205,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "BiologicallyDerivedProduct.collection",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -2131,6 +2256,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "BiologicallyDerivedProduct.processing",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -2183,6 +2313,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "BiologicallyDerivedProduct.manipulation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -2223,6 +2358,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "BiologicallyDerivedProduct.storage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -2274,6 +2414,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BodyStructure",
+      "definition": {
+        "path": "BodyStructure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -2379,6 +2524,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Bundle",
+      "definition": {
+        "path": "Bundle",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -2437,6 +2587,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Bundle.link",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 10,
         "extension": 11,
@@ -2474,6 +2629,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Bundle.entry",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -2516,6 +2676,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Bundle.entry.search",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -2553,6 +2718,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Bundle.entry.request",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -2614,6 +2784,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Bundle.entry.response",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -2676,6 +2851,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CapabilityStatement",
+      "definition": {
+        "path": "CapabilityStatement",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -2842,6 +3022,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.software",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -2885,6 +3070,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.implementation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -2948,6 +3138,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -2991,6 +3186,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.security",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -3034,6 +3234,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.resource",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -3096,6 +3301,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.resource.interaction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 66,
         "extension": 67,
@@ -3183,6 +3393,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.resource.searchParam",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 82,
         "extension": 83,
@@ -3232,6 +3447,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.resource.operation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 90,
         "extension": 91,
@@ -3275,6 +3495,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.rest.interaction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 97,
         "extension": 98,
@@ -3319,6 +3544,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.messaging",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 106,
         "extension": 107,
@@ -3348,6 +3578,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.messaging.endpoint",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 110,
         "extension": 111,
@@ -3395,6 +3630,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.messaging.supportedMessage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 118,
         "extension": 119,
@@ -3432,6 +3672,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CapabilityStatement.document",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 124,
         "extension": 125,
@@ -3477,6 +3722,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CarePlan",
+      "definition": {
+        "path": "CarePlan",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -3660,6 +3910,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CarePlan.activity",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -3710,6 +3965,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CarePlan.activity.detail",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -3851,6 +4111,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CareTeam",
+      "definition": {
+        "path": "CareTeam",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -3954,6 +4219,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CareTeam.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -4030,6 +4300,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CatalogEntry",
+      "definition": {
+        "path": "CatalogEntry",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -4158,6 +4433,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CatalogEntry.relatedEntry",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -4197,6 +4477,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ChargeItem",
+      "definition": {
+        "path": "ChargeItem",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -4327,6 +4612,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ChargeItem.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -4449,6 +4739,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ChargeItemDefinition",
+      "definition": {
+        "path": "ChargeItemDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -4632,6 +4927,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ChargeItemDefinition.applicability",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -4675,6 +4975,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ChargeItemDefinition.propertyGroup",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -4703,6 +5008,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ChargeItemDefinition.propertyGroup.priceComponent",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -4754,6 +5064,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Claim",
+      "definition": {
+        "path": "Claim",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -4901,6 +5216,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.related",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -4954,6 +5274,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.payee",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -5001,6 +5326,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.careTeam",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 40,
         "extension": 41,
@@ -5056,6 +5386,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.supportingInfo",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -5126,6 +5461,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.diagnosis",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -5184,6 +5524,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.procedure",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 68,
         "extension": 69,
@@ -5242,6 +5587,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.insurance",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 77,
         "extension": 78,
@@ -5309,6 +5659,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.accident",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 88,
         "extension": 89,
@@ -5355,6 +5710,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 95,
         "extension": 96,
@@ -5508,6 +5868,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.item.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 119,
         "extension": 120,
@@ -5600,6 +5965,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Claim.item.detail.subDetail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 134,
         "extension": 135,
@@ -5698,6 +6068,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ClaimResponse",
+      "definition": {
+        "path": "ClaimResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -5855,6 +6230,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -5894,6 +6274,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.item.adjudication",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -5943,6 +6328,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.item.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -5983,6 +6373,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.item.detail.subDetail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -6022,6 +6417,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.addItem",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 53,
         "extension": 54,
@@ -6153,6 +6553,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.addItem.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 74,
         "extension": 75,
@@ -6223,6 +6628,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.addItem.detail.subDetail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 86,
         "extension": 87,
@@ -6293,6 +6703,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.total",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 99,
         "extension": 100,
@@ -6330,6 +6745,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.payment",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 105,
         "extension": 106,
@@ -6406,6 +6826,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.processNote",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 118,
         "extension": 119,
@@ -6460,6 +6885,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.insurance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 127,
         "extension": 128,
@@ -6515,6 +6945,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClaimResponse.error",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 136,
         "extension": 137,
@@ -6566,6 +7001,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ClinicalImpression",
+      "definition": {
+        "path": "ClinicalImpression",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -6704,6 +7144,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClinicalImpression.investigation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -6751,6 +7196,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ClinicalImpression.finding",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -6816,6 +7266,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CodeSystem",
+      "definition": {
+        "path": "CodeSystem",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -7012,6 +7467,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CodeSystem.filter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -7061,6 +7521,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CodeSystem.property",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -7110,6 +7575,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CodeSystem.concept",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -7156,6 +7626,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CodeSystem.concept.designation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 56,
         "extension": 57,
@@ -7199,6 +7674,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CodeSystem.concept.property",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -7246,6 +7726,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Communication",
+      "definition": {
+        "path": "Communication",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -7429,6 +7914,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Communication.payload",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -7471,6 +7961,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CommunicationRequest",
+      "definition": {
+        "path": "CommunicationRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -7613,6 +8108,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CommunicationRequest.payload",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -7693,6 +8193,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CompartmentDefinition",
+      "definition": {
+        "path": "CompartmentDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -7827,6 +8332,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CompartmentDefinition.resource",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -7872,6 +8382,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Composition",
+      "definition": {
+        "path": "Composition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -7992,6 +8507,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Composition.attester",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 20,
         "extension": 21,
@@ -8040,6 +8560,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Composition.relatesTo",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 28,
         "extension": 29,
@@ -8080,6 +8605,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Composition.event",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -8123,6 +8653,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Composition.section",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -8205,6 +8740,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ConceptMap",
+      "definition": {
+        "path": "ConceptMap",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -8369,6 +8909,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ConceptMap.group",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -8420,6 +8965,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ConceptMap.group.element",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -8458,6 +9008,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ConceptMap.group.element.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -8509,6 +9064,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ConceptMap.group.element.target.dependsOn",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -8559,6 +9119,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ConceptMap.group.unmapped",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -8610,6 +9175,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Condition",
+      "definition": {
+        "path": "Condition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -8764,6 +9334,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Condition.stage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -8807,6 +9382,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Condition.evidence",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -8851,6 +9431,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Consent",
+      "definition": {
+        "path": "Consent",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -8967,6 +9552,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Consent.policy",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -9009,6 +9599,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Consent.verification",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -9052,6 +9647,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Consent.provision",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -9098,6 +9698,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Consent.provision.actor",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -9165,6 +9770,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Consent.provision.data",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -9204,6 +9814,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Contract",
+      "definition": {
+        "path": "Contract",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -9415,6 +10030,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.contentDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -9476,6 +10096,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 44,
         "extension": 45,
@@ -9551,6 +10176,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.securityLabel",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -9600,6 +10230,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.offer",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -9640,6 +10275,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.offer.party",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 68,
         "extension": 69,
@@ -9697,6 +10337,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.offer.answer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 78,
         "extension": 79,
@@ -9756,6 +10401,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.asset",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 86,
         "extension": 87,
@@ -9821,6 +10471,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.asset.context",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 95,
         "extension": 96,
@@ -9900,6 +10555,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.asset.valuedItem",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 110,
         "extension": 111,
@@ -10012,6 +10672,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.action",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 128,
         "extension": 129,
@@ -10068,6 +10733,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.term.action.subject",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 134,
         "extension": 135,
@@ -10210,6 +10880,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.signer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 161,
         "extension": 162,
@@ -10253,6 +10928,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.friendly",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 168,
         "extension": 169,
@@ -10287,6 +10967,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.legal",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 173,
         "extension": 174,
@@ -10321,6 +11006,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Contract.rule",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 178,
         "extension": 179,
@@ -10365,6 +11055,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Coverage",
+      "definition": {
+        "path": "Coverage",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -10492,6 +11187,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Coverage.class",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -10545,6 +11245,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Coverage.costToBeneficiary",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -10586,6 +11291,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Coverage.costToBeneficiary.exception",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 36,
         "extension": 37,
@@ -10635,6 +11345,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CoverageEligibilityRequest",
+      "definition": {
+        "path": "CoverageEligibilityRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -10762,6 +11477,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityRequest.supportingInfo",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -10805,6 +11525,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityRequest.insurance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 28,
         "extension": 29,
@@ -10848,6 +11573,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityRequest.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -10923,6 +11653,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityRequest.item.diagnosis",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -10964,6 +11699,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CoverageEligibilityResponse",
+      "definition": {
+        "path": "CoverageEligibilityResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -11092,6 +11832,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityResponse.insurance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -11136,6 +11881,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityResponse.insurance.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 28,
         "extension": 29,
@@ -11225,6 +11975,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityResponse.insurance.item.benefit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -11301,6 +12056,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "CoverageEligibilityResponse.error",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 54,
         "extension": 55,
@@ -11334,6 +12094,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DetectedIssue",
+      "definition": {
+        "path": "DetectedIssue",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -11444,6 +12209,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DetectedIssue.evidence",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -11491,6 +12261,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DetectedIssue.mitigation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -11536,6 +12311,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Device",
+      "definition": {
+        "path": "Device",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -11627,6 +12407,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Device.udiCarrier",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 12,
         "extension": 13,
@@ -11728,6 +12513,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Device.deviceName",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -11780,6 +12570,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Device.specialization",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -11817,6 +12612,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Device.version",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -11860,6 +12660,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Device.property",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 52,
         "extension": 53,
@@ -11945,6 +12750,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DeviceDefinition",
+      "definition": {
+        "path": "DeviceDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -12027,6 +12837,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.udiDeviceIdentifier",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 11,
         "extension": 12,
@@ -12078,6 +12893,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.deviceName",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -12125,6 +12945,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.specialization",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -12187,6 +13012,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.capability",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -12224,6 +13054,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.property",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 44,
         "extension": 45,
@@ -12302,6 +13137,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceDefinition.material",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -12347,6 +13187,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DeviceMetric",
+      "definition": {
+        "path": "DeviceMetric",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -12457,6 +13302,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceMetric.calibration",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -12502,6 +13352,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DeviceRequest",
+      "definition": {
+        "path": "DeviceRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -12634,6 +13489,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DeviceRequest.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 20,
         "extension": 21,
@@ -12747,6 +13607,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DeviceUseStatement",
+      "definition": {
+        "path": "DeviceUseStatement",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -12886,6 +13751,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DiagnosticReport",
+      "definition": {
+        "path": "DiagnosticReport",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -13032,6 +13902,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DiagnosticReport.media",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -13086,6 +13961,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DocumentManifest",
+      "definition": {
+        "path": "DocumentManifest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -13208,6 +14088,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DocumentManifest.related",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -13247,6 +14132,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DocumentReference",
+      "definition": {
+        "path": "DocumentReference",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -13373,6 +14263,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DocumentReference.relatesTo",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -13420,6 +14315,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DocumentReference.content",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -13457,6 +14357,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "DocumentReference.context",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -13526,6 +14431,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DomainResource",
+      "definition": {
+        "path": "DomainResource",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -13583,6 +14493,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EffectEvidenceSynthesis",
+      "definition": {
+        "path": "EffectEvidenceSynthesis",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -13816,6 +14731,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.sampleSize",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -13859,6 +14779,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.resultsByExposure",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -13908,6 +14833,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.effectEstimate",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 54,
         "extension": 55,
@@ -13964,6 +14894,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.effectEstimate.precisionEstimate",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -14013,6 +14948,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.certainty",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 71,
         "extension": 72,
@@ -14051,6 +14991,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EffectEvidenceSynthesis.certainty.certaintySubcomponent",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 77,
         "extension": 78,
@@ -14096,6 +15041,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Encounter",
+      "definition": {
+        "path": "Encounter",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -14184,6 +15134,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.statusHistory",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 12,
         "extension": 13,
@@ -14226,6 +15181,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.classHistory",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -14293,6 +15253,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -14361,6 +15326,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.diagnosis",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -14409,6 +15379,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.hospitalization",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -14488,6 +15463,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Encounter.location",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 64,
         "extension": 65,
@@ -14549,6 +15529,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Endpoint",
+      "definition": {
+        "path": "Endpoint",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -14672,6 +15657,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EnrollmentRequest",
+      "definition": {
+        "path": "EnrollmentRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -14771,6 +15761,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EnrollmentResponse",
+      "definition": {
+        "path": "EnrollmentResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -14876,6 +15871,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EpisodeOfCare",
+      "definition": {
+        "path": "EpisodeOfCare",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -14953,6 +15953,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EpisodeOfCare.statusHistory",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 12,
         "extension": 13,
@@ -14995,6 +16000,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EpisodeOfCare.diagnosis",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -15075,6 +16085,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EventDefinition",
+      "definition": {
+        "path": "EventDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -15303,6 +16318,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Evidence",
+      "definition": {
+        "path": "Evidence",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -15528,6 +16548,11 @@ export default {
     {
       "_type_": "complex",
       "type": "EvidenceVariable",
+      "definition": {
+        "path": "EvidenceVariable",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -15740,6 +16765,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "EvidenceVariable.characteristic",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 36,
         "extension": 37,
@@ -15821,6 +16851,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ExampleScenario",
+      "definition": {
+        "path": "ExampleScenario",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -15958,6 +16993,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.actor",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -16007,6 +17047,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.instance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -16058,6 +17103,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.instance.version",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -16095,6 +17145,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.instance.containedInstance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -16132,6 +17187,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.process",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -16182,6 +17242,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.process.step",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -16217,6 +17282,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.process.step.operation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 65,
         "extension": 66,
@@ -16294,6 +17364,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExampleScenario.process.step.alternative",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 79,
         "extension": 80,
@@ -16340,6 +17415,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ExplanationOfBenefit",
+      "definition": {
+        "path": "ExplanationOfBenefit",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -16508,6 +17588,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.related",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -16561,6 +17646,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.payee",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -16638,6 +17728,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.careTeam",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -16693,6 +17788,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.supportingInfo",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 56,
         "extension": 57,
@@ -16763,6 +17863,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.diagnosis",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 66,
         "extension": 67,
@@ -16821,6 +17926,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.procedure",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 75,
         "extension": 76,
@@ -16884,6 +17994,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.insurance",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 85,
         "extension": 86,
@@ -16927,6 +18042,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.accident",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 92,
         "extension": 93,
@@ -16973,6 +18093,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 99,
         "extension": 100,
@@ -17133,6 +18258,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.item.adjudication",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 124,
         "extension": 125,
@@ -17182,6 +18312,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.item.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 132,
         "extension": 133,
@@ -17282,6 +18417,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.item.detail.subDetail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 149,
         "extension": 150,
@@ -17381,6 +18521,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 166,
         "extension": 167,
@@ -17512,6 +18657,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 187,
         "extension": 188,
@@ -17582,6 +18732,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem.detail.subDetail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 199,
         "extension": 200,
@@ -17652,6 +18807,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.total",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 212,
         "extension": 213,
@@ -17689,6 +18849,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.payment",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 218,
         "extension": 219,
@@ -17760,6 +18925,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.processNote",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 230,
         "extension": 231,
@@ -17814,6 +18984,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.benefitBalance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 239,
         "extension": 240,
@@ -17882,6 +19057,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ExplanationOfBenefit.benefitBalance.financial",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 250,
         "extension": 251,
@@ -17934,6 +19114,11 @@ export default {
     {
       "_type_": "complex",
       "type": "FamilyMemberHistory",
+      "definition": {
+        "path": "FamilyMemberHistory",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -18106,6 +19291,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "FamilyMemberHistory.condition",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -18168,6 +19358,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Flag",
+      "definition": {
+        "path": "Flag",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -18273,6 +19468,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Goal",
+      "definition": {
+        "path": "Goal",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -18387,6 +19587,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Goal.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -18478,6 +19683,11 @@ export default {
     {
       "_type_": "complex",
       "type": "GraphDefinition",
+      "definition": {
+        "path": "GraphDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -18618,6 +19828,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "GraphDefinition.link",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -18674,6 +19889,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "GraphDefinition.link.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -18719,6 +19939,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "GraphDefinition.link.target.compartment",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 40,
         "extension": 41,
@@ -18776,6 +20001,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Group",
+      "definition": {
+        "path": "Group",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -18881,6 +20111,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Group.characteristic",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -18936,6 +20171,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Group.member",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -18981,6 +20221,11 @@ export default {
     {
       "_type_": "complex",
       "type": "GuidanceResponse",
+      "definition": {
+        "path": "GuidanceResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -19132,6 +20377,11 @@ export default {
     {
       "_type_": "complex",
       "type": "HealthcareService",
+      "definition": {
+        "path": "HealthcareService",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -19281,6 +20531,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "HealthcareService.eligibility",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -19343,6 +20598,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "HealthcareService.availableTime",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -19392,6 +20652,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "HealthcareService.notAvailable",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -19441,6 +20706,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ImagingStudy",
+      "definition": {
+        "path": "ImagingStudy",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -19611,6 +20881,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImagingStudy.series",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -19698,6 +20973,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImagingStudy.series.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -19735,6 +21015,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImagingStudy.series.instance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -19786,6 +21071,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Immunization",
+      "definition": {
+        "path": "Immunization",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -19957,6 +21247,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Immunization.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -20019,6 +21314,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Immunization.education",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -20078,6 +21378,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Immunization.reaction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 48,
         "extension": 49,
@@ -20121,6 +21426,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Immunization.protocolApplied",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -20184,6 +21494,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ImmunizationEvaluation",
+      "definition": {
+        "path": "ImmunizationEvaluation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -20325,6 +21640,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ImmunizationRecommendation",
+      "definition": {
+        "path": "ImmunizationRecommendation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -20405,6 +21725,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImmunizationRecommendation.recommendation",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -20467,6 +21792,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImmunizationRecommendation.recommendation.dateCriterion",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -20542,6 +21872,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ImplementationGuide",
+      "definition": {
+        "path": "ImplementationGuide",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -20697,6 +22032,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.dependsOn",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -20740,6 +22080,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.global",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -20777,6 +22122,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -20807,6 +22157,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition.grouping",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -20844,6 +22199,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition.resource",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -20908,6 +22268,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition.page",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -20956,6 +22321,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 67,
         "extension": 68,
@@ -20993,6 +22363,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.definition.template",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 73,
         "extension": 74,
@@ -21036,6 +22411,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.manifest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 80,
         "extension": 81,
@@ -21071,6 +22451,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.manifest.resource",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 85,
         "extension": 86,
@@ -21117,6 +22502,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ImplementationGuide.manifest.page",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 92,
         "extension": 93,
@@ -21172,6 +22562,11 @@ export default {
     {
       "_type_": "complex",
       "type": "InsurancePlan",
+      "definition": {
+        "path": "InsurancePlan",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -21286,6 +22681,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.contact",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -21345,6 +22745,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.coverage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -21383,6 +22788,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.coverage.benefit",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -21421,6 +22831,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.coverage.benefit.limit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -21458,6 +22873,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.plan",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -21509,6 +22929,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.plan.generalCost",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -21558,6 +22983,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.plan.specificCost",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -21590,6 +23020,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.plan.specificCost.benefit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 68,
         "extension": 69,
@@ -21622,6 +23057,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "InsurancePlan.plan.specificCost.benefit.cost",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 73,
         "extension": 74,
@@ -21673,6 +23113,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Invoice",
+      "definition": {
+        "path": "Invoice",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -21779,6 +23224,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Invoice.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -21826,6 +23276,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Invoice.lineItem",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -21867,6 +23322,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Invoice.lineItem.priceComponent",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -21939,6 +23399,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Library",
+      "definition": {
+        "path": "Library",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -22185,6 +23650,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Linkage",
+      "definition": {
+        "path": "Linkage",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -22253,6 +23723,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Linkage.item",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 12,
         "extension": 13,
@@ -22292,6 +23767,11 @@ export default {
     {
       "_type_": "complex",
       "type": "List",
+      "definition": {
+        "path": "List",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -22415,6 +23895,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "List.entry",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -22471,6 +23956,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Location",
+      "definition": {
+        "path": "Location",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -22598,6 +24088,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Location.position",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -22651,6 +24146,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Location.hoursOfOperation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -22712,6 +24212,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Measure",
+      "definition": {
+        "path": "Measure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -23006,6 +24511,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Measure.group",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -23045,6 +24555,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Measure.group.population",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -23088,6 +24603,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Measure.group.stratifier",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 62,
         "extension": 63,
@@ -23132,6 +24652,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Measure.group.stratifier.component",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 69,
         "extension": 70,
@@ -23175,6 +24700,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Measure.supplementalData",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 76,
         "extension": 77,
@@ -23226,6 +24756,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MeasureReport",
+      "definition": {
+        "path": "MeasureReport",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -23337,6 +24872,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -23371,6 +24911,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group.population",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -23419,6 +24964,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group.stratifier",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -23451,6 +25001,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group.stratifier.stratum",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -23485,6 +25040,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group.stratifier.stratum.component",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -23522,6 +25082,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MeasureReport.group.stratifier.stratum.population",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 48,
         "extension": 49,
@@ -23577,6 +25142,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Media",
+      "definition": {
+        "path": "Media",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -23769,6 +25339,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Medication",
+      "definition": {
+        "path": "Medication",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -23862,6 +25437,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Medication.ingredient",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -23908,6 +25488,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Medication.batch",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -23947,6 +25532,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicationAdministration",
+      "definition": {
+        "path": "MedicationAdministration",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -24082,6 +25672,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationAdministration.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -24144,6 +25739,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationAdministration.dosage",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -24215,6 +25815,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicationDispense",
+      "definition": {
+        "path": "MedicationDispense",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -24345,6 +25950,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationDispense.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -24437,6 +26047,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationDispense.substitution",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 36,
         "extension": 37,
@@ -24498,6 +26113,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicationKnowledge",
+      "definition": {
+        "path": "MedicationKnowledge",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -24605,6 +26225,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.relatedMedicationKnowledge",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -24652,6 +26277,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.monograph",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -24689,6 +26319,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.ingredient",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -24745,6 +26380,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.cost",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -24788,6 +26428,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.monitoringProgram",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -24825,6 +26470,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.administrationGuidelines",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 52,
         "extension": 53,
@@ -24853,6 +26503,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.administrationGuidelines.dosage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 56,
         "extension": 57,
@@ -24898,6 +26553,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.administrationGuidelines.patientCharacteristics",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -24938,6 +26598,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.medicineClassification",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 69,
         "extension": 70,
@@ -24975,6 +26640,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.packaging",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 75,
         "extension": 76,
@@ -25012,6 +26682,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.drugCharacteristic",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 81,
         "extension": 82,
@@ -25059,6 +26734,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.regulatory",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 88,
         "extension": 89,
@@ -25093,6 +26773,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.regulatory.substitution",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 93,
         "extension": 94,
@@ -25130,6 +26815,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.regulatory.schedule",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 99,
         "extension": 100,
@@ -25161,6 +26851,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.regulatory.maxDispense",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 104,
         "extension": 105,
@@ -25198,6 +26893,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationKnowledge.kinetics",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 110,
         "extension": 111,
@@ -25243,6 +26943,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicationRequest",
+      "definition": {
+        "path": "MedicationRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -25471,6 +27176,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationRequest.dispenseRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -25503,6 +27213,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationRequest.dispenseRequest.initialFill",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -25570,6 +27285,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicationRequest.substitution",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 53,
         "extension": 54,
@@ -25627,6 +27347,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicationStatement",
+      "definition": {
+        "path": "MedicationStatement",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -25792,6 +27517,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProduct",
+      "definition": {
+        "path": "MedicinalProduct",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -25947,6 +27677,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProduct.name",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -25980,6 +27715,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProduct.name.namePart",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -26017,6 +27757,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProduct.name.countryLanguage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -26065,6 +27810,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProduct.manufacturingBusinessOperation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -26126,6 +27876,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProduct.specialDesignation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -26198,6 +27953,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductAuthorization",
+      "definition": {
+        "path": "MedicinalProductAuthorization",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -26329,6 +28089,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductAuthorization.jurisdictionalAuthorization",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -26394,6 +28159,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductAuthorization.procedure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -26443,6 +28213,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductContraindication",
+      "definition": {
+        "path": "MedicinalProductContraindication",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -26530,6 +28305,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductContraindication.otherTherapy",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 15,
         "extension": 16,
@@ -26577,6 +28357,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductIndication",
+      "definition": {
+        "path": "MedicinalProductIndication",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -26671,6 +28456,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductIndication.otherTherapy",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -26723,6 +28513,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductIngredient",
+      "definition": {
+        "path": "MedicinalProductIngredient",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -26804,6 +28599,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductIngredient.specifiedSubstance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -26848,6 +28648,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductIngredient.specifiedSubstance.strength",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -26910,6 +28715,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductIngredient.specifiedSubstance.strength.referenceStrength",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -26965,6 +28775,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductIngredient.substance",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 40,
         "extension": 41,
@@ -26999,6 +28814,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductInteraction",
+      "definition": {
+        "path": "MedicinalProductInteraction",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27071,6 +28891,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductInteraction.interactant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 12,
         "extension": 13,
@@ -27127,6 +28952,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductManufactured",
+      "definition": {
+        "path": "MedicinalProductManufactured",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27226,6 +29056,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductPackaged",
+      "definition": {
+        "path": "MedicinalProductPackaged",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27325,6 +29160,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPackaged.batchIdentifier",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -27362,6 +29202,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPackaged.packageItem",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -27457,6 +29302,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductPharmaceutical",
+      "definition": {
+        "path": "MedicinalProductPharmaceutical",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27544,6 +29394,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPharmaceutical.characteristics",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 15,
         "extension": 16,
@@ -27581,6 +29436,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPharmaceutical.routeOfAdministration",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -27643,6 +29503,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPharmaceutical.routeOfAdministration.targetSpecies",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -27675,6 +29540,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MedicinalProductPharmaceutical.routeOfAdministration.targetSpecies.withdrawalPeriod",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 36,
         "extension": 37,
@@ -27720,6 +29590,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MedicinalProductUndesirableEffect",
+      "definition": {
+        "path": "MedicinalProductUndesirableEffect",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27807,6 +29682,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MessageDefinition",
+      "definition": {
+        "path": "MessageDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -27989,6 +29869,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageDefinition.focus",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -28043,6 +29928,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageDefinition.allowedResponse",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -28087,6 +29977,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MessageHeader",
+      "definition": {
+        "path": "MessageHeader",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -28161,6 +30056,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageHeader.destination",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 11,
         "extension": 12,
@@ -28225,6 +30125,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageHeader.source",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -28290,6 +30195,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageHeader.response",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -28345,6 +30255,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MolecularSequence",
+      "definition": {
+        "path": "MolecularSequence",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -28456,6 +30371,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.referenceSeq",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -28535,6 +30455,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.variant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -28601,6 +30526,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.quality",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -28711,6 +30641,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.quality.roc",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 60,
         "extension": 61,
@@ -28783,6 +30718,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.repository",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 72,
         "extension": 73,
@@ -28849,6 +30789,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.structureVariant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 83,
         "extension": 84,
@@ -28894,6 +30839,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.structureVariant.outer",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 90,
         "extension": 91,
@@ -28931,6 +30881,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MolecularSequence.structureVariant.inner",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 96,
         "extension": 97,
@@ -28970,6 +30925,11 @@ export default {
     {
       "_type_": "complex",
       "type": "NamingSystem",
+      "definition": {
+        "path": "NamingSystem",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -29098,6 +31058,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NamingSystem.uniqueId",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -29155,6 +31120,11 @@ export default {
     {
       "_type_": "complex",
       "type": "NutritionOrder",
+      "definition": {
+        "path": "NutritionOrder",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -29292,6 +31262,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.oralDiet",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 23,
         "extension": 24,
@@ -29333,6 +31308,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.oralDiet.nutrient",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -29370,6 +31350,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.oralDiet.texture",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -29417,6 +31402,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.supplement",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -29472,6 +31462,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.enteralFormula",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 52,
         "extension": 53,
@@ -29536,6 +31531,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "NutritionOrder.enteralFormula.administration",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 62,
         "extension": 63,
@@ -29599,6 +31599,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Observation",
+      "definition": {
+        "path": "Observation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -29795,6 +31800,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Observation.referenceRange",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 30,
         "extension": 31,
@@ -29866,6 +31876,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Observation.component",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -29930,6 +31945,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ObservationDefinition",
+      "definition": {
+        "path": "ObservationDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -30033,6 +32053,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ObservationDefinition.quantitativeDetails",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -30082,6 +32107,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ObservationDefinition.qualifiedInterval",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -30177,6 +32207,11 @@ export default {
     {
       "_type_": "complex",
       "type": "OperationDefinition",
+      "definition": {
+        "path": "OperationDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -30378,6 +32413,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "OperationDefinition.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -30454,6 +32494,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "OperationDefinition.parameter.binding",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -30491,6 +32536,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "OperationDefinition.parameter.referencedFrom",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 52,
         "extension": 53,
@@ -30529,6 +32579,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "OperationDefinition.overload",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -30568,6 +32623,11 @@ export default {
     {
       "_type_": "complex",
       "type": "OperationOutcome",
+      "definition": {
+        "path": "OperationOutcome",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -30624,6 +32684,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "OperationOutcome.issue",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 10,
         "extension": 11,
@@ -30687,6 +32752,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Organization",
+      "definition": {
+        "path": "Organization",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -30792,6 +32862,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Organization.contact",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -30848,6 +32923,11 @@ export default {
     {
       "_type_": "complex",
       "type": "OrganizationAffiliation",
+      "definition": {
+        "path": "OrganizationAffiliation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -30977,6 +33057,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Parameters",
+      "definition": {
+        "path": "Parameters",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -31009,6 +33094,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Parameters.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 6,
         "extension": 7,
@@ -31106,6 +33196,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Patient",
+      "definition": {
+        "path": "Patient",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -31238,6 +33333,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Patient.contact",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -31305,6 +33405,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Patient.communication",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -31352,6 +33457,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Patient.link",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 40,
         "extension": 41,
@@ -31391,6 +33501,11 @@ export default {
     {
       "_type_": "complex",
       "type": "PaymentNotice",
+      "definition": {
+        "path": "PaymentNotice",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -31520,6 +33635,11 @@ export default {
     {
       "_type_": "complex",
       "type": "PaymentReconciliation",
+      "definition": {
+        "path": "PaymentReconciliation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -31650,6 +33770,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PaymentReconciliation.detail",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -31740,6 +33865,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PaymentReconciliation.processNote",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -31779,6 +33909,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Person",
+      "definition": {
+        "path": "Person",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -31889,6 +34024,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Person.link",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -31928,6 +34068,11 @@ export default {
     {
       "_type_": "complex",
       "type": "PlanDefinition",
+      "definition": {
+        "path": "PlanDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -32162,6 +34307,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.goal",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -32224,6 +34374,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.goal.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -32271,6 +34426,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.action",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 56,
         "extension": 57,
@@ -32381,6 +34541,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.action.condition",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 71,
         "extension": 72,
@@ -32428,6 +34593,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.action.relatedAction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 79,
         "extension": 80,
@@ -32486,6 +34656,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.action.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 87,
         "extension": 88,
@@ -32566,6 +34741,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PlanDefinition.action.dynamicValue",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 101,
         "extension": 102,
@@ -32605,6 +34785,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Practitioner",
+      "definition": {
+        "path": "Practitioner",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -32710,6 +34895,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Practitioner.qualification",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -32766,6 +34956,11 @@ export default {
     {
       "_type_": "complex",
       "type": "PractitionerRole",
+      "definition": {
+        "path": "PractitionerRole",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -32885,6 +35080,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PractitionerRole.availableTime",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 20,
         "extension": 21,
@@ -32934,6 +35134,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "PractitionerRole.notAvailable",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 28,
         "extension": 29,
@@ -32983,6 +35188,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Procedure",
+      "definition": {
+        "path": "Procedure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -33142,6 +35352,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Procedure.performer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -33235,6 +35450,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Procedure.focalDevice",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -33284,6 +35504,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Provenance",
+      "definition": {
+        "path": "Provenance",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -33387,6 +35612,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Provenance.agent",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -33436,6 +35666,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Provenance.entity",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -33482,6 +35717,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Questionnaire",
+      "definition": {
+        "path": "Questionnaire",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -33664,6 +35904,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Questionnaire.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -33735,6 +35980,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Questionnaire.item.enableWhen",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -33819,6 +36069,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Questionnaire.item.answerOption",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 54,
         "extension": 55,
@@ -33863,6 +36118,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Questionnaire.item.initial",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 60,
         "extension": 61,
@@ -33909,6 +36169,11 @@ export default {
     {
       "_type_": "complex",
       "type": "QuestionnaireResponse",
+      "definition": {
+        "path": "QuestionnaireResponse",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -34025,6 +36290,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "QuestionnaireResponse.item",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 20,
         "extension": 21,
@@ -34070,6 +36340,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "QuestionnaireResponse.item.answer",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -34118,6 +36393,11 @@ export default {
     {
       "_type_": "complex",
       "type": "RelatedPerson",
+      "definition": {
+        "path": "RelatedPerson",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -34240,6 +36520,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RelatedPerson.communication",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -34279,6 +36564,11 @@ export default {
     {
       "_type_": "complex",
       "type": "RequestGroup",
+      "definition": {
+        "path": "RequestGroup",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -34437,6 +36727,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RequestGroup.action",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -34516,6 +36811,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RequestGroup.action.condition",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -34553,6 +36853,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RequestGroup.action.relatedAction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 44,
         "extension": 45,
@@ -34653,6 +36958,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ResearchDefinition",
+      "definition": {
+        "path": "ResearchDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -34917,6 +37227,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ResearchElementDefinition",
+      "definition": {
+        "path": "ResearchElementDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -35168,6 +37483,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ResearchElementDefinition.characteristic",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -35282,6 +37602,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ResearchStudy",
+      "definition": {
+        "path": "ResearchStudy",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -35471,6 +37796,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ResearchStudy.arm",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -35514,6 +37844,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ResearchStudy.objective",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 39,
         "extension": 40,
@@ -35553,6 +37888,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ResearchSubject",
+      "definition": {
+        "path": "ResearchSubject",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -35658,6 +37998,11 @@ export default {
     {
       "_type_": "complex",
       "type": "RiskAssessment",
+      "definition": {
+        "path": "RiskAssessment",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -35803,6 +38148,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskAssessment.prediction",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -35882,6 +38232,11 @@ export default {
     {
       "_type_": "complex",
       "type": "RiskEvidenceSynthesis",
+      "definition": {
+        "path": "RiskEvidenceSynthesis",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -36108,6 +38463,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskEvidenceSynthesis.sampleSize",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -36151,6 +38511,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskEvidenceSynthesis.riskEstimate",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -36213,6 +38578,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskEvidenceSynthesis.riskEstimate.precisionEstimate",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -36262,6 +38632,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskEvidenceSynthesis.certainty",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -36300,6 +38675,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "RiskEvidenceSynthesis.certainty.certaintySubcomponent",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 69,
         "extension": 70,
@@ -36345,6 +38725,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Schedule",
+      "definition": {
+        "path": "Schedule",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -36450,6 +38835,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SearchParameter",
+      "definition": {
+        "path": "SearchParameter",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -36656,6 +39046,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SearchParameter.component",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -36695,6 +39090,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ServiceRequest",
+      "definition": {
+        "path": "ServiceRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -36961,6 +39361,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Slot",
+      "definition": {
+        "path": "Slot",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -37084,6 +39489,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Specimen",
+      "definition": {
+        "path": "Specimen",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -37192,6 +39602,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Specimen.collection",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -37265,6 +39680,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Specimen.processing",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -37317,6 +39737,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Specimen.container",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -37393,6 +39818,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SpecimenDefinition",
+      "definition": {
+        "path": "SpecimenDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -37479,6 +39909,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SpecimenDefinition.typeTested",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 15,
         "extension": 16,
@@ -37527,6 +39962,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SpecimenDefinition.typeTested.container",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -37593,6 +40033,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SpecimenDefinition.typeTested.container.additive",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -37647,6 +40092,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SpecimenDefinition.typeTested.handling",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -37698,6 +40148,11 @@ export default {
     {
       "_type_": "complex",
       "type": "StructureDefinition",
+      "definition": {
+        "path": "StructureDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -37865,6 +40320,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureDefinition.mapping",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -37924,6 +40384,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureDefinition.context",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -37981,6 +40446,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureDefinition.snapshot",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -38012,6 +40482,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureDefinition.differential",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 52,
         "extension": 53,
@@ -38045,6 +40520,11 @@ export default {
     {
       "_type_": "complex",
       "type": "StructureMap",
+      "definition": {
+        "path": "StructureMap",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -38193,6 +40673,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.structure",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -38247,6 +40732,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -38298,6 +40788,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.input",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 42,
         "extension": 43,
@@ -38347,6 +40842,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.rule",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 50,
         "extension": 51,
@@ -38383,6 +40883,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.rule.source",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 55,
         "extension": 56,
@@ -38525,6 +41030,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.rule.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 70,
         "extension": 71,
@@ -38593,6 +41103,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.rule.target.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 81,
         "extension": 82,
@@ -38631,6 +41146,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "StructureMap.group.rule.dependent",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 87,
         "extension": 88,
@@ -38675,6 +41195,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Subscription",
+      "definition": {
+        "path": "Subscription",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -38767,6 +41292,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Subscription.channel",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -38818,6 +41348,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Substance",
+      "definition": {
+        "path": "Substance",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -38905,6 +41440,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Substance.instance",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 15,
         "extension": 16,
@@ -38948,6 +41488,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Substance.ingredient",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -38990,6 +41535,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceNucleicAcid",
+      "definition": {
+        "path": "SubstanceNucleicAcid",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -39070,6 +41620,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceNucleicAcid.subunit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -39133,6 +41688,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceNucleicAcid.subunit.linkage",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 24,
         "extension": 25,
@@ -39182,6 +41742,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceNucleicAcid.subunit.sugar",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -39227,6 +41792,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstancePolymer",
+      "definition": {
+        "path": "SubstancePolymer",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -39308,6 +41878,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.monomerSet",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -39340,6 +41915,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.monomerSet.startingMaterial",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 19,
         "extension": 20,
@@ -39389,6 +41969,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.repeat",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 27,
         "extension": 28,
@@ -39433,6 +42018,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.repeat.repeatUnit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 34,
         "extension": 35,
@@ -39478,6 +42068,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.repeat.repeatUnit.degreeOfPolymerisation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -39515,6 +42110,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstancePolymer.repeat.repeatUnit.structuralRepresentation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -39560,6 +42160,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceProtein",
+      "definition": {
+        "path": "SubstanceProtein",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -39634,6 +42239,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceProtein.subunit",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 13,
         "extension": 14,
@@ -39709,6 +42319,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceReferenceInformation",
+      "definition": {
+        "path": "SubstanceReferenceInformation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -39774,6 +42389,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceReferenceInformation.gene",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 11,
         "extension": 12,
@@ -39817,6 +42437,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceReferenceInformation.geneElement",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -39860,6 +42485,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceReferenceInformation.classification",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -39909,6 +42539,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceReferenceInformation.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -39988,6 +42623,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceSourceMaterial",
+      "definition": {
+        "path": "SubstanceSourceMaterial",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -40106,6 +42746,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.fractionDescription",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 20,
         "extension": 21,
@@ -40143,6 +42788,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.organism",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -40201,6 +42851,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.organism.author",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 35,
         "extension": 36,
@@ -40238,6 +42893,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.organism.hybrid",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -40293,6 +42953,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.organism.organismGeneral",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 50,
         "extension": 51,
@@ -40342,6 +43007,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSourceMaterial.partDescription",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -40381,6 +43051,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceSpecification",
+      "definition": {
+        "path": "SubstanceSpecification",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -40490,6 +43165,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.moiety",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -40560,6 +43240,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.property",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 28,
         "extension": 29,
@@ -40626,6 +43311,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.structure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -40679,6 +43369,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.structure.isotope",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 46,
         "extension": 47,
@@ -40729,6 +43424,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.structure.isotope.molecularWeight",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 54,
         "extension": 55,
@@ -40778,6 +43478,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.structure.representation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -40821,6 +43526,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.code",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 70,
         "extension": 71,
@@ -40876,6 +43586,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.name",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 79,
         "extension": 80,
@@ -40949,6 +43664,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.name.official",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 92,
         "extension": 93,
@@ -40998,6 +43718,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SubstanceSpecification.relationship",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 101,
         "extension": 102,
@@ -41095,6 +43820,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SupplyDelivery",
+      "definition": {
+        "path": "SupplyDelivery",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -41191,6 +43921,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SupplyDelivery.suppliedItem",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -41257,6 +43992,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SupplyRequest",
+      "definition": {
+        "path": "SupplyRequest",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -41360,6 +44100,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "SupplyRequest.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 16,
         "extension": 17,
@@ -41448,6 +44193,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Task",
+      "definition": {
+        "path": "Task",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -41674,6 +44424,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Task.restriction",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -41717,6 +44472,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Task.input",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 45,
         "extension": 46,
@@ -41805,6 +44565,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "Task.output",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -41895,6 +44660,11 @@ export default {
     {
       "_type_": "complex",
       "type": "TerminologyCapabilities",
+      "definition": {
+        "path": "TerminologyCapabilities",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -42049,6 +44819,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.software",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -42086,6 +44861,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.implementation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -42128,6 +44908,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.codeSystem",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -42161,6 +44946,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.codeSystem.version",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 43,
         "extension": 44,
@@ -42212,6 +45002,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.codeSystem.version.filter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -42259,6 +45054,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.expansion",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -42304,6 +45104,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.expansion.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 66,
         "extension": 67,
@@ -42351,6 +45156,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.validateCode",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 74,
         "extension": 75,
@@ -42382,6 +45192,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.translation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 79,
         "extension": 80,
@@ -42413,6 +45228,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TerminologyCapabilities.closure",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 84,
         "extension": 85,
@@ -42446,6 +45266,11 @@ export default {
     {
       "_type_": "complex",
       "type": "TestReport",
+      "definition": {
+        "path": "TestReport",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -42553,6 +45378,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.participant",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 18,
         "extension": 19,
@@ -42596,6 +45426,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.setup",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -42622,6 +45457,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.setup.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -42649,6 +45489,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.setup.action.operation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 33,
         "extension": 34,
@@ -42692,6 +45537,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.setup.action.assert",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 40,
         "extension": 41,
@@ -42735,6 +45585,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.test",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -42773,6 +45628,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.test.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 53,
         "extension": 54,
@@ -42802,6 +45662,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.teardown",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 59,
         "extension": 60,
@@ -42828,6 +45693,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestReport.teardown.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 63,
         "extension": 64,
@@ -42856,6 +45726,11 @@ export default {
     {
       "_type_": "complex",
       "type": "TestScript",
+      "definition": {
+        "path": "TestScript",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -43010,6 +45885,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.origin",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 25,
         "extension": 26,
@@ -43047,6 +45927,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.destination",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 31,
         "extension": 32,
@@ -43084,6 +45969,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.metadata",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 37,
         "extension": 38,
@@ -43111,6 +46001,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.metadata.link",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 41,
         "extension": 42,
@@ -43148,6 +46043,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.metadata.capability",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 47,
         "extension": 48,
@@ -43215,6 +46115,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.fixture",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -43263,6 +46168,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.variable",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 66,
         "extension": 67,
@@ -43336,6 +46246,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.setup",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 78,
         "extension": 79,
@@ -43362,6 +46277,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.setup.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 82,
         "extension": 83,
@@ -43389,6 +46309,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.setup.action.operation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 86,
         "extension": 87,
@@ -43486,6 +46411,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.setup.action.operation.requestHeader",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 101,
         "extension": 102,
@@ -43548,6 +46478,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.setup.action.assert",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 112,
         "extension": 113,
@@ -43705,6 +46640,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.test",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 138,
         "extension": 139,
@@ -43743,6 +46683,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.test.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 144,
         "extension": 145,
@@ -43772,6 +46717,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.teardown",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 150,
         "extension": 151,
@@ -43798,6 +46748,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "TestScript.teardown.action",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 154,
         "extension": 155,
@@ -43826,6 +46781,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ValueSet",
+      "definition": {
+        "path": "ValueSet",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -43979,6 +46939,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.compose",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -44018,6 +46983,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.compose.include",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -44058,6 +47028,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.compose.include.concept",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 38,
         "extension": 39,
@@ -44096,6 +47071,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.compose.include.concept.designation",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 44,
         "extension": 45,
@@ -44139,6 +47119,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.compose.include.filter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 51,
         "extension": 52,
@@ -44188,6 +47173,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.expansion",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 60,
         "extension": 61,
@@ -44239,6 +47229,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.expansion.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 68,
         "extension": 69,
@@ -44284,6 +47279,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "ValueSet.expansion.contains",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 74,
         "extension": 75,
@@ -44350,6 +47350,11 @@ export default {
     {
       "_type_": "complex",
       "type": "VerificationResult",
+      "definition": {
+        "path": "VerificationResult",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -44474,6 +47479,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "VerificationResult.primarySource",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 21,
         "extension": 22,
@@ -44541,6 +47551,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "VerificationResult.attestation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 32,
         "extension": 33,
@@ -44614,6 +47629,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "VerificationResult.validator",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 44,
         "extension": 45,
@@ -44659,6 +47679,11 @@ export default {
     {
       "_type_": "complex",
       "type": "VisionPrescription",
+      "definition": {
+        "path": "VisionPrescription",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -44757,6 +47782,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "VisionPrescription.lensSpecification",
+        "min": 1,
+        "max": "*"
+      },
       "properties": {
         "id": 17,
         "extension": 18,
@@ -44821,6 +47851,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "VisionPrescription.lensSpecification.prism",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 26,
         "extension": 27,
@@ -44900,6 +47935,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "Element",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2
@@ -44921,6 +47961,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "BackboneElement",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -44948,6 +47993,11 @@ export default {
     {
       "_type_": "complex",
       "type": "base64Binary",
+      "definition": {
+        "path": "base64Binary",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -44975,6 +48025,11 @@ export default {
     {
       "_type_": "complex",
       "type": "boolean",
+      "definition": {
+        "path": "boolean",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45002,6 +48057,11 @@ export default {
     {
       "_type_": "complex",
       "type": "canonical",
+      "definition": {
+        "path": "canonical",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45029,6 +48089,11 @@ export default {
     {
       "_type_": "complex",
       "type": "code",
+      "definition": {
+        "path": "code",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45056,6 +48121,11 @@ export default {
     {
       "_type_": "complex",
       "type": "date",
+      "definition": {
+        "path": "date",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45083,6 +48153,11 @@ export default {
     {
       "_type_": "complex",
       "type": "dateTime",
+      "definition": {
+        "path": "dateTime",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45110,6 +48185,11 @@ export default {
     {
       "_type_": "complex",
       "type": "decimal",
+      "definition": {
+        "path": "decimal",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45137,6 +48217,11 @@ export default {
     {
       "_type_": "complex",
       "type": "id",
+      "definition": {
+        "path": "id",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45164,6 +48249,11 @@ export default {
     {
       "_type_": "complex",
       "type": "instant",
+      "definition": {
+        "path": "instant",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45191,6 +48281,11 @@ export default {
     {
       "_type_": "complex",
       "type": "integer",
+      "definition": {
+        "path": "integer",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45218,6 +48313,11 @@ export default {
     {
       "_type_": "complex",
       "type": "markdown",
+      "definition": {
+        "path": "markdown",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45245,6 +48345,11 @@ export default {
     {
       "_type_": "complex",
       "type": "oid",
+      "definition": {
+        "path": "oid",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45272,6 +48377,11 @@ export default {
     {
       "_type_": "complex",
       "type": "positiveInt",
+      "definition": {
+        "path": "positiveInt",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45299,6 +48409,11 @@ export default {
     {
       "_type_": "complex",
       "type": "string",
+      "definition": {
+        "path": "string",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45326,6 +48441,11 @@ export default {
     {
       "_type_": "complex",
       "type": "time",
+      "definition": {
+        "path": "time",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45353,6 +48473,11 @@ export default {
     {
       "_type_": "complex",
       "type": "unsignedInt",
+      "definition": {
+        "path": "unsignedInt",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45380,6 +48505,11 @@ export default {
     {
       "_type_": "complex",
       "type": "uri",
+      "definition": {
+        "path": "uri",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45407,6 +48537,11 @@ export default {
     {
       "_type_": "complex",
       "type": "url",
+      "definition": {
+        "path": "url",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45434,6 +48569,11 @@ export default {
     {
       "_type_": "complex",
       "type": "uuid",
+      "definition": {
+        "path": "uuid",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45461,6 +48601,11 @@ export default {
     {
       "_type_": "complex",
       "type": "xhtml",
+      "definition": {
+        "path": "xhtml",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45488,6 +48633,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Address",
+      "definition": {
+        "path": "Address",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45569,6 +48719,26 @@ export default {
     {
       "_type_": "complex",
       "type": "Age",
+      "definition": {
+        "path": "Age",
+        "min": 0,
+        "max": "1",
+        "binding": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
+              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+              "valueString": "AgeUnits"
+            }
+          ],
+          "strength": "extensible",
+          "description": "Appropriate units for Age.",
+          "valueSet": "http://hl7.org/fhir/ValueSet/age-units"
+        }
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45620,6 +48790,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Annotation",
+      "definition": {
+        "path": "Annotation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45662,6 +48837,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Attachment",
+      "definition": {
+        "path": "Attachment",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45731,6 +48911,11 @@ export default {
     {
       "_type_": "complex",
       "type": "CodeableConcept",
+      "definition": {
+        "path": "CodeableConcept",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45764,6 +48949,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Coding",
+      "definition": {
+        "path": "Coding",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45815,6 +49005,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ContactDetail",
+      "definition": {
+        "path": "ContactDetail",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45848,6 +49043,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ContactPoint",
+      "definition": {
+        "path": "ContactPoint",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45899,6 +49099,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Contributor",
+      "definition": {
+        "path": "Contributor",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45938,6 +49143,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Count",
+      "definition": {
+        "path": "Count",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -45989,6 +49199,11 @@ export default {
     {
       "_type_": "complex",
       "type": "DataRequirement",
+      "definition": {
+        "path": "DataRequirement",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -46039,6 +49254,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "DataRequirement.codeFilter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 8,
         "extension": 9,
@@ -46082,6 +49302,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "DataRequirement.dateFilter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 15,
         "extension": 16,
@@ -46128,6 +49353,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "DataRequirement.sort",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 22,
         "extension": 23,
@@ -46161,6 +49391,26 @@ export default {
     {
       "_type_": "complex",
       "type": "Distance",
+      "definition": {
+        "path": "Distance",
+        "min": 0,
+        "max": "1",
+        "binding": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
+              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-distance-units"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+              "valueString": "DistanceUnits"
+            }
+          ],
+          "strength": "extensible",
+          "description": "Appropriate units for Distance.",
+          "valueSet": "http://hl7.org/fhir/ValueSet/distance-units"
+        }
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -46212,6 +49462,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Dosage",
+      "definition": {
+        "path": "Dosage",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -46298,6 +49553,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "Dosage.doseAndRate",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -46359,6 +49619,26 @@ export default {
     {
       "_type_": "complex",
       "type": "Duration",
+      "definition": {
+        "path": "Duration",
+        "min": 0,
+        "max": "1",
+        "binding": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
+              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+              "valueString": "DurationUnits"
+            }
+          ],
+          "strength": "extensible",
+          "description": "Appropriate units for Duration.",
+          "valueSet": "http://hl7.org/fhir/ValueSet/duration-units"
+        }
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -46410,6 +49690,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ElementDefinition",
+      "definition": {
+        "path": "ElementDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -46499,6 +49784,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.slicing",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 11,
         "extension": 12,
@@ -46522,6 +49812,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.slicing.discriminator",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 14,
         "extension": 15,
@@ -46603,6 +49898,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.base",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 29,
         "extension": 30,
@@ -46645,6 +49945,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.type",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 36,
         "extension": 37,
@@ -46872,6 +50177,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.example",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 49,
         "extension": 50,
@@ -46994,6 +50304,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.constraint",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 58,
         "extension": 59,
@@ -47075,6 +50390,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.binding",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 72,
         "extension": 73,
@@ -47112,6 +50432,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "ElementDefinition.mapping",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "id": 78,
         "extension": 79,
@@ -47157,6 +50482,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Expression",
+      "definition": {
+        "path": "Expression",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47208,6 +50538,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Extension",
+      "definition": {
+        "path": "Extension",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47292,6 +50627,11 @@ export default {
     {
       "_type_": "complex",
       "type": "HumanName",
+      "definition": {
+        "path": "HumanName",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47355,6 +50695,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Identifier",
+      "definition": {
+        "path": "Identifier",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47412,6 +50757,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MarketingStatus",
+      "definition": {
+        "path": "MarketingStatus",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47469,6 +50819,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Meta",
+      "definition": {
+        "path": "Meta",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47526,6 +50881,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Money",
+      "definition": {
+        "path": "Money",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47559,6 +50919,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Narrative",
+      "definition": {
+        "path": "Narrative",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47592,6 +50957,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ParameterDefinition",
+      "definition": {
+        "path": "ParameterDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47655,6 +51025,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Period",
+      "definition": {
+        "path": "Period",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47688,6 +51063,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Population",
+      "definition": {
+        "path": "Population",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47742,6 +51122,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ProdCharacteristic",
+      "definition": {
+        "path": "ProdCharacteristic",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47835,6 +51220,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ProductShelfLife",
+      "definition": {
+        "path": "ProductShelfLife",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47886,6 +51276,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Quantity",
+      "definition": {
+        "path": "Quantity",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47937,6 +51332,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Range",
+      "definition": {
+        "path": "Range",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -47970,6 +51370,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Ratio",
+      "definition": {
+        "path": "Ratio",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48003,6 +51408,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Reference",
+      "definition": {
+        "path": "Reference",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48048,6 +51458,11 @@ export default {
     {
       "_type_": "complex",
       "type": "RelatedArtifact",
+      "definition": {
+        "path": "RelatedArtifact",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48111,6 +51526,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SampledData",
+      "definition": {
+        "path": "SampledData",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48174,6 +51594,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Signature",
+      "definition": {
+        "path": "Signature",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48237,6 +51662,11 @@ export default {
     {
       "_type_": "complex",
       "type": "SubstanceAmount",
+      "definition": {
+        "path": "SubstanceAmount",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48285,6 +51715,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "SubstanceAmount.referenceRange",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 8,
         "extension": 9,
@@ -48318,6 +51753,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Timing",
+      "definition": {
+        "path": "Timing",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48351,6 +51791,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Element",
+      "definition": {
+        "path": "Timing.repeat",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 6,
         "extension": 7,
@@ -48471,6 +51916,11 @@ export default {
     {
       "_type_": "complex",
       "type": "TriggerDefinition",
+      "definition": {
+        "path": "TriggerDefinition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48527,6 +51977,11 @@ export default {
     {
       "_type_": "complex",
       "type": "UsageContext",
+      "definition": {
+        "path": "UsageContext",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "extension": 2,
@@ -48565,6 +52020,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AccessPolicyV2",
+      "definition": {
+        "path": "AccessPolicyV2",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -48605,6 +52065,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.attribute",
+        "min": 0,
+        "max": "15"
+      },
       "properties": {
         "attributeId": 7,
         "operation": 8
@@ -48619,6 +52084,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.attribute.operation",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "type": 9,
         "path": 10,
@@ -48644,6 +52114,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.rule",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "name": 13,
         "description": 14,
@@ -48678,6 +52153,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.rule.target",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "expression": 18
       },
@@ -48691,6 +52171,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.rule.condition",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "expression": 20
       },
@@ -48705,6 +52190,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicyV2.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "link": 23
       },
@@ -48720,6 +52210,11 @@ export default {
     {
       "_type_": "complex",
       "type": "AccessPolicy",
+      "definition": {
+        "path": "AccessPolicy",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -48765,6 +52260,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicy.target",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "link": 8
       },
@@ -48778,6 +52278,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicy.access",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "fhir": 10
       },
@@ -48786,6 +52291,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicy.access.fhir",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "method": 11,
         "resourceType": 12,
@@ -48806,6 +52316,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "AccessPolicy.access.fhir.parameter",
+        "min": 0,
+        "max": "*"
+      },
       "properties": {
         "name": 14,
         "value": 15
@@ -48827,6 +52342,11 @@ export default {
     {
       "_type_": "complex",
       "type": "ClientApplication",
+      "definition": {
+        "path": "ClientApplication",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -48920,6 +52440,11 @@ export default {
     {
       "_type_": "complex",
       "type": "IdentityProvider",
+      "definition": {
+        "path": "IdentityProvider",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -48958,6 +52483,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "IdentityProvider.oidc",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "authorization_endpoint": 7,
         "token_endpoint": 8,
@@ -48997,6 +52527,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "IdentityProvider.oidc.client",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "clientId": 13,
         "secret": 14
@@ -49016,6 +52551,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "IdentityProvider.oidc.pkce",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "code_challenge_method": 16,
         "enabled": 17
@@ -49037,6 +52577,11 @@ export default {
     {
       "_type_": "complex",
       "type": "Membership",
+      "definition": {
+        "path": "Membership",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -49094,6 +52639,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MessageBroker",
+      "definition": {
+        "path": "MessageBroker",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -49132,6 +52682,11 @@ export default {
     {
       "_type_": "complex",
       "type": "BackboneElement",
+      "definition": {
+        "path": "MessageBroker.security",
+        "min": 1,
+        "max": "1"
+      },
       "properties": {
         "type": 7,
         "username": 8,
@@ -49159,6 +52714,11 @@ export default {
     {
       "_type_": "complex",
       "type": "MessageTopic",
+      "definition": {
+        "path": "MessageTopic",
+        "min": 0,
+        "max": "1"
+      },
       "properties": {
         "id": 1,
         "meta": 2,
@@ -49190,51 +52750,51 @@ export default {
   ],
   "http://hl7.org/fhirpath/System.Boolean": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.Boolean",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.String": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.String",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.Date": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.Date",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.DateTime": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.DateTime",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.Decimal": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.Decimal",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.Integer": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.Integer",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ],
   "http://hl7.org/fhirpath/System.Time": [
     {
-      "_type_": "complex",
+      "_type_": "fp-primitive",
       "type": "http://hl7.org/fhirpath/System.Time",
-      "cardinality": "array"
+      "cardinality": "single"
     }
   ]
 }
