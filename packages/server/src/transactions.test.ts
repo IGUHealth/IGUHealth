@@ -21,7 +21,6 @@ import {
 
 import { testServices } from "./fhir-clients/test-ctx.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
-import { IGUHealthServerCTX } from "./fhir-server/types.js";
 
 function loadResources(
   resourceTypes: ResourceType<R4>[],
