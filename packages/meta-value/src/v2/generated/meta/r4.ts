@@ -48724,18 +48724,7 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "AgeUnits"
-            }
-          ],
           "strength": "extensible",
-          "description": "Appropriate units for Age.",
           "valueSet": "http://hl7.org/fhir/ValueSet/age-units"
         }
       },
@@ -49396,18 +49385,7 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-distance-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "DistanceUnits"
-            }
-          ],
           "strength": "extensible",
-          "description": "Appropriate units for Distance.",
           "valueSet": "http://hl7.org/fhir/ValueSet/distance-units"
         }
       },
@@ -49624,18 +49602,7 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "DurationUnits"
-            }
-          ],
           "strength": "extensible",
-          "description": "Appropriate units for Duration.",
           "valueSet": "http://hl7.org/fhir/ValueSet/duration-units"
         }
       },

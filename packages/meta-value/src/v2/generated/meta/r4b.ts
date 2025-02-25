@@ -49543,20 +49543,6 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/build/StructureDefinition/binding-definition",
-              "valueString": "Appropriate units for Age."
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "AgeUnits"
-            }
-          ],
           "strength": "extensible",
           "valueSet": "http://hl7.org/fhir/ValueSet/age-units"
         }
@@ -50256,20 +50242,6 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/build/StructureDefinition/binding-definition",
-              "valueString": "Appropriate units for Distance."
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-distance-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "DistanceUnits"
-            }
-          ],
           "strength": "extensible",
           "valueSet": "http://hl7.org/fhir/ValueSet/distance-units"
         }
@@ -50487,20 +50459,6 @@ export default {
         "min": 0,
         "max": "1",
         "binding": {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/build/StructureDefinition/binding-definition",
-              "valueString": "Appropriate units for Duration."
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
-              "valueCanonical": "http://hl7.org/fhir/ValueSet/all-time-units"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
-              "valueString": "DurationUnits"
-            }
-          ],
           "strength": "extensible",
           "valueSet": "http://hl7.org/fhir/ValueSet/duration-units"
         }

@@ -154,7 +154,12 @@ function createSingularNode(
       ...getAllTypeChoice("minValue", element),
       ...getAllTypeChoice("maxValue", element),
       maxLength: element.maxLength,
-      binding: element.binding,
+      binding: element.binding
+        ? {
+            strength: element.binding.strength,
+            valueSet: element.binding.valueSet,
+          }
+        : undefined,
     },
     properties: children.reduce((acc: Record<string, number>, k) => {
       acc[k.field] = k.index;
