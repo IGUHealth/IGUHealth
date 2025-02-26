@@ -44,9 +44,14 @@ export function getMeta(
   fhirVersion: FHIR_VERSION,
   meta: ElementNode,
   field: string,
-): ElementNode | TypeNode | TypeChoiceNode {
+): ElementNode | TypeNode | TypeChoiceNode | undefined {
   const globalMeta = getGlobalMeta(fhirVersion);
-  return globalMeta[meta.base][meta.properties?.[field] ?? -1] as
+  const fieldIndex = meta.properties?.[field];
+  if (!fieldIndex) {
+    return undefined;
+  }
+
+  return globalMeta[meta.base][fieldIndex] as
     | ElementNode
     | TypeNode
     | TypeChoiceNode;

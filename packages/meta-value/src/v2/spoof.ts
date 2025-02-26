@@ -24,11 +24,9 @@ function descendMeta(
   field: string,
 ) {
   const nextMeta = getMeta(fhirVersion, meta, field);
+  if (nextMeta === undefined) return undefined;
 
   switch (true) {
-    case nextMeta === undefined: {
-      return undefined;
-    }
     case nextMeta._type_ === "type": {
       return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
     }

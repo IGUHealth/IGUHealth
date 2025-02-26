@@ -173,9 +173,11 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     return this._location;
   }
   descend(_field: string): IMetaValue<unknown> | undefined {
+    const unresolvedMeta = getMeta(this._fhirVersion, this._meta, _field);
+    if (!unresolvedMeta) return undefined;
     const nextMeta = resolveMeta(
       this._fhirVersion,
-      getMeta(this._fhirVersion, this._meta, _field),
+      unresolvedMeta,
       this._value,
       _field,
     );
