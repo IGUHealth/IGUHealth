@@ -99,12 +99,12 @@ export function resolveMeta<T>(
       }
     }
     case meta._type_ === "typechoice": {
-      for (const typeChoiceField of Object.keys(meta.fields)) {
+      for (const typeChoiceField of Object.keys(meta.fieldsToType)) {
         if ((value as any)?.[typeChoiceField] !== undefined) {
           return resolveTypeNode(
             fhirVersion,
             meta,
-            meta.fields[typeChoiceField],
+            meta.fieldsToType[typeChoiceField],
             typeChoiceField,
           );
         }

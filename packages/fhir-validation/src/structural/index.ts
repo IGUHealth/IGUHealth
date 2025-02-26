@@ -24,6 +24,7 @@ import {
 import {
   ElementNode,
   MetaNode,
+  getMeta,
   getStartingMeta,
 } from "@iguhealth/meta-value/meta";
 import {
@@ -139,6 +140,24 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
+type PropertyAndType = { field: string; type: uri };
+function findMetaFields(
+  version: FHIR_VERSION,
+  meta: MetaNode,
+  value: unknown,
+): PropertyAndType[] {
+  switch (meta._type_) {
+    case "complex": {
+    }
+    case "type": {
+    }
+    case "typechoice": {
+    }
+    case "fp-primitive": {
+    }
+  }
+}
+
 /**
  * Validates the BackboneElement / Element values that have nested ElementDefinitions
  *
@@ -150,7 +169,7 @@ async function validateReferenceTypeConstraint(
  * @param childrenIndexes
  * @returns
  */
-async function validateElementNested(
+async function validateComplex(
   ctx: ValidationCTX,
   meta: ElementNode,
   root: object,
@@ -174,30 +193,22 @@ async function validateElementNested(
     ];
   }
 
+  const issues2 = Object.keys(meta.properties ?? {}).map((property) => {
+    const childMeta = getMeta(ctx.fhirVersion, meta, property);
+    const fields = findMetaFields(ctx.fhirVersion, childMeta, value);
+    fields.forEach((f) => foundFields.add(f.field));
+  });
+
   const issues = (
     await Promise.all(
       childrenIndexes.map(async (childElementIndex) => {
-        const childElementLoc = descend(
-          elementsLoc,
-          childElementIndex,
-        ) as unknown as ElementLoc;
-        const childElement = get(childElementLoc, structureDefinition);
-        if (!notNullable(childElement)) {
-          throw new OperationError(
-            outcomeFatal(
-              "structure",
-              `Element not found at '${childElementLoc}' for StructureDefinition ${structureDefinition.id}`,
-              [toJSONPointer(path)],
-            ),
-          );
-        }
-
         // Because Primitives can be extended under seperate key we must check multiple fields.
         const fields = getFoundFieldsForElement(
           ctx.fhirVersion,
           childElement,
           value,
         );
+
         fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(childElement) && fields.length === 0) {
@@ -303,7 +314,7 @@ export async function validateElementSingular(
     return validatePrimitive(ctx, meta.definition, root, path, meta.type);
   }
 
-  return validateElementNested(ctx, meta, root, path);
+  return validateComplex(ctx, meta, root, path);
   // Leaf validation
   if (childrenIndixes.length === 0) {
     if (
@@ -324,7 +335,7 @@ export async function validateElementSingular(
       return issues;
     }
   } else {
-    return validateElementNested(ctx, meta, root, path);
+    return validateComplex(ctx, meta, root, path);
   }
 }
 

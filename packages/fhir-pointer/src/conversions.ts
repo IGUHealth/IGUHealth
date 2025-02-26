@@ -7,8 +7,8 @@ import {
 import {
   ElementNode,
   getMeta,
-  getResolvedMeta,
   getStartingMeta,
+  resolveMeta,
 } from "@iguhealth/meta-value/meta";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -24,7 +24,6 @@ export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
 
 function resolveFieldToTypeChoiceName(
   version: FHIR_VERSION,
-  type: uri,
   meta: ElementNode,
   field: string,
 ): string | undefined {
@@ -33,9 +32,9 @@ function resolveFieldToTypeChoiceName(
   );
 
   for (const key of keysToCheck) {
-    const information = getMeta(version, type as uri, meta, key);
+    const information = getMeta(version, meta, key);
     if (information._type_ === "typechoice") {
-      const v = Object.keys(information.fields).find((f) => f === field);
+      const v = Object.keys(information.fieldsToType).find((f) => f === field);
       // Return if typechoice includes field name.
       if (v !== undefined) return key;
     }
@@ -51,7 +50,6 @@ export function toFHIRPath<
 
   const { version, type } = pathMeta(loc);
 
-  let base = type as uri;
   let meta: ElementNode | undefined = getStartingMeta(version, type as uri);
 
   if (indexOfLastSlash === -1) return "$this";
@@ -77,7 +75,6 @@ export function toFHIRPath<
       if (!meta.properties?.[unescapedField]) {
         const typeChoiceField = resolveFieldToTypeChoiceName(
           version,
-          base,
           meta,
           unescapedField,
         );
@@ -91,9 +88,8 @@ export function toFHIRPath<
         field = typeChoiceField;
       }
 
-      const nextMeta = getResolvedMeta(
+      const nextMeta = resolveMeta(
         version,
-        base,
         meta,
         // Hack to inject the typechoice field in.
         { [unescapedField]: {} },
@@ -107,7 +103,6 @@ export function toFHIRPath<
         );
       }
 
-      base = nextMeta.base as uri;
       meta = nextMeta.meta;
 
       fp += `.${field}`;

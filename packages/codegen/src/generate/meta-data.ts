@@ -54,7 +54,8 @@ interface Node {
 
 export interface TypeChoiceNode extends Node {
   _type_: "typechoice";
-  fields: Record<string, uri>;
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
+  fieldsToType: Record<string, uri>;
 }
 
 export interface ElementNode extends Node {
@@ -66,7 +67,7 @@ export interface ElementNode extends Node {
 export interface TypeNode extends Node {
   _type_: "type";
   type: uri;
-  targetProfile?: uri[];
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
 }
 
 export type MetaNode =
@@ -134,6 +135,28 @@ function getAllTypeChoice(
     }, {});
 }
 
+function simpleElementDefinition(
+  element: Data<FHIR_VERSION, "ElementDefinition">,
+): Data<FHIR_VERSION, "ElementDefinition"> {
+  return {
+    path: element.path,
+    min: element.min,
+    max: element.max,
+    ...getAllTypeChoice("pattern", element),
+    ...getAllTypeChoice("minValue", element),
+    ...getAllTypeChoice("maxValue", element),
+    ...getAllTypeChoice("fixed", element),
+    maxLength: element.maxLength,
+    type: element.type,
+    binding: element.binding
+      ? {
+          strength: element.binding.strength,
+          valueSet: element.binding.valueSet,
+        }
+      : undefined,
+  };
+}
+
 function createSingularNode<Version extends FHIR_VERSION>(
   sd: Resource<Version, "StructureDefinition">,
   element: Data<Version, "ElementDefinition">,
@@ -146,7 +169,7 @@ function createSingularNode<Version extends FHIR_VERSION>(
       _type_: "type",
       base: sd.type,
       type: type?.code as uri,
-      targetProfile: element.type?.map((t) => t.targetProfile ?? []).flat(),
+      definition: simpleElementDefinition(element),
       cardinality,
     };
   }
@@ -155,22 +178,7 @@ function createSingularNode<Version extends FHIR_VERSION>(
     _type_: "complex",
     base: sd.type,
     type: type?.code as uri,
-    definition: {
-      path: element.path,
-      min: element.min,
-      max: element.max,
-      ...getAllTypeChoice("pattern", element),
-      ...getAllTypeChoice("minValue", element),
-      ...getAllTypeChoice("maxValue", element),
-      ...getAllTypeChoice("fixed", element),
-      maxLength: element.maxLength,
-      binding: element.binding
-        ? {
-            strength: element.binding.strength,
-            valueSet: element.binding.valueSet,
-          }
-        : undefined,
-    },
+    definition: simpleElementDefinition(element),
     properties: children.reduce((acc: Record<string, number>, k) => {
       acc[k.field] = k.index;
       return acc;
@@ -186,11 +194,15 @@ function createTypeChoiceNode<Version extends FHIR_VERSION>(
   return {
     _type_: "typechoice",
     base: sd.type,
+    definition: simpleElementDefinition(element),
     cardinality: element.max === "1" ? "single" : "array",
-    fields: (element.type ?? []).reduce((acc: Record<string, uri>, type) => {
-      acc[getElementField(element, type.code)] = type.code;
-      return acc;
-    }, {}),
+    fieldsToType: (element.type ?? []).reduce(
+      (acc: Record<string, uri>, type) => {
+        acc[getElementField(element, type.code)] = type.code;
+        return acc;
+      },
+      {},
+    ),
   };
 }
 

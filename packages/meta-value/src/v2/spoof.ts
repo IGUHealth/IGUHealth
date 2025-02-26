@@ -85,7 +85,7 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
 
   types(): TypeInfo[] | undefined {
     if (this._meta._type_ === "typechoice") {
-      return Object.values(this._meta.fields).map((type) => {
+      return Object.values(this._meta.fieldsToType).map((type) => {
         return {
           type: type as uri,
           fhirVersion: this._fhirVersion,
@@ -149,7 +149,7 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
         return this._meta.type === type;
       }
       case "typechoice": {
-        return Object.values(this._meta.fields).includes(type as uri);
+        return Object.values(this._meta.fieldsToType).includes(type as uri);
       }
       case "fp-primitive": {
         return this._meta.type === type;
