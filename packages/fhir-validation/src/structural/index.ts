@@ -275,8 +275,7 @@ async function validateElementNested(
 /**
  * Validates a singular element. This Could be a primitive or complex type.
  * @param ctx
- * @param structureDefinition
- * @param elementLoc The location to the ElementDefinition in the structure definition.
+ * @param meta Structural information.
  * @param root
  * @param path
  * @param type
@@ -284,22 +283,11 @@ async function validateElementNested(
  */
 export async function validateElementSingular(
   ctx: ValidationCTX,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementLoc: ElementLoc,
+  meta: ElementNode,
   root: object,
   path: Loc<object, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
-  const { field: elementIndex, parent: elementsLoc } =
-    ascendElementLoc(elementLoc);
-
-  const element = get(elementLoc, structureDefinition);
-  if (!element) {
-    throw new OperationError(
-      outcomeFatal("invalid", `Element not found at loc '${elementLoc}'`),
-    );
-  }
-
   if (element.contentReference) {
     return validateElementSingular(
       ctx,
@@ -380,8 +368,7 @@ export async function validateElement(
           (value || []).map((_v: any, i: number) => {
             return validateElementSingular(
               ctx,
-              structureDefinition,
-              elementLoc,
+              meta,
               root,
               descend(path, i),
               type,
@@ -391,14 +378,7 @@ export async function validateElement(
       ).flat();
     }
     default: {
-      return validateElementSingular(
-        ctx,
-        structureDefinition,
-        elementLoc,
-        root,
-        path,
-        type,
-      );
+      return validateElementSingular(ctx, meta, root, path, type);
     }
   }
 }
@@ -438,14 +418,6 @@ export function _validate(
       ];
     }
   }
-
-  const startingLoc = descend(
-    descend(
-      descend(pointer(R4, "StructureDefinition", sd.id as id), "snapshot"),
-      "element",
-    ),
-    0,
-  );
 
   return validateElement(ctx, meta, resource, path, meta.type);
 }
