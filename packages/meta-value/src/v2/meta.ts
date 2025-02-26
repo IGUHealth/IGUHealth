@@ -80,47 +80,45 @@ function resolveResourceType(
   return resolveTypeNode(fhirVersion, meta, type, field);
 }
 
-export function getResolvedMeta<T>(
+export function resolveMeta<T>(
   fhirVersion: FHIR_VERSION,
   base: string,
-  meta: ElementNode,
+  meta: MetaNode,
   value: T | FHIRPrimitive<RawPrimitive>,
   field: string,
 ): { base: string; meta: ElementNode; field: string } | undefined {
-  const nextMeta = getMeta(fhirVersion, base, meta, field);
-
   switch (true) {
-    case nextMeta === undefined: {
+    case meta === undefined: {
       return undefined;
     }
-    case nextMeta._type_ === "type": {
+    case meta._type_ === "type": {
       // Special handling for Bundle.entry.resource which is abstract Resource;
       // Descend into the resourceType field to get the actual type.
-      if (nextMeta.type === "Resource" || nextMeta.type === "DomainResource") {
-        return resolveResourceType(fhirVersion, nextMeta, value, field);
+      if (meta.type === "Resource" || meta.type === "DomainResource") {
+        return resolveResourceType(fhirVersion, meta, value, field);
       } else {
-        return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
+        return resolveTypeNode(fhirVersion, meta, meta.type, field);
       }
     }
-    case nextMeta._type_ === "typechoice": {
-      for (const typeChoiceField of Object.keys(nextMeta.fields)) {
+    case meta._type_ === "typechoice": {
+      for (const typeChoiceField of Object.keys(meta.fields)) {
         if ((value as any)?.[typeChoiceField] !== undefined) {
           return resolveTypeNode(
             fhirVersion,
-            nextMeta,
-            nextMeta.fields[typeChoiceField],
+            meta,
+            meta.fields[typeChoiceField],
             typeChoiceField,
           );
         }
       }
       return undefined;
     }
-    case nextMeta._type_ === "complex": {
-      return { base, meta: nextMeta, field };
+    case meta._type_ === "complex": {
+      return { base, meta: meta, field };
     }
     default: {
       // @ts-ignore
-      throw new Error(`Unknown meta type: ${nextMeta._type_}`);
+      throw new Error(`Unknown meta type: ${meta._type_}`);
     }
   }
 }

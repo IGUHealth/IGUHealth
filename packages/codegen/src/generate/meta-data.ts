@@ -40,30 +40,35 @@ function addFPPrimitiveNodes(metadata: MetaV2Compiled) {
   }, metadata);
 }
 
-export interface TypeChoiceNode {
-  _type_: "typechoice";
-  cardinality: "array" | "single";
-  fields: Record<string, uri>;
-}
-
 export interface FPPrimitiveNode {
   _type_: "fp-primitive";
   type: uri;
   cardinality: "single";
 }
 
-export interface ElementNode {
+interface Node {
+  _type_: "complex" | "type" | "typechoice";
+  cardinality: "array" | "single";
+  base: uri;
+}
+
+export interface TypeChoiceNode extends Node {
+  _type_: "typechoice";
+  fields: Record<string, uri>;
+}
+
+export interface ElementNode extends Node {
   _type_: "complex";
   type: uri;
   definition: Data<FHIR_VERSION, "ElementDefinition">;
-  cardinality: "array" | "single";
   properties?: Record<string, number>;
 }
-export interface TypeNode {
+export interface TypeNode extends Node {
   _type_: "type";
   type: uri;
-  cardinality: "array" | "single";
+  targetProfile?: uri[];
 }
+
 export type MetaNode =
   | ElementNode
   | TypeNode
@@ -129,8 +134,9 @@ function getAllTypeChoice(
     }, {});
 }
 
-function createSingularNode(
-  element: ElementDefinition,
+function createSingularNode<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+  element: Data<Version, "ElementDefinition">,
   type: ElementDefinitionType | undefined,
   children: { index: number; field: string }[],
 ): MetaNode {
@@ -138,13 +144,16 @@ function createSingularNode(
   if (children.length === 0) {
     return {
       _type_: "type",
+      base: sd.type,
       type: type?.code as uri,
+      targetProfile: element.type?.map((t) => t.targetProfile ?? []).flat(),
       cardinality,
     };
   }
 
   return {
     _type_: "complex",
+    base: sd.type,
     type: type?.code as uri,
     definition: {
       path: element.path,
@@ -153,6 +162,7 @@ function createSingularNode(
       ...getAllTypeChoice("pattern", element),
       ...getAllTypeChoice("minValue", element),
       ...getAllTypeChoice("maxValue", element),
+      ...getAllTypeChoice("fixed", element),
       maxLength: element.maxLength,
       binding: element.binding
         ? {
@@ -169,12 +179,13 @@ function createSingularNode(
   };
 }
 
-function createTypeChoiceNode(
-  indices: Record<ElementPath | ElementPathType, number>,
-  element: ElementDefinition,
+function createTypeChoiceNode<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+  element: Data<Version, "ElementDefinition">,
 ): TypeChoiceNode {
   return {
     _type_: "typechoice",
+    base: sd.type,
     cardinality: element.max === "1" ? "single" : "array",
     fields: (element.type ?? []).reduce((acc: Record<string, uri>, type) => {
       acc[getElementField(element, type.code)] = type.code;
@@ -183,7 +194,9 @@ function createTypeChoiceNode(
   };
 }
 
-function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
+function SDToMetaData<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+) {
   const indices = preGenerateIndices(sd);
   const metaInfo: Array<MetaNode> = [
     ...new Array(Math.max(...Object.values(indices))),
@@ -207,8 +220,8 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
 
       if (determineIsTypeChoice(element)) {
         metaInfo[indices[element.path as ElementPath]] = createTypeChoiceNode(
-          indices,
-          element,
+          sd,
+          element as Data<Version, "ElementDefinition">,
         );
 
         return [
@@ -233,9 +246,12 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
       } else {
         const index = indices[element.path as ElementPath];
         metaInfo[index] = createSingularNode(
+          sd,
           // if index is zero set cardinality to 1
           // as it is the root element.
-          index === 0 ? { ...element, max: "1" } : element,
+          index === 0
+            ? ({ ...element, max: "1" } as Data<Version, "ElementDefinition">)
+            : (element as Data<Version, "ElementDefinition">),
           index === 0
             ? ({ code: element.path } as ElementDefinitionType)
             : (element.type?.[0] as ElementDefinitionType),

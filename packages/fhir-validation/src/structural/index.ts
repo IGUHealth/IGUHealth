@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
+
 import {
   Loc,
   descend,
@@ -12,19 +12,20 @@ import {
   OperationOutcome,
   OperationOutcomeIssue,
   Reference,
-  StructureDefinition,
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   AllDataTypes,
   AllResourceTypes,
   FHIR_VERSION,
-  R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { ElementNode, getStartingMeta } from "@iguhealth/meta-value/meta";
+import {
+  ElementNode,
+  MetaNode,
+  getStartingMeta,
+} from "@iguhealth/meta-value/meta";
 import {
   isObject,
   isPrimitiveType,
@@ -42,28 +43,10 @@ import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import {
-  ascendElementLoc,
   getFoundFieldsForElement,
   isElementRequired,
   notNullable,
 } from "../utilities.js";
-
-function resolveContentReferenceIndex(
-  sd: StructureDefinition | r4b.StructureDefinition,
-  elementsLoc: Loc<StructureDefinition, ElementDefinition[]>,
-  element: ElementDefinition | r4b.ElementDefinition,
-): ElementLoc {
-  const elements = get(elementsLoc, sd as StructureDefinition);
-  const contentReference = element.contentReference?.split("#")[1];
-  const referenceElementIndex = elements.findIndex(
-    (element) => element.id === contentReference,
-  );
-  if (!referenceElementIndex)
-    throw new Error(
-      "unable to resolve contentreference: '" + element.contentReference + "'",
-    );
-  return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
-}
 
 function isReferenceConformantToStructureDefinition(
   ctx: ValidationCTX,
@@ -114,17 +97,13 @@ function isReferenceConformantToStructureDefinition(
  */
 async function validateReferenceTypeConstraint(
   ctx: ValidationCTX,
-  element: ElementDefinition,
+  referenceProfiles: canonical[],
   root: object,
   path: Loc<object, any, any>,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
   const value = get(path, root) as Reference | undefined;
   if (!value) return [];
-
-  const referenceProfiles = element.type?.find(
-    (t) => t.code === "Reference",
-  )?.targetProfile;
 
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
@@ -173,19 +152,15 @@ async function validateReferenceTypeConstraint(
  */
 async function validateElementNested(
   ctx: ValidationCTX,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementLoc: ElementLoc,
+  meta: ElementNode,
   root: object,
   path: Loc<object, any, any>,
   childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
-  const { field: elementIndex, parent: elementsLoc } =
-    ascendElementLoc(elementLoc);
   // Found concatenate on found fields so can check at end whether their are additional and throw error.
-  const foundFields: Set<string> =
-    structureDefinition.kind === "resource" && elementIndex === 0
-      ? new Set(["resourceType"])
-      : new Set([]);
+  const foundFields: Set<string> = isResourceType(ctx.fhirVersion, meta.type)
+    ? new Set(["resourceType"])
+    : new Set([]);
 
   const value = get(path, root);
 
@@ -206,8 +181,8 @@ async function validateElementNested(
           elementsLoc,
           childElementIndex,
         ) as unknown as ElementLoc;
-        const element = get(childElementLoc, structureDefinition);
-        if (!notNullable(element)) {
+        const childElement = get(childElementLoc, structureDefinition);
+        if (!notNullable(childElement)) {
           throw new OperationError(
             outcomeFatal(
               "structure",
@@ -220,16 +195,16 @@ async function validateElementNested(
         // Because Primitives can be extended under seperate key we must check multiple fields.
         const fields = getFoundFieldsForElement(
           ctx.fhirVersion,
-          element,
+          childElement,
           value,
         );
         fields.forEach((f) => foundFields.add(f.field));
 
-        if (isElementRequired(element) && fields.length === 0) {
+        if (isElementRequired(childElement) && fields.length === 0) {
           return [
             issueError(
               "structure",
-              `Missing required field '${element.path}' at path '${toJSONPointer(
+              `Missing required field '${childElement.path}' at path '${toJSONPointer(
                 path,
               )}'`,
               [toJSONPointer(path)],
@@ -242,8 +217,7 @@ async function validateElementNested(
             fields.map((fieldType) =>
               validateElement(
                 ctx,
-                structureDefinition,
-                childElementLoc,
+                meta,
                 root,
                 descend(path, fieldType.field),
                 fieldType.type,
@@ -283,37 +257,53 @@ async function validateElementNested(
  */
 export async function validateElementSingular(
   ctx: ValidationCTX,
-  meta: ElementNode,
+  meta: MetaNode,
   root: object,
   path: Loc<object, any, any>,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
-  if (element.contentReference) {
-    return validateElementSingular(
-      ctx,
-      structureDefinition,
-      resolveContentReferenceIndex(structureDefinition, elementsLoc, element),
-      root,
-      path,
-      type,
-    );
-  }
-
-  const childrenIndixes = eleIndexToChildIndexes(
-    get(elementsLoc, structureDefinition as StructureDefinition) ?? [],
-    elementIndex as number,
-  );
-
-  const patternIssues = await validatePattern(element, root, path);
+  const patternIssues = await validatePattern(meta.definition, root, path);
   if (patternIssues.length > 0) {
     return patternIssues;
   }
 
-  const fixedValueIssues = await validateFixedValue(element, root, path);
+  const fixedValueIssues = await validateFixedValue(
+    meta.definition,
+    root,
+    path,
+  );
+
   if (fixedValueIssues.length > 0) {
     return fixedValueIssues;
   }
 
+  switch (meta._type_) {
+    case "type": {
+      if (meta.type === "Reference" && meta.targetProfile) {
+        return validateReferenceTypeConstraint(
+          ctx,
+          meta.targetProfile,
+          root,
+          path,
+        );
+      }
+    }
+    case "fp-primitive": {
+    }
+    case "typechoice": {
+    }
+    case "complex": {
+    }
+  }
+
+  if (
+    isPrimitiveType(ctx.fhirVersion, meta.type) ||
+    meta.type === "http://hl7.org/fhirpath/System.String"
+  ) {
+    return validatePrimitive(ctx, meta.definition, root, path, meta.type);
+  }
+
+  return validateElementNested(ctx, meta, root, path);
   // Leaf validation
   if (childrenIndixes.length === 0) {
     if (
@@ -334,14 +324,7 @@ export async function validateElementSingular(
       return issues;
     }
   } else {
-    return validateElementNested(
-      ctx,
-      structureDefinition,
-      elementLoc,
-      root,
-      path,
-      childrenIndixes,
-    );
+    return validateElementNested(ctx, meta, root, path);
   }
 }
 

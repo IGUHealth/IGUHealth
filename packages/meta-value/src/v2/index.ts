@@ -25,7 +25,7 @@ import {
   isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
-import { ElementNode, getResolvedMeta, getStartingMeta } from "./meta.js";
+import { ElementNode, getMeta, getStartingMeta, resolveMeta } from "./meta.js";
 import { SpoofMetaValueV2 } from "./spoof.js";
 
 function conversion<T>(
@@ -178,10 +178,10 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     return this._location;
   }
   descend(_field: string): IMetaValue<unknown> | undefined {
-    const nextMeta = getResolvedMeta(
+    const nextMeta = resolveMeta(
       this._fhirVersion,
       this._base,
-      this._meta,
+      getMeta(this._fhirVersion, this._base, this._meta, _field),
       this._value,
       _field,
     );
