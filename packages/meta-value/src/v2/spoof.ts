@@ -35,7 +35,6 @@ function descendMeta(
     case nextMeta._type_ === "typechoice": {
       return { meta: nextMeta, field };
     }
-    case nextMeta._type_ === "fp-primitive":
     case nextMeta._type_ === "complex": {
       return { meta: nextMeta, field };
     }
