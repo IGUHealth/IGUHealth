@@ -42,12 +42,11 @@ export function getStartingMeta(
 
 export function getMeta(
   fhirVersion: FHIR_VERSION,
-  base: string,
   meta: ElementNode,
   field: string,
 ): MetaNode {
   const globalMeta = getGlobalMeta(fhirVersion);
-  return globalMeta[base][meta.properties?.[field] ?? -1];
+  return globalMeta[meta.base][meta.properties?.[field] ?? -1];
 }
 
 export function resolveTypeNode(
@@ -82,11 +81,10 @@ function resolveResourceType(
 
 export function resolveMeta<T>(
   fhirVersion: FHIR_VERSION,
-  base: string,
   meta: MetaNode,
   value: T | FHIRPrimitive<RawPrimitive>,
   field: string,
-): { base: string; meta: ElementNode; field: string } | undefined {
+): { meta: ElementNode; field: string } | undefined {
   switch (true) {
     case meta === undefined: {
       return undefined;
@@ -114,7 +112,7 @@ export function resolveMeta<T>(
       return undefined;
     }
     case meta._type_ === "complex": {
-      return { base, meta: meta, field };
+      return { meta, field };
     }
     default: {
       // @ts-ignore
