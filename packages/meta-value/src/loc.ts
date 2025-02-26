@@ -32,7 +32,8 @@ function descendPrimitiveLoc(loc: Location, field: string): Location {
 export function descendLoc<T>(v: IMetaValue<T>, field: string): Location {
   const loc = v.location() || [];
   // Need special handling for .value and extensions which are under _fieldName for primitives.
-  if (isPrimitiveType(v.meta()?.type ?? "")) {
+  const meta = v.meta();
+  if (meta && isPrimitiveType(meta.fhirVersion, meta.type)) {
     return descendPrimitiveLoc(loc, field);
   }
   return [...loc, field];

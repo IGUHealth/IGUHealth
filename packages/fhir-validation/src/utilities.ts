@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Loc, ascend } from "@iguhealth/fhir-pointer";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   ElementDefinition,
   StructureDefinition,
@@ -33,10 +32,6 @@ export function notNullable<T, Z extends T | undefined>(
  */
 export function isTypeChoice(element: ElementDefinition) {
   return element.id?.endsWith("[x]");
-}
-
-export function isResourceType(type: string) {
-  return resourceTypes.has(type);
 }
 
 export function fieldName(elementDefinition: ElementDefinition, type?: string) {
@@ -134,6 +129,7 @@ export function isElementRequired(element: ElementDefinition) {
  * @returns
  */
 export function getFoundFieldsForElement(
+  version: FHIR_VERSION,
   element: ElementDefinition,
   value: unknown,
 ): PropertyAndType[] {
@@ -144,7 +140,7 @@ export function getFoundFieldsForElement(
   if (base) {
     properties.push(base);
     const { field, type } = base;
-    if (isPrimitiveType(type)) {
+    if (isPrimitiveType(version, type)) {
       const primitiveElementField = {
         field: `_${field}`,
         type: "Element" as uri,
@@ -154,7 +150,7 @@ export function getFoundFieldsForElement(
   } else {
     // Check for primitive extensions when non existent values
     const primitives =
-      element.type?.filter((type) => isPrimitiveType(type.code)) ?? [];
+      element.type?.filter((type) => isPrimitiveType(version, type.code)) ?? [];
     for (const primType of primitives) {
       if (`_${fieldName(element, primType.code)}` in value) {
         const primitiveElementField = {

@@ -4,6 +4,7 @@ import {
   ElementDefinition,
   OperationOutcomeIssue,
 } from "@iguhealth/fhir-types/r4/types";
+import { Data, FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { issueError } from "@iguhealth/operation-outcomes";
 
 import { ElementLoc } from "../../types.js";
@@ -35,7 +36,7 @@ function getMax(elementDefinition: ElementDefinition) {
 }
 
 export function validateCardinality(
-  element: ElementDefinition,
+  element: Data<FHIR_VERSION, "ElementDefinition">,
   // Need this to check indice as specified below element zero indices are specified as array when we want to validate them as singular.
   elementLoc: ElementLoc,
   root: object,

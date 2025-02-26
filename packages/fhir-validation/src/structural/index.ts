@@ -24,7 +24,12 @@ import {
   R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
+import { ElementNode, getStartingMeta } from "@iguhealth/meta-value/meta";
+import {
+  isObject,
+  isPrimitiveType,
+  isResourceType,
+} from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
@@ -40,9 +45,7 @@ import {
   ascendElementLoc,
   getFoundFieldsForElement,
   isElementRequired,
-  isResourceType,
   notNullable,
-  resolveTypeToStructureDefinition,
 } from "../utilities.js";
 
 function resolveContentReferenceIndex(
@@ -63,6 +66,7 @@ function resolveContentReferenceIndex(
 }
 
 function isReferenceConformantToStructureDefinition(
+  ctx: ValidationCTX,
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
   value: Reference,
 ): boolean {
@@ -75,7 +79,7 @@ function isReferenceConformantToStructureDefinition(
 
       switch (true) {
         // Could be ref in bundle so skip for now.
-        case !isResourceType(resourceType): {
+        case !isResourceType(ctx.fhirVersion, resourceType as uri): {
           return true;
         }
         case resourceType === sd?.type: {
@@ -121,6 +125,7 @@ async function validateReferenceTypeConstraint(
   const referenceProfiles = element.type?.find(
     (t) => t.code === "Reference",
   )?.targetProfile;
+
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
   for (const profileURI of referenceProfiles ?? []) {
@@ -137,7 +142,7 @@ async function validateReferenceTypeConstraint(
         ),
       );
     }
-    if (isReferenceConformantToStructureDefinition(sd, value)) {
+    if (isReferenceConformantToStructureDefinition(ctx, sd, value)) {
       return [];
     }
   }
@@ -213,7 +218,11 @@ async function validateElementNested(
         }
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
-        const fields = getFoundFieldsForElement(element, value);
+        const fields = getFoundFieldsForElement(
+          ctx.fhirVersion,
+          element,
+          value,
+        );
         fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
@@ -320,7 +329,7 @@ export async function validateElementSingular(
   // Leaf validation
   if (childrenIndixes.length === 0) {
     if (
-      isPrimitiveType(type) ||
+      isPrimitiveType(ctx.fhirVersion, type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
       // Element Check.
@@ -350,26 +359,14 @@ export async function validateElementSingular(
 
 export async function validateElement(
   ctx: ValidationCTX,
-  structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
-  elementLoc: ElementLoc,
+  meta: ElementNode,
   root: object,
   path: Loc<any, any, any>,
   type: uri,
 ): Promise<OperationOutcomeIssue[]> {
-  const element = get(elementLoc, structureDefinition);
-  if (!notNullable(element)) {
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Element not found at '${elementLoc}' for StructureDefinition ${structureDefinition.id}`,
-        [toJSONPointer(path)],
-      ),
-    );
-  }
-
   const value = get(path, root);
 
-  const issues = validateCardinality(element, elementLoc, root, path);
+  const issues = validateCardinality(meta.definition, root, path);
   if (issues.length > 0) return issues;
 
   switch (true) {
@@ -406,35 +403,36 @@ export async function validateElement(
   }
 }
 
-export function validateSD(
+export function _validate(
   ctx: ValidationCTX,
-  sd: Resource<FHIR_VERSION, "StructureDefinition">,
+  meta: ElementNode,
   root: unknown,
   path_?: Loc<any, any, any>,
 ) {
   const path =
-    path_ ?? pointer(ctx.fhirVersion, sd.type as AllResourceTypes, "id" as id);
+    path_ ??
+    pointer(ctx.fhirVersion, meta.type as AllResourceTypes, "id" as id);
 
   if (!isObject(root))
     return [
       issueError(
         "structure",
-        `Value must be an object when validating '${sd.type}'. Instead found type of '${typeof root}'`,
+        `Value must be an object when validating '${meta.type}'. Instead found type of '${typeof root}'`,
         [toJSONPointer(path)],
       ),
     ];
 
   const resource = root as unknown as Resource<FHIR_VERSION, AllResourceTypes>;
 
-  if (sd.kind === "resource") {
+  if (isResourceType(ctx.fhirVersion, meta.type)) {
     // Verify the resourceType aligns.
-    if (get(descend(path, "resourceType"), resource) !== sd.type) {
+    if (get(descend(path, "resourceType"), resource) !== meta.type) {
       return [
         issueError(
           "invalid",
           `ResourceType '${
             resource.resourceType
-          }' does not match expected type '${sd.type}'`,
+          }' does not match expected type '${meta.type}'`,
           [toJSONPointer(path)],
         ),
       ];
@@ -449,14 +447,7 @@ export function validateSD(
     0,
   );
 
-  return validateElement(
-    ctx,
-    sd,
-    startingLoc as unknown as ElementLoc,
-    resource,
-    path,
-    sd.type,
-  );
+  return validateElement(ctx, meta, resource, path, meta.type);
 }
 
 export default async function validate(
@@ -468,9 +459,18 @@ export default async function validate(
   const path =
     path_ ?? pointer(ctx.fhirVersion, type as AllDataTypes, "id" as id);
 
-  if (isPrimitiveType(type))
+  if (isPrimitiveType(ctx.fhirVersion, type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
-  const sd = await resolveTypeToStructureDefinition(ctx, type);
-  return validateSD(ctx, sd, root, path);
+  const meta = getStartingMeta(ctx.fhirVersion, type);
+  if (!meta) {
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        `Structural validation found an invalid type: '${type}'.`,
+      ),
+    );
+  }
+
+  return _validate(ctx, meta, root, path);
 }

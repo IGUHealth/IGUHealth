@@ -54,6 +54,7 @@ function ignoreSliceElements(
  * @returns true|false as to whether the element is constrained to the type.
  */
 function validateTypeIfMultipleTypesConstrained(
+  version: FHIR_VERSION,
   element: ElementDefinition,
   type: uri,
 ): boolean {
@@ -62,7 +63,7 @@ function validateTypeIfMultipleTypesConstrained(
       return true;
     } else if (
       type === "Element" &&
-      element.type.find((t) => isPrimitiveType(t.code))
+      element.type.find((t) => isPrimitiveType(version, t.code))
     ) {
       return true;
     }
@@ -112,7 +113,11 @@ export async function validateSingularProfileElement(
   ).flat();
   sliceIndices.forEach((sliceIndex) => {
     const discriminatorElement = elements[sliceIndex.discriminator];
-    const fields = getFoundFieldsForElement(discriminatorElement, value);
+    const fields = getFoundFieldsForElement(
+      ctx.fhirVersion,
+      discriminatorElement,
+      value,
+    );
     fields.forEach((f) => foundFields.add(f.field));
   });
 
@@ -144,7 +149,7 @@ export async function validateSingularProfileElement(
   }
 
   // Profile can further constrain typechoices check that here.
-  if (!validateTypeIfMultipleTypesConstrained(element, type)) {
+  if (!validateTypeIfMultipleTypesConstrained(ctx.fhirVersion, element, type)) {
     throw new OperationError(
       outcomeFatal(
         "invalid",
@@ -170,7 +175,11 @@ export async function validateSingularProfileElement(
     for (const childIndex of children) {
       const childElement = elements[childIndex];
       const childElementLoc = descend(elementsLoc, childIndex);
-      const fields = getFoundFieldsForElement(childElement, value);
+      const fields = getFoundFieldsForElement(
+        ctx.fhirVersion,
+        childElement,
+        value,
+      );
       fields.forEach((f) => foundFields.add(f.field));
 
       // Confirm if no fields are found and the element is required then issue an error.

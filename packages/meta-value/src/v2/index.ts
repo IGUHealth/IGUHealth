@@ -188,7 +188,10 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     if (!nextMeta?.meta) return undefined;
 
     switch (true) {
-      case isPrimitiveType((nextMeta.meta as ElementNode).type): {
+      case isPrimitiveType(
+        this._fhirVersion,
+        (nextMeta.meta as ElementNode).type,
+      ): {
         const value = (this._value as any)?.[nextMeta.field];
         const element = (this._value as any)?.[`_${nextMeta.field}`];
 

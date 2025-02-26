@@ -1,5 +1,7 @@
-import { primitiveTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
-import { Element } from "@iguhealth/fhir-types/r4/types";
+import * as r4sets from "@iguhealth/fhir-types/r4/sets";
+import { Element, uri } from "@iguhealth/fhir-types/r4/types";
+import * as r4bsets from "@iguhealth/fhir-types/r4b/sets";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import { IMetaValue, IMetaValueArray } from "./interface.js";
 
@@ -8,8 +10,33 @@ export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   _type_: "primitive";
   value: T;
 };
-export function isPrimitiveType(type: string) {
-  return primitiveTypes.has(type);
+
+export function isResourceType(version: FHIR_VERSION, type: uri) {
+  switch (version) {
+    case R4: {
+      return r4sets.resourceTypes.has(type);
+    }
+    case R4B: {
+      return r4bsets.resourceTypes.has(type);
+    }
+    default: {
+      throw new Error(`Unsupported FHIR version: ${version}`);
+    }
+  }
+}
+
+export function isPrimitiveType(version: FHIR_VERSION, type: string) {
+  switch (version) {
+    case R4: {
+      return r4sets.primitiveTypes.has(type);
+    }
+    case R4B: {
+      return r4bsets.primitiveTypes.has(type);
+    }
+    default: {
+      throw new Error(`Unsupported FHIR version: ${version}`);
+    }
+  }
 }
 
 export function isFPPrimitive(
