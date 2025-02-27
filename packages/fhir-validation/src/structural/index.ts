@@ -213,7 +213,7 @@ async function validateElementNested(
         }
 
         // Because Primitives can be extended under seperate key we must check multiple fields.
-        const fields = getFoundFieldsForElement(element, value);
+        const fields = getFoundFieldsForElement(ctx, element, value);
         fields.forEach((f) => foundFields.add(f.field));
 
         if (isElementRequired(element) && fields.length === 0) {
@@ -320,7 +320,7 @@ export async function validateElementSingular(
   // Leaf validation
   if (childrenIndixes.length === 0) {
     if (
-      isPrimitiveType(type) ||
+      isPrimitiveType(ctx.fhirVersion, type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
       // Element Check.
@@ -468,7 +468,7 @@ export default async function validate(
   const path =
     path_ ?? pointer(ctx.fhirVersion, type as AllDataTypes, "id" as id);
 
-  if (isPrimitiveType(type))
+  if (isPrimitiveType(ctx.fhirVersion, type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
   const sd = await resolveTypeToStructureDefinition(ctx, type);

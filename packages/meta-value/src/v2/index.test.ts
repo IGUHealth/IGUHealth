@@ -20,6 +20,7 @@ test("Simple Type test1", async () => {
   } as Patient;
 
   let root = await metaValue({ fhirVersion: R4 }, patient, []);
+  expect(root?.meta()?.type).toEqual("Patient");
   let value = root?.descend("name");
   expect(value?.meta()?.type).toEqual("HumanName");
   value = value?.descend(0)?.descend("given");

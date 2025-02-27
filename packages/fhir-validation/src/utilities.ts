@@ -134,6 +134,7 @@ export function isElementRequired(element: ElementDefinition) {
  * @returns
  */
 export function getFoundFieldsForElement(
+  ctx: ValidationCTX,
   element: ElementDefinition,
   value: unknown,
 ): PropertyAndType[] {
@@ -144,7 +145,7 @@ export function getFoundFieldsForElement(
   if (base) {
     properties.push(base);
     const { field, type } = base;
-    if (isPrimitiveType(type)) {
+    if (isPrimitiveType(ctx.fhirVersion, type)) {
       const primitiveElementField = {
         field: `_${field}`,
         type: "Element" as uri,
@@ -154,7 +155,9 @@ export function getFoundFieldsForElement(
   } else {
     // Check for primitive extensions when non existent values
     const primitives =
-      element.type?.filter((type) => isPrimitiveType(type.code)) ?? [];
+      element.type?.filter((type) =>
+        isPrimitiveType(ctx.fhirVersion, type.code),
+      ) ?? [];
     for (const primType of primitives) {
       if (`_${fieldName(element, primType.code)}` in value) {
         const primitiveElementField = {

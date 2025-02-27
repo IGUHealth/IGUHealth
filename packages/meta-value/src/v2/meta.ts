@@ -42,12 +42,20 @@ export function getStartingMeta(
 
 export function getMeta(
   fhirVersion: FHIR_VERSION,
-  base: string,
   meta: ElementNode,
   field: string,
-): MetaNode {
+): ElementNode | TypeNode | TypeChoiceNode | undefined {
   const globalMeta = getGlobalMeta(fhirVersion);
-  return globalMeta[base][meta.properties?.[field] ?? -1];
+  const fieldIndex = meta.properties?.[field];
+
+  if (!fieldIndex) {
+    return undefined;
+  }
+
+  return globalMeta[meta.base][fieldIndex] as
+    | ElementNode
+    | TypeNode
+    | TypeChoiceNode;
 }
 
 export function resolveTypeNode(
@@ -80,47 +88,46 @@ function resolveResourceType(
   return resolveTypeNode(fhirVersion, meta, type, field);
 }
 
-export function getResolvedMeta<T>(
+export function resolveMeta<T>(
   fhirVersion: FHIR_VERSION,
-  base: string,
-  meta: ElementNode,
+  meta: MetaNode,
   value: T | FHIRPrimitive<RawPrimitive>,
   field: string,
-): { base: string; meta: ElementNode; field: string } | undefined {
-  const nextMeta = getMeta(fhirVersion, base, meta, field);
-
+): { meta: ElementNode; field: string } | undefined {
   switch (true) {
-    case nextMeta === undefined: {
+    case meta === undefined: {
       return undefined;
     }
-    case nextMeta._type_ === "type": {
+    case meta._type_ === "type": {
       // Special handling for Bundle.entry.resource which is abstract Resource;
       // Descend into the resourceType field to get the actual type.
-      if (nextMeta.type === "Resource" || nextMeta.type === "DomainResource") {
-        return resolveResourceType(fhirVersion, nextMeta, value, field);
+      if (meta.type === "Resource" || meta.type === "DomainResource") {
+        return resolveResourceType(fhirVersion, meta, value, field);
       } else {
-        return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
+        return resolveTypeNode(fhirVersion, meta, meta.type, field);
       }
     }
-    case nextMeta._type_ === "typechoice": {
-      for (const typeChoiceField of Object.keys(nextMeta.fields)) {
+    case meta._type_ === "typechoice": {
+      for (const typeChoiceField of Object.keys(meta.fieldsToType)) {
         if ((value as any)?.[typeChoiceField] !== undefined) {
           return resolveTypeNode(
             fhirVersion,
-            nextMeta,
-            nextMeta.fields[typeChoiceField],
+            meta,
+            meta.fieldsToType[typeChoiceField],
             typeChoiceField,
           );
         }
       }
       return undefined;
     }
-    case nextMeta._type_ === "complex": {
-      return { base, meta: nextMeta, field };
+    case meta._type_ === "complex-type":
+    case meta._type_ === "resource":
+    case meta._type_ === "primitive-type": {
+      return { meta, field };
     }
     default: {
       // @ts-ignore
-      throw new Error(`Unknown meta type: ${nextMeta._type_}`);
+      throw new Error(`Unknown meta type: ${meta._type_}`);
     }
   }
 }

@@ -20,25 +20,23 @@ import {
 
 function descendMeta(
   fhirVersion: FHIR_VERSION,
-  base: uri,
   meta: ElementNode,
   field: string,
 ) {
-  const nextMeta = getMeta(fhirVersion, base, meta, field);
+  const nextMeta = getMeta(fhirVersion, meta, field);
+  if (nextMeta === undefined) return undefined;
 
   switch (true) {
-    case nextMeta === undefined: {
-      return undefined;
-    }
     case nextMeta._type_ === "type": {
       return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
     }
     case nextMeta._type_ === "typechoice": {
-      return { base, meta: nextMeta, field };
+      return { meta: nextMeta, field };
     }
-    case nextMeta._type_ === "fp-primitive":
-    case nextMeta._type_ === "complex": {
-      return { base, meta: nextMeta, field };
+    case nextMeta._type_ === "resource":
+    case nextMeta._type_ === "primitive-type":
+    case nextMeta._type_ === "complex-type": {
+      return { meta: nextMeta, field };
     }
     default: {
       // @ts-ignore
@@ -60,20 +58,16 @@ export function isResourceType(version: FHIR_VERSION, type: string) {
 
 export class SpoofMetaValueV2<T> implements IMetaValue<T> {
   private readonly _fhirVersion: FHIR_VERSION;
-  private readonly _base: uri;
   private readonly _meta: ElementNode | TypeChoiceNode | FPPrimitiveNode;
   private readonly _nestedCardinality: "single" | "array";
 
   constructor(
     fhirVersion: FHIR_VERSION,
-    base: uri,
     fullCardinality: "single" | "array",
     meta: ElementNode | TypeChoiceNode | FPPrimitiveNode,
   ) {
     this._fhirVersion = fhirVersion;
-    this._base = base;
     this._meta = meta;
-    this._base = base;
     this._nestedCardinality = fullCardinality;
   }
 
@@ -90,7 +84,7 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
 
   types(): TypeInfo[] | undefined {
     if (this._meta._type_ === "typechoice") {
-      return Object.values(this._meta.fields).map((type) => {
+      return Object.values(this._meta.fieldsToType).map((type) => {
         return {
           type: type as uri,
           fhirVersion: this._fhirVersion,
@@ -103,17 +97,14 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
   }
 
   meta(): TypeInfo | undefined {
-    if (
-      this._meta._type_ === "complex" ||
-      this._meta._type_ === "fp-primitive"
-    ) {
-      return {
-        type: this._meta.type,
-        fhirVersion: this._fhirVersion,
-        cardinality: this._meta.cardinality,
-      };
+    if (this._meta._type_ === "typechoice") {
+      return undefined;
     }
-    return undefined;
+    return {
+      type: this._meta.type,
+      fhirVersion: this._fhirVersion,
+      cardinality: this._meta.cardinality,
+    };
   }
   getValue(): T {
     return {} as T;
@@ -134,7 +125,6 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
 
       return new SpoofMetaValueV2(
         this._fhirVersion,
-        this._base,
         this._nestedCardinality,
         nextMeta,
       );
@@ -143,22 +133,28 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
 
   isType(type: string): boolean {
     switch (this._meta._type_) {
-      case "complex": {
+      case "resource": {
         // Special Handle for Resource +  Domain Resource Type.
         if (
-          isResourceType(this._fhirVersion, type) &&
-          (this._meta.type === "Resource" ||
-            this._meta.type === "DomainResource")
+          this._meta.type === "Resource" ||
+          this._meta.type === "DomainResource"
         ) {
           return true;
         }
         return this._meta.type === type;
       }
+
       case "typechoice": {
-        return Object.values(this._meta.fields).includes(type as uri);
+        return Object.values(this._meta.fieldsToType).includes(type as uri);
       }
-      case "fp-primitive": {
+      case "fp-primitive":
+      case "primitive-type":
+      case "complex-type": {
         return this._meta.type === type;
+      }
+      default: {
+        // @ts-ignore
+        throw new Error(`Unknown meta type: ${this._meta._type_}`);
       }
     }
   }
@@ -174,29 +170,18 @@ export class SpoofMetaValueV2<T> implements IMetaValue<T> {
 
     if (typeof field === "number") {
       if (this._meta.cardinality !== "array") return undefined;
-      return new SpoofMetaValueV2(
-        this._fhirVersion,
-        this._base,
-        this._nestedCardinality,
-        {
-          ...this._meta,
-          cardinality: "single",
-        },
-      );
+      return new SpoofMetaValueV2(this._fhirVersion, this._nestedCardinality, {
+        ...this._meta,
+        cardinality: "single",
+      });
     }
 
-    const nextMeta = descendMeta(
-      this._fhirVersion,
-      this._base,
-      this._meta,
-      field,
-    );
+    const nextMeta = descendMeta(this._fhirVersion, this._meta, field);
 
     if (!nextMeta?.meta) return undefined;
 
     return new SpoofMetaValueV2(
       this._fhirVersion,
-      nextMeta.base,
       // If descending a field from an array that means full cardinality must be array.
       nextMeta.meta.cardinality === "array" ? "array" : this._nestedCardinality,
       nextMeta.meta,
@@ -217,5 +202,5 @@ export default function spoof(
     throw new Error(`No meta found for ${type}`);
   }
 
-  return new SpoofMetaValueV2(fhirVersion, type, "single", meta);
+  return new SpoofMetaValueV2(fhirVersion, "single", meta);
 }
