@@ -10389,7 +10389,7 @@ exports[`Parameters 1`] = `
         },
         {
           "cardinality": "single",
-          "type": "code",
+          "type": "string",
         },
       ],
     },

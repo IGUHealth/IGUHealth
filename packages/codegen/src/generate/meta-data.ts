@@ -8,12 +8,25 @@ import { Data, FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { traversalBottomUp } from "../sdTraversal.js";
 import { filterSDForTypes } from "../utilities.js";
 
+interface Node {
+  _type_:
+    | "fp-primitive"
+    | "primitive-type"
+    | "complex-type"
+    | "resource"
+    | "type"
+    | "typechoice";
+  cardinality: "array" | "single";
+  base: uri;
+}
+
 function createFPPrimitiveNode(type: uri): MetaNode[] {
   return [
     {
       _type_: "fp-primitive",
       type,
       cardinality: "single",
+      base: type,
     },
   ];
 }
@@ -40,30 +53,30 @@ function addFPPrimitiveNodes(metadata: MetaV2Compiled) {
   }, metadata);
 }
 
-export interface TypeChoiceNode {
+export interface TypeChoiceNode extends Node {
   _type_: "typechoice";
-  cardinality: "array" | "single";
-  fields: Record<string, uri>;
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
+  fieldsToType: Record<string, uri>;
 }
 
-export interface FPPrimitiveNode {
-  _type_: "fp-primitive";
-  type: uri;
-  cardinality: "single";
-}
-
-export interface ElementNode {
-  _type_: "complex";
+export interface ElementNode extends Node {
+  _type_: "primitive-type" | "complex-type" | "resource";
   type: uri;
   definition: Data<FHIR_VERSION, "ElementDefinition">;
-  cardinality: "array" | "single";
-  properties?: Record<string, number>;
+  properties: Record<string, number>;
 }
-export interface TypeNode {
+
+export interface FPPrimitiveNode extends Node {
+  _type_: "fp-primitive";
+  type: uri;
+}
+
+export interface TypeNode extends Node {
   _type_: "type";
   type: uri;
-  cardinality: "array" | "single";
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
 }
+
 export type MetaNode =
   | ElementNode
   | TypeNode
@@ -129,38 +142,78 @@ function getAllTypeChoice(
     }, {});
 }
 
-function createSingularNode(
-  element: ElementDefinition,
-  type: ElementDefinitionType | undefined,
+function simpleElementDefinition(
+  element: Data<FHIR_VERSION, "ElementDefinition">,
+): Data<FHIR_VERSION, "ElementDefinition"> {
+  return {
+    path: element.path,
+    min: element.min,
+    max: element.max,
+    ...getAllTypeChoice("pattern", element),
+    ...getAllTypeChoice("minValue", element),
+    ...getAllTypeChoice("maxValue", element),
+    ...getAllTypeChoice("fixed", element),
+    maxLength: element.maxLength,
+    type: element.type,
+    binding: element.binding
+      ? {
+          strength: element.binding.strength,
+          valueSet: element.binding.valueSet,
+        }
+      : undefined,
+  };
+}
+
+function createSingularNode<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+  index: number,
+  element: Data<Version, "ElementDefinition">,
   children: { index: number; field: string }[],
 ): MetaNode {
+  if (index === 0) {
+    if (!["primitive-type", "complex-type", "resource"].includes(sd.kind)) {
+      throw new Error(
+        "sd must be of type 'primitive-type', 'complex-type' or 'resource'",
+      );
+    }
+
+    return {
+      _type_: sd.kind as "primitive-type" | "complex-type" | "resource",
+      base: sd.type,
+      type: sd.type,
+      // Set as singular to ensure that the first element is always singular.
+      definition: { ...simpleElementDefinition(element), max: "1" },
+      cardinality: "single",
+      properties: children.reduce((acc: Record<string, number>, k) => {
+        acc[k.field] = k.index;
+        return acc;
+      }, {}),
+    };
+  }
+
+  const type: ElementDefinitionType | undefined = element.type?.[0];
+  if ((element.type ?? []).length > 1) {
+    throw new Error(
+      "Multiple types are not supported for creating singular node.",
+    );
+  }
   const cardinality = element.max === "1" ? "single" : "array";
+
   if (children.length === 0) {
     return {
       _type_: "type",
+      base: sd.type,
       type: type?.code as uri,
+      definition: simpleElementDefinition(element),
       cardinality,
     };
   }
 
   return {
-    _type_: "complex",
+    _type_: "complex-type",
+    base: sd.type,
     type: type?.code as uri,
-    definition: {
-      path: element.path,
-      min: element.min,
-      max: element.max,
-      ...getAllTypeChoice("pattern", element),
-      ...getAllTypeChoice("minValue", element),
-      ...getAllTypeChoice("maxValue", element),
-      maxLength: element.maxLength,
-      binding: element.binding
-        ? {
-            strength: element.binding.strength,
-            valueSet: element.binding.valueSet,
-          }
-        : undefined,
-    },
+    definition: simpleElementDefinition(element),
     properties: children.reduce((acc: Record<string, number>, k) => {
       acc[k.field] = k.index;
       return acc;
@@ -169,21 +222,29 @@ function createSingularNode(
   };
 }
 
-function createTypeChoiceNode(
-  indices: Record<ElementPath | ElementPathType, number>,
-  element: ElementDefinition,
+function createTypeChoiceNode<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+  element: Data<Version, "ElementDefinition">,
 ): TypeChoiceNode {
   return {
     _type_: "typechoice",
+    base: sd.type,
+    definition: simpleElementDefinition(element),
     cardinality: element.max === "1" ? "single" : "array",
-    fields: (element.type ?? []).reduce((acc: Record<string, uri>, type) => {
-      acc[getElementField(element, type.code)] = type.code;
-      return acc;
-    }, {}),
+    fieldsToType: (element.type ?? []).reduce(
+      (acc: Record<string, uri>, type) => {
+        acc[getElementField(element, type.code)] = type.code;
+        return acc;
+      },
+      {},
+    ),
   };
 }
 
-function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
+function SDToMetaData<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+) {
+  // Used to handle content references so know ahead of time where to point.
   const indices = preGenerateIndices(sd);
   const metaInfo: Array<MetaNode> = [
     ...new Array(Math.max(...Object.values(indices))),
@@ -207,8 +268,8 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
 
       if (determineIsTypeChoice(element)) {
         metaInfo[indices[element.path as ElementPath]] = createTypeChoiceNode(
-          indices,
-          element,
+          sd,
+          element as Data<Version, "ElementDefinition">,
         );
 
         return [
@@ -233,12 +294,9 @@ function SDToMetaData(sd: Resource<FHIR_VERSION, "StructureDefinition">) {
       } else {
         const index = indices[element.path as ElementPath];
         metaInfo[index] = createSingularNode(
-          // if index is zero set cardinality to 1
-          // as it is the root element.
-          index === 0 ? { ...element, max: "1" } : element,
-          index === 0
-            ? ({ code: element.path } as ElementDefinitionType)
-            : (element.type?.[0] as ElementDefinitionType),
+          sd,
+          index,
+          element as Data<Version, "ElementDefinition">,
           children,
         );
 

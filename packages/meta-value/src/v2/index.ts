@@ -25,12 +25,11 @@ import {
   isPrimitiveType,
   toFPPrimitive,
 } from "../utilities.js";
-import { ElementNode, getResolvedMeta, getStartingMeta } from "./meta.js";
+import { ElementNode, getMeta, getStartingMeta, resolveMeta } from "./meta.js";
 import { SpoofMetaValueV2 } from "./spoof.js";
 
 function conversion<T>(
   fhirVersion: FHIR_VERSION,
-  base: string,
   meta: ElementNode,
   value: Array<unknown>,
   location: Location,
@@ -39,7 +38,6 @@ function conversion<T>(
     if (v instanceof MetaValueV2Singular) return v;
     return new MetaValueV2Singular(
       fhirVersion,
-      base,
       { ...meta, cardinality: "single" },
       v,
       [...location, i],
@@ -112,22 +110,19 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
   private _value: T | FHIRPrimitive<RawPrimitive>;
   private _meta: ElementNode;
   private _fhirVersion: FHIR_VERSION;
-  private _base: string;
 
   private _location: Location;
 
   constructor(
     fhirVersion: FHIR_VERSION,
-    base: string,
+
     meta: ElementNode,
     value: T,
     location: Location,
   ) {
     this._fhirVersion = fhirVersion;
-    this._base = base;
     this._meta = meta;
     this._value = value;
-    this._base = base;
     this._location = location;
   }
   get _internal_meta_() {
@@ -178,17 +173,21 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
     return this._location;
   }
   descend(_field: string): IMetaValue<unknown> | undefined {
-    const nextMeta = getResolvedMeta(
+    const unresolvedMeta = getMeta(this._fhirVersion, this._meta, _field);
+    if (!unresolvedMeta) return undefined;
+    const nextMeta = resolveMeta(
       this._fhirVersion,
-      this._base,
-      this._meta,
+      unresolvedMeta,
       this._value,
       _field,
     );
     if (!nextMeta?.meta) return undefined;
 
     switch (true) {
-      case isPrimitiveType((nextMeta.meta as ElementNode).type): {
+      case isPrimitiveType(
+        this._fhirVersion,
+        (nextMeta.meta as ElementNode).type,
+      ): {
         const value = (this._value as any)?.[nextMeta.field];
         const element = (this._value as any)?.[`_${nextMeta.field}`];
 
@@ -200,7 +199,6 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             return new MetaValueV2Array(
               conversion(
                 this._fhirVersion,
-                nextMeta.base,
                 nextMeta.meta as ElementNode,
                 [
                   ...new Array(
@@ -215,7 +213,6 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
           default: {
             return new MetaValueV2Singular(
               this._fhirVersion,
-              nextMeta.base,
               nextMeta.meta as ElementNode,
               toFPPrimitive(value, element),
               descendLoc(this, nextMeta.field),
@@ -233,7 +230,6 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
             return new MetaValueV2Array(
               conversion(
                 this._fhirVersion,
-                nextMeta.base,
                 nextMeta.meta as ElementNode,
                 (this._value as any)?.[nextMeta.field] ?? [],
                 descendLoc(this, nextMeta.field),
@@ -244,7 +240,6 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
           default: {
             return new MetaValueV2Singular(
               this._fhirVersion,
-              nextMeta.base,
               nextMeta.meta as ElementNode,
               (this._value as any)?.[nextMeta.field],
               descendLoc(this, nextMeta.field),
@@ -325,7 +320,6 @@ class NonMetaValue<T> implements IMetaValue<T> {
           return new MetaValueV2Array(
             conversion(
               R4,
-              "Element",
               getStartingMeta(R4, "Element" as uri) as ElementNode,
               fpPrimitive,
               descendLoc(this, field.toString()),
@@ -335,7 +329,6 @@ class NonMetaValue<T> implements IMetaValue<T> {
         } else {
           return new MetaValueV2Singular(
             R4,
-            "Element",
             {
               ...(getStartingMeta(R4, "Element" as uri) as ElementNode),
               cardinality: "single",
@@ -358,17 +351,11 @@ class NonMetaValue<T> implements IMetaValue<T> {
           const meta = getStartingMeta(R4, type);
           if (isArray(value)) {
             return new MetaValueV2Array(
-              conversion(R4, type, meta as ElementNode, value, loc),
+              conversion(R4, meta as ElementNode, value, loc),
               loc,
             );
           } else {
-            return new MetaValueV2Singular(
-              R4,
-              type,
-              meta as ElementNode,
-              value,
-              loc,
-            );
+            return new MetaValueV2Singular(R4, meta as ElementNode, value, loc);
           }
         } else {
           return new NonMetaValue(this._fhirVersion, value, loc);
@@ -430,7 +417,6 @@ export function metaValue<T>(
         }
         return new MetaValueV2Singular(
           fhirVersion,
-          type, // Start as base because resource root is not specified in elements
           meta,
           value as NonNullable<T>,
           location,
