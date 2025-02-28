@@ -17,12 +17,37 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ElementLoc, ValidationCTX } from "../types.js";
 import { validateProfileElement } from "./element.js";
 
+function setRootAsSingular<Version extends FHIR_VERSION>(
+  profile: Resource<Version, "StructureDefinition">,
+): Resource<Version, "StructureDefinition"> {
+  return {
+    ...profile,
+    snapshot: {
+      ...profile?.snapshot,
+      element: [
+        ...(profile.snapshot?.element?.[0]
+          ? [
+              {
+                ...profile.snapshot?.element?.[0],
+                max: "1",
+              },
+            ]
+          : []),
+        ...(profile?.snapshot?.element.slice(1) ?? []),
+      ],
+    },
+  };
+}
+
 export async function validateProfile(
   ctx: ValidationCTX,
-  profile: Resource<FHIR_VERSION, "StructureDefinition">,
+  _profile: Resource<FHIR_VERSION, "StructureDefinition">,
   root: object,
   path_?: Loc<any, any, any>,
 ): Promise<OperationOutcomeIssue[]> {
+  // Need to set root as singular.
+  const profile = setRootAsSingular(_profile);
+
   const path =
     path_ ??
     pointer(ctx.fhirVersion, profile?.type as AllDataTypes, "id" as id);
