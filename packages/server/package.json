@@ -74,7 +74,7 @@
     "glob": "^11.0.1",
     "helmet": "^8.0.0",
     "hl7.fhir.us.core": "4.0.0",
-    "ioredis": "5.4.2",
+    "ioredis": "5.5.0",
     "jose": "^5.9.6",
     "json-schema-to-typescript": "^15.0.4",
     "jsonpointer": "^5.0.1",
