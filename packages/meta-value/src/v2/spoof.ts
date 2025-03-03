@@ -1,4 +1,7 @@
-import { FPPrimitiveNode } from "@iguhealth/codegen/generate/meta-data";
+import {
+  FPPrimitiveNode,
+  MetaNode,
+} from "@iguhealth/codegen/generate/meta-data";
 import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bsets from "@iguhealth/fhir-types/r4b/sets";
@@ -15,8 +18,35 @@ import {
   TypeChoiceNode,
   getMeta,
   getStartingMeta,
+  resolveContentReference,
   resolveTypeNode,
 } from "./meta.js";
+
+function resolve(fhirVersion: FHIR_VERSION, meta: MetaNode, field: string) {
+  switch (meta._type_) {
+    case "content-reference": {
+      return resolve(
+        fhirVersion,
+        resolveContentReference(fhirVersion, meta),
+        field,
+      );
+    }
+    case "type": {
+      return resolveTypeNode(fhirVersion, meta, meta.type, field);
+    }
+    case "typechoice":
+    case "resource":
+    case "primitive-type":
+    case "complex-type": {
+      return { meta, field };
+    }
+    case "fp-primitive":
+    default: {
+      // @ts-ignore
+      throw new Error(`Unknown meta type: ${meta._type_}`);
+    }
+  }
+}
 
 function descendMeta(
   fhirVersion: FHIR_VERSION,
@@ -25,24 +55,7 @@ function descendMeta(
 ) {
   const nextMeta = getMeta(fhirVersion, meta, field);
   if (nextMeta === undefined) return undefined;
-
-  switch (true) {
-    case nextMeta._type_ === "type": {
-      return resolveTypeNode(fhirVersion, nextMeta, nextMeta.type, field);
-    }
-    case nextMeta._type_ === "typechoice": {
-      return { meta: nextMeta, field };
-    }
-    case nextMeta._type_ === "resource":
-    case nextMeta._type_ === "primitive-type":
-    case nextMeta._type_ === "complex-type": {
-      return { meta: nextMeta, field };
-    }
-    default: {
-      // @ts-ignore
-      throw new Error(`Unknown meta type: ${nextMeta._type_}`);
-    }
-  }
+  return resolve(fhirVersion, nextMeta, field);
 }
 
 export function isResourceType(version: FHIR_VERSION, type: string) {

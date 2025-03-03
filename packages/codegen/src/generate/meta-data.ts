@@ -280,13 +280,12 @@ function SDToMetaData<Version extends FHIR_VERSION>(
   traversalBottomUp<{ index: number; field: string }>(
     sd,
     (element: ElementDefinition, children) => {
+      const index = indices[element.path as ElementPath];
       if (element.contentReference) {
         const elementIndex =
           indices[
             element.contentReference.substring(1) as unknown as ElementPath
           ];
-
-        const index = indices[element.path as ElementPath];
         metaInfo[index] = createContentReferenceNode(
           sd,
           element as Data<Version, "ElementDefinition">,
@@ -295,14 +294,14 @@ function SDToMetaData<Version extends FHIR_VERSION>(
 
         return [
           {
-            index: elementIndex,
+            index,
             field: getElementField(element),
           },
         ];
       }
 
       if (determineIsTypeChoice(element)) {
-        metaInfo[indices[element.path as ElementPath]] = createTypeChoiceNode(
+        metaInfo[index] = createTypeChoiceNode(
           sd,
           element as Data<Version, "ElementDefinition">,
         );
@@ -321,13 +320,12 @@ function SDToMetaData<Version extends FHIR_VERSION>(
             };
           }),
           {
-            index: indices[element.path as ElementPath],
+            index,
             field: getElementField(element),
           },
         ];
         // For Type choices include a typechoice node which points to the types loc.
       } else {
-        const index = indices[element.path as ElementPath];
         metaInfo[index] = createSingularNode(
           sd,
           index,
@@ -337,7 +335,7 @@ function SDToMetaData<Version extends FHIR_VERSION>(
 
         return [
           {
-            index: indices[element.path as ElementPath],
+            index,
             field: getElementField(element),
           },
         ];

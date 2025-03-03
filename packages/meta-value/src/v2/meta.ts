@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  ContentReferenceNode,
   ElementNode,
   FPPrimitiveNode,
   MetaNode,
@@ -47,6 +48,7 @@ export function getMeta(
   field: string,
 ): ElementNode | TypeNode | TypeChoiceNode | undefined {
   if (meta._type_ === "fp-primitive") return undefined;
+
   const globalMeta = getGlobalMeta(fhirVersion);
   const fieldIndex = meta.properties?.[field];
 
@@ -90,6 +92,13 @@ function resolveResourceType(
   return resolveTypeNode(fhirVersion, meta, type, field);
 }
 
+export function resolveContentReference(
+  fhirVersion: FHIR_VERSION,
+  meta: ContentReferenceNode,
+) {
+  return getGlobalMeta(fhirVersion)[meta.base][meta.reference];
+}
+
 export function resolveMeta<T>(
   fhirVersion: FHIR_VERSION,
   meta: MetaNode,
@@ -125,7 +134,7 @@ export function resolveMeta<T>(
     case meta._type_ === "content-reference": {
       const nextMeta = resolveMeta(
         fhirVersion,
-        getGlobalMeta(fhirVersion)[meta.base][meta.reference],
+        resolveContentReference(fhirVersion, meta),
         value,
         field,
       );
