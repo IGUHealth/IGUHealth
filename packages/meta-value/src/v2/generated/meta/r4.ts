@@ -7538,7 +7538,7 @@ export default {
         "id": 16,
         "extension": 17,
         "modifierExtension": 18,
-        "link": 9,
+        "link": 19,
         "fullUrl": 20,
         "resource": 21,
         "search": 22,
@@ -8948,8 +8948,8 @@ export default {
         "security": 50,
         "resource": 57,
         "interaction": 96,
-        "searchParam": 81,
-        "operation": 89,
+        "searchParam": 102,
+        "operation": 103,
         "compartment": 104
       },
       "cardinality": "array"
@@ -14287,7 +14287,7 @@ export default {
         "id": 38,
         "extension": 39,
         "modifierExtension": 40,
-        "applicability": 30,
+        "applicability": 41,
         "priceComponent": 42
       },
       "cardinality": "array"
@@ -17472,7 +17472,7 @@ export default {
         "payeeType": 23,
         "item": 24,
         "addItem": 52,
-        "adjudication": 30,
+        "adjudication": 97,
         "total": 98,
         "payment": 104,
         "fundsReserve": 114,
@@ -18182,7 +18182,7 @@ export default {
         "modifierExtension": 41,
         "detailSequence": 42,
         "noteNumber": 43,
-        "adjudication": 30,
+        "adjudication": 44,
         "subDetail": 45
       },
       "cardinality": "array"
@@ -18304,7 +18304,7 @@ export default {
         "modifierExtension": 48,
         "subDetailSequence": 49,
         "noteNumber": 50,
-        "adjudication": 30
+        "adjudication": 51
       },
       "cardinality": "array"
     },
@@ -18439,7 +18439,7 @@ export default {
         "bodySite": 69,
         "subSite": 70,
         "noteNumber": 71,
-        "adjudication": 30,
+        "adjudication": 72,
         "detail": 73
       },
       "cardinality": "array"
@@ -18841,7 +18841,7 @@ export default {
         "factor": 81,
         "net": 82,
         "noteNumber": 83,
-        "adjudication": 30,
+        "adjudication": 84,
         "subDetail": 85
       },
       "cardinality": "array"
@@ -19059,7 +19059,7 @@ export default {
         "factor": 93,
         "net": 94,
         "noteNumber": 95,
-        "adjudication": 30
+        "adjudication": 96
       },
       "cardinality": "array"
     },
@@ -21763,7 +21763,7 @@ export default {
         "definition": 54,
         "designation": 55,
         "property": 62,
-        "concept": 48
+        "concept": 68
       },
       "cardinality": "array"
     },
@@ -24898,7 +24898,7 @@ export default {
         "orderedBy": 50,
         "entry": 51,
         "emptyReason": 52,
-        "section": 40
+        "section": 53
       },
       "cardinality": "array"
     },
@@ -25896,7 +25896,7 @@ export default {
         "equivalence": 46,
         "comment": 47,
         "dependsOn": 48,
-        "product": 48
+        "product": 56
       },
       "cardinality": "array"
     },
@@ -27723,7 +27723,7 @@ export default {
         "code": 48,
         "dataPeriod": 49,
         "data": 50,
-        "provision": 32
+        "provision": 56
       },
       "cardinality": "single"
     },
@@ -29042,7 +29042,7 @@ export default {
         "offer": 62,
         "asset": 85,
         "action": 127,
-        "group": 43
+        "group": 157
       },
       "cardinality": "array"
     },
@@ -29905,7 +29905,7 @@ export default {
         "usePeriod": 104,
         "text": 105,
         "linkId": 106,
-        "answer": 77,
+        "answer": 107,
         "securityLabelNumber": 108,
         "valuedItem": 109
       },
@@ -49347,7 +49347,7 @@ export default {
         "id": 59,
         "extension": 60,
         "modifierExtension": 61,
-        "process": 50,
+        "process": 62,
         "pause": 63,
         "operation": 64,
         "alternative": 78
@@ -49461,8 +49461,8 @@ export default {
         "description": 73,
         "initiatorActive": 74,
         "receiverActive": 75,
-        "request": 44,
-        "response": 44
+        "request": 76,
+        "response": 77
       },
       "cardinality": "single"
     },
@@ -49690,7 +49690,7 @@ export default {
         "modifierExtension": 81,
         "title": 82,
         "description": 83,
-        "step": 58
+        "step": 84
       },
       "cardinality": "array"
     },
@@ -49866,7 +49866,7 @@ export default {
         "accident": 91,
         "item": 98,
         "addItem": 165,
-        "adjudication": 123,
+        "adjudication": 210,
         "total": 211,
         "payment": 217,
         "formCode": 227,
@@ -52430,7 +52430,7 @@ export default {
         "net": 144,
         "udi": 145,
         "noteNumber": 146,
-        "adjudication": 123,
+        "adjudication": 147,
         "subDetail": 148
       },
       "cardinality": "array"
@@ -52748,7 +52748,7 @@ export default {
         "net": 161,
         "udi": 162,
         "noteNumber": 163,
-        "adjudication": 123
+        "adjudication": 164
       },
       "cardinality": "array"
     },
@@ -53069,7 +53069,7 @@ export default {
         "bodySite": 182,
         "subSite": 183,
         "noteNumber": 184,
-        "adjudication": 123,
+        "adjudication": 185,
         "detail": 186
       },
       "cardinality": "array"
@@ -53471,7 +53471,7 @@ export default {
         "factor": 194,
         "net": 195,
         "noteNumber": 196,
-        "adjudication": 123,
+        "adjudication": 197,
         "subDetail": 198
       },
       "cardinality": "array"
@@ -53689,7 +53689,7 @@ export default {
         "factor": 206,
         "net": 207,
         "noteNumber": 208,
-        "adjudication": 123
+        "adjudication": 209
       },
       "cardinality": "array"
     },
@@ -57024,7 +57024,7 @@ export default {
         "params": 37,
         "profile": 38,
         "compartment": 39,
-        "link": 23
+        "link": 48
       },
       "cardinality": "array"
     },
@@ -63775,7 +63775,7 @@ export default {
         "name": 62,
         "title": 63,
         "generation": 64,
-        "page": 58
+        "page": 65
       },
       "cardinality": "single"
     },
@@ -66048,7 +66048,7 @@ export default {
         "issuer": 22,
         "account": 23,
         "lineItem": 24,
-        "totalPriceComponent": 30,
+        "totalPriceComponent": 38,
         "totalNet": 39,
         "totalGross": 40,
         "paymentTerms": 41,
@@ -80254,7 +80254,7 @@ export default {
         "identifier": 36,
         "type": 37,
         "date": 38,
-        "application": 32
+        "application": 39
       },
       "cardinality": "single"
     },
@@ -81913,7 +81913,7 @@ export default {
         "extension": 41,
         "modifierExtension": 42,
         "code": 43,
-        "strength": 20
+        "strength": 44
       },
       "cardinality": "single"
     },
@@ -83082,7 +83082,7 @@ export default {
         "alternateMaterial": 30,
         "device": 31,
         "manufacturedItem": 32,
-        "packageItem": 22,
+        "packageItem": 33,
         "physicalCharacteristics": 34,
         "otherCharacteristics": 35,
         "shelfLifeStorage": 36,
@@ -90612,7 +90612,7 @@ export default {
         "value": 46,
         "dataAbsentReason": 47,
         "interpretation": 48,
-        "referenceRange": 29
+        "referenceRange": 49
       },
       "cardinality": "array"
     },
@@ -92179,7 +92179,7 @@ export default {
         "searchType": 44,
         "binding": 45,
         "referencedFrom": 51,
-        "part": 33
+        "part": 57
       },
       "cardinality": "array"
     },
@@ -94060,7 +94060,7 @@ export default {
         "name": 9,
         "value": 10,
         "resource": 11,
-        "part": 5
+        "part": 12
       },
       "cardinality": "array"
     },
@@ -97923,7 +97923,7 @@ export default {
         "definition": 98,
         "transform": 99,
         "dynamicValue": 100,
-        "action": 55
+        "action": 106
       },
       "cardinality": "array"
     },
@@ -101483,7 +101483,7 @@ export default {
         "modifierExtension": 27,
         "role": 28,
         "what": 29,
-        "agent": 16
+        "agent": 30
       },
       "cardinality": "array"
     },
@@ -102178,7 +102178,7 @@ export default {
         "answerValueSet": 52,
         "answerOption": 53,
         "initial": 59,
-        "item": 30
+        "item": 64
       },
       "cardinality": "array"
     },
@@ -103301,7 +103301,7 @@ export default {
         "definition": 24,
         "text": 25,
         "answer": 26,
-        "item": 19
+        "item": 32
       },
       "cardinality": "array"
     },
@@ -103426,7 +103426,7 @@ export default {
         "extension": 28,
         "modifierExtension": 29,
         "value": 30,
-        "item": 19
+        "item": 31
       },
       "cardinality": "array"
     },
@@ -104571,7 +104571,7 @@ export default {
         "precheckBehavior": 56,
         "cardinalityBehavior": 57,
         "resource": 58,
-        "action": 26
+        "action": 59
       },
       "cardinality": "array"
     },
@@ -116332,7 +116332,7 @@ export default {
         "name": 53,
         "source": 54,
         "target": 69,
-        "rule": 49,
+        "rule": 85,
         "dependent": 86,
         "documentation": 92
       },
@@ -122285,7 +122285,7 @@ export default {
         "structure": 37,
         "code": 69,
         "name": 78,
-        "molecularWeight": 53,
+        "molecularWeight": 99,
         "relationship": 100,
         "nucleicAcid": 111,
         "polymer": 112,
@@ -122964,7 +122964,7 @@ export default {
         "molecularFormula": 43,
         "molecularFormulaByMoiety": 44,
         "isotope": 45,
-        "molecularWeight": 53,
+        "molecularWeight": 60,
         "source": 61,
         "representation": 62
       },
@@ -123702,8 +123702,8 @@ export default {
         "language": 86,
         "domain": 87,
         "jurisdiction": 88,
-        "synonym": 78,
-        "translation": 78,
+        "synonym": 89,
+        "translation": 90,
         "official": 91,
         "source": 98
       },
@@ -129500,8 +129500,8 @@ export default {
         "id": 53,
         "extension": 54,
         "modifierExtension": 55,
-        "operation": 32,
-        "assert": 39
+        "operation": 56,
+        "assert": 57
       },
       "cardinality": "array"
     },
@@ -129675,7 +129675,7 @@ export default {
         "id": 63,
         "extension": 64,
         "modifierExtension": 65,
-        "operation": 32
+        "operation": 66
       },
       "cardinality": "array"
     },
@@ -132376,8 +132376,8 @@ export default {
         "id": 144,
         "extension": 145,
         "modifierExtension": 146,
-        "operation": 85,
-        "assert": 111
+        "operation": 147,
+        "assert": 148
       },
       "cardinality": "array"
     },
@@ -132551,7 +132551,7 @@ export default {
         "id": 154,
         "extension": 155,
         "modifierExtension": 156,
-        "operation": 85
+        "operation": 157
       },
       "cardinality": "array"
     },
@@ -133084,7 +133084,7 @@ export default {
         "lockedDate": 29,
         "inactive": 30,
         "include": 31,
-        "exclude": 31
+        "exclude": 58
       },
       "cardinality": "single"
     },
@@ -133994,8 +133994,8 @@ export default {
         "version": 80,
         "code": 81,
         "display": 82,
-        "designation": 43,
-        "contains": 73
+        "designation": 83,
+        "contains": 84
       },
       "cardinality": "array"
     },
@@ -146997,7 +146997,7 @@ export default {
         "effect": 16,
         "target": 17,
         "condition": 19,
-        "rule": 12
+        "rule": 21
       },
       "cardinality": "array"
     },

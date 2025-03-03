@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  ContentReferenceNode,
   ElementNode,
   MetaNode,
   MetaV2Compiled,
@@ -44,7 +45,7 @@ export function getMeta(
   fhirVersion: FHIR_VERSION,
   meta: ElementNode,
   field: string,
-): ElementNode | TypeNode | TypeChoiceNode | undefined {
+): ElementNode | TypeNode | TypeChoiceNode | ContentReferenceNode | undefined {
   const globalMeta = getGlobalMeta(fhirVersion);
   const fieldIndex = meta.properties?.[field];
 
@@ -88,6 +89,13 @@ function resolveResourceType(
   return resolveTypeNode(fhirVersion, meta, type, field);
 }
 
+export function resolveContentReference(
+  fhirVersion: FHIR_VERSION,
+  meta: ContentReferenceNode,
+) {
+  return getGlobalMeta(fhirVersion)[meta.base][meta.reference];
+}
+
 export function resolveMeta<T>(
   fhirVersion: FHIR_VERSION,
   meta: MetaNode,
@@ -123,7 +131,7 @@ export function resolveMeta<T>(
     case meta._type_ === "content-reference": {
       const nextMeta = resolveMeta(
         fhirVersion,
-        getGlobalMeta(fhirVersion)[meta.base][meta.reference],
+        resolveContentReference(fhirVersion, meta),
         value,
         field,
       );
