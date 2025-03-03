@@ -21,39 +21,6 @@ interface Node {
   base: uri;
 }
 
-function createFPPrimitiveNode(type: uri): MetaNode[] {
-  return [
-    {
-      _type_: "fp-primitive",
-      type,
-      cardinality: "single",
-      base: type,
-    },
-  ];
-}
-
-const FP_PRIMITIVES_TYPES: uri[] = [
-  "http://hl7.org/fhirpath/System.Boolean",
-  "http://hl7.org/fhirpath/System.String",
-  "http://hl7.org/fhirpath/System.Date",
-  "http://hl7.org/fhirpath/System.DateTime",
-  "http://hl7.org/fhirpath/System.Decimal",
-  "http://hl7.org/fhirpath/System.Integer",
-  "http://hl7.org/fhirpath/System.Time",
-] as uri[];
-
-/**
- *
- * @param type
- * @returns
- */
-function addFPPrimitiveNodes(metadata: MetaV2Compiled) {
-  return FP_PRIMITIVES_TYPES.reduce((metadata, type) => {
-    metadata[type] = createFPPrimitiveNode(type);
-    return metadata;
-  }, metadata);
-}
-
 export interface TypeChoiceNode extends Node {
   _type_: "typechoice";
   definition: Data<FHIR_VERSION, "ElementDefinition">;
@@ -93,6 +60,39 @@ export type MetaNode =
 
 export interface MetaV2Compiled {
   [key: string]: Array<MetaNode>;
+}
+
+function createFPPrimitiveNode(type: uri): MetaNode[] {
+  return [
+    {
+      _type_: "fp-primitive",
+      type,
+      cardinality: "single",
+      base: type,
+    },
+  ];
+}
+
+const FP_PRIMITIVES_TYPES: uri[] = [
+  "http://hl7.org/fhirpath/System.Boolean",
+  "http://hl7.org/fhirpath/System.String",
+  "http://hl7.org/fhirpath/System.Date",
+  "http://hl7.org/fhirpath/System.DateTime",
+  "http://hl7.org/fhirpath/System.Decimal",
+  "http://hl7.org/fhirpath/System.Integer",
+  "http://hl7.org/fhirpath/System.Time",
+] as uri[];
+
+/**
+ *
+ * @param type
+ * @returns
+ */
+function addFPPrimitiveNodes(metadata: MetaV2Compiled) {
+  return FP_PRIMITIVES_TYPES.reduce((metadata, type) => {
+    metadata[type] = createFPPrimitiveNode(type);
+    return metadata;
+  }, metadata);
 }
 
 function determineIsTypeChoice(element: ElementDefinition): boolean {

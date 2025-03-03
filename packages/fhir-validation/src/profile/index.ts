@@ -48,6 +48,8 @@ export async function validateProfile(
     0,
   );
 
+  profile.snapshot?.element?.[0]?.max = "1"
+
   return validateProfileElement(
     ctx,
     profile,

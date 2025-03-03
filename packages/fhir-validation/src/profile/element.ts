@@ -267,8 +267,16 @@ export async function validateProfileElement(
   path: Loc<any, any, any>,
   type: uri,
 ): Promise<OperationOutcomeIssue[]> {
+  const { field: elementIndex } = ascendElementLoc(elementLoc);
   const value = get(path, root);
-  const element = get(elementLoc, profile as StructureDefinition);
+  const element =
+    elementIndex === 0
+      ? // Set max to be 1 if root element.
+        ({
+          ...get(elementLoc, profile as StructureDefinition),
+          max: "1",
+        } as ElementDefinition)
+      : get(elementLoc, profile as StructureDefinition);
 
   if (!element) {
     throw new OperationError(
@@ -284,7 +292,7 @@ export async function validateProfileElement(
   let issues: OperationOutcomeIssue[] = [];
 
   // [Cardinality validation]
-  issues = issues.concat(validateCardinality(element, elementLoc, root, path));
+  issues = issues.concat(validateCardinality(element, root, path));
 
   switch (true) {
     case Array.isArray(value): {
