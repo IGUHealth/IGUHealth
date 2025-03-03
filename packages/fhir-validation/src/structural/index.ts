@@ -329,7 +329,6 @@ async function validateComplex(
               isElementRequired(childMeta.definition) &&
               fields.length === 0
             ) {
-              console.log("child:", childMeta);
               return [
                 issueError(
                   "structure",

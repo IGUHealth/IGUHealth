@@ -12,7 +12,7 @@ import { issueError } from "@iguhealth/operation-outcomes";
  * @returns
  */
 function isArray(element: ElementDefinition): boolean {
-  const max = element.base?.max ?? element.max ?? "1";
+  const max = element.max ?? element.base?.max ?? "1";
   if (!max) return false;
   const parsed = parseInt(max);
   if (!isNaN(parsed)) {
@@ -31,7 +31,6 @@ function getMax(elementDefinition: ElementDefinition) {
 
 export function validateCardinality(
   element: ElementDefinition,
-
   root: object,
   path: Loc<any, any, any>,
 ): Array<OperationOutcomeIssue> {

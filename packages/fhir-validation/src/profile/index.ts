@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as jsonpointer from "jsonpointer";
+
 import { Loc, descend, pointer, toJSONPointer } from "@iguhealth/fhir-pointer";
 import {
   OperationOutcomeIssue,
@@ -48,7 +50,8 @@ export async function validateProfile(
     0,
   );
 
-  profile.snapshot?.element?.[0]?.max = "1"
+  // Set root to be singular.
+  jsonpointer.set(profile, toJSONPointer(descend(startingLoc, "max")), "1");
 
   return validateProfileElement(
     ctx,

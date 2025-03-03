@@ -51,7 +51,9 @@ export function toFHIRPath<
 
   const { version, type } = pathMeta(loc);
 
-  let meta: ElementNode | undefined = getStartingMeta(version, type as uri);
+  let meta = getStartingMeta(version, type as uri);
+  if (meta?._type_ === "fp-primitive")
+    throw new Error("Invalid meta information");
 
   if (indexOfLastSlash === -1) return "$this";
   const pieces = loc.substring(indexOfLastSlash + 1).split("/");

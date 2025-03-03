@@ -322,15 +322,13 @@ test("Test required ", async () => {
   ).toEqual([
     {
       code: "structure",
-      diagnostics:
-        "Missing required field 'Patient.link.other' at path '/link/0'",
+      diagnostics: "Missing required field at path '/link/0/other'",
       expression: ["/link/0"],
       severity: "error",
     },
     {
       code: "structure",
-      diagnostics:
-        "Missing required field 'Patient.link.type' at path '/link/0'",
+      diagnostics: "Missing required field at path '/link/0/type'",
       expression: ["/link/0"],
       severity: "error",
     },
@@ -473,7 +471,8 @@ test("Patient with primitive on name", async () => {
   ).toEqual([
     {
       code: "structure",
-      diagnostics: "Invalid type 'number' at path '/name/0",
+      diagnostics:
+        "Value must be an object when validating 'HumanName'. Instead found type of 'number'",
       expression: ["/name/0"],
       severity: "error",
     },
