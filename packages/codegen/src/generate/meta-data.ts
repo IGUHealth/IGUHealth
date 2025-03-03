@@ -15,7 +15,8 @@ interface Node {
     | "complex-type"
     | "resource"
     | "type"
-    | "typechoice";
+    | "typechoice"
+    | "content-reference";
   cardinality: "array" | "single";
   base: uri;
 }
@@ -77,9 +78,16 @@ export interface TypeNode extends Node {
   definition: Data<FHIR_VERSION, "ElementDefinition">;
 }
 
+export interface ContentReferenceNode extends Node {
+  _type_: "content-reference";
+  definition: Data<FHIR_VERSION, "ElementDefinition">;
+  reference: number;
+}
+
 export type MetaNode =
   | ElementNode
   | TypeNode
+  | ContentReferenceNode
   | TypeChoiceNode
   | FPPrimitiveNode;
 
@@ -164,6 +172,25 @@ function simpleElementDefinition(
   };
 }
 
+function getElementCardinality(element: ElementDefinition): "array" | "single" {
+  const cardinality = element.max === "1" ? "single" : "array";
+  return cardinality;
+}
+
+function createContentReferenceNode<Version extends FHIR_VERSION>(
+  sd: Resource<Version, "StructureDefinition">,
+  element: Data<Version, "ElementDefinition">,
+  reference: number,
+): ContentReferenceNode {
+  return {
+    _type_: "content-reference",
+    definition: simpleElementDefinition(element),
+    base: sd.type,
+    cardinality: getElementCardinality(element),
+    reference,
+  };
+}
+
 function createSingularNode<Version extends FHIR_VERSION>(
   sd: Resource<Version, "StructureDefinition">,
   index: number,
@@ -197,7 +224,7 @@ function createSingularNode<Version extends FHIR_VERSION>(
       "Multiple types are not supported for creating singular node.",
     );
   }
-  const cardinality = element.max === "1" ? "single" : "array";
+  const cardinality = getElementCardinality(element);
 
   if (children.length === 0) {
     return {
@@ -230,7 +257,7 @@ function createTypeChoiceNode<Version extends FHIR_VERSION>(
     _type_: "typechoice",
     base: sd.type,
     definition: simpleElementDefinition(element),
-    cardinality: element.max === "1" ? "single" : "array",
+    cardinality: getElementCardinality(element),
     fieldsToType: (element.type ?? []).reduce(
       (acc: Record<string, uri>, type) => {
         acc[getElementField(element, type.code)] = type.code;
@@ -254,13 +281,21 @@ function SDToMetaData<Version extends FHIR_VERSION>(
     sd,
     (element: ElementDefinition, children) => {
       if (element.contentReference) {
-        const index =
+        const elementIndex =
           indices[
             element.contentReference.substring(1) as unknown as ElementPath
           ];
+
+        const index = indices[element.path as ElementPath];
+        metaInfo[index] = createContentReferenceNode(
+          sd,
+          element as Data<Version, "ElementDefinition">,
+          elementIndex,
+        );
+
         return [
           {
-            index,
+            index: elementIndex,
             field: getElementField(element),
           },
         ];

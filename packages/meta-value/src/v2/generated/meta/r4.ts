@@ -7601,7 +7601,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Bundle.entry.link",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Bundle",
+      "cardinality": "array",
+      "reference": 9
+    },
     {
       "_type_": "type",
       "base": "Bundle",
@@ -10011,8 +10021,28 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "CapabilityStatement.rest.searchParam",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "CapabilityStatement",
+      "cardinality": "array",
+      "reference": 81
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "CapabilityStatement.rest.operation",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "CapabilityStatement",
+      "cardinality": "array",
+      "reference": 89
+    },
     {
       "_type_": "type",
       "base": "CapabilityStatement",
@@ -14316,7 +14346,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ChargeItemDefinition.propertyGroup.applicability",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ChargeItemDefinition",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ChargeItemDefinition",
@@ -18233,7 +18273,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.item.detail.adjudication",
+        "min": 1,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ClaimResponse",
@@ -18344,7 +18394,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.item.detail.subDetail.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ClaimResponse",
@@ -18745,7 +18805,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.addItem.adjudication",
+        "min": 1,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ClaimResponse",
@@ -18953,7 +19023,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.addItem.detail.adjudication",
+        "min": 1,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ClaimResponse",
@@ -19160,8 +19240,28 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.addItem.detail.subDetail.adjudication",
+        "min": 1,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ClaimResponse.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ClaimResponse",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "complex-type",
       "base": "ClaimResponse",
@@ -22037,6 +22137,17 @@ export default {
         "valueDateTime": "dateTime",
         "valueDecimal": "decimal"
       }
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "CodeSystem.concept.concept",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "CodeSystem",
+      "cardinality": "array",
+      "reference": 48
     }
   ],
   "Communication": [
@@ -25018,6 +25129,17 @@ export default {
         }
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Composition.section.section",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Composition",
+      "cardinality": "array",
+      "reference": 40
     }
   ],
   "ConceptMap": [
@@ -26046,7 +26168,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ConceptMap.group.element.target.product",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ConceptMap",
+      "cardinality": "array",
+      "reference": 48
+    },
     {
       "_type_": "complex-type",
       "base": "ConceptMap",
@@ -28039,6 +28171,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Consent.provision.provision",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Consent",
+      "cardinality": "array",
+      "reference": 32
     }
   ],
   "Contract": [
@@ -30154,7 +30297,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Contract.term.asset.answer",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Contract",
+      "cardinality": "array",
+      "reference": 77
+    },
     {
       "_type_": "type",
       "base": "Contract",
@@ -31114,7 +31267,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Contract.term.group",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Contract",
+      "cardinality": "array",
+      "reference": 43
+    },
     {
       "_type_": "type",
       "base": "Contract",
@@ -49245,7 +49408,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExampleScenario.process.step.process",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExampleScenario",
+      "cardinality": "array",
+      "reference": 50
+    },
     {
       "_type_": "type",
       "base": "ExampleScenario",
@@ -49475,8 +49648,28 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExampleScenario.process.step.operation.request",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "ExampleScenario",
+      "cardinality": "single",
+      "reference": 44
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExampleScenario.process.step.operation.response",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "ExampleScenario",
+      "cardinality": "single",
+      "reference": 44
+    },
     {
       "_type_": "complex-type",
       "base": "ExampleScenario",
@@ -49587,7 +49780,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExampleScenario.process.step.alternative.step",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExampleScenario",
+      "cardinality": "array",
+      "reference": 58
+    },
     {
       "_type_": "type",
       "base": "ExampleScenario",
@@ -52504,7 +52707,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.item.detail.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
     {
       "_type_": "complex-type",
       "base": "ExplanationOfBenefit",
@@ -52811,7 +53024,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.item.detail.subDetail.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
     {
       "_type_": "complex-type",
       "base": "ExplanationOfBenefit",
@@ -53212,7 +53435,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
     {
       "_type_": "complex-type",
       "base": "ExplanationOfBenefit",
@@ -53420,7 +53653,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem.detail.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
     {
       "_type_": "complex-type",
       "base": "ExplanationOfBenefit",
@@ -53627,8 +53870,28 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.addItem.detail.subDetail.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ExplanationOfBenefit.adjudication",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ExplanationOfBenefit",
+      "cardinality": "array",
+      "reference": 123
+    },
     {
       "_type_": "complex-type",
       "base": "ExplanationOfBenefit",
@@ -57045,6 +57308,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "GraphDefinition.link.target.link",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "GraphDefinition",
+      "cardinality": "array",
+      "reference": 23
     }
   ],
   "Group": [
@@ -63620,7 +63894,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ImplementationGuide.definition.page.page",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ImplementationGuide",
+      "cardinality": "array",
+      "reference": 58
+    },
     {
       "_type_": "complex-type",
       "base": "ImplementationGuide",
@@ -66455,7 +66739,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Invoice.totalPriceComponent",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Invoice",
+      "cardinality": "array",
+      "reference": 30
+    },
     {
       "_type_": "type",
       "base": "Invoice",
@@ -80071,6 +80365,17 @@ export default {
         "datePeriod": "Period",
         "dateDateTime": "dateTime"
       }
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "MedicinalProductAuthorization.procedure.application",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "MedicinalProductAuthorization",
+      "cardinality": "array",
+      "reference": 32
     }
   ],
   "MedicinalProductContraindication": [
@@ -81681,6 +81986,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "MedicinalProductIngredient.substance.strength",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "MedicinalProductIngredient",
+      "cardinality": "array",
+      "reference": 20
     }
   ],
   "MedicinalProductInteraction": [
@@ -82946,7 +83262,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "MedicinalProductPackaged.packageItem.packageItem",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "MedicinalProductPackaged",
+      "cardinality": "array",
+      "reference": 22
+    },
     {
       "_type_": "type",
       "base": "MedicinalProductPackaged",
@@ -90461,6 +90787,17 @@ export default {
         }
       },
       "cardinality": "array"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Observation.component.referenceRange",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Observation",
+      "cardinality": "array",
+      "reference": 29
     }
   ],
   "ObservationDefinition": [
@@ -92268,7 +92605,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "OperationDefinition.parameter.part",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "OperationDefinition",
+      "cardinality": "array",
+      "reference": 33
+    },
     {
       "_type_": "complex-type",
       "base": "OperationDefinition",
@@ -94016,6 +94363,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Parameters.parameter.part",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Parameters",
+      "cardinality": "array",
+      "reference": 5
     }
   ],
   "Patient": [
@@ -98526,6 +98884,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "PlanDefinition.action.action",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "PlanDefinition",
+      "cardinality": "array",
+      "reference": 55
     }
   ],
   "Practitioner": [
@@ -101211,7 +101580,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Provenance.entity.agent",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Provenance",
+      "cardinality": "array",
+      "reference": 16
+    },
     {
       "_type_": "type",
       "base": "Provenance",
@@ -102521,6 +102900,17 @@ export default {
         "valueQuantity": "Quantity",
         "valueReference": "Reference"
       }
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "Questionnaire.item.item",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "Questionnaire",
+      "cardinality": "array",
+      "reference": 30
     }
   ],
   "QuestionnaireResponse": [
@@ -103163,7 +103553,28 @@ export default {
         "valueReference": "Reference"
       }
     },
-    null
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "QuestionnaireResponse.item.answer.item",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "QuestionnaireResponse",
+      "cardinality": "array",
+      "reference": 19
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "QuestionnaireResponse.item.item",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "QuestionnaireResponse",
+      "cardinality": "array",
+      "reference": 19
+    }
   ],
   "RelatedPerson": [
     {
@@ -104782,6 +105193,17 @@ export default {
         ]
       },
       "cardinality": "single"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "RequestGroup.action.action",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "RequestGroup",
+      "cardinality": "array",
+      "reference": 26
     }
   ],
   "ResearchDefinition": [
@@ -116767,7 +117189,17 @@ export default {
         "valueDecimal": "decimal"
       }
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "StructureMap.group.rule.rule",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "StructureMap",
+      "cardinality": "array",
+      "reference": 49
+    },
     {
       "_type_": "complex-type",
       "base": "StructureMap",
@@ -122926,7 +123358,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "SubstanceSpecification.structure.molecularWeight",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "SubstanceSpecification",
+      "cardinality": "single",
+      "reference": 53
+    },
     {
       "_type_": "type",
       "base": "SubstanceSpecification",
@@ -123433,8 +123875,28 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "SubstanceSpecification.name.synonym",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "SubstanceSpecification",
+      "cardinality": "array",
+      "reference": 78
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "SubstanceSpecification.name.translation",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "SubstanceSpecification",
+      "cardinality": "array",
+      "reference": 78
+    },
     {
       "_type_": "complex-type",
       "base": "SubstanceSpecification",
@@ -123580,7 +124042,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "SubstanceSpecification.molecularWeight",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "SubstanceSpecification",
+      "cardinality": "array",
+      "reference": 53
+    },
     {
       "_type_": "complex-type",
       "base": "SubstanceSpecification",
@@ -129087,8 +129559,28 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestReport.test.action.operation",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "TestReport",
+      "cardinality": "single",
+      "reference": 32
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestReport.test.action.assert",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "TestReport",
+      "cardinality": "single",
+      "reference": 39
+    },
     {
       "_type_": "complex-type",
       "base": "TestReport",
@@ -129240,6 +129732,17 @@ export default {
         ]
       },
       "cardinality": "array"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestReport.teardown.action.operation",
+        "min": 1,
+        "max": "1"
+      },
+      "base": "TestReport",
+      "cardinality": "single",
+      "reference": 32
     }
   ],
   "TestScript": [
@@ -131932,8 +132435,28 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestScript.test.action.operation",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "TestScript",
+      "cardinality": "single",
+      "reference": 85
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestScript.test.action.assert",
+        "min": 0,
+        "max": "1"
+      },
+      "base": "TestScript",
+      "cardinality": "single",
+      "reference": 111
+    },
     {
       "_type_": "complex-type",
       "base": "TestScript",
@@ -132085,6 +132608,17 @@ export default {
         ]
       },
       "cardinality": "array"
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "TestScript.teardown.action.operation",
+        "min": 1,
+        "max": "1"
+      },
+      "base": "TestScript",
+      "cardinality": "single",
+      "reference": 85
     }
   ],
   "ValueSet": [
@@ -133145,7 +133679,17 @@ export default {
       },
       "cardinality": "array"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ValueSet.compose.exclude",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ValueSet",
+      "cardinality": "array",
+      "reference": 31
+    },
     {
       "_type_": "complex-type",
       "base": "ValueSet",
@@ -133605,7 +134149,28 @@ export default {
       },
       "cardinality": "single"
     },
-    null
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ValueSet.expansion.contains.designation",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ValueSet",
+      "cardinality": "array",
+      "reference": 43
+    },
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "ValueSet.expansion.contains.contains",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "ValueSet",
+      "cardinality": "array",
+      "reference": 73
+    }
   ],
   "VerificationResult": [
     {
@@ -146578,7 +147143,17 @@ export default {
       },
       "cardinality": "single"
     },
-    null,
+    {
+      "_type_": "content-reference",
+      "definition": {
+        "path": "AccessPolicyV2.rule.rule",
+        "min": 0,
+        "max": "*"
+      },
+      "base": "AccessPolicyV2",
+      "cardinality": "array",
+      "reference": 12
+    },
     {
       "_type_": "complex-type",
       "base": "AccessPolicyV2",

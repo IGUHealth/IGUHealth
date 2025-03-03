@@ -120,6 +120,20 @@ export function resolveMeta<T>(
       }
       return undefined;
     }
+    case meta._type_ === "content-reference": {
+      const nextMeta = resolveMeta(
+        fhirVersion,
+        getGlobalMeta(fhirVersion)[meta.base][meta.reference],
+        value,
+        field,
+      );
+      if (!nextMeta)
+        throw new Error(
+          `Could not derive meta from content-reference '${meta.definition.path}'`,
+        );
+
+      return nextMeta;
+    }
     case meta._type_ === "complex-type":
     case meta._type_ === "resource":
     case meta._type_ === "primitive-type": {
