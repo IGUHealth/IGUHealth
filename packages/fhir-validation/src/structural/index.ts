@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
+  ContentReferenceNode,
   FPPrimitiveNode,
   TypeChoiceNode,
   TypeNode,
@@ -30,6 +31,7 @@ import {
   ElementNode,
   getMeta,
   getStartingMeta,
+  resolveMeta,
 } from "@iguhealth/meta-value/meta";
 import { isObject } from "@iguhealth/meta-value/utilities";
 import {
@@ -167,7 +169,12 @@ type FieldMeta = {
 
 function findFields(
   ctx: ValidationCTX,
-  meta: ElementNode | TypeNode | TypeChoiceNode | FPPrimitiveNode,
+  meta:
+    | ElementNode
+    | TypeNode
+    | TypeChoiceNode
+    | FPPrimitiveNode
+    | ContentReferenceNode,
   value: object,
   field: string,
 ): FieldMeta[] {
@@ -200,6 +207,7 @@ function findFields(
       if (field in value) {
         foundFields.push({ field, meta });
       }
+      // Because Primitives have Element data under seperate key we must check multiple fields.
       if (`_${field}` in value) {
         const elementMeta = getStartingMeta(
           ctx.fhirVersion,
@@ -224,23 +232,46 @@ function findFields(
 
     case "typechoice": {
       for (const fieldToType of Object.keys(meta.fieldsToType)) {
-        if (fieldToType in value) {
-          return findFields(
-            ctx,
-            {
-              ...getStartingMeta(
-                ctx.fhirVersion,
-                meta.fieldsToType[fieldToType],
-              ),
-              definition: meta.definition,
-            } as ElementNode,
-            value,
-            fieldToType,
-          );
-        }
+        const foundFields = findFields(
+          ctx,
+          {
+            ...getStartingMeta(ctx.fhirVersion, meta.fieldsToType[fieldToType]),
+            definition: meta.definition,
+          } as ElementNode,
+          value,
+          fieldToType,
+        );
+        if (foundFields.length > 0) return foundFields;
       }
       return [];
     }
+
+    case "content-reference": {
+      const nextMeta = resolveMeta(ctx.fhirVersion, meta, value, field);
+      if (!nextMeta)
+        throw new OperationError(
+          outcomeFatal(
+            "not-found",
+            `Could not derive meta from content-reference '${meta.definition.path}'`,
+          ),
+        );
+
+      return findFields(
+        ctx,
+        {
+          ...nextMeta.meta,
+          cardinality: meta.cardinality,
+          definition: {
+            ...nextMeta.meta.definition,
+            min: meta.definition.min,
+            max: meta.definition.max,
+          },
+        },
+        value,
+        field,
+      );
+    }
+
     default: {
       // @ts-ignore
       throw new Error(`Unknown meta type: ${meta._type_}`);
@@ -298,7 +329,7 @@ async function validateComplex(
               isElementRequired(childMeta.definition) &&
               fields.length === 0
             ) {
-              console.log(childMeta.definition);
+              console.log("child:", childMeta);
               return [
                 issueError(
                   "structure",
@@ -329,18 +360,19 @@ async function validateComplex(
         foundFields,
       );
 
-      return additionalFields.size > 0
-        ? [
-            ...issues,
-            issueError(
-              "structure",
-              `Additional fields found at path '${toJSONPointer(
-                path,
-              )}': '${Array.from(additionalFields).join(", ")}'`,
-              [toJSONPointer(path)],
-            ),
-          ]
-        : issues;
+      if (additionalFields.size > 0) {
+        issues.push(
+          issueError(
+            "structure",
+            `Additional fields found at path '${toJSONPointer(
+              path,
+            )}': '${Array.from(additionalFields).join(", ")}'`,
+            [toJSONPointer(path)],
+          ),
+        );
+      }
+
+      return issues;
     }
     default: {
       throw new OperationError(outcomeFatal("invalid", "Invalid Meta type."));
