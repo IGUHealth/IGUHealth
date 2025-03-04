@@ -34,6 +34,7 @@ export async function validatePrimitive(
   type: string,
 ): Promise<Resource<FHIR_VERSION, "OperationOutcome">["issue"]> {
   let value;
+
   if (isObject(rootValue)) value = fpointer.get(path, rootValue);
   else if (path === fpointer.root(path)) value = rootValue;
   else {

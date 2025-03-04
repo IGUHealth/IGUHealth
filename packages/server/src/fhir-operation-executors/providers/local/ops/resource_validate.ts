@@ -34,6 +34,7 @@ export const validateResource = async (
           "invalid",
           "No resource provided during validation",
         );
+
       const issues = await validate(
         {
           fhirVersion,
@@ -47,6 +48,7 @@ export const validateResource = async (
                 url,
               },
             );
+
             return result.result;
           },
           resolveCanonical: (fhirVersion, type, url) =>

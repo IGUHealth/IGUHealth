@@ -715,11 +715,11 @@ function evaluateOperator(
 }
 
 function assertionFailureMessage(
-  v1: unknown,
-  v2: unknown,
+  found: unknown,
+  expected: unknown,
   operator: code = "equals" as code,
 ): string {
-  return `Failed Assertion '${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'`;
+  return `Failed Assertion FOUND['${JSON.stringify(found)}'] !${operator} EXPECTED['${expected ? JSON.stringify(expected) : ""}']`;
 }
 
 async function runAssertion<Version extends FHIR_VERSION>(
