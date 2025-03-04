@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as jsonpointer from "jsonpointer";
+
 import { Loc, descend, pointer, toJSONPointer } from "@iguhealth/fhir-pointer";
 import {
   OperationOutcomeIssue,

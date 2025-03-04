@@ -157,7 +157,7 @@ export function getRedisClient(): Redis {
  * @param sources Client sources
  * @returns FHIRClientAsync instance
  */
-function createFHIRClient(sources: RouterState["sources"]) {
+function createRouterClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
       createCheckTenantUsageMiddleware(),
@@ -214,7 +214,7 @@ export function createClient(): {
     EvaluatePolicyInvoke,
     IdentityProviderRegistrationInvoke,
   ]);
-  const client = createFHIRClient([
+  const client = createRouterClient([
     // OP INVOCATION
     {
       filter: {

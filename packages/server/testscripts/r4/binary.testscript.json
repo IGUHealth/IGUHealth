@@ -8,7 +8,11 @@
       "contentType": "application/fhir+json",
       "resourceType": "Binary",
       "meta": {
-        "tag": [{ "code": "binary-create-test" }]
+        "tag": [
+          {
+            "code": "binary-create-test"
+          }
+        ]
       }
     },
     {
@@ -16,7 +20,11 @@
       "contentType": "application/fhir+jso",
       "resourceType": "Binary",
       "meta": {
-        "tag": [{ "code": "binary-create-test" }]
+        "tag": [
+          {
+            "code": "binary-create-test"
+          }
+        ]
       }
     }
   ],

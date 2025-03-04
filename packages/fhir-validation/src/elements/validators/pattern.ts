@@ -43,7 +43,7 @@ export function conformsToPattern(pattern: unknown, value: unknown): boolean {
 
 export async function validatePattern(
   element: ElementDefinition,
-  root: object,
+  root: unknown,
   path: Loc<any, any, any>,
 ): Promise<Array<OperationOutcomeIssue>> {
   const pattern = (

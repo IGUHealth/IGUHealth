@@ -17,7 +17,7 @@ export function conformsToValue(
 
 export async function validateFixedValue(
   element: ElementDefinition,
-  root: object,
+  root: unknown,
   path: Loc<any, any, any>,
 ): Promise<Array<OperationOutcomeIssue>> {
   const expectedValue = (

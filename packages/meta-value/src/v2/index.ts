@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { FPPrimitiveNode } from "@iguhealth/codegen/generate/meta-data";
 import {
   Element,
   Resource as R4Resource,
@@ -108,7 +109,7 @@ function deriveFHIRPrimitives(
 
 class MetaValueV2Singular<T> implements IMetaValue<T> {
   private _value: T | FHIRPrimitive<RawPrimitive>;
-  private _meta: ElementNode;
+  private readonly _meta: ElementNode | FPPrimitiveNode;
   private _fhirVersion: FHIR_VERSION;
 
   private _location: Location;
@@ -116,7 +117,7 @@ class MetaValueV2Singular<T> implements IMetaValue<T> {
   constructor(
     fhirVersion: FHIR_VERSION,
 
-    meta: ElementNode,
+    meta: ElementNode | FPPrimitiveNode,
     value: T,
     location: Location,
   ) {

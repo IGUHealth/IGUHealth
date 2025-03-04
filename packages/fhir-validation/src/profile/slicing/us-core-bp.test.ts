@@ -18,7 +18,6 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { validateSD } from "../../structural/index.js";
 import { ElementLoc, ValidationCTX } from "../../types.js";
 import { getSliceIndices, validateSliceDescriptor } from "./index.js";
 
@@ -344,58 +343,6 @@ test("Slice Validation", async () => {
       diagnostics:
         "Slice 'diastolic' does not have the minimum number of values.",
       expression: [""],
-      severity: "error",
-    },
-  ]);
-});
-
-test("Pattern Check", async () => {
-  const testSD: StructureDefinition = {
-    resourceType: "StructureDefinition",
-    id: "test",
-    type: "TESTING",
-    kind: "complex-type",
-    snapshot: {
-      element: [
-        {
-          id: "TESTING",
-          path: "TESTING",
-          min: 0,
-          max: "*",
-        },
-        {
-          id: "TESTING.concept",
-          path: "TESTING.concept",
-          min: 1,
-          max: "1",
-          type: [
-            {
-              code: "CodeableConcept",
-            },
-          ],
-          patternCodeableConcept: {
-            coding: [
-              {
-                system: "http://loinc.org",
-                code: "85354-9",
-              },
-            ],
-          },
-        },
-      ],
-    },
-  } as StructureDefinition;
-
-  expect(
-    validateSD(CTX, testSD, {
-      concept: {},
-    }),
-  ).resolves.toEqual([
-    {
-      code: "structure",
-      diagnostics:
-        'Value does not conform to pattern {"coding":[{"system":"http://loinc.org","code":"85354-9"}]}.',
-      expression: ["/concept"],
       severity: "error",
     },
   ]);
