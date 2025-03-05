@@ -74,7 +74,7 @@ jobs:
           cache: "yarn"
 
       - name: Yarn Setup
-        run: corepack prepare yarn@4.6.0 --activate
+        run: corepack prepare yarn@4.7.0 --activate
 
       - name: Build
         run: sh install.sh
