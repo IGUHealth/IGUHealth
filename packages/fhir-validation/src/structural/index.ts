@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen/traversal/structure-definition";
+
+import {
+  ContentReferenceNode,
+  FPPrimitiveNode,
+  TypeChoiceNode,
+  TypeNode,
+} from "@iguhealth/codegen/generate/meta-data";
 import {
   Loc,
   descend,
@@ -12,19 +18,22 @@ import {
   OperationOutcome,
   OperationOutcomeIssue,
   Reference,
-  StructureDefinition,
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   AllDataTypes,
   AllResourceTypes,
   FHIR_VERSION,
-  R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { isObject, isPrimitiveType } from "@iguhealth/meta-value/utilities";
+import {
+  ElementNode,
+  getMeta,
+  getStartingMeta,
+  resolveMeta,
+} from "@iguhealth/meta-value/meta";
+import { isObject } from "@iguhealth/meta-value/utilities";
 import {
   OperationError,
   issueError,
@@ -35,32 +44,8 @@ import { validatePrimitive } from "../elements/primitive.js";
 import { validateCardinality } from "../elements/validators/cardinality.js";
 import { validateFixedValue } from "../elements/validators/fixedValue.js";
 import { validatePattern } from "../elements/validators/pattern.js";
-import { ElementLoc, ValidationCTX } from "../types.js";
-import {
-  ascendElementLoc,
-  getFoundFieldsForElement,
-  isElementRequired,
-  isResourceType,
-  notNullable,
-  resolveTypeToStructureDefinition,
-} from "../utilities.js";
-
-function resolveContentReferenceIndex(
-  sd: StructureDefinition | r4b.StructureDefinition,
-  elementsLoc: Loc<StructureDefinition, ElementDefinition[]>,
-  element: ElementDefinition | r4b.ElementDefinition,
-): ElementLoc {
-  const elements = get(elementsLoc, sd as StructureDefinition);
-  const contentReference = element.contentReference?.split("#")[1];
-  const referenceElementIndex = elements.findIndex(
-    (element) => element.id === contentReference,
-  );
-  if (!referenceElementIndex)
-    throw new Error(
-      "unable to resolve contentreference: '" + element.contentReference + "'",
-    );
-  return descend(elementsLoc, referenceElementIndex) as unknown as ElementLoc;
-}
+import { ValidationCTX } from "../types.js";
+import { isElementRequired, isResourceType } from "../utilities.js";
 
 function isReferenceConformantToStructureDefinition(
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
@@ -155,221 +140,264 @@ async function validateReferenceTypeConstraint(
   ];
 }
 
-/**
- * Validates the BackboneElement / Element values that have nested ElementDefinitions
- *
- * @param ctx
- * @param structureDefinition
- * @param elementLoc
- * @param root
- * @param path
- * @param childrenIndexes
- * @returns
- */
-async function validateElementNested(
-  ctx: ValidationCTX,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementLoc: ElementLoc,
-  root: object,
-  path: Loc<object, any, any>,
-  childrenIndexes: number[],
-): Promise<OperationOutcome["issue"]> {
-  const { field: elementIndex, parent: elementsLoc } =
-    ascendElementLoc(elementLoc);
-  // Found concatenate on found fields so can check at end whether their are additional and throw error.
-  const foundFields: Set<string> =
-    structureDefinition.kind === "resource" && elementIndex === 0
-      ? new Set(["resourceType"])
-      : new Set([]);
-
-  const value = get(path, root);
-
-  if (typeof value !== "object") {
+function checkResourceType(
+  type: uri,
+  root: Record<string, unknown>,
+  path: Loc<any, any, any>,
+) {
+  const resource = root as unknown as Resource<FHIR_VERSION, AllResourceTypes>;
+  // Verify the resourceType aligns.
+  if (get(descend(path, "resourceType"), resource) !== type) {
     return [
       issueError(
-        "structure",
-        `Invalid type '${typeof value}' at path '${toJSONPointer(path)}`,
+        "invalid",
+        `ResourceType '${get(
+          descend(path, "resourceType"),
+          resource,
+        )}' does not match expected type '${type}'`,
         [toJSONPointer(path)],
       ),
     ];
   }
+  return [];
+}
 
-  const issues = (
-    await Promise.all(
-      childrenIndexes.map(async (childElementIndex) => {
-        const childElementLoc = descend(
-          elementsLoc,
-          childElementIndex,
-        ) as unknown as ElementLoc;
-        const element = get(childElementLoc, structureDefinition);
-        if (!notNullable(element)) {
-          throw new OperationError(
-            outcomeFatal(
-              "structure",
-              `Element not found at '${childElementLoc}' for StructureDefinition ${structureDefinition.id}`,
-              [toJSONPointer(path)],
-            ),
-          );
-        }
+type FieldMeta = {
+  field: string;
+  meta: ElementNode | (FPPrimitiveNode & { definition: ElementDefinition });
+};
 
-        // Because Primitives can be extended under seperate key we must check multiple fields.
-        const fields = getFoundFieldsForElement(ctx, element, value);
-        fields.forEach((f) => foundFields.add(f.field));
+function findFields(
+  ctx: ValidationCTX,
+  meta:
+    | ElementNode
+    | TypeNode
+    | TypeChoiceNode
+    | FPPrimitiveNode
+    | ContentReferenceNode,
+  value: object,
+  field: string,
+): FieldMeta[] {
+  switch (meta._type_) {
+    case "fp-primitive":
+    case "resource":
+    case "complex-type": {
+      if (!("definition" in meta))
+        throw new Error("Definition not found in meta");
 
-        if (isElementRequired(element) && fields.length === 0) {
-          return [
-            issueError(
-              "structure",
-              `Missing required field '${element.path}' at path '${toJSONPointer(
-                path,
-              )}'`,
-              [toJSONPointer(path)],
-            ),
-          ];
-        }
+      if (field in value) {
+        return [{ field, meta }];
+      }
 
-        return (
-          await Promise.all(
-            fields.map((fieldType) =>
-              validateElement(
-                ctx,
-                structureDefinition,
-                childElementLoc,
-                root,
-                descend(path, fieldType.field),
-                fieldType.type,
-              ),
-            ),
-          )
-        ).flat();
-      }),
-    )
-  ).flat();
+      return [];
+    }
+    case "type": {
+      return findFields(
+        ctx,
+        {
+          ...getStartingMeta(ctx.fhirVersion, meta.type),
+          definition: meta.definition,
+        } as ElementNode,
+        value,
+        field,
+      );
+    }
+    case "primitive-type": {
+      const foundFields: FieldMeta[] = [];
+      if (field in value) {
+        foundFields.push({ field, meta });
+      }
+      // Because Primitives have Element data under seperate key we must check multiple fields.
+      if (`_${field}` in value) {
+        const elementMeta = getStartingMeta(
+          ctx.fhirVersion,
+          "Element" as uri,
+        ) as ElementNode;
+        foundFields.push({
+          field: `_${field}`,
+          meta: {
+            ...elementMeta,
+            // Reet the min max cardinaltiy to the field definition.
+            definition: {
+              ...elementMeta.definition,
+              // Set both path and max,min,base to field definition to avoid issues with cardinality validation.
+              path: meta.definition.path,
+              max: meta.definition.max,
+              min: meta.definition.min,
+              base: meta.definition.base,
+            },
+          },
+        });
+      }
 
-  // Check for additional fields
-  const additionalFields = new Set(Object.keys(value)).difference(foundFields);
+      return foundFields;
+    }
 
-  return additionalFields.size > 0
-    ? [
-        ...issues,
-        issueError(
-          "structure",
-          `Additional fields found at path '${toJSONPointer(
-            path,
-          )}': '${Array.from(additionalFields).join(", ")}'`,
-          [toJSONPointer(path)],
-        ),
-      ]
-    : issues;
+    case "typechoice": {
+      for (const fieldToType of Object.keys(meta.fieldsToType)) {
+        const foundFields = findFields(
+          ctx,
+          {
+            ...getStartingMeta(ctx.fhirVersion, meta.fieldsToType[fieldToType]),
+            definition: meta.definition,
+          } as ElementNode,
+          value,
+          fieldToType,
+        );
+        if (foundFields.length > 0) return foundFields;
+      }
+      return [];
+    }
+
+    case "content-reference": {
+      const nextMeta = resolveMeta(ctx.fhirVersion, meta, value, field);
+      if (!nextMeta)
+        throw new OperationError(
+          outcomeFatal(
+            "not-found",
+            `Could not derive meta from content-reference '${meta.definition.path}'`,
+          ),
+        );
+
+      return findFields(
+        ctx,
+        {
+          ...nextMeta.meta,
+          cardinality: meta.cardinality,
+          definition: {
+            ...nextMeta.meta.definition,
+            min: meta.definition.min,
+            max: meta.definition.max,
+          },
+        },
+        value,
+        field,
+      );
+    }
+
+    default: {
+      // @ts-ignore
+      throw new Error(`Unknown meta type: ${meta._type_}`);
+    }
+  }
 }
 
 /**
- * Validates a singular element. This Could be a primitive or complex type.
+ * Validates singular complex item.
  * @param ctx
- * @param structureDefinition
- * @param elementLoc The location to the ElementDefinition in the structure definition.
+ * @param meta
  * @param root
  * @param path
- * @param type
- * @returns
  */
-export async function validateElementSingular(
+async function validateComplex(
   ctx: ValidationCTX,
-  structureDefinition: StructureDefinition | r4b.StructureDefinition,
-  elementLoc: ElementLoc,
+  meta: ElementNode,
   root: object,
-  path: Loc<object, any, any>,
-  type: uri,
-): Promise<OperationOutcome["issue"]> {
-  const { field: elementIndex, parent: elementsLoc } =
-    ascendElementLoc(elementLoc);
-
-  const element = get(elementLoc, structureDefinition);
-  if (!element) {
-    throw new OperationError(
-      outcomeFatal("invalid", `Element not found at loc '${elementLoc}'`),
-    );
+  path: Loc<any, any, any>,
+) {
+  const value = get(path, root);
+  if (!isObject(value)) {
+    return [
+      issueError(
+        "structure",
+        `Value must be an object when validating '${meta.type}'. Instead found type of '${typeof value}'`,
+        [toJSONPointer(path)],
+      ),
+    ];
   }
+  switch (meta._type_) {
+    case "resource":
+    case "complex-type": {
+      const foundFields: Set<string> =
+        meta._type_ === "resource" ? new Set(["resourceType"]) : new Set([]);
 
-  if (element.contentReference) {
-    return validateElementSingular(
-      ctx,
-      structureDefinition,
-      resolveContentReferenceIndex(structureDefinition, elementsLoc, element),
-      root,
-      path,
-      type,
-    );
-  }
+      const issues = (
+        await Promise.all(
+          Object.keys(meta.properties).map(async (property) => {
+            const childMeta = getMeta(ctx.fhirVersion, meta, property);
+            if (!childMeta) {
+              throw new OperationError(
+                outcomeFatal(
+                  "not-found",
+                  `Could not find meta for property '${property}' on type '${meta.type}'`,
+                ),
+              );
+            }
 
-  const childrenIndixes = eleIndexToChildIndexes(
-    get(elementsLoc, structureDefinition as StructureDefinition) ?? [],
-    elementIndex as number,
-  );
+            // Because Primitives can be extended under seperate key we must check multiple fields.
+            const fields = findFields(ctx, childMeta, value, property);
+            fields.forEach((f) => foundFields.add(f.field));
 
-  const patternIssues = await validatePattern(element, root, path);
-  if (patternIssues.length > 0) {
-    return patternIssues;
-  }
+            if (
+              isElementRequired(childMeta.definition) &&
+              fields.length === 0
+            ) {
+              return [
+                issueError(
+                  "structure",
+                  `Missing required field at path '${toJSONPointer(descend(path, property))}'`,
+                  [toJSONPointer(path)],
+                ),
+              ];
+            }
 
-  const fixedValueIssues = await validateFixedValue(element, root, path);
-  if (fixedValueIssues.length > 0) {
-    return fixedValueIssues;
-  }
+            return (
+              await Promise.all(
+                fields.map((child) =>
+                  validateElement(
+                    ctx,
+                    child.meta,
+                    root,
+                    descend(path, child.field),
+                  ),
+                ),
+              )
+            ).flat();
+          }),
+        )
+      ).flat();
 
-  // Leaf validation
-  if (childrenIndixes.length === 0) {
-    if (
-      isPrimitiveType(ctx.fhirVersion, type) ||
-      type === "http://hl7.org/fhirpath/System.String"
-    ) {
-      // Element Check.
-      return validatePrimitive(ctx, element, root, path, type);
-    } else {
-      if (type === "Resource" || type === "DomainResource") {
-        type = get(descend(path, "resourceType"), root);
+      // Check for additional fields
+      const additionalFields = new Set(Object.keys(value)).difference(
+        foundFields,
+      );
+
+      if (additionalFields.size > 0) {
+        issues.push(
+          issueError(
+            "structure",
+            `Additional fields found at path '${toJSONPointer(
+              path,
+            )}': '${Array.from(additionalFields).join(", ")}'`,
+            [toJSONPointer(path)],
+          ),
+        );
       }
-      const issues = await validate(ctx, type, root, path);
-      // Special validation for reference to confirm the type constraint.
-      if (issues.length === 0 && type === "Reference") {
-        return await validateReferenceTypeConstraint(ctx, element, root, path);
-      }
+
       return issues;
     }
-  } else {
-    return validateElementNested(
-      ctx,
-      structureDefinition,
-      elementLoc,
-      root,
-      path,
-      childrenIndixes,
-    );
+    default: {
+      throw new OperationError(outcomeFatal("invalid", "Invalid Meta type."));
+    }
   }
 }
 
-export async function validateElement(
+/**
+ * Validate cardinality for the element.
+ * @param ctx Validation context.
+ * @param meta Meta of the element to be validated.
+ * @param root
+ * @param path
+ * @returns
+ */
+async function validateElement(
   ctx: ValidationCTX,
-  structureDefinition: Resource<FHIR_VERSION, "StructureDefinition">,
-  elementLoc: ElementLoc,
+  meta: ElementNode | (FPPrimitiveNode & { definition: ElementDefinition }),
   root: object,
   path: Loc<any, any, any>,
-  type: uri,
-): Promise<OperationOutcomeIssue[]> {
-  const element = get(elementLoc, structureDefinition);
-  if (!notNullable(element)) {
-    throw new OperationError(
-      outcomeFatal(
-        "structure",
-        `Element not found at '${elementLoc}' for StructureDefinition ${structureDefinition.id}`,
-        [toJSONPointer(path)],
-      ),
-    );
-  }
-
+) {
   const value = get(path, root);
-
-  const issues = validateCardinality(element, elementLoc, root, path);
+  const issues = validateCardinality(meta.definition, root, path);
   if (issues.length > 0) return issues;
 
   switch (true) {
@@ -381,82 +409,107 @@ export async function validateElement(
       return (
         await Promise.all(
           (value || []).map((_v: any, i: number) => {
-            return validateElementSingular(
-              ctx,
-              structureDefinition,
-              elementLoc,
-              root,
-              descend(path, i),
-              type,
-            );
+            return validateElementSingular(ctx, meta, root, descend(path, i));
           }),
         )
       ).flat();
     }
+    // Means single item.
     default: {
-      return validateElementSingular(
-        ctx,
-        structureDefinition,
-        elementLoc,
-        root,
-        path,
-        type,
-      );
+      return validateElementSingular(ctx, meta, root, path);
     }
   }
 }
 
-export function validateSD(
+/**
+ * Validates a singular item.
+ * @param ctx Validation ctx which includes the version.
+ * @param meta
+ * @param root
+ * @param path_
+ * @returns
+ */
+async function validateElementSingular(
   ctx: ValidationCTX,
-  sd: Resource<FHIR_VERSION, "StructureDefinition">,
+  meta: ElementNode | (FPPrimitiveNode & { definition: ElementDefinition }),
   root: unknown,
-  path_?: Loc<any, any, any>,
-) {
-  const path =
-    path_ ?? pointer(ctx.fhirVersion, sd.type as AllResourceTypes, "id" as id);
-
-  if (!isObject(root))
-    return [
-      issueError(
-        "structure",
-        `Value must be an object when validating '${sd.type}'. Instead found type of '${typeof root}'`,
-        [toJSONPointer(path)],
-      ),
-    ];
-
-  const resource = root as unknown as Resource<FHIR_VERSION, AllResourceTypes>;
-
-  if (sd.kind === "resource") {
-    // Verify the resourceType aligns.
-    if (get(descend(path, "resourceType"), resource) !== sd.type) {
-      return [
-        issueError(
-          "invalid",
-          `ResourceType '${
-            resource.resourceType
-          }' does not match expected type '${sd.type}'`,
-          [toJSONPointer(path)],
-        ),
-      ];
-    }
+  path: Loc<any, any, any>,
+): Promise<OperationOutcomeIssue[]> {
+  const patternIssues = await validatePattern(meta.definition, root, path);
+  if (patternIssues.length > 0) {
+    return patternIssues;
   }
 
-  const startingLoc = descend(
-    descend(
-      descend(pointer(R4, "StructureDefinition", sd.id as id), "snapshot"),
-      "element",
-    ),
-    0,
-  );
-
-  return validateElement(
-    ctx,
-    sd,
-    startingLoc as unknown as ElementLoc,
-    resource,
+  const fixedValueIssues = await validateFixedValue(
+    meta.definition,
+    root,
     path,
-    sd.type,
   );
+  if (fixedValueIssues.length > 0) {
+    return fixedValueIssues;
+  }
+
+  switch (meta._type_) {
+    case "resource": {
+      let type = meta.type;
+      if (!isObject(root))
+        return [
+          issueError(
+            "structure",
+            `Value must be an object when validating '${meta.type}'. Instead found type of '${typeof root}'`,
+            [toJSONPointer(path)],
+          ),
+        ];
+
+      if (meta.type === "Resource" || meta.type === "DomainResource") {
+        type = get(descend(path, "resourceType"), root);
+      }
+
+      const typeIssues = checkResourceType(type, root, path);
+      if (typeIssues.length > 0) return typeIssues;
+
+      const resourceMeta = getStartingMeta(ctx.fhirVersion, type);
+      if (!resourceMeta || resourceMeta._type_ !== "resource")
+        throw new OperationError(
+          outcomeFatal("not-found", `Could not find meta for type '${type}'`),
+        );
+
+      return validateComplex(ctx, resourceMeta, root, path);
+    }
+    case "complex-type": {
+      if (!isObject(root))
+        return [
+          issueError(
+            "structure",
+            `Value must be an object when validating '${meta.type}'. Instead found type of '${typeof root}'`,
+            [toJSONPointer(path)],
+          ),
+        ];
+
+      if (meta.type === "Reference") {
+        const issuesReferenceConstraint = await validateReferenceTypeConstraint(
+          ctx,
+          meta.definition,
+          root,
+          path,
+        );
+        if (issuesReferenceConstraint.length > 0)
+          return issuesReferenceConstraint;
+      }
+
+      return validateComplex(ctx, meta, root, path);
+    }
+    case "fp-primitive":
+    case "primitive-type": {
+      return validatePrimitive(
+        ctx,
+        meta.definition,
+        root,
+        path as Loc<any, any, any>,
+        meta.type,
+      );
+    }
+  }
 }
 
 export default async function validate(
@@ -468,9 +521,13 @@ export default async function validate(
   const path =
     path_ ?? pointer(ctx.fhirVersion, type as AllDataTypes, "id" as id);
 
-  if (isPrimitiveType(ctx.fhirVersion, type))
-    return validatePrimitive(ctx, undefined, root, path, type);
+  const meta = getStartingMeta(ctx.fhirVersion, type);
+  if (!meta)
+    throw new OperationError(
+      outcomeFatal("not-found", `Could not find meta for type '${type}'`),
+    );
 
-  const sd = await resolveTypeToStructureDefinition(ctx, type);
-  return validateSD(ctx, sd, root, path);
+  if (meta._type_ === "fp-primitive") throw new Error();
+
+  return validateElementSingular(ctx, meta, root, path) ?? [];
 }

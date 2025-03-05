@@ -74,11 +74,17 @@ export function pathMeta<
   };
 }
 
-export function get<T extends object, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>,
-  v: T,
-): R {
-  return jsonpointer.get(v, toJSONPointer(loc)) as R;
+export function get<T, R, P extends Parent<T>>(loc: Loc<T, R, P>, v: T): R {
+  const pointer = toJSONPointer(loc);
+
+  if (typeof v !== "object" || v === null) {
+    if (pointer === "") {
+      return v as unknown as R;
+    }
+    throw new Error(`Invalid pointer for primitive value ${typeof v}`);
+  }
+
+  return jsonpointer.get(v, pointer) as R;
 }
 
 export function fields<T extends object, R, P extends Parent<T>>(

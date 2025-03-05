@@ -284,7 +284,7 @@ export async function validateProfileElement(
   let issues: OperationOutcomeIssue[] = [];
 
   // [Cardinality validation]
-  issues = issues.concat(validateCardinality(element, elementLoc, root, path));
+  issues = issues.concat(validateCardinality(element, root, path));
 
   switch (true) {
     case Array.isArray(value): {

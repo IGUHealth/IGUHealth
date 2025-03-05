@@ -8,7 +8,6 @@ import {
   StructureDefinition,
   canonical,
   id,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -273,7 +272,6 @@ test("us-core patient slicing", async () => {
 });
 
 test("Validate US-CORE", async () => {
-  await validateProfile(CTX, usCorePatientProfile, usCorePatient);
   expect(
     validateProfile(CTX, usCorePatientProfile, usCorePatient),
   ).resolves.toEqual([]);

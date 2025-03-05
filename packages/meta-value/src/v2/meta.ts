@@ -2,6 +2,7 @@
 import type {
   ContentReferenceNode,
   ElementNode,
+  FPPrimitiveNode,
   MetaNode,
   MetaV2Compiled,
   TypeChoiceNode,
@@ -37,15 +38,17 @@ function getGlobalMeta(fhirVersion: FHIR_VERSION): MetaV2Compiled {
 export function getStartingMeta(
   fhirVersion: FHIR_VERSION,
   type: uri,
-): ElementNode | undefined {
+): ElementNode | FPPrimitiveNode | undefined {
   return getGlobalMeta(fhirVersion)[type]?.[0] as ElementNode | undefined;
 }
 
 export function getMeta(
   fhirVersion: FHIR_VERSION,
-  meta: ElementNode,
+  meta: ElementNode | FPPrimitiveNode,
   field: string,
-): ElementNode | TypeNode | TypeChoiceNode | ContentReferenceNode | undefined {
+): ElementNode | TypeNode | TypeChoiceNode | undefined {
+  if (meta._type_ === "fp-primitive") return undefined;
+
   const globalMeta = getGlobalMeta(fhirVersion);
   const fieldIndex = meta.properties?.[field];
 
