@@ -220,8 +220,11 @@ function findFields(
             // Reet the min max cardinaltiy to the field definition.
             definition: {
               ...elementMeta.definition,
+              // Set both path and max,min,base to field definition to avoid issues with cardinality validation.
+              path: meta.definition.path,
               max: meta.definition.max,
               min: meta.definition.min,
+              base: meta.definition.base,
             },
           },
         });

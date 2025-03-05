@@ -14,14 +14,10 @@ import { issueError } from "@iguhealth/operation-outcomes";
 function isArray(element: ElementDefinition): boolean {
   // If base is an array should check that first (because profile could restrict to singular value).
   if (!element.path.includes(".")) return false;
-  const max = element.base?.max ?? element.max ?? "1";
-  if (!max) return false;
+  const base = element.base?.max ?? "1";
+  const max = element.max ?? "1";
 
-  const parsed = parseInt(max);
-  if (!isNaN(parsed)) {
-    return parsed > 1;
-  }
-  return max === "*";
+  return base === "*" || max === "*" || parseInt(base) > 1 || parseInt(max) > 1;
 }
 
 function getMin(elementDefinition: ElementDefinition) {
