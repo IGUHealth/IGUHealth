@@ -16874,7 +16874,7 @@ const RAW_RUNTIME_STATE =
           ["jsonpointer", "npm:5.0.1"],\
           ["jwks-rsa", "npm:3.1.0"],\
           ["kafkajs", "npm:2.2.4"],\
-          ["koa", "npm:2.15.3"],\
+          ["koa", "npm:2.16.0"],\
           ["koa-compress", "npm:5.1.1"],\
           ["koa-helmet", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:7.1.0"],\
           ["koa-jwt", "npm:4.0.4"],\
@@ -18329,7 +18329,7 @@ const RAW_RUNTIME_STATE =
           ["@koa/bodyparser", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:5.1.1"],\
           ["@types/koa", "npm:2.15.0"],\
           ["co-body", "npm:6.1.0"],\
-          ["koa", "npm:2.15.3"],\
+          ["koa", "npm:2.16.0"],\
           ["lodash.merge", "npm:4.6.2"],\
           ["type-is", "npm:1.6.18"]\
         ],\
@@ -42956,10 +42956,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["koa", [\
-      ["npm:2.15.3", {\
-        "packageLocation": "./.yarn/cache/koa-npm-2.15.3-7a802d72e9-b2c2771a4e.zip/node_modules/koa/",\
+      ["npm:2.16.0", {\
+        "packageLocation": "./.yarn/cache/koa-npm-2.16.0-fccb365a23-88284e5da4.zip/node_modules/koa/",\
         "packageDependencies": [\
-          ["koa", "npm:2.15.3"],\
+          ["koa", "npm:2.16.0"],\
           ["accepts", "npm:1.3.8"],\
           ["cache-content-type", "npm:1.0.1"],\
           ["content-disposition", "npm:0.5.4"],\
