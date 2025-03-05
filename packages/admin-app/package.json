@@ -63,7 +63,7 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.9",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/react-window": "^1.8.8",
