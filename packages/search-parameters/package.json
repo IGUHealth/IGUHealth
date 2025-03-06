@@ -31,6 +31,6 @@
   "exports": {
     "./api/load": "./lib/api/load.js",
     "./api/sp1.parameters": "./lib/api/sp1.parameters.js",
-    "./api/parameter-resolution": "./api/parameter-resolution.js"
+    "./api/parameter-resolution": "./lib/api/parameter-resolution.js"
   }
 }

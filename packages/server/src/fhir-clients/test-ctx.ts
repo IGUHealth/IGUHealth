@@ -33,6 +33,18 @@ const sds = loadArtifacts({
   silence: true,
 });
 
+const parameters = loadArtifacts({
+  fhirVersion: R4,
+  resourceType: "SearchParameter",
+  // Don't want to load other searchparameters which could conflict with base for now.
+  onlyPackages: [
+    "@iguhealth/hl7.fhir.r4.core",
+    "@iguhealth/iguhealth.fhir.r4.core",
+  ],
+  currentDirectory: fileURLToPath(import.meta.url),
+  silence: true,
+});
+
 class TestLock implements Lock<TestLock> {
   async withLock(lockId: string, body: (v: TestLock) => Promise<void>) {
     await body(this);
@@ -72,17 +84,28 @@ export const testServices: IGUHealthServerCTX = {
   resolveCanonical: async <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
-    URL extends canonical | canonical[],
-    Return extends URL extends canonical[]
-      ? Resource<Version, Type>[]
-      : Resource<Version, Type> | undefined,
+    URL extends canonical[],
   >(
     _ctx: IGUHealthServerCTX,
     version: Version,
     type: Type,
     url: URL,
-  ): Promise<Return> => {
-    return sds.find((sd) => sd.url === url) as Return;
+  ): Promise<Resource<Version, Type>[]> => {
+    switch (type) {
+      case "StructureDefinition": {
+        return sds.filter((sd) =>
+          url.includes(sd.url as canonical),
+        ) as Resource<Version, Type>[];
+      }
+      case "SearchParameter": {
+        return parameters.filter((param) =>
+          url.includes(param.url as canonical),
+        ) as Resource<Version, Type>[];
+      }
+      default: {
+        return [];
+      }
+    }
   },
   lock: new TestLock(),
 };

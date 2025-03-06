@@ -79,6 +79,8 @@ export interface IQueue {
   batch(): Promise<IQueueBatch>;
 
   isBatch(): boolean;
+
+  disconnect(): Promise<void>;
 }
 
 export interface IQueueBatch extends IQueue {
