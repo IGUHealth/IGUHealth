@@ -16,9 +16,9 @@
     "classnames": "^2.5.1",
     "fhirclient": "^2.5.4",
     "nanoid": "^5.1.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0",
     "react-scripts": "^5.0.1",
     "typescript": "5.8.2",
     "web-vitals": "^3.5.2"
@@ -50,8 +50,8 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.9",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.4.17"
   }
