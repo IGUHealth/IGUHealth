@@ -62,7 +62,7 @@ export async function createCertifications(
  */
 export async function getJWKS(
   directory: string,
-  alg: string = ALGORITHMS.RS384,
+  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
 ) {
   const publicKeyPaths = readdirSync(directory);
   const keys = await Promise.all(
