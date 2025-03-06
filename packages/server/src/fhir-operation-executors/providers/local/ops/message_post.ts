@@ -1,4 +1,4 @@
-import { Kafka } from "kafkajs";
+import { CompressionTypes, Kafka } from "kafkajs";
 
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
@@ -55,6 +55,7 @@ async function postMessageBroker(
       await producer.send({
         topic: channel.topic.topicId,
         messages: [{ value: JSON.stringify(input) }],
+        compression: CompressionTypes.GZIP,
       });
       await producer.disconnect();
 

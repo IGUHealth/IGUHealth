@@ -49,11 +49,13 @@ export class KafkaBatch implements IQueue, IQueueBatch {
     messages: ITopicMessage<T>[],
   ): Promise<void> {
     this._messages[topic] = (this._messages[topic] ?? []).concat(
-      messages.map((m) => ({
-        ...m,
-        key: this._transactionKey,
-        value: JSON.stringify(m.value),
-      })),
+      messages.map((m) => {
+        return {
+          ...m,
+          key: this._transactionKey,
+          value: JSON.stringify(m.value),
+        };
+      }),
     );
   }
 
@@ -76,6 +78,10 @@ export class KafkaBatch implements IQueue, IQueueBatch {
   isBatch(): boolean {
     return true;
   }
+
+  disconnect() {
+    return this._producer.disconnect();
+  }
 }
 
 export class KafkaQueue implements IQueue {
@@ -92,10 +98,12 @@ export class KafkaQueue implements IQueue {
     await this._producer.send({
       compression: CompressionTypes.GZIP,
       topic: topic,
-      messages: messages.map((m) => ({
-        ...m,
-        value: JSON.stringify(m.value),
-      })),
+      messages: messages.map((m) => {
+        return {
+          ...m,
+          value: JSON.stringify(m.value),
+        };
+      }),
     });
   }
 
@@ -119,5 +127,9 @@ export class KafkaQueue implements IQueue {
 
   isBatch(): boolean {
     return false;
+  }
+
+  disconnect() {
+    return this._producer.disconnect();
   }
 }

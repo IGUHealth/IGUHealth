@@ -17,6 +17,7 @@ import logAuditEvent, {
   createAuditEvent,
 } from "../../../../fhir-logging/auditEvents.js";
 import { createClient, createLogger } from "../../../../fhir-server/index.js";
+import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
 import createQueue from "../../../../queue/index.js";
@@ -31,7 +32,6 @@ import { createResolverRemoteCanonical } from "../../../../search-stores/canonic
 import { createSearchStore } from "../../../../search-stores/index.js";
 import {
   deriveResourceTypeFilter,
-  findSearchParameter,
   parametersWithMetaAssociated,
 } from "../../../../search-stores/parameters.js";
 import { workerTokenClaims } from "../../../utilities.js";
@@ -67,8 +67,8 @@ async function processSubscription(
     request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
     const parameters = await parametersWithMetaAssociated(
-      async (resourceTypes, name) =>
-        await findSearchParameter(ctx.client, {}, R4, resourceTypes, name),
+      asRoot(ctx),
+      request.fhirVersion,
       resourceTypes,
       request.parameters,
     ); // Standard parameters
@@ -215,7 +215,8 @@ export default async function createSubscriptionV1Worker() {
     search: await createSearchStore({ type: "postgres" }),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
-    ...createClient(),
+    client: createClient(),
+    resolveCanonical,
   };
 
   const stop = await createKafkaConsumer(
