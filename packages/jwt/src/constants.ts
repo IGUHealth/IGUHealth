@@ -8,7 +8,9 @@ export const CUSTOM_CLAIMS = {
   ROLE: <const>"https://iguhealth.app/role",
 };
 
-export const ALGORITHMS = {
+export type ALGORITHMS_ALLOWED = typeof ALGORITHMS[keyof typeof ALGORITHMS];
+
+export const ALGORITHMS = <const>{
   RS256: "RS256",
   RS384: "RS384",
 };

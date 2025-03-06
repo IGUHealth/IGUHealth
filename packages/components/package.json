@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-attributes": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.0",
     "@chromatic-com/storybook": "^1.6.1",
@@ -56,7 +56,7 @@
     "postcss-cli": "^11.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "rollup": "^4.27.4",
+    "rollup": "^4.34.9",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
@@ -83,7 +83,7 @@
     "fast-json-patch": "^3.1.1",
     "immer": "^10.1.1",
     "js-file-download": "^0.4.12",
-    "react-hot-toast": "^2.5.1"
+    "react-hot-toast": "^2.5.2"
   },
   "files": [
     "src/**",

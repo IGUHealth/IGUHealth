@@ -28,7 +28,7 @@ export async function createToken<Payload extends jose.JWTPayload>({
   payload,
   expiresIn = "1h",
 }: {
-  signingKey: { kid: string; key: jose.KeyLike };
+  signingKey: { kid: string; key: CryptoKey };
   payload: Payload;
   expiresIn?: string;
 }): Promise<JWT<Payload>> {
