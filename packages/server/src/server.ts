@@ -352,7 +352,7 @@ export default async function createServer(): Promise<
       await next();
     })
     .use(async (ctx, next) => {
-      return helmet({
+      return helmet.default({
         contentSecurityPolicy: {
           // See https://github.com/w3c/webappsec-csp/issues/8
           // Not compatible with redirect on OIDC
