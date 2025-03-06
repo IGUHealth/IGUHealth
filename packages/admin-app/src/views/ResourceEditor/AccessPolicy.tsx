@@ -1,7 +1,7 @@
 import { json } from "@codemirror/lang-json";
 import { basicSetup } from "codemirror";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import {
   Button,
@@ -42,7 +42,7 @@ const AccessPolicyInvoke = ({
   accessPolicy: AccessPolicyV2 | undefined;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [output, setOutput] = useState<unknown | undefined>(undefined);
   const [userReference, setUserReference] = useState<Reference | undefined>();
   const [requestType, setRequestType] = useState<code | undefined>();

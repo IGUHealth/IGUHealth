@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 import {
   Button,
@@ -28,7 +28,7 @@ function InviteModal({
   refresh,
   setOpen,
 }: Readonly<{ setOpen: (open: boolean) => void; refresh: () => void }>) {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
   const [role, setRole] = useState<code | undefined>();
   const [accessPolicyRef, setAccessPolicyRef] = useState<
@@ -172,7 +172,7 @@ function ResourceTypeHeader({ refresh }: Readonly<{ refresh: () => void }>) {
 }
 
 export default function ResourceTypeView() {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const params = useParams();
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState<(() => void) | undefined>(undefined);

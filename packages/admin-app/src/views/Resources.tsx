@@ -1,6 +1,6 @@
+import { useAtomValue } from "jotai";
 import React from "react";
 import { generatePath, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 import { Loading, Table } from "@iguhealth/components";
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
@@ -9,7 +9,7 @@ import { getCapabilities } from "../db/capabilities";
 
 const DisplayResources = () => {
   const navigate = useNavigate();
-  const capabilities = useRecoilValue(getCapabilities);
+  const capabilities = useAtomValue(getCapabilities);
 
   return (
     <div className="flex flex-col flex-1 overflow-auto">

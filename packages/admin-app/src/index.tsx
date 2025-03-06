@@ -3,6 +3,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import { useAtom } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {
@@ -13,7 +14,6 @@ import {
   useMatches,
   useNavigate,
 } from "react-router-dom";
-import { RecoilRoot, useRecoilState } from "recoil";
 
 import {
   IGUHealthProvider,
@@ -84,7 +84,7 @@ function LoginWrapper() {
 function ServiceSetup({ children }: { children: React.ReactNode }) {
   const iguhealth = useIGUHealth();
   const client = iguhealth.isAuthenticated ? iguhealth.client : undefined;
-  const [c, setClient] = useRecoilState(getClient);
+  const [c, setClient] = useAtom(getClient);
 
   React.useEffect(() => {
     if (client) {
@@ -499,9 +499,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
+    <App />
   </React.StrictMode>,
 );
 

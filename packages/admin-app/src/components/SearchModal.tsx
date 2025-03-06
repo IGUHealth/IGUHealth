@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
+import { atom, useAtom, useAtomValue } from "jotai";
 import {
   CSSProperties,
   ComponentType,
@@ -13,7 +14,6 @@ import {
   FixedSizeListProps,
   FixedSizeList as _FixedSizeList,
 } from "react-window";
-import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
@@ -21,15 +21,9 @@ import { getCapabilities } from "../db/capabilities";
 
 const List = _FixedSizeList as ComponentType<FixedSizeListProps>;
 
-export const openSearchModalAtom = atom({
-  key: "openSearchModal",
-  default: false,
-});
+export const openSearchModalAtom = atom(false);
 
-export const currentIndex: RecoilState<number> = atom({
-  key: "searchModalIndex",
-  default: 0,
-});
+export const currentIndex = atom(0);
 
 function SearchResultItem({
   data,
@@ -74,10 +68,10 @@ function SearchResultItem({
 
 function SearchModal() {
   const [inputSearch, setInputSearch] = useState<HTMLInputElement | null>(null);
-  const capabilities = useRecoilValue(getCapabilities);
+  const capabilities = useAtomValue(getCapabilities);
   const [search, setSearch] = useState("");
-  const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
-  const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
+  const [openModal, setOpenModal] = useAtom(openSearchModalAtom);
+  const [searchIndex, setSearchIndex] = useAtom(currentIndex);
 
   useEffect(() => {
     if (openModal && inputSearch) {

@@ -1,6 +1,6 @@
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 import { Toaster } from "@iguhealth/components";
 import {
@@ -27,7 +27,7 @@ import OperationDefinitionView from "./OperationDefinition";
 import SubscriptionView from "./Subscription";
 
 function ResourceEditorTabs() {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [resource, setResource] = useState<Resource | undefined>(undefined);
   const [structureDefinition, setStructureDefinition] = useState<
     StructureDefinition | undefined

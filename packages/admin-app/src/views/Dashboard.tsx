@@ -1,5 +1,5 @@
+import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import { isResponseError } from "@iguhealth/client/lib/http";
 import { Toaster } from "@iguhealth/components";
@@ -15,7 +15,7 @@ const Dashboard = () => {
     [key: string]: IguhealthUsageStatistics.Output["statistics"];
   }>({});
 
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   useEffect(() => {
     client
       .invoke_system(IguhealthUsageStatistics.Op, {}, R4, {})
