@@ -2,7 +2,7 @@
   "name": "@iguhealth/jwt",
   "version": "0.10.5",
   "dependencies": {
-    "jose": "^5.10.0"
+    "jose": "^6.0.8"
   },
   "type": "module",
   "description": "JWT utilities for Igu Health",
@@ -17,7 +17,7 @@
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.2.6",
     "typescript": "5.8.2"
   },
   "exports": {

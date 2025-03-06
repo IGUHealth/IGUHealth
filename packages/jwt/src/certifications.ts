@@ -1,5 +1,4 @@
 import * as jose from "jose";
-import { KeyObject } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
@@ -9,15 +8,18 @@ import {
 } from "node:fs";
 import path from "node:path";
 
-import { ALGORITHMS } from "./constants.js";
+import { ALGORITHMS, ALGORITHMS_ALLOWED } from "./constants.js";
 
 /**
  * Generates a keypair using the provided algorithm.
  * @param alg
  * @returns privateKey and publicKey generated using jose library.
  */
-export async function generateKeyPair(alg: string = ALGORITHMS.RS384) {
-  const { privateKey, publicKey } = await jose.generateKeyPair(alg);
+export async function generateKeyPair(
+  alg: ALGORITHMS_ALLOWED,
+  options: { extractable: boolean },
+) {
+  const { privateKey, publicKey } = await jose.generateKeyPair(alg, options);
   return { privateKey, publicKey };
 }
 
@@ -30,13 +32,15 @@ export async function generateKeyPair(alg: string = ALGORITHMS.RS384) {
  * @returns
  */
 export async function createCertifications(
+  alg: ALGORITHMS_ALLOWED,
   directory: string,
   kid: string,
-  alg: string = ALGORITHMS.RS384,
 ) {
   mkdirSync(directory, { recursive: true });
 
-  const { publicKey, privateKey } = await generateKeyPair(alg);
+  const { publicKey, privateKey } = await generateKeyPair(alg, {
+    extractable: true,
+  });
 
   const p8PublicKey = await jose.exportSPKI(publicKey);
   const p8Private = await jose.exportPKCS8(privateKey);
@@ -58,7 +62,7 @@ export async function createCertifications(
  */
 export async function getJWKS(
   directory: string,
-  alg: string = ALGORITHMS.RS384,
+  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
 ) {
   const publicKeyPaths = readdirSync(directory);
   const keys = await Promise.all(
@@ -94,10 +98,10 @@ export async function getJWKS(
 export async function getSigningKey(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS384,
-): Promise<{ key: KeyObject; kid: string }> {
+  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
+): Promise<{ key: CryptoKey; kid: string }> {
   const privateKeyPath = path.join(directory, `${kid}.p8`);
-  const privateKey = await jose.importPKCS8<KeyObject & jose.KeyLike>(
+  const privateKey = await jose.importPKCS8(
     readFileSync(privateKeyPath, "utf-8"),
     alg,
   );
@@ -116,7 +120,7 @@ export async function getSigningKey(
 export async function createCertsIfNoneExists(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS384,
+  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
 ) {
   try {
     await getSigningKey(directory, kid, alg);
@@ -124,6 +128,6 @@ export async function createCertsIfNoneExists(
     if (!existsSync(directory)) {
       mkdirSync(directory);
     }
-    await createCertifications(directory, kid, alg);
+    await createCertifications(alg, directory, kid);
   }
 }
