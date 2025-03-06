@@ -25031,7 +25031,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.3.1"],\
           ["semver", "npm:7.5.3"],\
-          ["store2", "npm:2.14.2"],\
+          ["store2", "npm:2.14.4"],\
           ["telejson", "npm:7.2.0"],\
           ["ts-dedent", "npm:2.2.0"]\
         ],\
@@ -55972,10 +55972,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["store2", [\
-      ["npm:2.14.2", {\
-        "packageLocation": "./.yarn/cache/store2-npm-2.14.2-c286d27e4f-896cb4c75b.zip/node_modules/store2/",\
+      ["npm:2.14.4", {\
+        "packageLocation": "./.yarn/cache/store2-npm-2.14.4-a143d1924d-c92713e755.zip/node_modules/store2/",\
         "packageDependencies": [\
-          ["store2", "npm:2.14.2"]\
+          ["store2", "npm:2.14.4"]\
         ],\
         "linkType": "HARD"\
       }]\
