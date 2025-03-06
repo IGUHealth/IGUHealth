@@ -1,10 +1,10 @@
+import { useSetAtom } from "jotai";
 import React from "react";
-import { useSetRecoilState } from "recoil";
 
 import { openSearchModalAtom } from "./SearchModal";
 
 function Search() {
-  const openSearchModal = useSetRecoilState(openSearchModalAtom);
+  const openSearchModal = useSetAtom(openSearchModalAtom);
 
   return (
     <>

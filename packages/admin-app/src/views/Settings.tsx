@@ -1,5 +1,5 @@
+import { useAtomValue } from "jotai";
 import React from "react";
-import { useRecoilValue } from "recoil";
 
 import { deriveIGUHealthVersionedURL } from "@iguhealth/client/http";
 import {
@@ -60,7 +60,7 @@ function Copyable({
 
 function Scopes() {
   const iguhealth = useIGUHealth();
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [scopes, setScopes] = React.useState<
     IguhealthListScopes.Output["scopes"]
   >([]);
@@ -157,7 +157,7 @@ function Scopes() {
 
 function RefreshTokens() {
   const iguhealth = useIGUHealth();
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [refreshTokens, setRefreshTokens] = React.useState<
     IguhealthListRefreshTokens.Output["refresh-tokens"]
   >([]);

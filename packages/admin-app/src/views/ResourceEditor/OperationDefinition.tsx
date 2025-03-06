@@ -3,8 +3,8 @@ import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { keymap } from "@codemirror/view";
 import { basicSetup } from "codemirror";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import {
   Button,
@@ -64,7 +64,7 @@ const DeployModal = ({
   operation: OperationDefinition | undefined;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [environment, setEnvironment] = useState("[]");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 
@@ -240,7 +240,7 @@ function OperationCodeEditor({
 }
 
 function OperationAuditEvents({ operationId }: { operationId: string }) {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [loading, setLoading] = useState(true);
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
 
@@ -297,7 +297,7 @@ const InvocationModal = ({
   operation: OperationDefinition | undefined;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [parameters, setParameters] = useState("{}");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 

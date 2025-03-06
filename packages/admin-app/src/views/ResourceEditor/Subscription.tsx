@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useAtomValue } from "jotai";
 import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import { FHIRCodeEditable, Input, Select } from "@iguhealth/components";
 import {
@@ -172,7 +172,7 @@ function SimpleSubscriptionView({
   resource: Subscription | undefined;
   onChange: React.Dispatch<React.SetStateAction<ConcreteType | undefined>>;
 }>) {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [channel, setChannel] = useState<
     Subscription["channel"]["type"] | undefined
   >();

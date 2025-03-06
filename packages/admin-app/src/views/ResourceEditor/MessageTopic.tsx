@@ -1,7 +1,7 @@
 import { json } from "@codemirror/lang-json";
 import { basicSetup } from "codemirror";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import {
   Button,
@@ -32,7 +32,7 @@ const SendMessageTopicModal = ({
   messageTopic: MessageTopic | undefined;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [parameters, setParameters] = useState("{}");
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 

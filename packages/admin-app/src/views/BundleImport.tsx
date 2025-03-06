@@ -1,6 +1,6 @@
+import { useAtomValue } from "jotai";
 import React, { useState } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 import { Button, Input, Toaster } from "@iguhealth/components";
 import { Bundle } from "@iguhealth/fhir-types/r4/types";
@@ -28,7 +28,7 @@ const getData = (file: File): Promise<string> => {
 
 export default function BatchImportView() {
   const navigate = useNavigate();
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [bundle, setBundle] = useState<Bundle>();
   const [issues, setIssues] = useState<string[]>([]);
 

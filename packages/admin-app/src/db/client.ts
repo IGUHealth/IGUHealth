@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from "jotai";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import createHTTPClient, { HTTPContext } from "@iguhealth/client/http";
@@ -16,11 +16,10 @@ type CachedClient = AsynchronousClient<
   unknown
 >;
 
-export const getClient = atom<ReturnType<typeof createAdminAppClient>>({
-  key: "client",
-  default: undefined,
-  dangerouslyAllowMutability: true,
-});
+export const getClient = atom<ReturnType<typeof createAdminAppClient>>(
+  // Q Hack to avoid uneccessary checks.
+  undefined as unknown as ReturnType<typeof createAdminAppClient>,
+);
 
 const cachedResponse: Record<
   string,

@@ -1,9 +1,9 @@
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { basicSetup } from "codemirror";
+import { useAtomValue } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 import {
   Button,
@@ -55,7 +55,7 @@ function JSONEditor({
 }
 
 function ResourceHistory() {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const { resourceType, id } = useParams();
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState<BundleEntry[]>([]);
@@ -150,7 +150,7 @@ export default function ResourceEditorComponent({
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
 }: AdditionalContent) {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const setValue = useMemo(
     () => (getResource: (r: Resource) => Resource) => {
       if (onChange) {

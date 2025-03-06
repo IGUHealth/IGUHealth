@@ -1,5 +1,5 @@
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import { Input } from "@iguhealth/components";
 import {
@@ -21,7 +21,7 @@ interface IdentityProviderEditorProps extends AdditionalContent {
 }
 
 function RegistrationInformation({ id }: Readonly<{ id: id }>) {
-  const client = useRecoilValue(getClient);
+  const client = useAtomValue(getClient);
   const [registrationInformation, setRegistrationInformation] = useState<
     IguhealthIdpRegistrationInfo.Output | undefined
   >();
