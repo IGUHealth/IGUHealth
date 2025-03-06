@@ -3,6 +3,12 @@ import { Command } from "commander";
 import DBMigrate from "db-migrate";
 import { Admin } from "kafkajs";
 
+import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
+
+import syncArtifacts, {
+  artifactStatus,
+} from "../../fhir-clients/clients/artifacts/load.js";
 import { createKafkaClient } from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { ITopic } from "../../queue/topics/index.js";
@@ -56,6 +62,63 @@ const kafka: Parameters<Command["action"]>[0] = async () => {
   }
 };
 
+const artifactsToLoad = {
+  r4: [
+    { resourceType: "StructureDefinition" as AllResourceTypes },
+    {
+      resourceType: "SearchParameter" as AllResourceTypes,
+      // Don't want to load other searchparameters which could conflict with base for now.
+      onlyPackages: [
+        "@iguhealth/hl7.fhir.r4.core",
+        "@iguhealth/iguhealth.fhir.r4.core",
+      ],
+    },
+    {
+      resourceType: "ValueSet" as AllResourceTypes,
+    },
+    { resourceType: "CodeSystem" as AllResourceTypes },
+  ],
+  r4b: [
+    { resourceType: "StructureDefinition" as AllResourceTypes },
+    {
+      resourceType: "SearchParameter" as AllResourceTypes,
+      // Don't want to load other searchparameters which could conflict with base for now.
+      onlyPackages: [
+        "@iguhealth/hl7.fhir.r4b.core",
+        "@iguhealth/iguhealth.fhir.r4b.core",
+      ],
+    },
+    { resourceType: "ValueSet" as AllResourceTypes },
+    { resourceType: "CodeSystem" as AllResourceTypes },
+  ],
+};
+
+const tenantsyncId = "iguhealth" as TenantId;
+
+const loadArtifacts: Parameters<Command["action"]>[0] = async () => {
+  const result = await syncArtifacts(tenantsyncId, artifactsToLoad);
+
+  console.log(result);
+};
+
+const checkStatus = async () => {
+  const result = await artifactStatus(tenantsyncId, artifactsToLoad);
+
+  if (
+    result.issue.find((i) => i.severity === "error" || i.severity === "fatal")
+  ) {
+    console.error(JSON.stringify(result));
+    process.exit(1);
+  } else {
+    console.log(JSON.stringify(result));
+  }
+};
+
+function artifactCommands(command: Command) {
+  command.description("Run artifact migrations.").action(loadArtifacts);
+  command.command("status").action(checkStatus);
+}
+
 export function migrateCommands(command: Command) {
   command
     .command("postgres")
@@ -67,11 +130,14 @@ export function migrateCommands(command: Command) {
     .description("Create default kafka topics.")
     .action(kafka);
 
+  artifactCommands(command.command("artifacts"));
+
   command
     .command("all")
     .description("Run all migrations.")
     .action(async () => {
       await postgres();
       await kafka();
+      await loadArtifacts();
     });
 }

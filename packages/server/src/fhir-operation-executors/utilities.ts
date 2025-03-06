@@ -98,8 +98,8 @@ export function getOpCTX(
       );
       return result.result;
     },
-    resolveCanonical: (fhirVersion, type, uri) =>
-      ctx.resolveCanonical(ctx, fhirVersion, type, uri),
+    resolveCanonical: async (fhirVersion, type, uri) =>
+      (await ctx.resolveCanonical(ctx, fhirVersion, type, [uri]))[0],
   };
 }
 

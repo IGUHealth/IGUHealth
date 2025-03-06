@@ -1,125 +1,227 @@
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt/types";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-
+import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
-  createClient,
-  createLogger,
-  getRedisClient,
-} from "../../../fhir-server/index.js";
+  FHIR_VERSION,
+  R4,
+  R4B,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt/types";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+  outcomeInfo,
+} from "@iguhealth/operation-outcomes";
+
+import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
+import sendQueueMiddleweare from "../../middleware/send-to-queue.js";
+import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
+import { createRequestToResponse } from "../request-to-response/index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
 }
 
-export default async function syncArtifacts<Version extends FHIR_VERSION>(
+async function syncType<Version extends FHIR_VERSION>(
+  services: Omit<IGUHealthServerCTX, "user">,
+  memSource: Memory<IGUHealthServerCTX>,
   fhirVersion: Version,
-  tenant: TenantId,
-  types: ResourceType<Version>[],
+  type: ResourceType<Version>,
 ) {
-  const redis = getRedisClient();
-  const { client, resolveCanonical } = createClient();
+  const resources = (
+    await memSource.search_type(asRoot(services), fhirVersion, type, [
+      { name: "_count", value: [500000] },
+    ])
+  ).resources;
+
+  services.logger.info({ [`COUNT ${type}`]: resources.length });
+  if (new Set(resources.map((r) => r.id)).size !== resources.length) {
+    const duplicates = new Set();
+    const ids = resources.map((r) => r.id);
+    ids.forEach((id, index) => {
+      if (ids.indexOf(id, index + 1) !== -1) {
+        duplicates.add(id);
+      }
+    });
+    services.logger.error({ duplicates });
+    throw new OperationError(
+      outcomeFatal("invalid", `Resources must have unique ids`),
+    );
+  }
+
+  await Promise.all(
+    resources.map(async (resource) => {
+      if (!resource.id) {
+        services.logger.error({
+          resource,
+          type,
+          fhirVersion,
+          message: "Resource must have an id",
+        });
+
+        throw new OperationError(
+          outcomeFatal("invalid", `Resource must have an id`),
+        );
+      }
+
+      const md5 = createCheckSum(resource);
+      resource = {
+        ...resource,
+        meta: {
+          ...resource.meta,
+          tag: [
+            ...(resource?.meta?.tag ?? []),
+            { system: "md5-checksum", code: md5 },
+          ],
+        },
+      };
+
+      try {
+        const res = await services.client.conditionalUpdate(
+          asRoot(services),
+          fhirVersion,
+          type,
+          `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
+          resource,
+        );
+        services.logger.info(`Update finished '${res.id}'`);
+      } catch (error) {
+        if (error instanceof OperationError) {
+          if (error.operationOutcome.issue[0].code === "conflict") {
+            services.logger.warn({
+              message: `Resource already exists with checksum`,
+              resource: resource.id,
+              checksum: md5,
+            });
+            return;
+          }
+        }
+        services.logger.error({ resource: resource, error });
+        throw error;
+      }
+    }),
+  );
+
+  return resources.length;
+}
+
+async function createServices(
+  tenant: TenantId,
+): Promise<Omit<IGUHealthServerCTX, "resolveCanonical" | "user">> {
   const logger = createLogger();
-  const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
+
+  const iguhealthServices: Omit<
+    IGUHealthServerCTX,
+    "user" | "resolveCanonical"
+  > = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
     store: await createResourceStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
-    client,
-    resolveCanonical,
+    client: createRequestToResponse({
+      transaction_entry_limit: parseInt(
+        process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
+      ),
+      middleware: [sendQueueMiddleweare()],
+    }),
     tenant,
   };
 
-  const result = Promise.all(
-    types.map((type) => {
-      const resources = loadArtifacts({
-        fhirVersion,
-        resourceType: type,
-        currentDirectory: fileURLToPath(import.meta.url),
-        silence: false,
-      });
+  return iguhealthServices;
+}
 
-      logger.info({ [`COUNT ${type}`]: resources.length });
-      if (new Set(resources.map((r) => r.id)).size !== resources.length) {
-        const duplicates = new Set();
-        const ids = resources.map((r) => r.id);
-        ids.forEach((id, index) => {
-          if (ids.indexOf(id, index + 1) !== -1) {
-            duplicates.add(id);
-          }
-        });
-        logger.error({ duplicates });
-        throw new OperationError(
-          outcomeFatal("invalid", `Resources must have unique ids`),
-        );
-      }
+export default async function syncArtifacts(
+  tenant: TenantId,
+  config: Parameters<typeof createArtifactMemoryDatabase>[0],
+) {
+  const memSource = createArtifactMemoryDatabase(config);
+  const iguhealthServices = {
+    ...(await createServices(tenant)),
+    resolveCanonical: memSource.resolveCanonical,
+  };
+  const r4Types: ResourceType<R4>[] = config.r4.map((r) => r.resourceType);
+  const r4bTypes: ResourceType<R4B>[] = config.r4b.map((r) => r.resourceType);
 
-      return Promise.all(
-        resources.map(async (resource) => {
-          if (!resource.id) {
-            logger.error({
-              resource,
-              type,
-              fhirVersion,
-              message: "Resource must have an id",
-            });
-
-            throw new OperationError(
-              outcomeFatal("invalid", `Resource must have an id`),
-            );
-          }
-
-          const md5 = createCheckSum(resource);
-          resource = {
-            ...resource,
-            id: `${resource.id}-${resource.resourceType}`,
-            meta: {
-              ...resource.meta,
-              tag: [
-                ...(resource?.meta?.tag ?? []),
-                { system: "md5-checksum", code: md5 },
-              ],
-            },
-          };
-
-          try {
-            const res = await client.conditionalUpdate(
-              asRoot(iguhealthServices),
-              fhirVersion,
-              type,
-              `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
-              resource,
-            );
-            logger.info(`Update finished '${res.id}'`);
-          } catch (error) {
-            if (error instanceof OperationError) {
-              if (error.operationOutcome.issue[0].code === "conflict") {
-                logger.warn({
-                  message: `Resource already exists with checksum`,
-                  resource: resource.id,
-                  checksum: md5,
-                });
-                return;
-              }
-            }
-            logger.error(error);
-            throw error;
-          }
-        }),
-      );
+  const result = {
+    r4: await Promise.all(
+      r4Types.map(async (type) => ({
+        type,
+        amount: await syncType(iguhealthServices, memSource, R4, type),
+      })),
+    ).then((res) => {
+      return res.reduce((acc: Record<string, number>, { type, amount }) => {
+        acc[type] = amount;
+        return acc;
+      }, {});
     }),
-  );
 
-  redis.disconnect();
+    r4b: await Promise.all(
+      r4bTypes.map(async (type) => ({
+        type,
+        amount: await syncType(iguhealthServices, memSource, R4B, type),
+      })),
+    ).then((res) => {
+      return res.reduce((acc: Record<string, number>, { type, amount }) => {
+        acc[type] = amount;
+        return acc;
+      }, {});
+    }),
+  };
+
+  await iguhealthServices.queue.disconnect();
+  iguhealthServices.logger.info("DONE");
 
   return result;
+}
+
+export async function artifactStatus(
+  tenant: TenantId,
+  config: Parameters<typeof createArtifactMemoryDatabase>[0],
+): Promise<OperationOutcome> {
+  const memSource = createArtifactMemoryDatabase(config);
+
+  const iguhealthServices = {
+    ...(await createServices(tenant)),
+    resolveCanonical: memSource.resolveCanonical,
+  };
+
+  for (const resourceConfig of config.r4) {
+    const artifactResults = await memSource.search_type(
+      asRoot(iguhealthServices),
+      R4,
+      resourceConfig.resourceType,
+      [{ name: "_count", value: [50000000000] }],
+    );
+    const res = await iguhealthServices.search.search(
+      asRoot(iguhealthServices),
+      {
+        type: "search-request",
+        level: "type",
+        resource: resourceConfig.resourceType,
+        fhirVersion: R4,
+        parameters: [
+          { name: "_total", value: ["accurate"] },
+          { name: "_count", value: [1] },
+        ],
+      },
+    );
+
+    if (res.total !== artifactResults.resources.length) {
+      return outcomeError(
+        "incomplete",
+        `Resources are missing for type '${resourceConfig.resourceType}'. ${artifactResults.resources.length} !== ${res.total}`,
+      );
+    }
+  }
+
+  await iguhealthServices.queue.disconnect();
+
+  return outcomeInfo("informational", "All resources are present");
 }

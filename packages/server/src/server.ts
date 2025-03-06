@@ -53,6 +53,7 @@ import {
   createLogger,
   getRedisClient,
 } from "./fhir-server/index.js";
+import resolveCanonical from "./fhir-server/resolvers/resolveCanonical.js";
 import {
   IGUHealthServerCTX,
   KoaExtensions,
@@ -168,6 +169,7 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
 export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
+  console.time("CREATE SERVER");
   if (process.env.SENTRY_SERVER_DSN)
     MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
@@ -188,6 +190,8 @@ export default async function createServer(): Promise<
   const redis = getRedisClient();
   const logger = createLogger();
 
+  console.time("createFHIRServer");
+
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
@@ -201,8 +205,11 @@ export default async function createServer(): Promise<
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),
     emailProvider: createEmailProvider(),
-    ...createClient(),
+    client: createClient(),
+    resolveCanonical,
   };
+
+  console.timeEnd("createFHIRServer");
 
   const app = new Koa<
     KoaExtensions.IGUHealth,
@@ -429,5 +436,6 @@ export default async function createServer(): Promise<
 
   logger.info("Running app");
 
+  console.timeEnd("CREATE SERVER");
   return app;
 }

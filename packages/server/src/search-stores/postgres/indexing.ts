@@ -19,18 +19,17 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { getSp1Name } from "../../cli/generate/sp1-parameters.js";
-import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
-import {
-  SEARCH_TABLE_TYPES,
-  search_table_types,
-  search_types_supported,
-} from "../constants.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import * as r4Sp1 from "../../migrations/sp1-parameters/r4.sp1parameters.js";
 import * as r4bSp1 from "../../migrations/sp1-parameters/r4b.sp1parameters.js";
 import { createResolverRemoteCanonical } from "../canonical.js";
+import { SEARCH_TABLE_TYPES, search_table_types } from "../constants.js";
 import dataConversion from "../dataConversion.js";
-import { searchParameterToTableName, searchResources } from "../parameters.js";
-import { isSearchParameterInSingularTable } from "./utilities.js";
+import { searchParameterToTableName } from "../parameters.js";
+import {
+  getAllParametersForResource,
+  isSearchParameterInSingularTable,
+} from "./utilities.js";
 
 type Insertables = {
   quantity: s.r4b_quantity_idx.Insertable | s.r4_quantity_idx.Insertable;
@@ -235,35 +234,6 @@ async function toInsertableIndex<
       throw new Error();
     }
   }
-}
-
-async function getAllParametersForResource<
-  CTX extends IGUHealthServerCTX,
-  Version extends FHIR_VERSION,
->(
-  ctx: CTX,
-  fhirVersion: Version,
-  resourceTypes: ResourceType<Version>[],
-): Promise<Resource<Version, "SearchParameter">[]> {
-  const parameters = [
-    {
-      name: "type",
-      value: search_types_supported,
-    },
-    {
-      name: "base",
-      value: searchResources(resourceTypes),
-    },
-  ];
-
-  return (
-    await ctx.client.search_type(
-      asRoot(ctx),
-      fhirVersion,
-      "SearchParameter",
-      parameters,
-    )
-  ).resources;
 }
 
 export async function removeIndices<Version extends FHIR_VERSION>(
@@ -1085,9 +1055,11 @@ export default async function indexResource<
     resource.resourceType as ResourceType<Version>,
   );
 
-  const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
+  const searchParameters = await getAllParametersForResource(
+    ctx,
+    fhirVersion,
     resource.resourceType as ResourceType<Version>,
-  ]);
+  );
 
   const sp1Parameters: Resource<Version, "SearchParameter">[] = [];
   const manyParameters: Resource<Version, "SearchParameter">[] = [];

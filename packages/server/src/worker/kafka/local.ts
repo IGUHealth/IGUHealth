@@ -66,27 +66,19 @@ async function startConsumer<CTX>(
     eachMessage:
       "eachMessage" in handler
         ? async ({ topic, partition, message }) => {
-            try {
-              await handler.eachMessage(ctx, { topic, partition, message });
-              console.log(
-                `- ${prefix(topic, partition, message.offset, message.timestamp)} ${message.key}`,
-              );
-            } catch (e) {
-              console.error(e);
-            }
+            await handler.eachMessage(ctx, { topic, partition, message });
+            console.log(
+              `- ${prefix(topic, partition, message.offset, message.timestamp)} ${message.key}`,
+            );
           }
         : undefined,
     eachBatch:
       "eachBatch" in handler
         ? async ({ batch }) => {
-            try {
-              await handler.eachBatch(ctx, { batch });
-              console.log(
-                `- ${prefix(batch.topic, batch.partition, batch.messages?.[0]?.offset, batch.messages?.[0]?.timestamp)} ${batch.messages.length} messages`,
-              );
-            } catch (e) {
-              console.error(e);
-            }
+            await handler.eachBatch(ctx, { batch });
+            console.log(
+              `- ${prefix(batch.topic, batch.partition, batch.messages?.[0]?.offset, batch.messages?.[0]?.timestamp)} ${batch.messages.length} messages`,
+            );
           }
         : undefined,
   });

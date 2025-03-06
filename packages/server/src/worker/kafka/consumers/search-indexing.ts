@@ -1,6 +1,7 @@
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { createClient, createLogger } from "../../../fhir-server/index.js";
+import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
@@ -64,13 +65,15 @@ const handler: MessageHandler<
   Omit<IGUHealthServerCTX, "user" | "tenant">
 > = async (iguhealthServices, { message }) => {
   iguhealthServices.logger.info(
-    `[Indexing], Processing message ${message.key?.toString()}`,
+    `[Indexing], Processing message '${message.key?.toString() ?? "[no-key]"}'`,
   );
 
   const tenantId = getTenantId(message);
 
   if (message.value) {
-    const mutations: queue.Operations = JSON.parse(message.value.toString());
+    const mutations: queue.Operations = JSON.parse(
+      message.value.toString("utf-8"),
+    );
     for (const mutation of mutations) {
       await handleMutation(
         { ...iguhealthServices, tenant: tenantId },
@@ -88,7 +91,8 @@ export default async function createIndexingWorker() {
     search: await createSearchStore({ type: "postgres" }),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
-    ...createClient(),
+    client: createClient(),
+    resolveCanonical,
   };
 
   const stop = await createKafkaConsumer(
@@ -97,11 +101,7 @@ export default async function createIndexingWorker() {
     Consumers.SearchIndexing,
     {
       eachMessage: async (ctx, { topic, partition, message }) => {
-        try {
-          await handler(ctx, { message, topic, partition });
-        } catch (e) {
-          console.error(e);
-        }
+        await handler(ctx, { message, topic, partition });
       },
     },
   );

@@ -1,4 +1,3 @@
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import {
   MetaParameter,
@@ -7,7 +6,7 @@ import {
   SearchParameterResult,
 } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
+import { code, date, dateTime, uri } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
@@ -18,8 +17,10 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { resolveParameterCodeToCanonical } from "@iguhealth/search-parameters/api/parameter-resolution";
 
-import { isSearchTableType, search_table_types } from "./constants.js";
+import { isSearchTableType } from "./constants.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
 
 export function deriveLimit(
   range: [number, number],
@@ -42,12 +43,12 @@ export function deriveLimit(
 
 export function searchResources(
   resourceTypes: AllResourceTypes[],
-): (ResourceType<FHIR_VERSION> | string)[] {
+): ResourceType<FHIR_VERSION>[] {
   const searchTypes = ["Resource", "DomainResource"];
   if (resourceTypes.length > 0) {
-    return searchTypes.concat(resourceTypes);
+    return searchTypes.concat(resourceTypes) as ResourceType<FHIR_VERSION>[];
   }
-  return searchTypes;
+  return searchTypes as ResourceType<FHIR_VERSION>[];
 }
 
 export function getDecimalPrecision(value: number): number {
@@ -121,11 +122,9 @@ export function deriveResourceTypeFilter<
 }
 
 async function associateChainedParameters<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
   parsedParameter: SearchParameterResource<Version>,
-  resolveSearchParameter: (
-    resourceTypes: AllResourceTypes[],
-    name: string,
-  ) => Promise<Resource<Version, "SearchParameter">[]>,
 ): Promise<SearchParameterResource<Version>> {
   if (!parsedParameter.chains) return parsedParameter;
 
@@ -147,20 +146,41 @@ async function associateChainedParameters<Version extends FHIR_VERSION>(
       })
       .flat();
 
-    const chainParameter = await resolveSearchParameter(
-      targets as AllResourceTypes[],
-      chain,
+    const canonicalURLs = resolveParameterCodeToCanonical(
+      fhirVersion,
+      searchResources(
+        targets as ResourceType<Version>[],
+      ) as ResourceType<Version>[],
+      chain as code,
     );
 
-    if (chainParameter.length === 0)
+    if (!canonicalURLs) {
       throw new OperationError(
         outcomeError(
           "not-found",
           `SearchParameter with name '${chain}' not found in chain.`,
         ),
       );
-    last = chainParameter;
-    chainedParameters.push(chainParameter);
+    }
+
+    const chainParameters = await ctx.resolveCanonical(
+      ctx,
+      fhirVersion,
+      "SearchParameter",
+      canonicalURLs,
+    );
+
+    if (chainParameters.length === 0) {
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `SearchParameter with name '${chain}' not found in chain.`,
+        ),
+      );
+    }
+
+    last = chainParameters;
+    chainedParameters.push(chainParameters);
   }
 
   return {
@@ -200,90 +220,129 @@ export function isSearchResultParameter(
   }
 }
 
-export async function findSearchParameter<
-  CTX,
-  Client extends FHIRClientAsync<CTX>,
-  Version extends FHIR_VERSION,
->(
-  client: Client,
-  ctx: CTX,
+async function processResourceParameters<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  resourceTypes: AllResourceTypes[],
-  code: string,
-): Promise<Resource<Version, "SearchParameter">[]> {
-  const result = await client.search_type(ctx, fhirVersion, "SearchParameter", [
-    { name: "code", value: [code] },
-    {
-      name: "type",
-      value: search_table_types,
-    },
-    {
-      name: "base",
-      value: searchResources(resourceTypes),
-    },
-  ]);
+  resourceTypes: ResourceType<Version>[],
+  resourceParameters: ParsedParameter<string | number>[],
+): Promise<SearchParameterResource<Version>[]> {
+  const searchParametersURLS = resourceParameters.map((p) => {
+    const canonicalURL = resolveParameterCodeToCanonical(
+      fhirVersion,
+      searchResources(resourceTypes) as ResourceType<Version>[],
+      p.name as code,
+    );
 
-  return result.resources;
+    if (canonicalURL.length === 0) {
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `SearchParameter with name '${p.name}' not found for types '${resourceTypes.join(", ")}'.`,
+        ),
+      );
+    }
+    if (canonicalURL.length > 1) {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `SearchParameter with name '${p.name}' has multiple definitions.`,
+        ),
+      );
+    }
+    return canonicalURL[0];
+  });
+
+  const searchParameters = await ctx.resolveCanonical(
+    ctx,
+    fhirVersion,
+    "SearchParameter",
+    searchParametersURLS,
+  );
+
+  const parameterURLHash = searchParameters.reduce(
+    (acc: Record<uri, Resource<Version, "SearchParameter">>, p) => {
+      acc[p.url] = p;
+      return acc;
+    },
+    {},
+  );
+
+  const searchResourceParameters = await Promise.all(
+    searchParametersURLS.map((url, i) => {
+      const parameter = resourceParameters[i];
+      const searchParameter = parameterURLHash[url];
+
+      if (searchParameter === undefined) {
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `SearchParameter with name '${parameter.name}' not found for types '${resourceTypes.join(", ")}'. '${searchParametersURLS.join(",")}'`,
+          ),
+        );
+      }
+
+      const param: SearchParameterResource<Version> = {
+        ...parameter,
+        type: "resource",
+        searchParameter: searchParameter,
+      };
+
+      return associateChainedParameters(ctx, fhirVersion, param);
+    }),
+  );
+
+  return searchResourceParameters;
 }
 
-type ResolveSearchParameter = (
-  resourceTypes: AllResourceTypes[],
-  name: string,
-) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>;
+/**
+ * Split the parameters into the result parameters (e.g. Offset, Count) and the resource parameters (e.g. status, code etc...)).
+ * @param parameters Parsed Parameters to split
+ * @returns Object containing the resource and result parameters.
+ */
+function splitParameterTypes(parameters: ParsedParameter<string | number>[]): {
+  resourceParameters: ParsedParameter<string | number>[];
+  resultParameters: ParsedParameter<string | number>[];
+} {
+  const resultParameters: ParsedParameter<string | number>[] = [];
+  const resourceParameters: ParsedParameter<string | number>[] = [];
+  for (const p of parameters) {
+    if (isSearchResultParameter(p)) {
+      resultParameters.push(p);
+    } else {
+      resourceParameters.push(p);
+    }
+  }
+
+  return { resultParameters, resourceParameters };
+}
 
 export async function parametersWithMetaAssociated<
   Version extends FHIR_VERSION,
 >(
-  resolveSearchParameter: ResolveSearchParameter,
-  resourceTypes: AllResourceTypes[],
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  resourceTypes: ResourceType<Version>[],
   parameters: ParsedParameter<string | number>[],
 ): Promise<MetaParameter<Version>[]> {
-  const result = await Promise.all(
-    parameters.map(async (p) => {
-      if (isSearchResultParameter(p)) {
-        const param: SearchParameterResult = { ...p, type: "result" };
-        return param;
-      }
+  const { resourceParameters, resultParameters } =
+    splitParameterTypes(parameters);
 
-      const searchParameterSearchResult = await resolveSearchParameter(
-        resourceTypes,
-        p.name,
-      );
-
-      if (searchParameterSearchResult.length === 0) {
-        throw new OperationError(
-          outcomeError(
-            "not-found",
-            `SearchParameter with name '${
-              p.name
-            }' not found for types '${resourceTypes.join(", ")}'.`,
-          ),
-        );
-      }
-
-      if (searchParameterSearchResult.length > 1)
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `SearchParameter with name '${p.name}' found multiple parameters.`,
-          ),
-        );
-
-      const searchParameter = searchParameterSearchResult[0];
-      const param: SearchParameterResource<Version> = {
-        ...p,
-        type: "resource",
-        searchParameter: searchParameter as Resource<
-          Version,
-          "SearchParameter"
-        >,
-      };
-
-      return associateChainedParameters(param, resolveSearchParameter);
-    }),
+  const searchResourceParameters = await processResourceParameters(
+    ctx,
+    fhirVersion,
+    resourceTypes,
+    resourceParameters,
   );
 
-  return result;
+  const searchResultParameters = resultParameters.map(
+    (r) =>
+      ({
+        ...r,
+        type: "result",
+      }) as SearchParameterResult,
+  );
+
+  return [...searchResultParameters, ...searchResourceParameters];
 }
 
 const PREFIX_REG = /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>.+)$/;

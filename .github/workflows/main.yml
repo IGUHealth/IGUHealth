@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22.7.0
+          node-version: 22.14.0
           cache: "yarn"
 
       - name: Yarn v4
@@ -97,7 +97,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22.7.0
+          node-version: 22.14.0
           cache: "yarn"
 
       - name: Yarn Setup
@@ -109,11 +109,18 @@ jobs:
       - name: Build
         run: sh install.sh
 
-      - name: Migrate
-        run: yarn workspace @iguhealth/server migrate
+      - name: Migrate Schemas
+        run: |
+          yarn workspace @iguhealth/server cli migrate all
 
       - name: Load Terminology
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
+
+      - name: Wait Artifacts
+        run: node .github/workflows/wait_artifacts.js
 
       - name: Create Test environment.
         env:
@@ -130,9 +137,6 @@ jobs:
            --auth client_credentials \
            --client-id $CLIENT_ID \
            --client-secret $CLIENT_SECRET
-
-      - name: Start server
-        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
 
       - name: R4 TestScripts
         run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 500
