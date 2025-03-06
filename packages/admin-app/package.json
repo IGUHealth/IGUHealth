@@ -9,10 +9,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@codemirror/commands": "^6.6.1",
-    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/commands": "^6.8.0",
+    "@codemirror/lang-javascript": "^6.2.3",
     "@codemirror/lang-json": "^6.0.1",
-    "@codemirror/view": "^6.33.0",
+    "@codemirror/view": "^6.36.4",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@iguhealth/client": "workspace:^",
