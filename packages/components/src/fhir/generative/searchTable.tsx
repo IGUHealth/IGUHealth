@@ -770,6 +770,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
       .search_type({}, props.fhirVersion, "SearchParameter", [
         { name: "base", value: ["Resource", props.resourceType as string] },
         { name: "_count", value: ["100"] },
+        { name: "_sort", value: ["code"] },
       ])
       .then((params) =>
         setSearchParameters(

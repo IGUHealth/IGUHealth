@@ -8,12 +8,15 @@ releases:
   "@iguhealth/components": minor
   "@iguhealth/fhir-patch-building": minor
   "@iguhealth/fhir-pointer": minor
+  "@iguhealth/fhir-types": patch
   "@iguhealth/fhir-validation": minor
   "@iguhealth/fhirpath": minor
   "@iguhealth/generated-ops": minor
-  "@iguhealth/hl7.fhir.r4b.core": minor
+  "@iguhealth/hl7v2-parsing": patch
+  "@iguhealth/jwt": patch
   "@iguhealth/meta-value": minor
   "@iguhealth/operation-execution": minor
+  "@iguhealth/operation-outcomes": patch
   "@iguhealth/search-parameters": minor
   "@iguhealth/server": minor
   "@iguhealth/smart-launch": minor

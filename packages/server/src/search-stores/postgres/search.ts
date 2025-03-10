@@ -269,7 +269,7 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
-  const limit = deriveLimit([0, 50], countParam);
+  const limit = deriveLimit([0, 200], countParam);
 
   const offset =
     offsetParam &&
