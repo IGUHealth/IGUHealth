@@ -72,7 +72,6 @@ const kafka: Parameters<Command["action"]>[0] = async () => {
 
 const artifactsToLoad = {
   r4: [
-    { resourceType: "StructureDefinition" as AllResourceTypes },
     {
       resourceType: "SearchParameter" as AllResourceTypes,
       // Don't want to load other searchparameters which could conflict with base for now.
@@ -81,13 +80,14 @@ const artifactsToLoad = {
         "@iguhealth/iguhealth.fhir.r4.core",
       ],
     },
+    { resourceType: "StructureDefinition" as AllResourceTypes },
+
     {
       resourceType: "ValueSet" as AllResourceTypes,
     },
     { resourceType: "CodeSystem" as AllResourceTypes },
   ],
   r4b: [
-    { resourceType: "StructureDefinition" as AllResourceTypes },
     {
       resourceType: "SearchParameter" as AllResourceTypes,
       // Don't want to load other searchparameters which could conflict with base for now.
@@ -96,6 +96,7 @@ const artifactsToLoad = {
         "@iguhealth/iguhealth.fhir.r4b.core",
       ],
     },
+    { resourceType: "StructureDefinition" as AllResourceTypes },
     { resourceType: "ValueSet" as AllResourceTypes },
     { resourceType: "CodeSystem" as AllResourceTypes },
   ],

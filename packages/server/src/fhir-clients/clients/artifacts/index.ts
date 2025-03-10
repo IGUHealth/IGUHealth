@@ -76,7 +76,6 @@ export function createArtifactClient<CTX extends IGUHealthServerCTX>(
         createSetArtifactTenantMiddleware(),
         validateOperationsAllowed(config.operationsAllowed),
         createRequestToResponseMiddleware(),
-
         createInTransactionMiddleware(),
         createSynchronousStorageMiddleware(),
         createSynchronousIndexingMiddleware(),

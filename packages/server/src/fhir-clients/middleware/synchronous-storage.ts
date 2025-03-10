@@ -48,6 +48,9 @@ export function createSynchronousStorageMiddleware<
       case "create-response":
       case "update-response":
       case "patch-response": {
+        context.ctx.logger.info(
+          `synchronous storing resource '${res.response.body.id}'`,
+        );
         await res.ctx.store.insert(res.ctx, "resources", {
           tenant: res.ctx.tenant,
           fhir_version: toDBFHIRVersion(res.response.fhirVersion),
@@ -139,11 +142,20 @@ export function createSynchronousIndexingMiddleware<
       case "create-response":
       case "update-response":
       case "patch-response": {
-        await res.ctx.search.index(
-          asRoot(res.ctx),
-          res.response.fhirVersion,
-          res.response.body,
-        );
+        context.ctx.logger.info(`indexing resource '${res.response.body.id}'`);
+        try {
+          await res.ctx.search.index(
+            asRoot(res.ctx),
+            res.response.fhirVersion,
+            res.response.body,
+          );
+          context.ctx.logger.info(
+            `finished indexing resource '${res.response.body.id}'`,
+          );
+        } catch (e) {
+          context.ctx.logger.error({ message: "FAILURE:", e });
+          throw e;
+        }
         break;
       }
       case "delete-response": {

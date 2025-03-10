@@ -127,7 +127,7 @@ async function createServices(
     client: createArtifactClient({
       transaction_entry_limit: 20,
       artifactTenant: tenant,
-      operationsAllowed: ["create-request", "update-request"],
+      operationsAllowed: ["create-request", "update-request", "search-request"],
       db: new pg.Pool({
         host: process.env.ARTIFACT_DB_PG_HOST,
         password: process.env.ARTIFACT_DB_PG_PASSWORD,
@@ -153,36 +153,21 @@ export default async function syncArtifacts(
   const r4Types: ResourceType<R4>[] = config.r4.map((r) => r.resourceType);
   const r4bTypes: ResourceType<R4B>[] = config.r4b.map((r) => r.resourceType);
 
-  const result = {
-    r4: await Promise.all(
-      r4Types.map(async (type) => ({
-        type,
-        amount: await syncType(iguhealthServices, memSource, R4, type),
-      })),
-    ).then((res) => {
-      return res.reduce((acc: Record<string, number>, { type, amount }) => {
-        acc[type] = amount;
-        return acc;
-      }, {});
-    }),
+  const r4Amounts: Record<string, number> = {};
 
-    r4b: await Promise.all(
-      r4bTypes.map(async (type) => ({
-        type,
-        amount: await syncType(iguhealthServices, memSource, R4B, type),
-      })),
-    ).then((res) => {
-      return res.reduce((acc: Record<string, number>, { type, amount }) => {
-        acc[type] = amount;
-        return acc;
-      }, {});
-    }),
-  };
+  for (const type of r4Types) {
+    r4Amounts[type] = await syncType(iguhealthServices, memSource, R4, type);
+  }
+
+  const r4bAmounts: Record<string, number> = {};
+  for (const type of r4bTypes) {
+    r4bAmounts[type] = await syncType(iguhealthServices, memSource, R4B, type);
+  }
 
   await iguhealthServices.queue.disconnect();
   iguhealthServices.logger.info("DONE");
 
-  return result;
+  return { r4: r4Amounts, r4b: r4bAmounts };
 }
 
 export async function artifactStatus(
