@@ -127,9 +127,6 @@ jobs:
       - name: Start server
         run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
 
-      - name: Wait Artifacts
-        run: node .github/workflows/wait_artifacts.js
-
       - name: Create Test environment.
         env:
           CLIENT_ID: test-client

@@ -6,9 +6,7 @@ import { Admin } from "kafkajs";
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
-import syncArtifacts, {
-  artifactStatus,
-} from "../../fhir-clients/clients/artifacts/load.js";
+import syncArtifacts from "../../fhir-clients/clients/artifacts/load.js";
 import { createKafkaClient } from "../../queue/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { ITopic } from "../../queue/topics/index.js";
@@ -110,22 +108,8 @@ const loadArtifacts: Parameters<Command["action"]>[0] = async () => {
   console.log(result);
 };
 
-const checkStatus = async () => {
-  const result = await artifactStatus(tenantsyncId, artifactsToLoad);
-
-  if (
-    result.issue.find((i) => i.severity === "error" || i.severity === "fatal")
-  ) {
-    console.error(JSON.stringify(result));
-    process.exit(1);
-  } else {
-    console.log(JSON.stringify(result));
-  }
-};
-
 function artifactCommands(command: Command) {
   command.description("Run artifact migrations.").action(loadArtifacts);
-  command.command("status").action(checkStatus);
 }
 
 export function migrateCommands(command: Command) {
