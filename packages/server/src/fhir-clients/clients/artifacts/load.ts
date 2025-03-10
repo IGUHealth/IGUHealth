@@ -55,58 +55,56 @@ async function syncType<Version extends FHIR_VERSION>(
     );
   }
 
-  await Promise.all(
-    resources.map(async (resource) => {
-      if (!resource.id) {
-        services.logger.error({
-          resource,
-          type,
-          fhirVersion,
-          message: "Resource must have an id",
-        });
+  for (let resource of resources) {
+    if (!resource.id) {
+      services.logger.error({
+        resource,
+        type,
+        fhirVersion,
+        message: "Resource must have an id",
+      });
 
-        throw new OperationError(
-          outcomeFatal("invalid", `Resource must have an id`),
-        );
-      }
+      throw new OperationError(
+        outcomeFatal("invalid", `Resource must have an id`),
+      );
+    }
 
-      const md5 = createCheckSum(resource);
-      resource = {
-        ...resource,
-        meta: {
-          ...resource.meta,
-          tag: [
-            ...(resource?.meta?.tag ?? []),
-            { system: "md5-checksum", code: md5 },
-          ],
-        },
-      };
+    const md5 = createCheckSum(resource);
+    resource = {
+      ...resource,
+      meta: {
+        ...resource.meta,
+        tag: [
+          ...(resource?.meta?.tag ?? []),
+          { system: "md5-checksum", code: md5 },
+        ],
+      },
+    };
 
-      try {
-        const res = await services.client.conditionalUpdate(
-          asRoot(services),
-          fhirVersion,
-          type,
-          `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
-          resource,
-        );
-        services.logger.info(`Update finished '${res.id}'`);
-      } catch (error) {
-        if (error instanceof OperationError) {
-          if (error.operationOutcome.issue[0].code === "conflict") {
-            services.logger.warn({
-              message: `Resource already exists with checksum`,
-              resource: resource.id,
-              checksum: md5,
-            });
-            return;
-          }
+    try {
+      const res = await services.client.conditionalUpdate(
+        asRoot(services),
+        fhirVersion,
+        type,
+        `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
+        resource,
+      );
+      services.logger.info(`Update finished '${res.id}'`);
+    } catch (error) {
+      if (error instanceof OperationError) {
+        if (error.operationOutcome.issue[0].code === "conflict") {
+          services.logger.warn({
+            message: `Resource already exists with checksum`,
+            resource: resource.id,
+            checksum: md5,
+          });
         }
+      } else {
         services.logger.error({ resource: resource, error });
         throw error;
       }
-    }),
-  );
+    }
+  }
 
   return resources.length;
 }
@@ -228,6 +226,8 @@ export async function artifactStatus(
   }
 
   await iguhealthServices.queue.disconnect();
+
+  iguhealthServices.logger.log("All resources are present");
 
   return outcomeInfo("informational", "All resources are present");
 }

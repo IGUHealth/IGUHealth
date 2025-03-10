@@ -54,7 +54,7 @@ export function createSynchronousStorageMiddleware<
           request_method: toMethod(res.response),
           author_type: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
           author_id: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-          resource: res.response.resource,
+          resource: res.response.body as unknown as db.JSONObject,
           deleted: false,
         });
         break;
@@ -121,7 +121,7 @@ export function createSynchronousStorageMiddleware<
         // No need to do anything.
       }
     }
-    return next(res);
+    return res;
   };
 }
 
@@ -179,6 +179,6 @@ export function createSynchronousIndexingMiddleware<
       }
     }
 
-    return next(res);
+    return res;
   };
 }

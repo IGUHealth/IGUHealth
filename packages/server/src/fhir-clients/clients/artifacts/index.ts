@@ -72,10 +72,11 @@ export function createArtifactClient<CTX extends IGUHealthServerCTX>(
     config,
     createMiddlewareAsync(
       [
+        associateConfig(),
         createSetArtifactTenantMiddleware(),
         validateOperationsAllowed(config.operationsAllowed),
         createRequestToResponseMiddleware(),
-        associateConfig(),
+
         createInTransactionMiddleware(),
         createSynchronousStorageMiddleware(),
         createSynchronousIndexingMiddleware(),
