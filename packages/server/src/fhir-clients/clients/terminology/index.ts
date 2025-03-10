@@ -11,7 +11,6 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
-import { createRequestToResponse } from "../request-to-response/index.js";
 
 export const TERMINOLOGY_RESOURCE_TYPES: ResourceType[] = [
   "ValueSet",
@@ -24,7 +23,7 @@ export const TERMINOLOGY_METHODS_ALLOWED: RequestType[AllInteractions][] = [
 
 function createTerminologyMiddleware<
   State extends {
-    fhirDB: ReturnType<typeof createRequestToResponse>;
+    fhirDB: IGUHealthServerCTX["client"];
   },
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
@@ -46,10 +45,10 @@ function createTerminologyMiddleware<
 }
 
 export function createTerminologyClient<CTX extends IGUHealthServerCTX>(
-  fhirDB: ReturnType<typeof createRequestToResponse>,
+  fhirDB: IGUHealthServerCTX["client"],
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<
-    { fhirDB: ReturnType<typeof createRequestToResponse> },
-    CTX
-  >({ fhirDB }, createTerminologyMiddleware());
+  return new AsynchronousClient<{ fhirDB: IGUHealthServerCTX["client"] }, CTX>(
+    { fhirDB },
+    createTerminologyMiddleware(),
+  );
 }

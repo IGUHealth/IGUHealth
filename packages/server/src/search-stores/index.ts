@@ -1,7 +1,8 @@
+import pg from "pg";
+
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { createResourceStorePool } from "../fhir-clients/pg.js";
 import { SearchEngine } from "./interface.js";
 import { PostgresSearchEngine } from "./postgres/index.js";
 
@@ -17,7 +18,7 @@ export async function createSearchStore<CTX extends IGUHealthServerCTX>(
   switch (config.type) {
     case "postgres": {
       return new PostgresSearchEngine(
-        createResourceStorePool({
+        new pg.Pool({
           user: process.env.SEARCH_STORE_PG_USERNAME,
           password: process.env.SEARCH_STORE_PG_PASSWORD,
           host: process.env.SEARCH_STORE_PG_HOST,

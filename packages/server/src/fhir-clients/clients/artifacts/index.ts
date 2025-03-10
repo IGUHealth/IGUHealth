@@ -1,18 +1,30 @@
+import * as db from "zapatos/db";
+
 import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClient } from "@iguhealth/client/lib/interface";
+import { FHIRClient } from "@iguhealth/client/interface";
 import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
+import { AllInteractions, RequestType } from "@iguhealth/client/types";
 import { TenantId } from "@iguhealth/jwt";
 
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
+import { PostgresStore } from "../../../resource-stores/postgres/index.js";
+import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
+import createRequestToResponseMiddleware from "../../middleware/request-to-response.js";
+import {
+  createInTransactionMiddleware,
+  createSynchronousIndexingMiddleware,
+  createSynchronousStorageMiddleware,
+} from "../../middleware/synchronous-storage.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
-import { createRequestToResponse } from "../request-to-response/index.js";
 
 type ArtifactConfig = {
+  transaction_entry_limit: number;
   artifactTenant: TenantId;
-  fhirDB: ReturnType<typeof createRequestToResponse>;
+  operationsAllowed: RequestType[AllInteractions][];
+  db: db.Queryable;
 };
 
 /**
@@ -32,36 +44,41 @@ function createSetArtifactTenantMiddleware<
   };
 }
 
+function associateConfig<
+  CTX extends IGUHealthServerCTX,
+  State extends ArtifactConfig,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    return next({
+      ...context,
+      ctx: {
+        ...context.ctx,
+        search: new PostgresSearchEngine(context.state.db),
+        store: new PostgresStore(context.state.db),
+      },
+    });
+  };
+}
+
 /**
  * Create a client that's used for shared artifacts like CodeSystem, ValueSet, StructureDefinition, and SearchParameter.
  * @param artifactConfig The configuration for artifact client. Right now it's just the tenant id.
  * @returns The FHIR client for artifacts.
  */
 export function createArtifactClient<CTX extends IGUHealthServerCTX>(
-  artifactConfig: ArtifactConfig,
+  config: ArtifactConfig,
 ): FHIRClient<CTX> {
   return new AsynchronousClient<ArtifactConfig, CTX>(
-    artifactConfig,
+    config,
     createMiddlewareAsync(
       [
         createSetArtifactTenantMiddleware(),
-        validateOperationsAllowed([
-          "read-request",
-          "search-request",
-          "vread-request",
-          "history-request",
-        ]),
-        async (context) => {
-          const response = await context.state.fhirDB.request(
-            asRoot(context.ctx),
-            context.request,
-          );
-
-          return {
-            ...context,
-            response,
-          };
-        },
+        validateOperationsAllowed(config.operationsAllowed),
+        createRequestToResponseMiddleware(),
+        associateConfig(),
+        createInTransactionMiddleware(),
+        createSynchronousStorageMiddleware(),
+        createSynchronousIndexingMiddleware(),
       ],
       {
         logging: false,

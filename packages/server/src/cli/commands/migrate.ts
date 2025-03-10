@@ -18,14 +18,22 @@ interface DBMigrate {
 }
 
 const postgres: Parameters<Command["action"]>[0] = async () => {
-  const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
+  const storeMigrate: DBMigrate = DBMigrate.getInstance(true, {
+    env: "store",
     cmdOptions: {
       "sql-file": true,
       "migrations-dir": "src/migrations/postgres/db-migrate",
     },
   });
 
-  await dbmigrate.up();
+  const artifactMigrate: DBMigrate = DBMigrate.getInstance(true, {
+    env: "artifact",
+    cmdOptions: {
+      "sql-file": true,
+      "migrations-dir": "src/migrations/postgres/db-migrate",
+    },
+  });
+  await Promise.all([storeMigrate.up(), artifactMigrate.up()]);
 };
 
 /**

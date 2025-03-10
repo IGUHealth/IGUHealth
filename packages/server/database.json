@@ -1,5 +1,26 @@
 {
-  "dev": {
+  "artifact": {
+    "driver": "pg",
+    "user": {
+      "ENV": "ARTIFACT_DB_PG_USERNAME"
+    },
+    "password": {
+      "ENV": "ARTIFACT_DB_PG_PASSWORD"
+    },
+    "host": {
+      "ENV": "ARTIFACT_DB_PG_HOST"
+    },
+    "database": {
+      "ENV": "ARTIFACT_DB_PG_NAME"
+    },
+    "port": {
+      "ENV": "ARTIFACT_DB_PG_PORT"
+    },
+    "ssl": {
+      "ENV": "ARTIFACT_DB_PG_SSL"
+    }
+  },
+  "store": {
     "driver": "pg",
     "user": {
       "ENV": "RESOURCE_STORE_PG_USERNAME"
@@ -18,7 +39,6 @@
     },
     "ssl": {
       "ENV": "RESOURCE_STORE_PG_SSL"
-    },
-    "schema": "my_schema"
+    }
   }
 }

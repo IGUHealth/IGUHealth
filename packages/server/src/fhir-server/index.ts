@@ -1,7 +1,10 @@
 import { Redis } from "ioredis";
+import pg from "pg";
 import { pino } from "pino";
 
+import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
@@ -24,8 +27,10 @@ import {
   createMembershipClient,
 } from "../fhir-clients/clients/auth-storage/index.js";
 import { MemoryParameter } from "../fhir-clients/clients/memory/async.js";
-import { createRequestToResponse } from "../fhir-clients/clients/request-to-response/index.js";
 import RouterClient from "../fhir-clients/clients/router/index.js";
+import createRequestToResponseMiddleware, {
+  RequestResponseState,
+} from "../fhir-clients/middleware/request-to-response.js";
 import sendQueueMiddleweare from "../fhir-clients/middleware/send-to-queue.js";
 import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
@@ -145,12 +150,20 @@ export function getRedisClient(): Redis {
 }
 
 export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
-  const storage = createRequestToResponse({
-    transaction_entry_limit: parseInt(
-      process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-    ),
-    middleware: [sendQueueMiddleweare()],
-  });
+  const storage = new AsynchronousClient<
+    RequestResponseState,
+    IGUHealthServerCTX
+  >(
+    {
+      transaction_entry_limit: parseInt(
+        process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
+      ),
+    },
+    createMiddlewareAsync([
+      createRequestToResponseMiddleware(),
+      sendQueueMiddleweare(),
+    ]),
+  );
 
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
@@ -245,7 +258,22 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
           },
         },
         source: createArtifactClient({
-          fhirDB: storage,
+          transaction_entry_limit: parseInt(
+            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
+          ),
+          db: new pg.Pool({
+            host: process.env.ARTIFACT_DB_PG_HOST,
+            password: process.env.ARTIFACT_DB_PG_PASSWORD,
+            user: process.env.ARTIFACT_DB_PG_USERNAME,
+            database: process.env.ARTIFACT_DB_PG_NAME,
+            port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+          }),
+          operationsAllowed: [
+            "read-request",
+            "search-request",
+            "vread-request",
+            "history-request",
+          ],
           artifactTenant: "iguhealth" as TenantId,
         }),
       },

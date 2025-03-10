@@ -1,7 +1,8 @@
+import pg from "pg";
+
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { createResourceStorePool } from "../fhir-clients/pg.js";
 import { PostgresStore } from "./postgres/index.js";
 
 interface PostgresStoreConfig {
@@ -16,7 +17,7 @@ export default async function createResourceStore<
   switch (config.type) {
     case "postgres": {
       return new PostgresStore(
-        createResourceStorePool({
+        new pg.Pool({
           user: process.env.RESOURCE_STORE_PG_USERNAME,
           password: process.env.RESOURCE_STORE_PG_PASSWORD,
           host: process.env.RESOURCE_STORE_PG_HOST,

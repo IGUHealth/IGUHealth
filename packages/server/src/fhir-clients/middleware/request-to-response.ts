@@ -1,11 +1,6 @@
 import jsonpatch, { Operation as JSONPatchOperation } from "fast-json-patch";
 
-import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClient } from "@iguhealth/client/interface";
-import {
-  MiddlewareAsyncChain,
-  createMiddlewareAsync,
-} from "@iguhealth/client/middleware";
+import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import {
   FHIRResponse,
   SystemSearchRequest,
@@ -28,20 +23,20 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
-import { validateResource } from "../../../fhir-operation-executors/providers/local/ops/resource_validate.js";
-import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
+import { httpRequestToFHIRRequest } from "../../fhir-http/index.js";
+import { validateResource } from "../../fhir-operation-executors/providers/local/ops/resource_validate.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import {
   QueueBatch,
   buildTransactionTopologicalGraph,
-} from "../../../transactions.js";
+} from "../../transactions.js";
 import {
   fhirResourceToBundleEntry,
   fhirResponseToBundleEntry,
-} from "../../utilities/bundle.js";
-import { generateId } from "../../utilities/generateId.js";
+} from "../utilities/bundle.js";
+import { generateId } from "../utilities/generateId.js";
 
-type RequestResponseState = {
+export type RequestResponseState = {
   transaction_entry_limit: number;
 };
 
@@ -335,11 +330,11 @@ async function conditionalDelete(
   }
 }
 
-function createRequestToResponseMiddleware<
+export default function createRequestToResponseMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends RequestResponseState,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function storageMiddleware(context, next) {
+  return async function requestToResponseMiddleware(context, next) {
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
@@ -972,29 +967,4 @@ function createRequestToResponseMiddleware<
       }
     }
   };
-}
-
-/**
- * Create a remote storage client.
- * @param param0 Options for the storage client.
- * @returns FHIRClient
- */
-export function createRequestToResponse<CTX extends IGUHealthServerCTX>({
-  transaction_entry_limit,
-  middleware = [],
-}: {
-  transaction_entry_limit: number;
-  middleware: MiddlewareAsyncChain<RequestResponseState, CTX>[];
-}): FHIRClient<CTX> {
-  return new AsynchronousClient<RequestResponseState, CTX>(
-    {
-      transaction_entry_limit,
-    },
-    createMiddlewareAsync(
-      [createRequestToResponseMiddleware(), ...middleware],
-      {
-        logging: false,
-      },
-    ),
-  );
 }

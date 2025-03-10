@@ -25,7 +25,7 @@ import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";
 
-function toMethod(
+export function toMethod(
   response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,
 ): "POST" | "PUT" | "DELETE" | "PATCH" {
   switch (response.type) {

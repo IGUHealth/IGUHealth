@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import pg from "pg";
 
 import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
@@ -20,9 +21,8 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
-import sendQueueMiddleweare from "../../middleware/send-to-queue.js";
 import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
-import { createRequestToResponse } from "../request-to-response/index.js";
+import { createArtifactClient } from "./index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -125,13 +125,19 @@ async function createServices(
     store: await createResourceStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
-    client: createRequestToResponse({
-      transaction_entry_limit: parseInt(
-        process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-      ),
-      middleware: [sendQueueMiddleweare()],
-    }),
     tenant,
+    client: createArtifactClient({
+      transaction_entry_limit: 20,
+      artifactTenant: tenant,
+      operationsAllowed: ["create-request", "update-request"],
+      db: new pg.Pool({
+        host: process.env.ARTIFACT_DB_PG_HOST,
+        password: process.env.ARTIFACT_DB_PG_PASSWORD,
+        user: process.env.ARTIFACT_DB_PG_USERNAME,
+        database: process.env.ARTIFACT_DB_PG_NAME,
+        port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+      }),
+    }),
   };
 
   return iguhealthServices;

@@ -6,7 +6,8 @@
  */
 
 export type IGUHealthEnvironment = ResourceStorePg &
-  SearchStorePg & {
+  SearchStorePg &
+  ArtifactPg & {
     /**
      * The environment the server is running in
      */
@@ -19,6 +20,10 @@ export type IGUHealthEnvironment = ResourceStorePg &
      * Resource storage type.
      */
     RESOURCE_STORE_TYPE: "postgres";
+    /**
+     * Artifact DB type.
+     */
+    ARTIFACT_DB_TYPE: "postgres";
     /**
      * Search storage type.
      */
@@ -218,5 +223,32 @@ export interface SearchStorePg {
    * Whether Postgres connection is SSL
    */
   SEARCH_STORE_PG_SSL?: "true" | "false";
+  [k: string]: unknown;
+}
+export interface ArtifactPg {
+  /**
+   * Postgres database name.
+   */
+  ARTIFACT_DB_PG_NAME?: string;
+  /**
+   * Postgres host
+   */
+  ARTIFACT_DB_PG_HOST?: string;
+  /**
+   * Postgres port
+   */
+  ARTIFACT_DB_PG_PORT?: string;
+  /**
+   * postgres password
+   */
+  ARTIFACT_DB_PG_PASSWORD?: string;
+  /**
+   * postgres username
+   */
+  ARTIFACT_DB_PG_USERNAME?: string;
+  /**
+   * Whether Postgres connection is SSL
+   */
+  ARTIFACT_DB_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }
