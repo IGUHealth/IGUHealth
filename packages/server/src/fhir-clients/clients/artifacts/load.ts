@@ -1,7 +1,6 @@
 import crypto from "node:crypto";
 import pg from "pg";
 
-import { OperationOutcome } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
   R4,
@@ -9,12 +8,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
-import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-  outcomeInfo,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
@@ -55,10 +49,10 @@ async function syncType<Version extends FHIR_VERSION>(
     );
   }
 
-  for (let resource of resources) {
-    if (!resource.id) {
+  for (const _resource of resources) {
+    if (!_resource.id) {
       services.logger.error({
-        resource,
+        resource: _resource,
         type,
         fhirVersion,
         message: "Resource must have an id",
@@ -69,13 +63,13 @@ async function syncType<Version extends FHIR_VERSION>(
       );
     }
 
-    const md5 = createCheckSum(resource);
-    resource = {
-      ...resource,
+    const md5 = createCheckSum(_resource);
+    const resource = {
+      ..._resource,
       meta: {
-        ...resource.meta,
+        ..._resource.meta,
         tag: [
-          ...(resource?.meta?.tag ?? []),
+          ...(_resource?.meta?.tag ?? []),
           { system: "md5-checksum", code: md5 },
         ],
       },
@@ -100,7 +94,7 @@ async function syncType<Version extends FHIR_VERSION>(
           });
         }
       } else {
-        services.logger.error({ resource: resource, error });
+        services.logger.error({ resource, error });
         throw error;
       }
     }
