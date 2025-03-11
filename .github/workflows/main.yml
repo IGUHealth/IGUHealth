@@ -111,6 +111,11 @@ jobs:
       - name: Yarn Setup
         run: corepack prepare yarn@4.7.0 --activate
 
+      - name: Setup Database
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE artifact;'
+        env:
+          PGPASSWORD: postgres
+
       - name: Version Check
         run: yarn version check
 
