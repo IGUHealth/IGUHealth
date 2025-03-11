@@ -78,11 +78,6 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
     ],
   );
 
-  console.log(
-    "SDS:",
-    sds.map((sd) => sd.id),
-  );
-
   return {
     resourceType: "CapabilityStatement",
     status: "active",
