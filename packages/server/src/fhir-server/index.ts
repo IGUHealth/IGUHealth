@@ -13,7 +13,6 @@ import {
   R4B,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import {
