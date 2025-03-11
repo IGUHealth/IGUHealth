@@ -6,11 +6,51 @@ import {
   R4,
   R4B,
   Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import { getAllSearchParameterParameters } from "@iguhealth/search-parameters/api/parameter-resolution";
 
+import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { r4_sp1_idx } from "../../migrations/sp1-parameters/r4.sp1parameters.js";
 import { r4b_sp1_idx } from "../../migrations/sp1-parameters/r4b.sp1parameters.js";
-import { getDatePrecision } from "../parameters.js";
+import { search_types_supported } from "../constants.js";
+import { getDatePrecision, searchResources } from "../parameters.js";
+
+export async function getAllParametersForResource<
+  CTX extends IGUHealthServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  resourceType: ResourceType<Version>,
+): Promise<Resource<Version, "SearchParameter">[]> {
+  switch (resourceType) {
+    case "SearchParameter": {
+      return getAllSearchParameterParameters(fhirVersion);
+    }
+    default: {
+      const parameters = [
+        {
+          name: "type",
+          value: search_types_supported,
+        },
+        {
+          name: "base",
+          value: searchResources([resourceType]),
+        },
+      ];
+
+      return (
+        await ctx.client.search_type(
+          asRoot(ctx),
+          fhirVersion,
+          "SearchParameter",
+          parameters,
+        )
+      ).resources;
+    }
+  }
+}
 
 export function getDateRange(value: string): [string, string] {
   // yyyy-mm-ddThh:mm:ss[Z|(+|-)hh:mm]

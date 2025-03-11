@@ -35,13 +35,10 @@ async function generateSnapshot(
   const baseSnapshotElements = sd.baseDefinition
     ? (
         (
-          await ctx.resolveCanonical(
-            ctx,
-            fhirVersion,
-            "StructureDefinition",
+          await ctx.resolveCanonical(ctx, fhirVersion, "StructureDefinition", [
             sd.baseDefinition,
-          )
-        )?.snapshot?.element ?? []
+          ])
+        )[0]?.snapshot?.element ?? []
       ).slice()
     : [];
 
@@ -99,12 +96,14 @@ export const StructureDefinitionSnapshotInvoke = InlineOperation(
     const sd: StructureDefinition | r4b.StructureDefinition | undefined =
       input.definition
         ? input.definition
-        : await ctx.resolveCanonical(
-            ctx,
-            request.fhirVersion,
-            "StructureDefinition",
-            input.url as canonical,
-          );
+        : (
+            await ctx.resolveCanonical(
+              ctx,
+              request.fhirVersion,
+              "StructureDefinition",
+              [input.url as canonical],
+            )
+          )[0];
 
     if (!sd) {
       throw new OperationError(

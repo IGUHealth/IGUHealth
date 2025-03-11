@@ -8,6 +8,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import createEmailProvider from "../../../email/index.js";
 import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
+import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import createQueue from "../../../queue/index.js";
@@ -24,7 +25,7 @@ import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";
 
-function toMethod(
+export function toMethod(
   response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,
 ): "POST" | "PUT" | "DELETE" | "PATCH" {
   switch (response.type) {
@@ -138,12 +139,14 @@ const handler: MessageHandler<
   Omit<IGUHealthServerCTX, "user" | "tenant">
 > = async (iguhealthServices, { message }) => {
   iguhealthServices.logger.info(
-    `[STORAGE], Processing message ${message.key?.toString()}`,
+    `[STORAGE], Processing message '${message.key?.toString() ?? "[no-key]"}'`,
   );
   const tenantId = getTenantId(message);
 
   if (message.value) {
-    const mutations: queue.Operations = JSON.parse(message.value.toString());
+    const mutations: queue.Operations = JSON.parse(
+      message.value.toString("utf-8"),
+    );
     await DBTransaction(
       iguhealthServices,
       db.IsolationLevel.RepeatableRead,
@@ -168,7 +171,8 @@ export default async function createStorageWorker() {
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
     emailProvider: createEmailProvider(),
-    ...createClient(),
+    client: createClient(),
+    resolveCanonical,
   };
 
   const stop = await createKafkaConsumer(
@@ -177,11 +181,7 @@ export default async function createStorageWorker() {
     Consumers.Storage,
     {
       eachMessage: async (ctx, { topic, partition, message }) => {
-        try {
-          await handler(ctx, { topic, partition, message });
-        } catch (e) {
-          console.error(e);
-        }
+        await handler(ctx, { topic, partition, message });
       },
     },
   );

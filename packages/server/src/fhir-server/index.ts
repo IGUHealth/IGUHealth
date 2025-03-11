@@ -1,7 +1,10 @@
 import { Redis } from "ioredis";
+import pg from "pg";
 import { pino } from "pino";
 
+import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
@@ -16,17 +19,17 @@ import {
   createInjectScopesMiddleware,
   createValidateScopesMiddleware,
 } from "../authZ/middleware/scopes.js";
+import { createArtifactClient } from "../fhir-clients/clients/artifacts/index.js";
 import {
   MEMBERSHIP_METHODS_ALLOWED,
   MEMBERSHIP_RESOURCE_TYPES,
   createMembershipClient,
 } from "../fhir-clients/clients/auth-storage/index.js";
-import {
-  MemoryParameter,
-  createArtifactMemoryDatabase,
-} from "../fhir-clients/clients/memory/async.js";
-import { createRequestToResponse } from "../fhir-clients/clients/request-to-response/index.js";
+import { MemoryParameter } from "../fhir-clients/clients/memory/async.js";
 import RouterClient from "../fhir-clients/clients/router/index.js";
+import createRequestToResponseMiddleware, {
+  RequestResponseState,
+} from "../fhir-clients/middleware/request-to-response.js";
 import sendQueueMiddleweare from "../fhir-clients/middleware/send-to-queue.js";
 import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
@@ -123,13 +126,6 @@ export const createLogger = () =>
       : undefined,
   );
 
-/**
- * Type manipulation to get state of a routerclient used for subsequent middlewares.
- */
-type RouterState = Parameters<
-  Parameters<typeof RouterClient>[0][number]
->[0]["state"];
-
 let _redis_client: Redis | undefined = undefined;
 /**
  * Returns instantiated Redis client based on environment variables.
@@ -152,41 +148,19 @@ export function getRedisClient(): Redis {
   return _redis_client;
 }
 
-/**
- * Creates the root ctx.client. Includes the expected middleware like validation and capabilities by default.
- * @param sources Client sources
- * @returns FHIRClientAsync instance
- */
-function createRouterClient(sources: RouterState["sources"]) {
-  return RouterClient(
-    [
-      createCheckTenantUsageMiddleware(),
-      createValidationMiddleware(),
-      createCapabilitiesMiddleware(),
-      createEncryptionMiddleware(["OperationDefinition"]),
-      createInjectScopesMiddleware(),
-      createValidateScopesMiddleware(),
-      createAuthorizationMiddleware(),
-    ],
-    sources,
+export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
+  const storage = new AsynchronousClient<
+    RequestResponseState,
+    IGUHealthServerCTX
+  >(
+    {},
+    createMiddlewareAsync([
+      createRequestToResponseMiddleware(
+        parseInt(process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"),
+      ),
+      sendQueueMiddleweare(),
+    ]),
   );
-}
-
-export function createClient(): {
-  client: FHIRClientAsync<IGUHealthServerCTX>;
-  resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
-} {
-  const memSource = createArtifactMemoryDatabase({
-    r4: R4_SPECIAL_TYPES.ARTIFACTS,
-    r4b: R4B_SPECIAL_TYPES.ARTIFACTS,
-  });
-
-  const storage = createRequestToResponse({
-    transaction_entry_limit: parseInt(
-      process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-    ),
-    middleware: [sendQueueMiddleweare()],
-  });
 
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
@@ -195,6 +169,7 @@ export function createClient(): {
     AWS_ROLE: process.env.AWS_LAMBDA_ROLE as string,
     AWS_LAMBDA_LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
+
   const lambdaSource = createOperationExecutioner(executioner);
   const inlineSource = InlineExecutioner([
     createDeployOperation(executioner),
@@ -214,102 +189,126 @@ export function createClient(): {
     EvaluatePolicyInvoke,
     IdentityProviderRegistrationInvoke,
   ]);
-  const client = createRouterClient([
-    // OP INVOCATION
-    {
-      filter: {
-        useSource: (request) => {
-          return (
-            request.type === "invoke-request" &&
-            inlineSource
-              .supportedOperations()
-              .map((op) => op.code)
-              .includes(request.operation)
-          );
+  const client = RouterClient(
+    [
+      createCheckTenantUsageMiddleware(),
+      createValidationMiddleware(),
+      createCapabilitiesMiddleware(),
+      createEncryptionMiddleware(["OperationDefinition"]),
+      createInjectScopesMiddleware(),
+      createValidateScopesMiddleware(),
+      createAuthorizationMiddleware(),
+    ],
+    [
+      // OP INVOCATION
+      {
+        filter: {
+          useSource: (request) => {
+            return (
+              request.type === "invoke-request" &&
+              inlineSource
+                .supportedOperations()
+                .map((op) => op.code)
+                .includes(request.operation)
+            );
+          },
         },
+        source: inlineSource,
       },
-      source: inlineSource,
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: [...r4Sets.resourceTypes] as ResourceType<R4>[],
-          interactionsSupported: ["invoke-request"],
+      {
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: [...r4Sets.resourceTypes] as ResourceType<R4>[],
+            interactionsSupported: ["invoke-request"],
+          },
         },
+        source: lambdaSource,
       },
-      source: lambdaSource,
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.ARTIFACTS.map(
-            (m) => m.resourceType,
-          ),
-          interactionsSupported: ["read-request", "search-request"],
+      {
+        filter: {
+          r4: {
+            levelsSupported: ["type", "instance"],
+            resourcesSupported: R4_SPECIAL_TYPES.AUTH.map(
+              (m) => m.resourceType,
+            ),
+            interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
+          },
         },
-        r4b: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_SPECIAL_TYPES.ARTIFACTS.map(
-            (m) => m.resourceType,
-          ),
-          interactionsSupported: ["read-request", "search-request"],
-        },
+        source: createMembershipClient({ fhirDB: storage }),
       },
-      source: memSource,
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.AUTH.map((m) => m.resourceType),
-          interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
+      {
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: R4_SPECIAL_TYPES.ARTIFACTS.map(
+              (m) => m.resourceType,
+            ),
+            interactionsSupported: ["read-request", "search-request"],
+          },
+          r4b: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: R4B_SPECIAL_TYPES.ARTIFACTS.map(
+              (m) => m.resourceType,
+            ),
+            interactionsSupported: ["read-request", "search-request"],
+          },
         },
-      },
-      source: createMembershipClient({ fhirDB: storage }),
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4_DB_TYPES,
-          interactionsSupported: [
-            "vread-request",
+        source: createArtifactClient({
+          db: new pg.Pool({
+            host: process.env.ARTIFACT_DB_PG_HOST,
+            password: process.env.ARTIFACT_DB_PG_PASSWORD,
+            user: process.env.ARTIFACT_DB_PG_USERNAME,
+            database: process.env.ARTIFACT_DB_PG_NAME,
+            port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+          }),
+          operationsAllowed: [
             "read-request",
             "search-request",
-            "create-request",
-            "patch-request",
-            "update-request",
-            "delete-request",
-            "history-request",
-            "transaction-request",
-            "batch-request",
-          ],
-        },
-        r4b: {
-          levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: R4B_DB_TYPES,
-          interactionsSupported: [
             "vread-request",
-            "read-request",
-            "search-request",
-            "create-request",
-            "patch-request",
-            "update-request",
-            "delete-request",
             "history-request",
-            "transaction-request",
-            "batch-request",
           ],
-        },
+        }),
       },
-      source: storage,
-    },
-  ]);
+      {
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: R4_DB_TYPES,
+            interactionsSupported: [
+              "vread-request",
+              "read-request",
+              "search-request",
+              "create-request",
+              "patch-request",
+              "update-request",
+              "delete-request",
+              "history-request",
+              "transaction-request",
+              "batch-request",
+            ],
+          },
+          r4b: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: R4B_DB_TYPES,
+            interactionsSupported: [
+              "vread-request",
+              "read-request",
+              "search-request",
+              "create-request",
+              "patch-request",
+              "update-request",
+              "delete-request",
+              "history-request",
+              "transaction-request",
+              "batch-request",
+            ],
+          },
+        },
+        source: storage,
+      },
+    ],
+  );
 
-  return {
-    resolveCanonical: memSource.resolveCanonical,
-    client,
-  };
+  return client;
 }

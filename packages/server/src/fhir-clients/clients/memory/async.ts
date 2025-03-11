@@ -33,26 +33,6 @@ import { generateId } from "../../utilities/generateId.js";
 import { fitsSearchCriteria } from "./search.js";
 import { InternalData } from "./types.js";
 
-// Need special handling of SearchParameter to avoid infinite recursion.
-async function resolveParameter<Version extends FHIR_VERSION>(
-  memoryData: MemoryData,
-  fhirVersion: Version,
-  resourceTypes: ResourceType<Version>[],
-  name: string,
-) {
-  const data = memoryData[fhirVersion];
-  const params = Object.values(data?.["SearchParameter"] || {}).filter(
-    (p): p is r4.SearchParameter =>
-      p?.resourceType === "SearchParameter" &&
-      p?.name === name &&
-      p?.base?.some((b: unknown) =>
-        resourceTypes.includes(b as ResourceType<Version>),
-      ),
-  );
-
-  return params;
-}
-
 function checkSearchParameter<Version extends FHIR_VERSION>(
   searchParameter: Resource<Version, "SearchParameter">,
   resourceParameters: SearchParameterResource<Version>[],
@@ -176,13 +156,8 @@ function createMemoryMiddleware<
               );
 
               const parameters = await parametersWithMetaAssociated(
-                async (resourceTypes, name) =>
-                  resolveParameter(
-                    context.state.data,
-                    context.request.fhirVersion,
-                    resourceTypes,
-                    name,
-                  ),
+                context.ctx,
+                context.request.fhirVersion,
                 resourceTypes,
                 context.request.parameters,
               );

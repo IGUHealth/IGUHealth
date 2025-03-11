@@ -2,8 +2,8 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { SearchParameterResource } from "@iguhealth/client/lib/url";
-import { SearchParameter, code, uri } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { code, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { getSp1Name } from "../../../../cli/generate/sp1-parameters.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
@@ -50,10 +50,10 @@ function getCanonicalSearchSQL<Version extends FHIR_VERSION>(
   (SELECT ${"r_id"} FROM ${getSp1Name(fhirVersion)} WHERE ${conditions})`;
 }
 
-function isChainParameter(
-  parameter: SearchParameterResource<FHIR_VERSION>,
-): parameter is SearchParameterResource<FHIR_VERSION> & {
-  chainedParameters: SearchParameter[][];
+function isChainParameter<Version extends FHIR_VERSION>(
+  parameter: SearchParameterResource<Version>,
+): parameter is SearchParameterResource<Version> & {
+  chainedParameters: Resource<Version, "SearchParameter">[][];
 } {
   if (parameter.chainedParameters && parameter.chainedParameters.length > 0)
     return true;
@@ -64,7 +64,7 @@ function chainSQL<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource<Version> & {
-    chainedParameters: SearchParameter[][];
+    chainedParameters: Resource<Version, "SearchParameter">[][];
   },
 ): db.SQLFragment<boolean | null, never> {
   const referenceParameters = [
@@ -72,7 +72,7 @@ function chainSQL<Version extends FHIR_VERSION>(
     ...parameter.chainedParameters.slice(0, -1),
   ];
 
-  const sqlCHAIN = referenceParameters.map((parameters) => {
+  const sqlCHAIN = referenceParameters.map((parameters): db.SQLFragment => {
     const res = parameters.map((p): db.SQLFragment => {
       return buildParametersSQL(
         ctx,

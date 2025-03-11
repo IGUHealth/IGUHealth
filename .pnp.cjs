@@ -208,7 +208,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@trivago/prettier-plugin-sort-imports", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch::version=4.3.0&hash=a7b871"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@typescript-eslint/eslint-plugin", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:8.26.0"],\
           ["@typescript-eslint/parser", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:8.26.0"],\
           ["eslint", "npm:8.57.1"],\
@@ -16200,7 +16200,7 @@ const RAW_RUNTIME_STATE =
           ["@testing-library/react", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:16.2.0"],\
           ["@testing-library/user-event", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:14.6.1"],\
           ["@types/jest", "npm:29.5.14"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@types/react", "npm:19.0.10"],\
           ["@types/react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:19.0.4"],\
           ["@types/react-window", "npm:1.8.8"],\
@@ -16226,7 +16226,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -16244,7 +16244,7 @@ const RAW_RUNTIME_STATE =
           ["@testing-library/react", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:16.2.0"],\
           ["@testing-library/user-event", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:14.6.1"],\
           ["@types/jest", "npm:29.5.14"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@types/react", "npm:19.0.10"],\
           ["@types/react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:19.0.4"],\
           ["@types/react-window", "npm:1.8.8"],\
@@ -16278,7 +16278,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/testscript-runner", "workspace:packages/testscript-runner"],\
           ["@inquirer/prompts", "npm:5.5.0"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["commander", "npm:12.1.0"],\
           ["pino", "npm:9.6.0"],\
           ["pino-pretty", "npm:11.3.0"],\
@@ -16310,7 +16310,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["commander", "npm:12.1.0"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
         ],\
@@ -16534,7 +16534,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/fhir-types/",\
         "packageDependencies": [\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -16820,7 +16820,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/iguhealth.fhir.r4b.core", "workspace:artifacts/r4b/iguhealth-core"],\
           ["@jest/globals", "npm:29.7.0"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["commander", "npm:13.1.0"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
           ["prettier", "npm:3.5.3"],\
@@ -16885,7 +16885,7 @@ const RAW_RUNTIME_STATE =
           ["@types/koa-static", "npm:4.0.4"],\
           ["@types/koa__cors", "npm:5.0.0"],\
           ["@types/koa__router", "npm:12.0.4"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@types/pg", "npm:8.11.11"],\
           ["@types/react", "npm:19.0.10"],\
           ["@types/react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:19.0.4"],\
@@ -27692,10 +27692,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:22.13.9", {\
-        "packageLocation": "./.yarn/cache/@types-node-npm-22.13.9-565bb4cd14-23560df3ee.zip/node_modules/@types/node/",\
+      ["npm:22.13.10", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-22.13.10-af5336e62b-57dc6a5e01.zip/node_modules/@types/node/",\
         "packageDependencies": [\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["undici-types", "npm:6.20.0"]\
         ],\
         "linkType": "HARD"\
@@ -37705,7 +37705,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["fhirclient", "virtual:b46d0427f1d2c1317925bf0d45d4b29f27445dfd377e0f285de9087d79b83a923346272d843549a58626965802889de2a3c8f01e4a3d6a5f1a951a48687fe1ff#npm:2.5.4"],\
           ["@types/hapi", null],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["abortcontroller-polyfill", "npm:1.7.5"],\
           ["core-js", "npm:3.37.1"],\
           ["cross-fetch", "npm:3.1.8"],\
@@ -39959,7 +39959,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["iguhealth-workspace", "workspace:."],\
           ["@trivago/prettier-plugin-sort-imports", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch::version=4.3.0&hash=a7b871"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@typescript-eslint/eslint-plugin", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:8.26.0"],\
           ["@typescript-eslint/parser", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:8.26.0"],\
           ["eslint", "npm:8.57.1"],\
@@ -57595,7 +57595,7 @@ const RAW_RUNTIME_STATE =
           ["@tsconfig/node12", "npm:1.0.11"],\
           ["@tsconfig/node14", "npm:1.0.3"],\
           ["@tsconfig/node16", "npm:1.0.4"],\
-          ["@types/node", "npm:22.13.9"],\
+          ["@types/node", "npm:22.13.10"],\
           ["@types/swc__core", null],\
           ["@types/swc__wasm", null],\
           ["@types/typescript", null],\

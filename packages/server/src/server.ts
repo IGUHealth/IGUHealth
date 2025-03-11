@@ -53,6 +53,7 @@ import {
   createLogger,
   getRedisClient,
 } from "./fhir-server/index.js";
+import resolveCanonical from "./fhir-server/resolvers/resolveCanonical.js";
 import {
   IGUHealthServerCTX,
   KoaExtensions,
@@ -201,7 +202,8 @@ export default async function createServer(): Promise<
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),
     emailProvider: createEmailProvider(),
-    ...createClient(),
+    client: createClient(),
+    resolveCanonical,
   };
 
   const app = new Koa<

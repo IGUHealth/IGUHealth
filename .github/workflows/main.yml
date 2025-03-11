@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22.7.0
+          node-version: 22.14.0
           cache: "yarn"
 
       - name: Yarn v4
@@ -47,18 +47,26 @@ jobs:
       RESOURCE_STORE_PG_NAME: postgres
       RESOURCE_STORE_PG_HOST: localhost
       RESOURCE_STORE_PG_PORT: 5432
-      RESOURCE_STORE_PG_PASSWORD: postgres
       RESOURCE_STORE_PG_USERNAME: postgres
+      RESOURCE_STORE_PG_PASSWORD: postgres
 
       SEARCH_STORE_PG_NAME: postgres
       SEARCH_STORE_PG_HOST: localhost
       SEARCH_STORE_PG_PORT: 5432
-      SEARCH_STORE_PG_PASSWORD: postgres
       SEARCH_STORE_PG_USERNAME: postgres
+      SEARCH_STORE_PG_PASSWORD: postgres
+
+      ARTIFACT_DB_TYPE: postgres
+      ARTIFACT_DB_PG_NAME: artifact
+      ARTIFACT_DB_PG_HOST: localhost
+      ARTIFACT_DB_PG_PORT: 5432
+      ARTIFACT_DB_PG_USERNAME: postgres
+      ARTIFACT_DB_PG_PASSWORD: postgres
 
       REDIS_HOST: localhost
       REDIS_PORT: 6379
       SESSION_COOKIE_SECRETS: "session-secret"
+
     services:
       redis:
         image: redis
@@ -97,11 +105,16 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22.7.0
+          node-version: 22.14.0
           cache: "yarn"
 
       - name: Yarn Setup
         run: corepack prepare yarn@4.7.0 --activate
+
+      - name: Setup Database
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE artifact;'
+        env:
+          PGPASSWORD: postgres
 
       - name: Version Check
         run: yarn version check
@@ -109,11 +122,15 @@ jobs:
       - name: Build
         run: sh install.sh
 
-      - name: Migrate
-        run: yarn workspace @iguhealth/server migrate
+      - name: Migrate Schemas
+        run: |
+          yarn workspace @iguhealth/server cli migrate all
 
       - name: Load Terminology
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
 
       - name: Create Test environment.
         env:
@@ -130,9 +147,6 @@ jobs:
            --auth client_credentials \
            --client-id $CLIENT_ID \
            --client-secret $CLIENT_SECRET
-
-      - name: Start server
-        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
 
       - name: R4 TestScripts
         run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 500

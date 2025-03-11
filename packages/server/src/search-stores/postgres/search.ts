@@ -17,7 +17,6 @@ import { toSQLString } from "../log-sql.js";
 import {
   deriveLimit,
   deriveResourceTypeFilter,
-  findSearchParameter,
   parametersWithMetaAssociated,
   searchParameterToTableName,
 } from "../parameters.js";
@@ -48,14 +47,8 @@ async function fhirSearchRequesttoInternalRequest<
   const resourceTypes = deriveResourceTypeFilter(request);
 
   const parameters = await parametersWithMetaAssociated(
-    async (resourceTypes, name) =>
-      findSearchParameter(
-        ctx.client,
-        asRoot(ctx),
-        request.fhirVersion,
-        resourceTypes,
-        name,
-      ),
+    ctx,
+    request.fhirVersion,
     resourceTypes,
     // Used for resource type filtering.
     queryParameters.filter((p) => p.name !== "_type"),
@@ -276,7 +269,7 @@ async function deriveResourceSearchSQL<Version extends FHIR_VERSION>(
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
-  const limit = deriveLimit([0, 50], countParam);
+  const limit = deriveLimit([0, 200], countParam);
 
   const offset =
     offsetParam &&

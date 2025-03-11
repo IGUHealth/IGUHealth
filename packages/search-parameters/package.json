@@ -21,7 +21,7 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@jest/globals": "^29.7.0",
-    "@types/node": "^22.13.9",
+    "@types/node": "^22.13.10",
     "commander": "^13.1.0",
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
@@ -31,6 +31,6 @@
   "exports": {
     "./api/load": "./lib/api/load.js",
     "./api/sp1.parameters": "./lib/api/sp1.parameters.js",
-    "./api/parameter-resolution": "./api/parameter-resolution.js"
+    "./api/parameter-resolution": "./lib/api/parameter-resolution.js"
   }
 }

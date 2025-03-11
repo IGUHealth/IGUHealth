@@ -12,10 +12,10 @@ import { IGUHealthServerCTX } from "../types.js";
 async function createResourceRestCapabilities(
   ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
-  memdb: FHIRClientAsync<IGUHealthServerCTX>,
+  client: FHIRClientAsync<IGUHealthServerCTX>,
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
 ): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type(
+  const resourceParameters = await client.search_type(
     ctx,
     fhirVersion,
     "SearchParameter",
@@ -61,6 +61,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
       { name: "kind", value: ["resource"] },
       { name: "abstract", value: ["false"] },
       { name: "derivation", value: ["specialization"] },
+      { name: "_sort", value: ["url"] },
     ])
   ).resources;
 

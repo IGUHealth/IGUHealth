@@ -23,7 +23,7 @@
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/testscript-runner": "workspace:^",
     "@inquirer/prompts": "^5.5.0",
-    "@types/node": "^22.13.9",
+    "@types/node": "^22.13.10",
     "commander": "^12.1.0",
     "pino": "^9.6.0",
     "pino-pretty": "^11.3.0"

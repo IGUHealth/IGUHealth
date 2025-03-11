@@ -10,6 +10,9 @@
     },
     {
       "$ref": "#/$defs/search-store-pg"
+    },
+    {
+      "$ref": "#/$defs/artifact-pg"
     }
   ],
   "required": [
@@ -19,6 +22,7 @@
     "REDIS_PORT",
     "RESOURCE_STORE_TYPE",
     "SEARCH_STORE_TYPE",
+    "ARTIFACT_DB_TYPE",
     "SESSION_COOKIE_SECRETS",
     "AUTH_LOCAL_CERTIFICATION_LOCATION",
     "AUTH_LOCAL_SIGNING_KEY",
@@ -41,6 +45,13 @@
     "RESOURCE_STORE_TYPE": {
       "type": "string",
       "description": "Resource storage type.",
+      "enum": [
+        "postgres"
+      ]
+    },
+    "ARTIFACT_DB_TYPE": {
+      "type": "string",
+      "description": "Artifact DB type.",
       "enum": [
         "postgres"
       ]
@@ -307,6 +318,46 @@
           "default": "postgres"
         },
         "SEARCH_STORE_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        }
+      }
+    },
+    "artifact-pg": {
+      "type": "object",
+      "properties": {
+        "ARTIFACT_DB_PG_NAME": {
+          "type": "string",
+          "description": "Postgres database name. ",
+          "default": "iguhealth"
+        },
+        "ARTIFACT_DB_PG_HOST": {
+          "type": "string",
+          "description": "Postgres host",
+          "default": "localhost"
+        },
+        "ARTIFACT_DB_PG_PORT": {
+          "type": "string",
+          "pattern": "[0-9]{4}",
+          "description": "Postgres port",
+          "default": "5432"
+        },
+        "ARTIFACT_DB_PG_PASSWORD": {
+          "type": "string",
+          "description": "postgres password",
+          "default": ""
+        },
+        "ARTIFACT_DB_PG_USERNAME": {
+          "type": "string",
+          "description": "postgres username",
+          "default": "postgres"
+        },
+        "ARTIFACT_DB_PG_SSL": {
           "type": "string",
           "enum": [
             "true",

@@ -9596,7 +9596,7 @@ __metadata:
     "@testing-library/react": "npm:^16.2.0"
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
     "@types/react-window": "npm:^1.8.8"
@@ -9620,7 +9620,7 @@ __metadata:
   resolution: "@iguhealth/artifacts@workspace:packages/artifacts"
   dependencies:
     "@iguhealth/fhir-types": "workspace:^"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     typescript: "npm:5.8.2"
   languageName: unknown
   linkType: soft
@@ -9636,7 +9636,7 @@ __metadata:
     "@testing-library/react": "npm:^16.2.0"
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
     "@types/react-window": "npm:^1.8.8"
@@ -9668,7 +9668,7 @@ __metadata:
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/testscript-runner": "workspace:^"
     "@inquirer/prompts": "npm:^5.5.0"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     commander: "npm:^12.1.0"
     pino: "npm:^9.6.0"
     pino-pretty: "npm:^11.3.0"
@@ -9698,7 +9698,7 @@ __metadata:
   dependencies:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     commander: "npm:^12.1.0"
     typescript: "npm:5.8.2"
   languageName: unknown
@@ -9839,7 +9839,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-types@workspace:packages/fhir-types"
   dependencies:
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     typescript: "npm:5.8.2"
   languageName: unknown
   linkType: soft
@@ -10081,7 +10081,7 @@ __metadata:
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     commander: "npm:^13.1.0"
     jest: "npm:^29.7.0"
     prettier: "npm:^3.5.3"
@@ -10144,7 +10144,7 @@ __metadata:
     "@types/koa-static": "npm:^4.0.4"
     "@types/koa__cors": "npm:^5.0.0"
     "@types/koa__router": "npm:^12.0.4"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     "@types/pg": "npm:^8.11.11"
     "@types/react": "npm:^19.0.10"
     "@types/react-dom": "npm:^19.0.4"
@@ -18246,12 +18246,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.13.9":
-  version: 22.13.9
-  resolution: "@types/node@npm:22.13.9"
+"@types/node@npm:^22.13.10":
+  version: 22.13.10
+  resolution: "@types/node@npm:22.13.10"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10/23560df3ee99c907179c688754486b969a72144f2e2bdefe974d320dddc5ca8f93365842966ecbd5c5bba34e919fc1a5a6627712beb8e7f71d71347dcf414a35
+  checksum: 10/57dc6a5e0110ca9edea8d7047082e649fa7fa813f79e4a901653b9174141c622f4336435648baced5b38d9f39843f404fa2d8d7a10981610da26066bc8caab48
   languageName: node
   linkType: hard
 
@@ -28369,7 +28369,7 @@ __metadata:
   resolution: "iguhealth-workspace@workspace:."
   dependencies:
     "@trivago/prettier-plugin-sort-imports": "patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch"
-    "@types/node": "npm:^22.13.9"
+    "@types/node": "npm:^22.13.10"
     "@typescript-eslint/eslint-plugin": "npm:^8.26.0"
     "@typescript-eslint/parser": "npm:^8.26.0"
     eslint: "npm:^8.57.1"

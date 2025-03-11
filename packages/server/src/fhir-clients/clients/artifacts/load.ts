@@ -1,125 +1,161 @@
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
-
-import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt/types";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import pg from "pg";
 
 import {
-  createClient,
-  createLogger,
-  getRedisClient,
-} from "../../../fhir-server/index.js";
+  FHIR_VERSION,
+  R4,
+  R4B,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+
+import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
+import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
+import { ARTIFACT_TENANT, createArtifactClient } from "./index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
 }
 
-export default async function syncArtifacts<Version extends FHIR_VERSION>(
+async function syncType<Version extends FHIR_VERSION>(
+  services: Omit<IGUHealthServerCTX, "user">,
+  memSource: Memory<IGUHealthServerCTX>,
   fhirVersion: Version,
-  tenant: TenantId,
-  types: ResourceType<Version>[],
+  type: ResourceType<Version>,
 ) {
-  const redis = getRedisClient();
-  const { client, resolveCanonical } = createClient();
+  const resources = (
+    await memSource.search_type(asRoot(services), fhirVersion, type, [
+      { name: "_count", value: [500000] },
+    ])
+  ).resources;
+
+  services.logger.info({ [`COUNT ${type}`]: resources.length });
+  if (new Set(resources.map((r) => r.id)).size !== resources.length) {
+    const duplicates = new Set();
+    const ids = resources.map((r) => r.id);
+    ids.forEach((id, index) => {
+      if (ids.indexOf(id, index + 1) !== -1) {
+        duplicates.add(id);
+      }
+    });
+    services.logger.error({ duplicates });
+    throw new OperationError(
+      outcomeFatal("invalid", `Resources must have unique ids`),
+    );
+  }
+
+  for (const _resource of resources) {
+    if (!_resource.id) {
+      services.logger.error({
+        resource: _resource,
+        type,
+        fhirVersion,
+        message: "Resource must have an id",
+      });
+
+      throw new OperationError(
+        outcomeFatal("invalid", `Resource must have an id`),
+      );
+    }
+
+    const md5 = createCheckSum(_resource);
+    const resource = {
+      ..._resource,
+      meta: {
+        ..._resource.meta,
+        tag: [
+          ...(_resource?.meta?.tag ?? []),
+          { system: "md5-checksum", code: md5 },
+        ],
+      },
+    };
+
+    try {
+      const res = await services.client.conditionalUpdate(
+        asRoot(services),
+        fhirVersion,
+        type,
+        `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
+        resource,
+      );
+      services.logger.info(`Update finished '${res.id}'`);
+    } catch (error) {
+      if (error instanceof OperationError) {
+        if (error.operationOutcome.issue[0].code === "conflict") {
+          services.logger.warn({
+            message: `Resource already exists with checksum`,
+            resource: resource.id,
+            checksum: md5,
+          });
+        }
+      } else {
+        services.logger.error({ resource, error });
+        throw error;
+      }
+    }
+  }
+
+  return resources.length;
+}
+
+async function createServices(): Promise<
+  Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
+> {
   const logger = createLogger();
-  const iguhealthServices: Omit<IGUHealthServerCTX, "user"> = {
+
+  const iguhealthServices: Omit<
+    IGUHealthServerCTX,
+    "user" | "resolveCanonical"
+  > = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
     store: await createResourceStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
-    client,
-    resolveCanonical,
-    tenant,
+    tenant: ARTIFACT_TENANT,
+    client: createArtifactClient({
+      operationsAllowed: ["create-request", "update-request", "search-request"],
+      db: new pg.Pool({
+        host: process.env.ARTIFACT_DB_PG_HOST,
+        password: process.env.ARTIFACT_DB_PG_PASSWORD,
+        user: process.env.ARTIFACT_DB_PG_USERNAME,
+        database: process.env.ARTIFACT_DB_PG_NAME,
+        port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+      }),
+    }),
   };
 
-  const result = Promise.all(
-    types.map((type) => {
-      const resources = loadArtifacts({
-        fhirVersion,
-        resourceType: type,
-        currentDirectory: fileURLToPath(import.meta.url),
-        silence: false,
-      });
+  return iguhealthServices;
+}
 
-      logger.info({ [`COUNT ${type}`]: resources.length });
-      if (new Set(resources.map((r) => r.id)).size !== resources.length) {
-        const duplicates = new Set();
-        const ids = resources.map((r) => r.id);
-        ids.forEach((id, index) => {
-          if (ids.indexOf(id, index + 1) !== -1) {
-            duplicates.add(id);
-          }
-        });
-        logger.error({ duplicates });
-        throw new OperationError(
-          outcomeFatal("invalid", `Resources must have unique ids`),
-        );
-      }
+export default async function syncArtifacts(
+  config: Parameters<typeof createArtifactMemoryDatabase>[0],
+) {
+  const memSource = createArtifactMemoryDatabase(config);
+  const iguhealthServices = {
+    ...(await createServices()),
+    resolveCanonical: memSource.resolveCanonical,
+  };
+  const r4Types: ResourceType<R4>[] = config.r4.map((r) => r.resourceType);
+  const r4bTypes: ResourceType<R4B>[] = config.r4b.map((r) => r.resourceType);
 
-      return Promise.all(
-        resources.map(async (resource) => {
-          if (!resource.id) {
-            logger.error({
-              resource,
-              type,
-              fhirVersion,
-              message: "Resource must have an id",
-            });
+  const r4Amounts: Record<string, number> = {};
 
-            throw new OperationError(
-              outcomeFatal("invalid", `Resource must have an id`),
-            );
-          }
+  for (const type of r4Types) {
+    r4Amounts[type] = await syncType(iguhealthServices, memSource, R4, type);
+  }
 
-          const md5 = createCheckSum(resource);
-          resource = {
-            ...resource,
-            id: `${resource.id}-${resource.resourceType}`,
-            meta: {
-              ...resource.meta,
-              tag: [
-                ...(resource?.meta?.tag ?? []),
-                { system: "md5-checksum", code: md5 },
-              ],
-            },
-          };
+  const r4bAmounts: Record<string, number> = {};
+  for (const type of r4bTypes) {
+    r4bAmounts[type] = await syncType(iguhealthServices, memSource, R4B, type);
+  }
 
-          try {
-            const res = await client.conditionalUpdate(
-              asRoot(iguhealthServices),
-              fhirVersion,
-              type,
-              `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
-              resource,
-            );
-            logger.info(`Update finished '${res.id}'`);
-          } catch (error) {
-            if (error instanceof OperationError) {
-              if (error.operationOutcome.issue[0].code === "conflict") {
-                logger.warn({
-                  message: `Resource already exists with checksum`,
-                  resource: resource.id,
-                  checksum: md5,
-                });
-                return;
-              }
-            }
-            logger.error(error);
-            throw error;
-          }
-        }),
-      );
-    }),
-  );
+  await iguhealthServices.queue.disconnect();
+  iguhealthServices.logger.info("DONE");
 
-  redis.disconnect();
-
-  return result;
+  return { r4: r4Amounts, r4b: r4bAmounts };
 }

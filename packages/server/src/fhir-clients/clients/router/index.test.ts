@@ -1,12 +1,12 @@
 import { expect, test } from "@jest/globals";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { FHIRRequest, Interaction } from "@iguhealth/client/lib/types";
 import {
   Patient,
   Practitioner,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/lib/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { testServices } from "../../test-ctx.js";
 import { Memory } from "../memory/async.js";
@@ -115,7 +115,9 @@ test("Test routing priority", async () => {
           r4: {
             levelsSupported: ["system", "type", "instance"],
           },
-          useSource: (request: FHIRRequest) => {
+          useSource: (
+            request: FHIRRequest<FHIR_VERSION, Interaction[keyof Interaction]>,
+          ) => {
             return (
               request.type === "search-request" &&
               request.level === "type" &&
@@ -182,7 +184,9 @@ test("Test routing priority", async () => {
       },
       {
         filter: {
-          useSource: (request: FHIRRequest) => {
+          useSource: (
+            request: FHIRRequest<FHIR_VERSION, Interaction[keyof Interaction]>,
+          ) => {
             return false;
           },
         },

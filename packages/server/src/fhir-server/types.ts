@@ -145,17 +145,12 @@ export interface IGUHealthServerCTX {
   resolveCanonical: <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
-    URL extends canonical | canonical[],
   >(
     ctx: this,
     fhirVersion: Version,
     type: Type,
-    url: URL,
-  ) => Promise<
-    URL extends canonical[]
-      ? Resource<Version, Type>[]
-      : Resource<Version, Type> | undefined
-  >;
+    url: canonical[],
+  ) => Promise<Resource<Version, Type>[]>;
 }
 
 function createRootClaims(
