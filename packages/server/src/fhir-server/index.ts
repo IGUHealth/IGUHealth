@@ -269,7 +269,6 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             "vread-request",
             "history-request",
           ],
-          artifactTenant: "iguhealth" as TenantId,
         }),
       },
       {

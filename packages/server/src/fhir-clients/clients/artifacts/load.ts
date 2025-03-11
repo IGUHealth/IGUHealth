@@ -7,7 +7,6 @@ import {
   R4B,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createLogger } from "../../../fhir-server/index.js";
@@ -16,7 +15,7 @@ import createQueue from "../../../queue/index.js";
 import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
-import { createArtifactClient } from "./index.js";
+import { ARTIFACT_TENANT, createArtifactClient } from "./index.js";
 
 function createCheckSum(value: unknown): string {
   return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
@@ -103,9 +102,9 @@ async function syncType<Version extends FHIR_VERSION>(
   return resources.length;
 }
 
-async function createServices(
-  tenant: TenantId,
-): Promise<Omit<IGUHealthServerCTX, "resolveCanonical" | "user">> {
+async function createServices(): Promise<
+  Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
+> {
   const logger = createLogger();
 
   const iguhealthServices: Omit<
@@ -117,9 +116,8 @@ async function createServices(
     store: await createResourceStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
-    tenant,
+    tenant: ARTIFACT_TENANT,
     client: createArtifactClient({
-      artifactTenant: tenant,
       operationsAllowed: ["create-request", "update-request", "search-request"],
       db: new pg.Pool({
         host: process.env.ARTIFACT_DB_PG_HOST,
@@ -135,12 +133,11 @@ async function createServices(
 }
 
 export default async function syncArtifacts(
-  tenant: TenantId,
   config: Parameters<typeof createArtifactMemoryDatabase>[0],
 ) {
   const memSource = createArtifactMemoryDatabase(config);
   const iguhealthServices = {
-    ...(await createServices(tenant)),
+    ...(await createServices()),
     resolveCanonical: memSource.resolveCanonical,
   };
   const r4Types: ResourceType<R4>[] = config.r4.map((r) => r.resourceType);

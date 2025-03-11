@@ -4,7 +4,6 @@ import DBMigrate from "db-migrate";
 import { Admin } from "kafkajs";
 
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 
 import syncArtifacts from "../../fhir-clients/clients/artifacts/load.js";
 import { createKafkaClient } from "../../queue/index.js";
@@ -100,10 +99,8 @@ const artifactsToLoad = {
   ],
 };
 
-const tenantsyncId = "iguhealth" as TenantId;
-
 const loadArtifacts: Parameters<Command["action"]>[0] = async () => {
-  const result = await syncArtifacts(tenantsyncId, artifactsToLoad);
+  const result = await syncArtifacts(artifactsToLoad);
 
   console.log(result);
 };

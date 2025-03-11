@@ -21,10 +21,11 @@ import {
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 
 type ArtifactConfig = {
-  artifactTenant: TenantId;
   operationsAllowed: RequestType[AllInteractions][];
   db: db.Queryable;
 };
+
+export const ARTIFACT_TENANT: TenantId = "iguhealth" as TenantId;
 
 /**
  * Sets the tenant for the artifact client.
@@ -38,7 +39,7 @@ function createSetArtifactTenantMiddleware<
   return async (context, next) => {
     return next({
       ...context,
-      ctx: { ...context.ctx, tenant: context.state.artifactTenant },
+      ctx: { ...context.ctx, tenant: ARTIFACT_TENANT },
     });
   };
 }
