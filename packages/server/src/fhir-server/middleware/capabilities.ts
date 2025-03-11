@@ -61,6 +61,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
       { name: "kind", value: ["resource"] },
       { name: "abstract", value: ["false"] },
       { name: "derivation", value: ["specialization"] },
+      { name: "_sort", value: ["url"] },
     ])
   ).resources;
 
