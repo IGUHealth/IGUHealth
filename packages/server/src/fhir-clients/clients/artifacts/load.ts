@@ -119,7 +119,6 @@ async function createServices(
     logger,
     tenant,
     client: createArtifactClient({
-      transaction_entry_limit: 20,
       artifactTenant: tenant,
       operationsAllowed: ["create-request", "update-request", "search-request"],
       db: new pg.Pool({

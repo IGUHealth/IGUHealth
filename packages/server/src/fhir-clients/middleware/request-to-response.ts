@@ -37,7 +37,7 @@ import {
 import { generateId } from "../utilities/generateId.js";
 
 export type RequestResponseState = {
-  transaction_entry_limit: number;
+  transaction_entry_limit?: number;
 };
 
 const AUTHOR_EXTENSION = "https://iguhealth.app/author";
@@ -332,8 +332,8 @@ async function conditionalDelete(
 
 export default function createRequestToResponseMiddleware<
   CTX extends IGUHealthServerCTX,
-  State extends RequestResponseState,
->(): MiddlewareAsyncChain<State, CTX> {
+  State,
+>(transaction_entry_limit: number = 20): MiddlewareAsyncChain<State, CTX> {
   return async function requestToResponseMiddleware(context, next) {
     switch (context.request.type) {
       case "read-request": {
@@ -838,15 +838,12 @@ export default function createRequestToResponseMiddleware<
             context.request.fhirVersion,
             transactionBundle,
           );
-        if (
-          (transactionBundle.entry || []).length >
-          context.state.transaction_entry_limit
-        ) {
+        if ((transactionBundle.entry || []).length > transaction_entry_limit) {
           throw new OperationError(
             outcomeError(
               "invalid",
               `Transaction bundle only allowed to have '${
-                context.state.transaction_entry_limit
+                transaction_entry_limit
               }' entries. Current bundle has '${
                 (transactionBundle.entry || []).length
               }'`,

@@ -154,13 +154,11 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
     RequestResponseState,
     IGUHealthServerCTX
   >(
-    {
-      transaction_entry_limit: parseInt(
-        process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-      ),
-    },
+    {},
     createMiddlewareAsync([
-      createRequestToResponseMiddleware(),
+      createRequestToResponseMiddleware(
+        parseInt(process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"),
+      ),
       sendQueueMiddleweare(),
     ]),
   );
@@ -258,9 +256,6 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
           },
         },
         source: createArtifactClient({
-          transaction_entry_limit: parseInt(
-            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-          ),
           db: new pg.Pool({
             host: process.env.ARTIFACT_DB_PG_HOST,
             password: process.env.ARTIFACT_DB_PG_PASSWORD,

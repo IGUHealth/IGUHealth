@@ -21,7 +21,6 @@ import {
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 
 type ArtifactConfig = {
-  transaction_entry_limit: number;
   artifactTenant: TenantId;
   operationsAllowed: RequestType[AllInteractions][];
   db: db.Queryable;
