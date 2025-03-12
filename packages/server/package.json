@@ -142,7 +142,7 @@
     "lib/**"
   ],
   "exports": {
-    "./server": "./lib/server.js",
+    ".": "./lib/server.js",
     "./cli": "./lib/cli/index.js"
   }
 }

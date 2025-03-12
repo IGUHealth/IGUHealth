@@ -147,6 +147,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/server"\
     },\
     {\
+      "name": "@iguhealth/serverless",\
+      "reference": "workspace:packages/serverless"\
+    },\
+    {\
       "name": "@iguhealth/smart-launch",\
       "reference": "workspace:packages/smart-launch"\
     },\
@@ -194,6 +198,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/performance-testing", ["workspace:packages/performance-testing"]],\
     ["@iguhealth/search-parameters", ["workspace:packages/search-parameters"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
+    ["@iguhealth/serverless", ["workspace:packages/serverless"]],\
     ["@iguhealth/smart-launch", ["workspace:packages/smart-launch"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
     ["@iguhealth/x-fhir-query", ["workspace:packages/x-fhir-query"]],\
@@ -16938,6 +16943,26 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"],\
           ["validator", "npm:13.12.0"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.5.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/serverless", [\
+      ["workspace:packages/serverless", {\
+        "packageLocation": "./packages/serverless/",\
+        "packageDependencies": [\
+          ["@iguhealth/serverless", "workspace:packages/serverless"],\
+          ["@babel/plugin-syntax-import-attributes", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.26.0"],\
+          ["@babel/preset-env", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.26.9"],\
+          ["@babel/preset-typescript", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:7.26.0"],\
+          ["@iguhealth/server", "workspace:packages/server"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/jest", "npm:29.5.14"],\
+          ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
+          ["serverless-http", "npm:3.2.0"],\
+          ["ts-jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.2.6"],\
+          ["tsx", "npm:4.11.2"],\
+          ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -55238,6 +55263,15 @@ const RAW_RUNTIME_STATE =
           ["escape-html", "npm:1.0.3"],\
           ["parseurl", "npm:1.3.3"],\
           ["send", "npm:0.18.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["serverless-http", [\
+      ["npm:3.2.0", {\
+        "packageLocation": "./.yarn/cache/serverless-http-npm-3.2.0-85d9b307db-82bee1b327.zip/node_modules/serverless-http/",\
+        "packageDependencies": [\
+          ["serverless-http", "npm:3.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
