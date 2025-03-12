@@ -12944,10 +12944,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@babel/runtime-corejs3", [\
-      ["npm:7.23.6", {\
-        "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.23.6-1699269972-6780931fc7.zip/node_modules/@babel/runtime-corejs3/",\
+      ["npm:7.26.10", {\
+        "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.26.10-e16911a95f-6da4663c8b.zip/node_modules/@babel/runtime-corejs3/",\
         "packageDependencies": [\
-          ["@babel/runtime-corejs3", "npm:7.23.6"],\
+          ["@babel/runtime-corejs3", "npm:7.26.10"],\
           ["core-js-pure", "npm:3.32.1"],\
           ["regenerator-runtime", "npm:0.14.0"]\
         ],\
@@ -14056,7 +14056,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-react", "virtual:a04f96b13d00fd9fc0bb6a6933b3227191d91dfd64ed4e24b377eb528b415f002d37496caf2a83f2c6c414ba5531a4c1084fa8bc5ac1eb015c15d20f88558247#npm:7.22.5"],\
           ["@babel/preset-typescript", "virtual:a04f96b13d00fd9fc0bb6a6933b3227191d91dfd64ed4e24b377eb528b415f002d37496caf2a83f2c6c414ba5531a4c1084fa8bc5ac1eb015c15d20f88558247#npm:7.23.3"],\
           ["@babel/runtime", "npm:7.23.6"],\
-          ["@babel/runtime-corejs3", "npm:7.23.6"],\
+          ["@babel/runtime-corejs3", "npm:7.26.10"],\
           ["@babel/traverse", "npm:7.23.2"],\
           ["@docusaurus/cssnano-preset", "npm:3.4.0"],\
           ["@docusaurus/logger", "npm:3.4.0"],\
@@ -14144,7 +14144,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-react", "virtual:a04f96b13d00fd9fc0bb6a6933b3227191d91dfd64ed4e24b377eb528b415f002d37496caf2a83f2c6c414ba5531a4c1084fa8bc5ac1eb015c15d20f88558247#npm:7.22.5"],\
           ["@babel/preset-typescript", "virtual:a04f96b13d00fd9fc0bb6a6933b3227191d91dfd64ed4e24b377eb528b415f002d37496caf2a83f2c6c414ba5531a4c1084fa8bc5ac1eb015c15d20f88558247#npm:7.23.3"],\
           ["@babel/runtime", "npm:7.23.6"],\
-          ["@babel/runtime-corejs3", "npm:7.23.6"],\
+          ["@babel/runtime-corejs3", "npm:7.26.10"],\
           ["@babel/traverse", "npm:7.23.2"],\
           ["@docusaurus/cssnano-preset", "npm:3.4.0"],\
           ["@docusaurus/logger", "npm:3.4.0"],\
