@@ -140,5 +140,9 @@
     "src/**",
     "database.json",
     "lib/**"
-  ]
+  ],
+  "exports": {
+    "./server": "./lib/server.js",
+    "./cli": "./lib/cli/index.js"
+  }
 }
