@@ -3,6 +3,7 @@ packages/**/lib
 coverage
 tsconfig.tsbuildinfo
 .env
+env.json
 packages/docs/.yarn
 packages/docs/build
 packages/auth_testing/build/
