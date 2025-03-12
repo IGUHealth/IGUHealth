@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  iguhealth-server
+Transform:
+  - AWS::Serverless-2016-10-31
+
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+Resources:
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  # This is a Lambda function config associated with the source code: get-all-items.js
+  getAllItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lib/index.handler
+      Runtime: nodejs22.x
+      Architectures:
+        - x86_64
+      MemorySize: 1024
+      Timeout: 500
+      Description: IGUHealth server.
+      # Policies:
+      #   # Give Create/Read/Update/Delete Permissions to the SampleTable
+      #   - DynamoDBCrudPolicy:
+      #       TableName: !Ref SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{all+}
+            Method: ANY
+
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    LoggingConfig:
+      LogFormat: JSON
