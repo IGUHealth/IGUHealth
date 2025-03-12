@@ -24,6 +24,13 @@ env:
   SEARCH_STORE_PG_PASSWORD: "postgres"
   SEARCH_STORE_PG_USERNAME: postgres
 
+  ARTIFACT_DB_TYPE: postgres
+  ARTIFACT_DB_PG_NAME: artifact
+  ARTIFACT_DB_PG_HOST: localhost
+  ARTIFACT_DB_PG_PORT: 5432
+  ARTIFACT_DB_PG_USERNAME: postgres
+  ARTIFACT_DB_PG_PASSWORD: postgres
+
   REDIS_HOST: localhost
   REDIS_PORT: 6379
   SESSION_COOKIE_SECRETS: "session-secret"
@@ -76,6 +83,11 @@ jobs:
       - name: Yarn Setup
         run: corepack prepare yarn@4.7.0 --activate
 
+      - name: Setup Database
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE artifact;'
+        env:
+          PGPASSWORD: postgres
+
       - name: Build
         run: sh install.sh
 
@@ -83,6 +95,9 @@ jobs:
         run: yarn workspace @iguhealth/server migrate
       - name: Load Terminology
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
 
       - name: Create Test environment.
         run: |
@@ -97,14 +112,11 @@ jobs:
            --client-id test-client \
            --client-secret mysecret
 
-      - name: Start server
-        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
-
       - name: R4 TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json -t 500
 
       - name: R4B TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -o r4b-reports.json
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -o r4b-reports.json -t 500
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
