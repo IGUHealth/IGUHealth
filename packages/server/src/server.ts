@@ -183,7 +183,7 @@ export default async function createServer(): Promise<
     await createCertsIfNoneExists(
       process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
       process.env.AUTH_LOCAL_SIGNING_KEY,
-      { write: false, alg: ALGORITHMS.RS384 },
+      { write: true, alg: ALGORITHMS.RS384 },
     );
   }
 
