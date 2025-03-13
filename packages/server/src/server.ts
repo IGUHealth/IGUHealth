@@ -22,7 +22,7 @@ import {
   createCertsIfNoneExists,
   getJWKS,
 } from "@iguhealth/jwt/certifications";
-import { TenantId } from "@iguhealth/jwt/types";
+import { ALGORITHMS, TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
   isOperationError,
@@ -183,6 +183,7 @@ export default async function createServer(): Promise<
     await createCertsIfNoneExists(
       process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
       process.env.AUTH_LOCAL_SIGNING_KEY,
+      { write: false, alg: ALGORITHMS.RS384 },
     );
   }
 

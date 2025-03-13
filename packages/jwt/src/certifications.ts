@@ -35,9 +35,8 @@ export async function createCertifications(
   alg: ALGORITHMS_ALLOWED,
   directory: string,
   kid: string,
+  write: boolean,
 ) {
-  mkdirSync(directory, { recursive: true });
-
   const { publicKey, privateKey } = await generateKeyPair(alg, {
     extractable: true,
   });
@@ -45,8 +44,13 @@ export async function createCertifications(
   const p8PublicKey = await jose.exportSPKI(publicKey);
   const p8Private = await jose.exportPKCS8(privateKey);
 
-  writeFileSync(path.join(directory, `${kid}.spki`), p8PublicKey);
-  writeFileSync(path.join(directory, `${kid}.p8`), p8Private);
+  if (write) {
+    if (!existsSync(directory)) {
+      mkdirSync(directory, { recursive: true });
+    }
+    writeFileSync(path.join(directory, `${kid}.spki`), p8PublicKey);
+    writeFileSync(path.join(directory, `${kid}.p8`), p8Private);
+  }
 
   return {
     publicKey,
@@ -120,14 +124,14 @@ export async function getSigningKey(
 export async function createCertsIfNoneExists(
   directory: string,
   kid: string,
-  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
+  options: { write: boolean; alg: ALGORITHMS_ALLOWED } = {
+    write: false,
+    alg: ALGORITHMS.RS384,
+  },
 ) {
   try {
-    await getSigningKey(directory, kid, alg);
-  } catch (_e) {
-    if (!existsSync(directory)) {
-      mkdirSync(directory);
-    }
-    await createCertifications(alg, directory, kid);
+    await getSigningKey(directory, kid, options.alg);
+  } catch {
+    await createCertifications(options.alg, directory, kid, options.write);
   }
 }

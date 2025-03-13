@@ -1,6 +1,7 @@
 import { Redis } from "ioredis";
 import pg from "pg";
 import { pino } from "pino";
+import pretty from "pino-pretty";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -117,12 +118,12 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
 
 export const createLogger = () =>
   pino<string>(
+    {},
     process.env.NODE_ENV === "development"
-      ? {
-          transport: {
-            target: "pino-pretty",
-          },
-        }
+      ? pretty({
+          levelFirst: true,
+          colorize: true,
+        })
       : undefined,
   );
 
