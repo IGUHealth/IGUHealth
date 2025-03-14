@@ -1,21 +1,32 @@
 import * as jose from "jose";
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { ALGORITHMS, ALGORITHMS_ALLOWED } from "./constants.js";
+import { ALGORITHMS_ALLOWED } from "./constants.js";
+
+interface BaseOption {
+  alg: ALGORITHMS_ALLOWED;
+}
+
+interface JWTCertificationFileConfig extends BaseOption {
+  type: "file";
+  directory: string;
+  kid: string;
+}
+
+interface JWTCertificationEnvironmentConfig extends BaseOption {
+  type: "environment";
+  kid: string;
+  privateKey: string;
+  publicKey: string;
+}
 
 /**
  * Generates a keypair using the provided algorithm.
  * @param alg
  * @returns privateKey and publicKey generated using jose library.
  */
-export async function generateKeyPair(
+async function generateKeyPair(
   alg: ALGORITHMS_ALLOWED,
   options: { extractable: boolean },
 ) {
@@ -23,39 +34,49 @@ export async function generateKeyPair(
   return { privateKey, publicKey };
 }
 
-/**
- * Saves certifications as follows:
- * private keys as /${directory}/{kid}.p8 and public keys as /${directory}/{kid}.spki
- * @param directory
- * @param kid
- * @param alg
- * @returns
- */
-export async function createCertifications(
-  alg: ALGORITHMS_ALLOWED,
+async function writeToFile(
   directory: string,
   kid: string,
-  write: boolean,
+  publicKey: CryptoKey,
+  privateKey: CryptoKey,
 ) {
-  const { publicKey, privateKey } = await generateKeyPair(alg, {
-    extractable: true,
-  });
-
   const p8PublicKey = await jose.exportSPKI(publicKey);
   const p8Private = await jose.exportPKCS8(privateKey);
 
-  if (write) {
-    if (!existsSync(directory)) {
-      mkdirSync(directory, { recursive: true });
-    }
-    writeFileSync(path.join(directory, `${kid}.spki`), p8PublicKey);
-    writeFileSync(path.join(directory, `${kid}.p8`), p8Private);
+  if (!existsSync(directory)) {
+    mkdirSync(directory, { recursive: true });
   }
 
-  return {
-    publicKey,
-    privateKey,
-  };
+  writeFileSync(path.join(directory, `${kid}.spki`), p8PublicKey);
+  writeFileSync(path.join(directory, `${kid}.p8`), p8Private);
+}
+
+async function getPublicPrivateKey(option: JWTCertificationConfig): Promise<{
+  publicKey: CryptoKey;
+  privateKey: CryptoKey;
+}> {
+  switch (option.type) {
+    case "environment": {
+      const publicKey = await jose.importSPKI(option.publicKey, option.alg);
+      const privateKey = await jose.importPKCS8(option.privateKey, option.alg);
+      return { publicKey, privateKey };
+    }
+    case "file": {
+      const publicKey = await jose.importSPKI(
+        readFileSync(
+          path.join(option.directory, `${option.kid}.spki`),
+          "utf-8",
+        ),
+        option.alg,
+      );
+      const privateKey = await jose.importPKCS8(
+        readFileSync(path.join(option.directory, `${option.kid}.p8`), "utf-8"),
+        option.alg,
+      );
+
+      return { privateKey, publicKey };
+    }
+  }
 }
 
 /**
@@ -64,33 +85,19 @@ export async function createCertifications(
  * @param alg
  * @returns JSON Web Key Set with all public keys in the directory. Uses filename to distinguish between keys (sets the kid field in the JWK).
  */
-export async function getJWKS(
-  directory: string,
-  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
-) {
-  const publicKeyPaths = readdirSync(directory);
-  const keys = await Promise.all(
-    publicKeyPaths
-      .filter((keyPath) => {
-        return keyPath.endsWith(".spki");
-      })
-      .map(async (pubKeyPath) => {
-        const pubKey = await jose.importSPKI(
-          readFileSync(path.join(directory, pubKeyPath), "utf-8"),
-          alg,
-        );
+export async function getJWKS(option: JWTCertificationConfig) {
+  const { publicKey } = await getPublicPrivateKey(option);
 
-        const kid = path.parse(pubKeyPath).name;
-        const pubJWK = await jose.exportJWK(pubKey);
-
-        return { ...pubJWK, alg, use: "sig", kid };
-      }),
-  );
+  const pubJWK = await jose.exportJWK(publicKey);
 
   return {
-    keys,
+    keys: [{ ...pubJWK, alg: option.alg, use: "sig", kid: option.kid }],
   };
 }
+
+export type JWTCertificationConfig =
+  | JWTCertificationFileConfig
+  | JWTCertificationEnvironmentConfig;
 
 /**
  *
@@ -100,17 +107,13 @@ export async function getJWKS(
  * @returns Returns the private key for a given kid.
  */
 export async function getSigningKey(
-  directory: string,
-  kid: string,
-  alg: ALGORITHMS_ALLOWED = ALGORITHMS.RS384,
+  option: JWTCertificationConfig,
 ): Promise<{ key: CryptoKey; kid: string }> {
-  const privateKeyPath = path.join(directory, `${kid}.p8`);
-  const privateKey = await jose.importPKCS8(
-    readFileSync(privateKeyPath, "utf-8"),
-    alg,
-  );
-
-  return { kid, key: privateKey };
+  const { privateKey } = await getPublicPrivateKey(option);
+  return {
+    key: privateKey,
+    kid: option.kid,
+  };
 }
 
 /**
@@ -121,17 +124,16 @@ export async function getSigningKey(
  * @param kid
  * @param alg
  */
-export async function createCertsIfNoneExists(
-  directory: string,
-  kid: string,
-  options: { write: boolean; alg: ALGORITHMS_ALLOWED } = {
-    write: false,
-    alg: ALGORITHMS.RS384,
-  },
-) {
+export async function createCertsIfNoneExists(option: JWTCertificationConfig) {
   try {
-    await getSigningKey(directory, kid, options.alg);
+    await getSigningKey(option);
   } catch {
-    await createCertifications(options.alg, directory, kid, options.write);
+    if (option.type === "environment")
+      throw new Error(`Cannot create certs for 'environment' type.`);
+
+    const { publicKey, privateKey } = await generateKeyPair(option.alg, {
+      extractable: true,
+    });
+    await writeToFile(option.directory, option.kid, publicKey, privateKey);
   }
 }

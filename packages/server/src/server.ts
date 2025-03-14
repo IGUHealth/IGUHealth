@@ -22,7 +22,7 @@ import {
   createCertsIfNoneExists,
   getJWKS,
 } from "@iguhealth/jwt/certifications";
-import { ALGORITHMS, TenantId } from "@iguhealth/jwt/types";
+import { TenantId } from "@iguhealth/jwt/types";
 import {
   OperationError,
   isOperationError,
@@ -40,6 +40,7 @@ import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyUserHasAccessToTenant } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
+import { getCertConfig } from "./certification.js";
 import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
 import loadEnv from "./env.js";
@@ -180,11 +181,7 @@ export default async function createServer(): Promise<
     });
 
   if (process.env.NODE_ENV === "development") {
-    await createCertsIfNoneExists(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-      { write: true, alg: ALGORITHMS.RS384 },
-    );
+    await createCertsIfNoneExists(getCertConfig());
   }
 
   const redis = getRedisClient();
@@ -242,7 +239,7 @@ export default async function createServer(): Promise<
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
+    const jwks = await getJWKS(getCertConfig());
     ctx.body = jwks;
     await next();
   });
@@ -254,10 +251,7 @@ export default async function createServer(): Promise<
     authN.verifyBasicAuth,
     process.env.AUTH_PUBLIC_ACCESS === "true"
       ? authN.allowPublicAccessMiddleware
-      : await authN.createValidateUserJWTMiddleware({
-          AUTH_LOCAL_CERTIFICATION_LOCATION:
-            process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-        }),
+      : await authN.createValidateUserJWTMiddleware(),
     authN.associateUserToIGUHealth,
     verifyUserHasAccessToTenant,
   ];

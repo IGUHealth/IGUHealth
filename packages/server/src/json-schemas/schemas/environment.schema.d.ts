@@ -96,10 +96,13 @@ export type IGUHealthEnvironment = ResourceStorePg &
      * The issuer of the tokens
      */
     AUTH_ISSUER: string;
+    AUTH_CERTIFICATION_TYPE: "file" | "environment";
+    AUTH_CERTIFICATION_PRIVATE_KEY?: string;
+    AUTH_CERTIFICATION_PUBLIC_KEY?: string;
     /**
-     * Location for local certifications for IGUHEALTH ISSUER
+     * IF Certification is type file, this is the location of the certification files.
      */
-    AUTH_LOCAL_CERTIFICATION_LOCATION: string;
+    AUTH_LOCAL_CERTIFICATION_LOCATION?: string;
     /**
      * The signing key used to generate new local tokens
      */

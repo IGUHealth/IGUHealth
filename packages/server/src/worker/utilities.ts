@@ -15,6 +15,7 @@ import {
 import { getIssuer } from "../authN/oidc/constants.js";
 import { WORKER_APP } from "../authN/oidc/hardcodedClients/worker-app.js";
 import RedisCache from "../cache/providers/redis.js";
+import { getCertConfig } from "../certification.js";
 import { createArtifactMemoryDatabase } from "../fhir-clients/clients/memory/async.js";
 import { createLogger, getRedisClient } from "../fhir-server/index.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
@@ -89,10 +90,7 @@ function createWorkerIGUHealthClient(
     url: new URL(`w/${tenant}`, process.env.API_URL).href,
     getAccessToken: async () => {
       const token = await createToken({
-        signingKey: await getSigningKey(
-          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-          process.env.AUTH_LOCAL_SIGNING_KEY,
-        ),
+        signingKey: await getSigningKey(getCertConfig()),
         payload: tokenPayload,
       });
       return token;

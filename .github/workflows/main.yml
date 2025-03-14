@@ -43,6 +43,7 @@ jobs:
       NODE_ENV: development
       API_URL: http://localhost:3000
       AUTH_ISSUER: http://localhost:3000
+      AUTH_CERTIFICATION_TYPE: file
 
       RESOURCE_STORE_PG_NAME: postgres
       RESOURCE_STORE_PG_HOST: localhost

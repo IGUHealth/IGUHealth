@@ -24,12 +24,12 @@
     "SEARCH_STORE_TYPE",
     "ARTIFACT_DB_TYPE",
     "SESSION_COOKIE_SECRETS",
-    "AUTH_LOCAL_CERTIFICATION_LOCATION",
     "AUTH_LOCAL_SIGNING_KEY",
     "IGUHEALTH_ENVIRONMENT",
     "QUEUE_TYPE",
     "QUEUE_BROKERS",
-    "QUEUE_CLIENT_ID"
+    "QUEUE_CLIENT_ID",
+    "AUTH_CERTIFICATION_TYPE"
   ],
   "properties": {
     "IGUHEALTH_ENVIRONMENT": {
@@ -159,9 +159,22 @@
       "type": "string",
       "description": "The issuer of the tokens"
     },
+    "AUTH_CERTIFICATION_TYPE": {
+      "type": "string",
+      "enum": [
+        "file",
+        "environment"
+      ]
+    },
+    "AUTH_CERTIFICATION_PRIVATE_KEY": {
+      "type": "string"
+    },
+    "AUTH_CERTIFICATION_PUBLIC_KEY": {
+      "type": "string"
+    },
     "AUTH_LOCAL_CERTIFICATION_LOCATION": {
       "type": "string",
-      "description": "Location for local certifications for IGUHEALTH ISSUER"
+      "description": "IF Certification is type file, this is the location of the certification files."
     },
     "AUTH_LOCAL_SIGNING_KEY": {
       "type": "string",

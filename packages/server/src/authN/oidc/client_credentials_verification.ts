@@ -12,6 +12,7 @@ import {
   Subject,
 } from "@iguhealth/jwt/types";
 
+import { getCertConfig } from "../../certification.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { getIssuer } from "./constants.js";
 
@@ -68,10 +69,7 @@ export async function createClientCredentialToken(
   client: ClientApplication,
   expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
-  const signingKey = await getSigningKey(
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-    process.env.AUTH_LOCAL_SIGNING_KEY,
-  );
+  const signingKey = await getSigningKey(getCertConfig());
 
   const policies = await ctx.client.search_type(
     asRoot(ctx),

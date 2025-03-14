@@ -17,6 +17,7 @@ import {
   Subject,
 } from "@iguhealth/jwt/types";
 
+import { getCertConfig } from "../../../../certification.js";
 import { createTenantURL } from "../../../../fhir-server/constants.js";
 import { asRoot } from "../../../../fhir-server/types.js";
 import resolveStatic from "../../../../resolveStatic.js";
@@ -81,10 +82,7 @@ export async function launchView<Version extends FHIR_VERSION>(
     [{ name: "link", value: [ctx.state.oidc.user?.fhir_user_id as id] }],
   );
   const accessToken = await createToken<AccessTokenPayload<user_role>>({
-    signingKey: await getSigningKey(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-    ),
+    signingKey: await getSigningKey(getCertConfig()),
     payload: {
       sub: ctx.state.oidc.user?.fhir_user_id as Subject,
       // So for a user to select a patient, they must have the user/Patient.s scope.

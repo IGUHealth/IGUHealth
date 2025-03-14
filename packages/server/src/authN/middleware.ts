@@ -20,6 +20,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { getCertConfig } from "../certification.js";
 import {
   IGUHealthServerCTX,
   KoaExtensions,
@@ -34,10 +35,10 @@ import { getIssuer } from "./oidc/constants.js";
 import getHardCodedClients from "./oidc/hardcodedClients/index.js";
 import { PUBLIC_APP } from "./oidc/hardcodedClients/public-app.js";
 
-async function createLocalJWTSecret(
-  certLocation: string,
-): Promise<ReturnType<typeof jwksRsa.koaJwtSecret>> {
-  const jwks = await getJWKS(certLocation);
+async function createLocalJWTSecret(): Promise<
+  ReturnType<typeof jwksRsa.koaJwtSecret>
+> {
+  const jwks = await getJWKS(getCertConfig());
   return jwksRsa.koaJwtSecret({
     jwksUri: "_not_used",
     cache: true,
@@ -47,10 +48,6 @@ async function createLocalJWTSecret(
       return jwks;
     },
   });
-}
-
-interface ValidateUserJWTMiddlewareOptions {
-  AUTH_LOCAL_CERTIFICATION_LOCATION: string;
 }
 
 /**
@@ -111,12 +108,10 @@ export async function verifyBasicAuth<
  *
  * @returns Koa middleware that validates the user JWT.
  */
-export async function createValidateUserJWTMiddleware<T, C>({
-  AUTH_LOCAL_CERTIFICATION_LOCATION,
-}: ValidateUserJWTMiddlewareOptions): Promise<Koa.Middleware<T, C>> {
-  const IGUHEALTH_JWT_SECRET = await createLocalJWTSecret(
-    AUTH_LOCAL_CERTIFICATION_LOCATION,
-  );
+export async function createValidateUserJWTMiddleware<T, C>(): Promise<
+  Koa.Middleware<T, C>
+> {
+  const IGUHEALTH_JWT_SECRET = await createLocalJWTSecret();
 
   return jwt({
     key: "__user__",
@@ -260,10 +255,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   };
 
   const token = await createToken({
-    signingKey: await getSigningKey(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-    ),
+    signingKey: await getSigningKey(getCertConfig()),
     payload: user,
   });
 
