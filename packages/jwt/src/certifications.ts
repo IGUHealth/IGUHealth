@@ -125,10 +125,12 @@ export async function getSigningKey(
  * @param alg
  */
 export async function createCertsIfNoneExists(option: JWTCertificationConfig) {
-  if (option.type === "environment") throw new Error();
   try {
     await getSigningKey(option);
   } catch {
+    if (option.type === "environment")
+      throw new Error(`Cannot create certs for 'environment' type.`);
+
     const { publicKey, privateKey } = await generateKeyPair(option.alg, {
       extractable: true,
     });
