@@ -90,9 +90,9 @@ export async function getJWKS(option: JWTCertificationConfig) {
 
   const pubJWK = await jose.exportJWK(publicKey);
 
-  return [
-    { keys: [{ ...pubJWK, alg: option.alg, use: "sig", kid: option.kid }] },
-  ];
+  return {
+    keys: [{ ...pubJWK, alg: option.alg, use: "sig", kid: option.kid }],
+  };
 }
 
 export type JWTCertificationConfig =
