@@ -12,6 +12,7 @@ import {
 } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { getCertConfig } from "../../../certification.js";
 import { getIssuer } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OAuth2TokenIntrospectionBody } from "../schemas/oauth2_token_introspection.schema.js";
@@ -127,10 +128,7 @@ export function tokenInfo(): OIDCRouteHandler {
       );
     }
 
-    const signingKey = await getSigningKey(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-    );
+    const signingKey = await getSigningKey(getCertConfig());
     try {
       const result = await jwtVerify<
         AccessTokenPayload<user_role> | IDTokenPayload<user_role>

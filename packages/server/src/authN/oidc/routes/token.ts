@@ -23,6 +23,7 @@ import {
   TenantId,
 } from "@iguhealth/jwt/types";
 
+import { getCertConfig } from "../../../certification.js";
 import {
   IGUHealthServerCTX,
   KoaExtensions,
@@ -30,7 +31,6 @@ import {
 } from "../../../fhir-server/types.js";
 import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
-import * as users from "../../db/users/index.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -252,10 +252,7 @@ async function createTokenResponse({
   clientApplication: ClientApplication;
   launchParameters?: ResolvedLaunchParameters;
 }): Promise<Oauth2TokenBodyResponse> {
-  const signingKey = await getSigningKey(
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-    process.env.AUTH_LOCAL_SIGNING_KEY,
-  );
+  const signingKey = await getSigningKey(getCertConfig());
   const approvedScopes = await scopes.getApprovedScope(
     ctx.store.getClient(),
     ctx.tenant,
