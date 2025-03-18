@@ -1,5 +1,0 @@
-releases:
-  "@iguhealth/cli": patch
-  "@iguhealth/hl7.fhir.r4b.core": patch
-  "@iguhealth/search-parameters": patch
-  "@iguhealth/server": patch

@@ -1,9 +1,0 @@
-releases:
-  "@iguhealth/access-control": patch
-  "@iguhealth/admin-app": patch
-  "@iguhealth/cli": patch
-  "@iguhealth/components": patch
-  "@iguhealth/jwt": patch
-  "@iguhealth/server": patch
-  "@iguhealth/serverless": patch
-  "@iguhealth/smart-launch": patch
