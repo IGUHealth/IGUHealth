@@ -7,7 +7,8 @@
     "_generate-parameters": "yarn node ./lib/cli/index.js generate special-parameters --output ./src/generated/search-parameters.ts",
     "generate": "yarn _generate-canonical-map && yarn _generate-parameters",
     "build": "tsc && yarn generate && tsc",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
@@ -32,5 +33,10 @@
     "./api/load": "./lib/api/load.js",
     "./api/sp1.parameters": "./lib/api/sp1.parameters.js",
     "./api/parameter-resolution": "./lib/api/parameter-resolution.js"
-  }
+  },
+  "files": [
+    "package.json",
+    "src/**",
+    "lib/**"
+  ]
 }
