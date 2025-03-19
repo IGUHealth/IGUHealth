@@ -19,6 +19,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:artifacts/r4/hl7-core"\
     },\
     {\
+      "name": "@iguhealth/hl7.fhir.us.core",\
+      "reference": "workspace:artifacts/r4/hl7.fhir.us.core"\
+    },\
+    {\
       "name": "@iguhealth/iguhealth.fhir.r4.core",\
       "reference": "workspace:artifacts/r4/iguhealth-core"\
     },\
@@ -185,6 +189,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/hl7.fhir.r4.test-data", ["workspace:artifacts/r4/test-data"]],\
     ["@iguhealth/hl7.fhir.r4b.core", ["workspace:artifacts/r4b/hl7-core"]],\
     ["@iguhealth/hl7.fhir.r4b.test-data", ["workspace:artifacts/r4b/test-data"]],\
+    ["@iguhealth/hl7.fhir.us.core", ["workspace:artifacts/r4/hl7.fhir.us.core"]],\
     ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", ["workspace:artifacts/r4/r5-subscription-backport"]],\
     ["@iguhealth/hl7v2-parsing", ["workspace:packages/hl7v2-parsing"]],\
     ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/r4/iguhealth-core"]],\
@@ -16560,13 +16565,13 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
+          ["@iguhealth/hl7.fhir.us.core", "workspace:artifacts/r4/hl7.fhir.us.core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/babel__preset-env", "npm:7.10.0"],\
           ["@types/jest", "npm:29.5.14"],\
-          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
           ["jsonpointer", "npm:5.0.1"],\
           ["ts-jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.2.6"],\
@@ -16651,6 +16656,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./artifacts/r4b/test-data/",\
         "packageDependencies": [\
           ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/hl7.fhir.us.core", [\
+      ["workspace:artifacts/r4/hl7.fhir.us.core", {\
+        "packageLocation": "./artifacts/r4/hl7.fhir.us.core/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7.fhir.us.core", "workspace:artifacts/r4/hl7.fhir.us.core"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -16862,6 +16876,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"],\
+          ["@iguhealth/hl7.fhir.us.core", "workspace:artifacts/r4/hl7.fhir.us.core"],\
           ["@iguhealth/hl7.fhir.uv.subscriptions-backport.r4", "workspace:artifacts/r4/r5-subscription-backport"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/iguhealth.fhir.r4b.core", "workspace:artifacts/r4b/iguhealth-core"],\
@@ -16910,7 +16925,6 @@ const RAW_RUNTIME_STATE =
           ["fast-json-patch", "npm:3.1.1"],\
           ["glob", "npm:11.0.1"],\
           ["helmet", "npm:8.0.0"],\
-          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"],\
           ["ioredis", "npm:5.6.0"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
           ["jose", "npm:6.0.8"],\
@@ -39414,15 +39428,6 @@ const RAW_RUNTIME_STATE =
           ["hl7.fhir.r4b.examples", "workspace:artifacts/r4b/test-data/examples-json"]\
         ],\
         "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["hl7.fhir.us.core", [\
-      ["npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0", {\
-        "packageLocation": "./.yarn/cache/hl7.fhir.us.core-npm-4.0.0-62879760c4-0ed77da0bd.zip/node_modules/hl7.fhir.us.core/",\
-        "packageDependencies": [\
-          ["hl7.fhir.us.core", "npm:4.0.0::__archiveUrl=https%3A%2F%2Fpackages.simplifier.net%2Fhl7.fhir.us.core%2F4.0.0"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["hoist-non-react-statics", [\
