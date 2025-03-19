@@ -1,4 +1,0 @@
-releases:
-  "@iguhealth/server": patch
-  "@iguhealth/serverless": patch
-  "@iguhealth/smart-launch": patch
