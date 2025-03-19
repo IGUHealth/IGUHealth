@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/search-parameters",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "_generate-canonical-map": "yarn node ./lib/cli/index.js generate canonical-map --output ./src/generated/canonical-map.ts",
     "_generate-parameters": "yarn node ./lib/cli/index.js generate special-parameters --output ./src/generated/search-parameters.ts",

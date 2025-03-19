@@ -1,4 +1,0 @@
-releases:
-  "@iguhealth/search-parameters": patch
-  "@iguhealth/server": patch
-  "@iguhealth/serverless": patch
