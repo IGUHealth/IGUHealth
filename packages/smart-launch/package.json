@@ -3,7 +3,8 @@
   "version": "0.6.0",
   "scripts": {
     "build-css": "yarn postcss -o dist/css/index.css index.css",
-    "build": "yarn rollup -c -i src/launch.tsx -o dist/launch.js & yarn build-css"
+    "build": "yarn rollup -c -i src/launch.tsx -o dist/launch.js & yarn build-css",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
     "@iguhealth/client": "workspace:^",
@@ -31,5 +32,11 @@
     "tailwindcss": "^3.4.17",
     "tslib": "^2.8.1",
     "typescript": "5.8.2"
-  }
+  },
+  "files": [
+    "dist/**",
+    "index.css",
+    "src/**",
+    "README.md"
+  ]
 }
