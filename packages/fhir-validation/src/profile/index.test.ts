@@ -37,7 +37,7 @@ function createMemoryDatabase(
       silence: true,
       currentDirectory: fileURLToPath(import.meta.url),
       onlyPackages: [
-        "hl7.fhir.us.core",
+        "@iguhealth/hl7.fhir.us.core",
         "@iguhealth/hl7.fhir.r4.core",
         "@iguhealth/hl7.fhir.r4.test-data",
       ],
