@@ -1,5 +1,0 @@
-releases:
-  "@iguhealth/hl7.fhir.uv.subscriptions-backport.r4": patch
-  "@iguhealth/search-parameters": patch
-  "@iguhealth/server": patch
-  "@iguhealth/serverless": patch
