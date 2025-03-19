@@ -98,7 +98,7 @@ jobs:
         run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
 
       - name: Start server
-        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/.well-known/openid-configuration
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
 
       - name: Create Test environment.
         run: |
