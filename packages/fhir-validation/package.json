@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-validation",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4.test-data": "workspace:^",
-    "@iguhealth/hl7.fhir.us.core": "4.0.0",
+    "@iguhealth/hl7.fhir.us.core": "4.0.1",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@jest/globals": "^29.7.0",
     "@types/babel__preset-env": "^7.10.0",
