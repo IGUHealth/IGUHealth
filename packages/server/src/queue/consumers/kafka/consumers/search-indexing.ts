@@ -1,18 +1,18 @@
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-import { createClient, createLogger } from "../../../fhir-server/index.js";
-import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../fhir-terminology/index.js";
-import createQueue from "../../../queue/provider/index.js";
-import * as queue from "../../../queue/provider/interface.js";
+import { createClient, createLogger } from "../../../../fhir-server/index.js";
+import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
+import createResourceStore from "../../../../resource-stores/index.js";
+import { createSearchStore } from "../../../../search-stores/index.js";
+import createQueue from "../../../providers/index.js";
+import * as queue from "../../../providers/interface.js";
 import {
   Consumers,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
-} from "../../../queue/topics/index.js";
-import createResourceStore from "../../../resource-stores/index.js";
-import { createSearchStore } from "../../../search-stores/index.js";
+} from "../../../topics/index.js";
 import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";

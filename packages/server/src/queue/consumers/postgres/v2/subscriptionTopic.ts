@@ -7,8 +7,8 @@ import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
-import { getActiveTenants } from "../../../authN/db/tenant.js";
-import { DBTransaction } from "../../../transactions.js";
+import { getActiveTenants } from "../../../../authN/db/tenant.js";
+import { DBTransaction } from "../../../../transactions.js";
 import {
   IGUHealthWorkerCTX,
   WorkerClient,

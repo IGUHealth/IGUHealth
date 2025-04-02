@@ -3,13 +3,13 @@ import * as s from "zapatos/schema";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IQueue, IQueueBatch } from "./provider/interface.js";
 import {
   ITopic,
   ITopicMessage,
   TenantTopic,
   TopicType,
-} from "./topics/index.js";
+} from "../topics/index.js";
+import { IQueue, IQueueBatch } from "./interface.js";
 
 export type PGQueueConfig = {
   connection: db.Queryable;

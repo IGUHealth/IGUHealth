@@ -41,7 +41,7 @@ import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
-import { IQueue, IQueueBatch } from "../queue/provider/interface.js";
+import { IQueue, IQueueBatch } from "../queue/providers/interface.js";
 import { PostgresStore } from "../resource-stores/postgres/index.js";
 import { SearchEngine } from "../search-stores/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";

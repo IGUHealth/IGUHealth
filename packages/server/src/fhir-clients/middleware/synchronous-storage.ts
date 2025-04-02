@@ -12,9 +12,9 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
+import { toMethod } from "../../queue/consumers/kafka/consumers/storage.js";
 import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
 import { DBTransaction } from "../../transactions.js";
-import { toMethod } from "../../worker/kafka/consumers/storage.js";
 import { toDBFHIRVersion } from "../utilities/version.js";
 
 export function createInTransactionMiddleware<

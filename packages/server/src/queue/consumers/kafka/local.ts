@@ -1,12 +1,8 @@
 import { Consumer, Kafka } from "kafkajs";
 
-import { createKafkaClient } from "../../queue/provider/index.js";
-import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import {
-  IConsumerGroupID,
-  ITopic,
-  ITopicPattern,
-} from "../../queue/topics/index.js";
+import { createKafkaClient } from "../../providers/index.js";
+import { DYNAMIC_TOPIC } from "../../topics/dynamic-topic.js";
+import { IConsumerGroupID, ITopic, ITopicPattern } from "../../topics/index.js";
 import { Handler, MessageHandler } from "./types.js";
 
 async function listTopics(kafka: Kafka, pattern: RegExp): Promise<ITopic[]> {
