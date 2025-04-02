@@ -92,6 +92,9 @@ jobs:
       - name: Build
         run: sh install.sh
 
+      - name: Build Server
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/server run build
+
       - name: Migrate
         run: yarn workspace @iguhealth/server migrate
       - name: Load Terminology

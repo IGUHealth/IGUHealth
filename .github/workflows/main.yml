@@ -123,6 +123,9 @@ jobs:
       - name: Build
         run: sh install.sh
 
+      - name: Build Server
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/server run build
+
       - name: Migrate Schemas
         run: |
           yarn workspace @iguhealth/server cli migrate all

@@ -2,7 +2,6 @@
 
 corepack enable
 yarn install
-yarn build
 
 # Setup default .env for server.
 if [ ! -f ./packages/server/.env ]; then
