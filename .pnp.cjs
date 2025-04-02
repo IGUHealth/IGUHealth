@@ -22250,7 +22250,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@sendgrid/client", "npm:8.1.4"],\
           ["@sendgrid/helpers", "npm:8.0.0"],\
-          ["axios", "npm:1.7.9"]\
+          ["axios", "npm:1.8.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -30387,10 +30387,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["axios", [\
-      ["npm:1.7.9", {\
-        "packageLocation": "./.yarn/cache/axios-npm-1.7.9-3c98466f87-b7a5f660ea.zip/node_modules/axios/",\
+      ["npm:1.8.4", {\
+        "packageLocation": "./.yarn/cache/axios-npm-1.8.4-8cf735eb2b-a10f0dd836.zip/node_modules/axios/",\
         "packageDependencies": [\
-          ["axios", "npm:1.7.9"],\
+          ["axios", "npm:1.8.4"],\
           ["follow-redirects", "virtual:a313c479c5c7e54d9ec8fbeeea69ff640f56b8989ea2dff42351a3fa5c4061fb80a52d8ede0f0826a181a216820c2d2c3f15da881e7fdf31cef1c446e42f0c45#npm:1.15.6"],\
           ["form-data", "npm:4.0.0"],\
           ["proxy-from-env", "npm:1.1.0"]\
@@ -51870,7 +51870,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/posthog-node-npm-4.4.0-c2a036324f-4d68b53811.zip/node_modules/posthog-node/",\
         "packageDependencies": [\
           ["posthog-node", "npm:4.4.0"],\
-          ["axios", "npm:1.7.9"]\
+          ["axios", "npm:1.8.4"]\
         ],\
         "linkType": "HARD"\
       }]\
