@@ -38,9 +38,6 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Build
-        run: sh install.sh
-
       - name: Compile documentation
         run: yarn generate-documentation
 
@@ -83,8 +80,12 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Build
+      - name: Install
         run: sh install.sh
+
+      - name: Build Documentation
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/docs run build
+
         env:
           GOOGLE_GTAG_TRACKING_ID: ${{ secrets.GOOGLE_GTAG_TRACKING_ID }}
           IGUHEALTH_TENANT_URL: ${{ secrets.DOCUMENTATION_IGUHEALTH_TENANT }}
@@ -129,8 +130,11 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Build
+      - name: Install
         run: sh install.sh
+
+      - name: Build Storybook
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/components run build
 
       - name: Compile storybook
         run: yarn workspace @iguhealth/components build-storybook
