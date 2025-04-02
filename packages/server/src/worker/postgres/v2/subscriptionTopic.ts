@@ -7,9 +7,8 @@ import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { TenantId } from "@iguhealth/jwt";
 
-import { getActiveTenants } from "../../authN/db/tenant.js";
-import { DBTransaction } from "../../transactions.js";
-import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
+import { getActiveTenants } from "../../../authN/db/tenant.js";
+import { DBTransaction } from "../../../transactions.js";
 import {
   IGUHealthWorkerCTX,
   WorkerClient,
@@ -17,7 +16,8 @@ import {
   staticWorkerServices,
   tenantWorkerContext,
   workerTokenClaims,
-} from "../utilities.js";
+} from "../../utilities.js";
+import { ensureLocksCreated, getAvailableLocks } from "../data/locks.js";
 
 type SubscriptionTopicVersion<FHIR_VERSION> = FHIR_VERSION extends R4
   ? Basic
