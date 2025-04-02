@@ -27,10 +27,6 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type fhir_version = ['r4', 'r4b', 'r5'];
   }
-  export type interaction_trigger = 'create' | 'delete' | 'update';
-  export namespace every {
-    export type interaction_trigger = ['create', 'delete', 'update'];
-  }
   export type limitation_type = 'LIMIT_TOTAL';
   export namespace every {
     export type limitation_type = ['LIMIT_TOTAL'];
@@ -50230,11 +50226,11 @@ declare module 'zapatos/schema' {
       */
       created_at: Date | null;
       /**
-      * **sub_queue.fhir_version**
-      * - `text` in database
+      * **sub_queue.headers**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      fhir_version: string;
+      headers: db.JSONValue;
       /**
       * **sub_queue.id**
       * - `int4` in database
@@ -50242,35 +50238,23 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **sub_queue.interaction**
-      * - `interaction_trigger` in database
-      * - `NOT NULL`, no default
-      */
-      interaction: interaction_trigger;
-      /**
-      * **sub_queue.resource_id**
+      * **sub_queue.key**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_id: string;
-      /**
-      * **sub_queue.resource_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      resource_version_id: number;
-      /**
-      * **sub_queue.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
+      key: string | null;
       /**
       * **sub_queue.topic_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       topic_id: string;
+      /**
+      * **sub_queue.value**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      value: db.JSONValue;
     }
     export interface JSONSelectable {
       /**
@@ -50280,11 +50264,11 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString | null;
       /**
-      * **sub_queue.fhir_version**
-      * - `text` in database
+      * **sub_queue.headers**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      fhir_version: string;
+      headers: db.JSONValue;
       /**
       * **sub_queue.id**
       * - `int4` in database
@@ -50292,35 +50276,23 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **sub_queue.interaction**
-      * - `interaction_trigger` in database
-      * - `NOT NULL`, no default
-      */
-      interaction: interaction_trigger;
-      /**
-      * **sub_queue.resource_id**
+      * **sub_queue.key**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_id: string;
-      /**
-      * **sub_queue.resource_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      resource_version_id: number;
-      /**
-      * **sub_queue.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
+      key: string | null;
       /**
       * **sub_queue.topic_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       topic_id: string;
+      /**
+      * **sub_queue.value**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      value: db.JSONValue;
     }
     export interface Whereable {
       /**
@@ -50330,11 +50302,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **sub_queue.fhir_version**
-      * - `text` in database
+      * **sub_queue.headers**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      headers?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
       * **sub_queue.id**
       * - `int4` in database
@@ -50342,35 +50314,23 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **sub_queue.interaction**
-      * - `interaction_trigger` in database
-      * - `NOT NULL`, no default
-      */
-      interaction?: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **sub_queue.resource_id**
+      * **sub_queue.key**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **sub_queue.resource_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      resource_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **sub_queue.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **sub_queue.topic_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       topic_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sub_queue.value**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      value?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -50380,11 +50340,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **sub_queue.fhir_version**
-      * - `text` in database
+      * **sub_queue.headers**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      fhir_version: string | db.Parameter<string> | db.SQLFragment;
+      headers: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
       * **sub_queue.id**
       * - `int4` in database
@@ -50392,35 +50352,23 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **sub_queue.interaction**
-      * - `interaction_trigger` in database
-      * - `NOT NULL`, no default
-      */
-      interaction: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment;
-      /**
-      * **sub_queue.resource_id**
+      * **sub_queue.key**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **sub_queue.resource_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      resource_version_id: number | db.Parameter<number> | db.SQLFragment;
-      /**
-      * **sub_queue.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
+      key?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **sub_queue.topic_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       topic_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sub_queue.value**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      value: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -50430,11 +50378,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **sub_queue.fhir_version**
-      * - `text` in database
+      * **sub_queue.headers**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      headers?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
       * **sub_queue.id**
       * - `int4` in database
@@ -50442,35 +50390,23 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **sub_queue.interaction**
-      * - `interaction_trigger` in database
-      * - `NOT NULL`, no default
-      */
-      interaction?: interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment | db.SQLFragment<any, interaction_trigger | db.Parameter<interaction_trigger> | db.SQLFragment>;
-      /**
-      * **sub_queue.resource_id**
+      * **sub_queue.key**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **sub_queue.resource_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      resource_version_id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **sub_queue.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      key?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **sub_queue.topic_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       topic_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sub_queue.value**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      value?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
     }
     export type UniqueIndex = 'sub_queue_pkey';
     export type Column = keyof Selectable;

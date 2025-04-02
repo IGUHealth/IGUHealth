@@ -66,6 +66,8 @@ export interface IQueue {
     messages: ITopicMessage<T>[],
   ): Promise<void>;
 
+  createTopic<T extends ITopic>(topic: T): Promise<boolean>;
+
   sendTenant<
     Tenant extends TenantId,
     Type extends TopicType,

@@ -19,7 +19,7 @@ export default async function createQueue(): Promise<IQueue> {
         createPartitioner: Partitioners.DefaultPartitioner,
       });
       await producer.connect();
-      return new KafkaQueue(producer);
+      return new KafkaQueue(kafka, producer);
     }
     default: {
       throw new Error(`Invalid queue type '${process.env.QUEUE_TYPE}'`);

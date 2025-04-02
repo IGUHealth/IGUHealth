@@ -1,5 +1,7 @@
 import {
+  Admin,
   CompressionTypes,
+  Kafka,
   Message as KafkaMessage,
   Producer,
   TopicMessages,
@@ -16,15 +18,51 @@ import {
   TopicType,
 } from "./topics/index.js";
 
+/**
+ * Check if a given topic exists in Kafka.
+ * @param admin The admin client
+ * @param topic Topic to check
+ * @returns true|false if the topic exists
+ */
+async function doesKafkaTopicExist(admin: Admin, topic: ITopic) {
+  // The admin client will throw an exception if any of the provided topics do not already exist.
+  try {
+    await admin.fetchTopicMetadata({ topics: [topic] });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function createTopic(admin: Admin, topic: ITopic): Promise<boolean> {
+  await admin.connect();
+  try {
+    if (!(await doesKafkaTopicExist(admin, topic))) {
+      const result = await admin.createTopics({ topics: [{ topic }] });
+      return result;
+    }
+    return true;
+  } finally {
+    await admin.disconnect();
+  }
+}
+
 export class KafkaBatch implements IQueue, IQueueBatch {
+  private readonly _kafka: Kafka;
   private readonly _producer: Producer;
   private readonly _transactionKey: string;
   private _messages: Record<string, KafkaMessage[]> = {};
 
-  constructor(producer: Producer) {
+  constructor(_kafka: Kafka, producer: Producer) {
+    this._kafka = _kafka;
     this._producer = producer;
     this._transactionKey = nanoid(24);
   }
+
+  async createTopic<T extends ITopic>(topic: T): Promise<boolean> {
+    return createTopic(this._kafka.admin(), topic);
+  }
+
   async commit(): Promise<void> {
     const sendData: TopicMessages[] = Object.keys(this._messages).map(
       (topic) => {
@@ -85,10 +123,18 @@ export class KafkaBatch implements IQueue, IQueueBatch {
 }
 
 export class KafkaQueue implements IQueue {
+  private readonly _kafka: Kafka;
   private readonly _producer: Producer;
 
-  constructor(producer: Producer) {
+  constructor(_kafka: Kafka, producer: Producer) {
+    this._kafka = _kafka;
     this._producer = producer;
+  }
+
+  async createTopic<T extends ITopic>(topic: T): Promise<boolean> {
+    const result = await createTopic(this._kafka.admin(), topic);
+
+    return result;
   }
 
   async send<T extends ITopic>(
@@ -122,7 +168,7 @@ export class KafkaQueue implements IQueue {
   }
 
   async batch() {
-    return new KafkaBatch(this._producer);
+    return new KafkaBatch(this._kafka, this._producer);
   }
 
   isBatch(): boolean {
