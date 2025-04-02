@@ -1,9 +1,9 @@
 import { Command } from "commander";
 
+import createIndexingWorker from "../../queue/consumers/kafka/consumers/search-indexing.js";
+import createStorageWorker from "../../queue/consumers/kafka/consumers/storage.js";
+import createSubscriptionWorker from "../../queue/consumers/kafka/consumers/subscription-v1/index.js";
 import createServer from "../../server.js";
-import createIndexingWorker from "../../worker/kafka/consumers/search-indexing.js";
-import createStorageWorker from "../../worker/kafka/consumers/storage.js";
-import createSubscriptionWorker from "../../worker/kafka/consumers/subscription-v1/index.js";
 
 async function runServer(port: number) {
   const server = await createServer();

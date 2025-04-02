@@ -10,13 +10,13 @@ import { nanoid } from "nanoid";
 
 import { TenantId } from "@iguhealth/jwt";
 
-import { IQueue, IQueueBatch } from "./interface.js";
 import {
   ITopic,
   ITopicMessage,
   TenantTopic,
   TopicType,
-} from "./topics/index.js";
+} from "../topics/index.js";
+import { IQueue, IQueueBatch } from "./interface.js";
 
 /**
  * Check if a given topic exists in Kafka.

@@ -1,4 +1,4 @@
-import { IMessage } from "../interface.js";
+import { IMessage } from "../providers/interface.js";
 
 export * from "./tenant-topics.js";
 

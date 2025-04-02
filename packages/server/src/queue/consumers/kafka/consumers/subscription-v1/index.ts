@@ -10,30 +10,36 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { fitsSearchCriteria } from "../../../../fhir-clients/clients/memory/search.js";
-import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
+import { fitsSearchCriteria } from "../../../../../fhir-clients/clients/memory/search.js";
+import { httpRequestToFHIRRequest } from "../../../../../fhir-http/index.js";
 import logAuditEvent, {
   SERIOUS_FAILURE,
   createAuditEvent,
-} from "../../../../fhir-logging/auditEvents.js";
-import { createClient, createLogger } from "../../../../fhir-server/index.js";
-import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
-import createQueue from "../../../../queue/index.js";
-import * as queue from "../../../../queue/interface.js";
-import { Consumers } from "../../../../queue/topics/index.js";
+} from "../../../../../fhir-logging/auditEvents.js";
 import {
-  OperationsTopic,
-  TENANT_TOPIC_PATTERN,
-} from "../../../../queue/topics/tenant-topics.js";
-import createResourceStore from "../../../../resource-stores/index.js";
-import { createResolverRemoteCanonical } from "../../../../search-stores/canonical.js";
-import { createSearchStore } from "../../../../search-stores/index.js";
+  createClient,
+  createLogger,
+} from "../../../../../fhir-server/index.js";
+import resolveCanonical from "../../../../../fhir-server/resolvers/resolveCanonical.js";
+import {
+  IGUHealthServerCTX,
+  asRoot,
+} from "../../../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../../../fhir-terminology/index.js";
+import createResourceStore from "../../../../../resource-stores/index.js";
+import { createResolverRemoteCanonical } from "../../../../../search-stores/canonical.js";
+import { createSearchStore } from "../../../../../search-stores/index.js";
 import {
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
-} from "../../../../search-stores/parameters.js";
+} from "../../../../../search-stores/parameters.js";
+import createQueue from "../../../../providers/index.js";
+import * as queue from "../../../../providers/interface.js";
+import { Consumers } from "../../../../topics/index.js";
+import {
+  OperationsTopic,
+  TENANT_TOPIC_PATTERN,
+} from "../../../../topics/tenant-topics.js";
 import { workerTokenClaims } from "../../../utilities.js";
 import createKafkaConsumer from "../../local.js";
 import { BatchHandler } from "../../types.js";

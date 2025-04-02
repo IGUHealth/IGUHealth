@@ -1,6 +1,6 @@
 import { TenantId } from "@iguhealth/jwt";
 
-import { TenantMessage } from "../interface.js";
+import { TenantMessage } from "../providers/interface.js";
 import { ITopic, ITopicPattern } from "./index.js";
 
 export type TopicType = "operations" | "error";

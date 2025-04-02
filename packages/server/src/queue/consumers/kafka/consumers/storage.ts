@@ -5,22 +5,22 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import createEmailProvider from "../../../email/index.js";
-import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
-import { createClient, createLogger } from "../../../fhir-server/index.js";
-import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../fhir-terminology/index.js";
-import createQueue from "../../../queue/index.js";
-import * as queue from "../../../queue/interface.js";
+import createEmailProvider from "../../../../email/index.js";
+import { toDBFHIRVersion } from "../../../../fhir-clients/utilities/version.js";
+import { createClient, createLogger } from "../../../../fhir-server/index.js";
+import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
+import createResourceStore from "../../../../resource-stores/index.js";
+import { createSearchStore } from "../../../../search-stores/index.js";
+import { DBTransaction } from "../../../../transactions.js";
+import createQueue from "../../../providers/index.js";
+import * as queue from "../../../providers/interface.js";
 import {
   Consumers,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
-} from "../../../queue/topics/index.js";
-import createResourceStore from "../../../resource-stores/index.js";
-import { createSearchStore } from "../../../search-stores/index.js";
-import { DBTransaction } from "../../../transactions.js";
+} from "../../../topics/index.js";
 import createKafkaConsumer from "../local.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "../utilities.js";
