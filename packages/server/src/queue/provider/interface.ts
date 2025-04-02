@@ -13,7 +13,7 @@ import {
   ITopicMessage,
   TenantTopic,
   TopicType,
-} from "./topics/index.js";
+} from "../topics/index.js";
 
 interface IOperation {
   author: {

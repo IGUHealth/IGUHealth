@@ -25,7 +25,7 @@ import {
 import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import createQueue from "../../queue/index.js";
+import createQueue from "../../queue/provider/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { Consumers, TenantTopic } from "../../queue/topics/index.js";
 import createResourceStore from "../../resource-stores/index.js";

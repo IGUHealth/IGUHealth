@@ -62,7 +62,7 @@ import {
 } from "./fhir-server/types.js";
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
-import createQueue from "./queue/index.js";
+import createQueue from "./queue/provider/index.js";
 import createResourceStore from "./resource-stores/index.js";
 import { createSearchStore } from "./search-stores/index.js";
 import RedisLock from "./synchronization/redis.lock.js";

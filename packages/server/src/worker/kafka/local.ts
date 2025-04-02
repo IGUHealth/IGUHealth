@@ -1,6 +1,6 @@
 import { Consumer, Kafka } from "kafkajs";
 
-import { createKafkaClient } from "../../queue/index.js";
+import { createKafkaClient } from "../../queue/provider/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import {
   IConsumerGroupID,

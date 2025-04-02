@@ -11,8 +11,8 @@ import { createClient, createLogger } from "../../../fhir-server/index.js";
 import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
-import createQueue from "../../../queue/index.js";
-import * as queue from "../../../queue/interface.js";
+import createQueue from "../../../queue/provider/index.js";
+import * as queue from "../../../queue/provider/interface.js";
 import {
   Consumers,
   OperationsTopic,

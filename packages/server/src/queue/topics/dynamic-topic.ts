@@ -1,4 +1,4 @@
-import { DynamicMessage } from "../interface.js";
+import { DynamicMessage } from "../provider/interface.js";
 import { ITopic } from "./index.js";
 
 export type DynamicTopic = ITopic<DynamicMessage> & {
