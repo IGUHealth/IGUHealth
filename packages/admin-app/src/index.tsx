@@ -29,7 +29,7 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
 import SearchModal from "./components/SearchModal";
-import { REACT_APP_FHIR_BASE_URL } from "./config";
+import { REACT_APP_CLIENT_ID, REACT_APP_FHIR_BASE_URL } from "./config";
 import { createAdminAppClient, getClient } from "./db/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
@@ -119,7 +119,7 @@ function IGUHealthWrapper() {
       scope="openid email profile fhirUser user/*.*"
       domain={REACT_APP_FHIR_BASE_URL || ""}
       tenant={deriveTenantID()}
-      clientId={"admin-app"}
+      clientId={REACT_APP_CLIENT_ID}
       redirectUrl={window.location.origin}
       onRedirectCallback={(initialPath: string) => {
         navigate(initialPath);
