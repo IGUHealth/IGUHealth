@@ -7,7 +7,9 @@
 
 export type IGUHealthEnvironment = ResourceStorePg &
   SearchStorePg &
-  ArtifactPg & {
+  ArtifactPg &
+  QueueKafka &
+  QueuePg & {
     /**
      * The environment the server is running in
      */
@@ -31,15 +33,7 @@ export type IGUHealthEnvironment = ResourceStorePg &
     /**
      * Queue Type.
      */
-    QUEUE_TYPE: "kafka";
-    /**
-     * Kafka brokers
-     */
-    QUEUE_BROKERS: string;
-    /**
-     * Kafka client id
-     */
-    QUEUE_CLIENT_ID: string;
+    QUEUE_TYPE: "kafka" | "postgres";
     /**
      * Redis host
      */
@@ -253,5 +247,43 @@ export interface ArtifactPg {
    * Whether Postgres connection is SSL
    */
   ARTIFACT_DB_PG_SSL?: "true" | "false";
+  [k: string]: unknown;
+}
+export interface QueueKafka {
+  /**
+   * Kafka brokers
+   */
+  KAFKA_QUEUE_BROKERS?: string;
+  /**
+   * Kafka client id
+   */
+  KAFKA_QUEUE_CLIENT_ID?: string;
+  [k: string]: unknown;
+}
+export interface QueuePg {
+  /**
+   * Postgres database name.
+   */
+  QUEUE_DB_PG_NAME?: string;
+  /**
+   * Postgres host
+   */
+  QUEUE_DB_PG_HOST?: string;
+  /**
+   * Postgres port
+   */
+  QUEUE_DB_PG_PORT?: string;
+  /**
+   * postgres password
+   */
+  QUEUE_DB_PG_PASSWORD?: string;
+  /**
+   * postgres username
+   */
+  QUEUE_DB_PG_USERNAME?: string;
+  /**
+   * Whether Postgres connection is SSL
+   */
+  QUEUE_DB_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }
