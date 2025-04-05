@@ -1,0 +1,19 @@
+{
+  "name": "@iguhealth/test-e2e",
+  "version": "0.17.1",
+  "private": true,
+  "scripts": {
+    "e2e:run": "yarn run e2e:run:admin-app",
+    "e2e:run:admin-app": "DEBUG=start-server-and-test yarn run start-server-and-test --proxy-host localhost --proxy-port 9090 start:admin-app http://dpamtgk6fe2d6c51iro5f.localhost:3001/ cy:run:admin-app",
+    "start:admin-app": "cd ../admin-app && yarn run start:headless",
+    "cy:run:admin-app:headed": "yarn run cy:run:admin-app --headed",
+    "cy:run:admin-app": "cypress run",
+    "ppeterson-start-server-and-test": "ppeterson-start-server-and-test",
+    "tsc": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "cypress": "^14.2.1",
+    "ppeterson-start-server-and-test": "2.0.13",
+    "typescript": "^5.8.3"
+  }
+}

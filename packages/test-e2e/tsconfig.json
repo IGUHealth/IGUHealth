@@ -1,0 +1,12 @@
+{
+  "extends": "../../config/base.tsconfig.json",
+  "exclude": [],
+  "include": ["cypress/e2e/*.cy.ts"],
+  "compilerOptions": {
+      "sourceMap": false,
+      "types": ["cypress"],
+      "typeRoots": [
+        "../../.yarn/unplugged/cypress-npm-14.2.1-8bd4b65fc9/node_modules"
+      ]
+  }
+}
