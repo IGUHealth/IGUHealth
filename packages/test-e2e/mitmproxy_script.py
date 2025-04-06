@@ -1,5 +1,8 @@
 from mitmproxy import http
+import os
+
+CI_TENANT_ID = os.environ.get("CI_TENANT_ID")
 
 def request(flow: http.HTTPFlow) -> None:
-    if "dpamtgk6fe2d6c51iro5f.localhost" in flow.request.host:
+    if f"{CI_TENANT_ID}.localhost" in flow.request.host:
         flow.request.host = "localhost"
