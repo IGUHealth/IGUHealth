@@ -5,7 +5,7 @@
   "scripts": {
     "e2e:run": "yarn run e2e:run:admin-app",
     "e2e:run:admin-app": "DEBUG=start-server-and-test yarn run start-server-and-test --proxy-host localhost --proxy-port 9090 deps:start:admin-app http://$CI_TENANT_ID.localhost:3001/ cy:run:admin-app",
-    "deps:start:admin-app": "concurrently -s first -n 'X,PROXY,CYPRESS' 'true' 'yarn run start:proxy' 'cd ../admin-app && yarn run start:headless'",
+    "deps:start:admin-app": "yarn node deps_start_admin_app.js",
     "cy:run:admin-app:headed": "yarn run cy:run:admin-app --headed",
     "cy:run:admin-app": "cypress run --env CI_TENANT_ID=$CI_TENANT_ID",
     "ppeterson-start-server-and-test": "ppeterson-start-server-and-test",
