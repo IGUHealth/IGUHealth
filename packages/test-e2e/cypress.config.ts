@@ -9,6 +9,5 @@ export default {
   },
   "hosts": {
     [`${CI_TENANT_ID}.localhost`]: "127.0.0.1"
-  },
-  "http_proxy": "http://localhost:9090",
+  }
 };
