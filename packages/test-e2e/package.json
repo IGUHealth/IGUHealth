@@ -1,0 +1,22 @@
+{
+  "name": "@iguhealth/test-e2e",
+  "version": "0.17.1",
+  "private": true,
+  "scripts": {
+    "e2e:run": "yarn run e2e:run:admin-app",
+    "e2e:run:admin-app": "DEBUG=start-server-and-test yarn run start-server-and-test --proxy-host localhost --proxy-port 9090 deps:start:admin-app http://$CI_TENANT_ID.localhost:3001/ cy:run:admin-app",
+    "deps:start:admin-app": "yarn node deps_start_admin_app.js",
+    "cy:run:admin-app:headed": "yarn run cy:run:admin-app --headed",
+    "cy:run:admin-app": "cypress run --env CI_TENANT_ID=$CI_TENANT_ID",
+    "ppeterson-start-server-and-test": "ppeterson-start-server-and-test",
+    "tsc": "tsc --noEmit",
+    "start:proxy": "mitmdump -s mitmproxy_script.py --allow-hosts $CI_TENANT_ID.localhost --listen-port 9090 --verbose --anticache --rawtcp || true"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cypress": "^14.2.1",
+    "http-server": "^14.1.1",
+    "ppeterson-start-server-and-test": "2.0.13",
+    "typescript": "^5.8.3"
+  }
+}
