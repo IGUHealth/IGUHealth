@@ -14275,7 +14275,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react", null],\
           ["@types/react-dom", null],\
           ["escape-html", "npm:1.0.3"],\
-          ["estree-util-value-to-estree", "npm:3.0.1"],\
+          ["estree-util-value-to-estree", "npm:3.3.3"],\
           ["file-loader", "virtual:d4800468542029a77b539c61d7ca4eb333148cf7787af89be872e4ae145eabec7224b9c799a00147cb5f59010d7bcb4d7493ec237e9e3c1157a024776999444e#npm:6.2.0"],\
           ["fs-extra", "npm:11.2.0"],\
           ["image-size", "npm:1.0.2"],\
@@ -14316,7 +14316,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.2.14"],\
           ["@types/react-dom", null],\
           ["escape-html", "npm:1.0.3"],\
-          ["estree-util-value-to-estree", "npm:3.0.1"],\
+          ["estree-util-value-to-estree", "npm:3.3.3"],\
           ["file-loader", "virtual:d4800468542029a77b539c61d7ca4eb333148cf7787af89be872e4ae145eabec7224b9c799a00147cb5f59010d7bcb4d7493ec237e9e3c1157a024776999444e#npm:6.2.0"],\
           ["fs-extra", "npm:11.2.0"],\
           ["image-size", "npm:1.0.2"],\
@@ -37144,12 +37144,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["estree-util-value-to-estree", [\
-      ["npm:3.0.1", {\
-        "packageLocation": "./.yarn/cache/estree-util-value-to-estree-npm-3.0.1-b303d5375a-f78ea726a3.zip/node_modules/estree-util-value-to-estree/",\
+      ["npm:3.3.3", {\
+        "packageLocation": "./.yarn/cache/estree-util-value-to-estree-npm-3.3.3-7433c3820f-68c42de34b.zip/node_modules/estree-util-value-to-estree/",\
         "packageDependencies": [\
-          ["estree-util-value-to-estree", "npm:3.0.1"],\
-          ["@types/estree", "npm:1.0.1"],\
-          ["is-plain-obj", "npm:4.1.0"]\
+          ["estree-util-value-to-estree", "npm:3.3.3"],\
+          ["@types/estree", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
