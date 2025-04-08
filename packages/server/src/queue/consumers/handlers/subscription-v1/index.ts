@@ -1,5 +1,3 @@
-import { KafkaMessage } from "kafkajs";
-
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { SearchParameterResource } from "@iguhealth/client/lib/url";
 import { code, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
@@ -10,40 +8,22 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { fitsSearchCriteria } from "../../../../../fhir-clients/clients/memory/search.js";
-import { httpRequestToFHIRRequest } from "../../../../../fhir-http/index.js";
+import { fitsSearchCriteria } from "../../../../fhir-clients/clients/memory/search.js";
+import { httpRequestToFHIRRequest } from "../../../../fhir-http/index.js";
 import logAuditEvent, {
   SERIOUS_FAILURE,
   createAuditEvent,
-} from "../../../../../fhir-logging/auditEvents.js";
-import {
-  createClient,
-  createLogger,
-} from "../../../../../fhir-server/index.js";
-import resolveCanonical from "../../../../../fhir-server/resolvers/resolveCanonical.js";
-import {
-  IGUHealthServerCTX,
-  asRoot,
-} from "../../../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../../../fhir-terminology/index.js";
-import createResourceStore from "../../../../../resource-stores/index.js";
-import { createResolverRemoteCanonical } from "../../../../../search-stores/canonical.js";
-import { createSearchStore } from "../../../../../search-stores/index.js";
+} from "../../../../fhir-logging/auditEvents.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import { createResolverRemoteCanonical } from "../../../../search-stores/canonical.js";
 import {
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
-} from "../../../../../search-stores/parameters.js";
-import createQueue from "../../../../providers/index.js";
-import * as queue from "../../../../providers/interface.js";
-import { Consumers } from "../../../../topics/index.js";
-import {
-  OperationsTopic,
-  TENANT_TOPIC_PATTERN,
-} from "../../../../topics/tenant-topics.js";
-import { workerTokenClaims } from "../../../utilities.js";
-import createKafkaConsumer from "../../local.js";
-import { BatchHandler } from "../../types.js";
-import { getTenantId } from "../../utilities.js";
+} from "../../../../search-stores/parameters.js";
+import * as queue from "../../../providers/interface.js";
+import { Message, MessageHandler } from "../../types.js";
+import { workerTokenClaims } from "../../utilities.js";
+import { getTenantId } from "../utilities.js";
 import { handleSubscriptionPayload } from "./handle-payload.js";
 
 async function processSubscription(
@@ -172,22 +152,22 @@ async function processSubscription(
 
 const TOTAL_SUBS_PROCESS = 1000;
 
-type NonNullableValue = KafkaMessage & {
-  value: NonNullable<KafkaMessage["value"]>;
+type NonNullableValue = Message & {
+  value: NonNullable<Message["value"]>;
 };
 
-function filterNullableMessages(m: KafkaMessage): m is NonNullableValue {
+function filterNullableMessages(m: Message): m is NonNullableValue {
   return m.value !== null;
 }
 
-const handler: BatchHandler<
+const handler: MessageHandler<
   Omit<IGUHealthServerCTX, "user" | "tenant">
-> = async (iguhealthServices, { batch }) => {
+> = async (iguhealthServices, { messages }) => {
   iguhealthServices.logger.info(
-    `[subscription-v1], Processing batch ${batch.messages?.[0].key?.toString()}`,
+    `[subscription-v1], Processing batch ${messages?.[0].key}`,
   );
 
-  const tenant = getTenantId(batch.messages?.[0]);
+  const tenant = getTenantId(messages?.[0]);
 
   const subscriptions = await iguhealthServices.client.search_type(
     asRoot({ ...iguhealthServices, tenant }),
@@ -199,9 +179,9 @@ const handler: BatchHandler<
     ],
   );
 
-  const operations: queue.Operations = batch.messages
+  const operations: queue.Operations = messages
     ?.filter(filterNullableMessages)
-    .map((m) => JSON.parse(m.value.toString()) as queue.Operations[number])
+    .map((m) => m.value as queue.Operations[number])
     .flat();
 
   for (const subscription of subscriptions.resources) {
@@ -213,32 +193,4 @@ const handler: BatchHandler<
   }
 };
 
-export default async function createSubscriptionV1Worker() {
-  const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
-    queue: await createQueue(),
-    store: await createResourceStore({ type: "postgres" }),
-    search: await createSearchStore({ type: "postgres" }),
-    logger: createLogger(),
-    terminologyProvider: new TerminologyProvider(),
-    client: createClient(),
-    resolveCanonical,
-  };
-
-  const stop = await createKafkaConsumer(
-    iguhealthServices,
-    TENANT_TOPIC_PATTERN(OperationsTopic),
-    Consumers.SubscriptionV1,
-    {
-      eachBatch: async (ctx, { batch }) => {
-        try {
-          await handler(ctx, { batch });
-        } catch (e) {
-          console.error(e);
-        }
-      },
-    },
-  );
-
-  return stop;
-}
+export default handler;

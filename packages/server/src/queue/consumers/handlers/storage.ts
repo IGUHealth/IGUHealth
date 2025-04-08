@@ -5,25 +5,12 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import createEmailProvider from "../../../../email/index.js";
-import { toDBFHIRVersion } from "../../../../fhir-clients/utilities/version.js";
-import { createClient, createLogger } from "../../../../fhir-server/index.js";
-import resolveCanonical from "../../../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
-import { TerminologyProvider } from "../../../../fhir-terminology/index.js";
-import createResourceStore from "../../../../resource-stores/index.js";
-import { createSearchStore } from "../../../../search-stores/index.js";
-import { DBTransaction } from "../../../../transactions.js";
-import createQueue from "../../../providers/index.js";
-import * as queue from "../../../providers/interface.js";
-import {
-  Consumers,
-  OperationsTopic,
-  TENANT_TOPIC_PATTERN,
-} from "../../../topics/index.js";
-import createKafkaConsumer from "../local.js";
+import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { DBTransaction } from "../../../transactions.js";
+import * as queue from "../../providers/interface.js";
+import { getTenantId } from "../handlers/utilities.js";
 import { MessageHandler } from "../types.js";
-import { getTenantId } from "../utilities.js";
 
 export function toMethod(
   response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,
@@ -135,56 +122,31 @@ async function handleMutation(
   }
 }
 
-const handler: MessageHandler<
+const storageHandler: MessageHandler<
   Omit<IGUHealthServerCTX, "user" | "tenant">
-> = async (iguhealthServices, { message }) => {
-  iguhealthServices.logger.info(
-    `[STORAGE], Processing message '${message.key?.toString() ?? "[no-key]"}'`,
-  );
-  const tenantId = getTenantId(message);
+> = async (iguhealthServices, { messages }) => {
+  for (const message of messages) {
+    iguhealthServices.logger.info(
+      `[STORAGE], Processing message '${message.key?.toString() ?? "[no-key]"}'`,
+    );
+    const tenantId = getTenantId(message);
 
-  if (message.value) {
-    const mutations: queue.Operations = JSON.parse(
-      message.value.toString("utf-8"),
-    );
-    await DBTransaction(
-      iguhealthServices,
-      db.IsolationLevel.RepeatableRead,
-      async () => {
-        for (const mutation of mutations) {
-          await handleMutation(
-            { ...iguhealthServices, tenant: tenantId },
-            mutation,
-          );
-        }
-      },
-    );
+    if (message.value) {
+      const mutations: queue.Operations = message.value as queue.Operations;
+      await DBTransaction(
+        iguhealthServices,
+        db.IsolationLevel.RepeatableRead,
+        async () => {
+          for (const mutation of mutations) {
+            await handleMutation(
+              { ...iguhealthServices, tenant: tenantId },
+              mutation,
+            );
+          }
+        },
+      );
+    }
   }
 };
 
-export default async function createStorageWorker() {
-  const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
-    queue: await createQueue(),
-    store: await createResourceStore({ type: "postgres" }),
-    search: await createSearchStore({ type: "postgres" }),
-    logger: createLogger(),
-    terminologyProvider: new TerminologyProvider(),
-    emailProvider: createEmailProvider(),
-    client: createClient(),
-    resolveCanonical,
-  };
-
-  const stop = await createKafkaConsumer(
-    iguhealthServices,
-    TENANT_TOPIC_PATTERN(OperationsTopic),
-    Consumers.Storage,
-    {
-      eachMessage: async (ctx, { topic, partition, message }) => {
-        await handler(ctx, { topic, partition, message });
-      },
-    },
-  );
-
-  return stop;
-}
+export default storageHandler;

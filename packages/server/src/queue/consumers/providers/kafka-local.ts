@@ -1,14 +1,40 @@
-import { Consumer, Kafka } from "kafkajs";
+import { Batch, Consumer, Kafka, KafkaMessage } from "kafkajs";
 
 import { createKafkaClient } from "../../providers/index.js";
 import { DYNAMIC_TOPIC } from "../../topics/dynamic-topic.js";
-import { IConsumerGroupID, ITopic, ITopicPattern } from "../../topics/index.js";
-import { Handler, MessageHandler } from "./types.js";
+import {
+  IConsumerGroupID,
+  ITopic,
+  ITopicPattern,
+  OperationsTopic,
+  TENANT_TOPIC_PATTERN,
+} from "../../topics/index.js";
+import { Message, MessageHandler } from "../types.js";
 
 async function listTopics(kafka: Kafka, pattern: RegExp): Promise<ITopic[]> {
   return (await kafka.admin().listTopics()).filter((t) =>
     pattern.test(t),
   ) as ITopic[];
+}
+
+function kafkaMessageToMessage(
+  topic_id: string,
+  message: KafkaMessage,
+): Message {
+  return {
+    topic_id,
+    key: message.key?.toString() ?? undefined,
+    headers: message.headers as Record<string, string>,
+    value: JSON.parse(message.value?.toString("utf-8") ?? ""),
+    offset: message.offset,
+    created_at: message.timestamp,
+  };
+}
+
+function batchToMessages(batch: Batch): Message[] {
+  return batch.messages.map((message) =>
+    kafkaMessageToMessage(batch.topic.toString(), message),
+  );
 }
 
 async function dynamicTopicsSubscriber(
@@ -20,8 +46,11 @@ async function dynamicTopicsSubscriber(
   const dynamicConsumer = kafka.consumer({ groupId });
   await dynamicConsumer.subscribe({ topic: dynamicTopic });
   await dynamicConsumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      await messageHandler(undefined, { topic, partition, message });
+    eachMessage: async ({ topic, message }) => {
+      await messageHandler(undefined, {
+        topic,
+        messages: [kafkaMessageToMessage(topic, message)],
+      });
     },
   });
 
@@ -59,24 +88,16 @@ async function startConsumer<CTX>(
   });
 
   await consumer.run({
-    eachMessage:
-      "eachMessage" in handler
-        ? async ({ topic, partition, message }) => {
-            await handler.eachMessage(ctx, { topic, partition, message });
-            console.log(
-              `- ${prefix(topic, partition, message.offset, message.timestamp)} ${message.key}`,
-            );
-          }
-        : undefined,
-    eachBatch:
-      "eachBatch" in handler
-        ? async ({ batch }) => {
-            await handler.eachBatch(ctx, { batch });
-            console.log(
-              `- ${prefix(batch.topic, batch.partition, batch.messages?.[0]?.offset, batch.messages?.[0]?.timestamp)} ${batch.messages.length} messages`,
-            );
-          }
-        : undefined,
+    eachBatch: async ({ batch }) => {
+      const message = batchToMessages(batch);
+      await handler.eachMessage(ctx, {
+        topic: batch.topic,
+        messages: message,
+      });
+      console.log(
+        `- ${prefix(batch.topic, batch.partition, batch.messages?.[0]?.offset, batch.messages?.[0]?.timestamp)} ${batch.messages.length} messages`,
+      );
+    },
   });
 
   const stop = async () => {
@@ -120,7 +141,9 @@ async function handlePattern<CTX>(
   };
 }
 
-export default async function createKafkaConsumer<CTX>(
+type Handler<CTX> = { eachMessage: MessageHandler<CTX> };
+
+async function createKafkaConsumer<CTX>(
   ctx: CTX,
   topic: ITopic | ITopicPattern,
   consumerGroupId: IConsumerGroupID,
@@ -135,4 +158,23 @@ export default async function createKafkaConsumer<CTX>(
   } else {
     return startConsumer(consumer, ctx, [topic], handler);
   }
+}
+
+export default async function createKafkaWorker<CTX>(
+  groupId: IConsumerGroupID,
+  ctx: CTX,
+  handler: MessageHandler<CTX>,
+): Promise<() => Promise<void>> {
+  const stop = await createKafkaConsumer(
+    ctx,
+    TENANT_TOPIC_PATTERN(OperationsTopic),
+    groupId,
+    {
+      eachMessage: async (ctx, { topic, messages: message }) => {
+        await handler(ctx, { messages: message, topic });
+      },
+    },
+  );
+
+  return stop;
 }
