@@ -155,12 +155,15 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
     IGUHealthServerCTX
   >(
     {},
-    createMiddlewareAsync([
-      createRequestToResponseMiddleware(
-        parseInt(process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"),
-      ),
-      sendQueueMiddleweare(),
-    ]),
+    createMiddlewareAsync(
+      [
+        createRequestToResponseMiddleware(
+          parseInt(process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"),
+        ),
+        sendQueueMiddleweare(),
+      ],
+      { logging: false },
+    ),
   );
 
   const executioner = new AWSLambdaExecutioner({

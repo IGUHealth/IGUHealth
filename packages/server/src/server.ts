@@ -103,6 +103,7 @@ function createFHIRKoaMiddleware(): Koa.Middleware<
         if (!KoaExtensions.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
           throw new Error("FHIR Context is not authorized");
         }
+
         const response = await ctx.state.iguhealth.client.request(
           ctx.state.iguhealth,
           httpRequestToFHIRRequest(ctx.params.fhirVersion, {

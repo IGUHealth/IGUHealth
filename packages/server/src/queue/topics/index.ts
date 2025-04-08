@@ -20,7 +20,7 @@ export type IConsumerGroupID = string & {
   [__consumer]: boolean;
 };
 
-export const Consumers = {
+export const Consumers = <const>{
   Storage: "storage" as IConsumerGroupID,
   SearchIndexing: "search-indexing" as IConsumerGroupID,
   SubscriptionV1: "subscription-v1" as IConsumerGroupID,

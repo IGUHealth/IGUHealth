@@ -11,15 +11,12 @@ import { TenantId } from "@iguhealth/jwt";
  */
 export async function ensureLocksCreated(
   pg: db.Queryable,
-  verifyLocksCreated: s.iguhealth_locks.Insertable[],
+  verifyLocksCreated: s.locks.Insertable[],
 ) {
   const foundLocks = await db
-    .upsert(
-      "iguhealth_locks",
-      verifyLocksCreated,
-      db.constraint("iguhealth_locks_pkey"),
-      { updateColumns: db.doNothing },
-    )
+    .upsert("locks", verifyLocksCreated, db.constraint("locks_pkey"), {
+      updateColumns: db.doNothing,
+    })
     .run(pg);
 
   return foundLocks;
@@ -39,18 +36,16 @@ export async function getAvailableLocks(
   tenant: TenantId,
   lock_type: string,
   lockIds: string[],
-): Promise<s.iguhealth_locks.Selectable[]> {
+): Promise<s.locks.Selectable[]> {
   if (lockIds.length === 0) return [];
   const whereable = db.conditions.or(
     ...lockIds.map((id) => ({ id, tenant, type: lock_type })),
   );
 
   return db.sql<
-    s.iguhealth_locks.SQL,
-    s.iguhealth_locks.Selectable[]
-  >`SELECT * FROM ${"iguhealth_locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(
-    pg,
-  );
+    s.locks.SQL,
+    s.locks.Selectable[]
+  >`SELECT * FROM ${"locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(pg);
 }
 
 export async function updateLock(
@@ -58,7 +53,7 @@ export async function updateLock(
   tenant: TenantId,
   type: string,
   lockid: string,
-  value: s.iguhealth_locks.Updatable,
+  value: s.locks.Updatable,
 ) {
-  db.update("iguhealth_locks", value, { id: lockid, tenant, type }).run(pg);
+  db.update("locks", value, { id: lockid, tenant, type }).run(pg);
 }
