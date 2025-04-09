@@ -31,6 +31,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type limitation_type = ['LIMIT_TOTAL'];
   }
+  export type lock_type = 'queue-loc';
+  export namespace every {
+    export type lock_type = ['queue-loc'];
+  }
   export type pkce_method = 'S256' | 'plain';
   export namespace every {
     export type pkce_method = ['S256', 'plain'];
@@ -1005,10 +1009,10 @@ declare module 'zapatos/schema' {
       tenant: string | null;
       /**
       * **locks.type**
-      * - `text` in database
-      * - Nullable, no default
+      * - `lock_type` in database
+      * - `NOT NULL`, no default
       */
-      type: string | null;
+      type: lock_type;
       /**
       * **locks.value**
       * - `jsonb` in database
@@ -1037,10 +1041,10 @@ declare module 'zapatos/schema' {
       tenant: string | null;
       /**
       * **locks.type**
-      * - `text` in database
-      * - Nullable, no default
+      * - `lock_type` in database
+      * - `NOT NULL`, no default
       */
-      type: string | null;
+      type: lock_type;
       /**
       * **locks.value**
       * - `jsonb` in database
@@ -1069,10 +1073,10 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **locks.type**
-      * - `text` in database
-      * - Nullable, no default
+      * - `lock_type` in database
+      * - `NOT NULL`, no default
       */
-      type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      type?: lock_type | db.Parameter<lock_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, lock_type | db.Parameter<lock_type> | db.SQLFragment | db.ParentColumn>;
       /**
       * **locks.value**
       * - `jsonb` in database
@@ -1101,10 +1105,10 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **locks.type**
-      * - `text` in database
-      * - Nullable, no default
+      * - `lock_type` in database
+      * - `NOT NULL`, no default
       */
-      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      type: lock_type | db.Parameter<lock_type> | db.SQLFragment;
       /**
       * **locks.value**
       * - `jsonb` in database
@@ -1133,10 +1137,10 @@ declare module 'zapatos/schema' {
       tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **locks.type**
-      * - `text` in database
-      * - Nullable, no default
+      * - `lock_type` in database
+      * - `NOT NULL`, no default
       */
-      type?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      type?: lock_type | db.Parameter<lock_type> | db.SQLFragment | db.SQLFragment<any, lock_type | db.Parameter<lock_type> | db.SQLFragment>;
       /**
       * **locks.value**
       * - `jsonb` in database

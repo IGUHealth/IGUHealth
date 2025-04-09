@@ -1,9 +1,11 @@
 DROP TABLE IF EXISTS iguhealth_locks;
 
+CREATE TYPE lock_type AS ENUM ('queue-loc');
+
 CREATE TABLE
     IF NOT EXISTS locks (
         tenant TEXT,
-        type TEXT,
+        type lock_type NOT NULL,
         id TEXT NOT NULL PRIMARY KEY,
         -- Use JSONB for value for flexiblity
         value JSONB,

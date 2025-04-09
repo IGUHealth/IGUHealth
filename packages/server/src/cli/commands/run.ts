@@ -6,9 +6,14 @@ import storageHandler from "../../queue/consumers/handlers/storage.js";
 import subscriptionHandler from "../../queue/consumers/handlers/subscription-v1/index.js";
 import createWorker, {
   services,
-} from "../../queue/consumers/providers/index.js";
+} from "../../queue/consumers/implementations/index.js";
 import { MessageHandler } from "../../queue/consumers/types.js";
-import { Consumers, IConsumerGroupID } from "../../queue/topics/index.js";
+import {
+  Consumers,
+  IConsumerGroupID,
+  OperationsTopic,
+  TENANT_TOPIC_PATTERN,
+} from "../../queue/topics/index.js";
 import createServer from "../../server.js";
 
 async function runServer(port: number) {
@@ -21,6 +26,7 @@ async function runWorker(
   handler: MessageHandler<Omit<IGUHealthServerCTX, "user" | "tenant">>,
 ) {
   return createWorker(
+    TENANT_TOPIC_PATTERN(OperationsTopic),
     groupId,
     process.env.QUEUE_TYPE,
     await services(),
@@ -80,11 +86,12 @@ const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
 
 const all: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
+
   const [server, ...workers] = await Promise.all([
     runServer(options.port),
-    await runWorker(Consumers.Storage, storageHandler),
-    await runWorker(Consumers.SearchIndexing, indexingHandler),
-    await runWorker(Consumers.SubscriptionV1, subscriptionHandler),
+    runWorker(Consumers.Storage, storageHandler),
+    runWorker(Consumers.SearchIndexing, indexingHandler),
+    runWorker(Consumers.SubscriptionV1, subscriptionHandler),
   ]);
 
   runningServices = {
