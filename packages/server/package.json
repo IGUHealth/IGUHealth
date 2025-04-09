@@ -80,7 +80,7 @@
     "jsonpointer": "^5.0.1",
     "jwks-rsa": "^3.1.0",
     "kafkajs": "^2.2.4",
-    "koa": "^2.16.0",
+    "koa": "^2.16.1",
     "koa-compress": "^5.1.1",
     "koa-helmet": "^8.0.1",
     "koa-jwt": "^4.0.4",
