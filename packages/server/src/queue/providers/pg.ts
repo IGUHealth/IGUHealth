@@ -17,12 +17,11 @@ export type PGQueueConfig = {
 
 export class PGQueueBatch implements IQueue, IQueueBatch {
   private readonly _connection: db.Queryable;
-  private readonly _transactionKey: string;
+
   private _messages: Record<string, s.sub_queue.Insertable[]> = {};
 
   constructor(config: PGQueueConfig) {
     this._connection = config.connection;
-    this._transactionKey = "batch-" + Date.now();
   }
   async commit(): Promise<void> {
     const messages = Object.values(this._messages).flat();
@@ -31,8 +30,8 @@ export class PGQueueBatch implements IQueue, IQueueBatch {
         "sub_queue",
         messages.map((m) => ({
           ...m,
-          headers: m.headers as db.JSONValue,
-          value: m.value as db.JSONValue,
+          headers: JSON.stringify(m.headers ?? {}),
+          value: JSON.stringify(m.value),
         })),
       )
       .run(this._connection);
@@ -98,8 +97,8 @@ export class PGQueue implements IQueue {
         "sub_queue",
         messages.map((m) => ({
           ...m,
-          headers: m.headers as db.JSONValue,
-          value: m.value as db.JSONValue,
+          headers: JSON.stringify(m.headers ?? {}),
+          value: JSON.stringify(m.value),
           topic_id,
         })),
       )

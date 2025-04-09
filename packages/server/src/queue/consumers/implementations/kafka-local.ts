@@ -2,13 +2,7 @@ import { Batch, Consumer, Kafka, KafkaMessage } from "kafkajs";
 
 import { createKafkaClient } from "../../providers/index.js";
 import { DYNAMIC_TOPIC } from "../../topics/dynamic-topic.js";
-import {
-  IConsumerGroupID,
-  ITopic,
-  ITopicPattern,
-  OperationsTopic,
-  TENANT_TOPIC_PATTERN,
-} from "../../topics/index.js";
+import { IConsumerGroupID, ITopic, ITopicPattern } from "../../topics/index.js";
 import { Message, MessageHandler } from "../types.js";
 
 async function listTopics(kafka: Kafka, pattern: RegExp): Promise<ITopic[]> {
@@ -161,20 +155,16 @@ async function createKafkaConsumer<CTX>(
 }
 
 export default async function createKafkaWorker<CTX>(
+  topic: ITopicPattern | ITopic,
   groupId: IConsumerGroupID,
   ctx: CTX,
   handler: MessageHandler<CTX>,
 ): Promise<() => Promise<void>> {
-  const stop = await createKafkaConsumer(
-    ctx,
-    TENANT_TOPIC_PATTERN(OperationsTopic),
-    groupId,
-    {
-      eachMessage: async (ctx, { topic, messages: message }) => {
-        await handler(ctx, { messages: message, topic });
-      },
+  const stop = await createKafkaConsumer(ctx, topic, groupId, {
+    eachMessage: async (ctx, { topic, messages: message }) => {
+      await handler(ctx, { messages: message, topic });
     },
-  );
+  });
 
   return stop;
 }

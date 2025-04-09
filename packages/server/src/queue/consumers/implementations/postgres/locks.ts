@@ -1,7 +1,20 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { TenantId } from "@iguhealth/jwt";
+interface OffsetLockValue {
+  isPattern: boolean;
+  topic: string;
+  offset: number;
+}
+
+type LockValue = {
+  "queue-loc": OffsetLockValue;
+};
+
+interface Lock<T extends s.lock_type>
+  extends Omit<s.locks.Insertable, "value"> {
+  value: LockValue[T];
+}
 
 /**
  *
@@ -9,14 +22,19 @@ import { TenantId } from "@iguhealth/jwt";
  * @param verifyLocksCreated Locks to verify created
  * @returns
  */
-export async function ensureLocksCreated(
+export async function ensureLocksCreated<T extends s.lock_type>(
   pg: db.Queryable,
-  verifyLocksCreated: s.locks.Insertable[],
+  verifyLocksCreated: Lock<T>[],
 ) {
   const foundLocks = await db
-    .upsert("locks", verifyLocksCreated, db.constraint("locks_pkey"), {
-      updateColumns: db.doNothing,
-    })
+    .upsert(
+      "locks",
+      verifyLocksCreated as unknown as s.locks.Insertable[],
+      db.constraint("locks_pkey"),
+      {
+        updateColumns: db.doNothing,
+      },
+    )
     .run(pg);
 
   return foundLocks;
@@ -31,29 +49,29 @@ export async function ensureLocksCreated(
  * @param lockIds Ids of locks to select
  * @returns Selectable locks that are available and locks until transaction is committed.
  */
-export async function getAvailableLocks(
+export async function getAvailableLocks<T extends s.lock_type>(
   pg: db.Queryable,
-  tenant: TenantId,
-  lock_type: string,
+  lock_type: T,
   lockIds: string[],
-): Promise<s.locks.Selectable[]> {
+): Promise<Lock<T>[]> {
   if (lockIds.length === 0) return [];
   const whereable = db.conditions.or(
-    ...lockIds.map((id) => ({ id, tenant, type: lock_type })),
+    ...lockIds.map((id) => ({ id, type: lock_type })),
   );
 
   return db.sql<
     s.locks.SQL,
     s.locks.Selectable[]
-  >`SELECT * FROM ${"locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(pg);
+  >`SELECT * FROM ${"locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(
+    pg,
+  ) as unknown as Promise<Lock<T>[]>;
 }
 
 export async function updateLock(
   pg: db.Queryable,
-  tenant: TenantId,
-  type: string,
+  type: s.lock_type,
   lockid: string,
   value: s.locks.Updatable,
 ) {
-  db.update("locks", value, { id: lockid, tenant, type }).run(pg);
+  db.update("locks", value, { id: lockid, type }).run(pg);
 }

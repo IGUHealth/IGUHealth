@@ -1,4 +1,4 @@
-DROP TABLE iguhealth_locks;
+DROP TABLE if exists iguhealth_locks;
 
 CREATE TABLE
     iguhealth_locks (
