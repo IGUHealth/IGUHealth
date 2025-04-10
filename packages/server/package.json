@@ -143,6 +143,9 @@
   ],
   "exports": {
     ".": "./lib/server.js",
-    "./cli": "./lib/cli/index.js"
+    "./cli": "./lib/cli/index.js",
+    "./consumer/handlers": "./lib/queue/consumers/handlers/index.js",
+    "./consumer/services": "./lib/queue/consumers/services.js",
+    "./consumer/types": "./lib/queue/consumers/types.js"
   }
 }

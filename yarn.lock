@@ -10212,25 +10212,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/serverless@workspace:packages/serverless"
   dependencies:
-    "@babel/plugin-syntax-import-attributes": "npm:^7.26.0"
-    "@babel/preset-env": "npm:^7.26.9"
-    "@babel/preset-typescript": "npm:^7.26.0"
     "@iguhealth/server": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
-    "@rollup/plugin-commonjs": "npm:^26.0.3"
-    "@rollup/plugin-json": "npm:^6.1.0"
-    "@rollup/plugin-node-resolve": "npm:^15.3.1"
-    "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/jest": "npm:^29.5.14"
     jest: "npm:^29.7.0"
-    rollup: "npm:^4.34.9"
-    rollup-plugin-dts: "npm:^6.1.1"
-    rollup-plugin-peer-deps-external: "npm:^2.2.4"
-    rollup-plugin-terser: "npm:^7.0.2"
     serverless-http: "npm:^3.2.0"
     ts-jest: "npm:^29.2.6"
-    tslib: "npm:^2.8.1"
-    tsx: "npm:4.11.2"
     typescript: "npm:5.8.2"
   languageName: unknown
   linkType: soft
