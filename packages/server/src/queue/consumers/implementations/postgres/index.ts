@@ -13,7 +13,7 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function convertPgMessagetoMessage(
+export function convertPgMessagetoMessage(
   pgMessage: s.sub_queue.JSONSelectable[],
 ): Message[] {
   return pgMessage.map(

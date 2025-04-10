@@ -4,9 +4,8 @@ import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import indexingHandler from "../../queue/consumers/handlers/search-indexing.js";
 import storageHandler from "../../queue/consumers/handlers/storage.js";
 import subscriptionHandler from "../../queue/consumers/handlers/subscription-v1/index.js";
-import createWorker, {
-  services,
-} from "../../queue/consumers/implementations/index.js";
+import createWorker from "../../queue/consumers/implementations/index.js";
+import { createConsumerServices } from "../../queue/consumers/services.js";
 import { MessageHandler } from "../../queue/consumers/types.js";
 import {
   Consumers,
@@ -29,7 +28,7 @@ async function runWorker(
     TENANT_TOPIC_PATTERN(OperationsTopic),
     groupId,
     process.env.QUEUE_TYPE,
-    await services(),
+    await createConsumerServices(),
     handler,
   );
 }
