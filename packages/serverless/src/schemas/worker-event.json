@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Queue event",
+    "type": "object",
+    "$id": "https://IGUHealth.app/environment-variables",
+    "additionalProperties": false,
+    "required": [
+        "id",
+        "headers",
+        "value",
+        "created_at",
+        "topic_id"
+    ],
+    "properties": {
+        "id": {
+            "description": "The id of the event",
+            "type": "string"
+        },
+        "headers": {
+            "type": "object",
+            "description": "Message headers."
+        },
+        "value": {
+            "type": "object",
+            "description": "Value of the event. This will be the response request."
+        },
+        "key": {
+            "description": "The message key. Similiar to kafka message.",
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string",
+            "description": "When the event was created."
+        },
+        "topic_id": {
+            "type": "string",
+            "description": "The topic for the given message."
+        }
+    }
+}

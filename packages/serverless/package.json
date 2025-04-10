@@ -8,7 +8,8 @@
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "generate": "yarn json2ts src/schemas/worker-event.json > src/schemas/worker-event.d.ts"
   },
   "type": "module",
   "files": [
