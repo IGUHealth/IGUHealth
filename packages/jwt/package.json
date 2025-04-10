@@ -2,7 +2,7 @@
   "name": "@iguhealth/jwt",
   "version": "0.11.0",
   "dependencies": {
-    "jose": "^6.0.8"
+    "jose": "^6.0.10"
   },
   "type": "module",
   "description": "JWT utilities for Igu Health",
