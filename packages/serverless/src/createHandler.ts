@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Ajv from "ajv";
-import serverless from "serverless-http";
 
 import { createConsumerServices } from "@iguhealth/server/consumer/services";
 import { Message, MessageHandler } from "@iguhealth/server/consumer/types";
@@ -31,16 +30,16 @@ function validateEvent(event: any): event is QueueEvent {
 
 export default async function createHandler(
   handler: MessageHandler<Awaited<ReturnType<typeof createConsumerServices>>>,
-): Promise<serverless.Handler> {
+) {
   const services = await createConsumerServices();
 
-  return async (event) => {
+  return async (event: QueueEvent) => {
     if (validateEvent(event)) {
       const message = convertEvent(event);
       await handler(services, { topic: message.topic_id, messages: [message] });
 
       return {
-        message: "ok",
+        message: "success",
       };
     }
     throw new Error("Invalid event");
