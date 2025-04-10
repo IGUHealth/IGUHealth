@@ -25,8 +25,7 @@ export default async function createHandler(
     await handler(services, { topic: message.topic_id, messages: [message] });
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "ok" }),
+      message: "ok",
     };
   };
 }

@@ -16969,7 +16969,9 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/server", "workspace:packages/server"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.14"],\
+          ["ajv", "npm:8.17.1"],\
           ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.7.0"],\
+          ["json-schema-to-typescript", "npm:15.0.4"],\
           ["serverless-http", "npm:3.2.0"],\
           ["ts-jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.2.6"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
