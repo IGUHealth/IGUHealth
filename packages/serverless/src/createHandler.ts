@@ -17,7 +17,7 @@ function convertEvent(event: QueueEvent): Message {
     headers: event.headers as Record<string, string>,
     value: event.value,
     key: event.key ?? undefined,
-    created_at: event.created_at as string,
+    created_at: event.created_at,
     topic_id: event.topic_id,
     offset: event.id.toString(),
   };
