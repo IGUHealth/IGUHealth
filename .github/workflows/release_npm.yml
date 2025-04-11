@@ -1,4 +1,4 @@
-name: NPM Publish
+name: Publish Packages
 on:
   release:
     types: [published]
@@ -48,5 +48,18 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - run: yarn publish
+      - name: Publish to NPM
+        run: yarn publish
+        timeout-minutes: 10
+
+      - name: Configure GITHUB PACKAGES NPM AUTH
+        run: |
+          yarn config set npmAuthToken $NPM_TOKEN
+          yarn config set npmPublishRegistry https://npm.pkg.github.com
+          yarn config set npmAlwaysAuth true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Github Packages
+        run: yarn publish
         timeout-minutes: 10

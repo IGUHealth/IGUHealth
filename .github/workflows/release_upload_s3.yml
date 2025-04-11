@@ -1,4 +1,4 @@
-name: S3 Uploads
+name: Asset Uploads
 
 on:
   release:
