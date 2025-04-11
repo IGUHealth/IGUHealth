@@ -42,7 +42,7 @@ jobs:
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
-          docker buildx build . \
+          docker buildx build packages/serverless/docker \
            --file packages/serverless/docker/server.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
@@ -78,7 +78,7 @@ jobs:
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
-          docker buildx build . \
+          docker buildx build packages/serverless/docker \
            --file packages/serverless/docker/storage.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
@@ -114,7 +114,7 @@ jobs:
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
-          docker buildx build . \
+          docker buildx build packages/serverless/docker \
            --file packages/serverless/docker/indexing.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
@@ -150,7 +150,7 @@ jobs:
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
-          docker buildx build . \
+          docker buildx build packages/serverless/docker \
            --file packages/serverless/docker/subscription-v1.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
