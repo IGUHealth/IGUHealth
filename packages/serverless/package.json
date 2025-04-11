@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "generate": "yarn json2ts src/schemas/worker-event.json > src/schemas/worker-event.d.ts"
+    "generate": "yarn json2ts src/schemas/worker-event.json > src/schemas/worker-event.d.ts",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "type": "module",
   "files": [
