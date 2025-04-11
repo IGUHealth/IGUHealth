@@ -7,17 +7,18 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  SERVER_IMAGE_NAME: iguhealth/iguhealth
-  ADMIN_APP_IMAGE_NAME: iguhealth/admin-app
+  SERVER_LAMBDA_NAME: iguhealth/iguhealth-server-lambda
+  STORAGE_LAMBDA_NAME: iguhealth/iguhealth-storage-lambda
+  INDEXING_LAMBDA_NAME: iguhealth/iguhealth-indexing-lambda
+  SUBSCRIPTION_V1_LAMBDA_NAME: iguhealth/iguhealth-subscription-v1-lambda
 
 jobs:
-  server:
+  server-lambda:
     environment: production
     runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -27,24 +28,11 @@ jobs:
       - name: EnableCorePack
         run: corepack enable
 
-      - name: Apply versioning
-        run: yarn version apply -R --all
-
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
-      - id: package_json_version
-        run: |
-          content=`cat ./packages/server/package.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          # end of optional handling for multi line json
-          echo "::set-output name=packageJson::$content"
-
       - name: Build and Publish Image
         run: |
-          IMAGE_NAME=$(echo $SERVER_IMAGE_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_NAME=$(echo $SERVER_LAMBDA_NAME | tr '[A-Z]' '[a-z]')
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           # This changes all uppercase characters to lowercase.
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -55,19 +43,18 @@ jobs:
 
           # --platform linux/amd64,linux/arm64 \
           docker buildx build . \
-           --file docker/server/server.dockerfile \
+           --file packages/serverless/docker/server.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
            --push
 
-  admin-app:
+  storage-lambda:
     environment: production
     runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
-
     steps:
       - uses: actions/checkout@v4
 
@@ -77,36 +64,93 @@ jobs:
       - name: EnableCorePack
         run: corepack enable
 
-      - name: Apply versioning
-        run: yarn version apply -R --all
-
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
-      - id: package_json_version
-        run: |
-          content=`cat ./packages/admin-app/package.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          # end of optional handling for multi line json
-          echo "::set-output name=packageJson::$content"
-
       - name: Build and Publish Image
         run: |
-          IMAGE_NAME=$(echo $ADMIN_APP_IMAGE_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_NAME=$(echo $STORAGE_LAMBDA_NAME | tr '[A-Z]' '[a-z]')
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           # This changes all uppercase characters to lowercase.
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
-          # Pulls image from admin-app package.json which is set in previous step.
           VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
           docker buildx build . \
-           --file docker/admin-app/admin-app.dockerfile \
+           --file packages/serverless/docker/storage.dockerfile \
+           --tag $IMAGE_ID:$VERSION \
+           --tag $IMAGE_ID:latest \
+           --label "runnumber=${GITHUB_RUN_ID}" \
+           --push
+
+  indexing-lambda:
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Build and Publish Image
+        run: |
+          IMAGE_NAME=$(echo $INDEXING_LAMBDA_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          # --platform linux/amd64,linux/arm64 \
+          docker buildx build . \
+           --file packages/serverless/docker/indexing.dockerfile \
+           --tag $IMAGE_ID:$VERSION \
+           --tag $IMAGE_ID:latest \
+           --label "runnumber=${GITHUB_RUN_ID}" \
+           --push
+  subscription-v1-lambda:
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Build and Publish Image
+        run: |
+          IMAGE_NAME=$(echo $SUBSCRIPTION_V1_LAMBDA_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          # --platform linux/amd64,linux/arm64 \
+          docker buildx build . \
+           --file packages/serverless/docker/subscription-v1.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
