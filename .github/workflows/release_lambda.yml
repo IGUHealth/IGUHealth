@@ -1,4 +1,4 @@
-name: Docker Images
+name: Lambda Docker Images
 on:
   # Because pull from npm wait until packages have been published.
   workflow_run:
