@@ -9,23 +9,21 @@
   },
   "scripts": {
     "build": "tsc",
-    "generate": "yarn json2ts src/schemas/worker-event.json > src/schemas/worker-event.d.ts"
+    "generate": "yarn json2ts src/schemas/worker-event.json > src/schemas/worker-event.d.ts",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "type": "module",
   "files": [
     "lib/**"
   ],
-  "exports": {
-    ".": "./lib/index.js"
-  },
   "dependencies": {
     "@iguhealth/server": "workspace:^",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "ajv": "^8.17.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
-    "ajv": "^8.17.1",
     "jest": "^29.7.0",
     "json-schema-to-typescript": "^15.0.4",
     "ts-jest": "^29.2.6",
