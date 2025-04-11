@@ -5,8 +5,8 @@ import Ajv from "ajv";
 import { createConsumerServices } from "@iguhealth/server/consumer/services";
 import { Message, MessageHandler } from "@iguhealth/server/consumer/types";
 
-import { QueueEvent } from "./schemas/worker-event.js";
-import workerEventSchema from "./schemas/worker-event.json" with { type: "json" };
+import { QueueEvent } from "../schemas/worker-event.js";
+import workerEventSchema from "../schemas/worker-event.json" with { type: "json" };
 
 const ajv = new Ajv.default({});
 const eventValidator = ajv.compile(workerEventSchema);
