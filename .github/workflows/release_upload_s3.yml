@@ -1,4 +1,4 @@
-name: S3 Uploads
+name: Asset Uploads
 
 on:
   release:
@@ -37,6 +37,12 @@ jobs:
 
       - name: Version Check
         run: yarn version check
+
+      - name: Install
+        run: yarn
+
+      - name: Compile
+        run: yarn build
 
       - name: Compile documentation
         run: yarn generate-documentation

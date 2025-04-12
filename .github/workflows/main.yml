@@ -1,4 +1,4 @@
-name: Workflow for Codecov example-javascript
+name: IGUHealth Tests
 on: [push, pull_request]
 jobs:
   security:
@@ -63,6 +63,13 @@ jobs:
       ARTIFACT_DB_PG_PORT: 5432
       ARTIFACT_DB_PG_USERNAME: postgres
       ARTIFACT_DB_PG_PASSWORD: postgres
+
+      QUEUE_TYPE: postgres
+      QUEUE_DB_PG_NAME: postgres
+      QUEUE_DB_PG_HOST: localhost
+      QUEUE_DB_PG_PORT: 5432
+      QUEUE_DB_PG_PASSWORD: postgres
+      QUEUE_DB_PG_USERNAME: postgres
 
       REDIS_HOST: localhost
       REDIS_PORT: 6379

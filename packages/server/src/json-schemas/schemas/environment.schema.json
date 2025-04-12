@@ -13,6 +13,12 @@
     },
     {
       "$ref": "#/$defs/artifact-pg"
+    },
+    {
+      "$ref": "#/$defs/queue-kafka"
+    },
+    {
+      "$ref": "#/$defs/queue-pg"
     }
   ],
   "required": [
@@ -27,8 +33,6 @@
     "AUTH_LOCAL_SIGNING_KEY",
     "IGUHEALTH_ENVIRONMENT",
     "QUEUE_TYPE",
-    "QUEUE_BROKERS",
-    "QUEUE_CLIENT_ID",
     "AUTH_CERTIFICATION_TYPE"
   ],
   "properties": {
@@ -67,16 +71,9 @@
       "type": "string",
       "description": "Queue Type.",
       "enum": [
-        "kafka"
+        "kafka",
+        "postgres"
       ]
-    },
-    "QUEUE_BROKERS": {
-      "type": "string",
-      "description": "Kafka brokers"
-    },
-    "QUEUE_CLIENT_ID": {
-      "type": "string",
-      "description": "Kafka client id"
     },
     "REDIS_HOST": {
       "type": "string",
@@ -371,6 +368,59 @@
           "default": "postgres"
         },
         "ARTIFACT_DB_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        }
+      }
+    },
+    "queue-kafka": {
+      "type": "object",
+      "properties": {
+        "KAFKA_QUEUE_BROKERS": {
+          "type": "string",
+          "description": "Kafka brokers"
+        },
+        "KAFKA_QUEUE_CLIENT_ID": {
+          "type": "string",
+          "description": "Kafka client id"
+        }
+      }
+    },
+    "queue-pg": {
+      "type": "object",
+      "properties": {
+        "QUEUE_DB_PG_NAME": {
+          "type": "string",
+          "description": "Postgres database name. ",
+          "default": "iguhealth"
+        },
+        "QUEUE_DB_PG_HOST": {
+          "type": "string",
+          "description": "Postgres host",
+          "default": "localhost"
+        },
+        "QUEUE_DB_PG_PORT": {
+          "type": "string",
+          "pattern": "[0-9]{4}",
+          "description": "Postgres port",
+          "default": "5432"
+        },
+        "QUEUE_DB_PG_PASSWORD": {
+          "type": "string",
+          "description": "postgres password",
+          "default": ""
+        },
+        "QUEUE_DB_PG_USERNAME": {
+          "type": "string",
+          "description": "postgres username",
+          "default": "postgres"
+        },
+        "QUEUE_DB_PG_SSL": {
           "type": "string",
           "enum": [
             "true",

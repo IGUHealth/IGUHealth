@@ -1,8 +1,18 @@
 import { Command } from "commander";
 
-import createIndexingWorker from "../../queue/consumers/kafka/consumers/search-indexing.js";
-import createStorageWorker from "../../queue/consumers/kafka/consumers/storage.js";
-import createSubscriptionWorker from "../../queue/consumers/kafka/consumers/subscription-v1/index.js";
+import { IGUHealthServerCTX } from "../../fhir-server/types.js";
+import indexingHandler from "../../queue/consumers/handlers/search-indexing.js";
+import storageHandler from "../../queue/consumers/handlers/storage.js";
+import subscriptionHandler from "../../queue/consumers/handlers/subscription-v1/index.js";
+import createWorker from "../../queue/consumers/implementations/index.js";
+import { createConsumerServices } from "../../queue/consumers/services.js";
+import { MessageHandler } from "../../queue/consumers/types.js";
+import {
+  Consumers,
+  IConsumerGroupID,
+  OperationsTopic,
+  TENANT_TOPIC_PATTERN,
+} from "../../queue/topics/index.js";
 import createServer from "../../server.js";
 
 async function runServer(port: number) {
@@ -10,9 +20,22 @@ async function runServer(port: number) {
   return server.listen(port);
 }
 
+async function runWorker(
+  groupId: IConsumerGroupID,
+  handler: MessageHandler<Omit<IGUHealthServerCTX, "user" | "tenant">>,
+) {
+  return createWorker(
+    TENANT_TOPIC_PATTERN(OperationsTopic),
+    groupId,
+    process.env.QUEUE_TYPE,
+    await createConsumerServices(),
+    handler,
+  );
+}
+
 type Services = {
   server?: Awaited<ReturnType<typeof runServer>>;
-  workers: Awaited<ReturnType<typeof createSubscriptionWorker>>[];
+  workers: Awaited<ReturnType<typeof createWorker>>[];
 };
 
 let runningServices: Services = { workers: [] };
@@ -35,31 +58,39 @@ const server: Parameters<Command["action"]>[0] = async (options) => {
 
 const worker: Parameters<Command["action"]>[0] = async () => {
   terminateServices();
+
   runningServices = {
     ...runningServices,
-    workers: [await createSubscriptionWorker()],
+    workers: [await runWorker(Consumers.SubscriptionV1, subscriptionHandler)],
   };
 };
 
 const storageWorker: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
-    workers: [...runningServices.workers, await createStorageWorker()],
+    workers: [
+      ...runningServices.workers,
+      await runWorker(Consumers.Storage, storageHandler),
+    ],
   };
 };
 
 const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
-    workers: [...runningServices.workers, await createIndexingWorker()],
+    workers: [
+      ...runningServices.workers,
+      await runWorker(Consumers.SearchIndexing, indexingHandler),
+    ],
   };
 };
 
 const all: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
+
   const [server, ...workers] = await Promise.all([
     runServer(options.port),
-    createStorageWorker(),
-    createIndexingWorker(),
-    createSubscriptionWorker(),
+    runWorker(Consumers.Storage, storageHandler),
+    runWorker(Consumers.SearchIndexing, indexingHandler),
+    runWorker(Consumers.SubscriptionV1, subscriptionHandler),
   ]);
 
   runningServices = {
