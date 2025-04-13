@@ -205,3 +205,24 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Install mitmdump via mitmproxy
+        run: sudo apt install -y mitmproxy
+
+      - name: Run cypress E2E
+        env:
+          CLIENT_ID: test-client-2
+          CLIENT_SECRET: mysecret-2
+          CI_TENANT_ID: tenant3
+        run: |
+          yarn workspace @iguhealth/server cli admin tenant create -i test-system3 -t unlimited -e test3@iguhealth.app -p testing
+          yarn workspace @iguhealth/server cli admin client-app create -t test-system3 -i $CLIENT_ID -s $CLIENT_SECRET
+          yarn workspace @iguhealth/server iguhealth config add-tenant \
+           --name $CI_TENANT_ID \
+           --r4-url http://localhost:3000/w/test-system3/api/v1/fhir/r4 \
+           --r4b-url http://localhost:3000/w/test-system3/api/v1/fhir/r4b \
+           --oidc http://localhost:3000/w/test-system3/oidc/.well-known/openid-configuration \
+           --auth client_credentials \
+           --client-id $CLIENT_ID \
+           --client-secret $CLIENT_SECRET
+          yarn workspace @iguhealth/test-e2e run e2e:run

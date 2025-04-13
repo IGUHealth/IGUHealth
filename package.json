@@ -9,7 +9,8 @@
     "publish": "yarn workspaces foreach -A -pt --topological-dev run publish",
     "configure": "yarn node configure_packages.cjs",
     "generate-documentation": "yarn typedoc",
-    "format": "yarn prettier --write "
+    "format": "yarn prettier --write ",
+    "start-server-and-test": "start-server-and-test"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch",
@@ -18,6 +19,7 @@
     "@typescript-eslint/parser": "^8.26.0",
     "eslint": "^8.57.1",
     "prettier": "^3.5.3",
+    "start-server-and-test": "^2.0.11",
     "ts-node": "^10.9.2",
     "typedoc": "^0.26.11",
     "typescript": "5.8.2"
@@ -38,6 +40,12 @@
       "unplugged": true
     },
     "@types/koa-ratelimit@5.0.5": {
+      "unplugged": true
+    },
+    "cypress@14.2.1": {
+      "unplugged": true
+    },
+    "ppeterson-start-server-and-test@2.0.13": {
       "unplugged": true
     },
     "prism-react-renderer@2.3.1": {

@@ -39,7 +39,8 @@
     "web-vitals": "^3.5.2"
   },
   "scripts": {
-    "start": "HOST=localhost PORT=3001 react-scripts start",
+    "start:headless": "BROWSER=none yarn run start",
+    "start": "HOST=0.0.0.0 PORT=3001 react-scripts start",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "eject": "react-scripts eject"
   },
