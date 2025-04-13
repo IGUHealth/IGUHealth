@@ -206,8 +206,8 @@ jobs:
       #  with:
       #    token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Install mitmdump
-        run: sudo apt install -y mitmdump
+      - name: Install mitmdump via mitmproxy
+        run: sudo apt install -y mitmproxy
 
       - name: Run cypress E2E
         env:
