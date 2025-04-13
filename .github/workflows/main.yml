@@ -206,6 +206,9 @@ jobs:
       #  with:
       #    token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Install mitmdump
+        run: sudo apt install -y mitmdump
+
       - name: Run cypress E2E
         env:
           CLIENT_ID: test-client-2
