@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  iguhealth-server
+Transform:
+  - AWS::Serverless-2016-10-31
+
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+Resources:
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  iguhealth:
+    Type: AWS::Serverless::Function
+    Metadata:
+      DockerTag: nodejs22.x-v1
+      Dockerfile: server.dockerfile
+      DockerContext: ./docker
+
+    Properties:
+      PackageType: Image
+      MemorySize: 1024
+      Timeout: 500
+      Description: IGUHealth server.
+      Environment:
+        Variables:
+          RESOURCE_STORE_TYPE: "postgres"
+          RESOURCE_STORE_PG_NAME: "iguhealth"
+          "RESOURCE_STORE_PG_HOST": "docker.for.mac.localhost"
+          "RESOURCE_STORE_PG_PORT": "5432"
+          "RESOURCE_STORE_PG_PASSWORD": "postgres"
+          "RESOURCE_STORE_PG_USERNAME": "postgres"
+          "SEARCH_STORE_TYPE": "postgres"
+          "SEARCH_STORE_PG_NAME": "iguhealth"
+          "SEARCH_STORE_PG_HOST": "docker.for.mac.localhost"
+          "SEARCH_STORE_PG_PORT": "5432"
+          "SEARCH_STORE_PG_PASSWORD": "postgres"
+          "SEARCH_STORE_PG_USERNAME": "postgres"
+          "ARTIFACT_DB_TYPE": "postgres"
+          "ARTIFACT_DB_PG_NAME": "iguhealth_artifact"
+          "ARTIFACT_DB_PG_HOST": "docker.for.mac.localhost"
+          "ARTIFACT_DB_PG_PORT": "5432"
+          "ARTIFACT_DB_PG_PASSWORD": "postgres"
+          "ARTIFACT_DB_PG_USERNAME": "postgres"
+          "RATE_LIMIT_MAX": "1000000000000"
+          "REDIS_HOST": "docker.for.mac.localhost"
+          "REDIS_PORT": "6379"
+          "NODE_ENV": "development"
+          "EMAIL_FROM": "dev@iguhealth.app"
+          "EMAIL_PROVIDER": "sendgrid"
+          "API_URL": "http://localhost:3000"
+          "AUTH_ISSUER": "http://localhost:3000"
+          "AUTH_CERTIFICATION_TYPE": "environment"
+
+          "ADMIN_APP_REDIRECT_URI": "http://*.localhost:3001"
+          "AUTH_ALLOW_GLOBAL_SIGNUP": true
+          "IGUHEALTH_ENVIRONMENT": "development"
+
+          # "QUEUE_TYPE": "kafka"
+          # "QUEUE_BROKERS": "kafka:9092"
+          # "QUEUE_CLIENT_ID": "iguhealth"
+
+          "QUEUE_TYPE": "postgres"
+          "QUEUE_DB_PG_NAME": "iguhealth"
+          "QUEUE_DB_PG_HOST": "docker.for.mac.localhost"
+          "QUEUE_DB_PG_PORT": "5432"
+          "QUEUE_DB_PG_PASSWORD": "postgres"
+          "QUEUE_DB_PG_USERNAME": "postgres"
+
+          AUTH_LOCAL_SIGNING_KEY: "signing_key"
+
+          # Secrets need to be defined for pull in env.json file
+          "AUTH_CERTIFICATION_PRIVATE_KEY": |
+            -----BEGIN PRIVATE KEY-----
+            MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQClRHwYkQ8IsTgp
+            4FPfA3iFTPwYoxgs10JswGHQ/kBtQKbG1TYI/vrUMWRCoyGGDwZzrO/5b6BmUZJn
+            svGAUcHzDWcj7I8FQLxPsC+2JhQpuzR9SnBsIKKse25gHybCcoajFcK+gwEOat0H
+            kM5DyIz7iWUyzN0EtrWIeseOWt52WqYbWcPdLG/K7nbTqVheoazbFlkIuY8gfxNo
+            m/yRr4WiqHoTdLgb0FdFtaqd07TQZ6lWIbxl8BpS8kx9/mmclz0aAH81dMplgj3Y
+            06+fNJhKziJkHpzNpGU0xmPIxunvH0ZO2BXzsokbzxOBt1qVzcXUbSUC83kX48B4
+            W3CVrH+VAgMBAAECggEAT226PK5e7N0Lsqijdp/66QoGcSrVgBuWy6Csgl7oBPoZ
+            DZ/EQA+X6qqwVoyDnKQVBDxd+2JoUzSqKhepFPR2RAOxieT0GeCygJQbYi4r66CT
+            ChJgNL98n2wVMLJYFQUo6zGWrqxUsiKvBydT0uUMyQmQLxmhsdXEKotj5GmM2JFS
+            pGDeS17CBFmsrxH1K8LkxbBX5wb5zxInUBHym3FbY1UCfjtHxFzd4pT651yt7Egh
+            JuTbfGnPMy4DdDSEYEV2WtzE5Hw4ONgh08o9fUsLFqmyop9V+HFF9kVjcS4XFH2X
+            u8Fv0/buscV4yUAsuk2d0ePGjl/jJze48uY5u4Wu8wKBgQDmI0G4CIlm1ppi0tit
+            UQP5OZ7xu3lFlJe1RTTM3CunkScZkFd4ll9gBaZVJHQiOrgub6wUML9iNgfglufY
+            xXtQ13NGABgGzUmmbHJH/dKeK9h6AKgtoszt9Jb6iZLYagOsBplvp5CXkDeH2LQw
+            +yIRvkkMvORsujr7blStqgc5gwKBgQC31wCQaBRqlBuhqFteRx9enn6tUHAqF5oN
+            +kyuQ+dA5AQQBKqboWlS5uBjiUQn4aZhuYai+8tuh5CRyKaBZDCVEXSo4lJLQaSG
+            Z5zzGanKJ3A+j2SISqnVgrLpDaUY5jDiDvv0HshJT1DtnNI7/0ejn7mHpCtHhqj7
+            1KFqu9PPBwKBgARmZipDl4Ts03TSPSxLIT1RmbVbdT0cUy43DYRhLUB96PZ3KQT4
+            Mwid8wkrskC5SK4ymmKkb/RLvijQGcyuMeZgyCZteAghQqg46JJxyuYVRoVGn/CH
+            bU2bYIuXt8QFet5+Hc7hsEUFj9o8DW3mT0dxkOn6bo+Zm+kUue+8EXlLAoGANY44
+            59iqOfIzqoB1PZ3SkanylWLdiiWeB3xnYkz9zXWfiVsSqIv5NuFzdQvEAypFYiq+
+            AjUAKo7rmsytVPxu+r4/EgP8nVfeKhl9K4TKZc3fcRos21eE6mJM5H/JHNvSWcir
+            tY5SIqkslkwdIsVXhV8+mTlGMmwURmjHLWTSa3kCgYB8jbsV/Uv9xwQfY3eoTB17
+            TtGsJAC02AaxKenIo9LX5EzshDipwH5nYoq2iIn5+4kgv6ZIdD7x15ffr6HNuq6c
+            L7vEW6sbbW/wCgdCCyxlvuEJWiTR5juYQYHRuJaTaN3MsMxDvZb+5bnuoHKh3pMl
+            fCLM2Ub6C98uIzTWy5I77Q==
+            -----END PRIVATE KEY-----
+          "AUTH_CERTIFICATION_PUBLIC_KEY": |
+            -----BEGIN PUBLIC KEY-----
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApUR8GJEPCLE4KeBT3wN4
+            hUz8GKMYLNdCbMBh0P5AbUCmxtU2CP761DFkQqMhhg8Gc6zv+W+gZlGSZ7LxgFHB
+            8w1nI+yPBUC8T7AvtiYUKbs0fUpwbCCirHtuYB8mwnKGoxXCvoMBDmrdB5DOQ8iM
+            +4llMszdBLa1iHrHjlredlqmG1nD3Sxvyu5206lYXqGs2xZZCLmPIH8TaJv8ka+F
+            oqh6E3S4G9BXRbWqndO00GepViG8ZfAaUvJMff5pnJc9GgB/NXTKZYI92NOvnzSY
+            Ss4iZB6czaRlNMZjyMbp7x9GTtgV87KJG88Tgbdalc3F1G0lAvN5F+PAeFtwlax/
+            lQIDAQAB
+            -----END PUBLIC KEY-----
+          "SESSION_COOKIE_SECRETS": !Ref SessionCookieSecrets
+          "EMAIL_SENDGRID_API_KEY": !Ref EmailSendgridApiKey
+          "AWS_REGION": !Ref AWSRegion
+          "AWS_LAMBDA_ACCESS_KEY_ID": !Ref AWSLambdaAccessKeyId
+          "AWS_LAMBDA_ACCESS_KEY_SECRET": !Ref AWSLambdaAccessKeySecret
+          "AWS_LAMBDA_ROLE": !Ref AWSLambdaRole
+          "AWS_LAMBDA_LAYER_ARN": !Ref AWSLambdaLayerARN
+          "ENCRYPTION_TYPE": aws
+          "AWS_KMS_ACCESS_KEY_ID": !Ref AWSKMSACCESSKEYID
+          "AWS_KMS_ACCESS_KEY_SECRET": !Ref AWSKMSACCESSKEYSECRET
+          "AWS_ENCRYPTION_GENERATOR_KEY": !Ref AWSENCRYPTIONGENERATORKEY
+          "AWS_ENCRYPTION_KEY": !Ref AWSENCRYPTIONKEY
+
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /{all+}
+            Method: ANY
+
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    LoggingConfig:
+      LogFormat: JSON

@@ -100,7 +100,7 @@ async function getHistory<
 
   const historyCols = <const>["resource", "request_method"];
   type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const historySQL = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  const historySQL = db.sql<s.resources.SQL, HistoryReturn[]>`
   SELECT ${db.cols(historyCols)}
   FROM ${"resources"} 
   WHERE

@@ -4,6 +4,7 @@ coverage
 tsconfig.tsbuildinfo
 .env
 env.json
+.aws-sam
 packages/docs/.yarn
 packages/docs/build
 packages/auth_testing/build/
