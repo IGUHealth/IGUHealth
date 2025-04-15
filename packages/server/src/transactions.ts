@@ -99,7 +99,7 @@ export async function buildTransactionTopologicalGraph<
 export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
-  transaction: (ctx: CTX) => R,
+  callback: (ctx: CTX) => R,
 ): Promise<R> {
   const z = db.transaction(
     ctx.store.getClient(),
@@ -107,7 +107,7 @@ export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
     async (client) => {
       const t: CTX = { ...ctx };
       t.store = new PostgresStore(client);
-      return transaction(t);
+      return callback(t);
     },
   );
 
