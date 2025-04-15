@@ -15,7 +15,7 @@ export const generateTenantId = customAlphabet(
 export class PostgresTenantAdmin<CTX, T extends "tenants">
   implements IAdminModel<CTX, T>
 {
-  private _pgClient: db.Queryable;
+  private readonly _pgClient: db.Queryable;
 
   constructor(pgClient: db.Queryable) {
     this._pgClient = pgClient;

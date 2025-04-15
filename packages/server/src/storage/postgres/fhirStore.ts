@@ -261,7 +261,7 @@ export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       this._pgClient,
       request.fhirVersion,
       historyLevelFilter(request),
-      request.parameters || [],
+      request.parameters ?? [],
     );
   }
 }

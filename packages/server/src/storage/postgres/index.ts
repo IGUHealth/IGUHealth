@@ -12,7 +12,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
 {
   public auth: IAuthAdmin<CTX>;
   public fhir: FHIRResourceStore<CTX>;
-  private _pgClient: db.Queryable;
+  private readonly _pgClient: db.Queryable;
 
   constructor(pgClient: db.Queryable) {
     this.fhir = new PostgresFHIRStore<CTX>(pgClient);
