@@ -2,8 +2,8 @@ import { createClient, createLogger } from "../../fhir-server/index.js";
 import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
+import createStore from "../../storage/index.js";
 import createQueue from "../providers/index.js";
 
 export const createConsumerServices: () => Promise<
@@ -12,7 +12,7 @@ export const createConsumerServices: () => Promise<
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
-    store: await createResourceStore({ type: "postgres" }),
+    store: await createStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),

@@ -141,7 +141,7 @@ export const IguhealthPasswordResetInvoke = InlineOperation(
       );
     }
 
-    const membership = await ctx.store.readLatestResourceById(
+    const membership = await ctx.store.fhir.readLatestResourceById(
       ctx,
       R4,
       "Membership",

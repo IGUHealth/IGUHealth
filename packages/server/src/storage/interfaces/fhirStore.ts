@@ -13,9 +13,9 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-export type Insertable = Extract<s.Table, "users" | "resources" | "tenants">;
+export type Insertable = Extract<s.Table, "resources">;
 
-export interface ResourceStore<CTX> {
+export interface FHIRResourceStore<CTX> {
   insert<T extends Insertable>(
     ctx: CTX,
     type: T,

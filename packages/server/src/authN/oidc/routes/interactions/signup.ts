@@ -57,12 +57,13 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   )[0];
 
   if (existingUser !== undefined) {
-    const membership = await ctx.state.iguhealth.store.readLatestResourceById(
-      asRoot(ctx.state.iguhealth),
-      R4,
-      "Membership",
-      existingUser.fhir_user_id as id,
-    );
+    const membership =
+      await ctx.state.iguhealth.store.fhir.readLatestResourceById(
+        asRoot(ctx.state.iguhealth),
+        R4,
+        "Membership",
+        existingUser.fhir_user_id as id,
+      );
     if (!membership || membership.resourceType !== "Membership") {
       throw new OperationError(
         outcomeError("exception", "Membership not found"),

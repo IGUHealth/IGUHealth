@@ -51,7 +51,7 @@ export function createSynchronousStorageMiddleware<
         context.ctx.logger.info(
           `synchronous storing resource '${res.response.body.id}'`,
         );
-        await res.ctx.store.insert(res.ctx, "resources", {
+        await res.ctx.store.fhir.insert(res.ctx, "resources", {
           tenant: res.ctx.tenant,
           fhir_version: toDBFHIRVersion(res.response.fhirVersion),
           request_method: toMethod(res.response),
@@ -72,7 +72,7 @@ export function createSynchronousStorageMiddleware<
                 "Deletion operation must return a deletion object.",
               );
 
-            await res.ctx.store.insert(res.ctx, "resources", {
+            await res.ctx.store.fhir.insert(res.ctx, "resources", {
               tenant: res.ctx.tenant,
               fhir_version: toDBFHIRVersion(res.response.fhirVersion),
               request_method: toMethod(response),
@@ -90,7 +90,7 @@ export function createSynchronousStorageMiddleware<
               | SystemDeleteResponse<FHIR_VERSION>;
             await Promise.all(
               (response.deletion ?? []).map(async (resourceToDelete) => {
-                await res.ctx.store.insert(res.ctx, "resources", {
+                await res.ctx.store.fhir.insert(res.ctx, "resources", {
                   tenant: res.ctx.tenant,
                   fhir_version: toDBFHIRVersion(response.fhirVersion),
                   request_method: toMethod(response),

@@ -93,7 +93,7 @@ async function getResourceById<
   type: Type,
   id: id,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
-  const resource = await ctx.store.readLatestResourceById(
+  const resource = await ctx.store.fhir.readLatestResourceById(
     ctx,
     fhirVersion,
     type,
@@ -367,11 +367,12 @@ export default function createRequestToResponseMiddleware<
         });
       }
       case "vread-request": {
-        const foundResources = await context.ctx.store.readResourcesByVersionId(
-          context.ctx,
-          context.request.fhirVersion,
-          [context.request.versionId as id],
-        );
+        const foundResources =
+          await context.ctx.store.fhir.readResourcesByVersionId(
+            context.ctx,
+            context.request.fhirVersion,
+            [context.request.versionId as id],
+          );
         if (foundResources.length === 0) {
           throw new OperationError(
             outcomeError(
@@ -427,7 +428,7 @@ export default function createRequestToResponseMiddleware<
           context.request,
         );
 
-        const resources = await context.ctx.store.readResourcesByVersionId(
+        const resources = await context.ctx.store.fhir.readResourcesByVersionId(
           context.ctx,
           context.request.fhirVersion,
           result.result.map((r) => r.version_id),
@@ -763,7 +764,7 @@ export default function createRequestToResponseMiddleware<
       }
 
       case "history-request": {
-        const history = await context.ctx.store.history(
+        const history = await context.ctx.store.fhir.history(
           context.ctx,
           context.request,
         );

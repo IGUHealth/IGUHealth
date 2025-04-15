@@ -11,9 +11,9 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
+import { generateTenantId } from "../../../storage/postgres/authAdmin/tenants.js";
 import { DBTransaction, QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
-import * as tenants from "../../db/tenant.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
@@ -61,7 +61,12 @@ async function createOrRetrieveUser(
           ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {
-            const tenant = await tenants.create(ctx, {});
+            const tenant = await ctx.store.auth.tenant.create(
+              { tenant: "system" as TenantId },
+              {
+                id: generateTenantId(),
+              },
+            );
             const membership = await ctx.client.create(
               asRoot({
                 ...ctx,

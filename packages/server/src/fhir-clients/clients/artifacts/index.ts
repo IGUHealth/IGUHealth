@@ -10,8 +10,8 @@ import { AllInteractions, RequestType } from "@iguhealth/client/types";
 import { TenantId } from "@iguhealth/jwt";
 
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import { PostgresStore } from "../../../resource-stores/postgres/index.js";
 import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
+import { PostgresStore } from "../../../storage/postgres/index.js";
 import createRequestToResponseMiddleware from "../../middleware/request-to-response.js";
 import {
   createInTransactionMiddleware,

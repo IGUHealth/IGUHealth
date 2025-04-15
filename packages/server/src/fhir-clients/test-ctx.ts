@@ -20,8 +20,8 @@ import {
 import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
-import createResourceStore from "../resource-stores/index.js";
 import { createSearchStore } from "../search-stores/index.js";
+import createStore from "../storage/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";
 
@@ -67,7 +67,7 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
 
 export const testServices: IGUHealthServerCTX = {
   tenant: "tenant" as TenantId,
-  store: await createResourceStore({ type: "postgres" }),
+  store: await createStore({ type: "postgres" }),
   search: await createSearchStore({ type: "postgres" }),
   // @ts-ignore
   user: {

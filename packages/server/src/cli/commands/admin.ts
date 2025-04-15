@@ -2,6 +2,7 @@ import * as inquirer from "@inquirer/prompts";
 import { Command } from "commander";
 import validator from "validator";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import {
   AccessPolicyV2,
@@ -13,7 +14,6 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import * as tenants from "../../authN/db/tenant.js";
 import * as users from "../../authN/db/users/index.js";
 import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
@@ -28,8 +28,9 @@ import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/providers/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
 import { Consumers, TenantTopic } from "../../queue/topics/index.js";
-import createResourceStore from "../../resource-stores/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
+import createStore from "../../storage/index.js";
+import { generateTenantId } from "../../storage/postgres/authAdmin/tenants.js";
 import RedisLock from "../../synchronization/redis.lock.js";
 import { DBTransaction, QueueBatch } from "../../transactions.js";
 
@@ -39,9 +40,9 @@ async function getTenant(
     id?: string;
     tier?: string;
   },
-): Promise<Parameters<(typeof tenants)["create"]>[1]> {
-  const tenant: Parameters<(typeof tenants)["create"]>[1] = {
-    id: options.id,
+) {
+  const tenant: s.tenants.Insertable = {
+    id: options.id ?? generateTenantId(),
     subscription_tier: options.tier,
   };
 
@@ -97,7 +98,10 @@ async function createTenant(
       ctx,
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {
-        const tenant = await tenants.create(ctx, await getTenant(ctx, options));
+        const tenant = await ctx.store.auth.tenant.create(
+          { ...ctx, tenant: "system" as TenantId },
+          await getTenant(ctx, options),
+        );
         const membership: Membership = await ctx.client.create(
           asRoot({ ...ctx, tenant: tenant.id as TenantId }),
           R4,
@@ -162,7 +166,7 @@ function tenantCommands(command: Command) {
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
-        store: await createResourceStore({ type: "postgres" }),
+        store: await createStore({ type: "postgres" }),
         search: await createSearchStore({ type: "postgres" }),
         resolveCanonical,
         client: createClient(),
@@ -190,7 +194,7 @@ function clientAppCommands(command: Command) {
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
-        store: await createResourceStore({ type: "postgres" }),
+        store: await createStore({ type: "postgres" }),
         search: await createSearchStore({ type: "postgres" }),
         client: createClient(),
         resolveCanonical,
