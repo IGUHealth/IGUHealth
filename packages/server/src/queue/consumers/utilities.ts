@@ -19,7 +19,7 @@ import { getCertConfig } from "../../certification.js";
 import { createArtifactMemoryDatabase } from "../../fhir-clients/clients/memory/async.js";
 import { createLogger, getRedisClient } from "../../fhir-server/index.js";
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
-import createResourceStore from "../../resource-stores/index.js";
+import createStore from "../../storage/index.js";
 import RedisLock from "../../synchronization/redis.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
@@ -70,7 +70,7 @@ export async function staticWorkerServices(
 
   return {
     resolveCanonical: sdArtifacts.resolveCanonical,
-    store: await createResourceStore({ type: "postgres" }),
+    store: await createStore({ type: "postgres" }),
     logger,
     cache,
     lock,

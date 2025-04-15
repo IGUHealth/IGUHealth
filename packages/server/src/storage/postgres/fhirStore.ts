@@ -17,12 +17,13 @@ import {
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { toDBFHIRVersion } from "../../fhir-clients/utilities/version.js";
-import { Insertable, ResourceStore } from "../interface.js";
+import { Insertable, FHIRResourceStore } from "../interfaces/fhirStore.js";
 import { createFHIRURL } from "../../fhir-server/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../search-stores/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../../search-stores/sql.js";
+import { TenantId } from "@iguhealth/jwt";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -87,10 +88,10 @@ function historyLevelFilter(
 }
 
 async function getHistory<
-  CTX extends Pick<IGUHealthServerCTX, "store" | "tenant">,
   Version extends FHIR_VERSION,
 >(
-  ctx: CTX,
+  tenant: TenantId,
+  pg: db.Queryable,
   fhirVersion: Version,
   filters: s.resources.Whereable,
   parameters: ParsedParameter<string | number>[],
@@ -106,12 +107,12 @@ async function getHistory<
   WHERE
   ${{
     fhir_version: toDBFHIRVersion(fhirVersion),
-    tenant: ctx.tenant,
+    tenant: tenant,
     ...filters,
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"created_at"} DESC LIMIT ${db.param(limit)}`;
 
-  const history = await historySQL.run(ctx.store.getClient());
+  const history = await historySQL.run(pg);
 
   const resourceHistory = history.map((row) => {
     const resource = row.resource as unknown as Resource<
@@ -123,7 +124,7 @@ async function getHistory<
       resource: resource as any,
       fullUrl: createFHIRURL(
         fhirVersion,
-        ctx.tenant,
+        tenant,
         `${resource.resourceType}/${resource.id}`,
       ),
       request: {
@@ -142,8 +143,8 @@ async function getHistory<
   return resourceHistory;
 }
 
-export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
-  implements ResourceStore<CTX>
+export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
+  implements FHIRResourceStore<CTX>
 {
   private readonly _pgClient;
   constructor(pgClient: db.Queryable) {
@@ -166,7 +167,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
     const res = (
       await db
         .select("resources", whereable, { columns: ["resource"] })
-        .run(this.getClient())
+        .run(this._pgClient)
     ).map((r) => r.resource) as unknown as Resource<
       Version,
       AllResourceTypes
@@ -218,7 +219,7 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
           columns: ["resource"],
         },
       )
-      .run(this.getClient());
+      .run(this._pgClient);
 
     return result?.resource as unknown as Promise<
       Resource<Version, Type> | undefined
@@ -241,19 +242,9 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
               updateColumns: Object.keys(data) as s.resources.Column[],
             },
           )
-          .run(this.getClient());
+          .run(this._pgClient);
 
         return res[0] as unknown as s.JSONSelectableForTable<T>;
-      }
-      case "users":
-      case "tenants": {
-        const res = await db.insert(type, [data]).run(this.getClient());
-        return res[0];
-      }
-      default: {
-        throw new OperationError(
-          outcomeError("invalid", `Invalid insertion type '${type}'`),
-        );
       }
     }
   }
@@ -266,14 +257,11 @@ export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       | SystemHistoryRequest<FHIR_VERSION>,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
     return getHistory(
-      { ...ctx, store: this },
+      ctx.tenant,
+      this._pgClient,
       request.fhirVersion,
       historyLevelFilter(request),
       request.parameters || [],
     );
-  }
-
-  getClient(): db.Queryable {
-    return this._pgClient;
   }
 }

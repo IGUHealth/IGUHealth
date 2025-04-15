@@ -17,6 +17,7 @@ import { fileURLToPath } from "url";
 
 import { AllInteractions, FHIRResponse } from "@iguhealth/client/types";
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   createCertsIfNoneExists,
@@ -30,7 +31,6 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { getTenant } from "./authN/db/tenant.js";
 import { createGlobalAuthRouter } from "./authN/global/index.js";
 import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
@@ -63,8 +63,8 @@ import {
 import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import createQueue from "./queue/providers/index.js";
-import createResourceStore from "./resource-stores/index.js";
 import { createSearchStore } from "./search-stores/index.js";
+import createStore from "./storage/index.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
@@ -191,7 +191,7 @@ export default async function createServer(): Promise<
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
-    store: await createResourceStore({
+    store: await createStore({
       type: "postgres",
     }),
     search: await createSearchStore({ type: "postgres" }),
@@ -279,9 +279,9 @@ export default async function createServer(): Promise<
         outcomeError("invalid", "No tenant present in request."),
       );
 
-    const tenant = await getTenant(
-      ctx.state.iguhealth.store.getClient(),
-      ctx.params.tenant as TenantId,
+    const tenant = await ctx.state.iguhealth.store.auth.tenant.read(
+      ctx.state.iguhealth,
+      ctx.params.tenant as id,
     );
 
     if (!tenant) {

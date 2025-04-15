@@ -359,12 +359,13 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    const membership = await ctx.state.iguhealth.store.readLatestResourceById(
-      ctx.state.iguhealth,
-      R4,
-      "Membership",
-      user.fhir_user_id as id,
-    );
+    const membership =
+      await ctx.state.iguhealth.store.fhir.readLatestResourceById(
+        ctx.state.iguhealth,
+        R4,
+        "Membership",
+        user.fhir_user_id as id,
+      );
 
     if (!membership || membership.resourceType !== "Membership") {
       throw new OperationError(

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import db, { doNothing } from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import createResourceStore from "../../resource-stores/index.js";
+import createStore from "../../storage/index.js";
 
 async function createSystem(pg: db.Queryable, url: string) {
   return db
@@ -165,7 +165,7 @@ export function terminologyCommands(command: Command) {
     .requiredOption("-s, --system <system...>", "System to load.")
     .option("-d, --delete", "Delete existing data.", false)
     .action(async (options) => {
-      const store = await createResourceStore({ type: "postgres" });
+      const store = await createStore({ type: "postgres" });
 
       db.serializable(store.getClient(), async (tx) => {
         if (options.delete) {

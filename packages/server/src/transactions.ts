@@ -7,7 +7,7 @@ import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "./fhir-server/types.js";
-import { PostgresStore } from "./resource-stores/postgres/index.js";
+import { PostgresStore } from "./storage/postgres/index.js";
 
 function getTransactionFullUrls(
   transaction: Resource<FHIR_VERSION, "Bundle">,
@@ -101,13 +101,17 @@ export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
   isolationLevel: db.IsolationLevel,
   transaction: (ctx: CTX) => R,
 ): Promise<R> {
-  return db.transaction(
+  const z = db.transaction(
     ctx.store.getClient(),
     isolationLevel,
     async (client) => {
-      return transaction({ ...ctx, store: new PostgresStore(client) });
+      const t: CTX = { ...ctx };
+      t.store = new PostgresStore(client);
+      return transaction(t);
     },
   );
+
+  return z;
 }
 
 export async function QueueBatch<

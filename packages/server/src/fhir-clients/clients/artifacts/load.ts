@@ -12,8 +12,8 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/providers/index.js";
-import createResourceStore from "../../../resource-stores/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
+import createStore from "../../../storage/index.js";
 import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
 import { ARTIFACT_TENANT, createArtifactClient } from "./index.js";
 
@@ -113,7 +113,7 @@ async function createServices(): Promise<
   > = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
-    store: await createResourceStore({ type: "postgres" }),
+    store: await createStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
     tenant: ARTIFACT_TENANT,
