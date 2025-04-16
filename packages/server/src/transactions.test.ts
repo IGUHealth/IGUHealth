@@ -20,6 +20,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { testServices } from "./fhir-clients/test-ctx.js";
+import { IGUHealthServerCTX } from "./fhir-server/types.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
 
 function loadResources(
@@ -41,7 +42,7 @@ function loadResources(
 
 const resources = loadResources(["StructureDefinition"]);
 
-const CTX = {
+const CTX: IGUHealthServerCTX = {
   ...testServices,
   resolveCanonical(ctx, fhirVersion, type, url) {
     // @ts-ignore

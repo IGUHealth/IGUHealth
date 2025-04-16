@@ -39,11 +39,9 @@
     "lib/**"
   ],
   "exports": {
-    ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js"
-    },
+    ".": "./lib/index.js",
     "./lib": "./lib/index.js",
-    "./analyze": "./lib/analyze.js"
+    "./analyze": "./lib/analyze.js",
+    "./lib/analyze": "./lib/analyze.js"
   }
 }

@@ -2,15 +2,15 @@ import { expect, test } from "@jest/globals";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { code, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
   R4,
   Resource,
   ResourceType,
-} from "@iguhealth/fhir-types/lib/versions";
-import analyze from "@iguhealth/fhirpath/analyze";
+} from "@iguhealth/fhir-types/versions";
+import analyze from "@iguhealth/fhirpath/lib/analyze";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -78,7 +78,7 @@ test("OF type with or", async () => {
 });
 
 test("Parameters", async () => {
-  const res = {};
+  const res: Record<uri, Record<code, unknown>> = {};
   for (const parameter of searchParameters) {
     for (const base of parameter.base) {
       const evalResult = await analyze(

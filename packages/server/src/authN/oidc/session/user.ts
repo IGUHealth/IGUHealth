@@ -2,22 +2,26 @@
  * Session utilities for managing user session login.
  */
 
-import * as users from "../../db/users/index.js";
+import {
+  LoginParameters,
+  LoginResult,
+  User,
+} from "../../../storage/interfaces/authAdmin/authAdmin.js";
 import { OIDCRouteHandler } from "../index.js";
 import { USER_SESSION_KEY } from "./constants.js";
 
-export function serializeUser(user: users.User): string {
+export function serializeUser(user: User): string {
   return user.fhir_user_id;
 }
 
 export async function deserializeUser(
   ctx: Parameters<OIDCRouteHandler>[0],
-): Promise<users.User | undefined> {
+): Promise<User | undefined> {
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = await users.get(
-      ctx.state.iguhealth.store.getClient(),
+    const user = await ctx.state.iguhealth.store.auth.user.read(
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       id,
     );
@@ -37,7 +41,7 @@ export async function isAuthenticated(
 
 export function sessionSetUserLogin(
   ctx: Parameters<OIDCRouteHandler>[0],
-  user: users.User | undefined,
+  user: User | undefined,
 ) {
   if (!ctx.session) {
     throw new Error("Session not found in context.");
@@ -51,14 +55,14 @@ export function sessionSetUserLogin(
  * @returns True if the user is logged in. False otherwise.
  */
 export async function sessionCredentialsLogin<
-  Method extends keyof users.LoginParameters,
+  Method extends keyof LoginParameters,
 >(
   ctx: Parameters<OIDCRouteHandler>[0],
   method: Method,
-  credentials: users.LoginParameters[Method],
-): Promise<users.LoginResult> {
-  const result = await users.login(
-    ctx.state.iguhealth.store.getClient(),
+  credentials: LoginParameters[Method],
+): Promise<LoginResult> {
+  const result = await ctx.state.iguhealth.store.auth.user.login(
+    ctx.state.iguhealth,
     ctx.state.iguhealth.tenant,
     method,
     credentials,

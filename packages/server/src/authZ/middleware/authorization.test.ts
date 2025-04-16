@@ -5,6 +5,7 @@ import {
   FHIRRequest,
   FHIRResponse,
 } from "@iguhealth/client/lib/types";
+import { MiddlewareAsync } from "@iguhealth/client/middleware";
 import {
   AccessPolicyV2,
   Patient,
@@ -54,7 +55,7 @@ test("Authorization test for read access on resource based on type and method", 
     },
   };
 
-  const responder: ReturnType<typeof createAuthorizationMiddleware> = async (
+  const responder: MiddlewareAsync<unknown, IGUHealthServerCTX> = async (
     context,
   ) => {
     return {

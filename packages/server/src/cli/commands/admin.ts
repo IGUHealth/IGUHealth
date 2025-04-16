@@ -10,11 +10,11 @@ import {
   ClientApplication,
   Membership,
   code,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import * as users from "../../authN/db/users/index.js";
 import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
 import {
@@ -120,9 +120,10 @@ async function createTenant(
           password,
         };
 
-        await users.update(
-          ctx.store.getClient(),
+        await ctx.store.auth.user.update(
+          { ...ctx, tenant: tenant.id as TenantId },
           tenant.id as TenantId,
+          verifiedUser.fhir_user_id as id,
           verifiedUser,
         );
 
