@@ -1,7 +1,7 @@
 import { IguhealthDeleteScope } from "@iguhealth/generated-ops/r4";
 import { outcomeInfo } from "@iguhealth/operation-outcomes";
 
-import * as scopes from "../../../../../authN/db/scopes/index.js";
+import * as scopes from "../../../../../authN/utilities/scopes/index.js";
 import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import InlineOperation from "../../interface.js";
 

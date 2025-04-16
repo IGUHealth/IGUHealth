@@ -1,9 +1,15 @@
 import React from "react";
 import validator from "validator";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
-import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
+import {
+  Membership,
+  OperationOutcome,
+  code,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import {
@@ -16,7 +22,6 @@ import { KoaExtensions, asRoot } from "../../../../fhir-server/types.js";
 import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
 import { DBTransaction } from "../../../../transactions.js";
 import * as views from "../../../../views/index.js";
-import { userToMembership } from "../../../db/users/utilities.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import * as adminApp from "../../hardcodedClients/admin-app.js";
@@ -39,6 +44,20 @@ function validatePasswordStrength(
     );
   }
   return undefined;
+}
+
+function userToMembership(
+  user: Partial<s.users.JSONSelectable> & { email: string },
+): Membership {
+  const member: Membership = {
+    id: user.fhir_user_id as id,
+    resourceType: "Membership",
+    emailVerified: user.email_verified ?? false,
+    email: user.email,
+    role: (user.role ?? "member") as code,
+  };
+
+  return member;
 }
 
 export function passwordResetGET(): OIDCRouteHandler {

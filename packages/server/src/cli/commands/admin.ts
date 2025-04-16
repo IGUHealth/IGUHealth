@@ -15,7 +15,6 @@ import {
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import { membershipToUser } from "../../authN/db/users/utilities.js";
 import RedisCache from "../../cache/providers/redis.js";
 import {
   createClient,
@@ -115,7 +114,11 @@ async function createTenant(
             });
 
         const verifiedUser = {
-          ...membershipToUser(tenant.id as TenantId, membership),
+          ...(await ctx.store.auth.user.read(
+            { ...ctx, tenant: tenant.id as TenantId },
+            tenant.id as TenantId,
+            membership.id as id,
+          )),
           email_verified: true,
           password,
         };

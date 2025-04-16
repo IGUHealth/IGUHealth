@@ -29,7 +29,7 @@ import {
   asRoot,
 } from "../../../fhir-server/types.js";
 import { AuthorizationCode } from "../../../storage/postgres/authAdmin/codes.js";
-import * as scopes from "../../db/scopes/index.js";
+import * as scopes from "../../utilities/scopes/index.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,

@@ -3,7 +3,11 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
-import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  Membership,
+  code,
+  id,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -14,7 +18,6 @@ import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
 import { generateTenantId } from "../../../storage/postgres/authAdmin/tenants.js";
 import { DBTransaction, QueueBatch } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
-import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
 import { ROUTES } from "../constants.js";
@@ -73,12 +76,12 @@ async function createOrRetrieveUser(
                 tenant: tenant.id as TenantId,
               }),
               R4,
-              userToMembership({
-                role: "owner",
-                tenant: tenant.id as TenantId,
+              {
+                resourceType: "Membership",
+                emailVerified: false,
                 email: email,
-                email_verified: false,
-              }),
+                role: "owner" as code,
+              },
             );
 
             return [membership, tenant];

@@ -1,5 +1,6 @@
 import validator from "validator";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -16,16 +17,13 @@ import {
 } from "@iguhealth/client/types";
 import { Membership, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  determineEmailUpdate,
-  membershipToUser,
-} from "../../../authN/db/users/utilities.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { QueueBatch } from "../../../transactions.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
@@ -40,6 +38,56 @@ export const MEMBERSHIP_METHODS_ALLOWED: RequestType[AllInteractions][] = [
   "update-request",
   "history-request",
 ];
+
+function membershipToUser(
+  tenant: TenantId,
+  membership: Membership,
+): Omit<s.users.Insertable, "password"> {
+  const fhir_user_id = membership.id;
+  const fhir_user_versionid = membership.meta?.versionId;
+
+  if (!fhir_user_id) {
+    throw new OperationError(outcomeFatal("exception", "User id not found"));
+  }
+
+  if (!fhir_user_versionid) {
+    throw new OperationError(
+      outcomeFatal("exception", "User versionId not found"),
+    );
+  }
+
+  return {
+    tenant: tenant,
+    email: membership.email,
+    method: membership.federated?.reference?.split("/")[1]
+      ? "oidc-provider"
+      : "email-password",
+    role: membership.role as s.user_role,
+    fhir_user_id,
+    fhir_provider_id: membership.federated?.reference?.split("/")[1] ?? null,
+    email_verified: membership.emailVerified,
+  };
+}
+
+/**
+ * Return false if email changed (even if update specifies the email is verified)
+ * Return value of update for email_verified if present in update.
+ * Else default to current email_verified value.
+ * @param update Update to user table
+ * @param current Current value in user table
+ * @returns whether email is verified.
+ */
+function determineEmailUpdate(
+  update: Pick<s.users.Insertable, "email" | "email_verified">,
+  current: s.users.JSONSelectable | undefined,
+): s.users.Insertable["email_verified"] {
+  // If email has changed.
+  if (!current) return false;
+  if (update.email !== current.email) return false;
+  if ("email_verified" in update) return update.email_verified;
+
+  return current.email_verified;
+}
 
 type AuthState = {
   fhirDB: IGUHealthServerCTX["client"];
