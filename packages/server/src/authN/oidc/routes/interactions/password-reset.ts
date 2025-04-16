@@ -52,9 +52,9 @@ function userToMembership(
   const member: Membership = {
     id: user.fhir_user_id as id,
     resourceType: "Membership",
-    emailVerified: user.email_verified ? user.email_verified : false,
+    emailVerified: user.email_verified ?? false,
     email: user.email,
-    role: (user.role ? user.role : "member") as code,
+    role: (user.role ?? "member") as code,
   };
 
   return member;
