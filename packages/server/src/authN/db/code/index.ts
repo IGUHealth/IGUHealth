@@ -5,7 +5,22 @@ import * as s from "zapatos/schema";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { is_expired, is_not_expired } from "./utilities.js";
+/**
+ * SQL eval that returns true if the code has expired.
+ * Generally used in extras parameter for select queries.
+ */
+const is_expired = db.sql<
+  s.authorization_code.SQL,
+  boolean
+>`NOW() > ${"created_at"} + ${"expires_in"}`;
+
+/**
+ * Filter for only non-expired codes.
+ */
+const is_not_expired = db.sql<
+  s.authorization_code.SQL,
+  boolean
+>`NOW() <= ${"created_at"} + ${"expires_in"}`;
 
 export type AuthorizationCode = s.authorization_code.JSONSelectable & {
   is_expired: boolean;
