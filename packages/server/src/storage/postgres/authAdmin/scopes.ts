@@ -15,12 +15,22 @@ export class PostgresAuthorizationScopeAdmin<CTX>
     this._pgClient = pgClient;
   }
 
-  create(
+  async create(
     ctx: CTX,
     tenant: TenantId,
     data: authorization_scopes.Insertable,
   ): Promise<authorization_scopes.JSONSelectable> {
-    throw new Error("Method not implemented.");
+    const scope = await db
+      .upsert(
+        "authorization_scopes",
+        [{ ...data, tenant }],
+        db.constraint("authorization_scopes_pkey"),
+        {
+          updateColumns: ["scope"],
+        },
+      )
+      .run(this._pgClient);
+    return scope[0];
   }
 
   read(
