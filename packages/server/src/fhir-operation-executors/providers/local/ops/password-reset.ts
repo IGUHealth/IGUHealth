@@ -1,6 +1,5 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import * as db from "zapatos/db";
 
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { Membership } from "@iguhealth/fhir-types/lib/generated/r4/types";
@@ -9,7 +8,6 @@ import { IguhealthPasswordReset } from "@iguhealth/generated-ops/r4";
 import { TenantId } from "@iguhealth/jwt";
 import { outcomeError, outcomeInfo } from "@iguhealth/operation-outcomes";
 
-import * as codes from "../../../../authN/db/code/index.js";
 import {
   EmailTemplate,
   EmailTemplateButton,
@@ -17,14 +15,15 @@ import {
   EmailTemplateText,
 } from "../../../../email/templates/base.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
+import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
 import InlineOperation from "../interface.js";
 
 function createPasswordResetCode(
-  pg: db.Queryable,
+  ctx: Omit<IGUHealthServerCTX, "user">,
   tenant: TenantId,
   member: Membership,
-): Promise<codes.AuthorizationCode> {
-  return codes.create(pg, tenant, {
+): Promise<AuthorizationCode> {
+  return ctx.store.auth.authorization_code.create(ctx, tenant, {
     type: "password_reset",
     user_id: member.id as string,
     expires_in: "15 minutes",
@@ -49,10 +48,14 @@ async function shouldSendPasswordReset(
   member: Membership,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await codes.search(ctx.store.getClient(), ctx.tenant, {
-    user_id: member.id,
-    type: "password_reset",
-  });
+  const existingCodes = await ctx.store.auth.authorization_code.where(
+    ctx,
+    ctx.tenant,
+    {
+      user_id: member.id,
+      type: "password_reset",
+    },
+  );
 
   return existingCodes.length === 0;
 }
@@ -80,11 +83,7 @@ async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await createPasswordResetCode(
-    ctx.store.getClient(),
-    ctx.tenant,
-    membership,
-  );
+  const code = await createPasswordResetCode(ctx, ctx.tenant, membership);
 
   const emailVerificationURL = new URL(
     `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,

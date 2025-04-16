@@ -3,7 +3,6 @@ import React from "react";
 import { ScopeVerifyForm } from "@iguhealth/components";
 
 import * as views from "../../../views/index.js";
-import * as codes from "../../db/code/index.js";
 import * as scopes from "../../db/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
@@ -158,8 +157,8 @@ export function authorize(): OIDCRouteHandler {
       return;
     }
 
-    const code = await codes.create(
-      ctx.state.iguhealth.store.getClient(),
+    const code = await ctx.state.iguhealth.store.auth.authorization_code.create(
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       {
         type: "oauth2_code_grant",

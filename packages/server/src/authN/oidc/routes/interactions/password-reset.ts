@@ -12,10 +12,10 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { asRoot } from "../../../../fhir-server/types.js";
+import { KoaExtensions, asRoot } from "../../../../fhir-server/types.js";
+import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
 import { DBTransaction } from "../../../../transactions.js";
 import * as views from "../../../../views/index.js";
-import * as codes from "../../../db/code/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -48,14 +48,15 @@ export function passwordResetGET(): OIDCRouteHandler {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
 
-    const authorizationCodeSearch = await codes.search(
-      ctx.state.iguhealth.store.getClient(),
-      ctx.state.iguhealth.tenant,
-      {
-        type: "password_reset",
-        code: queryCode,
-      },
-    );
+    const authorizationCodeSearch =
+      await ctx.state.iguhealth.store.auth.authorization_code.where(
+        ctx.state.iguhealth,
+        ctx.state.iguhealth.tenant,
+        {
+          type: "password_reset",
+          code: queryCode,
+        },
+      );
 
     if (
       authorizationCodeSearch.length !== 1 ||
@@ -89,14 +90,18 @@ export function passwordResetGET(): OIDCRouteHandler {
 }
 
 async function getAuthorizationCode(
-  pg: db.Queryable,
+  ctx: NonNullable<KoaExtensions.IGUHealthServices["iguhealth"]>,
   tenant: TenantId,
   code: string,
-): Promise<codes.AuthorizationCode> {
-  const res = await codes.search(pg, tenant, {
-    type: "password_reset",
-    code: code,
-  });
+): Promise<AuthorizationCode> {
+  const res = await ctx.store.auth.authorization_code.where(
+    { ...ctx, tenant },
+    tenant,
+    {
+      type: "password_reset",
+      code: code,
+    },
+  );
 
   if (res.length !== 1) {
     throw new OperationError(outcomeError("invalid", "Code not found."));
@@ -190,14 +195,14 @@ export function passwordResetPOST(): OIDCRouteHandler {
             );
           }
           const authorizationCode = await getAuthorizationCode(
-            fhirContext.store.getClient(),
+            fhirContext,
             fhirContext.tenant,
             body.code,
           );
           const email = (authorizationCode.meta as Record<string, string>)
             ?.email;
-          const user = await ctx.state.iguhealth.store.auth.user.read(
-            ctx.state.iguhealth,
+          const user = await fhirContext.store.auth.user.read(
+            fhirContext,
             fhirContext.tenant,
             authorizationCode.user_id as id,
           );
@@ -208,8 +213,8 @@ export function passwordResetPOST(): OIDCRouteHandler {
             );
           }
 
-          const update = await ctx.state.iguhealth.store.auth.user.update(
-            ctx.state.iguhealth,
+          const update = await fhirContext.store.auth.user.update(
+            fhirContext,
             fhirContext.tenant,
             user.fhir_user_id as id,
             {
@@ -221,7 +226,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
             },
           );
 
-          await ctx.state.iguhealth.client.update(
+          await fhirContext.client.update(
             asRoot({
               ...fhirContext,
               tenant: update.tenant as TenantId,
@@ -232,8 +237,8 @@ export function passwordResetPOST(): OIDCRouteHandler {
             userToMembership(update),
           );
 
-          await codes.remove(
-            fhirContext.store.getClient(),
+          await fhirContext.store.auth.authorization_code.delete(
+            fhirContext,
             fhirContext.tenant,
             {
               code: body.code,
