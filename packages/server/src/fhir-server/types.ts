@@ -28,7 +28,6 @@ import {
   TenantId,
 } from "@iguhealth/jwt/types";
 
-import { User } from "../authN/db/users/index.js";
 import { getIssuer } from "../authN/oidc/constants.js";
 import { SYSTEM_APP } from "../authN/oidc/hardcodedClients/system-app.js";
 import { OIDCRouteHandler } from "../authN/oidc/index.js";
@@ -43,6 +42,7 @@ import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import { IQueue, IQueueBatch } from "../queue/providers/interface.js";
 import { SearchEngine } from "../search-stores/interface.js";
+import { User } from "../storage/interfaces/authAdmin/authAdmin.js";
 import { PostgresStore } from "../storage/postgres/index.js";
 import type { Lock } from "../synchronization/interfaces.js";
 

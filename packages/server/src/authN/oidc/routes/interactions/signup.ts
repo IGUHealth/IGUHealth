@@ -7,7 +7,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-server/types.js";
 import * as views from "../../../../views/index.js";
-import * as users from "../../../db/users/index.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
@@ -47,8 +46,8 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await users.search(
-      ctx.state.iguhealth.store.getClient(),
+    await ctx.state.iguhealth.store.auth.user.where(
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       {
         email,
@@ -88,8 +87,8 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       } as Membership,
     );
 
-    const user = await users.search(
-      ctx.state.iguhealth.store.getClient(),
+    const user = await ctx.state.iguhealth.store.auth.user.where(
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,

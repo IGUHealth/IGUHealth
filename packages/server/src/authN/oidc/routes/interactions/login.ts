@@ -3,8 +3,11 @@ import React from "react";
 import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import {
+  LoginErrors,
+  LoginResult,
+} from "../../../../storage/interfaces/authAdmin/authAdmin.js";
 import * as views from "../../../../views/index.js";
-import type { LoginErrors, LoginResult } from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 

@@ -5,7 +5,6 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-server/types.js";
-import * as users from "../../../db/users/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { sessionSetUserLogin } from "../../session/user.js";
@@ -125,8 +124,8 @@ export function federatedCallback(): OIDCRouteHandler {
           },
         );
 
-        let user = await users.search(
-          ctx.state.iguhealth.store.getClient(),
+        let user = await ctx.state.iguhealth.store.auth.user.where(
+          ctx.state.iguhealth,
           ctx.state.iguhealth.tenant,
           {
             fhir_user_id: membership.id,
@@ -137,8 +136,8 @@ export function federatedCallback(): OIDCRouteHandler {
         let retries = 5;
         while (user[0] === undefined && retries > 0) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          user = await users.search(
-            ctx.state.iguhealth.store.getClient(),
+          user = await ctx.state.iguhealth.store.auth.user.where(
+            ctx.state.iguhealth,
             ctx.state.iguhealth.tenant,
             {
               fhir_user_id: membership.id,

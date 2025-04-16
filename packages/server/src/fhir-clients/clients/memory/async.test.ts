@@ -10,7 +10,7 @@ import {
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/lib/versions";
-import { loadParameters } from "@iguhealth/search-parameters/api/load";
+import { loadParameters } from "@iguhealth/search-parameters/lib/api/load";
 
 import { testServices } from "../../test-ctx.js";
 import { Memory } from "./async.js";

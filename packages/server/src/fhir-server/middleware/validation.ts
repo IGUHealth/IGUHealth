@@ -1,4 +1,4 @@
-import Ajv from "ajv";
+import { Ajv } from "ajv";
 
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
@@ -36,7 +36,7 @@ function getResourceTypeToValidate(
 /**
  * Used for JSON PATCH validation which is non FHIR data.
  */
-const ajv = new Ajv.default({});
+const ajv = new Ajv({});
 const validateJSONPatch = ajv.compile(JSONPatchSchema);
 
 function createValidationMiddleware<State>(): MiddlewareAsyncChain<

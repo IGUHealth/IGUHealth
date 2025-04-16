@@ -1,4 +1,4 @@
-import type Redis from "ioredis";
+import type { Redis } from "ioredis";
 import Redlock, {
   RedlockAbortSignal,
   ResourceLockedError,
@@ -31,7 +31,7 @@ const defaultSettings: Settings = {
 
 export default class RedisLock implements Lock<RedlockAbortSignal> {
   private _lock: Redlock;
-  constructor(client: Redis.default, lockSettings: Settings = defaultSettings) {
+  constructor(client: Redis, lockSettings: Settings = defaultSettings) {
     this._lock = new Redlock(
       // You should have one client for each independent redis node
       // or cluster.

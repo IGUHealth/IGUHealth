@@ -5,7 +5,7 @@ const config = {
   collectCoverage: true,
   coverageReporters: ["text", "cobertura"],
   testMatch: ["**/?(*.)+(spec|test).[t]s?(x)"],
-  extensionsToTreatAsEsm: [".ts"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },

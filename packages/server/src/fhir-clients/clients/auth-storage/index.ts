@@ -14,7 +14,7 @@ import {
   RequestType,
   UpdateResponse,
 } from "@iguhealth/client/types";
-import { Membership, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { Membership, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
@@ -22,7 +22,6 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import * as users from "../../../authN/db/users/index.js";
 import {
   determineEmailUpdate,
   membershipToUser,
@@ -249,8 +248,8 @@ function updateUserTableMiddleware<
         }
 
         try {
-          await users.create(
-            context.ctx.store.getClient(),
+          await context.ctx.store.auth.user.create(
+            context.ctx,
             context.ctx.tenant,
             {
               ...membershipToUser(context.ctx.tenant, membership),
@@ -285,8 +284,8 @@ function updateUserTableMiddleware<
 
             const res = await next(context);
 
-            await users.remove(
-              context.ctx.store.getClient(),
+            await context.ctx.store.auth.user.delete(
+              context.ctx,
               context.ctx.tenant,
               {
                 tenant: context.ctx.tenant,
@@ -312,9 +311,10 @@ function updateUserTableMiddleware<
           .body as Membership;
 
         const user = membershipToUser(context.ctx.tenant, membership);
-        await users.update(
-          context.ctx.store.getClient(),
+        await context.ctx.store.auth.user.update(
+          context.ctx,
           context.ctx.tenant,
+          user.fhir_user_id as id,
           user,
         );
 

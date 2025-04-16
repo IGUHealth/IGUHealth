@@ -16,7 +16,6 @@ import { asRoot } from "../../../../fhir-server/types.js";
 import { DBTransaction } from "../../../../transactions.js";
 import * as views from "../../../../views/index.js";
 import * as codes from "../../../db/code/index.js";
-import * as users from "../../../db/users/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -197,10 +196,10 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
           const email = (authorizationCode.meta as Record<string, string>)
             ?.email;
-          const user = await users.get(
-            fhirContext.store.getClient(),
+          const user = await ctx.state.iguhealth.store.auth.user.read(
+            ctx.state.iguhealth,
             fhirContext.tenant,
-            authorizationCode.user_id,
+            authorizationCode.user_id as id,
           );
 
           if (user?.email !== email) {
@@ -209,9 +208,10 @@ export function passwordResetPOST(): OIDCRouteHandler {
             );
           }
 
-          const update = await users.update(
-            fhirContext.store.getClient(),
+          const update = await ctx.state.iguhealth.store.auth.user.update(
+            ctx.state.iguhealth,
             fhirContext.tenant,
+            user.fhir_user_id as id,
             {
               ...user,
               email,
@@ -317,8 +317,8 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    const usersWithEmail = await users.search(
-      ctx.state.iguhealth.store.getClient(),
+    const usersWithEmail = await ctx.state.iguhealth.store.auth.user.where(
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       {
         email: email,
