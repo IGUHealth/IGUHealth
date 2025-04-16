@@ -8,16 +8,12 @@ import InlineOperation from "../../interface.js";
 export const IguhealthDeleteScopeInvoke = InlineOperation(
   IguhealthDeleteScope.Op,
   async (ctx: IGUHealthServerCTX, _request, input) => {
-    const deleteResult = await scopes.deleteUserScope(
-      ctx.store.getClient(),
+    await scopes.deleteUserScope(
+      ctx,
       ctx.tenant,
       input.client_id,
       ctx.user.payload.sub,
     );
-
-    if (deleteResult.length === 0) {
-      return outcomeError("not-found", "No scopes found for the user");
-    }
 
     return outcomeInfo("informational", "Scopes deleted successfully.");
   },

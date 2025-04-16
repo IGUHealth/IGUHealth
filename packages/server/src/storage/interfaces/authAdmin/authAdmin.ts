@@ -3,7 +3,7 @@ import * as s from "zapatos/schema";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { TenantId } from "@iguhealth/jwt";
 
-export type AuthTypes = Extract<s.Table, "tenants" | "users" | "authorization_code">;
+export type AuthTypes = Extract<s.Table, "tenants" | "users" | "authorization_code"  | "authorization_scopes">;
 
 
 export interface ITenantAuthModel<

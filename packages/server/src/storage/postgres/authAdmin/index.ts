@@ -9,11 +9,13 @@ import {
 } from "../../interfaces/authAdmin/authAdmin.js";
 import { IAuthAdmin } from "../../interfaces/authAdmin/index.js";
 import { AuthorizationCode, PostgresAuthorizationCodeAdmin } from "./codes.js";
+import { PostgresAuthorizationScopeAdmin } from "./scopes.js";
 import { PostgresTenantAdmin } from "./tenants.js";
 import { PostgresUserAdmin } from "./users.js";
 
 export class PostgresAuthAdmin<CTX> implements IAuthAdmin<CTX> {
   public tenant: ITenantAdmin<CTX>;
+
   public user: ITenantAuthModel<
     CTX,
     "users",
@@ -21,6 +23,7 @@ export class PostgresAuthAdmin<CTX> implements IAuthAdmin<CTX> {
     User
   > &
     LoginProvider<CTX>;
+
   public authorization_code: ITenantAuthModel<
     CTX,
     "authorization_code",
@@ -39,9 +42,12 @@ export class PostgresAuthAdmin<CTX> implements IAuthAdmin<CTX> {
     AuthorizationCode
   >;
 
+  public authorization_scope: ITenantAuthModel<CTX, "authorization_scopes">;
+
   constructor(pgClient: db.Queryable) {
     this.tenant = new PostgresTenantAdmin(pgClient);
     this.user = new PostgresUserAdmin(pgClient);
     this.authorization_code = new PostgresAuthorizationCodeAdmin(pgClient);
+    this.authorization_scope = new PostgresAuthorizationScopeAdmin(pgClient);
   }
 }

@@ -100,7 +100,7 @@ export function authorize(): OIDCRouteHandler {
       });
     }
     const approvedScopes = await scopes.getApprovedScope(
-      ctx.state.iguhealth.store.getClient(),
+      ctx.state.iguhealth,
       ctx.state.iguhealth.tenant,
       client.id,
       userId,

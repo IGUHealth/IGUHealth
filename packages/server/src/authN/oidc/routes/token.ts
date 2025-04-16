@@ -257,7 +257,7 @@ async function createTokenResponse({
 }): Promise<Oauth2TokenBodyResponse> {
   const signingKey = await getSigningKey(getCertConfig());
   const approvedScopes = await scopes.getApprovedScope(
-    ctx.store.getClient(),
+    ctx,
     ctx.tenant,
     clientApplication.id as id,
     member.id as id,
