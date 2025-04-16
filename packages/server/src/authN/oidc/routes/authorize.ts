@@ -3,7 +3,7 @@ import React from "react";
 import { ScopeVerifyForm } from "@iguhealth/components";
 
 import * as views from "../../../views/index.js";
-import * as scopes from "../../db/scopes/index.js";
+import * as scopes from "../../utilities/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { OIDCRouteHandler } from "../index.js";
 import { OIDCError } from "../middleware/oauth_error_handling.js";
