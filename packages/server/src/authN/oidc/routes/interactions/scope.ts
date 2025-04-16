@@ -1,5 +1,3 @@
-import * as db from "zapatos/db";
-
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { OIDC_ROUTES } from "../../constants.js";
@@ -57,23 +55,16 @@ export function scopePOST(): OIDCRouteHandler {
       const scopes = ctx.state.oidc.scopes ?? [];
       checkPatientScopesForLaunch(scopes);
 
-      await db
-        .upsert(
-          "authorization_scopes",
-          [
-            {
-              tenant: ctx.state.iguhealth.tenant,
-              client_id: ctx.state.oidc.client?.id as string,
-              user_id: ctx.state.oidc.user?.fhir_user_id as string,
-              scope: parseScopes.toString(scopes),
-            },
-          ],
-          db.constraint("authorization_scopes_pkey"),
-          {
-            updateColumns: ["scope"],
-          },
-        )
-        .run(ctx.state.iguhealth.store.getClient());
+      await ctx.state.iguhealth.store.auth.authorization_scope.create(
+        ctx.state.iguhealth,
+        ctx.state.iguhealth.tenant,
+        {
+          tenant: ctx.state.iguhealth.tenant,
+          client_id: ctx.state.oidc.client?.id as string,
+          user_id: ctx.state.oidc.user?.fhir_user_id as string,
+          scope: parseScopes.toString(scopes),
+        },
+      );
 
       // Redirect back to get request which generates the code etc... as next step.
       const authorizeRoute = ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {

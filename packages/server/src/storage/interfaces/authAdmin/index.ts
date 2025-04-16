@@ -10,6 +10,7 @@ import {
 
 export interface IAuthAdmin<CTX> {
   tenant: ITenantAdmin<CTX>;
+
   authorization_code: ITenantAuthModel<
     CTX,
     "authorization_code",
@@ -27,6 +28,8 @@ export interface IAuthAdmin<CTX> {
     >,
     AuthorizationCode
   >;
+
+  authorization_scope: ITenantAuthModel<CTX, "authorization_scopes">;
 
   user: ITenantAuthModel<
     CTX,
