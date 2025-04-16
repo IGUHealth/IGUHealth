@@ -1,7 +1,6 @@
 import Ajv from "ajv";
 import type * as Koa from "koa";
 import crypto from "node:crypto";
-import type * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import {
@@ -29,7 +28,7 @@ import {
   KoaExtensions,
   asRoot,
 } from "../../../fhir-server/types.js";
-import * as codes from "../../db/code/index.js";
+import { AuthorizationCode } from "../../../storage/postgres/authAdmin/codes.js";
 import * as scopes from "../../db/scopes/index.js";
 import {
   authenticateClientCredentials,
@@ -71,7 +70,7 @@ export function convertChallenge(
   }
 }
 
-function verifyCodeChallenge(code: codes.AuthorizationCode, verifier: string) {
+function verifyCodeChallenge(code: AuthorizationCode, verifier: string) {
   switch (code.pkce_code_challenge_method) {
     case "S256": {
       const code_challenge_hashed = convertChallenge(
@@ -136,7 +135,7 @@ function verifyClient(
 }
 
 function getLaunchParameters(
-  code: codes.AuthorizationCode,
+  code: AuthorizationCode,
 ): ResolvedLaunchParameters | undefined {
   return (
     code.meta as unknown as undefined | { launch: ResolvedLaunchParameters }
@@ -209,22 +208,26 @@ async function getIDTokenPayload(
  * @returns
  */
 async function createRefreshToken(
-  pg: db.Queryable,
+  ctx: IGUHealthServerCTX,
   tenant: TenantId,
   client: ClientApplication,
   member: Membership,
   launchParameters?: ResolvedLaunchParameters,
   expires_in: string = "12 hours",
-): Promise<codes.AuthorizationCode> {
-  const refresh_token = await codes.create(pg, tenant, {
-    type: "refresh_token",
-    client_id: client.id,
-    tenant: tenant,
-    // Should be safe to use here as is authenticated so user should be populated.
-    user_id: member.id as id,
-    expires_in,
-    meta: launchParameters ? { launch: launchParameters } : undefined,
-  });
+): Promise<AuthorizationCode> {
+  const refresh_token = await ctx.store.auth.authorization_code.create(
+    ctx,
+    tenant,
+    {
+      type: "refresh_token",
+      client_id: client.id,
+      tenant: tenant,
+      // Should be safe to use here as is authenticated so user should be populated.
+      user_id: member.id as id,
+      expires_in,
+      meta: launchParameters ? { launch: launchParameters } : undefined,
+    },
+  );
 
   return refresh_token;
 }
@@ -313,7 +316,7 @@ async function createTokenResponse({
   if (approvedScopes.find((v) => v.type === "offline_access")) {
     body.refresh_token = (
       await createRefreshToken(
-        ctx.store.getClient(),
+        ctx,
         ctx.tenant,
         clientApplication,
         member,
@@ -348,14 +351,15 @@ export function tokenPost<
 
     switch (tokenParameters.grant_type) {
       case "refresh_token": {
-        const code = await codes.search(
-          ctx.state.iguhealth.store.getClient(),
-          ctx.state.iguhealth.tenant,
-          {
-            type: "refresh_token",
-            code: tokenParameters.refresh_token,
-          },
-        );
+        const code =
+          await ctx.state.iguhealth.store.auth.authorization_code.where(
+            ctx.state.iguhealth,
+            ctx.state.iguhealth.tenant,
+            {
+              type: "refresh_token",
+              code: tokenParameters.refresh_token,
+            },
+          );
 
         if (code.length !== 1 || code[0].is_expired)
           throw new OIDCError({
@@ -389,8 +393,8 @@ export function tokenPost<
           });
 
         // Removes the old refresh token and issues a new one in tokenResponse.
-        await codes.remove(
-          ctx.state.iguhealth.store.getClient(),
+        await ctx.state.iguhealth.store.auth.authorization_code.delete(
+          ctx.state.iguhealth,
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,
@@ -420,14 +424,15 @@ export function tokenPost<
           await findClient(ctx, tokenParameters.client_id),
         );
 
-        const code = await codes.search(
-          ctx.state.iguhealth.store.getClient(),
-          ctx.state.iguhealth.tenant,
-          {
-            type: "oauth2_code_grant",
-            code: tokenParameters.code,
-          },
-        );
+        const code =
+          await ctx.state.iguhealth.store.auth.authorization_code.where(
+            ctx.state.iguhealth,
+            ctx.state.iguhealth.tenant,
+            {
+              type: "oauth2_code_grant",
+              code: tokenParameters.code,
+            },
+          );
 
         if (code.length !== 1 || code[0].is_expired)
           throw new OIDCError({
@@ -469,8 +474,8 @@ export function tokenPost<
             error_description: "Invalid user",
           });
 
-        await codes.remove(
-          ctx.state.iguhealth.store.getClient(),
+        await ctx.state.iguhealth.store.auth.authorization_code.delete(
+          ctx.state.iguhealth,
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,

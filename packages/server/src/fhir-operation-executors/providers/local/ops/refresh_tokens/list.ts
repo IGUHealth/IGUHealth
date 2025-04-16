@@ -1,15 +1,14 @@
 import { dateTime, id } from "@iguhealth/fhir-types/r4/types";
 import { IguhealthListRefreshTokens } from "@iguhealth/generated-ops/r4";
 
-import * as codes from "../../../../../authN/db/code/index.js";
 import { IGUHealthServerCTX } from "../../../../../fhir-server/types.js";
 import InlineOperation from "../../interface.js";
 
 export const IguhealthListRefreshTokensInvoke = InlineOperation(
   IguhealthListRefreshTokens.Op,
   async (ctx: IGUHealthServerCTX) => {
-    const refreshTokens = await codes.search(
-      ctx.store.getClient(),
+    const refreshTokens = await ctx.store.auth.authorization_code.where(
+      ctx,
       ctx.tenant,
       {
         user_id: ctx.user.payload.sub,

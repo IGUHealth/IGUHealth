@@ -29,7 +29,7 @@ export type AuthorizationCode = s.authorization_code.JSONSelectable & {
   is_expired: boolean;
 };
 
-export class PostgresUserAdmin<CTX, T extends "users">
+export class PostgresAuthorizationCodeAdmin<CTX, T extends "authorization_code">
   implements
     ITenantAuthModel<
       CTX,
