@@ -1,0 +1,66 @@
+name: IGUHealth Tests
+on: [push, pull_request]
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+          cache: "yarn"
+
+      - name: Yarn Setup
+        run: corepack prepare yarn@4.7.0 --activate
+
+      - name: Setup Database
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE artifact;'
+        env:
+          PGPASSWORD: postgres
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Build
+        run: sh install.sh
+
+      - name: Build Server
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/server run build
+
+      - name: Migrate Schemas
+        run: |
+          yarn workspace @iguhealth/server cli migrate all
+
+      - name: Load Terminology
+        run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
+      - name: Install mitmdump via mitmproxy
+        run: sudo apt install -y mitmproxy
+
+      - name: Run cypress E2E
+        env:
+          CLIENT_ID: test-client-2
+          CLIENT_SECRET: mysecret-2
+          CI_TENANT_ID: tenant3
+        run: |
+          yarn workspace @iguhealth/server cli admin tenant create -i test-system3 -t unlimited -e test3@iguhealth.app -p testing
+          yarn workspace @iguhealth/server cli admin client-app create -t test-system3 -i $CLIENT_ID -s $CLIENT_SECRET
+          yarn workspace @iguhealth/server iguhealth config add-tenant \
+          --name $CI_TENANT_ID \
+          --r4-url http://localhost:3000/w/test-system3/api/v1/fhir/r4 \
+          --r4b-url http://localhost:3000/w/test-system3/api/v1/fhir/r4b \
+          --oidc http://localhost:3000/w/test-system3/oidc/.well-known/openid-configuration \
+          --auth client_credentials \
+          --client-id $CLIENT_ID \
+          --client-secret $CLIENT_SECRET
+          yarn workspace @iguhealth/test-e2e run e2e:run
