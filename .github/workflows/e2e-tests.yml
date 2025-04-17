@@ -3,6 +3,41 @@ on: [push, pull_request]
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
+      API_URL: http://localhost:3000
+      AUTH_ISSUER: http://localhost:3000
+      AUTH_CERTIFICATION_TYPE: file
+
+      RESOURCE_STORE_PG_NAME: postgres
+      RESOURCE_STORE_PG_HOST: localhost
+      RESOURCE_STORE_PG_PORT: 5432
+      RESOURCE_STORE_PG_USERNAME: postgres
+      RESOURCE_STORE_PG_PASSWORD: postgres
+
+      SEARCH_STORE_PG_NAME: postgres
+      SEARCH_STORE_PG_HOST: localhost
+      SEARCH_STORE_PG_PORT: 5432
+      SEARCH_STORE_PG_USERNAME: postgres
+      SEARCH_STORE_PG_PASSWORD: postgres
+
+      ARTIFACT_DB_TYPE: postgres
+      ARTIFACT_DB_PG_NAME: artifact
+      ARTIFACT_DB_PG_HOST: localhost
+      ARTIFACT_DB_PG_PORT: 5432
+      ARTIFACT_DB_PG_USERNAME: postgres
+      ARTIFACT_DB_PG_PASSWORD: postgres
+
+      QUEUE_TYPE: postgres
+      QUEUE_DB_PG_NAME: postgres
+      QUEUE_DB_PG_HOST: localhost
+      QUEUE_DB_PG_PORT: 5432
+      QUEUE_DB_PG_PASSWORD: postgres
+      QUEUE_DB_PG_USERNAME: postgres
+
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      SESSION_COOKIE_SECRETS: "session-secret"
     services:
       redis:
         image: redis
