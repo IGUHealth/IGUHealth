@@ -1,0 +1,128 @@
+name: E2E Tests
+on: [push, pull_request]
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
+      API_URL: http://localhost:3000
+      AUTH_ISSUER: http://localhost:3000
+      AUTH_CERTIFICATION_TYPE: file
+
+      RESOURCE_STORE_PG_NAME: postgres
+      RESOURCE_STORE_PG_HOST: localhost
+      RESOURCE_STORE_PG_PORT: 5432
+      RESOURCE_STORE_PG_USERNAME: postgres
+      RESOURCE_STORE_PG_PASSWORD: postgres
+
+      SEARCH_STORE_PG_NAME: postgres
+      SEARCH_STORE_PG_HOST: localhost
+      SEARCH_STORE_PG_PORT: 5432
+      SEARCH_STORE_PG_USERNAME: postgres
+      SEARCH_STORE_PG_PASSWORD: postgres
+
+      ARTIFACT_DB_TYPE: postgres
+      ARTIFACT_DB_PG_NAME: artifact
+      ARTIFACT_DB_PG_HOST: localhost
+      ARTIFACT_DB_PG_PORT: 5432
+      ARTIFACT_DB_PG_USERNAME: postgres
+      ARTIFACT_DB_PG_PASSWORD: postgres
+
+      QUEUE_TYPE: postgres
+      QUEUE_DB_PG_NAME: postgres
+      QUEUE_DB_PG_HOST: localhost
+      QUEUE_DB_PG_PORT: 5432
+      QUEUE_DB_PG_PASSWORD: postgres
+      QUEUE_DB_PG_USERNAME: postgres
+
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      SESSION_COOKIE_SECRETS: "session-secret"
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      kafka:
+        image: apache/kafka-native:3.9.0
+        ports:
+          - 9092:9092
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+          cache: "yarn"
+
+      - name: Yarn Setup
+        run: corepack prepare yarn@4.7.0 --activate
+
+      - name: Setup Database
+        run: psql -h localhost -U postgres -c 'CREATE DATABASE artifact;'
+        env:
+          PGPASSWORD: postgres
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Build
+        run: sh install.sh
+
+      - name: Build Server
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/server run build
+
+      - name: Migrate Schemas
+        run: |
+          yarn workspace @iguhealth/server cli migrate all
+
+      - name: Load Terminology
+        run: yarn workspace @iguhealth/server cli terminology load --system iso-4217 iso-3166 bcp-13
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/oidc/.well-known/openid-configuration
+
+      - name: Install mitmdump via mitmproxy
+        run: sudo apt install -y mitmproxy
+
+      - name: Run cypress E2E
+        env:
+          CLIENT_ID: test-client-2
+          CLIENT_SECRET: mysecret-2
+          CI_TENANT_ID: tenant3
+        run: |
+          yarn workspace @iguhealth/server cli admin tenant create -i test-system3 -t unlimited -e test3@iguhealth.app -p testing
+          yarn workspace @iguhealth/server cli admin client-app create -t test-system3 -i $CLIENT_ID -s $CLIENT_SECRET
+          yarn workspace @iguhealth/server iguhealth config add-tenant \
+          --name $CI_TENANT_ID \
+          --r4-url http://localhost:3000/w/test-system3/api/v1/fhir/r4 \
+          --r4b-url http://localhost:3000/w/test-system3/api/v1/fhir/r4b \
+          --oidc http://localhost:3000/w/test-system3/oidc/.well-known/openid-configuration \
+          --auth client_credentials \
+          --client-id $CLIENT_ID \
+          --client-secret $CLIENT_SECRET
+          yarn workspace @iguhealth/test-e2e run e2e:run
