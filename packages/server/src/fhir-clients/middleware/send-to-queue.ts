@@ -39,8 +39,7 @@ export default function sendQueueMiddleweare<
       case "create-request":
       case "delete-request":
       case "update-request":
-      case "patch-request":
-      case "invoke-request": {
+      case "patch-request": {
         if (res.response?.type === "error-response") {
           return res;
         }

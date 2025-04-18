@@ -24,7 +24,7 @@ interface IOperation {
 
 export type MutationTypes = Extract<
   AllInteractions,
-  "create" | "update" | "delete" | "invoke" | "patch"
+  "create" | "update" | "delete" | "patch"
 >;
 
 export interface Operation<

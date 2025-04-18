@@ -6,7 +6,7 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { DBTransaction } from "../../../transactions.js";
 import * as queue from "../../providers/interface.js";
 import { getTenantId } from "../handlers/utilities.js";
@@ -28,6 +28,7 @@ export function toMethod(
       throw new OperationError(
         outcomeError(
           "not-supported",
+          // @ts-ignore
           `Operation type '${response.type}' is not supported in this consumer.`,
         ),
       );
@@ -104,11 +105,6 @@ async function handleMutation(
           );
         }
       }
-    }
-
-    case queue.isOperationType("invoke", mutation): {
-      await ctx.client.request(asRoot(ctx), mutation.request);
-      return;
     }
 
     default: {
