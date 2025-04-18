@@ -125,7 +125,7 @@ export function federatedCallback(): OIDCRouteHandler {
         );
 
         let user = await ctx.state.iguhealth.store.auth.user.where(
-          ctx.state.iguhealth,
+          asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             fhir_user_id: membership.id,
@@ -137,7 +137,7 @@ export function federatedCallback(): OIDCRouteHandler {
         while (user[0] === undefined && retries > 0) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           user = await ctx.state.iguhealth.store.auth.user.where(
-            ctx.state.iguhealth,
+            asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               fhir_user_id: membership.id,

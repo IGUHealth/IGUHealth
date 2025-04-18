@@ -7,7 +7,7 @@ import { Store } from "../interfaces/index.js";
 import { PostgresAuthAdmin } from "./authAdmin/index.js";
 import { PostgresFHIRStore } from "./fhirStore.js";
 
-export class PostgresStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
+export class PostgresStore<CTX extends IGUHealthServerCTX>
   implements Store<CTX>
 {
   public auth: IAuthAdmin<CTX>;

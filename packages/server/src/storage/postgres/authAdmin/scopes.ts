@@ -4,9 +4,10 @@ import { authorization_scopes } from "zapatos/schema";
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { TenantId } from "@iguhealth/jwt";
 
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { ITenantAuthModel } from "../../interfaces/authAdmin/authAdmin.js";
 
-export class PostgresAuthorizationScopeAdmin<CTX>
+export class PostgresAuthorizationScopeAdmin<CTX extends IGUHealthServerCTX>
   implements ITenantAuthModel<CTX, "authorization_scopes">
 {
   private readonly _pgClient: db.Queryable;

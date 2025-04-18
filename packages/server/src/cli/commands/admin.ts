@@ -98,7 +98,7 @@ async function createTenant(
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {
         const tenant = await ctx.store.auth.tenant.create(
-          { ...ctx, tenant: "system" as TenantId },
+          asRoot({ ...ctx, tenant: "system" as TenantId }),
           await getTenant(ctx, options),
         );
         const membership: Membership = await ctx.client.create(
@@ -115,7 +115,7 @@ async function createTenant(
 
         const verifiedUser = {
           ...(await ctx.store.auth.user.read(
-            { ...ctx, tenant: tenant.id as TenantId },
+            asRoot({ ...ctx, tenant: tenant.id as TenantId }),
             tenant.id as TenantId,
             membership.id as id,
           )),
@@ -124,7 +124,7 @@ async function createTenant(
         };
 
         await ctx.store.auth.user.update(
-          { ...ctx, tenant: tenant.id as TenantId },
+          asRoot({ ...ctx, tenant: tenant.id as TenantId }),
           tenant.id as TenantId,
           verifiedUser.fhir_user_id as id,
           verifiedUser,

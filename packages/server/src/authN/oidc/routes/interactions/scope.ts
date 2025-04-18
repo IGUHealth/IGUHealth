@@ -1,5 +1,6 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { asRoot } from "../../../../fhir-server/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import { OIDCRouteHandler } from "../../index.js";
 import { OIDCError } from "../../middleware/oauth_error_handling.js";
@@ -56,7 +57,7 @@ export function scopePOST(): OIDCRouteHandler {
       checkPatientScopesForLaunch(scopes);
 
       await ctx.state.iguhealth.store.auth.authorization_scope.create(
-        ctx.state.iguhealth,
+        asRoot(ctx.state.iguhealth),
         ctx.state.iguhealth.tenant,
         {
           tenant: ctx.state.iguhealth.tenant,

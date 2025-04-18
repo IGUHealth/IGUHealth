@@ -5,6 +5,7 @@ import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import {
   ITenantAuthModel,
   LoginParameters,
@@ -14,7 +15,10 @@ import {
   User,
 } from "../../interfaces/authAdmin/authAdmin.js";
 
-export class PostgresUserAdmin<CTX, T extends "users">
+export class PostgresUserAdmin<
+    CTX extends IGUHealthServerCTX,
+    T extends "users",
+  >
   implements
     ITenantAuthModel<CTX, T, Omit<s.users.Insertable, "password">, User>,
     LoginProvider<CTX>

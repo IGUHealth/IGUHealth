@@ -3,7 +3,7 @@ import * as s from "zapatos/schema";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { TenantId } from "@iguhealth/jwt/types";
 
-import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { Scope, parseScopes } from "../../oidc/scopes/parse.js";
 
 export async function getApprovedScope(
@@ -13,7 +13,7 @@ export async function getApprovedScope(
   user_id: string,
 ): Promise<Scope[]> {
   const approvedScopes = await ctx.store.auth.authorization_scope.where(
-    { ...ctx, tenant },
+    asRoot({ ...ctx, tenant }),
     tenant,
     {
       client_id,
@@ -29,9 +29,13 @@ export async function getAllUserApprovedScopes(
   tenant: TenantId,
   user_id: string,
 ): Promise<s.authorization_scopes.JSONSelectable[]> {
-  return ctx.store.auth.authorization_scope.where({ ...ctx, tenant }, tenant, {
-    user_id,
-  });
+  return ctx.store.auth.authorization_scope.where(
+    asRoot({ ...ctx, tenant }),
+    tenant,
+    {
+      user_id,
+    },
+  );
 }
 
 export async function deleteUserScope(
@@ -40,8 +44,12 @@ export async function deleteUserScope(
   client_id: id,
   user_id: string,
 ): Promise<void> {
-  return ctx.store.auth.authorization_scope.delete({ ...ctx, tenant }, tenant, {
-    client_id,
-    user_id,
-  });
+  return ctx.store.auth.authorization_scope.delete(
+    asRoot({ ...ctx, tenant }),
+    tenant,
+    {
+      client_id,
+      user_id,
+    },
+  );
 }

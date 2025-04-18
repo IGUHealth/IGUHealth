@@ -65,7 +65,7 @@ async function createOrRetrieveUser(
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {
             const tenant = await ctx.store.auth.tenant.create(
-              { tenant: "system" as TenantId },
+              asRoot({ ...ctx, tenant: "system" as TenantId }),
               {
                 id: generateTenantId(),
               },

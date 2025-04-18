@@ -11,9 +11,9 @@ interface PostgresStoreConfig {
 
 export type Storeconfig = PostgresStoreConfig;
 
-export default async function createStore<
-  CTX extends Pick<IGUHealthServerCTX, "tenant">,
->(config: Storeconfig): Promise<PostgresStore<CTX>> {
+export default async function createStore<CTX extends IGUHealthServerCTX>(
+  config: Storeconfig,
+): Promise<PostgresStore<CTX>> {
   switch (config.type) {
     case "postgres": {
       return new PostgresStore(
