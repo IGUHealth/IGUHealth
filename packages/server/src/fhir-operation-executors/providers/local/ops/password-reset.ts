@@ -14,7 +14,7 @@ import {
   EmailTemplateImage,
   EmailTemplateText,
 } from "../../../../email/templates/base.js";
-import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
 import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
 import InlineOperation from "../interface.js";
 
@@ -23,7 +23,7 @@ function createPasswordResetCode(
   tenant: TenantId,
   member: Membership,
 ): Promise<AuthorizationCode> {
-  return ctx.store.auth.authorization_code.create(ctx, tenant, {
+  return ctx.store.auth.authorization_code.create(asRoot(ctx), tenant, {
     type: "password_reset",
     user_id: member.id as string,
     expires_in: "15 minutes",
@@ -49,7 +49,7 @@ async function shouldSendPasswordReset(
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
   const existingCodes = await ctx.store.auth.authorization_code.where(
-    ctx,
+    asRoot(ctx),
     ctx.tenant,
     {
       user_id: member.id,

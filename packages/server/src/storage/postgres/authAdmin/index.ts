@@ -1,6 +1,7 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import {
   ITenantAdmin,
   ITenantAuthModel,
@@ -13,7 +14,9 @@ import { PostgresAuthorizationScopeAdmin } from "./scopes.js";
 import { PostgresTenantAdmin } from "./tenants.js";
 import { PostgresUserAdmin } from "./users.js";
 
-export class PostgresAuthAdmin<CTX> implements IAuthAdmin<CTX> {
+export class PostgresAuthAdmin<CTX extends IGUHealthServerCTX>
+  implements IAuthAdmin<CTX>
+{
   public tenant: ITenantAdmin<CTX>;
 
   public user: ITenantAuthModel<

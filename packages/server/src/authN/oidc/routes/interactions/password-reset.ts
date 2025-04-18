@@ -69,7 +69,7 @@ export function passwordResetGET(): OIDCRouteHandler {
 
     const authorizationCodeSearch =
       await ctx.state.iguhealth.store.auth.authorization_code.where(
-        ctx.state.iguhealth,
+        asRoot(ctx.state.iguhealth),
         ctx.state.iguhealth.tenant,
         {
           type: "password_reset",
@@ -114,7 +114,7 @@ async function getAuthorizationCode(
   code: string,
 ): Promise<AuthorizationCode> {
   const res = await ctx.store.auth.authorization_code.where(
-    { ...ctx, tenant },
+    asRoot({ ...ctx, tenant }),
     tenant,
     {
       type: "password_reset",
@@ -221,7 +221,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           const email = (authorizationCode.meta as Record<string, string>)
             ?.email;
           const user = await fhirContext.store.auth.user.read(
-            fhirContext,
+            asRoot(fhirContext),
             fhirContext.tenant,
             authorizationCode.user_id as id,
           );
@@ -233,7 +233,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           }
 
           const update = await fhirContext.store.auth.user.update(
-            fhirContext,
+            asRoot(fhirContext),
             fhirContext.tenant,
             user.fhir_user_id as id,
             {
@@ -257,7 +257,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
 
           await fhirContext.store.auth.authorization_code.delete(
-            fhirContext,
+            asRoot(fhirContext),
             fhirContext.tenant,
             {
               code: body.code,
@@ -342,7 +342,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     }
 
     const usersWithEmail = await ctx.state.iguhealth.store.auth.user.where(
-      ctx.state.iguhealth,
+      asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         email: email,
@@ -385,7 +385,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
 
     const membership =
       await ctx.state.iguhealth.store.fhir.readLatestResourceById(
-        ctx.state.iguhealth,
+        asRoot(ctx.state.iguhealth),
         R4,
         "Membership",
         user.fhir_user_id as id,

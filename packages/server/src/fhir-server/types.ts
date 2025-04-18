@@ -130,7 +130,7 @@ export interface IGUHealthServerCTX {
 
   // Storage
   search: SearchEngine<IGUHealthServerCTX>;
-  store: PostgresStore<Pick<IGUHealthServerCTX, "tenant">>;
+  store: PostgresStore<IGUHealthServerCTX>;
 
   // Services
   cache?: IOCache<Pick<IGUHealthServerCTX, "tenant">>;

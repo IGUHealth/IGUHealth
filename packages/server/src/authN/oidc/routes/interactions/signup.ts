@@ -47,7 +47,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
 
   const existingUser = (
     await ctx.state.iguhealth.store.auth.user.where(
-      ctx.state.iguhealth,
+      asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         email,
@@ -88,7 +88,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     );
 
     const user = await ctx.state.iguhealth.store.auth.user.where(
-      ctx.state.iguhealth,
+      asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         fhir_user_id: membership.id,

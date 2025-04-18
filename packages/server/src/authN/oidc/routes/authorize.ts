@@ -2,6 +2,7 @@ import React from "react";
 
 import { ScopeVerifyForm } from "@iguhealth/components";
 
+import { asRoot } from "../../../fhir-server/types.js";
 import * as views from "../../../views/index.js";
 import * as scopes from "../../utilities/scopes/index.js";
 import { OIDC_ROUTES } from "../constants.js";
@@ -158,7 +159,7 @@ export function authorize(): OIDCRouteHandler {
     }
 
     const code = await ctx.state.iguhealth.store.auth.authorization_code.create(
-      ctx.state.iguhealth,
+      asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         type: "oauth2_code_grant",

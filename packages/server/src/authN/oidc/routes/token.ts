@@ -353,7 +353,7 @@ export function tokenPost<
       case "refresh_token": {
         const code =
           await ctx.state.iguhealth.store.auth.authorization_code.where(
-            ctx.state.iguhealth,
+            asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               type: "refresh_token",
@@ -394,7 +394,7 @@ export function tokenPost<
 
         // Removes the old refresh token and issues a new one in tokenResponse.
         await ctx.state.iguhealth.store.auth.authorization_code.delete(
-          ctx.state.iguhealth,
+          asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,
@@ -426,7 +426,7 @@ export function tokenPost<
 
         const code =
           await ctx.state.iguhealth.store.auth.authorization_code.where(
-            ctx.state.iguhealth,
+            asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               type: "oauth2_code_grant",
@@ -475,7 +475,7 @@ export function tokenPost<
           });
 
         await ctx.state.iguhealth.store.auth.authorization_code.delete(
-          ctx.state.iguhealth,
+          asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,

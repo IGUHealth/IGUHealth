@@ -6,6 +6,7 @@ import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { ITenantAuthModel } from "../../interfaces/authAdmin/authAdmin.js";
 
 /**
@@ -29,8 +30,10 @@ export type AuthorizationCode = s.authorization_code.JSONSelectable & {
   is_expired: boolean;
 };
 
-export class PostgresAuthorizationCodeAdmin<CTX, T extends "authorization_code">
-  implements
+export class PostgresAuthorizationCodeAdmin<
+  CTX extends IGUHealthServerCTX,
+  T extends "authorization_code",
+> implements
     ITenantAuthModel<
       CTX,
       T,

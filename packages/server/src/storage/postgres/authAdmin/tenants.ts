@@ -4,6 +4,7 @@ import * as s from "zapatos/schema";
 
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { ITenantAdmin } from "../../interfaces/authAdmin/authAdmin.js";
 
 // https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
@@ -12,7 +13,9 @@ export const generateTenantId = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyz",
 );
 
-export class PostgresTenantAdmin<CTX> implements ITenantAdmin<CTX> {
+export class PostgresTenantAdmin<CTX extends IGUHealthServerCTX>
+  implements ITenantAdmin<CTX>
+{
   private readonly _pgClient: db.Queryable;
 
   constructor(pgClient: db.Queryable) {

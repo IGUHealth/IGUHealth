@@ -280,7 +280,7 @@ export default async function createServer(): Promise<
       );
 
     const tenant = await ctx.state.iguhealth.store.auth.tenant.read(
-      ctx.state.iguhealth,
+      asRoot(ctx.state.iguhealth),
       ctx.params.tenant as id,
     );
 
