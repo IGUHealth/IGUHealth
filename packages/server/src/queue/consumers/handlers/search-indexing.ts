@@ -57,15 +57,12 @@ const searchIndexingHandler: MessageHandler<
       `[Indexing], Processing message '${message.key?.toString() ?? "[no-key]"}'`,
     );
 
-    const tenantId = getTenantId(message);
+    const tenant = getTenantId(message);
 
     if (message.value) {
       const mutations: queue.Operations = message.value as queue.Operations;
       for (const mutation of mutations) {
-        await handleMutation(
-          { ...iguhealthServices, tenant: tenantId },
-          mutation,
-        );
+        await handleMutation({ ...iguhealthServices, tenant }, mutation);
       }
     }
   }
