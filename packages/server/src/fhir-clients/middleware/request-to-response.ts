@@ -36,8 +36,8 @@ import {
 } from "../utilities/bundle.js";
 import { generateId } from "../utilities/generateId.js";
 
-export type RequestResponseState = {
-  transaction_entry_limit?: number;
+export type Limits = {
+  transaction_entry_limit: number;
 };
 
 const AUTHOR_EXTENSION = "https://iguhealth.app/author";
@@ -331,10 +331,10 @@ async function conditionalDelete(
 }
 
 export default function createRequestToResponseMiddleware<
-  CTX extends IGUHealthServerCTX,
   State,
->(transaction_entry_limit: number = 20): MiddlewareAsyncChain<State, CTX> {
-  return async function requestToResponseMiddleware(context, next) {
+  CTX extends IGUHealthServerCTX,
+>({ transaction_entry_limit }: Limits): MiddlewareAsyncChain<State, CTX> {
+  return async function requestToResponseMiddleware(state, context, next) {
     switch (context.request.type) {
       case "read-request": {
         const resource = await getResource(
@@ -352,8 +352,7 @@ export default function createRequestToResponseMiddleware<
           );
         }
 
-        return next({
-          state: context.state,
+        return next(state, {
           ctx: context.ctx,
           request: context.request,
           response: {
@@ -407,8 +406,7 @@ export default function createRequestToResponseMiddleware<
           );
         }
 
-        return next({
-          state: context.state,
+        return next(state, {
           ctx: context.ctx,
           request: context.request,
           response: {
@@ -436,9 +434,8 @@ export default function createRequestToResponseMiddleware<
 
         switch (context.request.level) {
           case "system": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -461,9 +458,8 @@ export default function createRequestToResponseMiddleware<
             });
           }
           case "type": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -492,9 +488,8 @@ export default function createRequestToResponseMiddleware<
         }
       }
       case "create-request": {
-        return next({
+        return next(state, {
           request: context.request,
-          state: context.state,
           ctx: context.ctx,
           response: {
             fhirVersion: context.request.fhirVersion,
@@ -519,9 +514,8 @@ export default function createRequestToResponseMiddleware<
           context.request.body as JSONPatchOperation[],
         );
 
-        return next({
+        return next(state, {
           request: context.request,
-          state: context.state,
           ctx: context.ctx,
           response: {
             fhirVersion: context.request.fhirVersion,
@@ -583,9 +577,8 @@ export default function createRequestToResponseMiddleware<
                     request.body,
                   );
 
-                  return next({
+                  return next(state, {
                     request: context.request,
-                    state: context.state,
                     ctx: context.ctx,
                     response: {
                       fhirVersion: request.fhirVersion,
@@ -606,9 +599,8 @@ export default function createRequestToResponseMiddleware<
                     request.fhirVersion,
                     request.body,
                   );
-                  return next({
+                  return next(state, {
                     request: context.request,
-                    state: context.state,
                     ctx: context.ctx,
                     response: {
                       fhirVersion: request.fhirVersion,
@@ -643,9 +635,8 @@ export default function createRequestToResponseMiddleware<
                   request.fhirVersion,
                   { ...request.body, id: foundResource.id },
                 );
-                return next({
+                return next(state, {
                   request: context.request,
-                  state: context.state,
                   ctx: context.ctx,
                   response: {
                     fhirVersion: request.fhirVersion,
@@ -682,9 +673,8 @@ export default function createRequestToResponseMiddleware<
               },
             );
 
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -714,9 +704,8 @@ export default function createRequestToResponseMiddleware<
               context.request.id,
             );
 
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -729,9 +718,8 @@ export default function createRequestToResponseMiddleware<
             });
           }
           case "type": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: await conditionalDelete(context.ctx, {
                 type: "search-request",
@@ -743,9 +731,8 @@ export default function createRequestToResponseMiddleware<
             });
           }
           case "system": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: await conditionalDelete(context.ctx, {
                 type: "search-request",
@@ -771,9 +758,8 @@ export default function createRequestToResponseMiddleware<
 
         switch (context.request.level) {
           case "instance": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -790,9 +776,8 @@ export default function createRequestToResponseMiddleware<
             });
           }
           case "type": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -808,9 +793,8 @@ export default function createRequestToResponseMiddleware<
             });
           }
           case "system": {
-            return next({
+            return next(state, {
               request: context.request,
-              state: context.state,
               ctx: context.ctx,
               response: {
                 fhirVersion: context.request.fhirVersion,
@@ -939,8 +923,7 @@ export default function createRequestToResponseMiddleware<
             entry: responseEntries,
           };
 
-          return next({
-            state: context.state,
+          return next(state, {
             ctx: context.ctx,
             request: context.request,
             response: {

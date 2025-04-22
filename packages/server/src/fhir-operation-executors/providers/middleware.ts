@@ -13,10 +13,10 @@ import { resolveOperationDefinition } from "../utilities.js";
 import { CustomCodeExecutor } from "./interface.js";
 
 function middleware(
-  provider: CustomCodeExecutor,
-): MiddlewareAsync<unknown, IGUHealthServerCTX> {
-  return createMiddlewareAsync<unknown, IGUHealthServerCTX>([
-    async (context) => {
+  state: CustomCodeExecutor,
+): MiddlewareAsync<IGUHealthServerCTX> {
+  return createMiddlewareAsync<CustomCodeExecutor, IGUHealthServerCTX>(state, [
+    async (state, context) => {
       try {
         switch (context.request.fhirVersion) {
           case R4B: {
@@ -39,14 +39,17 @@ function middleware(
                   Record<string, unknown>
                 >(operationDefinition);
 
-                return {
-                  ...context,
-                  response: await provider.execute(
-                    context.ctx,
-                    op,
-                    context.request as InvokeRequest<R4>,
-                  ),
-                };
+                return [
+                  state,
+                  {
+                    ...context,
+                    response: await state.execute(
+                      context.ctx,
+                      op,
+                      context.request as InvokeRequest<R4>,
+                    ),
+                  },
+                ];
               }
               default:
                 throw new OperationError(
@@ -68,9 +71,6 @@ function middleware(
 
 export default function createOperationExecutioner(
   provider: CustomCodeExecutor,
-): AsynchronousClient<unknown, IGUHealthServerCTX> {
-  return new AsynchronousClient<unknown, IGUHealthServerCTX>(
-    {},
-    middleware(provider),
-  );
+): AsynchronousClient<IGUHealthServerCTX> {
+  return new AsynchronousClient<IGUHealthServerCTX>(middleware(provider));
 }

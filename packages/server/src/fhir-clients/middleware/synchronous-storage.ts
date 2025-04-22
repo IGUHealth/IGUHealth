@@ -21,12 +21,12 @@ export function createInTransactionMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function inTransactionMiddleware(context, next) {
+  return async function inTransactionMiddleware(state, context, next) {
     return DBTransaction(
       context.ctx,
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {
-        return next({
+        return next(state, {
           ...context,
           ctx: {
             ...context.ctx,
@@ -42,22 +42,22 @@ export function createSynchronousStorageMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function synchronousStorageMiddleware(context, next) {
-    const res = await next(context);
-    switch (res.response?.type) {
+  return async function synchronousStorageMiddleware(state, context, next) {
+    const res = await next(state, context);
+    switch (res[1].response?.type) {
       case "create-response":
       case "update-response":
       case "patch-response": {
         context.ctx.logger.info(
-          `synchronous storing resource '${res.response.body.id}'`,
+          `synchronous storing resource '${res[1].response.body.id}'`,
         );
-        await res.ctx.store.fhir.insert(res.ctx, "resources", {
-          tenant: res.ctx.tenant,
-          fhir_version: toDBFHIRVersion(res.response.fhirVersion),
-          request_method: toMethod(res.response),
-          author_type: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-          author_id: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
-          resource: res.response.body as unknown as db.JSONObject,
+        await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
+          tenant: res[1].ctx.tenant,
+          fhir_version: toDBFHIRVersion(res[1].response.fhirVersion),
+          request_method: toMethod(res[1].response),
+          author_type: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+          author_id: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+          resource: res[1].response.body as unknown as db.JSONObject,
           deleted: false,
         });
         break;
@@ -65,19 +65,19 @@ export function createSynchronousStorageMiddleware<
       case "delete-response": {
         switch (context.request.level) {
           case "instance": {
-            const response =
-              res.response as InstanceDeleteResponse<FHIR_VERSION>;
-            if (!res.response.deletion)
+            const response = res[1]
+              .response as InstanceDeleteResponse<FHIR_VERSION>;
+            if (!res[1].response.deletion)
               throw new Error(
                 "Deletion operation must return a deletion object.",
               );
 
-            await res.ctx.store.fhir.insert(res.ctx, "resources", {
-              tenant: res.ctx.tenant,
-              fhir_version: toDBFHIRVersion(res.response.fhirVersion),
+            await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
+              tenant: res[1].ctx.tenant,
+              fhir_version: toDBFHIRVersion(res[1].response.fhirVersion),
               request_method: toMethod(response),
-              author_type: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-              author_id: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+              author_type: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+              author_id: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
               resource: response.deletion as unknown as db.JSONObject,
               deleted: true,
             });
@@ -85,18 +85,18 @@ export function createSynchronousStorageMiddleware<
           }
           case "type":
           case "system": {
-            const response = res.response as
+            const response = res[1].response as
               | TypeDeleteResponse<FHIR_VERSION>
               | SystemDeleteResponse<FHIR_VERSION>;
             await Promise.all(
               (response.deletion ?? []).map(async (resourceToDelete) => {
-                await res.ctx.store.fhir.insert(res.ctx, "resources", {
-                  tenant: res.ctx.tenant,
+                await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
+                  tenant: res[1].ctx.tenant,
                   fhir_version: toDBFHIRVersion(response.fhirVersion),
                   request_method: toMethod(response),
                   author_type:
-                    res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
-                  author_id: res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+                    res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+                  author_id: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
                   resource: resourceToDelete as unknown as db.JSONObject,
                   deleted: true,
                 });
@@ -129,28 +129,30 @@ export function createSynchronousStorageMiddleware<
 }
 
 /**
- * Indexing middleware for searching. This happens within a single transaction if single postgres.
+ * Indexing middleware for searching. This happens within a single transaction if single postgres[1].
  * @returns
  */
 export function createSynchronousIndexingMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function synchronousIndexingMiddleware(context, next) {
-    const res = await next(context);
-    switch (res.response?.type) {
+  return async function synchronousIndexingMiddleware(state, context, next) {
+    const res = await next(state, context);
+    switch (res[1].response?.type) {
       case "create-response":
       case "update-response":
       case "patch-response": {
-        context.ctx.logger.info(`indexing resource '${res.response.body.id}'`);
+        context.ctx.logger.info(
+          `indexing resource '${res[1].response.body.id}'`,
+        );
         try {
-          await res.ctx.search.index(
-            asRoot(res.ctx),
-            res.response.fhirVersion,
-            res.response.body,
+          await res[1].ctx.search.index(
+            asRoot(res[1].ctx),
+            res[1].response.fhirVersion,
+            res[1].response.body,
           );
           context.ctx.logger.info(
-            `finished indexing resource '${res.response.body.id}'`,
+            `finished indexing resource '${res[1].response.body.id}'`,
           );
         } catch (e) {
           context.ctx.logger.error({ message: "FAILURE:", e });
@@ -159,26 +161,26 @@ export function createSynchronousIndexingMiddleware<
         break;
       }
       case "delete-response": {
-        switch (res.response.level) {
+        switch (res[1].response.level) {
           case "instance": {
-            await res.ctx.search.removeIndex(
-              asRoot(res.ctx),
-              res.response.fhirVersion,
-              res.response.id,
-              res.response.resource,
+            await res[1].ctx.search.removeIndex(
+              asRoot(res[1].ctx),
+              res[1].response.fhirVersion,
+              res[1].response.id,
+              res[1].response.resource,
             );
             break;
           }
           case "type":
           case "system": {
-            const response = res.response as
+            const response = res[1].response as
               | TypeDeleteResponse<FHIR_VERSION>
               | SystemDeleteResponse<FHIR_VERSION>;
 
             await Promise.all(
               (response.deletion ?? []).map(async (r) => {
-                await res.ctx.search.removeIndex(
-                  asRoot(res.ctx),
+                await res[1].ctx.search.removeIndex(
+                  asRoot(res[1].ctx),
                   response.fhirVersion,
                   r.id as id,
                   r.resourceType,

@@ -97,8 +97,9 @@ async function createTenant(
       ctx,
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {
+        const newTenant = await getTenant(ctx, options);
         const tenant = await ctx.store.auth.tenant.create(
-          asRoot({ ...ctx, tenant: "system" as TenantId }),
+          asRoot({ ...ctx, tenant: newTenant.id as TenantId }),
           await getTenant(ctx, options),
         );
         const membership: Membership = await ctx.client.create(

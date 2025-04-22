@@ -124,29 +124,32 @@ function setResource<Version extends FHIR_VERSION>(
 function createMemoryMiddleware<
   State extends { data: MemoryData },
   CTX extends IGUHealthServerCTX,
->(): MiddlewareAsync<State, CTX> {
-  return createMiddlewareAsync<State, CTX>([
-    async (context) => {
+>(state: State): MiddlewareAsync<CTX> {
+  return createMiddlewareAsync<State, CTX>(state, [
+    async (state, context) => {
       /* eslint-disable no-fallthrough */
       switch (context.request.type) {
         case "search-request": {
           switch (context.request.level) {
             case "system": {
               // For system searches going to skip.
-              return {
-                ...context,
-                response: {
-                  fhirVersion: context.request.fhirVersion,
-                  level: context.request.level,
-                  parameters: context.request.parameters,
-                  type: "search-response",
-                  body: {
-                    type: "searchset" as r4.code,
-                    resourceType: "Bundle",
-                    entry: [],
-                  },
-                } as FHIRResponse<FHIR_VERSION, "search">,
-              };
+              return [
+                state,
+                {
+                  ...context,
+                  response: {
+                    fhirVersion: context.request.fhirVersion,
+                    level: context.request.level,
+                    parameters: context.request.parameters,
+                    type: "search-response",
+                    body: {
+                      type: "searchset" as r4.code,
+                      resourceType: "Bundle",
+                      entry: [],
+                    },
+                  } as FHIRResponse<FHIR_VERSION, "search">,
+                },
+              ];
             }
             case "type": {
               const resourceTypes = deriveResourceTypeFilter(context.request);
@@ -170,7 +173,7 @@ function createMemoryMiddleware<
 
               const resourceSet = Object.values(
                 getResourcesOfType(
-                  context.state.data,
+                  state.data,
                   context.request.fhirVersion,
                   context.request.resource,
                 ),
@@ -221,21 +224,24 @@ function createMemoryMiddleware<
                   : 50;
 
               result = result.slice(0, total);
-              return {
-                ...context,
-                response: {
-                  fhirVersion: context.request.fhirVersion,
-                  resource: context.request.resource,
-                  level: "type",
-                  parameters: context.request.parameters,
-                  type: "search-response",
-                  body: {
-                    type: "searchset",
-                    resourceType: "Bundle",
-                    entry: result.map((r) => ({ resource: r })),
-                  },
-                } as FHIRResponse<FHIR_VERSION, "search">,
-              };
+              return [
+                state,
+                {
+                  ...context,
+                  response: {
+                    fhirVersion: context.request.fhirVersion,
+                    resource: context.request.resource,
+                    level: "type",
+                    parameters: context.request.parameters,
+                    type: "search-response",
+                    body: {
+                      type: "searchset",
+                      resourceType: "Bundle",
+                      entry: result.map((r) => ({ resource: r })),
+                    },
+                  } as FHIRResponse<FHIR_VERSION, "search">,
+                },
+              ];
             }
             default: {
               throw new OperationError(
@@ -254,78 +260,86 @@ function createMemoryMiddleware<
               outcomeError("invalid", "Updated resource must have an id."),
             );
 
-          return {
-            ...context,
-            state: {
-              ...context.state,
+          return [
+            {
+              ...state,
               data: setResource(
-                context.state.data,
+                state.data,
                 context.request.fhirVersion,
                 resource as Parameters<typeof setResource>[2],
               ),
             },
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              level: "instance",
-              type: "update-response",
-              resource: context.request.resource,
-              id: resource.id,
-              body: resource as Resource<
-                typeof context.request.fhirVersion,
-                AllResourceTypes
-              >,
-            } as FHIRResponse<FHIR_VERSION, "update">,
-          };
+            {
+              ...context,
+              response: {
+                fhirVersion: context.request.fhirVersion,
+                level: "instance",
+                type: "update-response",
+                resource: context.request.resource,
+                id: resource.id,
+                body: resource as Resource<
+                  typeof context.request.fhirVersion,
+                  AllResourceTypes
+                >,
+              } as FHIRResponse<FHIR_VERSION, "update">,
+            },
+          ];
         }
         case "create-request": {
           const resource = context.request.body;
           if (!resource?.id) resource.id = generateId();
-          return {
-            ...context,
-            state: {
-              ...context.state,
+          return [
+            {
+              ...state,
               data: setResource(
-                context.state.data,
+                state.data,
                 context.request.fhirVersion,
                 resource as Parameters<typeof setResource>[2],
               ),
             },
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              level: "type",
-              type: "create-response",
-              resource: context.request.resource,
-              body: resource as Resource<
-                typeof context.request.fhirVersion,
-                AllResourceTypes
-              >,
-            } as FHIRResponse<FHIR_VERSION, "create">,
-          };
+            {
+              ...context,
+
+              response: {
+                fhirVersion: context.request.fhirVersion,
+                level: "type",
+                type: "create-response",
+                resource: context.request.resource,
+                body: resource as Resource<
+                  typeof context.request.fhirVersion,
+                  AllResourceTypes
+                >,
+              } as FHIRResponse<FHIR_VERSION, "create">,
+            },
+          ];
         }
         case "read-request": {
           const resource =
-            context.state.data[context.request.fhirVersion][
-              context.request.resource
-            ]?.[context.request.id];
+            state.data[context.request.fhirVersion][context.request.resource]?.[
+              context.request.id
+            ];
           if (!resource) {
             throw new Error(
               `Not found resource of type '${context.request.resource}' with id '${context.request.id}'`,
             );
           }
-          return {
-            ...context,
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              level: "instance",
-              type: "read-response",
-              resource: context.request.resource,
-              id: context.request.id,
-              body: resource as Resource<
-                typeof context.request.fhirVersion,
-                AllResourceTypes
-              >,
-            } as FHIRResponse<FHIR_VERSION, "read">,
-          };
+          return [
+            state,
+            {
+              ...context,
+              response: {
+                fhirVersion: context.request.fhirVersion,
+                level: "instance",
+                type: "read-response",
+                resource: context.request.resource,
+                id: context.request.id,
+                body: resource as Resource<
+                  typeof context.request.fhirVersion,
+                  AllResourceTypes
+                >,
+              } as FHIRResponse<FHIR_VERSION, "read">,
+            },
+          ];
         }
         default:
           throw new OperationError(
@@ -467,12 +481,9 @@ export class Memory<CTX extends IGUHealthServerCTX>
       [R4B]: {},
       ...partialData,
     };
-    const client = new AsynchronousClient<
-      {
-        data: MemoryData;
-      },
-      CTX
-    >({ data }, createMemoryMiddleware());
+    const client = new AsynchronousClient<CTX>(
+      createMemoryMiddleware({ data }),
+    );
 
     this._client = client;
     this.request = this._client.request.bind(this._client);
