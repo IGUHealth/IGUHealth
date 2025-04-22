@@ -100,7 +100,7 @@ async function createTenant(
         const newTenant = await getTenant(ctx, options);
         const tenant = await ctx.store.auth.tenant.create(
           asRoot({ ...ctx, tenant: newTenant.id as TenantId }),
-          await getTenant(ctx, options),
+          newTenant,
         );
         const membership: Membership = await ctx.client.create(
           asRoot({ ...ctx, tenant: tenant.id as TenantId }),
