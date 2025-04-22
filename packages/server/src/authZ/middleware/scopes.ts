@@ -93,7 +93,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async function validateScopesMiddleware(context, next) {
+  return async function validateScopesMiddleware(state, context, next) {
     switch (context.request.type) {
       case "capabilities-request":
       case "transaction-request":
@@ -102,8 +102,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
         // Note for invoke-request will need to implement custom scopes (SMART does not have a scope for invocation of operations).
         // Batch and transaction hit authorization again per request in Bundle.
         // Capabilities should always be allowed as public.
-
-        return next(context);
+        return next(state, context);
       }
       default: {
         const smartScope = getHighestValueScopeForRequest(
@@ -165,7 +164,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
                   throw new OperationError(evaluation);
                 }
 
-                return next(context);
+                return next(state, context);
               }
               default: {
                 throw new OperationError(
@@ -185,7 +184,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
               case "patch-request":
               case "history-request":
               case "search-request": {
-                return next(context);
+                return next(state, context);
               }
               default: {
                 throw new OperationError(
@@ -207,11 +206,11 @@ export function createInjectScopesMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
-  return async function scopesMiddleware(context, next) {
+  return async function scopesMiddleware(state, context, next) {
     context.ctx.user.scope = parseScopes.parseScopes(
       context.ctx.user.payload.scope,
     );
 
-    return next(context);
+    return next(state, context);
   };
 }

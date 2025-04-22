@@ -7,9 +7,9 @@ import { IGUHealthServerCTX } from "../types.js";
 function createEncryptionMiddleware<State>(
   resourceTypesToEncrypt: AllResourceTypes[],
 ): MiddlewareAsyncChain<State, IGUHealthServerCTX> {
-  return async function encryptionMiddleware(context, next) {
+  return async function encryptionMiddleware(state, context, next) {
     if (!context.ctx.encryptionProvider) {
-      return next(context);
+      return next(state, context);
     }
     if (
       "resource" in context.request &&
@@ -22,7 +22,7 @@ function createEncryptionMiddleware<State>(
             context.ctx,
             context.request.body,
           );
-          return next({
+          return next(state, {
             ...context,
             // @ts-ignore
             request: { ...context.request, body: encrypted },
@@ -34,17 +34,17 @@ function createEncryptionMiddleware<State>(
             // Should be safe as given patch should be validated.
             context.request.body as object,
           );
-          return next({
+          return next(state, {
             ...context,
             request: { ...context.request, body: encrypted },
           });
         }
         default: {
-          return next(context);
+          return next(state, context);
         }
       }
     } else {
-      return next(context);
+      return next(state, context);
     }
   };
 }

@@ -104,10 +104,8 @@ export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
   const z = db.transaction(
     ctx.store.getClient(),
     isolationLevel,
-    async (client) => {
-      const t: CTX = { ...ctx };
-      t.store = new PostgresStore(client);
-      return callback(t);
+    async (txClient) => {
+      return callback({ ...ctx, store: new PostgresStore(txClient) });
     },
   );
 

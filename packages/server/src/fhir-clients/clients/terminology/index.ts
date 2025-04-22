@@ -21,25 +21,25 @@ export const TERMINOLOGY_METHODS_ALLOWED: RequestType[AllInteractions][] = [
   "search-request",
 ];
 
-function createTerminologyMiddleware<
-  State extends {
-    fhirDB: IGUHealthServerCTX["client"];
-  },
-  CTX extends IGUHealthServerCTX,
->(): MiddlewareAsync<State, CTX> {
-  return createMiddlewareAsync<State, CTX>([
+function createTerminologyMiddleware<CTX extends IGUHealthServerCTX>(state: {
+  fhirDB: IGUHealthServerCTX["client"];
+}): MiddlewareAsync<CTX> {
+  return createMiddlewareAsync(state, [
     validateResourceTypesAllowedMiddleware(TERMINOLOGY_RESOURCE_TYPES),
     validateOperationsAllowed(TERMINOLOGY_METHODS_ALLOWED),
-    async (context) => {
-      const response = await context.state.fhirDB.request(
+    async (state, context) => {
+      const response = await state.fhirDB.request(
         asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
         context.request,
       );
 
-      return {
-        ...context,
-        response,
-      };
+      return [
+        state,
+        {
+          ...context,
+          response,
+        },
+      ];
     },
   ]);
 }
@@ -47,8 +47,5 @@ function createTerminologyMiddleware<
 export function createTerminologyClient<CTX extends IGUHealthServerCTX>(
   fhirDB: IGUHealthServerCTX["client"],
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<{ fhirDB: IGUHealthServerCTX["client"] }, CTX>(
-    { fhirDB },
-    createTerminologyMiddleware(),
-  );
+  return new AsynchronousClient<CTX>(createTerminologyMiddleware({ fhirDB }));
 }

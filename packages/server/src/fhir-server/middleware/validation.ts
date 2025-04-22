@@ -43,7 +43,7 @@ function createValidationMiddleware<State>(): MiddlewareAsyncChain<
   State,
   IGUHealthServerCTX
 > {
-  return async function validationMiddleware(context, next) {
+  return async function validationMiddleware(state, context, next) {
     switch (context.request.type) {
       case "update-request":
       case "create-request":
@@ -83,7 +83,7 @@ function createValidationMiddleware<State>(): MiddlewareAsyncChain<
       }
     }
 
-    return next(context);
+    return next(state, context);
   };
 }
 

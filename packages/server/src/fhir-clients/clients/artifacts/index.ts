@@ -36,8 +36,8 @@ function createSetArtifactTenantMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends ArtifactConfig,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
-    return next({
+  return async (state, context, next) => {
+    return next(state, {
       ...context,
       ctx: { ...context.ctx, tenant: ARTIFACT_TENANT },
     });
@@ -48,13 +48,13 @@ function associateConfig<
   CTX extends IGUHealthServerCTX,
   State extends ArtifactConfig,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
-    return next({
+  return async (state, context, next) => {
+    return next(state, {
       ...context,
       ctx: {
         ...context.ctx,
-        search: new PostgresSearchEngine(context.state.db),
-        store: new PostgresStore(context.state.db),
+        search: new PostgresSearchEngine(state.db),
+        store: new PostgresStore(state.db),
       },
     });
   };
@@ -68,14 +68,16 @@ function associateConfig<
 export function createArtifactClient<CTX extends IGUHealthServerCTX>(
   config: ArtifactConfig,
 ): FHIRClient<CTX> {
-  return new AsynchronousClient<ArtifactConfig, CTX>(
-    config,
-    createMiddlewareAsync(
+  return new AsynchronousClient<CTX>(
+    createMiddlewareAsync<ArtifactConfig, CTX>(
+      config,
       [
         associateConfig(),
         createSetArtifactTenantMiddleware(),
         validateOperationsAllowed(config.operationsAllowed),
-        createRequestToResponseMiddleware(),
+        createRequestToResponseMiddleware({
+          transaction_entry_limit: 0,
+        }),
         createInTransactionMiddleware(),
         createSynchronousStorageMiddleware(),
         createSynchronousIndexingMiddleware(),

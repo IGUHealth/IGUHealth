@@ -28,10 +28,8 @@ import {
 } from "../fhir-clients/clients/auth-storage/index.js";
 import { MemoryParameter } from "../fhir-clients/clients/memory/async.js";
 import RouterClient from "../fhir-clients/clients/router/index.js";
-import createRequestToResponseMiddleware, {
-  RequestResponseState,
-} from "../fhir-clients/middleware/request-to-response.js";
-import sendQueueMiddleweare from "../fhir-clients/middleware/send-to-queue.js";
+import createRequestToResponseMiddleware from "../fhir-clients/middleware/request-to-response.js";
+import sendQueueMiddleware from "../fhir-clients/middleware/send-to-queue.js";
 import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
   CodeSystemLookupInvoke,
@@ -150,17 +148,16 @@ export function getRedisClient(): Redis {
 }
 
 export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
-  const storage = new AsynchronousClient<
-    RequestResponseState,
-    IGUHealthServerCTX
-  >(
-    {},
+  const storage = new AsynchronousClient<IGUHealthServerCTX>(
     createMiddlewareAsync(
+      undefined,
       [
-        createRequestToResponseMiddleware(
-          parseInt(process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"),
-        ),
-        sendQueueMiddleweare(),
+        createRequestToResponseMiddleware({
+          transaction_entry_limit: parseInt(
+            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT ?? "20",
+          ),
+        }),
+        sendQueueMiddleware(),
       ],
       { logging: false },
     ),

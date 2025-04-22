@@ -12,15 +12,15 @@ export class PostgresStore<CTX extends IGUHealthServerCTX>
 {
   public auth: IAuthAdmin<CTX>;
   public fhir: FHIRResourceStore<CTX>;
-  private readonly _pgClient: db.Queryable;
+  private readonly client: db.Queryable;
 
-  constructor(pgClient: db.Queryable) {
-    this.fhir = new PostgresFHIRStore<CTX>(pgClient);
-    this.auth = new PostgresAuthAdmin<CTX>(pgClient);
-    this._pgClient = pgClient;
+  constructor(client: db.Queryable) {
+    this.fhir = new PostgresFHIRStore<CTX>(client);
+    this.auth = new PostgresAuthAdmin<CTX>(client);
+    this.client = client;
   }
 
   getClient(): db.Queryable {
-    return this._pgClient;
+    return this.client;
   }
 }

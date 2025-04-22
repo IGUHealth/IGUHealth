@@ -110,14 +110,12 @@ function setInTransactionMiddleware<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     return QueueBatch(context.ctx, async (ctx) => {
-      const res = await next({
+      return next(state, {
         ...context,
         ctx,
       });
-
-      return res;
     });
   };
 }
@@ -130,9 +128,9 @@ function limitOwnershipEdits<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
-    const res = await next(context);
-    const response = res.response;
+  return async (state, context, next) => {
+    const res = await next(state, context);
+    const response = res[1].response;
     switch (response?.type) {
       case "create-response":
       case "update-response":
@@ -142,7 +140,7 @@ function limitOwnershipEdits<
           response.body.role === "owner"
         ) {
           if (
-            context.ctx.user.payload["https://iguhealth.app/role"] !== "owner"
+            res[1].ctx.user.payload["https://iguhealth.app/role"] !== "owner"
           ) {
             throw new OperationError(
               outcomeError(
@@ -159,7 +157,7 @@ function limitOwnershipEdits<
           case "instance": {
             const id = context.request.id;
 
-            const membership = await context.state.fhirDB.read(
+            const membership = await state.fhirDB.read(
               context.ctx,
               R4,
               "Membership",
@@ -215,15 +213,15 @@ function customValidationMembershipMiddleware<
   },
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     switch (context.request.type) {
       case "update-request":
       case "create-request": {
         await customValidationMembership(context.request.body as Membership);
-        return next(context);
+        return next(state, context);
       }
       default: {
-        return next(context);
+        return next(state, context);
       }
     }
   };
@@ -233,13 +231,13 @@ function setEmailVerified<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     switch (context.request.type) {
       case "create-request": {
         if (context.request.body.resourceType === "Membership") {
           context.request.body.emailVerified = false;
         }
-        return next(context);
+        return next(state, context);
       }
       case "update-request": {
         const membership = context.request.body;
@@ -258,7 +256,7 @@ function setEmailVerified<
             ),
           } as Membership;
         }
-        return next(context);
+        return next(state, context);
       }
       case "patch-request": {
         throw new OperationError(
@@ -266,7 +264,7 @@ function setEmailVerified<
         );
       }
       default: {
-        return next(context);
+        return next(state, context);
       }
     }
   };
@@ -276,32 +274,34 @@ function updateUserTableMiddleware<
   State extends AuthState,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     // Skip and run other middleware if not membership.
     if (
       !("resource" in context.request) ||
       "Membership" !== context.request.resource
     ) {
-      return next(context);
+      return next(state, context);
     }
 
     switch (context.request.type) {
       case "create-request": {
-        const res = await next(context);
-        const membership = (res.response as CreateResponse<R4>)?.body;
+        const res = await next(state, context);
+        const membership = (res[1].response as CreateResponse<R4>)?.body;
         if (membership.resourceType !== "Membership") {
           throw new OperationError(
             outcomeError("invariant", "Invalid resource type."),
           );
         }
 
+        const userTableUpdate = {
+          ...membershipToUser(res[1].ctx.tenant, membership),
+        };
+
         try {
-          await context.ctx.store.auth.user.create(
-            context.ctx,
-            context.ctx.tenant,
-            {
-              ...membershipToUser(context.ctx.tenant, membership),
-            },
+          await res[1].ctx.store.auth.user.create(
+            res[1].ctx,
+            res[1].ctx.tenant,
+            userTableUpdate,
           );
         } catch (e) {
           context.ctx.logger.error(e);
@@ -317,7 +317,7 @@ function updateUserTableMiddleware<
           case "instance": {
             const id = context.request.id;
 
-            const membership = await context.state.fhirDB.read(
+            const membership = await state.fhirDB.read(
               context.ctx,
               R4,
               "Membership",
@@ -330,13 +330,13 @@ function updateUserTableMiddleware<
               );
             }
 
-            const res = await next(context);
+            const res = await next(state, context);
 
-            await context.ctx.store.auth.user.delete(
-              context.ctx,
-              context.ctx.tenant,
+            await res[1].ctx.store.auth.user.delete(
+              res[1].ctx,
+              res[1].ctx.tenant,
               {
-                tenant: context.ctx.tenant,
+                tenant: res[1].ctx.tenant,
                 fhir_user_id: membership.id,
               },
             );
@@ -354,14 +354,14 @@ function updateUserTableMiddleware<
         }
       }
       case "update-request": {
-        const res = await next(context);
-        const membership = (res.response as UpdateResponse<R4>)
+        const res = await next(state, context);
+        const membership = (res[1].response as UpdateResponse<R4>)
           .body as Membership;
 
-        const user = membershipToUser(context.ctx.tenant, membership);
-        await context.ctx.store.auth.user.update(
-          context.ctx,
-          context.ctx.tenant,
+        const user = membershipToUser(res[1].ctx.tenant, membership);
+        await res[1].ctx.store.auth.user.update(
+          res[1].ctx,
+          res[1].ctx.tenant,
           user.fhir_user_id as id,
           user,
         );
@@ -372,7 +372,7 @@ function updateUserTableMiddleware<
       case "read-request":
       case "search-request":
       case "history-request": {
-        return next(context);
+        return next(state, context);
       }
       default: {
         throw new OperationError(
@@ -383,11 +383,10 @@ function updateUserTableMiddleware<
   };
 }
 
-function createAuthMiddleware<
-  State extends AuthState,
-  CTX extends IGUHealthServerCTX,
->(): MiddlewareAsync<State, CTX> {
-  return createMiddlewareAsync<State, CTX>([
+function createAuthMiddleware<CTX extends IGUHealthServerCTX>(
+  state: AuthState,
+): MiddlewareAsync<CTX> {
+  return createMiddlewareAsync<AuthState, CTX>(state, [
     validateResourceTypesAllowedMiddleware(MEMBERSHIP_RESOURCE_TYPES),
     validateOperationsAllowed(MEMBERSHIP_METHODS_ALLOWED),
     customValidationMembershipMiddleware(),
@@ -396,14 +395,14 @@ function createAuthMiddleware<
     updateUserTableMiddleware(),
     limitOwnershipEdits(),
     // validateOwnershipMiddleware(),
-    async (context) => {
-      return {
-        ...context,
-        response: await context.state.fhirDB.request(
-          context.ctx,
-          context.request,
-        ),
-      };
+    async (state, context) => {
+      return [
+        state,
+        {
+          ...context,
+          response: await state.fhirDB.request(context.ctx, context.request),
+        },
+      ];
     },
   ]);
 }
@@ -411,5 +410,5 @@ function createAuthMiddleware<
 export function createMembershipClient<CTX extends IGUHealthServerCTX>(
   state: AuthState,
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<AuthState, CTX>(state, createAuthMiddleware());
+  return new AsynchronousClient<CTX>(createAuthMiddleware(state));
 }

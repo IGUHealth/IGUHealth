@@ -112,24 +112,27 @@ function createCapabilitiesMiddleware<State>(): MiddlewareAsyncChain<
   State,
   IGUHealthServerCTX
 > {
-  return async function capabilitiesMiddleware(context, next) {
+  return async function capabilitiesMiddleware(state, context, next) {
     if (context.request.type === "capabilities-request") {
-      return {
-        ...context,
-        response: {
-          fhirVersion: context.request.fhirVersion,
-          level: "system",
-          type: "capabilities-response",
-          body: await serverCapabilities(
-            context.ctx,
-            context.request.fhirVersion,
-            context.ctx.client,
-          ),
-        } as FHIRResponse<typeof context.request.fhirVersion, "capabilities">,
-      };
+      return [
+        state,
+        {
+          ...context,
+          response: {
+            fhirVersion: context.request.fhirVersion,
+            level: "system",
+            type: "capabilities-response",
+            body: await serverCapabilities(
+              context.ctx,
+              context.request.fhirVersion,
+              context.ctx.client,
+            ),
+          } as FHIRResponse<typeof context.request.fhirVersion, "capabilities">,
+        },
+      ];
     }
 
-    return next(context);
+    return next(state, context);
   };
 }
 
