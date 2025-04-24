@@ -1,4 +1,5 @@
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClient } from "@iguhealth/client/lib/interface";
 import { InvokeRequest } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
@@ -71,6 +72,6 @@ function middleware(
 
 export default function createOperationExecutioner(
   provider: CustomCodeExecutor,
-): AsynchronousClient<IGUHealthServerCTX> {
+): FHIRClient<IGUHealthServerCTX> {
   return new AsynchronousClient<IGUHealthServerCTX>(middleware(provider));
 }

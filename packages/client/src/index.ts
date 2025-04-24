@@ -20,16 +20,20 @@ import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
 
 export class AsynchronousClient<CTX> implements FHIRClientAsync<CTX> {
-  private readonly middleware: MiddlewareAsync<CTX>;
+  private readonly _middleware: MiddlewareAsync<CTX>;
   constructor(middleware: MiddlewareAsync<CTX>) {
-    this.middleware = middleware;
+    this._middleware = middleware;
+  }
+
+  get middleware(): MiddlewareAsync<CTX> {
+    return this._middleware;
   }
 
   async request<Version extends FHIR_VERSION, I extends AllInteractions>(
     ctx: CTX,
     request: FHIRRequest<Version, I>,
   ): Promise<FHIRResponse<Version, I | "error">> {
-    const res = await this.middleware({ ctx, request });
+    const res = await this._middleware({ ctx, request });
 
     if (!res.response) throw new Error("No Response was returned.");
     if (res.response.fhirVersion !== res.request.fhirVersion)

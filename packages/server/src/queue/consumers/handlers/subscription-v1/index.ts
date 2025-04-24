@@ -107,7 +107,7 @@ async function processSubscription(
             resolveCanonical: ctx.resolveCanonical,
             resolveRemoteCanonical: createResolverRemoteCanonical(
               ctx.client,
-              ctx,
+              asRoot(ctx),
             ),
           },
           R4,
@@ -127,7 +127,7 @@ async function processSubscription(
     }
     await logAuditEvent(
       ctx.client,
-      ctx,
+      asRoot(ctx),
       R4,
       createAuditEvent(
         workerTokenClaims("subscription-v1", ctx.tenant),

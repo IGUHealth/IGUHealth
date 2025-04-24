@@ -1,4 +1,5 @@
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClient } from "@iguhealth/client/lib/interface";
 import {
   MiddlewareAsync,
   MiddlewareAsyncChain,
@@ -401,7 +402,7 @@ function createRouterMiddleware<
 export default function RouterClient<CTX extends IGUHealthServerCTX>(
   middleware: MiddlewareAsyncChain<{ sources: Sources<CTX> }, CTX>[],
   sources: Sources<CTX>,
-): AsynchronousClient<CTX> {
+): FHIRClient<CTX> {
   return new AsynchronousClient<CTX>(
     createMiddlewareAsync(
       { sources },
