@@ -79,7 +79,7 @@ async function processAttribute<CTX, Role>(
     case attribute.operation !== undefined: {
       switch (attribute.operation.type) {
         case "read": {
-          const path = await evaluateExpression(
+          const path = await evaluateExpression<CTX, Role>(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),

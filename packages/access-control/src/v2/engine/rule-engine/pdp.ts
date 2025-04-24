@@ -22,7 +22,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import pip from "./pip.js";
-import { PolicyContext, Result } from "../types.js";
+import { PolicyContext, PolicyResult } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
@@ -49,7 +49,7 @@ async function evaluateConditon<CTX, Role>(
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<
-  Result<CTX, Role, (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]>
+  PolicyResult<CTX, Role, (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]>
 > {
   const rule = pt.get(loc, policy);
   const effect: "permit" | "deny" =
@@ -77,7 +77,7 @@ async function shouldEvaluateRule<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<Result<CTX, Role, boolean>> {
+): Promise<PolicyResult<CTX, Role, boolean>> {
   const target = pt.get(loc, policy);
   if (target?.expression === undefined)
     return { context: policyContext, result: true };
@@ -94,7 +94,7 @@ async function shouldEvaluateRule<CTX, Role>(
     );
   }
 
-  return res as Result<CTX, Role, boolean>
+  return res as PolicyResult<CTX, Role, boolean>
 }
 
 async function evaluateAccessPolicyRule<CTX, Role>(
@@ -102,7 +102,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<
-  Result<
+  PolicyResult<
     CTX,
     Role,
     (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]
