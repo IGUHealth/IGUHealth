@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 export default function validateOperationsAllowed<State, CTX>(
   operationsAllowed: RequestType[AllInteractions][],
 ): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     if (!operationsAllowed.includes(context.request.type)) {
       throw new OperationError(
         outcomeError(
@@ -14,6 +14,6 @@ export default function validateOperationsAllowed<State, CTX>(
         ),
       );
     }
-    return next(context);
+    return next(state, context);
   };
 }

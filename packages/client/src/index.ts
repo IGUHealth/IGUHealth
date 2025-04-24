@@ -19,11 +19,9 @@ import type {
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
 
-export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
-  private state: State;
-  private middleware: MiddlewareAsync<State, CTX>;
-  constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {
-    this.state = initialState;
+export class AsynchronousClient<CTX> implements FHIRClientAsync<CTX> {
+  private readonly middleware: MiddlewareAsync<CTX>;
+  constructor(middleware: MiddlewareAsync<CTX>) {
     this.middleware = middleware;
   }
 
@@ -31,8 +29,8 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     ctx: CTX,
     request: FHIRRequest<Version, I>,
   ): Promise<FHIRResponse<Version, I | "error">> {
-    const res = await this.middleware({ ctx, state: this.state, request });
-    this.state = res.state;
+    const res = await this.middleware({ ctx, request });
+
     if (!res.response) throw new Error("No Response was returned.");
     if (res.response.fhirVersion !== res.request.fhirVersion)
       throw new Error(

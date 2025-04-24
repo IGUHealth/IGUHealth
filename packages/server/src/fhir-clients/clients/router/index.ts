@@ -167,8 +167,8 @@ function createRouterMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends { sources: Sources<CTX> },
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function routerMiddleware(context) {
-    const sources = findSource(context.state.sources, context.request);
+  return async function routerMiddleware(state, context) {
+    const sources = findSource(state.sources, context.request);
 
     if (sources.length === 0) {
       throw new OperationError(
@@ -198,22 +198,25 @@ function createRouterMiddleware<
         );
 
         const entry = responses.map((b) => b.body.entry ?? []).flat();
-        return {
-          ...context,
-          response: {
-            ...responses[0],
-            body: {
-              resourceType: "Bundle",
-              type: "searchset" as r4.code,
-              total: responses.reduce(
-                (acc: number | undefined, res) =>
-                  res.body.total ? (acc ?? 0) + res.body.total : undefined,
-                undefined,
-              ),
-              entry,
-            } as Resource<FHIR_VERSION, "Bundle">,
+        return [
+          state,
+          {
+            ...context,
+            response: {
+              ...responses[0],
+              body: {
+                resourceType: "Bundle",
+                type: "searchset" as r4.code,
+                total: responses.reduce(
+                  (acc: number | undefined, res) =>
+                    res.body.total ? (acc ?? 0) + res.body.total : undefined,
+                  undefined,
+                ),
+                entry,
+              } as Resource<FHIR_VERSION, "Bundle">,
+            },
           },
-        };
+        ];
       }
       case "history-request": {
         const responses = (
@@ -234,17 +237,20 @@ function createRouterMiddleware<
 
         const entry = responses.map((b) => b.body.entry ?? []).flat();
 
-        return {
-          ...context,
-          response: {
-            ...responses[0],
-            body: {
-              resourceType: "Bundle",
-              type: "history" as r4.code,
-              entry,
-            } as Resource<FHIR_VERSION, "Bundle">,
+        return [
+          state,
+          {
+            ...context,
+            response: {
+              ...responses[0],
+              body: {
+                resourceType: "Bundle",
+                type: "history" as r4.code,
+                entry,
+              } as Resource<FHIR_VERSION, "Bundle">,
+            },
           },
-        };
+        ];
       }
       // Search for the first one successful
       case "read-request":
@@ -278,10 +284,13 @@ function createRouterMiddleware<
             outcomeError("not-found", `Resource not found`),
           );
 
-        return {
-          ...context,
-          response: responses[0],
-        };
+        return [
+          state,
+          {
+            ...context,
+            response: responses[0],
+          },
+        ];
       }
 
       case "batch-request": {
@@ -343,19 +352,22 @@ function createRouterMiddleware<
             },
           ),
         );
-        return {
-          ...context,
-          response: {
-            fhirVersion: context.request.fhirVersion,
-            type: "batch-response",
-            level: "system",
-            body: {
-              resourceType: "Bundle",
-              type: "batch-response" as r4.code | r4b.code,
-              entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
-            } as r4b.Bundle | r4.Bundle,
-          } as FHIRResponse<FHIR_VERSION, "batch">,
-        };
+        return [
+          state,
+          {
+            ...context,
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              type: "batch-response",
+              level: "system",
+              body: {
+                resourceType: "Bundle",
+                type: "batch-response" as r4.code | r4b.code,
+                entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
+              } as r4b.Bundle | r4.Bundle,
+            } as FHIRResponse<FHIR_VERSION, "batch">,
+          },
+        ];
       }
       // Mutations and invocations should only have one source
       case "invoke-request":
@@ -382,7 +394,7 @@ function createRouterMiddleware<
           context.ctx,
           context.request,
         );
-        return { ...context, response };
+        return [state, { ...context, response }];
       }
       case "capabilities-request":
       default:
@@ -399,11 +411,14 @@ function createRouterMiddleware<
 export default function RouterClient<CTX extends IGUHealthServerCTX>(
   middleware: MiddlewareAsyncChain<{ sources: Sources<CTX> }, CTX>[],
   sources: Sources<CTX>,
-): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
-  return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(
-    { sources },
-    createMiddlewareAsync([...middleware, createRouterMiddleware()], {
-      logging: false,
-    }),
+): AsynchronousClient<CTX> {
+  return new AsynchronousClient<CTX>(
+    createMiddlewareAsync(
+      { sources },
+      [...middleware, createRouterMiddleware()],
+      {
+        logging: false,
+      },
+    ),
   );
 }

@@ -30,31 +30,31 @@ function confirmTypeResponse<
 
 export default function sendQueueMiddleweare<
   CTX extends IGUHealthServerCTX,
-  State = unknown,
+  State = undefined,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function storageMiddleware(context, next) {
-    const res = await next(context);
+  return async function storageMiddleware(state, context, next) {
+    const res = await next(state, context);
 
-    switch (res.request.type) {
+    switch (res[1].request.type) {
       case "create-request":
       case "delete-request":
       case "update-request":
       case "patch-request":
       case "invoke-request": {
-        if (res.response?.type === "error-response") {
+        if (res[1].response?.type === "error-response") {
           return res;
         }
 
-        if (!res.response) {
+        if (!res[1].response) {
           throw new OperationError(
             outcomeError(
               "invalid",
-              `Response not found for request type '${res.request.type}'`,
+              `Response not found for request type '${res[1].request.type}'`,
             ),
           );
         }
 
-        if (!confirmTypeResponse(res.request, res.response)) {
+        if (!confirmTypeResponse(res[1].request, res[1].response)) {
           throw new OperationError(
             outcomeError(
               "invalid",
@@ -64,22 +64,22 @@ export default function sendQueueMiddleweare<
         }
 
         await context.ctx.queue.sendTenant(
-          res.ctx.tenant,
-          TenantTopic(res.ctx.tenant, OperationsTopic),
+          res[1].ctx.tenant,
+          TenantTopic(res[1].ctx.tenant, OperationsTopic),
           [
             {
               value: [
                 {
-                  fhirVersion: res.response.fhirVersion,
-                  type: toInteraction(res.request.type),
-                  request: res.request,
+                  fhirVersion: res[1].response.fhirVersion,
+                  type: toInteraction(res[1].request.type),
+                  request: res[1].request,
                   // eslint-disable-next-line
-                  response: res.response as any,
+                  response: res[1].response as any,
                   author: {
                     [CUSTOM_CLAIMS.RESOURCE_TYPE]:
-                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+                      res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
                     [CUSTOM_CLAIMS.RESOURCE_ID]:
-                      res.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+                      res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
                   },
                 },
               ],

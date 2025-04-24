@@ -621,12 +621,12 @@ async function httpResponseToFHIRResponse<Version extends FHIR_VERSION>(
   }
 }
 
-function httpMiddleware(): MiddlewareAsync<HTTPClientState, HTTPContext> {
-  return createMiddlewareAsync<HTTPClientState, HTTPContext>([
-    async (context) => {
+function httpMiddleware(state: HTTPClientState): MiddlewareAsync<HTTPContext> {
+  return createMiddlewareAsync<HTTPClientState, HTTPContext>(state, [
+    async (state, context) => {
       try {
         const httpRequest = await toHTTPRequest(
-          context.state,
+          state,
           context.ctx,
           context.request,
         );
@@ -643,15 +643,19 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, HTTPContext> {
           status: response.status,
           headers: Object.fromEntries(response.headers),
         };
-        return {
-          ...context,
-          response: fhirResponse,
-        };
+        return [
+          state,
+          {
+            ...context,
+
+            response: fhirResponse,
+          },
+        ];
       } catch (e) {
         if (isResponseError(e)) {
           if (e.response.body.issue[0].code === "login") {
-            if (context.state.authenticate) {
-              context.state.authenticate();
+            if (state.authenticate) {
+              state.authenticate();
             }
           }
         }
@@ -663,11 +667,8 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, HTTPContext> {
 
 export default function createHTTPClient(
   initialState: HTTPClientState,
-): AsynchronousClient<HTTPClientState, HTTPContext> {
+): AsynchronousClient<HTTPContext> {
   // Removing trailing slash
-  const middleware = httpMiddleware();
-  return new AsynchronousClient<HTTPClientState, HTTPContext>(
-    initialState,
-    middleware,
-  );
+  const middleware = httpMiddleware(initialState);
+  return new AsynchronousClient<HTTPContext>(middleware);
 }

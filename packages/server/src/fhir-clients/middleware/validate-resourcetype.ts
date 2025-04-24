@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 export default function validateResourceTypesAllowedMiddleware<State, CTX>(
   typesAllowed: ResourceType<FHIR_VERSION>[],
 ): MiddlewareAsyncChain<State, CTX> {
-  return async (context, next) => {
+  return async (state, context, next) => {
     if (context.request.level === "system") {
       throw new OperationError(
         outcomeError(
@@ -30,6 +30,6 @@ export default function validateResourceTypesAllowedMiddleware<State, CTX>(
         ),
       );
     }
-    return next(context);
+    return next(state, context);
   };
 }

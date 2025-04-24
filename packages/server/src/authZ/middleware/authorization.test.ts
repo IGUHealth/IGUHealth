@@ -5,7 +5,11 @@ import {
   FHIRRequest,
   FHIRResponse,
 } from "@iguhealth/client/lib/types";
-import { MiddlewareAsync } from "@iguhealth/client/middleware";
+import {
+  MiddlewareAsync,
+  MiddlewareAsyncChain,
+  createMiddlewareAsync,
+} from "@iguhealth/client/middleware";
 import {
   AccessPolicyV2,
   Patient,
@@ -55,40 +59,46 @@ test("Authorization test for read access on resource based on type and method", 
     },
   };
 
-  const responder: MiddlewareAsync<unknown, IGUHealthServerCTX> = async (
+  const responder: MiddlewareAsyncChain<unknown, IGUHealthServerCTX> = async (
+    state,
     context,
   ) => {
-    return {
-      ...context,
-      response: {
-        fhirVersion: context.request.fhirVersion,
-        type: "read-response",
-        level: "instance",
-        resource: "Patient",
-        id: "1" as id,
-        body: {
-          resourceType: "Patient",
-          id: "1",
-        } as Patient,
-      } as FHIRResponse<FHIR_VERSION, AllInteractions>,
-    };
+    return [
+      state,
+      {
+        ...context,
+        response: {
+          fhirVersion: context.request.fhirVersion,
+          type: "read-response",
+          level: "instance",
+          resource: "Patient",
+          id: "1" as id,
+          body: {
+            resourceType: "Patient",
+            id: "1",
+          } as Patient,
+        } as FHIRResponse<FHIR_VERSION, AllInteractions>,
+      },
+    ];
   };
+
+  const middleware = createMiddlewareAsync(undefined, [
+    authorizationMiddleware,
+    responder,
+  ]);
 
   expect(
     (
-      await authorizationMiddleware(
-        {
-          ctx: ctx,
-          state: {},
-          request: {
-            type: "read-request",
-            level: "instance",
-            resource: "Patient",
-            id: "1",
-          } as FHIRRequest<FHIR_VERSION, AllInteractions>,
-        },
-        responder,
-      )
+      await middleware({
+        ctx: ctx,
+
+        request: {
+          type: "read-request",
+          level: "instance",
+          resource: "Patient",
+          id: "1",
+        } as FHIRRequest<FHIR_VERSION, AllInteractions>,
+      })
     ).response,
   ).toEqual({
     type: "read-response",
@@ -103,18 +113,14 @@ test("Authorization test for read access on resource based on type and method", 
 
   expect(async () => {
     try {
-      await authorizationMiddleware(
-        {
-          ctx: ctx,
-          state: {},
-          request: {
-            type: "search-request",
-            level: "type",
-            resource: "Patient",
-          } as FHIRRequest<FHIR_VERSION, AllInteractions>,
-        },
-        responder,
-      );
+      await middleware({
+        ctx: ctx,
+        request: {
+          type: "search-request",
+          level: "type",
+          resource: "Patient",
+        } as FHIRRequest<FHIR_VERSION, AllInteractions>,
+      });
     } catch (e) {
       // @ts-ignore
       throw e.operationOutcome;

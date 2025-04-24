@@ -16,15 +16,13 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { InlineOp } from "./interface.js";
 
-function createExecutor(): MiddlewareAsync<
-  InlineOp<unknown, unknown>[],
-  IGUHealthServerCTX
-> {
-  return createMiddlewareAsync<
-    InlineOp<unknown, unknown>[],
-    IGUHealthServerCTX
-  >([
-    async (context) => {
+type ExecutorState = InlineOp<unknown, unknown>[];
+
+function createExecutor(
+  state: ExecutorState,
+): MiddlewareAsync<IGUHealthServerCTX> {
+  return createMiddlewareAsync<ExecutorState, IGUHealthServerCTX>(state, [
+    async (state, context) => {
       switch (context.request.fhirVersion) {
         case R4B: {
           throw new OperationError(
@@ -34,22 +32,25 @@ function createExecutor(): MiddlewareAsync<
         case R4: {
           switch (context.request.type) {
             case "invoke-request": {
-              for (const op of context.state) {
+              for (const op of state) {
                 if (op.code === context.request.operation) {
                   const parameterOutput = await op.execute(
                     context.ctx,
                     context.request as InvokeRequest<R4>,
                   );
-                  return {
-                    ...context,
-                    response: {
-                      fhirVersion: R4,
-                      type: "invoke-response",
-                      level: "system",
-                      operation: context.request.operation,
-                      body: parameterOutput,
+                  return [
+                    state,
+                    {
+                      ...context,
+                      response: {
+                        fhirVersion: R4,
+                        type: "invoke-response",
+                        level: "system",
+                        operation: context.request.operation,
+                        body: parameterOutput,
+                      },
                     },
-                  };
+                  ];
                 }
               }
               throw new OperationError(
@@ -73,30 +74,22 @@ function createExecutor(): MiddlewareAsync<
   ]);
 }
 
-class OperationClient extends AsynchronousClient<
-  InlineOp<unknown, unknown>[],
-  IGUHealthServerCTX
-> {
-  _state: InlineOp<unknown, unknown>[];
-  constructor(
-    initialState: InlineOp<unknown, unknown>[],
-    middleware: MiddlewareAsync<
-      InlineOp<unknown, unknown>[],
-      IGUHealthServerCTX
-    >,
-  ) {
-    super(initialState, middleware);
-    this._state = initialState;
+class OperationClient extends AsynchronousClient<IGUHealthServerCTX> {
+  private readonly _ops: InlineOp<unknown, unknown>[];
+  constructor(ops: InlineOp<unknown, unknown>[]) {
+    super(createExecutor(ops));
+    this._ops = ops;
   }
+
   supportedOperations(): OperationDefinition[] {
-    return this._state.map((op) => op.operationDefinition);
+    return this._ops.map((op) => op.operationDefinition);
   }
 }
 
 export default function InlineOperations(
   ops: InlineOp<unknown, unknown>[],
 ): OperationClient {
-  const client = new OperationClient(ops, createExecutor());
+  const client = new OperationClient(ops);
 
   return client;
 }
