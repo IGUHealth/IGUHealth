@@ -6,18 +6,22 @@ import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import xFhirQuery from "@iguhealth/x-fhir-query";
 
-import { PolicyContext, Result } from "../types.js";
+import { PolicyContext, PolicyResult } from "../types.js";
 
-export async function evaluateExpression<CTX, Role>(
-  context: PolicyContext<CTX, Role>,
+export async function evaluateExpression<
+  CTX,
+  Role,
+  Context extends PolicyContext<CTX, Role> = PolicyContext<CTX, Role>,
+>(
+  context: Context,
   policy: AccessPolicyV2,
   loc: pt.Loc<AccessPolicyV2, Expression | undefined, any>,
-  resolveVariable: <Context extends PolicyContext<CTX, Role>>(
+  resolveVariable: (
     context: Context,
     policy: AccessPolicyV2,
     variableId: id,
   ) => Promise<{ context: Context; value: unknown }>,
-): Promise<Result<CTX, Role, string | boolean | undefined>> {
+): Promise<PolicyResult<CTX, Role, string | boolean | undefined>> {
   let nextContext = context;
   const expression = pt.get(loc, policy);
   if (!expression) return { context, result: undefined };

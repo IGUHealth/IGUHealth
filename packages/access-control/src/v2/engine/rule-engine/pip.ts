@@ -50,12 +50,8 @@ function findVariable(
   return undefined;
 }
 
-const resolveVariable = async <
-  CTX,
-  Role,
-  Context extends PolicyContext<CTX, Role>,
->(
-  context: Context,
+const resolveVariable = async <CTX, Role>(
+  context: PolicyContext<CTX, Role>,
   _policy: AccessPolicyV2,
   variableId: id,
 ) => {
@@ -79,7 +75,7 @@ async function processAttribute<CTX, Role>(
     case attribute.operation !== undefined: {
       switch (attribute.operation.type) {
         case "read": {
-          const path = await evaluateExpression(
+          const path = await evaluateExpression<CTX, Role>(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
@@ -116,7 +112,7 @@ async function processAttribute<CTX, Role>(
 
         case "search-system": {
           const parameters =
-            (await evaluateExpression(
+            (await evaluateExpression<CTX, Role>(
               policyContext,
               policy,
               pt.descend(pt.descend(loc, "operation"), "params"),
@@ -141,7 +137,7 @@ async function processAttribute<CTX, Role>(
         }
 
         case "search-type": {
-          const path = await evaluateExpression(
+          const path = await evaluateExpression<CTX, Role>(
             policyContext,
             policy,
             pt.descend(pt.descend(loc, "operation"), "path"),
@@ -149,7 +145,7 @@ async function processAttribute<CTX, Role>(
           );
 
           const parameters =
-            (await evaluateExpression(
+            (await evaluateExpression<CTX, Role>(
               policyContext,
               policy,
               pt.descend(pt.descend(loc, "operation"), "params"),

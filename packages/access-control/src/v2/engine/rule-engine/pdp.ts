@@ -22,7 +22,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import pip from "./pip.js";
-import { PolicyContext, Result } from "../types.js";
+import { PolicyContext, PolicyResult } from "../types.js";
 import { evaluateExpression } from "./utilities.js";
 import { R4 } from "@iguhealth/fhir-types/versions";
 
@@ -32,14 +32,14 @@ const PERMISSION_LEVELS = {
   permit: <const>1,
 };
 
-const resolveVariable = async <CTX, Role, Context extends PolicyContext<CTX, Role>>(
-  context: Context,
+const resolveVariable = async <CTX, Role>(
+  context: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   variableId: id,
 ) => {
   const res = await pip(context, policy, variableId);
   return {
-    context: res.context as Context,
+    context: res.context as PolicyContext<CTX, Role>,
     value: res.attribute,
   };
 };
@@ -49,13 +49,13 @@ async function evaluateConditon<CTX, Role>(
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<
-  Result<CTX, Role, (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]>
+  PolicyResult<CTX, Role, (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]>
 > {
   const rule = pt.get(loc, policy);
   const effect: "permit" | "deny" =
     (rule?.effect as unknown as "permit" | "deny" | undefined) ?? "permit";
 
-  const evaluation = await evaluateExpression(
+  const evaluation = await evaluateExpression<CTX, Role>(
     context,
     policy,
     pt.descend(pt.descend(loc, "condition"), "expression"),
@@ -77,12 +77,12 @@ async function shouldEvaluateRule<CTX, Role>(
   policyContext: PolicyContext<CTX, Role>,
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2RuleTarget | undefined, any>,
   policy: AccessPolicyV2,
-): Promise<Result<CTX, Role, boolean>> {
+): Promise<PolicyResult<CTX, Role, boolean>> {
   const target = pt.get(loc, policy);
   if (target?.expression === undefined)
     return { context: policyContext, result: true };
 
-  const res =  await evaluateExpression(
+  const res =  await evaluateExpression<CTX, Role>(
     policyContext,    
     policy,
     pt.descend(loc, "expression"),
@@ -94,7 +94,7 @@ async function shouldEvaluateRule<CTX, Role>(
     );
   }
 
-  return res as Result<CTX, Role, boolean>
+  return res as PolicyResult<CTX, Role, boolean>
 }
 
 async function evaluateAccessPolicyRule<CTX, Role>(
@@ -102,7 +102,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
   loc: pt.Loc<AccessPolicyV2, AccessPolicyV2Rule | undefined, any>,
   policy: AccessPolicyV2,
 ): Promise<
-  Result<
+  PolicyResult<
     CTX,
     Role,
     (typeof PERMISSION_LEVELS)[keyof typeof PERMISSION_LEVELS]

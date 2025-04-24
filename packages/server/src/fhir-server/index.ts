@@ -4,7 +4,7 @@ import { pino } from "pino";
 import pretty from "pino-pretty";
 
 import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClient, FHIRClientAsync } from "@iguhealth/client/interface";
 import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
@@ -148,20 +148,21 @@ export function getRedisClient(): Redis {
 }
 
 export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
-  const storage = new AsynchronousClient<IGUHealthServerCTX>(
-    createMiddlewareAsync(
-      undefined,
-      [
-        createRequestToResponseMiddleware({
-          transaction_entry_limit: parseInt(
-            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT ?? "20",
-          ),
-        }),
-        sendQueueMiddleware(),
-      ],
-      { logging: false },
-    ),
-  );
+  const storage: FHIRClient<IGUHealthServerCTX> =
+    new AsynchronousClient<IGUHealthServerCTX>(
+      createMiddlewareAsync(
+        undefined,
+        [
+          createRequestToResponseMiddleware({
+            transaction_entry_limit: parseInt(
+              process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT ?? "20",
+            ),
+          }),
+          sendQueueMiddleware(),
+        ],
+        { logging: false },
+      ),
+    );
 
   const executioner = new AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
@@ -172,7 +173,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
   });
 
   const lambdaSource = createOperationExecutioner(executioner);
-  const inlineSource = InlineExecutioner([
+  const inlineOperations = InlineExecutioner([
     createDeployOperation(executioner),
     StructureDefinitionSnapshotInvoke,
     ResourceValidateInvoke,
@@ -207,14 +208,14 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
           useSource: (request) => {
             return (
               request.type === "invoke-request" &&
-              inlineSource
+              inlineOperations
                 .supportedOperations()
                 .map((op) => op.code)
                 .includes(request.operation)
             );
           },
         },
-        source: inlineSource,
+        middleware: inlineOperations.middleware,
       },
       {
         filter: {
@@ -224,7 +225,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["invoke-request"],
           },
         },
-        source: lambdaSource,
+        middleware: lambdaSource.middleware,
       },
       {
         filter: {
@@ -236,7 +237,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
           },
         },
-        source: createMembershipClient({ fhirDB: storage }),
+        middleware: createMembershipClient({ fhirDB: storage }).middleware,
       },
       {
         filter: {
@@ -255,7 +256,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: createArtifactClient({
+        middleware: createArtifactClient({
           db: new pg.Pool({
             host: process.env.ARTIFACT_DB_PG_HOST,
             password: process.env.ARTIFACT_DB_PG_PASSWORD,
@@ -269,7 +270,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             "vread-request",
             "history-request",
           ],
-        }),
+        }).middleware,
       },
       {
         filter: {
@@ -306,7 +307,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             ],
           },
         },
-        source: storage,
+        middleware: storage.middleware,
       },
     ],
   );

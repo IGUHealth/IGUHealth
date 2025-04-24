@@ -450,7 +450,7 @@ export class Memory<CTX extends IGUHealthServerCTX>
   implements MemoryClientInterface<CTX>
 {
   private readonly _client;
-
+  public middleware: MiddlewareAsync<CTX>;
   public request: FHIRClientAsync<CTX>["request"];
   public capabilities: FHIRClientAsync<CTX>["capabilities"];
   public search_system: FHIRClientAsync<CTX>["search_system"];
@@ -485,6 +485,7 @@ export class Memory<CTX extends IGUHealthServerCTX>
       createMemoryMiddleware({ data }),
     );
 
+    this.middleware = client.middleware;
     this._client = client;
     this.request = this._client.request.bind(this._client);
     this.capabilities = this._client.capabilities.bind(this._client);

@@ -8,6 +8,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 
+import { MiddlewareAsync } from "./middleware/index.js";
 import type {
   AllInteractions,
   FHIRRequest,
@@ -31,6 +32,7 @@ export interface FHIRClientAsync<CTX> {
     ctx: CTX,
     request: FHIRRequest<Version, I>,
   ): Promise<FHIRResponse<Version, I | "error">>;
+  middleware: MiddlewareAsync<CTX>;
   capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
