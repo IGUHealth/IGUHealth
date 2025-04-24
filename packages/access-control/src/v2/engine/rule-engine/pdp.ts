@@ -32,14 +32,14 @@ const PERMISSION_LEVELS = {
   permit: <const>1,
 };
 
-const resolveVariable = async <CTX, Role, Context extends PolicyContext<CTX, Role>>(
-  context: Context,
+const resolveVariable = async <CTX, Role>(
+  context: PolicyContext<CTX, Role>,
   policy: AccessPolicyV2,
   variableId: id,
 ) => {
   const res = await pip(context, policy, variableId);
   return {
-    context: res.context as Context,
+    context: res.context as PolicyContext<CTX, Role>,
     value: res.attribute,
   };
 };
@@ -55,7 +55,7 @@ async function evaluateConditon<CTX, Role>(
   const effect: "permit" | "deny" =
     (rule?.effect as unknown as "permit" | "deny" | undefined) ?? "permit";
 
-  const evaluation = await evaluateExpression(
+  const evaluation = await evaluateExpression<CTX, Role>(
     context,
     policy,
     pt.descend(pt.descend(loc, "condition"), "expression"),
@@ -82,7 +82,7 @@ async function shouldEvaluateRule<CTX, Role>(
   if (target?.expression === undefined)
     return { context: policyContext, result: true };
 
-  const res =  await evaluateExpression(
+  const res =  await evaluateExpression<CTX, Role>(
     policyContext,    
     policy,
     pt.descend(loc, "expression"),
