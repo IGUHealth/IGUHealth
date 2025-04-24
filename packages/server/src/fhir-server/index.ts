@@ -214,7 +214,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             );
           },
         },
-        source: inlineSource,
+        middleware: inlineSource,
       },
       {
         filter: {
@@ -224,7 +224,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["invoke-request"],
           },
         },
-        source: lambdaSource,
+        middleware: lambdaSource,
       },
       {
         filter: {
@@ -236,7 +236,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
           },
         },
-        source: createMembershipClient({ fhirDB: storage }),
+        middleware: createMembershipClient({ fhirDB: storage }),
       },
       {
         filter: {
@@ -255,7 +255,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: createArtifactClient({
+        middleware: createArtifactClient({
           db: new pg.Pool({
             host: process.env.ARTIFACT_DB_PG_HOST,
             password: process.env.ARTIFACT_DB_PG_PASSWORD,
@@ -306,7 +306,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             ],
           },
         },
-        source: storage,
+        middleware: storage,
       },
     ],
   );

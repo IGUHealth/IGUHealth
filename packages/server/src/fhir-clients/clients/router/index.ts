@@ -1,6 +1,6 @@
 import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClient } from "@iguhealth/client/interface";
 import {
+  MiddlewareAsync,
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
@@ -61,7 +61,7 @@ type Source<CTX> = {
     ) => boolean;
   };
 
-  source: FHIRClient<CTX>;
+  middleware: MiddlewareAsync<CTX>;
 };
 type Sources<CTX> = Source<CTX>[];
 
@@ -182,32 +182,32 @@ function createRouterMiddleware<
     switch (context.request.type) {
       // Multi-types allowed
       case "search-request": {
-        const responses = (
-          await Promise.all(
-            sources.map((source) =>
-              source.source.request(context.ctx, context.request),
-            ),
-          )
-        ).filter(
-          (
-            res,
-          ): res is
-            | TypeSearchResponse<FHIR_VERSION>
-            | SystemSearchResponse<FHIR_VERSION> =>
-            res.type === "search-response",
+        const responses = await Promise.all(
+          sources.map((source) => source.middleware(context)),
         );
 
-        const entry = responses.map((b) => b.body.entry ?? []).flat();
+        const searchResponses = responses
+          .map((r) => r.response)
+          .filter(
+            (
+              res,
+            ): res is
+              | TypeSearchResponse<FHIR_VERSION>
+              | SystemSearchResponse<FHIR_VERSION> =>
+              res?.type === "search-response",
+          );
+
+        const entry = searchResponses.map((b) => b.body.entry ?? []).flat();
         return [
           state,
           {
             ...context,
             response: {
-              ...responses[0],
+              ...searchResponses[0],
               body: {
                 resourceType: "Bundle",
                 type: "searchset" as r4.code,
-                total: responses.reduce(
+                total: searchResponses.reduce(
                   (acc: number | undefined, res) =>
                     res.body.total ? (acc ?? 0) + res.body.total : undefined,
                   undefined,
@@ -218,31 +218,32 @@ function createRouterMiddleware<
           },
         ];
       }
+
       case "history-request": {
-        const responses = (
-          await Promise.all(
-            sources.map((source) =>
-              source.source.request(context.ctx, context.request),
-            ),
-          )
-        ).filter(
-          (
-            res,
-          ): res is
-            | SystemHistoryResponse<FHIR_VERSION>
-            | TypeHistoryResponse<FHIR_VERSION>
-            | InstanceHistoryResponse<FHIR_VERSION> =>
-            res.type === "history-response",
+        const responses = await Promise.all(
+          sources.map((source) => source.middleware(context)),
         );
 
-        const entry = responses.map((b) => b.body.entry ?? []).flat();
+        const historyResponses = responses
+          .map((r) => r.response)
+          .filter(
+            (
+              res,
+            ): res is
+              | SystemHistoryResponse<FHIR_VERSION>
+              | TypeHistoryResponse<FHIR_VERSION>
+              | InstanceHistoryResponse<FHIR_VERSION> =>
+              res?.type === "history-response",
+          );
+
+        const entry = historyResponses.map((b) => b.body.entry ?? []).flat();
 
         return [
           state,
           {
             ...context,
             response: {
-              ...responses[0],
+              ...historyResponses[0],
               body: {
                 resourceType: "Bundle",
                 type: "history" as r4.code,
@@ -255,24 +256,21 @@ function createRouterMiddleware<
       // Search for the first one successful
       case "read-request":
       case "vread-request": {
-        const responses = (
-          await Promise.all(
-            sources.map(async (source) => {
-              try {
-                return await source.source.request(
-                  context.ctx,
-                  context.request,
-                );
-              } catch (e) {
-                context.ctx.logger.error(e);
-                return undefined;
-              }
-            }),
-          )
-        ).filter(
-          (response): response is FHIRResponse<FHIR_VERSION, AllInteractions> =>
-            response !== undefined,
+        const responses = await Promise.all(
+          sources.map(async (source) => {
+            try {
+              return await source.middleware(context);
+            } catch (e) {
+              context.ctx.logger.error(e);
+              return undefined;
+            }
+          }),
         );
+
+        // .filter(
+        //   (response): response is FHIRResponse<FHIR_VERSION, AllInteractions> =>
+        //     response !== undefined,
+        // );
 
         if (responses.length > 1)
           throw new OperationError(
@@ -284,13 +282,7 @@ function createRouterMiddleware<
             outcomeError("not-found", `Resource not found`),
           );
 
-        return [
-          state,
-          {
-            ...context,
-            response: responses[0],
-          },
-        ];
+        return [state, responses[0] as NonNullable<(typeof responses)[0]>];
       }
 
       case "batch-request": {
@@ -322,6 +314,7 @@ function createRouterMiddleware<
                   context.ctx,
                   fhirRequest,
                 );
+
                 return fhirResponseToBundleEntry(
                   context.ctx.tenant,
                   fhirResponse,
@@ -390,11 +383,8 @@ function createRouterMiddleware<
             ),
           );
         const source = sources[0];
-        const response = await source.source.request(
-          context.ctx,
-          context.request,
-        );
-        return [state, { ...context, response }];
+        const response = await source.middleware(context);
+        return [state, response];
       }
       case "capabilities-request":
       default:
