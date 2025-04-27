@@ -164,11 +164,10 @@ export function findSource<T>(
   }
 }
 
-function createRouterMiddleware<
-  CTX extends IGUHealthServerCTX,
-  State extends { sources: Sources<CTX> },
->(): MiddlewareAsyncChain<State, CTX> {
-  return async function routerMiddleware(state, context) {
+function createRouterMiddleware<CTX extends IGUHealthServerCTX, State>(state: {
+  sources: Sources<CTX>;
+}): MiddlewareAsyncChain<State, CTX> {
+  return async function routerMiddleware(_state, context) {
     const sources = findSource(state.sources, context.request);
 
     if (sources.length === 0) {
@@ -200,7 +199,7 @@ function createRouterMiddleware<
 
         const entry = searchResponses.map((b) => b.body.entry ?? []).flat();
         return [
-          state,
+          _state,
           {
             ...context,
             response: {
@@ -240,7 +239,7 @@ function createRouterMiddleware<
         const entry = historyResponses.map((b) => b.body.entry ?? []).flat();
 
         return [
-          state,
+          _state,
           {
             ...context,
             response: {
@@ -283,7 +282,7 @@ function createRouterMiddleware<
             outcomeError("not-found", `Resource not found`),
           );
 
-        return [state, responses[0] as NonNullable<(typeof responses)[0]>];
+        return [_state, responses[0] as NonNullable<(typeof responses)[0]>];
       }
 
       case "batch-request": {
@@ -347,7 +346,7 @@ function createRouterMiddleware<
           ),
         );
         return [
-          state,
+          _state,
           {
             ...context,
             response: {
@@ -385,7 +384,7 @@ function createRouterMiddleware<
           );
         const source = sources[0];
         const response = await source.middleware(context);
-        return [state, response];
+        return [_state, response];
       }
       case "capabilities-request":
       default:
@@ -400,13 +399,13 @@ function createRouterMiddleware<
 }
 
 export default function RouterClient<CTX extends IGUHealthServerCTX>(
-  middleware: MiddlewareAsyncChain<{ sources: Sources<CTX> }, CTX>[],
+  middleware: MiddlewareAsyncChain<undefined, CTX>[],
   sources: Sources<CTX>,
 ): FHIRClient<CTX> {
   return new AsynchronousClient<CTX>(
     createMiddlewareAsync(
-      { sources },
-      [...middleware, createRouterMiddleware()],
+      undefined,
+      [...middleware, createRouterMiddleware({ sources })],
       {
         logging: false,
       },
