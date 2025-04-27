@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/test-e2e",
-  "version": "0.17.1",
+  "version": "0.18.0",
   "private": true,
   "scripts": {
     "e2e:run": "yarn run e2e:run:admin-app",
