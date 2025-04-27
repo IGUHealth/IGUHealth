@@ -1,5 +1,3 @@
-import { resolve } from "node:path";
-
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/lib/interface";
 import {
