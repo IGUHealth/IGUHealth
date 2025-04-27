@@ -1,8 +1,11 @@
+import { resolve } from "node:path";
+
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClient } from "@iguhealth/client/lib/interface";
 import {
   MiddlewareAsync,
   MiddlewareAsyncChain,
+  MiddlewareContext,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
@@ -54,6 +57,7 @@ type R4BFilter = {
 };
 
 type Source<CTX> = {
+  sources?: Source<CTX>[];
   filter?: {
     r4?: R4Filter;
     r4b?: R4BFilter;
@@ -62,7 +66,7 @@ type Source<CTX> = {
     ) => boolean;
   };
 
-  middleware: MiddlewareAsync<CTX>;
+  middleware: MiddlewareAsync<CTX>[];
 };
 type Sources<CTX> = Source<CTX>[];
 
@@ -164,6 +168,17 @@ export function findSource<T>(
   }
 }
 
+async function resolveSource<CTX>(
+  source: Source<CTX>,
+  context: MiddlewareContext<CTX>,
+) {
+  let curContext = context;
+  for (const middleware of source.middleware) {
+    curContext = await middleware(curContext);
+  }
+  return curContext;
+}
+
 function createRouterMiddleware<
   CTX extends IGUHealthServerCTX,
   State extends { sources: Sources<CTX> },
@@ -184,7 +199,7 @@ function createRouterMiddleware<
       // Multi-types allowed
       case "search-request": {
         const responses = await Promise.all(
-          sources.map((source) => source.middleware(context)),
+          sources.map((source) => resolveSource(source, context)),
         );
 
         const searchResponses = responses
@@ -222,7 +237,7 @@ function createRouterMiddleware<
 
       case "history-request": {
         const responses = await Promise.all(
-          sources.map((source) => source.middleware(context)),
+          sources.map((source) => resolveSource(source, context)),
         );
 
         const historyResponses = responses
@@ -260,7 +275,7 @@ function createRouterMiddleware<
         const responses = await Promise.all(
           sources.map(async (source) => {
             try {
-              return await source.middleware(context);
+              return await resolveSource(source, context);
             } catch (e) {
               context.ctx.logger.error(e);
               return undefined;
@@ -384,7 +399,7 @@ function createRouterMiddleware<
             ),
           );
         const source = sources[0];
-        const response = await source.middleware(context);
+        const response = await resolveSource(source, context);
         return [state, response];
       }
       case "capabilities-request":

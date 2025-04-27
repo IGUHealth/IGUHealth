@@ -24,19 +24,21 @@ test("Test routing on resourceTypes", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        middleware: new Memory({
-          [R4]: {
-            ["Patient"]: {
-              ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Patient"]: {
+                ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
+              },
+              ["Practitioner"]: {
+                ["3" as id]: {
+                  id: "3",
+                  resourceType: "Practitioner",
+                } as Practitioner,
+              },
             },
-            ["Practitioner"]: {
-              ["3" as id]: {
-                id: "3",
-                resourceType: "Practitioner",
-              } as Practitioner,
-            },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
       {
         filter: {
@@ -46,19 +48,21 @@ test("Test routing on resourceTypes", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        middleware: new Memory({
-          [R4]: {
-            ["Patient"]: {
-              ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Patient"]: {
+                ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
+              },
+              ["Practitioner"]: {
+                ["4" as id]: {
+                  id: "4",
+                  resourceType: "Practitioner",
+                } as Practitioner,
+              },
             },
-            ["Practitioner"]: {
-              ["4" as id]: {
-                id: "4",
-                resourceType: "Practitioner",
-              } as Practitioner,
-            },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
     ],
   );
@@ -98,17 +102,19 @@ test("Test routing priority", async () => {
           },
         },
 
-        middleware: new Memory({
-          [R4]: {
-            ["Practitioner"]: {
-              ["4" as id]: {
-                id: "4",
-                resourceType: "Practitioner",
-                name: [{ given: ["TEST"] }],
-              } as Practitioner,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Practitioner"]: {
+                ["4" as id]: {
+                  id: "4",
+                  resourceType: "Practitioner",
+                  name: [{ given: ["TEST"] }],
+                } as Practitioner,
+              },
             },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
       {
         filter: {
@@ -125,17 +131,19 @@ test("Test routing priority", async () => {
             );
           },
         },
-        middleware: new Memory({
-          [R4]: {
-            ["Practitioner"]: {
-              ["5" as id]: {
-                id: "5",
-                resourceType: "Practitioner",
-                name: [{ given: ["TEST"] }],
-              } as Practitioner,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Practitioner"]: {
+                ["5" as id]: {
+                  id: "5",
+                  resourceType: "Practitioner",
+                  name: [{ given: ["TEST"] }],
+                } as Practitioner,
+              },
             },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
     ],
   );
@@ -170,17 +178,19 @@ test("Test routing priority", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        middleware: new Memory({
-          [R4]: {
-            ["Practitioner"]: {
-              ["4" as id]: {
-                id: "4",
-                resourceType: "Practitioner",
-                name: [{ given: ["TEST"] }],
-              } as Practitioner,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Practitioner"]: {
+                ["4" as id]: {
+                  id: "4",
+                  resourceType: "Practitioner",
+                  name: [{ given: ["TEST"] }],
+                } as Practitioner,
+              },
             },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
       {
         filter: {
@@ -190,17 +200,19 @@ test("Test routing priority", async () => {
             return false;
           },
         },
-        middleware: new Memory({
-          [R4]: {
-            ["Practitioner"]: {
-              ["5" as id]: {
-                id: "5",
-                resourceType: "Practitioner",
-                name: [{ given: ["TEST"] }],
-              } as Practitioner,
+        middleware: [
+          new Memory({
+            [R4]: {
+              ["Practitioner"]: {
+                ["5" as id]: {
+                  id: "5",
+                  resourceType: "Practitioner",
+                  name: [{ given: ["TEST"] }],
+                } as Practitioner,
+              },
             },
-          },
-        }).middleware,
+          }).middleware,
+        ],
       },
     ],
   );

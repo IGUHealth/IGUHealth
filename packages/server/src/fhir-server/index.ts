@@ -215,7 +215,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             );
           },
         },
-        middleware: inlineOperations.middleware,
+        middleware: [inlineOperations.middleware],
       },
       {
         filter: {
@@ -225,7 +225,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["invoke-request"],
           },
         },
-        middleware: lambdaSource.middleware,
+        middleware: [lambdaSource.middleware],
       },
       {
         filter: {
@@ -237,7 +237,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: MEMBERSHIP_METHODS_ALLOWED,
           },
         },
-        middleware: createMembershipClient({ fhirDB: storage }).middleware,
+        middleware: [createMembershipClient().middleware, storage.middleware],
       },
       {
         filter: {
@@ -256,21 +256,23 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        middleware: createArtifactClient({
-          db: new pg.Pool({
-            host: process.env.ARTIFACT_DB_PG_HOST,
-            password: process.env.ARTIFACT_DB_PG_PASSWORD,
-            user: process.env.ARTIFACT_DB_PG_USERNAME,
-            database: process.env.ARTIFACT_DB_PG_NAME,
-            port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
-          }),
-          operationsAllowed: [
-            "read-request",
-            "search-request",
-            "vread-request",
-            "history-request",
-          ],
-        }).middleware,
+        middleware: [
+          createArtifactClient({
+            db: new pg.Pool({
+              host: process.env.ARTIFACT_DB_PG_HOST,
+              password: process.env.ARTIFACT_DB_PG_PASSWORD,
+              user: process.env.ARTIFACT_DB_PG_USERNAME,
+              database: process.env.ARTIFACT_DB_PG_NAME,
+              port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+            }),
+            operationsAllowed: [
+              "read-request",
+              "search-request",
+              "vread-request",
+              "history-request",
+            ],
+          }).middleware,
+        ],
       },
       {
         filter: {
@@ -307,7 +309,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
             ],
           },
         },
-        middleware: storage.middleware,
+        middleware: [storage.middleware],
       },
     ],
   );
