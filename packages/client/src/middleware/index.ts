@@ -2,7 +2,11 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { AllInteractions, FHIRRequest, FHIRResponse } from "../types/index.js";
 
-type Context<CTX, Request, Response> = {
+export type MiddlewareContext<
+  CTX,
+  Request = FHIRRequest<FHIR_VERSION, AllInteractions>,
+  Response = FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
+> = {
   key?: string;
   ctx: CTX;
   request: Request;
@@ -16,9 +20,9 @@ export type MiddlewareAsyncChain<
   Response = FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 > = (
   state: State,
-  ctx: Context<CTX, Request, Response>,
+  ctx: MiddlewareContext<CTX, Request, Response>,
   next: Next<State, CTX, Request, Response>,
-) => Promise<[State, Context<CTX, Request, Response>]>;
+) => Promise<[State, MiddlewareContext<CTX, Request, Response>]>;
 
 type Next<
   State,
@@ -27,16 +31,16 @@ type Next<
   Response = FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 > = (
   state: State,
-  context: Context<CTX, Request, Response>,
-) => Promise<[State, Context<CTX, Request, Response>]>;
+  context: MiddlewareContext<CTX, Request, Response>,
+) => Promise<[State, MiddlewareContext<CTX, Request, Response>]>;
 
 export type MiddlewareAsync<
   CTX,
   Request = FHIRRequest<FHIR_VERSION, AllInteractions>,
   Response = FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
 > = (
-  ctx: Context<CTX, Request, Response>,
-) => Promise<Context<CTX, Request, Response>>;
+  ctx: MiddlewareContext<CTX, Request, Response>,
+) => Promise<MiddlewareContext<CTX, Request, Response>>;
 
 function createNext<
   State,

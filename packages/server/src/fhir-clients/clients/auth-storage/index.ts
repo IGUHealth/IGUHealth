@@ -89,10 +89,6 @@ function determineEmailUpdate(
   return current.email_verified;
 }
 
-type AuthState = {
-  fhirDB: IGUHealthServerCTX["client"];
-};
-
 async function customValidationMembership(
   membership: Membership,
 ): Promise<void> {
@@ -107,7 +103,7 @@ async function customValidationMembership(
 }
 
 function setInTransactionMiddleware<
-  State extends AuthState,
+  State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (state, context, next) => {
@@ -125,7 +121,7 @@ function setInTransactionMiddleware<
  * @returns MiddlewareAsyncChain
  */
 function limitOwnershipEdits<
-  State extends AuthState,
+  State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (state, context, next) => {
@@ -157,7 +153,7 @@ function limitOwnershipEdits<
           case "instance": {
             const id = context.request.id;
 
-            const membership = await state.fhirDB.read(
+            const membership = await context.ctx.client.read(
               context.ctx,
               R4,
               "Membership",
@@ -208,9 +204,7 @@ function limitOwnershipEdits<
 }
 
 function customValidationMembershipMiddleware<
-  State extends {
-    fhirDB: IGUHealthServerCTX["client"];
-  },
+  State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (state, context, next) => {
@@ -228,7 +222,7 @@ function customValidationMembershipMiddleware<
 }
 
 function setEmailVerified<
-  State extends AuthState,
+  State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (state, context, next) => {
@@ -271,7 +265,7 @@ function setEmailVerified<
 }
 
 function updateUserTableMiddleware<
-  State extends AuthState,
+  State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (state, context, next) => {
@@ -317,7 +311,7 @@ function updateUserTableMiddleware<
           case "instance": {
             const id = context.request.id;
 
-            const membership = await state.fhirDB.read(
+            const membership = await context.ctx.client.read(
               context.ctx,
               R4,
               "Membership",
@@ -383,10 +377,10 @@ function updateUserTableMiddleware<
   };
 }
 
-function createAuthMiddleware<CTX extends IGUHealthServerCTX>(
-  state: AuthState,
-): MiddlewareAsync<CTX> {
-  return createMiddlewareAsync<AuthState, CTX>(state, [
+function createAuthMiddleware<
+  CTX extends IGUHealthServerCTX,
+>(): MiddlewareAsync<CTX> {
+  return createMiddlewareAsync<undefined, CTX>(undefined, [
     validateResourceTypesAllowedMiddleware(MEMBERSHIP_RESOURCE_TYPES),
     validateOperationsAllowed(MEMBERSHIP_METHODS_ALLOWED),
     customValidationMembershipMiddleware(),
@@ -395,20 +389,11 @@ function createAuthMiddleware<CTX extends IGUHealthServerCTX>(
     updateUserTableMiddleware(),
     limitOwnershipEdits(),
     // validateOwnershipMiddleware(),
-    async (state, context) => {
-      return [
-        state,
-        {
-          ...context,
-          response: await state.fhirDB.request(context.ctx, context.request),
-        },
-      ];
-    },
   ]);
 }
 
-export function createMembershipClient<CTX extends IGUHealthServerCTX>(
-  state: AuthState,
-): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<CTX>(createAuthMiddleware(state));
+export function createMembershipClient<
+  CTX extends IGUHealthServerCTX,
+>(): FHIRClientAsync<CTX> {
+  return new AsynchronousClient<CTX>(createAuthMiddleware());
 }
