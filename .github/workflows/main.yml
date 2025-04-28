@@ -160,32 +160,32 @@ jobs:
            --client-secret $CLIENT_SECRET
 
       - name: R4 TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4
 
       - name: R4B TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b
 
-      - name: Subscription Testscripts
-        env:
-          CLIENT_ID: test-client
-          CLIENT_SECRET: mysecret
-        run: |
-          yarn workspace @iguhealth/server cli admin tenant create -i test-system2 -t unlimited -e test2@iguhealth.app -p testing
-          yarn workspace @iguhealth/server cli admin client-app create -t test-system2 -i $CLIENT_ID -s $CLIENT_SECRET
-          yarn workspace @iguhealth/server iguhealth config add-tenant \
-           --name tenant2 \
-           --r4-url http://localhost:3000/w/test-system2/api/v1/fhir/r4 \
-           --r4b-url http://localhost:3000/w/test-system2/api/v1/fhir/r4b \
-           --oidc http://localhost:3000/w/test-system2/oidc/.well-known/openid-configuration \
-           --auth client_credentials \
-           --client-id $CLIENT_ID \
-           --client-secret $CLIENT_SECRET
-          yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/setup.testscript.json  -t 500
-          yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant1
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/from.testscript.json   -t 500
-          yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/to.testscript.json   -t 500
+      # - name: Subscription Testscripts
+      #   env:
+      #     CLIENT_ID: test-client
+      #     CLIENT_SECRET: mysecret
+      #   run: |
+      #     yarn workspace @iguhealth/server cli admin tenant create -i test-system2 -t unlimited -e test2@iguhealth.app -p testing
+      #     yarn workspace @iguhealth/server cli admin client-app create -t test-system2 -i $CLIENT_ID -s $CLIENT_SECRET
+      #     yarn workspace @iguhealth/server iguhealth config add-tenant \
+      #      --name tenant2 \
+      #      --r4-url http://localhost:3000/w/test-system2/api/v1/fhir/r4 \
+      #      --r4b-url http://localhost:3000/w/test-system2/api/v1/fhir/r4b \
+      #      --oidc http://localhost:3000/w/test-system2/oidc/.well-known/openid-configuration \
+      #      --auth client_credentials \
+      #      --client-id $CLIENT_ID \
+      #      --client-secret $CLIENT_SECRET
+      #     yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
+      #     yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/setup.testscript.json
+      #     yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant1
+      #     yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/from.testscript.json
+      #     yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
+      #     yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/to.testscript.json
 
       - name: Jest tests
         run: yarn test

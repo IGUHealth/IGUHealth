@@ -14,10 +14,10 @@ import { PostgresSearchEngine } from "../../../search-stores/postgres/index.js";
 import { PostgresStore } from "../../../storage/postgres/index.js";
 import createRequestToResponseMiddleware from "../../middleware/request-to-response.js";
 import {
-  createInTransactionMiddleware,
-  createSynchronousIndexingMiddleware,
-  createSynchronousStorageMiddleware,
-} from "../../middleware/synchronous-storage.js";
+  indexingMiddleware,
+  storageMiddleware,
+  transactionMiddleware,
+} from "../../middleware/storage.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 
 type ArtifactConfig = {
@@ -78,9 +78,9 @@ export function createArtifactClient<CTX extends IGUHealthServerCTX>(
         createRequestToResponseMiddleware({
           transaction_entry_limit: 0,
         }),
-        createInTransactionMiddleware(),
-        createSynchronousStorageMiddleware(),
-        createSynchronousIndexingMiddleware(),
+        transactionMiddleware(),
+        storageMiddleware(),
+        indexingMiddleware(),
       ],
       {
         logging: false,

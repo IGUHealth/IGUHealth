@@ -14,31 +14,42 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { toMethod } from "../../queue/consumers/handlers/storage.js";
 import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
-import { DBTransaction } from "../../transactions.js";
+import { StorageTransaction } from "../../transactions.js";
 import { toDBFHIRVersion } from "../utilities/version.js";
 
-export function createInTransactionMiddleware<
+export function transactionMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
-  return async function inTransactionMiddleware(state, context, next) {
-    return DBTransaction(
-      context.ctx,
-      db.IsolationLevel.RepeatableRead,
-      async (ctx) => {
-        return next(state, {
-          ...context,
-          ctx: {
-            ...context.ctx,
-            search: new PostgresSearchEngine(ctx.store.getClient()),
+  return async function transactionmiddleware(state, context, next) {
+    switch (context.response?.type) {
+      case "create-response":
+      case "update-response":
+      case "patch-response":
+      case "delete-response":
+        return StorageTransaction(
+          context.ctx,
+          db.IsolationLevel.RepeatableRead,
+          async (txCTX) => {
+            return next(state, {
+              ...context,
+              ctx: {
+                ...txCTX,
+                search: new PostgresSearchEngine(txCTX.store.getClient()),
+              },
+            });
           },
-        });
-      },
-    );
+        );
+
+      default: {
+        // No need to do anything.
+        return next(state, context);
+      }
+    }
   };
 }
 
-export function createSynchronousStorageMiddleware<
+export function storageMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
@@ -112,14 +123,6 @@ export function createSynchronousStorageMiddleware<
         }
         break;
       }
-      case "transaction-response": {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `Transactions not supported for synchronous middleware.`,
-          ),
-        );
-      }
       default: {
         // No need to do anything.
       }
@@ -132,7 +135,7 @@ export function createSynchronousStorageMiddleware<
  * Indexing middleware for searching. This happens within a single transaction if single postgres[1].
  * @returns
  */
-export function createSynchronousIndexingMiddleware<
+export function indexingMiddleware<
   State,
   CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {

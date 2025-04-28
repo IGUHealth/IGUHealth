@@ -20,7 +20,7 @@ import {
 
 import { KoaExtensions, asRoot } from "../../../../fhir-server/types.js";
 import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
-import { DBTransaction } from "../../../../transactions.js";
+import { StorageTransaction } from "../../../../transactions.js";
 import * as views from "../../../../views/index.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -204,7 +204,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
       return;
     }
     try {
-      await DBTransaction(
+      await StorageTransaction(
         ctx.state.iguhealth,
         db.IsolationLevel.Serializable,
         async (fhirContext) => {

@@ -1,4 +1,5 @@
 import jsonpatch, { Operation as JSONPatchOperation } from "fast-json-patch";
+import * as db from "zapatos/db";
 
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import {
@@ -27,7 +28,7 @@ import { httpRequestToFHIRRequest } from "../../fhir-http/index.js";
 import { validateResource } from "../../fhir-operation-executors/providers/local/ops/resource_validate.js";
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import {
-  QueueBatch,
+  StorageTransaction,
   buildTransactionTopologicalGraph,
 } from "../../transactions.js";
 import {
@@ -817,126 +818,135 @@ export default function createRequestToResponseMiddleware<
       }
       case "transaction-request": {
         let transactionBundle = context.request.body;
-        const { locationsToUpdate, order } =
-          await buildTransactionTopologicalGraph(
-            context.ctx,
-            context.request.fhirVersion,
-            transactionBundle,
-          );
-        if ((transactionBundle.entry || []).length > transaction_entry_limit) {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `Transaction bundle only allowed to have '${
-                transaction_entry_limit
-              }' entries. Current bundle has '${
-                (transactionBundle.entry || []).length
-              }'`,
-            ),
-          );
-        }
-
-        const responseEntries = [
-          ...new Array((transactionBundle.entry || []).length),
-        ];
-
-        return QueueBatch(context.ctx, async (ctx: IGUHealthServerCTX) => {
-          for (const index of order) {
-            const entry = transactionBundle.entry?.[parseInt(index)];
-            if (!entry)
-              throw new OperationError(
-                outcomeFatal(
-                  "exception",
-                  "invalid entry in transaction processing.",
-                ),
+        return StorageTransaction(
+          context.ctx,
+          db.IsolationLevel.RepeatableRead,
+          async (txCTX) => {
+            const { locationsToUpdate, order } =
+              await buildTransactionTopologicalGraph(
+                txCTX,
+                context.request.fhirVersion,
+                transactionBundle,
               );
-
-            if (!entry.request?.method) {
+            if (
+              (transactionBundle.entry ?? []).length > transaction_entry_limit
+            ) {
               throw new OperationError(
                 outcomeError(
                   "invalid",
-                  `No request.method found at index '${index}'`,
-                ),
-              );
-            }
-            if (!entry.request?.url) {
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  `No request.url found at index '${index}'`,
+                  `Transaction bundle only allowed to have '${
+                    transaction_entry_limit
+                  }' entries. Current bundle has '${
+                    (transactionBundle.entry ?? []).length
+                  }'`,
                 ),
               );
             }
 
-            const fhirRequest = httpRequestToFHIRRequest(
-              context.request.fhirVersion,
-              {
-                url: entry.request?.url || "",
-                method: entry.request?.method,
-                body: entry.resource,
-              },
-            );
+            const responseEntries = [
+              ...new Array((transactionBundle.entry ?? []).length),
+            ];
 
-            const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+            for (const index of order) {
+              const entry = transactionBundle.entry?.[parseInt(index)];
+              if (!entry)
+                throw new OperationError(
+                  outcomeFatal(
+                    "exception",
+                    "invalid entry in transaction processing.",
+                  ),
+                );
 
-            const responseEntry = fhirResponseToBundleEntry(
-              ctx.tenant,
-              fhirResponse,
-            );
-            responseEntries[parseInt(index)] = responseEntry;
-            // Generate patches to update the transaction references.
-            const patches = entry.fullUrl
-              ? (locationsToUpdate[entry.fullUrl] || []).map(
-                  (loc): JSONPatchOperation => {
-                    if (!responseEntry.response?.location)
-                      throw new OperationError(
-                        outcomeFatal(
-                          "exception",
-                          "response location not found during transaction processing",
-                        ),
-                      );
-                    return {
-                      path: `/${loc.join("/")}`,
-                      op: "replace",
-                      value: {
-                        reference: responseEntry.response?.location,
-                      },
-                    };
-                  },
-                )
-              : [];
+              if (!entry.request?.method) {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `No request.method found at index '${index}'`,
+                  ),
+                );
+              }
+              if (!entry.request?.url) {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `No request.url found at index '${index}'`,
+                  ),
+                );
+              }
 
-            // End of loop and operation
-            // Now update transaction bundle with applied references.
-            transactionBundle = jsonpatch.applyPatch(
-              transactionBundle,
-              patches,
-            ).newDocument;
-          }
+              const fhirRequest = httpRequestToFHIRRequest(
+                context.request.fhirVersion,
+                {
+                  url: entry.request?.url ?? "",
+                  method: entry.request?.method,
+                  body: entry.resource,
+                },
+              );
 
-          const transactionResponse: Resource<
-            typeof context.request.fhirVersion,
-            "Bundle"
-          > = {
-            resourceType: "Bundle",
-            type: "transaction-response" as code,
-            entry: responseEntries,
-          };
+              const fhirResponse = await txCTX.client.request(
+                txCTX,
+                fhirRequest,
+              );
 
-          return next(state, {
-            ctx: context.ctx,
-            request: context.request,
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              type: "transaction-response",
-              level: "system",
-              body: transactionResponse,
-            } as FHIRResponse<
+              const responseEntry = fhirResponseToBundleEntry(
+                txCTX.tenant,
+                fhirResponse,
+              );
+              responseEntries[parseInt(index)] = responseEntry;
+              // Generate patches to update the transaction references.
+              const patches = entry.fullUrl
+                ? (locationsToUpdate[entry.fullUrl] ?? []).map(
+                    (loc): JSONPatchOperation => {
+                      if (!responseEntry.response?.location)
+                        throw new OperationError(
+                          outcomeFatal(
+                            "exception",
+                            "response location not found during transaction processing",
+                          ),
+                        );
+                      return {
+                        path: `/${loc.join("/")}`,
+                        op: "replace",
+                        value: {
+                          reference: responseEntry.response?.location,
+                        },
+                      };
+                    },
+                  )
+                : [];
+
+              // End of loop and operation
+              // Now update transaction bundle with applied references.
+              transactionBundle = jsonpatch.applyPatch(
+                transactionBundle,
+                patches,
+              ).newDocument;
+            }
+
+            const transactionResponse: Resource<
               typeof context.request.fhirVersion,
-              "transaction"
-            >,
-          });
-        });
+              "Bundle"
+            > = {
+              resourceType: "Bundle",
+              type: "transaction-response" as code,
+              entry: responseEntries,
+            };
+
+            return next(state, {
+              ctx: txCTX,
+              request: context.request,
+              response: {
+                fhirVersion: context.request.fhirVersion,
+                type: "transaction-response",
+                level: "system",
+                body: transactionResponse,
+              } as FHIRResponse<
+                typeof context.request.fhirVersion,
+                "transaction"
+              >,
+            });
+          },
+        );
       }
       default: {
         throw new OperationError(

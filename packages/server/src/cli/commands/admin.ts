@@ -31,7 +31,7 @@ import { createSearchStore } from "../../search-stores/index.js";
 import createStore from "../../storage/index.js";
 import { generateTenantId } from "../../storage/postgres/authAdmin/tenants.js";
 import RedisLock from "../../synchronization/redis.lock.js";
-import { DBTransaction, QueueBatch } from "../../transactions.js";
+import { QueueBatch, StorageTransaction } from "../../transactions.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -93,7 +93,7 @@ async function createTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
   return QueueBatch(ctx, async (ctx) => {
-    const [tenant, membership] = await DBTransaction(
+    const [tenant, membership] = await StorageTransaction(
       ctx,
       db.IsolationLevel.RepeatableRead,
       async (ctx) => {

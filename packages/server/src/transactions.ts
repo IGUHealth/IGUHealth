@@ -7,6 +7,7 @@ import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "./fhir-server/types.js";
+// import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
 import { PostgresStore } from "./storage/postgres/index.js";
 
 function getTransactionFullUrls(
@@ -96,7 +97,10 @@ export async function buildTransactionTopologicalGraph<
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
 }
 
-export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
+export function StorageTransaction<
+  CTX extends Pick<IGUHealthServerCTX, "store">,
+  R,
+>(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
   callback: (ctx: CTX) => R,
@@ -105,7 +109,10 @@ export function DBTransaction<CTX extends Pick<IGUHealthServerCTX, "store">, R>(
     ctx.store.getClient(),
     isolationLevel,
     async (txClient) => {
-      return callback({ ...ctx, store: new PostgresStore(txClient) });
+      return callback({
+        ...ctx,
+        store: new PostgresStore(txClient),
+      });
     },
   );
 
