@@ -16,7 +16,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
 import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
 import { generateTenantId } from "../../../storage/postgres/authAdmin/tenants.js";
-import { DBTransaction, QueueBatch } from "../../../transactions.js";
+import { QueueBatch, StorageTransaction } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../sendPasswordReset.js";
@@ -60,7 +60,7 @@ async function createOrRetrieveUser(
     const result: [TenantId, Membership] = await QueueBatch(
       ctx,
       async (ctx) => {
-        const [membership, tenant] = await DBTransaction(
+        const [membership, tenant] = await StorageTransaction(
           ctx,
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {

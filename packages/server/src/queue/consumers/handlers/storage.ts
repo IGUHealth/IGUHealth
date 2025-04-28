@@ -7,7 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { DBTransaction } from "../../../transactions.js";
+import { StorageTransaction } from "../../../transactions.js";
 import * as queue from "../../providers/interface.js";
 import { getTenantId } from "../handlers/utilities.js";
 import { MessageHandler } from "../types.js";
@@ -133,7 +133,7 @@ const storageHandler: MessageHandler<
 
     if (message.value) {
       const mutations: queue.Operations = message.value as queue.Operations;
-      await DBTransaction(
+      await StorageTransaction(
         iguhealthServices,
         db.IsolationLevel.RepeatableRead,
         async () => {

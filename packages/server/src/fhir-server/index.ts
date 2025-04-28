@@ -29,7 +29,12 @@ import {
 import { MemoryParameter } from "../fhir-clients/clients/memory/async.js";
 import RouterClient from "../fhir-clients/clients/router/index.js";
 import createRequestToResponseMiddleware from "../fhir-clients/middleware/request-to-response.js";
-import sendQueueMiddleware from "../fhir-clients/middleware/send-to-queue.js";
+// import sendQueueMiddleware from "../fhir-clients/middleware/send-to-queue.js";
+import {
+  indexingMiddleware,
+  storageMiddleware,
+  transactionMiddleware,
+} from "../fhir-clients/middleware/storage.js";
 import { AWSLambdaExecutioner } from "../fhir-operation-executors/providers/aws/index.js";
 import {
   CodeSystemLookupInvoke,
@@ -158,7 +163,11 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
               process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT ?? "20",
             ),
           }),
-          sendQueueMiddleware(),
+          transactionMiddleware(),
+          storageMiddleware(),
+          indexingMiddleware(),
+          // Temp comment out until we have a better solution for the queue.
+          // sendQueueMiddleware(),
         ],
         { logging: false },
       ),
