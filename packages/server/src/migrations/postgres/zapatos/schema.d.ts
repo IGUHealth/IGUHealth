@@ -23,6 +23,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type code_type = ['oauth2_code_grant', 'password_reset', 'refresh_token'];
   }
+  export type fhir_method = 'create' | 'delete' | 'patch' | 'update';
+  export namespace every {
+    export type fhir_method = ['create', 'delete', 'patch', 'update'];
+  }
   export type fhir_version = 'r4' | 'r4b' | 'r5';
   export namespace every {
     export type fhir_version = ['r4', 'r4b', 'r5'];
@@ -49901,6 +49905,12 @@ declare module 'zapatos/schema' {
       */
       deleted: boolean;
       /**
+      * **resources.fhir_method**
+      * - `fhir_method` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_method: fhir_method;
+      /**
       * **resources.fhir_version**
       * - `fhir_version` in database
       * - `NOT NULL`, no default
@@ -49968,6 +49978,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       deleted: boolean;
+      /**
+      * **resources.fhir_method**
+      * - `fhir_method` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_method: fhir_method;
       /**
       * **resources.fhir_version**
       * - `fhir_version` in database
@@ -50037,6 +50053,12 @@ declare module 'zapatos/schema' {
       */
       deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **resources.fhir_method**
+      * - `fhir_method` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_method?: fhir_method | db.Parameter<fhir_method> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, fhir_method | db.Parameter<fhir_method> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **resources.fhir_version**
       * - `fhir_version` in database
       * - `NOT NULL`, no default
@@ -50105,6 +50127,12 @@ declare module 'zapatos/schema' {
       */
       deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
       /**
+      * **resources.fhir_method**
+      * - `fhir_method` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_method: fhir_method | db.Parameter<fhir_method> | db.SQLFragment;
+      /**
       * **resources.fhir_version**
       * - `fhir_version` in database
       * - `NOT NULL`, no default
@@ -50154,6 +50182,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `false`
       */
       deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **resources.fhir_method**
+      * - `fhir_method` in database
+      * - `NOT NULL`, no default
+      */
+      fhir_method?: fhir_method | db.Parameter<fhir_method> | db.SQLFragment | db.SQLFragment<any, fhir_method | db.Parameter<fhir_method> | db.SQLFragment>;
       /**
       * **resources.fhir_version**
       * - `fhir_version` in database

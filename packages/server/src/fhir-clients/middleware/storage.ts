@@ -4,6 +4,7 @@ import {
   InstanceDeleteResponse,
   SystemDeleteResponse,
   TypeDeleteResponse,
+  toInteraction,
 } from "@iguhealth/client/lib/types";
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { id } from "@iguhealth/fhir-types/r4/types";
@@ -55,16 +56,21 @@ export function storageMiddleware<
 >(): MiddlewareAsyncChain<State, CTX> {
   return async function synchronousStorageMiddleware(state, context, next) {
     const res = await next(state, context);
-    switch (res[1].response?.type) {
+    const responseType = res[1].response?.type;
+    switch (responseType) {
       case "create-response":
       case "update-response":
       case "patch-response": {
         context.ctx.logger.info(
           `synchronous storing resource '${res[1].response.body.id}'`,
         );
+
         await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
           tenant: res[1].ctx.tenant,
           fhir_version: toDBFHIRVersion(res[1].response.fhirVersion),
+          fhir_method: toInteraction<"patch" | "update" | "create">(
+            responseType,
+          ),
           request_method: toMethod(res[1].response),
           author_type: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
           author_id: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
@@ -78,7 +84,7 @@ export function storageMiddleware<
           case "instance": {
             const response = res[1]
               .response as InstanceDeleteResponse<FHIR_VERSION>;
-            if (!res[1].response.deletion)
+            if (!res[1].response?.deletion)
               throw new Error(
                 "Deletion operation must return a deletion object.",
               );
@@ -86,6 +92,7 @@ export function storageMiddleware<
             await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
               tenant: res[1].ctx.tenant,
               fhir_version: toDBFHIRVersion(res[1].response.fhirVersion),
+              fhir_method: toInteraction<"delete">(responseType),
               request_method: toMethod(response),
               author_type: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
               author_id: res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
@@ -104,6 +111,7 @@ export function storageMiddleware<
                 await res[1].ctx.store.fhir.insert(res[1].ctx, "resources", {
                   tenant: res[1].ctx.tenant,
                   fhir_version: toDBFHIRVersion(response.fhirVersion),
+                  fhir_method: toInteraction<"delete">(responseType),
                   request_method: toMethod(response),
                   author_type:
                     res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],

@@ -1,6 +1,6 @@
 import * as db from "zapatos/db";
 
-import { FHIRResponse } from "@iguhealth/client/lib/types";
+import { FHIRResponse, toInteraction } from "@iguhealth/client/lib/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -46,6 +46,9 @@ async function handleMutation(
       await ctx.store.fhir.insert(asRoot(ctx), "resources", {
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+        fhir_method: toInteraction<"create" | "update" | "patch">(
+          mutation.response.type,
+        ),
         request_method: toMethod(mutation.response),
         author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
         author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
@@ -69,6 +72,7 @@ async function handleMutation(
           await ctx.store.fhir.insert(asRoot(ctx), "resources", {
             tenant: ctx.tenant,
             fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+            fhir_method: toInteraction<"delete">(mutation.response.type),
             request_method: toMethod(mutation.response),
             author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
             author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
@@ -84,6 +88,7 @@ async function handleMutation(
               await ctx.store.fhir.insert(asRoot(ctx), "resources", {
                 tenant: ctx.tenant,
                 fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
+                fhir_method: toInteraction<"delete">(mutation.response.type),
                 request_method: toMethod(mutation.response),
                 author_type: mutation.author[CUSTOM_CLAIMS.RESOURCE_TYPE],
                 author_id: mutation.author[CUSTOM_CLAIMS.RESOURCE_ID],
