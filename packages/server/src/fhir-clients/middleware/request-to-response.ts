@@ -829,7 +829,7 @@ export default function createRequestToResponseMiddleware<
                 transactionBundle,
               );
             if (
-              (transactionBundle.entry || []).length > transaction_entry_limit
+              (transactionBundle.entry ?? []).length > transaction_entry_limit
             ) {
               throw new OperationError(
                 outcomeError(
@@ -837,14 +837,14 @@ export default function createRequestToResponseMiddleware<
                   `Transaction bundle only allowed to have '${
                     transaction_entry_limit
                   }' entries. Current bundle has '${
-                    (transactionBundle.entry || []).length
+                    (transactionBundle.entry ?? []).length
                   }'`,
                 ),
               );
             }
 
             const responseEntries = [
-              ...new Array((transactionBundle.entry || []).length),
+              ...new Array((transactionBundle.entry ?? []).length),
             ];
 
             for (const index of order) {
@@ -877,7 +877,7 @@ export default function createRequestToResponseMiddleware<
               const fhirRequest = httpRequestToFHIRRequest(
                 context.request.fhirVersion,
                 {
-                  url: entry.request?.url || "",
+                  url: entry.request?.url ?? "",
                   method: entry.request?.method,
                   body: entry.resource,
                 },
@@ -895,7 +895,7 @@ export default function createRequestToResponseMiddleware<
               responseEntries[parseInt(index)] = responseEntry;
               // Generate patches to update the transaction references.
               const patches = entry.fullUrl
-                ? (locationsToUpdate[entry.fullUrl] || []).map(
+                ? (locationsToUpdate[entry.fullUrl] ?? []).map(
                     (loc): JSONPatchOperation => {
                       if (!responseEntry.response?.location)
                         throw new OperationError(
