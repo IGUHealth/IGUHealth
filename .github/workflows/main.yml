@@ -160,10 +160,10 @@ jobs:
            --client-secret $CLIENT_SECRET
 
       - name: R4 TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4
 
       - name: R4B TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b
 
       - name: Subscription Testscripts
         env:
@@ -181,11 +181,11 @@ jobs:
            --client-id $CLIENT_ID \
            --client-secret $CLIENT_SECRET
           yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/setup.testscript.json  -t 500
+          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/setup.testscript.json  
           yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant1
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/from.testscript.json   -t 500
+          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/from.testscript.json   
           yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
-          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/to.testscript.json   -t 500
+          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/to.testscript.json
 
       - name: Jest tests
         run: yarn test

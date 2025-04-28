@@ -117,10 +117,10 @@ jobs:
            --client-secret mysecret
 
       - name: R4 TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json
 
       - name: R4B TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -o r4b-reports.json -t 500
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -o r4b-reports.json
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
