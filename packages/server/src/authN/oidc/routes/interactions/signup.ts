@@ -1,4 +1,5 @@
 import React from "react";
+import * as db from "zapatos/db";
 
 import { EmailForm, Feedback } from "@iguhealth/components";
 import { Membership, id } from "@iguhealth/fhir-types/lib/generated/r4/types";
@@ -6,6 +7,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asRoot } from "../../../../fhir-server/types.js";
+import { StorageTransaction } from "../../../../transactions.js";
 import * as views from "../../../../views/index.js";
 import { sendPasswordResetEmail } from "../../../sendPasswordReset.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -77,38 +79,44 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       },
     });
   } else {
-    const membership = await ctx.state.iguhealth.client.create(
-      asRoot(ctx.state.iguhealth),
-      R4,
-      {
-        resourceType: "Membership",
-        role: "member",
-        email,
-      } as Membership,
-    );
+    await StorageTransaction(
+      ctx.state.iguhealth,
+      db.IsolationLevel.RepeatableRead,
+      async (iguhealth) => {
+        const membership = await iguhealth.client.create(
+          asRoot(iguhealth),
+          R4,
+          {
+            resourceType: "Membership",
+            role: "member",
+            email,
+          } as Membership,
+        );
 
-    const user = await ctx.state.iguhealth.store.auth.user.where(
-      asRoot(ctx.state.iguhealth),
-      ctx.state.iguhealth.tenant,
-      {
-        fhir_user_id: membership.id,
+        const user = await iguhealth.store.auth.user.where(
+          asRoot(iguhealth),
+          iguhealth.tenant,
+          {
+            fhir_user_id: membership.id,
+          },
+        );
+
+        // Alert system admin of new user.
+        await sendAlertEmail(
+          iguhealth.emailProvider,
+          "New User",
+          `A new user with email '${user[0]?.email}' has signed up.`,
+        );
+
+        await sendPasswordResetEmail(asRoot(iguhealth), membership, {
+          email: {
+            subject: "IGUHealth Email Verification",
+            body: "To verify your email and set your password click below.",
+            acceptText: "Reset Password",
+          },
+        });
       },
     );
-
-    // Alert system admin of new user.
-    await sendAlertEmail(
-      ctx.state.iguhealth.emailProvider,
-      "New User",
-      `A new user with email '${user[0]?.email}' has signed up.`,
-    );
-
-    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
-      email: {
-        subject: "IGUHealth Email Verification",
-        body: "To verify your email and set your password click below.",
-        acceptText: "Reset Password",
-      },
-    });
   }
 
   ctx.status = 200;

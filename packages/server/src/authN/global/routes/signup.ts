@@ -157,26 +157,34 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     throw new OperationError(outcomeError("invalid", "Email is not valid."));
   }
 
-  await QueueBatch(ctx.state.iguhealth, async (iguhealth) => {
-    const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
+  await StorageTransaction(
+    ctx.state.iguhealth,
+    db.IsolationLevel.RepeatableRead,
+    async (iguhealth) => {
+      const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
 
-    await sendPasswordResetEmail(asRoot({ ...iguhealth, tenant }), membership, {
-      email: {
-        acceptText: "Reset Password",
-        body: "To verify your email and set your password click below.",
-        subject: "IGUHealth Email Verification",
-      },
-    });
+      await sendPasswordResetEmail(
+        asRoot({ ...iguhealth, tenant }),
+        membership,
+        {
+          email: {
+            acceptText: "Reset Password",
+            body: "To verify your email and set your password click below.",
+            subject: "IGUHealth Email Verification",
+          },
+        },
+      );
 
-    ctx.status = 200;
-    ctx.body = views.renderString(
-      React.createElement(Feedback, {
-        logo: "/public/img/logo.svg",
-        title: "IGUHealth",
-        header: "Email Verification",
-        content:
-          "An email will arrive in the next few minutes with the next steps to complete your registration.",
-      }),
-    );
-  });
+      ctx.status = 200;
+      ctx.body = views.renderString(
+        React.createElement(Feedback, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          header: "Email Verification",
+          content:
+            "An email will arrive in the next few minutes with the next steps to complete your registration.",
+        }),
+      );
+    },
+  );
 };
