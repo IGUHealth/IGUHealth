@@ -1,3 +1,5 @@
+import * as db from "zapatos/db";
+
 import { AllInteractions, FHIRRequest } from "@iguhealth/client/types";
 import { Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
@@ -10,7 +12,7 @@ import {
 
 import { sendPasswordResetEmail } from "../../../../authN/sendPasswordReset.js";
 import { IGUHealthServerCTX } from "../../../../fhir-server/types.js";
-import { QueueBatch } from "../../../../transactions.js";
+import { StorageTransaction } from "../../../../transactions.js";
 import InlineOperation from "../interface.js";
 
 export const IguhealthInviteUserInvoke = InlineOperation(
@@ -25,51 +27,55 @@ export const IguhealthInviteUserInvoke = InlineOperation(
         outcomeError("exception", "Encryption provider not configured"),
       );
 
-    await QueueBatch(ctx, async (ctx) => {
-      const membership = await ctx.client.create(ctx, R4, {
-        resourceType: "Membership",
-        email: input.email,
-        role: input.role,
-      } as Membership);
+    await StorageTransaction(
+      ctx,
+      db.IsolationLevel.RepeatableRead,
+      async (ctx) => {
+        const membership = await ctx.client.create(ctx, R4, {
+          resourceType: "Membership",
+          email: input.email,
+          role: input.role,
+        } as Membership);
 
-      const accessPolicyId = input.accessPolicy?.reference?.split("/")[1];
-      if (accessPolicyId) {
-        const accessPolicy = await ctx.client.read(
-          ctx,
-          R4,
-          "AccessPolicyV2",
-          accessPolicyId as id,
-        );
-
-        if (accessPolicy) {
-          await ctx.client.update(
+        const accessPolicyId = input.accessPolicy?.reference?.split("/")[1];
+        if (accessPolicyId) {
+          const accessPolicy = await ctx.client.read(
             ctx,
             R4,
             "AccessPolicyV2",
-            accessPolicy.id as id,
-            {
-              ...accessPolicy,
-              target: [
-                ...(accessPolicy.target || []),
-                {
-                  link: {
-                    reference: `${membership.resourceType}/${membership.id}`,
-                  },
-                },
-              ],
-            },
+            accessPolicyId as id,
           );
-        }
-      }
 
-      await sendPasswordResetEmail(ctx, membership, {
-        email: {
-          subject: "IGUHealth Email Verification",
-          body: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below if you'd like to accept the invite.`,
-          acceptText: "Accept Invite",
-        },
-      });
-    });
+          if (accessPolicy) {
+            await ctx.client.update(
+              ctx,
+              R4,
+              "AccessPolicyV2",
+              accessPolicy.id as id,
+              {
+                ...accessPolicy,
+                target: [
+                  ...(accessPolicy.target || []),
+                  {
+                    link: {
+                      reference: `${membership.resourceType}/${membership.id}`,
+                    },
+                  },
+                ],
+              },
+            );
+          }
+        }
+
+        await sendPasswordResetEmail(ctx, membership, {
+          email: {
+            subject: "IGUHealth Email Verification",
+            body: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below if you'd like to accept the invite.`,
+            acceptText: "Accept Invite",
+          },
+        });
+      },
+    );
 
     return outcomeInfo(
       "value",
