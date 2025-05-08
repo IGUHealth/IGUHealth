@@ -28,6 +28,7 @@ export function toMethod(
       throw new OperationError(
         outcomeError(
           "not-supported",
+          // @ts-ignore
           `Operation type '${response.type}' is not supported in this consumer.`,
         ),
       );
@@ -111,16 +112,11 @@ async function handleMutation(
       }
     }
 
-    case queue.isOperationType("invoke", mutation): {
-      await ctx.client.request(asRoot(ctx), mutation.request);
-      return;
-    }
-
     default: {
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Operation type '${mutation.request.type}' is not supported in this consumer.`,
+          `Operation type '${mutation.response.type}' is not supported in this consumer.`,
         ),
       );
     }

@@ -1,8 +1,4 @@
-import {
-  AllInteractions,
-  FHIRRequest,
-  FHIRResponse,
-} from "@iguhealth/client/lib/types";
+import { AllInteractions, FHIRResponse } from "@iguhealth/client/lib/types";
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
@@ -24,7 +20,7 @@ interface IOperation {
 
 export type MutationTypes = Extract<
   AllInteractions,
-  "create" | "update" | "delete" | "invoke" | "patch"
+  "create" | "update" | "delete" | "patch" | "error"
 >;
 
 export interface Operation<
@@ -33,8 +29,7 @@ export interface Operation<
 > extends IOperation {
   fhirVersion: Version;
   type: Type;
-  request: FHIRRequest<Version, Type>;
-  response: Type extends "invoke" ? undefined : FHIRResponse<Version, Type>;
+  response: FHIRResponse<Version, Type>;
 }
 
 export function isOperationType<I extends MutationTypes>(

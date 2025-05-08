@@ -35,16 +35,11 @@ export default function sendQueueMiddleweare<
   return async function storageMiddleware(state, context, next) {
     const res = await next(state, context);
 
-    switch (res[1].request.type) {
-      case "create-request":
-      case "delete-request":
-      case "update-request":
-      case "patch-request":
-      case "invoke-request": {
-        if (res[1].response?.type === "error-response") {
-          return res;
-        }
-
+    switch (res[1].response?.type) {
+      case "create-response":
+      case "delete-response":
+      case "update-response":
+      case "patch-response": {
         if (!res[1].response) {
           throw new OperationError(
             outcomeError(
@@ -71,8 +66,7 @@ export default function sendQueueMiddleweare<
               value: [
                 {
                   fhirVersion: res[1].response.fhirVersion,
-                  type: toInteraction(res[1].request.type),
-                  request: res[1].request,
+                  type: toInteraction(res[1].response.type),
                   // eslint-disable-next-line
                   response: res[1].response as any,
                   author: {
@@ -86,6 +80,9 @@ export default function sendQueueMiddleweare<
             },
           ],
         );
+        return res;
+      }
+      case "error-response": {
         return res;
       }
       default: {
