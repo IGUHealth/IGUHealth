@@ -49941,6 +49941,12 @@ declare module 'zapatos/schema' {
       */
       resource_type: string;
       /**
+      * **resources.sequence**
+      * - `int8` in database
+      * - `NOT NULL`, default: `nextval('resources_sequence_seq'::regclass)`
+      */
+      sequence: db.Int8String;
+      /**
       * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -50014,6 +50020,12 @@ declare module 'zapatos/schema' {
       * - Generated column
       */
       resource_type: string;
+      /**
+      * **resources.sequence**
+      * - `int8` in database
+      * - `NOT NULL`, default: `nextval('resources_sequence_seq'::regclass)`
+      */
+      sequence: number;
       /**
       * **resources.tenant**
       * - `text` in database
@@ -50089,6 +50101,12 @@ declare module 'zapatos/schema' {
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **resources.sequence**
+      * - `int8` in database
+      * - `NOT NULL`, default: `nextval('resources_sequence_seq'::regclass)`
+      */
+      sequence?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -50151,6 +50169,12 @@ declare module 'zapatos/schema' {
       */
       resource: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
+      * **resources.sequence**
+      * - `int8` in database
+      * - `NOT NULL`, default: `nextval('resources_sequence_seq'::regclass)`
+      */
+      sequence?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.DefaultType | db.SQLFragment;
+      /**
       * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -50206,6 +50230,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      /**
+      * **resources.sequence**
+      * - `int8` in database
+      * - `NOT NULL`, default: `nextval('resources_sequence_seq'::regclass)`
+      */
+      sequence?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.DefaultType | db.SQLFragment>;
       /**
       * **resources.tenant**
       * - `text` in database
