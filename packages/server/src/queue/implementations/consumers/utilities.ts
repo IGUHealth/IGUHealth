@@ -24,14 +24,7 @@ import RedisLock from "../../../synchronization/redis.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
-  | "tenant"
-  | "store"
-  | "logger"
-  | "lock"
-  | "cache"
-  | "tenant"
-  | "user"
-  | "resolveCanonical"
+  "tenant" | "store" | "logger" | "lock" | "cache" | "user" | "resolveCanonical"
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(

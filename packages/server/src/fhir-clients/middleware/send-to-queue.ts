@@ -1,5 +1,3 @@
-import { fhir_method } from "zapatos/schema";
-
 import {
   AllInteractions,
   FHIRRequest,
