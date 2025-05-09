@@ -17,7 +17,7 @@ import {
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { toDBFHIRVersion } from "../../fhir-clients/utilities/version.js";
-import { Insertable, FHIRResourceStore } from "../interfaces/fhirStore.js";
+import { Insertable, FHIRResourceStore } from "../interfaces/fhirResourceStore.js";
 import { createFHIRURL } from "../../fhir-server/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../search-stores/parameters.js";
