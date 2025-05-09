@@ -1,18 +1,18 @@
 import { Command } from "commander";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
-import indexingHandler from "../../queue/consumers/handlers/search-indexing.js";
-import storageHandler from "../../queue/consumers/handlers/storage.js";
-import subscriptionHandler from "../../queue/consumers/handlers/subscription-v1/index.js";
-import createWorker from "../../queue/consumers/implementations/index.js";
-import { createConsumerServices } from "../../queue/consumers/services.js";
-import { MessageHandler } from "../../queue/consumers/types.js";
+import indexingHandler from "../../queue/implementations/consumers/handlers/search-indexing.js";
+import storageHandler from "../../queue/implementations/consumers/handlers/storage.js";
+import subscriptionHandler from "../../queue/implementations/consumers/handlers/subscription-v1/index.js";
+import createWorker from "../../queue/implementations/consumers/implementations/index.js";
+import { createConsumerServices } from "../../queue/implementations/consumers/services.js";
+import { MessageHandler } from "../../queue/implementations/consumers/types.js";
 import {
   Consumers,
   IConsumerGroupID,
   OperationsTopic,
   TENANT_TOPIC_PATTERN,
-} from "../../queue/topics/index.js";
+} from "../../queue/implementations/topics/index.js";
 import createServer from "../../server.js";
 
 async function runServer(port: number) {

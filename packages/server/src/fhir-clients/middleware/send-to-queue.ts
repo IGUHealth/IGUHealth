@@ -15,7 +15,7 @@ import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import {
   OperationsTopic,
   TenantTopic,
-} from "../../queue/topics/tenant-topics.js";
+} from "../../queue/implementations/topics/tenant-topics.js";
 
 function confirmTypeResponse<
   I extends AllInteractions,

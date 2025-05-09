@@ -5,8 +5,8 @@ import DBMigrate from "db-migrate";
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 
 import syncArtifacts from "../../fhir-clients/clients/artifacts/load.js";
-import createQueue from "../../queue/providers/index.js";
-import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
+import createQueue from "../../queue/implementations/providers/index.js";
+import { DYNAMIC_TOPIC } from "../../queue/implementations/topics/dynamic-topic.js";
 
 interface DBMigrate {
   up: () => Promise<void>;

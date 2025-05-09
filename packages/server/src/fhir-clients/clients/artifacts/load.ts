@@ -11,7 +11,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import createQueue from "../../../queue/providers/index.js";
+import createQueue from "../../../queue/implementations/providers/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import createStore from "../../../storage/index.js";
 import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";

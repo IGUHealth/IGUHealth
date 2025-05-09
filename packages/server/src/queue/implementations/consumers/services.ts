@@ -1,9 +1,9 @@
-import { createClient, createLogger } from "../../fhir-server/index.js";
-import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX } from "../../fhir-server/types.js";
-import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import { createSearchStore } from "../../search-stores/index.js";
-import createStore from "../../storage/index.js";
+import { createClient, createLogger } from "../../../fhir-server/index.js";
+import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
+import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
+import { TerminologyProvider } from "../../../fhir-terminology/index.js";
+import { createSearchStore } from "../../../search-stores/index.js";
+import createStore from "../../../storage/index.js";
 import createQueue from "../providers/index.js";
 
 export const createConsumerServices: () => Promise<

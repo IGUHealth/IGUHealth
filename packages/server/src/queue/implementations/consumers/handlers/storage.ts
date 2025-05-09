@@ -5,12 +5,12 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { toDBFHIRVersion } from "../../../fhir-clients/utilities/version.js";
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { StorageTransaction } from "../../../transactions.js";
+import { toDBFHIRVersion } from "../../../../fhir-clients/utilities/version.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import { StorageTransaction } from "../../../../transactions.js";
 import * as queue from "../../providers/interface.js";
-import { getTenantId } from "../handlers/utilities.js";
 import { MessageHandler } from "../types.js";
+import { getTenantId } from "./utilities.js";
 
 export function toMethod(
   response: FHIRResponse<FHIR_VERSION, queue.MutationTypes>,

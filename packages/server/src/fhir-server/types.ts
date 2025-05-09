@@ -40,7 +40,10 @@ import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
-import { IQueue, IQueueBatch } from "../queue/providers/interface.js";
+import {
+  IQueue,
+  IQueueBatch,
+} from "../queue/implementations/providers/interface.js";
 import { SearchEngine } from "../search-stores/interface.js";
 import { User } from "../storage/interfaces/authAdmin/authAdmin.js";
 import { PostgresStore } from "../storage/postgres/index.js";

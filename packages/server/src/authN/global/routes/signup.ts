@@ -13,8 +13,11 @@ import { TenantId } from "@iguhealth/jwt/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
-import { DYNAMIC_TOPIC } from "../../../queue/topics/dynamic-topic.js";
-import { Consumers, TenantTopic } from "../../../queue/topics/index.js";
+import { DYNAMIC_TOPIC } from "../../../queue/implementations/topics/dynamic-topic.js";
+import {
+  Consumers,
+  TenantTopic,
+} from "../../../queue/implementations/topics/index.js";
 import { generateTenantId } from "../../../storage/postgres/authAdmin/tenants.js";
 import { QueueBatch, StorageTransaction } from "../../../transactions.js";
 import * as views from "../../../views/index.js";
