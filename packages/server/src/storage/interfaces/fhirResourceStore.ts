@@ -49,5 +49,5 @@ export interface FHIRResourceStore<CTX> {
   getSequence(
     sequenceId: number,
     count?: number,
-  ): Promise<s.resources.JSONSelectable>;
+  ): Promise<s.resources.JSONSelectable[]>;
 }

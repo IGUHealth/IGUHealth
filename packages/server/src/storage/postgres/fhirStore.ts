@@ -150,6 +150,24 @@ export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
   constructor(pgClient: db.Queryable) {
     this._pgClient = pgClient;
   }
+
+  getSequence(sequenceId: number, limit: number = 20): Promise<s.resources.JSONSelectable[]> {
+    const result = db.select(
+      "resources",
+      {
+        sequence: sequenceId,
+
+      },
+      {
+        limit,
+        order: { by: "sequence", direction: "ASC" },
+        
+      }
+    ).run(this._pgClient);
+
+    return result;
+  }
+
   async readResourcesByVersionId<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
