@@ -31,7 +31,7 @@ const postgres: Parameters<Command["action"]>[0] = async () => {
   await Promise.all([storeMigrate.up(), artifactMigrate.up()]);
 };
 
-const kafka: Parameters<Command["action"]>[0] = async () => {
+const queueMigration: Parameters<Command["action"]>[0] = async () => {
   const queue = await createQueue();
   await queue.createTopic(DYNAMIC_TOPIC);
   await queue.disconnect();
@@ -88,7 +88,7 @@ export function migrateCommands(command: Command) {
   command
     .command("kafka")
     .description("Create default kafka topics.")
-    .action(kafka);
+    .action(queueMigration);
 
   artifactCommands(command.command("artifacts"));
 
@@ -97,7 +97,7 @@ export function migrateCommands(command: Command) {
     .description("Run all migrations.")
     .action(async () => {
       await postgres();
-      await kafka();
+      await queueMigration();
       await loadArtifacts();
     });
 }
