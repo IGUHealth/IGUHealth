@@ -1,6 +1,6 @@
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
 import * as queue from "../../providers/interface.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "./utilities.js";

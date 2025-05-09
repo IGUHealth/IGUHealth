@@ -13,7 +13,7 @@ import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import {
   OperationsTopic,
   TenantTopic,
-} from "../../queue/topics/tenant-topics.js";
+} from "../../queue/implementations/topics/tenant-topics.js";
 
 function confirmTypeResponse<
   I extends AllInteractions,
@@ -67,8 +67,7 @@ export default function sendQueueMiddleweare<
                 {
                   fhirVersion: res[1].response.fhirVersion,
                   type: toInteraction(res[1].response.type),
-                  // eslint-disable-next-line
-                  response: res[1].response as any,
+                  response: res[1].response,
                   author: {
                     [CUSTOM_CLAIMS.RESOURCE_TYPE]:
                       res[1].ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],

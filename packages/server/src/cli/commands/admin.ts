@@ -24,9 +24,12 @@ import {
 import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
-import createQueue from "../../queue/providers/index.js";
-import { DYNAMIC_TOPIC } from "../../queue/topics/dynamic-topic.js";
-import { Consumers, TenantTopic } from "../../queue/topics/index.js";
+import createQueue from "../../queue/implementations/providers/index.js";
+import { DYNAMIC_TOPIC } from "../../queue/implementations/topics/dynamic-topic.js";
+import {
+  Consumers,
+  TenantTopic,
+} from "../../queue/implementations/topics/index.js";
 import { createSearchStore } from "../../search-stores/index.js";
 import createStore from "../../storage/index.js";
 import { generateTenantId } from "../../storage/postgres/authAdmin/tenants.js";

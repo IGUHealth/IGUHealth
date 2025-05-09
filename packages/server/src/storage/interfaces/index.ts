@@ -1,6 +1,6 @@
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { IAuthAdmin } from "./authAdmin/index.js";
-import { FHIRResourceStore } from "./fhirStore.js";
+import { FHIRResourceStore } from "./fhirResourceStore.js";
 
 export interface Store<CTX extends IGUHealthServerCTX> {
   fhir: FHIRResourceStore<CTX>;

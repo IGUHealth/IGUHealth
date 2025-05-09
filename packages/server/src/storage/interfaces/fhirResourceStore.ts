@@ -45,4 +45,9 @@ export interface FHIRResourceStore<CTX> {
       | SystemHistoryRequest<FHIR_VERSION>
       | TypeHistoryRequest<FHIR_VERSION>,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>>;
+
+  getSequence(
+    sequenceId: number,
+    count?: number,
+  ): Promise<s.resources.JSONSelectable[]>;
 }

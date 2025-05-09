@@ -13,7 +13,7 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
-import { toMethod } from "../../queue/consumers/handlers/storage.js";
+import { toMethod } from "../../queue/implementations/consumers/handlers/storage.js";
 import { PostgresSearchEngine } from "../../search-stores/postgres/index.js";
 import { StorageTransaction } from "../../transactions.js";
 import { toDBFHIRVersion } from "../utilities/version.js";

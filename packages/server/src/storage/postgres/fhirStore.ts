@@ -17,7 +17,7 @@ import {
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { toDBFHIRVersion } from "../../fhir-clients/utilities/version.js";
-import { Insertable, FHIRResourceStore } from "../interfaces/fhirStore.js";
+import { Insertable, FHIRResourceStore } from "../interfaces/fhirResourceStore.js";
 import { createFHIRURL } from "../../fhir-server/constants.js";
 import { ParsedParameter } from "@iguhealth/client/lib/url";
 import { deriveLimit } from "../../search-stores/parameters.js";
@@ -150,6 +150,24 @@ export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
   constructor(pgClient: db.Queryable) {
     this._pgClient = pgClient;
   }
+
+  getSequence(sequenceId: number, limit: number = 20): Promise<s.resources.JSONSelectable[]> {
+    const result = db.select(
+      "resources",
+      {
+        sequence: sequenceId,
+
+      },
+      {
+        limit,
+        order: { by: "sequence", direction: "ASC" },
+        
+      }
+    ).run(this._pgClient);
+
+    return result;
+  }
+
   async readResourcesByVersionId<Version extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: Version,
