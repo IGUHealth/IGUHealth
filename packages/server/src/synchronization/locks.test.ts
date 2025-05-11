@@ -32,7 +32,7 @@ test("Test PostgresLock", async () => {
   const lock = new PostgresLock();
 
   await lock.create({ store }, [
-    { id: "test-lock", type: "sync-lock", value: {} },
+    { id: "test-lock", type: "queue-loc", value: {} },
   ]);
 
   for (let i = 0; i < 10; i++) {
@@ -43,7 +43,7 @@ test("Test PostgresLock", async () => {
           { store },
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {
-            await lock.get(ctx, "sync-lock", [lockId]);
+            await lock.get(ctx, "queue-lock", [lockId]);
             expect(sharedValue).toEqual(0);
             const timeToWait = Math.random() * 10;
 
