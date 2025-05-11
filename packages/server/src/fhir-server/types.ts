@@ -47,7 +47,7 @@ import {
 import { SearchEngine } from "../search-stores/interface.js";
 import { User } from "../storage/interfaces/authAdmin/authAdmin.js";
 import { PostgresStore } from "../storage/postgres/index.js";
-import type { Lock, LockProvider } from "../synchronization/interfaces.js";
+import type { LockProvider } from "../synchronization/interfaces.js";
 
 type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [P in K]?: T[P];
