@@ -33,7 +33,7 @@ import {
 import { createSearchStore } from "../../search-stores/index.js";
 import createStore from "../../storage/index.js";
 import { generateTenantId } from "../../storage/postgres/authAdmin/tenants.js";
-import RedisLock from "../../synchronization/redis.lock.js";
+import PostgresLock from "../../synchronization/postgres.lock.js";
 import { QueueBatch, StorageTransaction } from "../../transactions.js";
 
 async function getTenant(
@@ -170,7 +170,7 @@ function tenantCommands(command: Command) {
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
         queue: await createQueue(),
-        lock: new RedisLock(redis),
+        lock: new PostgresLock(),
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),
@@ -198,7 +198,7 @@ function clientAppCommands(command: Command) {
       const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
         queue: await createQueue(),
-        lock: new RedisLock(redis),
+        lock: new PostgresLock(),
         cache: new RedisCache(redis),
         logger: createLogger(),
         terminologyProvider: new TerminologyProvider(),

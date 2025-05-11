@@ -1,9 +1,11 @@
 import { expect, test } from "@jest/globals";
 import dotEnv from "dotenv";
+import pg from "pg";
+import * as db from "zapatos/db";
 
-import { getRedisClient } from "../fhir-server/index.js";
+import { PostgresStore } from "../storage/postgres/index.js";
+import { StorageTransaction } from "../transactions.js";
 import PostgresLock from "./postgres.lock.js";
-import RedisLock from "./redis.lock.js";
 
 dotEnv.config();
 
@@ -11,43 +13,14 @@ function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-test("redisLock", async () => {
-  const redisClient = getRedisClient();
-  const lock = new RedisLock(redisClient);
-
-  let sharedValue = 0;
-  const lockId = "test-lock";
-  const promises: Promise<void>[] = [];
-  for (let i = 0; i < 10; i++) {
-    // Test that synchronous code works
-    promises.push(
-      lock.withLock(lockId, async (signal) => {
-        // Make sure any attempted lock extension has not failed.
-        if (signal.aborted) {
-          throw signal.error;
-        }
-        expect(sharedValue).toEqual(0);
-        const timeToWait = Math.random() * 10;
-
-        sharedValue++;
-        await timeout(timeToWait);
-        sharedValue--;
-
-        expect(sharedValue).toEqual(0);
-      }),
-    );
-  }
-  await Promise.all(promises);
-  redisClient.disconnect();
-});
-
 test("Test PostgresLock", async () => {
   // Test that lock properly handles syncrhonization of multiple threads
 
   let sharedValue = 0;
   const lockId = "test-lock";
   const promises: Promise<void>[] = [];
-  const lock = new PostgresLock({
+
+  const client = new pg.Client({
     user: process.env["RESOURCE_STORE_PG_USERNAME"],
     password: process.env["RESOURCE_STORE_PG_PASSWORD"],
     host: process.env["RESOURCE_STORE_PG_HOST"],
@@ -55,19 +28,33 @@ test("Test PostgresLock", async () => {
     port: parseInt(process.env["RESOURCE_STORE_PG_PORT"] ?? "5432"),
   });
 
+  const store = new PostgresStore(client);
+  const lock = new PostgresLock();
+
+  await lock.create({ store }, [
+    { id: "test-lock", type: "sync-lock", value: {} },
+  ]);
+
   for (let i = 0; i < 10; i++) {
     // Test that Async code works in order
     promises.push(
-      lock.withLock(lockId, async () => {
-        expect(sharedValue).toEqual(0);
-        const timeToWait = Math.random() * 10;
+      (async () => {
+        await StorageTransaction(
+          { store },
+          db.IsolationLevel.RepeatableRead,
+          async (ctx) => {
+            await lock.get(ctx, "sync-lock", [lockId]);
+            expect(sharedValue).toEqual(0);
+            const timeToWait = Math.random() * 10;
 
-        sharedValue++;
-        await timeout(timeToWait);
-        sharedValue--;
+            sharedValue++;
+            await timeout(timeToWait);
+            sharedValue--;
 
-        expect(sharedValue).toEqual(0);
-      }),
+            expect(sharedValue).toEqual(0);
+          },
+        );
+      })(),
     );
   }
 

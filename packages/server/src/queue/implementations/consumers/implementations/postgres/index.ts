@@ -35,7 +35,7 @@ export default async function createPGWorker<CTX>(
   ctx: CTX,
   handler: MessageHandler<CTX>,
 ) {
-  await locks.ensureLocksCreated(pg, [
+  await locks.createLock(pg, [
     {
       type: "queue-loc",
       id: groupId,
