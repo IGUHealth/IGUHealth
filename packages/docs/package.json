@@ -30,12 +30,12 @@
     "@mdx-js/react": "^3.0.0",
     "autoprefixer": "^10.4.20",
     "clsx": "^2.0.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "postcss": "^8.5.3",
-    "prism-react-renderer": "^2.4.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-hook-form": "^7.54.2",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.3",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "browserslist": {
     "production": [

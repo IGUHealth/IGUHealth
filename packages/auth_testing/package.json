@@ -16,11 +16,11 @@
     "classnames": "^2.5.1",
     "fhirclient": "^2.5.5",
     "nanoid": "^5.1.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0",
     "react-scripts": "^5.0.1",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "web-vitals": "^3.5.2"
   },
   "scripts": {
@@ -49,9 +49,9 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.10",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "^22.15.17",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.4",
     "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.4.17"
   }
