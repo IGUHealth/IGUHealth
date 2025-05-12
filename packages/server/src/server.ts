@@ -65,7 +65,7 @@ import * as MonitoringSentry from "./monitoring/sentry.js";
 import createQueue from "./queue/implementations/providers/index.js";
 import { createSearchStore } from "./search-stores/index.js";
 import createStore from "./storage/index.js";
-import RedisLock from "./synchronization/redis.lock.js";
+import PostgresLock from "./synchronization/postgres.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
 
@@ -196,7 +196,7 @@ export default async function createServer(): Promise<
     }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
-    lock: new RedisLock(redis),
+    lock: new PostgresLock(),
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),

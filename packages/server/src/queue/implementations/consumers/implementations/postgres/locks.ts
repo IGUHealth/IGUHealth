@@ -22,7 +22,7 @@ interface Lock<T extends s.lock_type>
  * @param verifyLocksCreated Locks to verify created
  * @returns
  */
-export async function ensureLocksCreated<T extends s.lock_type>(
+export async function createLock<T extends s.lock_type>(
   pg: db.Queryable,
   verifyLocksCreated: Lock<T>[],
 ) {

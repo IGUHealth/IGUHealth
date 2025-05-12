@@ -103,7 +103,7 @@ export function StorageTransaction<
 >(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
-  callback: (ctx: CTX) => R,
+  callback: (ctx: CTX) => Promise<R>,
 ): Promise<R> {
   const z = db.transaction(
     ctx.store.getClient(),

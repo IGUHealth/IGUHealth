@@ -20,7 +20,7 @@ import { createArtifactMemoryDatabase } from "../../../fhir-clients/clients/memo
 import { createLogger, getRedisClient } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import createStore from "../../../storage/index.js";
-import RedisLock from "../../../synchronization/redis.lock.js";
+import PostgresLock from "../../../synchronization/postgres.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
@@ -53,7 +53,7 @@ export async function staticWorkerServices(
   workerID: string,
 ): Promise<Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">> {
   const redis = getRedisClient();
-  const lock = new RedisLock(redis);
+  const lock = new PostgresLock();
   const cache = new RedisCache(redis);
   const logger = createLogger().child({ worker: workerID });
   const sdArtifacts = createArtifactMemoryDatabase({

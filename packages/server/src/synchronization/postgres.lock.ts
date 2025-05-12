@@ -1,44 +1,60 @@
 // Locking mechanisms
-import pg from "pg";
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
-import { Lock } from "./interfaces.js";
+import { IGUHealthServerCTX } from "../fhir-server/types.js";
+import { toSQLString } from "../search-stores/log-sql.js";
+import { Lock, LockProvider } from "./interfaces.js";
 
-function hash(str: string): number {
-  let hash = 0,
-    i,
-    chr;
-  if (str.length === 0) return hash;
-  for (i = 0; i < str.length; i++) {
-    chr = str.charCodeAt(i);
-    // Max charcode length is 5 so leftshift over by 5
-    hash = (hash << 5) - hash + chr;
-    hash |= 0;
+export default class PostgresLock<CTX extends Pick<IGUHealthServerCTX, "store">>
+  implements LockProvider<CTX>
+{
+  async get<T extends s.lock_type>(
+    ctx: CTX,
+    lock_type: T,
+    lockIds: string[],
+  ): Promise<Lock<T>[]> {
+    if (lockIds.length === 0) return [];
+    const whereable = db.conditions.or(
+      ...lockIds.map((id) => ({ id, type: lock_type })),
+    );
+
+    return db.sql<
+      s.locks.SQL,
+      s.locks.Selectable[]
+    >`SELECT * FROM ${"locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(
+      ctx.store.getClient(),
+    ) as unknown as Promise<Lock<T>[]>;
   }
-  return hash;
-}
 
-function pgLock(client: pg.Client, id: number) {
-  return client.query(`SELECT pg_advisory_xact_lock($1)`, [id]);
-}
-
-export default class PostgresLock implements Lock<PostgresLock> {
-  private config: pg.ClientConfig;
-  constructor(config: pg.ClientConfig) {
-    this.config = config;
+  async update(
+    ctx: CTX,
+    type: s.lock_type,
+    lockid: string,
+    value: s.locks.Updatable,
+  ) {
+    db.update("locks", value, { id: lockid, type }).run(ctx.store.getClient());
   }
+  /**
+   * Creates locks in the database.
+   * @param verifyLocksCreated Locks to verify created
+   * @returns
+   */
+  async create<T extends s.lock_type>(
+    ctx: CTX,
+    locks: Lock<T>[],
+  ): Promise<Lock<T>[]> {
+    const createdLocks = await db
+      .upsert(
+        "locks",
+        locks as unknown as s.locks.Insertable[],
+        db.constraint("locks_pkey"),
+        {
+          updateColumns: db.doNothing,
+        },
+      )
+      .run(ctx.store.getClient());
 
-  async withLock(lockId: string, body: (v: PostgresLock) => Promise<void>) {
-    const id = hash(lockId);
-    const client = new pg.Client(this.config);
-    await client.connect();
-    await client.query("BEGIN");
-    const lock = await pgLock(client, id);
-    try {
-      await body(this);
-    } finally {
-      //await pgUnlock(this.client, lockId);
-      await client.query("END");
-      await client.end();
-    }
+    return (createdLocks ?? []) as unknown as Lock<T>[];
   }
 }

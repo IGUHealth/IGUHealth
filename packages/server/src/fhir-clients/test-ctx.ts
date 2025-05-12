@@ -22,7 +22,6 @@ import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { createSearchStore } from "../search-stores/index.js";
 import createStore from "../storage/index.js";
-import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./clients/memory/async.js";
 
 const sds = loadArtifacts({
@@ -44,12 +43,6 @@ const parameters = loadArtifacts({
   currentDirectory: fileURLToPath(import.meta.url),
   silence: true,
 });
-
-class TestLock implements Lock<TestLock> {
-  async withLock(lockId: string, body: (v: TestLock) => Promise<void>) {
-    await body(this);
-  }
-}
 
 class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
   _date: Record<string, unknown>;
@@ -107,5 +100,4 @@ export const testServices: IGUHealthServerCTX = {
       }
     }
   },
-  lock: new TestLock(),
 };
