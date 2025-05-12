@@ -4,6 +4,7 @@ import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 import { TerminologyProvider } from "../../../fhir-terminology/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import createStore from "../../../storage/index.js";
+import PostgresLock from "../../../synchronization/postgres.lock.js";
 import createQueue from "../providers/index.js";
 
 export const createConsumerServices: () => Promise<
@@ -14,6 +15,7 @@ export const createConsumerServices: () => Promise<
     queue: await createQueue(),
     store: await createStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
+    lock: new PostgresLock(),
     logger: createLogger(),
     terminologyProvider: new TerminologyProvider(),
     client: createClient(),
