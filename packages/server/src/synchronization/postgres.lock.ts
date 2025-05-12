@@ -3,6 +3,7 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
+import { toSQLString } from "../search-stores/log-sql.js";
 import { Lock, LockProvider } from "./interfaces.js";
 
 export default class PostgresLock<CTX extends Pick<IGUHealthServerCTX, "store">>
