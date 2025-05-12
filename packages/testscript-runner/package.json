@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "scripts": {
     "build": "tsc",
