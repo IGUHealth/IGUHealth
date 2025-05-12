@@ -137,7 +137,7 @@ export interface IGUHealthServerCTX {
 
   // Services
   cache?: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
-  lock?: LockProvider<Pick<IGUHealthServerCTX, "store">>;
+  lock: LockProvider<Pick<IGUHealthServerCTX, "store">>;
 
   logger: Logger<string>;
   terminologyProvider?: TerminologyProvider;

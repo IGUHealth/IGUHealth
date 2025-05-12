@@ -14,6 +14,7 @@ import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/implementations/providers/index.js";
 import { createSearchStore } from "../../../search-stores/index.js";
 import createStore from "../../../storage/index.js";
+import PostgresLock from "../../../synchronization/postgres.lock.js";
 import { Memory, createArtifactMemoryDatabase } from "../memory/async.js";
 import { ARTIFACT_TENANT, createArtifactClient } from "./index.js";
 
@@ -116,6 +117,7 @@ async function createServices(): Promise<
     store: await createStore({ type: "postgres" }),
     search: await createSearchStore({ type: "postgres" }),
     logger,
+    lock: new PostgresLock(),
     tenant: ARTIFACT_TENANT,
     client: createArtifactClient({
       operationsAllowed: ["create-request", "update-request", "search-request"],

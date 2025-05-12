@@ -16994,7 +16994,6 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.5.3"],\
           ["react", "npm:19.0.0"],\
           ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:19.0.0"],\
-          ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\
           ["tailwindcss", "npm:3.4.17"],\
           ["ts-jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.2.6"],\
           ["tsx", "npm:4.11.2"],\
@@ -54573,16 +54572,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["redis-parser", "npm:3.0.0"],\
           ["redis-errors", "npm:1.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["redlock", [\
-      ["patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A.", {\
-        "packageLocation": "./.yarn/cache/redlock-patch-214d2e4571-2a5208e8ad.zip/node_modules/redlock/",\
-        "packageDependencies": [\
-          ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\
-          ["node-abort-controller", "npm:3.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\

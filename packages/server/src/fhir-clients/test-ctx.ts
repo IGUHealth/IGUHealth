@@ -22,6 +22,7 @@ import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { createSearchStore } from "../search-stores/index.js";
 import createStore from "../storage/index.js";
+import PostgresLock from "../synchronization/postgres.lock.js";
 import { Memory } from "./clients/memory/async.js";
 
 const sds = loadArtifacts({
@@ -72,6 +73,7 @@ export const testServices: IGUHealthServerCTX = {
   },
   terminologyProvider: new TerminologyProvider(),
   logger: pino<string>(),
+  lock: new PostgresLock(),
   client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),
   resolveCanonical: async <
