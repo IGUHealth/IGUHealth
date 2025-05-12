@@ -40,27 +40,29 @@ test("Test PostgresLock", async () => {
   ]);
 
   for (let i = 0; i < 10; i++) {
-    // Test that Async code works in order
-    // const z = StorageTransaction(
-    //   { store },
-    //   db.IsolationLevel.RepeatableRead,
-    //   async (ctx) => {
-    //     await lock.get(ctx, "queue-loc", [lockId]);
-    //     expect(sharedValue).toEqual(0);
-    //     const timeToWait = Math.random() * 10;
-    //     sharedValue++;
-    //     await timeout(timeToWait);
-    //     sharedValue--;
-    //     expect(sharedValue).toEqual(0);
-    //     return;
-    //   },
-    // );
-    // promises.push(z);
+    promises.push(
+      StorageTransaction(
+        { store },
+        db.IsolationLevel.RepeatableRead,
+        async (ctx) => {
+          // Test that Async code works in order
+
+          let retrievedLock = await lock.get(ctx, "queue-loc", [lockId]);
+          while (retrievedLock.length !== 1) {
+            await timeout(100);
+            retrievedLock = await lock.get(ctx, "queue-loc", [lockId]);
+          }
+
+          expect(sharedValue).toEqual(0);
+          const timeToWait = Math.random() * 10;
+          sharedValue++;
+          await timeout(timeToWait);
+          sharedValue--;
+          expect(sharedValue).toEqual(0);
+        },
+      ),
+    );
   }
 
-  await client.end();
-
-  console.log("TESTING");
-
-  // await Promise.all(promises);
-}, 10000);
+  await Promise.all(promises);
+}, 1000000);
