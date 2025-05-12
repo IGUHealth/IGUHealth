@@ -10232,7 +10232,6 @@ __metadata:
     prettier: "npm:^3.5.3"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
-    redlock: "npm:v5.0.0-beta.2"
     tailwindcss: "npm:^3.4.17"
     ts-jest: "npm:^29.2.6"
     tsx: "npm:4.11.2"
@@ -39085,24 +39084,6 @@ __metadata:
   dependencies:
     redis-errors: "npm:^1.0.0"
   checksum: 10/b10846844b4267f19ce1a6529465819c3d78c3e89db7eb0c3bb4eb19f83784797ec411274d15a77dbe08038b48f95f76014b83ca366dc955a016a3a0a0234650
-  languageName: node
-  linkType: hard
-
-"redlock@npm:5.0.0-beta.2":
-  version: 5.0.0-beta.2
-  resolution: "redlock@npm:5.0.0-beta.2"
-  dependencies:
-    node-abort-controller: "npm:^3.0.1"
-  checksum: 10/c1df94fb229182ccf59b744f600b45f2cda1d9c7e5b87b9bbf5c3ef92eb47339af7b33b80dc71e97c08c1f476443be68987dad6c49cfc1a89e9a647127884963
-  languageName: node
-  linkType: hard
-
-"redlock@patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::locator=iguhealth-workspace%40workspace%3A.":
-  version: 5.0.0-beta.2
-  resolution: "redlock@patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."
-  dependencies:
-    node-abort-controller: "npm:^3.0.1"
-  checksum: 10/2a5208e8addb62d203c406e789bdae0c117849da730915292bac1cf42fc8c636d0d425adce59e2a9417bcfa8e9fd71a940a642491675ba5f97fb9ead72ab4d23
   languageName: node
   linkType: hard
 

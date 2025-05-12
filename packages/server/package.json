@@ -93,7 +93,6 @@
     "pino": "^9.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "redlock": "v5.0.0-beta.2",
     "validator": "^13.12.0",
     "zapatos": "^6.5.0"
   },
