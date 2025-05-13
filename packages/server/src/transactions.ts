@@ -9,6 +9,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { IGUHealthServerCTX } from "./fhir-server/types.js";
 // import { PostgresSearchEngine } from "./search-stores/postgres/index.js";
 import { PostgresStore } from "./storage/postgres/index.js";
+import PostgresLock from "./synchronization/postgres.lock.js";
 
 function getTransactionFullUrls(
   transaction: Resource<FHIR_VERSION, "Bundle">,
@@ -112,6 +113,7 @@ export function StorageTransaction<
       return callback({
         ...ctx,
         store: new PostgresStore(txClient),
+        lock: new PostgresLock(txClient),
       });
     },
   );

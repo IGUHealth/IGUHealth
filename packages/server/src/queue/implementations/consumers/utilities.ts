@@ -49,28 +49,6 @@ export function workerTokenClaims(
 export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
-export async function staticWorkerServices(
-  workerID: string,
-): Promise<Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">> {
-  const redis = getRedisClient();
-  const lock = new PostgresLock();
-  const cache = new RedisCache(redis);
-  const logger = createLogger().child({ worker: workerID });
-  const sdArtifacts = createArtifactMemoryDatabase({
-    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-  });
-
-  return {
-    resolveCanonical: sdArtifacts.resolveCanonical,
-    store: await createStore({ type: "postgres" }),
-    logger,
-    cache,
-    lock,
-    workerID,
-  };
-}
-
 function createWorkerIGUHealthClient(
   tenant: TenantId,
   tokenPayload: AccessTokenPayload<s.user_role>,

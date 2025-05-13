@@ -1,0 +1,1 @@
+ALTER TYPE lock_type ADD VALUE 'system';

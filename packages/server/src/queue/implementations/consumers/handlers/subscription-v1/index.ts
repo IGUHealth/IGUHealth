@@ -16,6 +16,7 @@ import logAuditEvent, {
 } from "../../../../../fhir-logging/auditEvents.js";
 import {
   IGUHealthServerCTX,
+  IGUHealthServices,
   asRoot,
 } from "../../../../../fhir-server/types.js";
 import { createResolverRemoteCanonical } from "../../../../../search-stores/canonical.js";
@@ -163,9 +164,10 @@ function filterNullableMessages(m: Message): m is NonNullableValue {
   return m.value !== null;
 }
 
-const handler: MessageHandler<
-  Omit<IGUHealthServerCTX, "user" | "tenant">
-> = async (iguhealthServices, { messages }) => {
+const handler: MessageHandler<IGUHealthServices> = async (
+  iguhealthServices,
+  { messages },
+) => {
   iguhealthServices.logger.info(
     `[subscription-v1], Processing batch ${messages?.[0].key}`,
   );

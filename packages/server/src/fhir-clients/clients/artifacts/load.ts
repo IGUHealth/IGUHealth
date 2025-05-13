@@ -107,6 +107,7 @@ async function createServices(): Promise<
   Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
 > {
   const logger = createLogger();
+  const store = await createStore({ type: "postgres" });
 
   const iguhealthServices: Omit<
     IGUHealthServerCTX,
@@ -114,10 +115,11 @@ async function createServices(): Promise<
   > = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
-    store: await createStore({ type: "postgres" }),
+    store,
     search: await createSearchStore({ type: "postgres" }),
+    lock: new PostgresLock(store.getClient()),
     logger,
-    lock: new PostgresLock(),
+
     tenant: ARTIFACT_TENANT,
     client: createArtifactClient({
       operationsAllowed: ["create-request", "update-request", "search-request"],

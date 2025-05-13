@@ -57,6 +57,7 @@ import {
 import resolveCanonical from "./fhir-server/resolvers/resolveCanonical.js";
 import {
   IGUHealthServerCTX,
+  IGUHealthServices,
   KoaExtensions,
   asRoot,
 } from "./fhir-server/types.js";
@@ -187,16 +188,17 @@ export default async function createServer(): Promise<
 
   const redis = getRedisClient();
   const logger = createLogger();
+  const store = await createStore({
+    type: "postgres",
+  });
 
-  const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+  const iguhealthServices: IGUHealthServices = {
     environment: process.env.IGUHEALTH_ENVIRONMENT,
     queue: await createQueue(),
-    store: await createStore({
-      type: "postgres",
-    }),
+    store,
     search: await createSearchStore({ type: "postgres" }),
+    lock: new PostgresLock(store.getClient()),
     logger,
-    lock: new PostgresLock(),
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),

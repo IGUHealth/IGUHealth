@@ -22,7 +22,11 @@ import {
   getRedisClient,
 } from "../../fhir-server/index.js";
 import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
+import {
+  IGUHealthServerCTX,
+  IGUHealthServices,
+  asRoot,
+} from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/implementations/providers/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/implementations/topics/dynamic-topic.js";
@@ -167,17 +171,18 @@ function tenantCommands(command: Command) {
     .option("-p, --password <password>", "Password for root user")
     .action(async (options) => {
       const redis = getRedisClient();
-      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+      const store = await createStore({ type: "postgres" });
+      const services: IGUHealthServices = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
         queue: await createQueue(),
-        lock: new PostgresLock(),
         cache: new RedisCache(redis),
-        logger: createLogger(),
-        terminologyProvider: new TerminologyProvider(),
-        store: await createStore({ type: "postgres" }),
+        store,
         search: await createSearchStore({ type: "postgres" }),
-        resolveCanonical,
+        lock: new PostgresLock(store.getClient()),
+        terminologyProvider: new TerminologyProvider(),
+        logger: createLogger(),
         client: createClient(),
+        resolveCanonical,
       };
 
       await createTenant(options, services);
@@ -195,15 +200,16 @@ function clientAppCommands(command: Command) {
     .requiredOption("-s, --secret <secret>", "Secret for client app")
     .action(async (options) => {
       const redis = getRedisClient();
-      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+      const store = await createStore({ type: "postgres" });
+      const services: IGUHealthServices = {
         environment: process.env.IGUHEALTH_ENVIRONMENT,
         queue: await createQueue(),
-        lock: new PostgresLock(),
         cache: new RedisCache(redis),
-        logger: createLogger(),
-        terminologyProvider: new TerminologyProvider(),
-        store: await createStore({ type: "postgres" }),
+        store,
         search: await createSearchStore({ type: "postgres" }),
+        lock: new PostgresLock(store.getClient()),
+        terminologyProvider: new TerminologyProvider(),
+        logger: createLogger(),
         client: createClient(),
         resolveCanonical,
       };

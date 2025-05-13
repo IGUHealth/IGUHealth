@@ -14,7 +14,7 @@ import { toJSONPointer } from "./conversions.js";
 import { Loc, NullGuard, Parent } from "./types.js";
 import { escapeField, unescapeField } from "./utilities.js";
 
-export { Loc, NullGuard } from "./types.js";
+export type { Loc, NullGuard } from "./types.js";
 export * from "./conversions.js";
 
 /*

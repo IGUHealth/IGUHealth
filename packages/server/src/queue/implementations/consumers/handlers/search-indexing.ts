@@ -1,6 +1,10 @@
 import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import {
+  IGUHealthServerCTX,
+  IGUHealthServices,
+  asRoot,
+} from "../../../../fhir-server/types.js";
 import * as queue from "../../providers/interface.js";
 import { MessageHandler } from "../types.js";
 import { getTenantId } from "./utilities.js";
@@ -49,9 +53,10 @@ async function handleMutation(
   }
 }
 
-const searchIndexingHandler: MessageHandler<
-  Omit<IGUHealthServerCTX, "user" | "tenant">
-> = async (iguhealthServices, { messages }) => {
+const searchIndexingHandler: MessageHandler<IGUHealthServices> = async (
+  iguhealthServices,
+  { messages },
+) => {
   for (const message of messages) {
     iguhealthServices.logger.info(
       `[Indexing], Processing message '${message.key?.toString() ?? "[no-key]"}'`,

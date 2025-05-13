@@ -29,9 +29,9 @@ test("Test PostgresLock", async () => {
   });
 
   const store = new PostgresStore(client);
-  const lock = new PostgresLock();
+  const lock = new PostgresLock(client);
 
-  await lock.create({ store }, [
+  await lock.create([
     {
       id: lockId,
       type: "queue-loc",
@@ -42,15 +42,14 @@ test("Test PostgresLock", async () => {
   for (let i = 0; i < 10; i++) {
     promises.push(
       StorageTransaction(
-        { store },
+        { store, lock },
         db.IsolationLevel.RepeatableRead,
         async (ctx) => {
           // Test that Async code works in order
-
-          let retrievedLock = await lock.get(ctx, "queue-loc", [lockId]);
+          let retrievedLock = await ctx.lock.get("queue-loc", [lockId]);
           while (retrievedLock.length !== 1) {
             await timeout(100);
-            retrievedLock = await lock.get(ctx, "queue-loc", [lockId]);
+            retrievedLock = await ctx.lock.get("queue-loc", [lockId]);
           }
 
           expect(sharedValue).toEqual(0);

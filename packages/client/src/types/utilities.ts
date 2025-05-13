@@ -37,16 +37,16 @@ export type ResponseType = {
   [I in Interaction[keyof Interaction]]: `${I}-response`;
 } & { error: "error-response" };
 
-export function RequestType(
-  interaction: Interaction[keyof Interaction],
-): RequestType[AllInteractions] {
-  return `${interaction}-request`;
+export function RequestType<I extends Interaction[keyof Interaction]>(
+  interaction: I,
+): RequestType[I] {
+  return `${interaction}-request` as RequestType[I];
 }
 
-export function ResponseType(
-  interaction: Interaction[keyof Interaction] | "error",
-): ResponseType[AllInteractions | "error"] {
-  return `${interaction}-response`;
+export function ResponseType<
+  I extends Interaction[keyof Interaction] | "error",
+>(interaction: I): ResponseType[I] {
+  return `${interaction}-response` as ResponseType[I];
 }
 
 export type Request<

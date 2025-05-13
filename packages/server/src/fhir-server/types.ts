@@ -120,12 +120,9 @@ export interface UserContext {
   scope?: Scope[];
 }
 
-export interface IGUHealthServerCTX {
+export interface IGUHealthServices {
   environment: string;
   // Server Information
-  tenant: TenantId;
-  user: UserContext;
-
   queue: IQueue | IQueueBatch;
 
   // FHIR Client
@@ -137,7 +134,7 @@ export interface IGUHealthServerCTX {
 
   // Services
   cache?: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
-  lock: LockProvider<Pick<IGUHealthServerCTX, "store">>;
+  lock: LockProvider;
 
   logger: Logger<string>;
   terminologyProvider?: TerminologyProvider;
@@ -149,11 +146,17 @@ export interface IGUHealthServerCTX {
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
   >(
-    ctx: this,
+    ctx: IGUHealthServerCTX,
     fhirVersion: Version,
     type: Type,
     url: canonical[],
   ) => Promise<Resource<Version, Type>[]>;
+}
+
+export interface IGUHealthServerCTX extends IGUHealthServices {
+  // User Context
+  tenant: TenantId;
+  user: UserContext;
 }
 
 function createRootClaims(

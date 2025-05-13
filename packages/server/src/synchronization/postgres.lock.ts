@@ -2,15 +2,15 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { IGUHealthServerCTX } from "../fhir-server/types.js";
-import { toSQLString } from "../search-stores/log-sql.js";
 import { Lock, LockProvider } from "./interfaces.js";
 
-export default class PostgresLock<CTX extends Pick<IGUHealthServerCTX, "store">>
-  implements LockProvider<CTX>
-{
+export default class PostgresLock implements LockProvider {
+  private _client: db.Queryable;
+  constructor(_client: db.Queryable) {
+    this._client = _client;
+  }
+
   async get<T extends s.lock_type>(
-    ctx: CTX,
     lock_type: T,
     lockIds: string[],
   ): Promise<Lock<T>[]> {
@@ -23,27 +23,20 @@ export default class PostgresLock<CTX extends Pick<IGUHealthServerCTX, "store">>
       s.locks.SQL,
       s.locks.Selectable[]
     >`SELECT * FROM ${"locks"} WHERE ${whereable} FOR UPDATE SKIP LOCKED`.run(
-      ctx.store.getClient(),
+      this._client,
     ) as unknown as Promise<Lock<T>[]>;
   }
 
-  async update(
-    ctx: CTX,
-    type: s.lock_type,
-    lockid: string,
-    value: s.locks.Updatable,
-  ) {
-    db.update("locks", value, { id: lockid, type }).run(ctx.store.getClient());
+  async update(type: s.lock_type, lockid: string, value: s.locks.Updatable) {
+    db.update("locks", value, { id: lockid, type }).run(this._client);
   }
+
   /**
    * Creates locks in the database.
    * @param verifyLocksCreated Locks to verify created
    * @returns
    */
-  async create<T extends s.lock_type>(
-    ctx: CTX,
-    locks: Lock<T>[],
-  ): Promise<Lock<T>[]> {
+  async create<T extends s.lock_type>(locks: Lock<T>[]): Promise<Lock<T>[]> {
     const createdLocks = await db
       .upsert(
         "locks",
@@ -53,7 +46,7 @@ export default class PostgresLock<CTX extends Pick<IGUHealthServerCTX, "store">>
           updateColumns: db.doNothing,
         },
       )
-      .run(ctx.store.getClient());
+      .run(this._client);
 
     return (createdLocks ?? []) as unknown as Lock<T>[];
   }
