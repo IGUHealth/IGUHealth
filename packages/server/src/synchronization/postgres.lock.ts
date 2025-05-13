@@ -5,7 +5,7 @@ import * as s from "zapatos/schema";
 import { Lock, LockProvider } from "./interfaces.js";
 
 export default class PostgresLock implements LockProvider {
-  private _client: db.Queryable;
+  private readonly _client: db.Queryable;
   constructor(_client: db.Queryable) {
     this._client = _client;
   }

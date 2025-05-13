@@ -56,7 +56,6 @@ import {
 } from "./fhir-server/index.js";
 import resolveCanonical from "./fhir-server/resolvers/resolveCanonical.js";
 import {
-  IGUHealthServerCTX,
   IGUHealthServices,
   KoaExtensions,
   asRoot,

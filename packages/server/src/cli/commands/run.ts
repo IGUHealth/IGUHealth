@@ -1,9 +1,6 @@
 import { Command } from "commander";
 
-import {
-  IGUHealthServerCTX,
-  IGUHealthServices,
-} from "../../fhir-server/types.js";
+import { IGUHealthServices } from "../../fhir-server/types.js";
 import indexingHandler from "../../queue/implementations/consumers/handlers/search-indexing.js";
 import storageHandler from "../../queue/implementations/consumers/handlers/storage.js";
 import subscriptionHandler from "../../queue/implementations/consumers/handlers/subscription-v1/index.js";
