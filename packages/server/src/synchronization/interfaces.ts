@@ -6,8 +6,13 @@ interface OffsetLockValue {
   offset: number;
 }
 
+interface SystemLock {
+  offset: number;
+}
+
 type LockValue = {
   "queue-loc": OffsetLockValue;
+  system: SystemLock;
 };
 
 export interface Lock<T extends s.lock_type>
@@ -15,7 +20,7 @@ export interface Lock<T extends s.lock_type>
   value: LockValue[T];
 }
 
-export interface LockProvider<CTX> {
+export interface LockProvider {
   /**
    * Retrieves available locks skipping over locked rows.
    * Sets available locks to be locked until transaction is committed.
@@ -25,7 +30,6 @@ export interface LockProvider<CTX> {
    * @returns Selectable locks that are available and locks until transaction is committed.
    */
   get<T extends s.lock_type>(
-    ctx: CTX,
     lock_type: T,
     lockIds: string[],
   ): Promise<Lock<T>[]>;
@@ -37,7 +41,6 @@ export interface LockProvider<CTX> {
    * @returns void
    */
   update(
-    ctx: CTX,
     type: s.lock_type,
     lockid: string,
     value: s.locks.Updatable,
@@ -47,5 +50,5 @@ export interface LockProvider<CTX> {
    * @param verifyLocksCreated Locks to verify created
    * @returns
    */
-  create<T extends s.lock_type>(ctx: CTX, locks: Lock<T>[]): Promise<Lock<T>[]>;
+  create<T extends s.lock_type>(locks: Lock<T>[]): Promise<Lock<T>[]>;
 }

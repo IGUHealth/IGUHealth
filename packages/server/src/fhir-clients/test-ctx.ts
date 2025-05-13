@@ -59,10 +59,13 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
   }
 }
 
+const store = await createStore({ type: "postgres" });
+
 export const testServices: IGUHealthServerCTX = {
   tenant: "tenant" as TenantId,
-  store: await createStore({ type: "postgres" }),
+  store,
   search: await createSearchStore({ type: "postgres" }),
+  lock: new PostgresLock(store.getClient()),
   // @ts-ignore
   user: {
     payload: {
@@ -73,7 +76,6 @@ export const testServices: IGUHealthServerCTX = {
   },
   terminologyProvider: new TerminologyProvider(),
   logger: pino<string>(),
-  lock: new PostgresLock(),
   client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),
   resolveCanonical: async <

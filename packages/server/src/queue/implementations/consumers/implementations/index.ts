@@ -1,11 +1,12 @@
 import pg from "pg";
 
+import { IGUHealthServices } from "../../../../fhir-server/types.js";
 import { IConsumerGroupID, ITopic, ITopicPattern } from "../../topics/index.js";
 import { MessageHandler } from "../types.js";
 import createKafkaWorker from "./kafka-local.js";
 import createPGWorker from "./postgres/index.js";
 
-export default function createWorker<CTX>(
+export default function createWorker<CTX extends IGUHealthServices>(
   topic: ITopicPattern | ITopic,
   groupId: IConsumerGroupID,
   type: typeof process.env.QUEUE_TYPE,

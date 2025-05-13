@@ -2,7 +2,6 @@ import * as s from "zapatos/schema";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
 import { id } from "@iguhealth/fhir-types/r4/types";
-import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -14,13 +13,8 @@ import {
 
 import { getIssuer } from "../../../authN/oidc/constants.js";
 import { WORKER_APP } from "../../../authN/oidc/hardcodedClients/worker-app.js";
-import RedisCache from "../../../cache/providers/redis.js";
 import { getCertConfig } from "../../../certification.js";
-import { createArtifactMemoryDatabase } from "../../../fhir-clients/clients/memory/async.js";
-import { createLogger, getRedisClient } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
-import createStore from "../../../storage/index.js";
-import PostgresLock from "../../../synchronization/postgres.lock.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
@@ -48,28 +42,6 @@ export function workerTokenClaims(
 
 export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
-
-export async function staticWorkerServices(
-  workerID: string,
-): Promise<Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">> {
-  const redis = getRedisClient();
-  const lock = new PostgresLock();
-  const cache = new RedisCache(redis);
-  const logger = createLogger().child({ worker: workerID });
-  const sdArtifacts = createArtifactMemoryDatabase({
-    r4: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-    r4b: [{ resourceType: "StructureDefinition" as AllResourceTypes }],
-  });
-
-  return {
-    resolveCanonical: sdArtifacts.resolveCanonical,
-    store: await createStore({ type: "postgres" }),
-    logger,
-    cache,
-    lock,
-    workerID,
-  };
-}
 
 function createWorkerIGUHealthClient(
   tenant: TenantId,

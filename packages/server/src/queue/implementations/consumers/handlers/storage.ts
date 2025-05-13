@@ -6,7 +6,11 @@ import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { toDBFHIRVersion } from "../../../../fhir-clients/utilities/version.js";
-import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
+import {
+  IGUHealthServerCTX,
+  IGUHealthServices,
+  asRoot,
+} from "../../../../fhir-server/types.js";
 import { StorageTransaction } from "../../../../transactions.js";
 import * as queue from "../../providers/interface.js";
 import { MessageHandler } from "../types.js";
@@ -123,9 +127,10 @@ async function handleMutation(
   }
 }
 
-const storageHandler: MessageHandler<
-  Omit<IGUHealthServerCTX, "user" | "tenant">
-> = async (iguhealthServices, { messages }) => {
+const storageHandler: MessageHandler<IGUHealthServices> = async (
+  iguhealthServices,
+  { messages },
+) => {
   for (const message of messages) {
     iguhealthServices.logger.info(
       `[STORAGE], Processing message '${message.key?.toString() ?? "[no-key]"}'`,

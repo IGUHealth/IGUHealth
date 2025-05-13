@@ -2,7 +2,7 @@ import * as db from "zapatos/db";
 
 import { IGUHealthServerCTX } from "../../fhir-server/types.js";
 import { IAuthAdmin } from "../interfaces/authAdmin/index.js";
-import { FHIRResourceStore } from "../interfaces/fhirResourceStore.js";
+import { FHIRResourceStore } from "../interfaces/fhir.js";
 import { Store } from "../interfaces/index.js";
 import { PostgresAuthAdmin } from "./authAdmin/index.js";
 import { PostgresFHIRStore } from "./fhirStore.js";

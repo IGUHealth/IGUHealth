@@ -22,7 +22,11 @@ import {
   getRedisClient,
 } from "../../fhir-server/index.js";
 import resolveCanonical from "../../fhir-server/resolvers/resolveCanonical.js";
-import { IGUHealthServerCTX, asRoot } from "../../fhir-server/types.js";
+import {
+  IGUHealthServerCTX,
+  IGUHealthServices,
+  asRoot,
+} from "../../fhir-server/types.js";
 import { TerminologyProvider } from "../../fhir-terminology/index.js";
 import createQueue from "../../queue/implementations/providers/index.js";
 import { DYNAMIC_TOPIC } from "../../queue/implementations/topics/dynamic-topic.js";
@@ -64,6 +68,23 @@ async function getTenant(
   }
 
   return tenant;
+}
+
+async function createServices(): Promise<IGUHealthServices> {
+  const redis = getRedisClient();
+  const store = await createStore({ type: "postgres" });
+  return {
+    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    queue: await createQueue(),
+    cache: new RedisCache(redis),
+    store,
+    search: await createSearchStore({ type: "postgres" }),
+    lock: new PostgresLock(store.getClient()),
+    terminologyProvider: new TerminologyProvider(),
+    logger: createLogger(),
+    client: createClient(),
+    resolveCanonical,
+  };
 }
 
 async function getMembership(options: {
@@ -166,20 +187,7 @@ function tenantCommands(command: Command) {
     .option("-e, --email <email>", "Email for root user")
     .option("-p, --password <password>", "Password for root user")
     .action(async (options) => {
-      const redis = getRedisClient();
-      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
-        environment: process.env.IGUHEALTH_ENVIRONMENT,
-        queue: await createQueue(),
-        lock: new PostgresLock(),
-        cache: new RedisCache(redis),
-        logger: createLogger(),
-        terminologyProvider: new TerminologyProvider(),
-        store: await createStore({ type: "postgres" }),
-        search: await createSearchStore({ type: "postgres" }),
-        resolveCanonical,
-        client: createClient(),
-      };
-
+      const services = await createServices();
       await createTenant(options, services);
 
       process.exit(0);
@@ -194,20 +202,7 @@ function clientAppCommands(command: Command) {
     .requiredOption("-i, --id <id>", "Id for client app")
     .requiredOption("-s, --secret <secret>", "Secret for client app")
     .action(async (options) => {
-      const redis = getRedisClient();
-      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
-        environment: process.env.IGUHEALTH_ENVIRONMENT,
-        queue: await createQueue(),
-        lock: new PostgresLock(),
-        cache: new RedisCache(redis),
-        logger: createLogger(),
-        terminologyProvider: new TerminologyProvider(),
-        store: await createStore({ type: "postgres" }),
-        search: await createSearchStore({ type: "postgres" }),
-        client: createClient(),
-        resolveCanonical,
-      };
-
+      const services = await createServices();
       const transaction = await services.client.transaction(
         asRoot({ ...services, tenant: options.tenant }),
         R4,

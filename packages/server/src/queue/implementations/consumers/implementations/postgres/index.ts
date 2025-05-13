@@ -1,13 +1,14 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { IGUHealthServices } from "../../../../../fhir-server/types.js";
+import PostgresLock from "../../../../../synchronization/postgres.lock.js";
 import {
   IConsumerGroupID,
   ITopic,
   ITopicPattern,
 } from "../../../topics/index.js";
 import { Message, MessageHandler } from "../../types.js";
-import * as locks from "./locks.js";
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,14 +29,15 @@ export function convertPgMessagetoMessage(
   );
 }
 
-export default async function createPGWorker<CTX>(
+export default async function createPGWorker<CTX extends IGUHealthServices>(
   pg: db.Queryable,
   topic: ITopicPattern | ITopic,
   groupId: IConsumerGroupID,
   ctx: CTX,
   handler: MessageHandler<CTX>,
 ) {
-  await locks.createLock(pg, [
+  let queueLock = new PostgresLock(pg);
+  await queueLock.create([
     {
       type: "queue-loc",
       id: groupId,
@@ -51,9 +53,8 @@ export default async function createPGWorker<CTX>(
   const run = async () => {
     while (isRunning) {
       db.transaction(pg, db.IsolationLevel.ReadCommitted, async (tx) => {
-        const offsetLock = (
-          await locks.getAvailableLocks(pg, "queue-loc", [groupId])
-        )[0];
+        queueLock = new PostgresLock(tx);
+        const offsetLock = (await queueLock.get("queue-loc", [groupId]))[0];
         if (!offsetLock) {
           throw new Error(`No offset lock found for groupId: '${groupId}'`);
         }
@@ -88,7 +89,7 @@ export default async function createPGWorker<CTX>(
           }),
         );
 
-        await locks.updateLock(tx, "queue-loc", groupId, {
+        await queueLock.update("queue-loc", groupId, {
           value: { ...offsetLock.value, offset: lastOffset },
         });
       });

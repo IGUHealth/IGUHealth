@@ -1,6 +1,6 @@
 import { Command } from "commander";
 
-import { IGUHealthServerCTX } from "../../fhir-server/types.js";
+import { IGUHealthServices } from "../../fhir-server/types.js";
 import indexingHandler from "../../queue/implementations/consumers/handlers/search-indexing.js";
 import storageHandler from "../../queue/implementations/consumers/handlers/storage.js";
 import subscriptionHandler from "../../queue/implementations/consumers/handlers/subscription-v1/index.js";
@@ -22,7 +22,7 @@ async function runServer(port: number) {
 
 async function runWorker(
   groupId: IConsumerGroupID,
-  handler: MessageHandler<Omit<IGUHealthServerCTX, "user" | "tenant">>,
+  handler: MessageHandler<IGUHealthServices>,
 ) {
   return createWorker(
     TENANT_TOPIC_PATTERN(OperationsTopic),

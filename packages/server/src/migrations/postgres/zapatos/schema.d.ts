@@ -35,9 +35,9 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type limitation_type = ['LIMIT_TOTAL'];
   }
-  export type lock_type = 'queue-loc';
+  export type lock_type = 'queue-loc' | 'system';
   export namespace every {
-    export type lock_type = ['queue-loc'];
+    export type lock_type = ['queue-loc', 'system'];
   }
   export type pkce_method = 'S256' | 'plain';
   export namespace every {
