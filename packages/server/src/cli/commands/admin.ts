@@ -70,6 +70,23 @@ async function getTenant(
   return tenant;
 }
 
+async function createServices(): Promise<IGUHealthServices> {
+  const redis = getRedisClient();
+  const store = await createStore({ type: "postgres" });
+  return {
+    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    queue: await createQueue(),
+    cache: new RedisCache(redis),
+    store,
+    search: await createSearchStore({ type: "postgres" }),
+    lock: new PostgresLock(store.getClient()),
+    terminologyProvider: new TerminologyProvider(),
+    logger: createLogger(),
+    client: createClient(),
+    resolveCanonical,
+  };
+}
+
 async function getMembership(options: {
   email?: string;
   password?: string;
@@ -170,21 +187,7 @@ function tenantCommands(command: Command) {
     .option("-e, --email <email>", "Email for root user")
     .option("-p, --password <password>", "Password for root user")
     .action(async (options) => {
-      const redis = getRedisClient();
-      const store = await createStore({ type: "postgres" });
-      const services: IGUHealthServices = {
-        environment: process.env.IGUHEALTH_ENVIRONMENT,
-        queue: await createQueue(),
-        cache: new RedisCache(redis),
-        store,
-        search: await createSearchStore({ type: "postgres" }),
-        lock: new PostgresLock(store.getClient()),
-        terminologyProvider: new TerminologyProvider(),
-        logger: createLogger(),
-        client: createClient(),
-        resolveCanonical,
-      };
-
+      const services = await createServices();
       await createTenant(options, services);
 
       process.exit(0);
@@ -199,21 +202,7 @@ function clientAppCommands(command: Command) {
     .requiredOption("-i, --id <id>", "Id for client app")
     .requiredOption("-s, --secret <secret>", "Secret for client app")
     .action(async (options) => {
-      const redis = getRedisClient();
-      const store = await createStore({ type: "postgres" });
-      const services: IGUHealthServices = {
-        environment: process.env.IGUHEALTH_ENVIRONMENT,
-        queue: await createQueue(),
-        cache: new RedisCache(redis),
-        store,
-        search: await createSearchStore({ type: "postgres" }),
-        lock: new PostgresLock(store.getClient()),
-        terminologyProvider: new TerminologyProvider(),
-        logger: createLogger(),
-        client: createClient(),
-        resolveCanonical,
-      };
-
+      const services = await createServices();
       const transaction = await services.client.transaction(
         asRoot({ ...services, tenant: options.tenant }),
         R4,
