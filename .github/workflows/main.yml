@@ -186,6 +186,9 @@ jobs:
           yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/from.testscript.json
           yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant2
           yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/qr-check/to.testscript.json
+          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/teardown.testscript.json
+          yarn workspace @iguhealth/server iguhealth config  switch-tenant -t tenant1
+          yarn workspace @iguhealth/server iguhealth test run -i testscripts/subscription-test/r4/teardown.testscript.json
 
       - name: Jest tests
         run: yarn test
