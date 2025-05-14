@@ -12,4 +12,3 @@ fi
 if [ ! -f ./packages/admin-app/.env ]; then
     cp packages/admin-app/.env.defaults ./packages/admin-app/.env 
 fi
-

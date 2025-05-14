@@ -1,6 +1,7 @@
 import { Command } from "commander";
 
 import { IGUHealthServices } from "../../fhir-server/types.js";
+import { pushFromStoreWorker } from "../../queue/from-store/index.js";
 import indexingHandler from "../../queue/implementations/consumers/handlers/search-indexing.js";
 import storageHandler from "../../queue/implementations/consumers/handlers/storage.js";
 import subscriptionHandler from "../../queue/implementations/consumers/handlers/subscription-v1/index.js";
@@ -83,14 +84,23 @@ const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
   };
 };
 
+const moveToQueueWorker: Parameters<Command["action"]>[0] = async () => {
+  const services = await createConsumerServices();
+  runningServices = {
+    ...runningServices,
+    workers: [...runningServices.workers, await pushFromStoreWorker(services)],
+  };
+};
+
 const all: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
 
   const [server, ...workers] = await Promise.all([
     runServer(options.port),
-    runWorker(Consumers.Storage, storageHandler),
+    // runWorker(Consumers.Storage, storageHandler),
     runWorker(Consumers.SearchIndexing, indexingHandler),
     runWorker(Consumers.SubscriptionV1, subscriptionHandler),
+    await pushFromStoreWorker(await createConsumerServices()),
   ]);
 
   runningServices = {
@@ -114,6 +124,11 @@ function workers(command: Command) {
     .command("subscription")
     .description("Subscription kafka worker.")
     .action(worker);
+
+  command
+    .command("push-from-store")
+    .description("Push from store")
+    .action(moveToQueueWorker);
 }
 
 export function runCommands(command: Command) {
@@ -126,7 +141,7 @@ export function runCommands(command: Command) {
     .action(server);
 
   command
-    .command("both")
+    .command("all")
     .option("-p, --port <number>", "port to run on.", "3000")
     .description("Run the server. And start up background workers.")
     .action(all);

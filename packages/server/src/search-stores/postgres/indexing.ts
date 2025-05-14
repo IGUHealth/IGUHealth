@@ -336,9 +336,14 @@ async function indexSingularParameters<
   switch (fhirVersion) {
     case R4: {
       await db
-        .upsert("r4_sp1_idx", [insertable], db.constraint("r4_sp1_idx_pkey"), {
-          updateColumns: db.doNothing,
-        })
+        .upsert(
+          "r4_sp1_idx",
+          [insertable],
+          db.constraint("r4_sp1_idx_tenant_r_id_key"),
+          {
+            updateColumns: db.doNothing,
+          },
+        )
         .run(pg);
       return;
     }
@@ -347,7 +352,7 @@ async function indexSingularParameters<
         .upsert(
           "r4b_sp1_idx",
           [insertable],
-          db.constraint("r4b_sp1_idx_pkey"),
+          db.constraint("r4b_sp1_idx_tenant_r_id_key"),
           {
             updateColumns: db.doNothing,
           },
