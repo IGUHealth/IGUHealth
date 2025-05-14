@@ -28,7 +28,7 @@ export default class PostgresLock implements LockProvider {
   }
 
   async update(type: s.lock_type, lockid: string, value: s.locks.Updatable) {
-    db.update("locks", value, { id: lockid, type }).run(this._client);
+    await db.update("locks", value, { id: lockid, type }).run(this._client);
   }
 
   /**

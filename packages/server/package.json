@@ -19,11 +19,11 @@
     "cli": "yarn node ./lib/cli/index.js",
     "build-css": "yarn postcss -o public/css/index.css index.css",
     "watch-css": "yarn postcss --watch -o public/css/index.css index.css ",
-    "ci": "yarn cli run both",
+    "ci": "yarn cli run all",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
     "db-migrate": "db-migrate --sql-file -m src/migrations/postgres/db-migrate/",
     "migrate": "yarn cli migrate all",
-    "watch": "yarn inject-version && yarn tsx watch src/cli/index.ts run both",
+    "watch": "yarn inject-version && yarn tsx watch src/cli/index.ts run all",
     "watch_server": "yarn inject-version && yarn tsx watch src/cli/index.ts run server",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },

@@ -19,11 +19,10 @@ import {
 import { CUSTOM_CLAIMS, TOKEN_RESOURCE_TYPES, TenantId } from "@iguhealth/jwt";
 
 import { toFHIRVersion } from "../../fhir-clients/utilities/version.js";
-import { IGUHealthServerCTX } from "../../fhir-server/types.js";
+import { IGUHealthServices } from "../../fhir-server/types.js";
 import { StorageTransaction } from "../../transactions.js";
-import {
-  Operations,
-} from "../implementations/providers/interface.js";
+import { wait } from "../../utilities.js";
+import { Operations } from "../implementations/providers/interface.js";
 import {
   OperationsTopic,
   TenantTopic,
@@ -68,24 +67,23 @@ function toResponse(
   }
 }
 
-const STORE_QUEUE = <const>"push-to-queue"
+const STORE_QUEUE = "push-to-queue";
 
-export default async function pushFromStoreHandler(ctx: IGUHealthServerCTX) {
+export async function pushFromStoreHandler(ctx: IGUHealthServices) {
   StorageTransaction(ctx, db.IsolationLevel.ReadCommitted, async (ctx) => {
-    const sequenceLock = await ctx.lock.get("system", [STORE_QUEUE]);
+    const currentSequence = (await ctx.lock.get("system", [STORE_QUEUE]))[0]
+      ?.value;
 
-    if (sequenceLock.length > 0) {
-      return;
-    }
-    const { offset } = sequenceLock[0].value;
-    const next = await ctx.store.fhir.getSequence(offset, 50);
+    if (currentSequence === undefined) return;
+
+    const next = await ctx.store.fhir.getSequence(currentSequence.offset, 50);
     if (next.length === 0) {
       return;
     }
 
     const tenantResults = Object.groupBy(next, (item) => item.tenant);
 
-    for (const tenant in Object.keys(tenantResults)) {
+    for (const tenant of Object.keys(tenantResults)) {
       const tenantMessages = tenantResults[tenant];
       const operations: Operations = (tenantMessages ?? [])?.map(
         (item): Operations[number] => {
@@ -114,11 +112,35 @@ export default async function pushFromStoreHandler(ctx: IGUHealthServerCTX) {
 
     const nextOffset = next[next.length - 1]?.sequence;
     await ctx.lock.update("system", STORE_QUEUE, {
-      ...sequenceLock[0],
+      id: STORE_QUEUE,
+      type: "system",
       value: {
-        ...sequenceLock[0].value,
+        ...currentSequence,
         offset: nextOffset,
       },
     });
   });
+}
+
+export async function pushFromStoreWorker<CTX extends IGUHealthServices>(
+  ctx: CTX,
+) {
+  let isRunning = true;
+  await ctx.lock.create([
+    { id: STORE_QUEUE, type: "system", value: { offset: 0 } },
+  ]);
+
+  const run = async () => {
+    while (isRunning) {
+      await pushFromStoreHandler(ctx);
+      await wait(50);
+    }
+  };
+
+  // Run on seperate.
+  setTimeout(() => run());
+
+  return () => {
+    isRunning = false;
+  };
 }

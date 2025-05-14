@@ -3,16 +3,13 @@ import * as s from "zapatos/schema";
 
 import { IGUHealthServices } from "../../../../../fhir-server/types.js";
 import PostgresLock from "../../../../../synchronization/postgres.lock.js";
+import { wait } from "../../../../../utilities.js";
 import {
   IConsumerGroupID,
   ITopic,
   ITopicPattern,
 } from "../../../topics/index.js";
 import { Message, MessageHandler } from "../../types.js";
-
-function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export function convertPgMessagetoMessage(
   pgMessage: s.sub_queue.JSONSelectable[],
@@ -52,11 +49,11 @@ export default async function createPGWorker<CTX extends IGUHealthServices>(
   let isRunning = true;
   const run = async () => {
     while (isRunning) {
-      db.transaction(pg, db.IsolationLevel.ReadCommitted, async (tx) => {
+      await db.transaction(pg, db.IsolationLevel.ReadCommitted, async (tx) => {
         queueLock = new PostgresLock(tx);
         const offsetLock = (await queueLock.get("queue-loc", [groupId]))[0];
         if (!offsetLock) {
-          throw new Error(`No offset lock found for groupId: '${groupId}'`);
+          return;
         }
 
         const { topic, offset, isPattern } = offsetLock.value;
