@@ -98,7 +98,7 @@ const all: Parameters<Command["action"]>[0] = async (options) => {
   const [server, ...workers] = await Promise.all([
     runServer(options.port),
     // runWorker(Consumers.Storage, storageHandler),
-    runWorker(Consumers.SearchIndexing, indexingHandler),
+    // runWorker(Consumers.SearchIndexing, indexingHandler),
     runWorker(Consumers.SubscriptionV1, subscriptionHandler),
     await pushFromStoreWorker(await createConsumerServices()),
   ]);
