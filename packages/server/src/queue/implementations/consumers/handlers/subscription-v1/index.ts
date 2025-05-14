@@ -125,6 +125,7 @@ async function processSubscription(
 
     await handleSubscriptionPayload(asRoot(ctx), R4, subscription, payload);
   } catch (e) {
+    ctx.logger.error(e);
     let errorDescription = "Subscription failed to process";
     if (isOperationError(e)) {
       errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
