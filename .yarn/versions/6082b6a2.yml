@@ -1,0 +1,7 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/components": patch
+  "@iguhealth/lang-fp": patch
+  "@iguhealth/server": patch
+  "@iguhealth/serverless": patch
+  "@iguhealth/smart-launch": patch
