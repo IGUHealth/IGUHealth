@@ -70,9 +70,7 @@ const artifactsToLoad = {
 };
 
 const loadArtifacts: Parameters<Command["action"]>[0] = async () => {
-  const result = await syncArtifacts(artifactsToLoad);
-
-  console.log(result);
+  await syncArtifacts(artifactsToLoad);
 };
 
 function artifactCommands(command: Command) {
