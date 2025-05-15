@@ -11,6 +11,7 @@ env:
   STORAGE_LAMBDA_NAME: iguhealth/iguhealth-storage-lambda
   INDEXING_LAMBDA_NAME: iguhealth/iguhealth-indexing-lambda
   SUBSCRIPTION_V1_LAMBDA_NAME: iguhealth/iguhealth-subscription-v1-lambda
+  MIGRATION_LAMBDA_NAME: iguhealth/iguhealth-migration-lambda
 
 jobs:
   server-lambda:
@@ -192,6 +193,52 @@ jobs:
           # --platform linux/amd64,linux/arm64 \
           docker buildx build packages/serverless/docker \
            --file packages/serverless/docker/subscription-v1.dockerfile \
+           --tag $IMAGE_ID:$VERSION \
+           --tag $IMAGE_ID:latest \
+           --label "runnumber=${GITHUB_RUN_ID}" \
+           --push
+
+  migration-lambda:
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - id: package_json_version
+        run: |
+          content=`cat ./packages/serverless/package.json`
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+
+      - name: Build and Publish Image
+        run: |
+          IMAGE_NAME=$(echo $MIGRATION_LAMBDA_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          # --platform linux/amd64,linux/arm64 \
+          docker buildx build packages/serverless/docker \
+           --file packages/serverless/docker/migration.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
