@@ -145,6 +145,7 @@
     "./cli": "./lib/cli/index.js",
     "./consumer/handlers": "./lib/queue/implementations/consumers/handlers/index.js",
     "./consumer/services": "./lib/queue/implementations/consumers/services.js",
-    "./consumer/types": "./lib/queue/implementations/consumers/types.js"
+    "./consumer/types": "./lib/queue/implementations/consumers/types.js",
+    "./migration": "./lib/migration.js"
   }
 }
