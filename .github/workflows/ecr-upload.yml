@@ -31,13 +31,15 @@ jobs:
 
       - name: Pull all github images
         run: |
+
           docker pull ghcr.io/iguhealth/iguhealth/iguhealth-server-lambda:latest
-          docker pull ghcr.io/iguhealth/iguhealth-storage-lambda:latest
-          docker pull ghcr.io/iguhealth/iguhealth-indexing-lambda:latest
-          docker pull ghcr.io/iguhealth/iguhealth-subscription-v1-lambda:latest
-          docker pull ghcr.io/iguhealth/iguhealth-migration-lambda:latest
-          docker pull ghcr.io/iguhealth/iguhealth/iguhealth:latest
-          docker pull ghcr.io/iguhealth/iguhealth/admin-app:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth-storage-lambda:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth-storage-lambda:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth-indexing-lambda:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth-subscription-v1-lambda:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth-migration-lambda:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth/iguhealth:latest
+          docker pull ghcr.io/iguhealth/iguhealth/iguhealth/admin-app:latest
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -45,13 +47,13 @@ jobs:
 
       - name: Tag and push images to ECR
         run: |
-          docker tag ghcr.io/iguhealth/iguhealth/iguhealth-server-lambda:latest $ECR_REGISTRY/iguhealth-server-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth-storage-lambda:latest $ECR_REGISTRY/iguhealth-storage-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth-indexing-lambda:latest $ECR_REGISTRY/iguhealth-indexing-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth-subscription-v1-lambda:latest $ECR_REGISTRY/iguhealth-subscription-v1-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth-migration-lambda:latest $ECR_REGISTRY/iguhealth-migration-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth/iguhealth:latest $ECR_REGISTRY/server:latest
-          docker tag ghcr.io/iguhealth/iguhealth/admin-app:latest $ECR_REGISTRY/admin-app:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth/iguhealth-server-lambda:latest $ECR_REGISTRY/iguhealth-server-lambda:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth-storage-lambda:latest $ECR_REGISTRY/iguhealth-storage-lambda:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth-indexing-lambda:latest $ECR_REGISTRY/iguhealth-indexing-lambda:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth-subscription-v1-lambda:latest $ECR_REGISTRY/iguhealth-subscription-v1-lambda:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth-migration-lambda:latest $ECR_REGISTRY/iguhealth-migration-lambda:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth/iguhealth:latest $ECR_REGISTRY/server:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth/admin-app:latest $ECR_REGISTRY/admin-app:latest
 
           docker push $ECR_REGISTRY/server:latest
           docker push $ECR_REGISTRY/admin-app:latest
