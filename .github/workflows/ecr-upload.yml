@@ -1,6 +1,8 @@
 name: ECR Upload
+
 permissions:
-  contents: read
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 on:
   # Because pull from npm wait until packages have been published.
   workflow_run:
