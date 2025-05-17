@@ -48,7 +48,7 @@ jobs:
       - name: Tag and push images to ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REGISTRY_ALIAS: t4p9j5c1/iguhealth
+          REGISTRY_ALIAS: t4p9j5c1
 
         run: |
           docker tag ghcr.io/iguhealth/iguhealth/iguhealth-server-lambda:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth-server-lambda:latest
@@ -56,10 +56,10 @@ jobs:
           docker tag ghcr.io/iguhealth/iguhealth/iguhealth-indexing-lambda:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth-indexing-lambda:latest
           docker tag ghcr.io/iguhealth/iguhealth/iguhealth-subscription-v1-lambda:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth-subscription-v1-lambda:latest
           docker tag ghcr.io/iguhealth/iguhealth/iguhealth-migration-lambda:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth-migration-lambda:latest
-          docker tag ghcr.io/iguhealth/iguhealth/iguhealth:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth:latest
+          docker tag ghcr.io/iguhealth/iguhealth/iguhealth:latest $REGISTRY/$REGISTRY_ALIAS/iguhealth-server:latest
           docker tag ghcr.io/iguhealth/iguhealth/admin-app:latest $REGISTRY/$REGISTRY_ALIAS/admin-app:latest
 
-          docker push $REGISTRY/$REGISTRY_ALIAS/iguhealth:latest
+          docker push $REGISTRY/$REGISTRY_ALIAS/iguhealth-server:latest
           docker push $REGISTRY/$REGISTRY_ALIAS/admin-app:latest
           docker push $REGISTRY/$REGISTRY_ALIAS/iguhealth-server-lambda:latest
           docker push $REGISTRY/$REGISTRY_ALIAS/iguhealth-storage-lambda:latest
