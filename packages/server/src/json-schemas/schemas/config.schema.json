@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "IGUHealthEnvironment",
+  "title": "ConfigSchema",
   "type": "object",
-  "$id": "https://IGUHealth.app/environment-variables",
+  "$id": "https://IGUHealth.app/config-variables",
   "additionalProperties": true,
   "allOf": [
     {

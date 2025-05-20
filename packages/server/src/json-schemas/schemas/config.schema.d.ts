@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type IGUHealthEnvironment = ResourceStorePg &
+export type ConfigSchema = ResourceStorePg &
   SearchStorePg &
   ArtifactPg &
   QueueKafka &
@@ -182,6 +182,10 @@ export interface ResourceStorePg {
    */
   RESOURCE_STORE_PG_PORT?: string;
   /**
+   * Whether Postgres connection is SSL
+   */
+  RESOURCE_STORE_PG_SSL?: "true" | "false";
+  /**
    * postgres password
    */
   RESOURCE_STORE_PG_PASSWORD?: string;
@@ -189,10 +193,6 @@ export interface ResourceStorePg {
    * postgres username
    */
   RESOURCE_STORE_PG_USERNAME?: string;
-  /**
-   * Whether Postgres connection is SSL
-   */
-  RESOURCE_STORE_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }
 export interface SearchStorePg {
@@ -209,6 +209,10 @@ export interface SearchStorePg {
    */
   SEARCH_STORE_PG_PORT?: string;
   /**
+   * Whether Postgres connection is SSL
+   */
+  SEARCH_STORE_PG_SSL?: "true" | "false";
+  /**
    * postgres password
    */
   SEARCH_STORE_PG_PASSWORD?: string;
@@ -216,10 +220,6 @@ export interface SearchStorePg {
    * postgres username
    */
   SEARCH_STORE_PG_USERNAME?: string;
-  /**
-   * Whether Postgres connection is SSL
-   */
-  SEARCH_STORE_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }
 export interface ArtifactPg {
@@ -236,6 +236,10 @@ export interface ArtifactPg {
    */
   ARTIFACT_DB_PG_PORT?: string;
   /**
+   * Whether Postgres connection is SSL
+   */
+  ARTIFACT_DB_PG_SSL?: "true" | "false";
+  /**
    * postgres password
    */
   ARTIFACT_DB_PG_PASSWORD?: string;
@@ -243,10 +247,6 @@ export interface ArtifactPg {
    * postgres username
    */
   ARTIFACT_DB_PG_USERNAME?: string;
-  /**
-   * Whether Postgres connection is SSL
-   */
-  ARTIFACT_DB_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }
 export interface QueueKafka {
@@ -274,6 +274,10 @@ export interface QueuePg {
    */
   QUEUE_DB_PG_PORT?: string;
   /**
+   * Whether Postgres connection is SSL
+   */
+  QUEUE_DB_PG_SSL?: "true" | "false";
+  /**
    * postgres password
    */
   QUEUE_DB_PG_PASSWORD?: string;
@@ -281,9 +285,5 @@ export interface QueuePg {
    * postgres username
    */
   QUEUE_DB_PG_USERNAME?: string;
-  /**
-   * Whether Postgres connection is SSL
-   */
-  QUEUE_DB_PG_SSL?: "true" | "false";
   [k: string]: unknown;
 }

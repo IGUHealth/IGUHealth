@@ -1,8 +1,8 @@
 import Ajv from "ajv";
 import dotEnv from "dotenv";
 
-import type { IGUHealthEnvironment } from "./json-schemas/schemas/environment.schema.js";
-import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" with { type: "json" };
+import type { ConfigSchema } from "./json-schemas/schemas/config.schema.js";
+import IGUHealthEnvironmentSchema from "./json-schemas/schemas/config.schema.json" with { type: "json" };
 
 export default function loadEnv() {
   dotEnv.config();
@@ -14,7 +14,7 @@ export default function loadEnv() {
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends IGUHealthEnvironment {
+    interface ProcessEnv extends ConfigSchema {
       [k: string]: unknown;
     }
   }
