@@ -9,6 +9,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
+import getConfigProvider from "../../../config/index.js";
 import { createLogger } from "../../../fhir-server/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../fhir-server/types.js";
 import createQueue from "../../../queue/implementations/providers/index.js";
@@ -106,17 +107,19 @@ async function syncType<Version extends FHIR_VERSION>(
 async function createServices(): Promise<
   Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
 > {
-  const logger = createLogger();
-  const store = await createStore({ type: "postgres" });
+  const config = getConfigProvider();
+  const logger = createLogger(config);
+  const store = await createStore(config);
 
   const iguhealthServices: Omit<
     IGUHealthServerCTX,
     "user" | "resolveCanonical"
   > = {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    config,
+    environment: config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(),
     store,
-    search: await createSearchStore({ type: "postgres" }),
+    search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     logger,
 
@@ -124,11 +127,11 @@ async function createServices(): Promise<
     client: createArtifactClient({
       operationsAllowed: ["create-request", "update-request", "search-request"],
       db: new pg.Pool({
-        host: process.env.ARTIFACT_DB_PG_HOST,
-        password: process.env.ARTIFACT_DB_PG_PASSWORD,
-        user: process.env.ARTIFACT_DB_PG_USERNAME,
-        database: process.env.ARTIFACT_DB_PG_NAME,
-        port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+        host: config.get("ARTIFACT_DB_PG_HOST"),
+        password: config.get("ARTIFACT_DB_PG_PASSWORD"),
+        user: config.get("ARTIFACT_DB_PG_USERNAME"),
+        database: config.get("ARTIFACT_DB_PG_NAME"),
+        port: parseInt(config.get("ARTIFACT_DB_PG_PORT") ?? "5432"),
       }),
     }),
   };

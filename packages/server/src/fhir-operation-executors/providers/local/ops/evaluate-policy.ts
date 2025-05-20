@@ -61,7 +61,7 @@ async function getUserSource(
 
   return {
     payload: {
-      iss: getIssuer(ctx.tenant),
+      iss: getIssuer(ctx.config, ctx.tenant),
       aud: "policy-test",
       [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
       [CUSTOM_CLAIMS.ROLE]:

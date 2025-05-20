@@ -14,6 +14,7 @@ import {
 import { getIssuer } from "../../../authN/oidc/constants.js";
 import { WORKER_APP } from "../../../authN/oidc/hardcodedClients/worker-app.js";
 import { getCertConfig } from "../../../certification.js";
+import { ConfigProvider } from "../../../config/provider/interface.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 
 export type IGUHealthWorkerCTX = Pick<
@@ -29,11 +30,12 @@ export type IGUHealthWorkerCTX = Pick<
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(
+  config: ConfigProvider,
   workerID: string,
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
-    iss: getIssuer(tenant),
+    iss: getIssuer(config, tenant),
     scope: "system/*.*",
     aud: WORKER_APP.id as id,
     sub: WORKER_APP.id as string as Subject,
@@ -60,7 +62,7 @@ function createWorkerIGUHealthClient(
   }
 
   const client = createHTTPClient({
-    url: new URL(`w/${tenant}`, process.env.API_URL).href,
+    url: new URL(`w/${tenant}`, services.config.get("API_URL")).href,
     getAccessToken: async () => {
       const token = await createToken({
         signingKey: await getSigningKey(getCertConfig(services.config)),

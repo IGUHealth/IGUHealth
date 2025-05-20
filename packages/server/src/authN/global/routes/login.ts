@@ -101,7 +101,10 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   // Auto redirect if one tenant.
   if (tenantClaims.length === 1) {
-    const admin_app_url = adminApp.redirectURL(tenantClaims[0].id);
+    const admin_app_url = adminApp.redirectURL(
+      ctx.state.iguhealth.config,
+      tenantClaims[0].id,
+    );
     if (!admin_app_url)
       throw new OperationError(
         outcomeFatal("exception", "Admin app URL not found"),
@@ -118,7 +121,10 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       email,
       tenants: tenantClaims,
       generateTenantURL: (email, tenantId) => {
-        const admin_app_url = adminApp.redirectURL(tenantId);
+        const admin_app_url = adminApp.redirectURL(
+          ctx.state.iguhealth.config,
+          tenantId,
+        );
         if (!admin_app_url)
           throw new OperationError(
             outcomeFatal("exception", "Admin app URL not found"),

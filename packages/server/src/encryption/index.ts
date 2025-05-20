@@ -114,17 +114,17 @@ export async function encryptValue<T extends object>(
 export default function createEncryptionProvider():
   | EncryptionProvider
   | undefined {
-  switch (process.env.ENCRYPTION_TYPE) {
+  switch (config.get("ENCRYPTION_TYPE")) {
     case "aws": {
       return new AWSKMSProvider({
         clientConfig: {
           credentials: {
-            accessKeyId: process.env.AWS_KMS_ACCESS_KEY_ID as string,
-            secretAccessKey: process.env.AWS_KMS_ACCESS_KEY_SECRET as string,
+            accessKeyId: config.get("AWS_KMS_ACCESS_KEY_ID") as string,
+            secretAccessKey: config.get("AWS_KMS_ACCESS_KEY_SECRET") as string,
           },
         },
-        generatorKeyARN: process.env.AWS_ENCRYPTION_GENERATOR_KEY as string,
-        encryptorKeyARNS: [process.env.AWS_ENCRYPTION_KEY as string],
+        generatorKeyARN: config.get("AWS_ENCRYPTION_GENERATOR_KEY") as string,
+        encryptorKeyARNS: [config.get("AWS_ENCRYPTION_KEY") as string],
       });
     }
 

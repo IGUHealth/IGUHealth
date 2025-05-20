@@ -51,18 +51,18 @@ async function generateTypes() {
   );
   await generateSQL.generate({
     db: {
-      user: process.env.RESOURCE_STORE_PG_USERNAME,
-      password: process.env.RESOURCE_STORE_PG_PASSWORD,
-      host: process.env.RESOURCE_STORE_PG_HOST,
-      database: process.env.RESOURCE_STORE_PG_NAME,
-      port: parseInt(process.env.RESOURCE_STORE_PG_PORT || "5432"),
+      user: config.get("RESOURCE_STORE_PG_USERNAME"),
+      password: config.get("RESOURCE_STORE_PG_PASSWORD"),
+      host: config.get("RESOURCE_STORE_PG_HOST"),
+      database: config.get("RESOURCE_STORE_PG_NAME"),
+      port: parseInt(config.get("RESOURCE_STORE_PG_PORT") || "5432"),
       ssl:
-        process.env.RESOURCE_STORE_SSL === "true"
+        config.get("RESOURCE_STORE_SSL") === "true"
           ? {
               // Self signed certificate CA is not used.
               rejectUnauthorized: false,
-              host: process.env.RESOURCE_STORE_PG_HOST,
-              port: parseInt(process.env.RESOURCE_STORE_PG_PORT || "5432"),
+              host: config.get("RESOURCE_STORE_PG_HOST"),
+              port: parseInt(config.get("RESOURCE_STORE_PG_PORT") || "5432"),
             }
           : false,
     },

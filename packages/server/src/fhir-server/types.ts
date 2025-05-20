@@ -123,6 +123,7 @@ export interface UserContext {
 
 export interface IGUHealthServices {
   config: ConfigProvider;
+  environment: string;
   // Server Information
   queue: IQueue | IQueueBatch;
 
@@ -161,12 +162,13 @@ export interface IGUHealthServerCTX extends IGUHealthServices {
 }
 
 function createRootClaims(
+  config: ConfigProvider,
   tenant: TenantId,
   clientApp: ClientApplication,
 ): AccessTokenPayload<s.user_role> {
   return {
     scope: "system/*.*",
-    iss: getIssuer(tenant),
+    iss: getIssuer(config, tenant),
     sub: clientApp.id as string as Subject,
     aud: clientApp.id as id,
     [CUSTOM_CLAIMS.RESOURCE_ID]: clientApp.id as id,
@@ -186,7 +188,7 @@ function createRootClaims(
 export function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
 ): IGUHealthServerCTX {
-  const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
+  const rootClaims = createRootClaims(ctx.config, ctx.tenant, SYSTEM_APP);
 
   return {
     ...ctx,

@@ -3,14 +3,15 @@ import { ConfigProvider } from "./provider/interface.js";
 
 export type ConfigProviderType = "environment" | "aws-parameter";
 
-export default function getConfigProvider(
-  type: ConfigProviderType,
-): ConfigProvider {
-  switch (type) {
+export default function getConfigProvider(): ConfigProvider {
+  const configType: ConfigProviderType =
+    (process.env.CONFIG_PROVIDER as ConfigProviderType) ?? "environment";
+
+  switch (configType) {
     case "environment":
       return new EnvironmentConfigProvider();
     case "aws-parameter":
     default:
-      throw new Error(`Unknown config provider type: ${type}`);
+      throw new Error(`Unknown config provider type: ${configType}`);
   }
 }

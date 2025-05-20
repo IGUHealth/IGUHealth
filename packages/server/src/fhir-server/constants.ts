@@ -5,7 +5,7 @@ import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 export function createTenantURL(tenant: TenantId): string {
-  const base = new URL(process.env.API_URL);
+  const base = new URL(config.get("API_URL"));
   return new URL(path.join(base.pathname, "w", tenant), base.origin).href;
 }
 

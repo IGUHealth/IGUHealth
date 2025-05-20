@@ -7,13 +7,13 @@ import { PGQueue } from "./pg.js";
 
 export function createKafkaClient() {
   return new Kafka({
-    brokers: process.env.KAFKA_QUEUE_BROKERS?.split(",") ?? [],
-    clientId: process.env.KAFKA_QUEUE_CLIENT_ID,
+    brokers: config.get("KAFKA_QUEUE_BROKERS")?.split(",") ?? [],
+    clientId: config.get("KAFKA_QUEUE_CLIENT_ID"),
   });
 }
 
 export default async function createQueue(): Promise<IQueue> {
-  switch (process.env.QUEUE_TYPE) {
+  switch (config.get("QUEUE_TYPE")) {
     case "kafka": {
       const kafka = createKafkaClient();
       const producer = kafka.producer({
@@ -25,25 +25,25 @@ export default async function createQueue(): Promise<IQueue> {
     }
     case "postgres": {
       const connection = new pg.Pool({
-        user: process.env.QUEUE_DB_PG_USERNAME,
-        password: process.env.QUEUE_DB_PG_PASSWORD,
-        host: process.env.QUEUE_DB_PG_HOST,
-        database: process.env.QUEUE_DB_PG_NAME,
-        port: parseInt(process.env.QUEUE_DB_PG_PORT ?? "5432"),
+        user: config.get("QUEUE_DB_PG_USERNAME"),
+        password: config.get("QUEUE_DB_PG_PASSWORD"),
+        host: config.get("QUEUE_DB_PG_HOST"),
+        database: config.get("QUEUE_DB_PG_NAME"),
+        port: parseInt(config.get("QUEUE_DB_PG_PORT") ?? "5432"),
         ssl:
-          process.env.QUEUE_DB_PG_SSL === "true"
+          config.get("QUEUE_DB_PG_SSL") === "true"
             ? {
                 // Self signed certificate CA is not used.
                 rejectUnauthorized: false,
-                host: process.env.QUEUE_DB_PG_HOST,
-                port: parseInt(process.env.QUEUE_DB_PG_PORT ?? "5432"),
+                host: config.get("QUEUE_DB_PG_HOST"),
+                port: parseInt(config.get("QUEUE_DB_PG_PORT") ?? "5432"),
               }
             : false,
       });
       return new PGQueue({ connection });
     }
     default: {
-      throw new Error(`Invalid queue type '${process.env.QUEUE_TYPE}'`);
+      throw new Error(`Invalid queue type '${config.get("QUEUE_TYPE")}'`);
     }
   }
 }

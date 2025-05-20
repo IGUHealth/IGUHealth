@@ -1,5 +1,7 @@
 import { Issuer, TenantId } from "@iguhealth/jwt/types";
 
+import { ConfigProvider } from "../../config/provider/interface.js";
+
 export const JWKS_GET = "JWKS_GET";
 
 export const OIDC_ROUTES = {
@@ -32,8 +34,8 @@ export const OIDC_ROUTES = {
   FEDERATED_CALLBACK: "tenant-oidc-federated-callback",
 };
 
-export function getIssuer(tenant: TenantId): Issuer {
-  const issuer = new URL(`/w/${tenant}/oidc`, process.env.AUTH_ISSUER)
+export function getIssuer(config: ConfigProvider, tenant: TenantId): Issuer {
+  const issuer = new URL(`/w/${tenant}/oidc`, config.get("AUTH_ISSUER"))
     .href as Issuer;
 
   return issuer;

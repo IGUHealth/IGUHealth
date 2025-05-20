@@ -25,7 +25,7 @@ export const IdentityProviderRegistrationInvoke = InlineOperation(
               name: "Redirect URL",
               value: new URL(
                 `/w/${ctx.tenant}/oidc/federated/${idp.id}/callback`,
-                process.env.API_URL,
+                config.get("API_URL"),
               ).toString(),
             },
           ],

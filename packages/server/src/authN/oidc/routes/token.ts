@@ -271,7 +271,7 @@ async function createTokenResponse({
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.tenant),
+    iss: getIssuer(ctx.config, ctx.tenant),
 
     // Smart claims.
     patient: launchParameters?.Patient,

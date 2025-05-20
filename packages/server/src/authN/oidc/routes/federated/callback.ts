@@ -68,7 +68,7 @@ export function federatedCallback(): OIDCRouteHandler {
             tenant: ctx.state.iguhealth.tenant,
             identityProvider: idpProvider.id,
           }) as string,
-          process.env.API_URL,
+          config.get("API_URL"),
         ).href,
       };
 

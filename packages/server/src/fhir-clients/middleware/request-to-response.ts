@@ -271,7 +271,7 @@ async function conditionalDelete(
     | TypeSearchRequest<FHIR_VERSION>
     | SystemSearchRequest<FHIR_VERSION>,
 ) {
-  const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
+  const limit = parseInt(config.get("FHIR_DELETE_CONDITIONAL_LIMIT") ?? "20");
   searchRequest.parameters = [
     ...searchRequest.parameters.filter(
       (p) => p.name !== "_total" && p.name !== "_count",

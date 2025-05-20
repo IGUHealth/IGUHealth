@@ -18,6 +18,7 @@ import {
 } from "@iguhealth/jwt/types";
 
 import { IOCache } from "../cache/interface.js";
+import getConfigProvider from "../config/index.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { createSearchStore } from "../search-stores/index.js";
@@ -59,12 +60,14 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
   }
 }
 
-const store = await createStore({ type: "postgres" });
+const config = getConfigProvider();
+const store = await createStore(config);
 
 export const testServices: IGUHealthServerCTX = {
+  config,
   tenant: "tenant" as TenantId,
   store,
-  search: await createSearchStore({ type: "postgres" }),
+  search: await createSearchStore(config),
   lock: new PostgresLock(store.getClient()),
   // @ts-ignore
   user: {

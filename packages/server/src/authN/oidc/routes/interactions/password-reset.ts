@@ -265,7 +265,10 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
         },
       );
-      const AdminAppURL = adminApp.redirectURL(ctx.state.iguhealth.tenant);
+      const AdminAppURL = adminApp.redirectURL(
+        ctx.state.iguhealth.config,
+        ctx.state.iguhealth.tenant,
+      );
       if (!AdminAppURL)
         throw new OperationError(
           outcomeFatal("invariant", "Admin app URL not found for tenant."),
@@ -374,7 +377,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       return;
     }
 
-    if (!process.env.EMAIL_FROM) {
+    if (!config.get("EMAIL_FROM")) {
       throw new OperationError(
         outcomeFatal(
           "invariant",

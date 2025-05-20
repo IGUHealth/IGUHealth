@@ -135,7 +135,7 @@ async function findResourceAndAccessPolicies<
   resource?: Resource<R4, Type>;
   accessPolicies: AccessPolicyV2[];
 }> {
-  const clients = getHardCodedClients();
+  const clients = getHardCodedClients(ctx.config);
 
   // For hardcoded clients access check is needed
   // IE iguhealth system app and worker app.
@@ -253,7 +253,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.params.tenant as TenantId),
+    iss: getIssuer(ctx.state.iguhealth.config, ctx.params.tenant as TenantId),
     aud: "iguhealth",
     sub: "public-user" as Subject,
     scope: "user/*.*",

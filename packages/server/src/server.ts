@@ -169,42 +169,39 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
 export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
-  const redis = getRedisClient();
-  const logger = createLogger();
-  const store = await createStore({
-    type: "postgres",
-  });
-
-  const config = getConfigProvider(
-    (process.env.CONFIG_PROVIDER as ConfigProviderType) ?? "environment",
-  );
+  const config = getConfigProvider();
+  const redis = getRedisClient(config);
+  const logger = createLogger(config);
+  const store = await createStore(config);
 
   const iguhealthServices: IGUHealthServices = {
+    environment: config.get("IGUHEALTH_ENVIRONMENT"),
     config,
     queue: await createQueue(),
     store,
-    search: await createSearchStore({ type: "postgres" }),
+    search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     logger,
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),
     emailProvider: createEmailProvider(),
-    client: createClient(),
+    client: createClient(config),
     resolveCanonical,
   };
 
-  if (process.env.SENTRY_SERVER_DSN)
-    MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
+  const sentryServerDSN = config.get("SENTRY_SERVER_DSN");
+  if (sentryServerDSN)
+    MonitoringSentry.enableSentry(sentryServerDSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
-        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
+        config.get("SENTRY_TRACES_SAMPLE_RATE") || "0.1",
       ),
       profilesSampleRate: parseFloat(
-        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
+        config.get("SENTRY_PROFILES_SAMPLE_RATE") || "0.1",
       ),
     });
 
-  if (process.env.NODE_ENV === "development") {
+  if (config.get("NODE_ENV") === "development") {
     await createCertsIfNoneExists(getCertConfig(config));
   }
 
@@ -212,8 +209,8 @@ export default async function createServer(): Promise<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >({
-    proxy: process.env.PROXY === "true",
-    proxyIpHeader: process.env.PROXY_IP_HEADER,
+    proxy: config.get("PROXY") === "true",
+    proxyIpHeader: config.get("PROXY_IP_HEADER"),
   });
   app.use(
     koaCompress({
@@ -256,7 +253,7 @@ export default async function createServer(): Promise<
     KoaExtensions.KoaIGUHealthContext
   >[] = [
     authN.verifyBasicAuth,
-    process.env.AUTH_PUBLIC_ACCESS === "true"
+    config.get("AUTH_PUBLIC_ACCESS") === "true"
       ? authN.allowPublicAccessMiddleware
       : await authN.createValidateUserJWTMiddleware(iguhealthServices.config),
     authN.associateUserToIGUHealth,
@@ -265,7 +262,7 @@ export default async function createServer(): Promise<
 
   const globalAuth = await createGlobalAuthRouter("/auth", {
     middleware: [
-      setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
+      setAllowSignup(config.get("AUTH_ALLOW_GLOBAL_SIGNUP") === "true"),
     ],
   });
 
@@ -310,7 +307,7 @@ export default async function createServer(): Promise<
     {
       tokenAuthMiddlewares: authMiddlewares,
       middleware: [
-        setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
+        setAllowSignup(config.get("AUTH_ALLOW_TENANT_SIGNUP") === "true"),
       ],
     },
   );
@@ -396,7 +393,7 @@ export default async function createServer(): Promise<
         app,
       ),
     )
-    .use(MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN))
+    .use(MonitoringSentry.tracingMiddleWare(config.get("SENTRY_SERVER_DSN")))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
@@ -404,7 +401,7 @@ export default async function createServer(): Promise<
       // For development we don't want to log all worker requests.
       if (
         ctx.state.iguhealth.user?.payload.sub !== (WORKER_APP.id as string) ||
-        process.env.NODE_ENV !== "development"
+        config.get("NODE_ENV") !== "development"
       ) {
         logger.info({
           ip: ctx.ip,

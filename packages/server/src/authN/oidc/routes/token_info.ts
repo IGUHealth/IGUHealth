@@ -136,7 +136,10 @@ export function tokenInfo(): OIDCRouteHandler {
       const result = await jwtVerify<
         AccessTokenPayload<user_role> | IDTokenPayload<user_role>
       >(body.token, signingKey.key, {
-        issuer: getIssuer(ctx.state.iguhealth.tenant),
+        issuer: getIssuer(
+          ctx.state.iguhealth.config,
+          ctx.state.iguhealth.tenant,
+        ),
         algorithms: [ALGORITHMS.RS384],
       });
 

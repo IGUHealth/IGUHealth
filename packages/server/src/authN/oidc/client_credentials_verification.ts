@@ -79,7 +79,7 @@ export async function createClientCredentialToken(
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.tenant),
+    iss: getIssuer(ctx.config, ctx.tenant),
     aud: client.id as string,
     [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
     [CUSTOM_CLAIMS.ROLE]: "member",

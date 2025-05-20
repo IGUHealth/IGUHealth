@@ -231,30 +231,32 @@ type WellKnownSmartConfiguration = {
 export function wellKnownOpenIDConfiguration(): OIDCRouteHandler {
   return async (ctx) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
-      issuer: getIssuer(ctx.state.iguhealth.tenant),
+      issuer: getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant),
       userinfo_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.USER_INFO, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
       scopes_supported: ["openid", "profile", "email", "offline_access"],
       token_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
 
       authorization_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
 
-      jwks_uri: new URL(ctx.router.url(JWKS_GET) as string, process.env.API_URL)
-        .href,
+      jwks_uri: new URL(
+        ctx.router.url(JWKS_GET) as string,
+        ctx.state.iguhealth.config.get("API_URL"),
+      ).href,
 
       response_types_supported: ["code", "id_token", "id_token token"],
       token_endpoint_auth_methods_supported: [
@@ -274,25 +276,27 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
 ): OIDCRouteHandler {
   return async (ctx) => {
     const WELL_KNOWN_SMART_CONFIGURATION: WellKnownSmartConfiguration = {
-      issuer: getIssuer(ctx.state.iguhealth.tenant),
+      issuer: getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant),
       grant_types_supported: ["authorization_code", "client_credentials"],
 
       token_endpoint: new URL(
         oidcRouter.url(OIDC_ROUTES.TOKEN_POST, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
 
       authorization_endpoint: new URL(
         oidcRouter.url(OIDC_ROUTES.AUTHORIZE_GET, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
 
-      jwks_uri: new URL(oidcRouter.url(JWKS_GET) as string, process.env.API_URL)
-        .href,
+      jwks_uri: new URL(
+        oidcRouter.url(JWKS_GET) as string,
+        ctx.state.iguhealth.config.get("API_URL"),
+      ).href,
 
       token_endpoint_auth_methods_supported: [
         "client_secret_basic",
@@ -317,7 +321,7 @@ export function wellKnownSmartGET<State extends KoaExtensions.IGUHealth>(
         oidcRouter.url(OIDC_ROUTES.TOKEN_INTROSPECTION_POST, {
           tenant: ctx.state.iguhealth.tenant,
         }) as string,
-        process.env.API_URL,
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
     };
 

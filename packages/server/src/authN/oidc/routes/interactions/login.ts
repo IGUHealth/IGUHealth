@@ -120,7 +120,7 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx) => {
                   },
                 },
               ) as string,
-              process.env.API_URL,
+              config.get("API_URL"),
             ).href,
           };
         }),
@@ -172,7 +172,7 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
                 },
               },
             ) as string,
-            process.env.API_URL,
+            config.get("API_URL"),
           ).href,
         };
       }),

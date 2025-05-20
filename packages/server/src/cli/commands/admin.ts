@@ -16,6 +16,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt/types";
 
 import RedisCache from "../../cache/providers/redis.js";
+import getConfigProvider from "../../config/index.js";
 import {
   createClient,
   createLogger,
@@ -71,18 +72,20 @@ async function getTenant(
 }
 
 async function createServices(): Promise<IGUHealthServices> {
-  const redis = getRedisClient();
-  const store = await createStore({ type: "postgres" });
+  const config = getConfigProvider();
+  const redis = getRedisClient(config);
+  const store = await createStore(config);
   return {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    config,
+    environment: config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(),
     cache: new RedisCache(redis),
     store,
-    search: await createSearchStore({ type: "postgres" }),
+    search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     terminologyProvider: new TerminologyProvider(),
-    logger: createLogger(),
-    client: createClient(),
+    logger: createLogger(config),
+    client: createClient(config),
     resolveCanonical,
   };
 }
