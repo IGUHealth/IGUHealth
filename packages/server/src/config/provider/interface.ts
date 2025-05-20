@@ -1,3 +1,5 @@
+import type { ConfigSchema } from "../../json-schemas/schemas/config.schema.js";
+
 export interface ConfigProvider {
-  get(key: string): string | undefined;
+  get<K extends keyof ConfigSchema>(key: K): ConfigSchema[K];
 }

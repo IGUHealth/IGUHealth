@@ -22,7 +22,7 @@ import {
 
 function generateReadme() {
   const schema = JSON.parse(
-    readFileSync("src/json-schemas/schemas/environment.schema.json", "utf-8"),
+    readFileSync("src/json-schemas/schemas/config.schema.json", "utf-8"),
   );
 
   const required = schema.required || [];
