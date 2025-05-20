@@ -41,9 +41,9 @@ import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyUserHasAccessToTenant } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import { getCertConfig } from "./certification.js";
+import getConfigProvider, { ConfigProviderType } from "./config/index.js";
 import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
-import loadEnv from "./env.js";
 import {
   deriveFHIRVersion,
   fhirResponseToHTTPResponse,
@@ -68,8 +68,6 @@ import createStore from "./storage/index.js";
 import PostgresLock from "./synchronization/postgres.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
-
-loadEnv();
 
 function fhirResponseSetKoa(
   ctx: Koa.ParameterizedContext<
@@ -171,28 +169,18 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
 export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
-  if (process.env.SENTRY_SERVER_DSN)
-    MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
-      tracesSampleRate: parseFloat(
-        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
-      ),
-      profilesSampleRate: parseFloat(
-        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
-      ),
-    });
-
-  if (process.env.NODE_ENV === "development") {
-    await createCertsIfNoneExists(getCertConfig());
-  }
-
   const redis = getRedisClient();
   const logger = createLogger();
   const store = await createStore({
     type: "postgres",
   });
 
+  const config = getConfigProvider(
+    (process.env.CONFIG_PROVIDER as ConfigProviderType) ?? "environment",
+  );
+
   const iguhealthServices: IGUHealthServices = {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
+    config,
     queue: await createQueue(),
     store,
     search: await createSearchStore({ type: "postgres" }),
@@ -205,6 +193,20 @@ export default async function createServer(): Promise<
     client: createClient(),
     resolveCanonical,
   };
+
+  if (process.env.SENTRY_SERVER_DSN)
+    MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
+      tracesSampleRate: parseFloat(
+        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
+      ),
+      profilesSampleRate: parseFloat(
+        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
+      ),
+    });
+
+  if (process.env.NODE_ENV === "development") {
+    await createCertsIfNoneExists(getCertConfig(config));
+  }
 
   const app = new Koa<
     KoaExtensions.IGUHealth,
@@ -233,7 +235,10 @@ export default async function createServer(): Promise<
     await next();
   });
 
-  app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
+  app.keys = config
+    .get("SESSION_COOKIE_SECRETS")
+    .split(":")
+    .map((s) => s.trim());
 
   const rootRouter = new Router<
     KoaExtensions.IGUHealth,
@@ -241,7 +246,7 @@ export default async function createServer(): Promise<
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    const jwks = await getJWKS(getCertConfig());
+    const jwks = await getJWKS(getCertConfig(ctx.state.iguhealth.config));
     ctx.body = jwks;
     await next();
   });
@@ -253,7 +258,7 @@ export default async function createServer(): Promise<
     authN.verifyBasicAuth,
     process.env.AUTH_PUBLIC_ACCESS === "true"
       ? authN.allowPublicAccessMiddleware
-      : await authN.createValidateUserJWTMiddleware(),
+      : await authN.createValidateUserJWTMiddleware(iguhealthServices.config),
     authN.associateUserToIGUHealth,
     verifyUserHasAccessToTenant,
   ];

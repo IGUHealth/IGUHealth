@@ -69,7 +69,7 @@ export async function createClientCredentialToken(
   client: ClientApplication,
   expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
-  const signingKey = await getSigningKey(getCertConfig());
+  const signingKey = await getSigningKey(getCertConfig(ctx.config));
 
   const policies = await ctx.client.search_type(
     asRoot(ctx),

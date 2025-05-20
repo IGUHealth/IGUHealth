@@ -18,7 +18,14 @@ import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
-  "tenant" | "store" | "logger" | "lock" | "cache" | "user" | "resolveCanonical"
+  | "tenant"
+  | "store"
+  | "logger"
+  | "lock"
+  | "cache"
+  | "user"
+  | "resolveCanonical"
+  | "config"
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(
@@ -44,6 +51,7 @@ export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
 function createWorkerIGUHealthClient(
+  services: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
   tenant: TenantId,
   tokenPayload: AccessTokenPayload<s.user_role>,
 ): ReturnType<typeof createHTTPClient> {
@@ -55,7 +63,7 @@ function createWorkerIGUHealthClient(
     url: new URL(`w/${tenant}`, process.env.API_URL).href,
     getAccessToken: async () => {
       const token = await createToken({
-        signingKey: await getSigningKey(getCertConfig()),
+        signingKey: await getSigningKey(getCertConfig(services.config)),
         payload: tokenPayload,
       });
       return token;
@@ -73,7 +81,7 @@ export function tenantWorkerContext(
   return {
     ...services,
     tenant: tenant,
-    client: createWorkerIGUHealthClient(tenant, claims),
+    client: createWorkerIGUHealthClient(services, tenant, claims),
     user: {
       resource: WORKER_APP,
       payload: claims,

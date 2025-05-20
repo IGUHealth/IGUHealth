@@ -1,7 +1,7 @@
 import EnvironmentConfigProvider from "./provider/environment.js";
 import { ConfigProvider } from "./provider/interface.js";
 
-type ConfigProviderType = "environment" | "aws-parameter";
+export type ConfigProviderType = "environment" | "aws-parameter";
 
 export default function getConfigProvider(
   type: ConfigProviderType,

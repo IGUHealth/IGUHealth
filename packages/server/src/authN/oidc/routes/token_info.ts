@@ -128,7 +128,10 @@ export function tokenInfo(): OIDCRouteHandler {
       );
     }
 
-    const signingKey = await getSigningKey(getCertConfig());
+    const signingKey = await getSigningKey(
+      getCertConfig(ctx.state.iguhealth.config),
+    );
+
     try {
       const result = await jwtVerify<
         AccessTokenPayload<user_role> | IDTokenPayload<user_role>

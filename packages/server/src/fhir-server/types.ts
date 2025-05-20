@@ -37,6 +37,7 @@ import {
   sessionLogout,
 } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
+import { ConfigProvider } from "../config/provider/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
@@ -121,7 +122,7 @@ export interface UserContext {
 }
 
 export interface IGUHealthServices {
-  environment: string;
+  config: ConfigProvider;
   // Server Information
   queue: IQueue | IQueueBatch;
 
