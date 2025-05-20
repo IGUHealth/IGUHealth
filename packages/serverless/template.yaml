@@ -30,27 +30,30 @@ Resources:
           "RESOURCE_STORE_PG_PORT": "5432"
           "RESOURCE_STORE_PG_PASSWORD": "postgres"
           "RESOURCE_STORE_PG_USERNAME": "postgres"
+
           "SEARCH_STORE_TYPE": "postgres"
           "SEARCH_STORE_PG_NAME": "iguhealth"
           "SEARCH_STORE_PG_HOST": "docker.for.mac.localhost"
           "SEARCH_STORE_PG_PORT": "5432"
           "SEARCH_STORE_PG_PASSWORD": "postgres"
           "SEARCH_STORE_PG_USERNAME": "postgres"
+
           "ARTIFACT_DB_TYPE": "postgres"
           "ARTIFACT_DB_PG_NAME": "iguhealth_artifact"
           "ARTIFACT_DB_PG_HOST": "docker.for.mac.localhost"
           "ARTIFACT_DB_PG_PORT": "5432"
           "ARTIFACT_DB_PG_PASSWORD": "postgres"
           "ARTIFACT_DB_PG_USERNAME": "postgres"
-          "RATE_LIMIT_MAX": "1000000000000"
+
           "REDIS_HOST": "docker.for.mac.localhost"
           "REDIS_PORT": "6379"
+
+          "RATE_LIMIT_MAX": "1000000000000"
           "NODE_ENV": "development"
           "EMAIL_FROM": "dev@iguhealth.app"
           "EMAIL_PROVIDER": "sendgrid"
           "API_URL": "http://localhost:3000"
           "AUTH_ISSUER": "http://localhost:3000"
-          "AUTH_CERTIFICATION_TYPE": "environment"
 
           "ADMIN_APP_REDIRECT_URI": "http://*.localhost:3001"
           "AUTH_ALLOW_GLOBAL_SIGNUP": true
@@ -67,8 +70,8 @@ Resources:
           "QUEUE_DB_PG_PASSWORD": "postgres"
           "QUEUE_DB_PG_USERNAME": "postgres"
 
-          AUTH_LOCAL_SIGNING_KEY: "signing_key"
-
+          "AUTH_CERTIFICATION_TYPE": "environment"
+          "AUTH_LOCAL_SIGNING_KEY": "signing_key"
           # Secrets need to be defined for pull in env.json file
           "AUTH_CERTIFICATION_PRIVATE_KEY": |
             -----BEGIN PRIVATE KEY-----
