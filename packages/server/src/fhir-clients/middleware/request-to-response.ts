@@ -271,7 +271,9 @@ async function conditionalDelete(
     | TypeSearchRequest<FHIR_VERSION>
     | SystemSearchRequest<FHIR_VERSION>,
 ) {
-  const limit = parseInt(config.get("FHIR_DELETE_CONDITIONAL_LIMIT") ?? "20");
+  const limit = parseInt(
+    ctx.config.get("FHIR_DELETE_CONDITIONAL_LIMIT") ?? "20",
+  );
   searchRequest.parameters = [
     ...searchRequest.parameters.filter(
       (p) => p.name !== "_total" && p.name !== "_count",
@@ -449,6 +451,7 @@ export default function createRequestToResponseMiddleware<
                   type: "searchset",
                   entry: resources.map((r) =>
                     fhirResourceToBundleEntry(
+                      context.ctx.config,
                       context.request.fhirVersion,
                       context.ctx.tenant,
                       r,
@@ -474,6 +477,7 @@ export default function createRequestToResponseMiddleware<
                   type: "searchset",
                   entry: resources.map((r) =>
                     fhirResourceToBundleEntry(
+                      context.ctx.config,
                       context.request.fhirVersion,
                       context.ctx.tenant,
                       r,
@@ -889,6 +893,7 @@ export default function createRequestToResponseMiddleware<
               );
 
               const responseEntry = fhirResponseToBundleEntry(
+                txCTX.config,
                 txCTX.tenant,
                 fhirResponse,
               );

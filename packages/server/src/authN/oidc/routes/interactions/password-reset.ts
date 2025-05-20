@@ -377,7 +377,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       return;
     }
 
-    if (!config.get("EMAIL_FROM")) {
+    if (!ctx.state.iguhealth.config.get("EMAIL_FROM")) {
       throw new OperationError(
         outcomeFatal(
           "invariant",

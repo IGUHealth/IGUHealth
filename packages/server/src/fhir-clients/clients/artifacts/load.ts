@@ -117,7 +117,7 @@ async function createServices(): Promise<
   > = {
     config,
     environment: config.get("IGUHEALTH_ENVIRONMENT"),
-    queue: await createQueue(),
+    queue: await createQueue(config),
     store,
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),

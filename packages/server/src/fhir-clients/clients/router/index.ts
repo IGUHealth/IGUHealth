@@ -316,6 +316,7 @@ function createRouterMiddleware<CTX extends IGUHealthServerCTX, State>(state: {
                 );
 
                 return fhirResponseToBundleEntry(
+                  context.ctx.config,
                   context.ctx.tenant,
                   fhirResponse,
                 );

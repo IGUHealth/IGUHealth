@@ -24,6 +24,7 @@ import { deriveLimit } from "../../search-stores/parameters.js";
 import { code, id, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { paramsWithComma } from "../../search-stores/sql.js";
 import { TenantId } from "@iguhealth/jwt";
+import { ConfigProvider } from "../../config/provider/interface.js";
 
 const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
 function processHistoryParameters(
@@ -90,6 +91,7 @@ function historyLevelFilter(
 async function getHistory<
   Version extends FHIR_VERSION,
 >(
+  config: ConfigProvider,
   tenant: TenantId,
   pg: db.Queryable,
   fhirVersion: Version,
@@ -123,6 +125,7 @@ async function getHistory<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resource: resource as any,
       fullUrl: createFHIRURL(
+        config,
         fhirVersion,
         tenant,
         `${resource.resourceType}/${resource.id}`,
@@ -143,7 +146,7 @@ async function getHistory<
   return resourceHistory;
 }
 
-export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
+export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant" | "config">>
   implements FHIRResourceStore<CTX>
 {
   private readonly _pgClient;
@@ -274,6 +277,7 @@ export class PostgresFHIRStore<CTX extends Pick<IGUHealthServerCTX, "tenant">>
       | SystemHistoryRequest<FHIR_VERSION>,
   ): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>> {
     return getHistory(
+      ctx.config,
       ctx.tenant,
       this._pgClient,
       request.fhirVersion,

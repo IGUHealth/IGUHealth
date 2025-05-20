@@ -5,6 +5,7 @@ import { Extension } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { ConfigProvider } from "../config/provider/interface.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { EncryptionProvider } from "./provider/interface.js";
 import { AWSKMSProvider } from "./provider/kms.js";
@@ -111,9 +112,9 @@ export async function encryptValue<T extends object>(
   return value.newDocument;
 }
 
-export default function createEncryptionProvider():
-  | EncryptionProvider
-  | undefined {
+export default function createEncryptionProvider(
+  config: ConfigProvider,
+): EncryptionProvider | undefined {
   switch (config.get("ENCRYPTION_TYPE")) {
     case "aws": {
       return new AWSKMSProvider({

@@ -1,21 +1,24 @@
 import { Kafka, Partitioners } from "kafkajs";
 import pg from "pg";
 
+import { ConfigProvider } from "../../../config/provider/interface.js";
 import { IQueue } from "./interface.js";
 import { KafkaQueue } from "./kafka.js";
 import { PGQueue } from "./pg.js";
 
-export function createKafkaClient() {
+export function createKafkaClient(config: ConfigProvider) {
   return new Kafka({
     brokers: config.get("KAFKA_QUEUE_BROKERS")?.split(",") ?? [],
     clientId: config.get("KAFKA_QUEUE_CLIENT_ID"),
   });
 }
 
-export default async function createQueue(): Promise<IQueue> {
+export default async function createQueue(
+  config: ConfigProvider,
+): Promise<IQueue> {
   switch (config.get("QUEUE_TYPE")) {
     case "kafka": {
-      const kafka = createKafkaClient();
+      const kafka = createKafkaClient(config);
       const producer = kafka.producer({
         allowAutoTopicCreation: true,
         createPartitioner: Partitioners.DefaultPartitioner,

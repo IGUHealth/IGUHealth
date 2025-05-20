@@ -1,7 +1,10 @@
+import { ConfigProvider } from "../config/provider/interface.js";
 import { EmailProvider } from "./interface.js";
 import SendGrid from "./providers/sendgrid.js";
 
-export default function createEmailProvider(): EmailProvider | undefined {
+export default function createEmailProvider(
+  config: ConfigProvider,
+): EmailProvider | undefined {
   switch (config.get("EMAIL_PROVIDER")) {
     case "sendgrid": {
       if (!config.get("EMAIL_SENDGRID_API_KEY"))

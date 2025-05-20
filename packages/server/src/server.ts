@@ -128,7 +128,7 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
     try {
       await next();
     } catch (e) {
-      createLogger().error(e);
+      ctx.state.iguhealth.logger.error(e);
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
         const status = operationOutcome.issue
@@ -177,15 +177,15 @@ export default async function createServer(): Promise<
   const iguhealthServices: IGUHealthServices = {
     environment: config.get("IGUHEALTH_ENVIRONMENT"),
     config,
-    queue: await createQueue(),
+    queue: await createQueue(config),
     store,
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     logger,
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
-    encryptionProvider: createEncryptionProvider(),
-    emailProvider: createEmailProvider(),
+    encryptionProvider: createEncryptionProvider(config),
+    emailProvider: createEmailProvider(config),
     client: createClient(config),
     resolveCanonical,
   };
@@ -388,7 +388,7 @@ export default async function createServer(): Promise<
       session(
         {
           prefix: "__koa_session",
-          store: redisStore({ client: getRedisClient() }),
+          store: redisStore({ client: getRedisClient(config) }),
         },
         app,
       ),

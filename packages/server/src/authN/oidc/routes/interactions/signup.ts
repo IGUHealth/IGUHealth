@@ -103,6 +103,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
 
         // Alert system admin of new user.
         await sendAlertEmail(
+          iguhealth.config,
           iguhealth.emailProvider,
           "New User",
           `A new user with email '${user[0]?.email}' has signed up.`,

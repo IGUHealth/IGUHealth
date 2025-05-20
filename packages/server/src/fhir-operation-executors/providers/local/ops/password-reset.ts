@@ -87,7 +87,7 @@ async function sendPasswordResetEmail(
 
   const emailVerificationURL = new URL(
     `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,
-    config.get("API_URL"),
+    ctx.config.get("API_URL"),
   ).toString();
 
   if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
@@ -100,7 +100,7 @@ async function sendPasswordResetEmail(
           width: "50px",
           url: new URL(
             "/public/img/logo.png",
-            config.get("API_URL"),
+            ctx.config.get("API_URL"),
           ).toString(),
         }),
         React.createElement(EmailTemplateText, {
@@ -108,14 +108,17 @@ async function sendPasswordResetEmail(
         }),
         React.createElement(EmailTemplateButton, {
           title: message.acceptText,
-          href: new URL(emailVerificationURL, config.get("API_URL")).toString(),
+          href: new URL(
+            emailVerificationURL,
+            ctx.config.get("API_URL"),
+          ).toString(),
         }),
       ],
     }),
   );
 
   await ctx.emailProvider.sendEmail({
-    from: config.get("EMAIL_FROM") as string,
+    from: ctx.config.get("EMAIL_FROM") as string,
     to: membership.email,
     subject: message.subject,
     html: emailHTML,

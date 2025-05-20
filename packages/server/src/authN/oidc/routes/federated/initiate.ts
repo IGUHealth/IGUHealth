@@ -92,7 +92,7 @@ export function federatedInitiate(): OIDCRouteHandler {
           tenant: ctx.state.iguhealth.tenant,
           identityProvider: idpProvider.id,
         }) as string,
-        config.get("API_URL"),
+        ctx.state.iguhealth.config.get("API_URL"),
       ).href,
     );
 

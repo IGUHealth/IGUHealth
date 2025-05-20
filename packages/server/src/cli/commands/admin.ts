@@ -78,7 +78,7 @@ async function createServices(): Promise<IGUHealthServices> {
   return {
     config,
     environment: config.get("IGUHEALTH_ENVIRONMENT"),
-    queue: await createQueue(),
+    queue: await createQueue(config),
     cache: new RedisCache(redis),
     store,
     search: await createSearchStore(config),

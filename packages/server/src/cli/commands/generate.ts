@@ -14,6 +14,7 @@ import {
 import { loadParameters } from "@iguhealth/search-parameters/api/load";
 import { generateSP1Sets } from "@iguhealth/search-parameters/api/sp1.parameters";
 
+import getConfigProvider from "../../config/index.js";
 import {
   generateSP1SQLTable,
   generateSP1TSCode,
@@ -42,6 +43,7 @@ ${Object.keys(schema.properties)
 }
 
 async function generateTypes() {
+  const config = getConfigProvider();
   const schemaFiles = await glob("src/**/*.schema.json");
   await Promise.all(
     schemaFiles.map(async (schemaFile) => {

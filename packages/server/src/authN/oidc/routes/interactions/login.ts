@@ -120,7 +120,7 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx) => {
                   },
                 },
               ) as string,
-              config.get("API_URL"),
+              ctx.state.iguhealth.config.get("API_URL"),
             ).href,
           };
         }),
@@ -172,7 +172,7 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
                 },
               },
             ) as string,
-            config.get("API_URL"),
+            ctx.state.iguhealth.config.get("API_URL"),
           ).href,
         };
       }),

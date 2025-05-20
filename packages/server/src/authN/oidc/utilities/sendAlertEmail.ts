@@ -1,6 +1,8 @@
+import { ConfigProvider } from "../../../config/provider/interface.js";
 import { EmailProvider } from "../../../email/interface.js";
 
 export async function sendAlertEmail(
+  config: ConfigProvider,
   emailProvider: EmailProvider | undefined,
   subject: string,
   text: string,
