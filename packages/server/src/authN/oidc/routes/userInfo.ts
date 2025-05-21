@@ -23,7 +23,7 @@ export function userInfo(): OIDCRouteHandler {
     }
 
     const membership = await ctx.state.iguhealth.client.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       "Membership",
       ctx.state.iguhealth.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],

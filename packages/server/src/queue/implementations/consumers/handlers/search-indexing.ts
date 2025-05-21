@@ -18,7 +18,7 @@ async function handleMutation(
     case queue.isOperationType("update", mutation):
     case queue.isOperationType("patch", mutation): {
       await ctx.search.index(
-        asRoot(ctx),
+        await asRoot(ctx),
         mutation.response.fhirVersion,
         mutation.response.body,
       );
@@ -28,7 +28,7 @@ async function handleMutation(
       switch (mutation.response.level) {
         case "instance": {
           await ctx.search.removeIndex(
-            asRoot(ctx),
+            await asRoot(ctx),
             mutation.response.fhirVersion,
             mutation.response.id,
             mutation.response.resource,
@@ -40,7 +40,7 @@ async function handleMutation(
           await Promise.all(
             (mutation.response.deletion ?? []).map(async (r) => {
               await ctx.search.removeIndex(
-                asRoot(ctx),
+                await asRoot(ctx),
                 mutation.response.fhirVersion,
                 r.id as id,
                 r.resourceType,

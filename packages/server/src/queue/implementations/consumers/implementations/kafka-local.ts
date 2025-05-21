@@ -144,7 +144,7 @@ async function createKafkaConsumer<CTX extends IGUHealthServices>(
   consumerGroupId: IConsumerGroupID,
   handler: Handler<CTX>,
 ): Promise<() => Promise<void>> {
-  const kafka = createKafkaClient(ctx.config);
+  const kafka = await createKafkaClient(ctx.config);
 
   const consumer = kafka.consumer({ groupId: consumerGroupId });
 

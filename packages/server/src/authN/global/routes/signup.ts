@@ -36,7 +36,7 @@ async function findExistingOwner(
   const userOwner = result[0];
   if (userOwner) {
     const member = await ctx.client.read(
-      asRoot({ ...ctx, tenant: userOwner.tenant as TenantId }),
+      await asRoot({ ...ctx, tenant: userOwner.tenant as TenantId }),
       R4,
       "Membership",
       userOwner.fhir_user_id as id,
@@ -68,13 +68,13 @@ async function createOrRetrieveUser(
           db.IsolationLevel.RepeatableRead,
           async (ctx) => {
             const tenant = await ctx.store.auth.tenant.create(
-              asRoot({ ...ctx, tenant: "system" as TenantId }),
+              await asRoot({ ...ctx, tenant: "system" as TenantId }),
               {
                 id: generateTenantId(),
               },
             );
             const membership = await ctx.client.create(
-              asRoot({
+              await asRoot({
                 ...ctx,
                 tenant: tenant.id as TenantId,
               }),
@@ -168,7 +168,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       const [tenant, membership] = await createOrRetrieveUser(iguhealth, email);
 
       await sendPasswordResetEmail(
-        asRoot({ ...iguhealth, tenant }),
+        await asRoot({ ...iguhealth, tenant }),
         membership,
         {
           email: {

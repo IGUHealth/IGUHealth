@@ -30,7 +30,7 @@ async function syncType<Version extends FHIR_VERSION>(
   type: ResourceType<Version>,
 ) {
   const resources = (
-    await memSource.search_type(asRoot(services), fhirVersion, type, [
+    await memSource.search_type(await asRoot(services), fhirVersion, type, [
       { name: "_count", value: [500000] },
     ])
   ).resources;
@@ -78,7 +78,7 @@ async function syncType<Version extends FHIR_VERSION>(
 
     try {
       const res = await services.client.conditionalUpdate(
-        asRoot(services),
+        await asRoot(services),
         fhirVersion,
         type,
         `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
@@ -108,7 +108,7 @@ async function createServices(): Promise<
   Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
 > {
   const config = getConfigProvider();
-  const logger = createLogger(config);
+  const logger = await createLogger(config);
   const store = await createStore(config);
 
   const iguhealthServices: Omit<
@@ -116,7 +116,7 @@ async function createServices(): Promise<
     "user" | "resolveCanonical"
   > = {
     config,
-    environment: config.get("IGUHEALTH_ENVIRONMENT"),
+    environment: await config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(config),
     store,
     search: await createSearchStore(config),
@@ -127,11 +127,11 @@ async function createServices(): Promise<
     client: createArtifactClient({
       operationsAllowed: ["create-request", "update-request", "search-request"],
       db: new pg.Pool({
-        host: config.get("ARTIFACT_DB_PG_HOST"),
-        password: config.get("ARTIFACT_DB_PG_PASSWORD"),
-        user: config.get("ARTIFACT_DB_PG_USERNAME"),
-        database: config.get("ARTIFACT_DB_PG_NAME"),
-        port: parseInt(config.get("ARTIFACT_DB_PG_PORT") ?? "5432"),
+        host: await config.get("ARTIFACT_DB_PG_HOST"),
+        password: await config.get("ARTIFACT_DB_PG_PASSWORD"),
+        user: await config.get("ARTIFACT_DB_PG_USERNAME"),
+        database: await config.get("ARTIFACT_DB_PG_NAME"),
+        port: parseInt((await config.get("ARTIFACT_DB_PG_PORT")) ?? "5432"),
       }),
     }),
   };

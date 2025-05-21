@@ -161,7 +161,7 @@ export async function generatePatientScopePolicy(
         throw new OperationError(outcomeFatal("exception", "Invalid resource"));
       }
       const searchParameters = await ctx.client.search_type(
-        asRoot(ctx),
+        await asRoot(ctx),
         request.fhirVersion,
         "SearchParameter",
         [

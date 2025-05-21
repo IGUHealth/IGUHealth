@@ -18,12 +18,12 @@ import { IGUHealthServerCTX, asRoot } from "../../../../fhir-server/types.js";
 import { AuthorizationCode } from "../../../../storage/postgres/authAdmin/codes.js";
 import InlineOperation from "../interface.js";
 
-function createPasswordResetCode(
+async function createPasswordResetCode(
   ctx: Omit<IGUHealthServerCTX, "user">,
   tenant: TenantId,
   member: Membership,
 ): Promise<AuthorizationCode> {
-  return ctx.store.auth.authorization_code.create(asRoot(ctx), tenant, {
+  return ctx.store.auth.authorization_code.create(await asRoot(ctx), tenant, {
     type: "password_reset",
     user_id: member.id as string,
     expires_in: "15 minutes",
@@ -49,7 +49,7 @@ async function shouldSendPasswordReset(
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
   const existingCodes = await ctx.store.auth.authorization_code.where(
-    asRoot(ctx),
+    await asRoot(ctx),
     ctx.tenant,
     {
       user_id: member.id,
@@ -87,7 +87,7 @@ async function sendPasswordResetEmail(
 
   const emailVerificationURL = new URL(
     `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,
-    ctx.config.get("API_URL"),
+    await ctx.config.get("API_URL"),
   ).toString();
 
   if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
@@ -100,7 +100,7 @@ async function sendPasswordResetEmail(
           width: "50px",
           url: new URL(
             "/public/img/logo.png",
-            ctx.config.get("API_URL"),
+            await ctx.config.get("API_URL"),
           ).toString(),
         }),
         React.createElement(EmailTemplateText, {
@@ -110,7 +110,7 @@ async function sendPasswordResetEmail(
           title: message.acceptText,
           href: new URL(
             emailVerificationURL,
-            ctx.config.get("API_URL"),
+            await ctx.config.get("API_URL"),
           ).toString(),
         }),
       ],
@@ -118,7 +118,7 @@ async function sendPasswordResetEmail(
   );
 
   await ctx.emailProvider.sendEmail({
-    from: ctx.config.get("EMAIL_FROM") as string,
+    from: (await ctx.config.get("EMAIL_FROM")) as string,
     to: membership.email,
     subject: message.subject,
     html: emailHTML,

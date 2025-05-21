@@ -42,7 +42,7 @@ export async function getAllParametersForResource<
 
       return (
         await ctx.client.search_type(
-          asRoot(ctx),
+          await asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           parameters,

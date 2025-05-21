@@ -7,7 +7,7 @@ import { MessageHandler } from "../types.js";
 import createKafkaWorker from "./kafka-local.js";
 import createPGWorker from "./postgres/index.js";
 
-export default function createWorker<CTX extends IGUHealthServices>(
+export default async function createWorker<CTX extends IGUHealthServices>(
   topic: ITopicPattern | ITopic,
   groupId: IConsumerGroupID,
   type: ConfigSchema["QUEUE_TYPE"],
@@ -21,18 +21,20 @@ export default function createWorker<CTX extends IGUHealthServices>(
     case "postgres": {
       return createPGWorker(
         new pg.Pool({
-          user: ctx.config.get("QUEUE_DB_PG_USERNAME"),
-          password: ctx.config.get("QUEUE_DB_PG_PASSWORD"),
-          host: ctx.config.get("QUEUE_DB_PG_HOST"),
-          database: ctx.config.get("QUEUE_DB_PG_NAME"),
-          port: parseInt(ctx.config.get("QUEUE_DB_PG_PORT") ?? "5432"),
+          user: await ctx.config.get("QUEUE_DB_PG_USERNAME"),
+          password: await ctx.config.get("QUEUE_DB_PG_PASSWORD"),
+          host: await ctx.config.get("QUEUE_DB_PG_HOST"),
+          database: await ctx.config.get("QUEUE_DB_PG_NAME"),
+          port: parseInt((await ctx.config.get("QUEUE_DB_PG_PORT")) ?? "5432"),
           ssl:
-            ctx.config.get("QUEUE_DB_PG_SSL") === "true"
+            (await ctx.config.get("QUEUE_DB_PG_SSL")) === "true"
               ? {
                   // Self signed certificate CA is not used.
                   rejectUnauthorized: false,
-                  host: ctx.config.get("QUEUE_DB_PG_HOST"),
-                  port: parseInt(ctx.config.get("QUEUE_DB_PG_PORT") ?? "5432"),
+                  host: await ctx.config.get("QUEUE_DB_PG_HOST"),
+                  port: parseInt(
+                    (await ctx.config.get("QUEUE_DB_PG_PORT")) ?? "5432",
+                  ),
                 }
               : false,
         }),

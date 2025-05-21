@@ -137,7 +137,7 @@ export function createValidateScopesMiddleware<T>(): MiddlewareAsyncChain<
 
                 const evaluation = await v2AccessControl(
                   {
-                    clientCTX: asRoot(context.ctx),
+                    clientCTX: await asRoot(context.ctx),
                     client: context.ctx.client,
                     environment: {
                       request: context.request,

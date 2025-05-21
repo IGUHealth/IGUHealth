@@ -48,7 +48,7 @@ async function handleMutation(
     case queue.isOperationType("create", mutation):
     case queue.isOperationType("update", mutation):
     case queue.isOperationType("patch", mutation): {
-      await ctx.store.fhir.insert(asRoot(ctx), "resources", {
+      await ctx.store.fhir.insert(await asRoot(ctx), "resources", {
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
         fhir_method: toInteraction<"create" | "update" | "patch">(
@@ -74,7 +74,7 @@ async function handleMutation(
       }
       switch (mutation.response.level) {
         case "instance": {
-          await ctx.store.fhir.insert(asRoot(ctx), "resources", {
+          await ctx.store.fhir.insert(await asRoot(ctx), "resources", {
             tenant: ctx.tenant,
             fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
             fhir_method: toInteraction<"delete">(mutation.response.type),
@@ -90,7 +90,7 @@ async function handleMutation(
         case "system": {
           await Promise.all(
             (mutation.response.deletion ?? []).map(async (resourceToDelete) => {
-              await ctx.store.fhir.insert(asRoot(ctx), "resources", {
+              await ctx.store.fhir.insert(await asRoot(ctx), "resources", {
                 tenant: ctx.tenant,
                 fhir_version: toDBFHIRVersion(mutation.response.fhirVersion),
                 fhir_method: toInteraction<"delete">(mutation.response.type),

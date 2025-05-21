@@ -49,7 +49,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
 
   const existingUser = (
     await ctx.state.iguhealth.store.auth.user.where(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         email,
@@ -60,7 +60,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   if (existingUser !== undefined) {
     const membership =
       await ctx.state.iguhealth.store.fhir.readLatestResourceById(
-        asRoot(ctx.state.iguhealth),
+        await asRoot(ctx.state.iguhealth),
         R4,
         "Membership",
         existingUser.fhir_user_id as id,
@@ -71,20 +71,24 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       );
     }
 
-    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
-      email: {
-        subject: "IGUHealth Email Verification",
-        body: "To verify your email and set your password click below.",
-        acceptText: "Reset Password",
+    await sendPasswordResetEmail(
+      await asRoot(ctx.state.iguhealth),
+      membership,
+      {
+        email: {
+          subject: "IGUHealth Email Verification",
+          body: "To verify your email and set your password click below.",
+          acceptText: "Reset Password",
+        },
       },
-    });
+    );
   } else {
     await StorageTransaction(
       ctx.state.iguhealth,
       db.IsolationLevel.RepeatableRead,
       async (iguhealth) => {
         const membership = await iguhealth.client.create(
-          asRoot(iguhealth),
+          await asRoot(iguhealth),
           R4,
           {
             resourceType: "Membership",
@@ -94,7 +98,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
         );
 
         const user = await iguhealth.store.auth.user.where(
-          asRoot(iguhealth),
+          await asRoot(iguhealth),
           iguhealth.tenant,
           {
             fhir_user_id: membership.id,
@@ -109,7 +113,7 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
           `A new user with email '${user[0]?.email}' has signed up.`,
         );
 
-        await sendPasswordResetEmail(asRoot(iguhealth), membership, {
+        await sendPasswordResetEmail(await asRoot(iguhealth), membership, {
           email: {
             subject: "IGUHealth Email Verification",
             body: "To verify your email and set your password click below.",

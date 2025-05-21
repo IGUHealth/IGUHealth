@@ -138,7 +138,7 @@ async function processInclude<Version extends FHIR_VERSION>(
         const resourceType = include[0] as ResourceType<Version>;
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
-          asRoot(ctx),
+          await asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           [
@@ -335,7 +335,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   const request = await fhirSearchRequesttoInternalRequest(ctx, fhirRequest);
   const searchSQL = await deriveResourceSearchSQL(ctx, request);
 
-  if (ctx.config.get("LOG_SQL")) {
+  if (await ctx.config.get("LOG_SQL")) {
     ctx.logger.info(toSQLString(searchSQL));
   }
 

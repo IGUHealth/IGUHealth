@@ -159,7 +159,7 @@ export function authorize(): OIDCRouteHandler {
     }
 
     const code = await ctx.state.iguhealth.store.auth.authorization_code.create(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         type: "oauth2_code_grant",

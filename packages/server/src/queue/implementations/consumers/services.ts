@@ -14,14 +14,14 @@ export const createConsumerServices: () => Promise<IGUHealthServices> =
     const store = await createStore(config);
     const iguhealthServices: IGUHealthServices = {
       config,
-      environment: config.get("IGUHEALTH_ENVIRONMENT"),
+      environment: await config.get("IGUHEALTH_ENVIRONMENT"),
       queue: await createQueue(config),
       store,
       search: await createSearchStore(config),
       lock: new PostgresLock(store.getClient()),
-      logger: createLogger(config),
+      logger: await createLogger(config),
       terminologyProvider: new TerminologyProvider(),
-      client: createClient(config),
+      client: await createClient(config),
       resolveCanonical,
     };
     return iguhealthServices;

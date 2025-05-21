@@ -7,15 +7,16 @@ import { TenantId } from "@iguhealth/jwt/types";
 
 import { ConfigProvider } from "../../../config/provider/interface.js";
 
-export function ADMIN_APP(
+export async function ADMIN_APP(
   config: ConfigProvider,
-): ClientApplication | undefined {
-  return config.get("ADMIN_APP_REDIRECT_URI")
+): Promise<ClientApplication | undefined> {
+  const redirectUri = await config.get("ADMIN_APP_REDIRECT_URI");
+  return redirectUri
     ? ({
         resourceType: "ClientApplication",
         id: "admin-app" as id,
         grantType: ["authorization_code" as code, "refresh_token" as code],
-        redirectUri: [config.get("ADMIN_APP_REDIRECT_URI")],
+        redirectUri: [redirectUri],
         name: "Admin Application",
         responseTypes: "code" as code,
         scope: "offline_access openid email profile fhirUser user/*.*",
@@ -23,11 +24,11 @@ export function ADMIN_APP(
     : undefined;
 }
 
-export function redirectURL(
+export async function redirectURL(
   config: ConfigProvider,
   tenant: TenantId,
-): string | undefined {
-  const adminApp = ADMIN_APP(config);
+): Promise<string | undefined> {
+  const adminApp = await ADMIN_APP(config);
   if (!adminApp) return undefined;
   return adminApp.redirectUri?.[0].replace("*", tenant) ?? undefined;
 }

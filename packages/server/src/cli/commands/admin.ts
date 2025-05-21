@@ -73,19 +73,19 @@ async function getTenant(
 
 async function createServices(): Promise<IGUHealthServices> {
   const config = getConfigProvider();
-  const redis = getRedisClient(config);
+  const redis = await getRedisClient(config);
   const store = await createStore(config);
   return {
     config,
-    environment: config.get("IGUHEALTH_ENVIRONMENT"),
+    environment: await config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(config),
     cache: new RedisCache(redis),
     store,
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     terminologyProvider: new TerminologyProvider(),
-    logger: createLogger(config),
-    client: createClient(config),
+    logger: await createLogger(config),
+    client: await createClient(config),
     resolveCanonical,
   };
 }
@@ -126,11 +126,11 @@ async function createTenant(
       async (ctx) => {
         const newTenant = await getTenant(ctx, options);
         const tenant = await ctx.store.auth.tenant.create(
-          asRoot({ ...ctx, tenant: newTenant.id as TenantId }),
+          await asRoot({ ...ctx, tenant: newTenant.id as TenantId }),
           newTenant,
         );
         const membership: Membership = await ctx.client.create(
-          asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+          await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
           R4,
           await getMembership(options),
         );
@@ -143,7 +143,7 @@ async function createTenant(
 
         const verifiedUser = {
           ...(await ctx.store.auth.user.read(
-            asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+            await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
             tenant.id as TenantId,
             membership.id as id,
           )),
@@ -152,7 +152,7 @@ async function createTenant(
         };
 
         await ctx.store.auth.user.update(
-          asRoot({ ...ctx, tenant: tenant.id as TenantId }),
+          await asRoot({ ...ctx, tenant: tenant.id as TenantId }),
           tenant.id as TenantId,
           verifiedUser.fhir_user_id as id,
           verifiedUser,
@@ -207,7 +207,7 @@ function clientAppCommands(command: Command) {
     .action(async (options) => {
       const services = await createServices();
       const transaction = await services.client.transaction(
-        asRoot({ ...services, tenant: options.tenant }),
+        await asRoot({ ...services, tenant: options.tenant }),
         R4,
         {
           resourceType: "Bundle",

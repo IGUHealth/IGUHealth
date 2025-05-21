@@ -13,7 +13,7 @@ export async function getApprovedScope(
   user_id: string,
 ): Promise<Scope[]> {
   const approvedScopes = await ctx.store.auth.authorization_scope.where(
-    asRoot({ ...ctx, tenant }),
+    await asRoot({ ...ctx, tenant }),
     tenant,
     {
       client_id,
@@ -30,7 +30,7 @@ export async function getAllUserApprovedScopes(
   user_id: string,
 ): Promise<s.authorization_scopes.JSONSelectable[]> {
   return ctx.store.auth.authorization_scope.where(
-    asRoot({ ...ctx, tenant }),
+    await asRoot({ ...ctx, tenant }),
     tenant,
     {
       user_id,
@@ -45,7 +45,7 @@ export async function deleteUserScope(
   user_id: string,
 ): Promise<void> {
   return ctx.store.auth.authorization_scope.delete(
-    asRoot({ ...ctx, tenant }),
+    await asRoot({ ...ctx, tenant }),
     tenant,
     {
       client_id,

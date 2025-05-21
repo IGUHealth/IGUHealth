@@ -24,11 +24,11 @@ test("Test PostgresLock", async () => {
   const config = new EnvironmentConfigProvider();
 
   const client = new pg.Pool({
-    user: config.get("RESOURCE_STORE_PG_USERNAME"),
-    password: config.get("RESOURCE_STORE_PG_PASSWORD"),
-    host: config.get("RESOURCE_STORE_PG_HOST"),
-    database: config.get("RESOURCE_STORE_PG_NAME"),
-    port: parseInt(config.get("RESOURCE_STORE_PG_PORT") ?? "5432"),
+    user: await config.get("RESOURCE_STORE_PG_USERNAME"),
+    password: await config.get("RESOURCE_STORE_PG_PASSWORD"),
+    host: await config.get("RESOURCE_STORE_PG_HOST"),
+    database: await config.get("RESOURCE_STORE_PG_NAME"),
+    port: parseInt((await config.get("RESOURCE_STORE_PG_PORT")) ?? "5432"),
   });
 
   const store = new PostgresStore(client);

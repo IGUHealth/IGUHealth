@@ -255,7 +255,7 @@ async function createTokenResponse({
   clientApplication: ClientApplication;
   launchParameters?: ResolvedLaunchParameters;
 }): Promise<Oauth2TokenBodyResponse> {
-  const signingKey = await getSigningKey(getCertConfig(ctx.config));
+  const signingKey = await getSigningKey(await getCertConfig(ctx.config));
   const approvedScopes = await scopes.getApprovedScope(
     ctx,
     ctx.tenant,
@@ -264,14 +264,14 @@ async function createTokenResponse({
   );
 
   const accesspolicies = await ctx.client.search_type(
-    asRoot(ctx),
+    await asRoot(ctx),
     R4,
     "AccessPolicyV2",
     [{ name: "link", value: [member.id as id] }],
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.config, ctx.tenant),
+    iss: await getIssuer(ctx.config, ctx.tenant),
 
     // Smart claims.
     patient: launchParameters?.Patient,
@@ -353,7 +353,7 @@ export function tokenPost<
       case "refresh_token": {
         const code =
           await ctx.state.iguhealth.store.auth.authorization_code.where(
-            asRoot(ctx.state.iguhealth),
+            await asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               type: "refresh_token",
@@ -380,7 +380,7 @@ export function tokenPost<
         );
 
         const member = await ctx.state.iguhealth.client.read(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           R4,
           "Membership",
           code[0].user_id as id,
@@ -394,7 +394,7 @@ export function tokenPost<
 
         // Removes the old refresh token and issues a new one in tokenResponse.
         await ctx.state.iguhealth.store.auth.authorization_code.delete(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,
@@ -405,7 +405,7 @@ export function tokenPost<
 
         const tokenBody = await createTokenResponse({
           member,
-          ctx: asRoot(ctx.state.iguhealth),
+          ctx: await asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,
         });
@@ -426,7 +426,7 @@ export function tokenPost<
 
         const code =
           await ctx.state.iguhealth.store.auth.authorization_code.where(
-            asRoot(ctx.state.iguhealth),
+            await asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               type: "oauth2_code_grant",
@@ -462,7 +462,7 @@ export function tokenPost<
         }
 
         const member = await ctx.state.iguhealth.client.read(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           R4,
           "Membership",
           code[0].user_id as id,
@@ -475,7 +475,7 @@ export function tokenPost<
           });
 
         await ctx.state.iguhealth.store.auth.authorization_code.delete(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             id: code[0].id,
@@ -486,7 +486,7 @@ export function tokenPost<
 
         const tokenBody = await createTokenResponse({
           member,
-          ctx: asRoot(ctx.state.iguhealth),
+          ctx: await asRoot(ctx.state.iguhealth),
           clientApplication,
           launchParameters,
         });

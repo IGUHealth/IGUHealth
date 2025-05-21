@@ -34,8 +34,11 @@ export const OIDC_ROUTES = {
   FEDERATED_CALLBACK: "tenant-oidc-federated-callback",
 };
 
-export function getIssuer(config: ConfigProvider, tenant: TenantId): Issuer {
-  const issuer = new URL(`/w/${tenant}/oidc`, config.get("AUTH_ISSUER"))
+export async function getIssuer(
+  config: ConfigProvider,
+  tenant: TenantId,
+): Promise<Issuer> {
+  const issuer = new URL(`/w/${tenant}/oidc`, await config.get("AUTH_ISSUER"))
     .href as Issuer;
 
   return issuer;

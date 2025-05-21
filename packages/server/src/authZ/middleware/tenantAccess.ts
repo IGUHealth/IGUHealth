@@ -40,7 +40,7 @@ export async function verifyUserHasAccessToTenant<
   // Each tenant has a unique issuer.
   if (
     ctx.state.iguhealth.user.payload.iss !==
-    getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant)
+    (await getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant))
   ) {
     throw new OperationError(
       outcomeError(

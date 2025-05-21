@@ -16,23 +16,25 @@ export type SearchEngineConfig = PostgresSearchEngineConfig;
 export async function createSearchStore<CTX extends IGUHealthServerCTX>(
   config: ConfigProvider,
 ): Promise<SearchEngine<CTX>> {
-  const type = config.get("SEARCH_STORE_TYPE");
+  const type = await config.get("SEARCH_STORE_TYPE");
   switch (type) {
     case "postgres": {
       return new PostgresSearchEngine(
         new pg.Pool({
-          user: config.get("SEARCH_STORE_PG_USERNAME"),
-          password: config.get("SEARCH_STORE_PG_PASSWORD"),
-          host: config.get("SEARCH_STORE_PG_HOST"),
-          database: config.get("SEARCH_STORE_PG_NAME"),
-          port: parseInt(config.get("SEARCH_STORE_PG_PORT") ?? "5432"),
+          user: await config.get("SEARCH_STORE_PG_USERNAME"),
+          password: await config.get("SEARCH_STORE_PG_PASSWORD"),
+          host: await config.get("SEARCH_STORE_PG_HOST"),
+          database: await config.get("SEARCH_STORE_PG_NAME"),
+          port: parseInt((await config.get("SEARCH_STORE_PG_PORT")) ?? "5432"),
           ssl:
-            config.get("SEARCH_STORE_PG_SSL") === "true"
+            (await config.get("SEARCH_STORE_PG_SSL")) === "true"
               ? {
                   // Self signed certificate CA is not used.
                   rejectUnauthorized: false,
-                  host: config.get("SEARCH_STORE_PG_HOST"),
-                  port: parseInt(config.get("SEARCH_STORE_PG_PORT") ?? "5432"),
+                  host: await config.get("SEARCH_STORE_PG_HOST"),
+                  port: parseInt(
+                    (await config.get("SEARCH_STORE_PG_PORT")) ?? "5432",
+                  ),
                 }
               : false,
         }),

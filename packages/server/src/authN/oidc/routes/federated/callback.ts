@@ -30,7 +30,7 @@ export function federatedCallback(): OIDCRouteHandler {
   return async (ctx) => {
     const idpId = ctx.params["identityProvider"];
     const idpProvider = await ctx.state.iguhealth.client.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       "IdentityProvider",
       idpId as id,
@@ -68,7 +68,7 @@ export function federatedCallback(): OIDCRouteHandler {
             tenant: ctx.state.iguhealth.tenant,
             identityProvider: idpProvider.id,
           }) as string,
-          ctx.state.iguhealth.config.get("API_URL"),
+          await ctx.state.iguhealth.config.get("API_URL"),
         ).href,
       };
 
@@ -109,7 +109,7 @@ export function federatedCallback(): OIDCRouteHandler {
 
         // Update / create new user for IDP.
         const membership = await ctx.state.iguhealth.client.update(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           R4,
           "Membership",
           id as id,
@@ -125,7 +125,7 @@ export function federatedCallback(): OIDCRouteHandler {
         );
 
         let user = await ctx.state.iguhealth.store.auth.user.where(
-          asRoot(ctx.state.iguhealth),
+          await asRoot(ctx.state.iguhealth),
           ctx.state.iguhealth.tenant,
           {
             fhir_user_id: membership.id,
@@ -137,7 +137,7 @@ export function federatedCallback(): OIDCRouteHandler {
         while (user[0] === undefined && retries > 0) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           user = await ctx.state.iguhealth.store.auth.user.where(
-            asRoot(ctx.state.iguhealth),
+            await asRoot(ctx.state.iguhealth),
             ctx.state.iguhealth.tenant,
             {
               fhir_user_id: membership.id,
