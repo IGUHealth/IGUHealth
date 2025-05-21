@@ -65,7 +65,7 @@ export function federatedInitiate(): OIDCRouteHandler {
   return async (ctx) => {
     const idpId = ctx.params["identityProvider"];
     const idpProvider = await ctx.state.iguhealth.client.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       "IdentityProvider",
       idpId as id,
@@ -92,7 +92,7 @@ export function federatedInitiate(): OIDCRouteHandler {
           tenant: ctx.state.iguhealth.tenant,
           identityProvider: idpProvider.id,
         }) as string,
-        ctx.state.iguhealth.config.get("API_URL"),
+        await ctx.state.iguhealth.config.get("API_URL"),
       ).href,
     );
 

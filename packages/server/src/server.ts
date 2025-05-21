@@ -170,12 +170,12 @@ export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   const config = getConfigProvider();
-  const redis = getRedisClient(config);
-  const logger = createLogger(config);
+  const redis = await getRedisClient(config);
+  const logger = await createLogger(config);
   const store = await createStore(config);
 
   const iguhealthServices: IGUHealthServices = {
-    environment: config.get("IGUHEALTH_ENVIRONMENT"),
+    environment: await config.get("IGUHEALTH_ENVIRONMENT"),
     config,
     queue: await createQueue(config),
     store,
@@ -184,33 +184,33 @@ export default async function createServer(): Promise<
     logger,
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
-    encryptionProvider: createEncryptionProvider(config),
-    emailProvider: createEmailProvider(config),
-    client: createClient(config),
+    encryptionProvider: await createEncryptionProvider(config),
+    emailProvider: await createEmailProvider(config),
+    client: await createClient(config),
     resolveCanonical,
   };
 
-  const sentryServerDSN = config.get("SENTRY_SERVER_DSN");
+  const sentryServerDSN = await config.get("SENTRY_SERVER_DSN");
   if (sentryServerDSN)
     MonitoringSentry.enableSentry(sentryServerDSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
-        config.get("SENTRY_TRACES_SAMPLE_RATE") ?? "0.1",
+        (await config.get("SENTRY_TRACES_SAMPLE_RATE")) ?? "0.1",
       ),
       profilesSampleRate: parseFloat(
-        config.get("SENTRY_PROFILES_SAMPLE_RATE") ?? "0.1",
+        (await config.get("SENTRY_PROFILES_SAMPLE_RATE")) ?? "0.1",
       ),
     });
 
-  if (config.get("NODE_ENV") === "development") {
-    await createCertsIfNoneExists(getCertConfig(config));
+  if ((await config.get("NODE_ENV")) === "development") {
+    await createCertsIfNoneExists(await getCertConfig(config));
   }
 
   const app = new Koa<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >({
-    proxy: config.get("PROXY") === "true",
-    proxyIpHeader: config.get("PROXY_IP_HEADER"),
+    proxy: (await config.get("PROXY")) === "true",
+    proxyIpHeader: await config.get("PROXY_IP_HEADER"),
   });
   app.use(
     koaCompress({
@@ -232,8 +232,7 @@ export default async function createServer(): Promise<
     await next();
   });
 
-  app.keys = config
-    .get("SESSION_COOKIE_SECRETS")
+  app.keys = (await config.get("SESSION_COOKIE_SECRETS"))
     .split(":")
     .map((s) => s.trim());
 
@@ -243,7 +242,7 @@ export default async function createServer(): Promise<
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    const jwks = await getJWKS(getCertConfig(ctx.state.iguhealth.config));
+    const jwks = await getJWKS(await getCertConfig(ctx.state.iguhealth.config));
     ctx.body = jwks;
     await next();
   });
@@ -253,7 +252,7 @@ export default async function createServer(): Promise<
     KoaExtensions.KoaIGUHealthContext
   >[] = [
     authN.verifyBasicAuth,
-    config.get("AUTH_PUBLIC_ACCESS") === "true"
+    (await config.get("AUTH_PUBLIC_ACCESS")) === "true"
       ? authN.allowPublicAccessMiddleware
       : await authN.createValidateUserJWTMiddleware(iguhealthServices.config),
     authN.associateUserToIGUHealth,
@@ -262,7 +261,7 @@ export default async function createServer(): Promise<
 
   const globalAuth = await createGlobalAuthRouter("/auth", {
     middleware: [
-      setAllowSignup(config.get("AUTH_ALLOW_GLOBAL_SIGNUP") === "true"),
+      setAllowSignup((await config.get("AUTH_ALLOW_GLOBAL_SIGNUP")) === "true"),
     ],
   });
 
@@ -283,7 +282,7 @@ export default async function createServer(): Promise<
       );
 
     const tenant = await ctx.state.iguhealth.store.auth.tenant.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       ctx.params.tenant as id,
     );
 
@@ -307,7 +306,9 @@ export default async function createServer(): Promise<
     {
       tokenAuthMiddlewares: authMiddlewares,
       middleware: [
-        setAllowSignup(config.get("AUTH_ALLOW_TENANT_SIGNUP") === "true"),
+        setAllowSignup(
+          (await config.get("AUTH_ALLOW_TENANT_SIGNUP")) === "true",
+        ),
       ],
     },
   );
@@ -322,7 +323,7 @@ export default async function createServer(): Promise<
   // Seperating as this should be a public endpoint for capabilities.
   tenantAPIV1Router.get("/fhir/:fhirVersion/metadata", async (ctx) => {
     ctx.body = await ctx.state.iguhealth.client.capabilities(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       deriveFHIRVersion(ctx.params.fhirVersion),
     );
   });
@@ -388,12 +389,14 @@ export default async function createServer(): Promise<
       session(
         {
           prefix: "__koa_session",
-          store: redisStore({ client: getRedisClient(config) }),
+          store: redisStore({ client: await getRedisClient(config) }),
         },
         app,
       ),
     )
-    .use(MonitoringSentry.tracingMiddleWare(config.get("SENTRY_SERVER_DSN")))
+    .use(
+      MonitoringSentry.tracingMiddleWare(await config.get("SENTRY_SERVER_DSN")),
+    )
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
@@ -401,7 +404,7 @@ export default async function createServer(): Promise<
       // For development we don't want to log all worker requests.
       if (
         ctx.state.iguhealth.user?.payload.sub !== (WORKER_APP.id as string) ||
-        config.get("NODE_ENV") !== "development"
+        (await config.get("NODE_ENV")) !== "development"
       ) {
         logger.info({
           ip: ctx.ip,

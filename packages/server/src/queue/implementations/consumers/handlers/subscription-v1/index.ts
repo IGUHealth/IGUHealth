@@ -57,7 +57,7 @@ async function processSubscription(
     request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
     const parameters = await parametersWithMetaAssociated(
-      asRoot(ctx),
+      await asRoot(ctx),
       request.fhirVersion,
       resourceTypes,
       request.parameters,
@@ -111,7 +111,7 @@ async function processSubscription(
             resolveCanonical: ctx.resolveCanonical,
             resolveRemoteCanonical: createResolverRemoteCanonical(
               ctx.client,
-              asRoot(ctx),
+              await asRoot(ctx),
             ),
           },
           R4,
@@ -123,7 +123,12 @@ async function processSubscription(
       }
     }
 
-    await handleSubscriptionPayload(asRoot(ctx), R4, subscription, payload);
+    await handleSubscriptionPayload(
+      await asRoot(ctx),
+      R4,
+      subscription,
+      payload,
+    );
   } catch (e) {
     ctx.logger.error(e);
     let errorDescription = "Subscription failed to process";
@@ -132,10 +137,10 @@ async function processSubscription(
     }
     await logAuditEvent(
       ctx.client,
-      asRoot(ctx),
+      await asRoot(ctx),
       R4,
       createAuditEvent(
-        workerTokenClaims(ctx.config, "subscription-v1", ctx.tenant),
+        await workerTokenClaims(ctx.config, "subscription-v1", ctx.tenant),
         SERIOUS_FAILURE,
         { reference: `Subscription/${subscription.id}` },
         errorDescription,
@@ -143,7 +148,7 @@ async function processSubscription(
     );
 
     await ctx.client.update(
-      asRoot(ctx),
+      await asRoot(ctx),
       R4,
       "Subscription",
       subscription.id as id,
@@ -176,7 +181,7 @@ const handler: MessageHandler<IGUHealthServices> = async (
   const tenant = getTenantId(messages?.[0]);
 
   const subscriptions = await iguhealthServices.client.search_type(
-    asRoot({ ...iguhealthServices, tenant }),
+    await asRoot({ ...iguhealthServices, tenant }),
     R4,
     "Subscription",
     [
@@ -192,7 +197,7 @@ const handler: MessageHandler<IGUHealthServices> = async (
 
   for (const subscription of subscriptions.resources) {
     processSubscription(
-      asRoot({ ...iguhealthServices, tenant }),
+      await asRoot({ ...iguhealthServices, tenant }),
       subscription,
       operations,
     );

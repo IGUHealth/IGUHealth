@@ -161,14 +161,14 @@ export interface IGUHealthServerCTX extends IGUHealthServices {
   user: UserContext;
 }
 
-function createRootClaims(
+async function createRootClaims(
   config: ConfigProvider,
   tenant: TenantId,
   clientApp: ClientApplication,
-): AccessTokenPayload<s.user_role> {
+): Promise<AccessTokenPayload<s.user_role>> {
   return {
     scope: "system/*.*",
-    iss: getIssuer(config, tenant),
+    iss: await getIssuer(config, tenant),
     sub: clientApp.id as string as Subject,
     aud: clientApp.id as id,
     [CUSTOM_CLAIMS.RESOURCE_ID]: clientApp.id as id,
@@ -185,10 +185,10 @@ function createRootClaims(
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asRoot(
+export async function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
-): IGUHealthServerCTX {
-  const rootClaims = createRootClaims(ctx.config, ctx.tenant, SYSTEM_APP);
+): Promise<IGUHealthServerCTX> {
+  const rootClaims = await createRootClaims(ctx.config, ctx.tenant, SYSTEM_APP);
 
   return {
     ...ctx,

@@ -31,7 +31,7 @@ async function runWorker(
   return createWorker(
     TENANT_TOPIC_PATTERN(OperationsTopic),
     groupId,
-    config.get("QUEUE_TYPE"),
+    await config.get("QUEUE_TYPE"),
     await createConsumerServices(),
     handler,
   );

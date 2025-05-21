@@ -117,7 +117,8 @@ async function createPayload<I, O>(
   return {
     ctx: {
       SEC_TOKEN: ctx.user.accessToken ?? "not-sec",
-      API_URL: new URL(`/w/${ctx.tenant}`, ctx.config.get("API_URL")).href,
+      API_URL: new URL(`/w/${ctx.tenant}`, await ctx.config.get("API_URL"))
+        .href,
       tenant: ctx.tenant,
       level: request.level,
       resourceType:

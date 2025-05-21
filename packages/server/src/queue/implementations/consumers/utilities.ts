@@ -29,13 +29,13 @@ export type IGUHealthWorkerCTX = Pick<
   | "config"
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
-export function workerTokenClaims(
+export async function workerTokenClaims(
   config: ConfigProvider,
   workerID: string,
   tenant: TenantId,
-): AccessTokenPayload<s.user_role> {
+): Promise<AccessTokenPayload<s.user_role>> {
   const accessTokenPayload = {
-    iss: getIssuer(config, tenant),
+    iss: await getIssuer(config, tenant),
     scope: "system/*.*",
     aud: WORKER_APP.id as id,
     sub: WORKER_APP.id as string as Subject,
@@ -49,23 +49,25 @@ export function workerTokenClaims(
   return accessTokenPayload;
 }
 
-export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
+export type WorkerClient = Awaited<
+  ReturnType<typeof createWorkerIGUHealthClient>
+>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
-function createWorkerIGUHealthClient(
+async function createWorkerIGUHealthClient(
   services: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
   tenant: TenantId,
   tokenPayload: AccessTokenPayload<s.user_role>,
-): ReturnType<typeof createHTTPClient> {
+): Promise<ReturnType<typeof createHTTPClient>> {
   if (tokenPayload[CUSTOM_CLAIMS.TENANT] !== tenant) {
     throw new Error("Token does not match tenant");
   }
 
   const client = createHTTPClient({
-    url: new URL(`w/${tenant}`, services.config.get("API_URL")).href,
+    url: new URL(`w/${tenant}`, await services.config.get("API_URL")).href,
     getAccessToken: async () => {
       const token = await createToken({
-        signingKey: await getSigningKey(getCertConfig(services.config)),
+        signingKey: await getSigningKey(await getCertConfig(services.config)),
         payload: tokenPayload,
       });
       return token;
@@ -75,15 +77,15 @@ function createWorkerIGUHealthClient(
   return client;
 }
 
-export function tenantWorkerContext(
+export async function tenantWorkerContext(
   services: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
   tenant: TenantId,
   claims: AccessTokenPayload<s.user_role>,
-): IGUHealthWorkerCTX {
+): Promise<IGUHealthWorkerCTX> {
   return {
     ...services,
     tenant: tenant,
-    client: createWorkerIGUHealthClient(services, tenant, claims),
+    client: await createWorkerIGUHealthClient(services, tenant, claims),
     user: {
       resource: WORKER_APP,
       payload: claims,

@@ -12,8 +12,8 @@ export async function sendAlertEmail(
   }
 
   await emailProvider.sendEmail({
-    from: config.get("EMAIL_FROM") as string,
-    to: config.get("EMAIL_FROM") as string,
+    from: (await config.get("EMAIL_FROM")) as string,
+    to: (await config.get("EMAIL_FROM")) as string,
     subject,
     text,
   });

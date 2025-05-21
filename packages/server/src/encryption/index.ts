@@ -112,20 +112,24 @@ export async function encryptValue<T extends object>(
   return value.newDocument;
 }
 
-export default function createEncryptionProvider(
+export default async function createEncryptionProvider(
   config: ConfigProvider,
-): EncryptionProvider | undefined {
-  switch (config.get("ENCRYPTION_TYPE")) {
+): Promise<EncryptionProvider | undefined> {
+  switch (await config.get("ENCRYPTION_TYPE")) {
     case "aws": {
       return new AWSKMSProvider({
         clientConfig: {
           credentials: {
-            accessKeyId: config.get("AWS_KMS_ACCESS_KEY_ID") as string,
-            secretAccessKey: config.get("AWS_KMS_ACCESS_KEY_SECRET") as string,
+            accessKeyId: (await config.get("AWS_KMS_ACCESS_KEY_ID")) as string,
+            secretAccessKey: (await config.get(
+              "AWS_KMS_ACCESS_KEY_SECRET",
+            )) as string,
           },
         },
-        generatorKeyARN: config.get("AWS_ENCRYPTION_GENERATOR_KEY") as string,
-        encryptorKeyARNS: [config.get("AWS_ENCRYPTION_KEY") as string],
+        generatorKeyARN: (await config.get(
+          "AWS_ENCRYPTION_GENERATOR_KEY",
+        )) as string,
+        encryptorKeyARNS: [(await config.get("AWS_ENCRYPTION_KEY")) as string],
       });
     }
 

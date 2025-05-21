@@ -158,7 +158,7 @@ export function indexingMiddleware<
         );
         try {
           await res[1].ctx.search.index(
-            asRoot(res[1].ctx),
+            await asRoot(res[1].ctx),
             res[1].response.fhirVersion,
             res[1].response.body,
           );
@@ -175,7 +175,7 @@ export function indexingMiddleware<
         switch (res[1].response.level) {
           case "instance": {
             await res[1].ctx.search.removeIndex(
-              asRoot(res[1].ctx),
+              await asRoot(res[1].ctx),
               res[1].response.fhirVersion,
               res[1].response.id,
               res[1].response.resource,
@@ -191,7 +191,7 @@ export function indexingMiddleware<
             await Promise.all(
               (response.deletion ?? []).map(async (r) => {
                 await res[1].ctx.search.removeIndex(
-                  asRoot(res[1].ctx),
+                  await asRoot(res[1].ctx),
                   response.fhirVersion,
                   r.id as id,
                   r.resourceType,

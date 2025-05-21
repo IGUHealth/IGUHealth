@@ -12,14 +12,14 @@ import { ConfigProvider } from "../../config/provider/interface.js";
 import { fhirResponseToHTTPResponse } from "../../fhir-http/index.js";
 import { createFHIRURL } from "../../fhir-server/constants.js";
 
-export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
+export async function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
   config: ConfigProvider,
   version: Version,
   tenant: TenantId,
   resource: Resource<Version, AllResourceTypes>,
-): NonNullable<Resource<Version, "Bundle">["entry"]>[number] {
+): Promise<NonNullable<Resource<Version, "Bundle">["entry"]>[number]> {
   return {
-    fullUrl: createFHIRURL(
+    fullUrl: await createFHIRURL(
       config,
       version,
       tenant,
@@ -29,11 +29,11 @@ export function fhirResourceToBundleEntry<Version extends FHIR_VERSION>(
   } as NonNullable<Resource<Version, "Bundle">["entry"]>[number];
 }
 
-export function fhirResponseToBundleEntry(
+export async function fhirResponseToBundleEntry(
   config: ConfigProvider,
   tenant: TenantId,
   fhirResponse: FHIRResponse<FHIR_VERSION, AllInteractions | "error">,
-): BundleEntry {
+): Promise<BundleEntry> {
   const httpResponse = fhirResponseToHTTPResponse(fhirResponse);
   return {
     response: {
@@ -41,7 +41,7 @@ export function fhirResponseToBundleEntry(
       location: (httpResponse.headers?.Location ??
         httpResponse.headers?.["Content-Location"]) as uri | undefined,
     },
-    fullUrl: createFHIRURL(
+    fullUrl: await createFHIRURL(
       config,
       fhirResponse.fhirVersion,
       tenant,

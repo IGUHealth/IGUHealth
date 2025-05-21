@@ -100,30 +100,32 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx) => {
         signupURL,
         forgotPasswordURL,
         errors: [errorToDescription(result.errors[0])],
-        federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => {
-          return {
-            title: idp.name,
-            url: new URL(
-              ctx.router.url(
-                OIDC_ROUTES.FEDERATED_INITIATE,
-                {
-                  tenant: ctx.state.iguhealth.tenant,
-                  identityProvider: idp.id,
-                },
-                {
-                  query: {
-                    redirect_to: ctx.router.url(
-                      OIDC_ROUTES.AUTHORIZE_GET,
-                      { tenant: ctx.state.iguhealth.tenant },
-                      { query: ctx.state.oidc.parameters },
-                    ),
+        federatedProviders: await Promise.all(
+          (ctx.state.oidc.identityProviders ?? []).map(async (idp) => {
+            return {
+              title: idp.name,
+              url: new URL(
+                ctx.router.url(
+                  OIDC_ROUTES.FEDERATED_INITIATE,
+                  {
+                    tenant: ctx.state.iguhealth.tenant,
+                    identityProvider: idp.id,
                   },
-                },
-              ) as string,
-              ctx.state.iguhealth.config.get("API_URL"),
-            ).href,
-          };
-        }),
+                  {
+                    query: {
+                      redirect_to: ctx.router.url(
+                        OIDC_ROUTES.AUTHORIZE_GET,
+                        { tenant: ctx.state.iguhealth.tenant },
+                        { query: ctx.state.oidc.parameters },
+                      ),
+                    },
+                  },
+                ) as string,
+                await ctx.state.iguhealth.config.get("API_URL"),
+              ).href,
+            };
+          }),
+        ),
       }),
     );
   } else {
@@ -152,30 +154,32 @@ export const loginGET = (): OIDCRouteHandler => async (ctx) => {
       action: loginRoute,
       signupURL,
       forgotPasswordURL,
-      federatedProviders: ctx.state.oidc.identityProviders?.map((idp) => {
-        return {
-          title: idp.name,
-          url: new URL(
-            ctx.router.url(
-              OIDC_ROUTES.FEDERATED_INITIATE,
-              {
-                tenant: ctx.state.iguhealth.tenant,
-                identityProvider: idp.id,
-              },
-              {
-                query: {
-                  redirect_to: ctx.router.url(
-                    OIDC_ROUTES.AUTHORIZE_GET,
-                    { tenant: ctx.state.iguhealth.tenant },
-                    { query: ctx.state.oidc.parameters },
-                  ),
+      federatedProviders: await Promise.all(
+        (ctx.state.oidc.identityProviders ?? []).map(async (idp) => {
+          return {
+            title: idp.name,
+            url: new URL(
+              ctx.router.url(
+                OIDC_ROUTES.FEDERATED_INITIATE,
+                {
+                  tenant: ctx.state.iguhealth.tenant,
+                  identityProvider: idp.id,
                 },
-              },
-            ) as string,
-            ctx.state.iguhealth.config.get("API_URL"),
-          ).href,
-        };
-      }),
+                {
+                  query: {
+                    redirect_to: ctx.router.url(
+                      OIDC_ROUTES.AUTHORIZE_GET,
+                      { tenant: ctx.state.iguhealth.tenant },
+                      { query: ctx.state.oidc.parameters },
+                    ),
+                  },
+                },
+              ) as string,
+              await ctx.state.iguhealth.config.get("API_URL"),
+            ).href,
+          };
+        }),
+      ),
     }),
   );
 };

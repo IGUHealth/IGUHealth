@@ -120,10 +120,10 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
     R4B_ALL_SPECIAL_TYPES.find((k) => k.resourceType === type) === undefined,
 );
 
-export const createLogger = (config: ConfigProvider) =>
+export const createLogger = async (config: ConfigProvider) =>
   pino<string>(
     {},
-    config.get("NODE_ENV") === "development"
+    (await config.get("NODE_ENV")) === "development"
       ? pretty({
           levelFirst: true,
           colorize: true,
@@ -136,13 +136,13 @@ let _redis_client: Redis | undefined = undefined;
  * Returns instantiated Redis client based on environment variables.
  * @returns Singleton Redis client
  */
-export function getRedisClient(config: ConfigProvider): Redis {
+export async function getRedisClient(config: ConfigProvider): Promise<Redis> {
   if (!_redis_client) {
     _redis_client = new Redis({
-      host: config.get("REDIS_HOST"),
-      port: parseInt(config.get("REDIS_PORT") || "6739"),
+      host: await config.get("REDIS_HOST"),
+      port: parseInt((await config.get("REDIS_PORT")) || "6739"),
       tls:
-        config.get("REDIS_SSL") === "true"
+        (await config.get("REDIS_SSL")) === "true"
           ? {
               rejectUnauthorized: false,
             }
@@ -153,9 +153,9 @@ export function getRedisClient(config: ConfigProvider): Redis {
   return _redis_client;
 }
 
-export function createClient(
+export async function createClient(
   config: ConfigProvider,
-): FHIRClientAsync<IGUHealthServerCTX> {
+): Promise<FHIRClientAsync<IGUHealthServerCTX>> {
   const storage: FHIRClient<IGUHealthServerCTX> =
     new AsynchronousClient<IGUHealthServerCTX>(
       createMiddlewareAsync(
@@ -163,7 +163,7 @@ export function createClient(
         [
           createRequestToResponseMiddleware({
             transaction_entry_limit: parseInt(
-              config.get("POSTGRES_TRANSACTION_ENTRY_LIMIT") ?? "20",
+              (await config.get("POSTGRES_TRANSACTION_ENTRY_LIMIT")) ?? "20",
             ),
           }),
           transactionMiddleware(),
@@ -177,11 +177,13 @@ export function createClient(
     );
 
   const executioner = new AWSLambdaExecutioner({
-    AWS_REGION: config.get("AWS_REGION") as string,
-    AWS_ACCESS_KEY_ID: config.get("AWS_LAMBDA_ACCESS_KEY_ID") as string,
-    AWS_ACCESS_KEY_SECRET: config.get("AWS_LAMBDA_ACCESS_KEY_SECRET") as string,
-    AWS_ROLE: config.get("AWS_LAMBDA_ROLE") as string,
-    AWS_LAMBDA_LAYERS: [config.get("AWS_LAMBDA_LAYER_ARN") as string],
+    AWS_REGION: (await config.get("AWS_REGION")) as string,
+    AWS_ACCESS_KEY_ID: (await config.get("AWS_LAMBDA_ACCESS_KEY_ID")) as string,
+    AWS_ACCESS_KEY_SECRET: (await config.get(
+      "AWS_LAMBDA_ACCESS_KEY_SECRET",
+    )) as string,
+    AWS_ROLE: (await config.get("AWS_LAMBDA_ROLE")) as string,
+    AWS_LAMBDA_LAYERS: [(await config.get("AWS_LAMBDA_LAYER_ARN")) as string],
   });
 
   const lambdaSource = createOperationExecutioner(executioner);
@@ -270,11 +272,11 @@ export function createClient(
         },
         middleware: createArtifactClient({
           db: new pg.Pool({
-            host: config.get("ARTIFACT_DB_PG_HOST"),
-            password: config.get("ARTIFACT_DB_PG_PASSWORD"),
-            user: config.get("ARTIFACT_DB_PG_USERNAME"),
-            database: config.get("ARTIFACT_DB_PG_NAME"),
-            port: parseInt(config.get("ARTIFACT_DB_PG_PORT") ?? "5432"),
+            host: await config.get("ARTIFACT_DB_PG_HOST"),
+            password: await config.get("ARTIFACT_DB_PG_PASSWORD"),
+            user: await config.get("ARTIFACT_DB_PG_USERNAME"),
+            database: await config.get("ARTIFACT_DB_PG_NAME"),
+            port: parseInt((await config.get("ARTIFACT_DB_PG_PORT")) ?? "5432"),
           }),
           operationsAllowed: [
             "read-request",

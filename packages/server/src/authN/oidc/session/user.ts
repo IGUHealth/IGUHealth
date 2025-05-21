@@ -22,7 +22,7 @@ export async function deserializeUser(
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
     const user = await ctx.state.iguhealth.store.auth.user.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       id,
     );
@@ -63,7 +63,7 @@ export async function sessionCredentialsLogin<
   credentials: LoginParameters[Method],
 ): Promise<LoginResult> {
   const result = await ctx.state.iguhealth.store.auth.user.login(
-    asRoot(ctx.state.iguhealth),
+    await asRoot(ctx.state.iguhealth),
     ctx.state.iguhealth.tenant,
     method,
     credentials,

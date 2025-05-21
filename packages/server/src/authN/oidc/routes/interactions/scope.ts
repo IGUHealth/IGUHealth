@@ -57,7 +57,7 @@ export function scopePOST(): OIDCRouteHandler {
       checkPatientScopesForLaunch(scopes);
 
       await ctx.state.iguhealth.store.auth.authorization_scope.create(
-        asRoot(ctx.state.iguhealth),
+        await asRoot(ctx.state.iguhealth),
         ctx.state.iguhealth.tenant,
         {
           tenant: ctx.state.iguhealth.tenant,

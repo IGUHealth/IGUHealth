@@ -101,7 +101,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   // Auto redirect if one tenant.
   if (tenantClaims.length === 1) {
-    const admin_app_url = adminApp.redirectURL(
+    const admin_app_url = await adminApp.redirectURL(
       ctx.state.iguhealth.config,
       tenantClaims[0].id,
     );
@@ -114,6 +114,11 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     return;
   }
 
+  const admin_app_url = await adminApp.redirectURL(
+    ctx.state.iguhealth.config,
+    "<placeholder>" as TenantId,
+  );
+
   ctx.body = views.renderString(
     React.createElement(TenantSelect, {
       title: "IGUHealth",
@@ -121,10 +126,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       email,
       tenants: tenantClaims,
       generateTenantURL: (email, tenantId) => {
-        const admin_app_url = adminApp.redirectURL(
-          ctx.state.iguhealth.config,
-          tenantId,
-        );
+        admin_app_url?.replace("<placeholder>", tenantId);
         if (!admin_app_url)
           throw new OperationError(
             outcomeFatal("exception", "Admin app URL not found"),

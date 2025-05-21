@@ -13,7 +13,7 @@ export default class EnvironmentConfigProvider implements ConfigProvider {
     const envValid = environmentValidator(process.env);
     if (!envValid) throw new Error(ajv.errorsText(environmentValidator.errors));
   }
-  get<K extends keyof ConfigSchema>(key: K): ConfigSchema[K] {
+  async get<K extends keyof ConfigSchema>(key: K): Promise<ConfigSchema[K]> {
     return process.env[key];
   }
 }

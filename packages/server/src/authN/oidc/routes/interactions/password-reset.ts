@@ -69,7 +69,7 @@ export function passwordResetGET(): OIDCRouteHandler {
 
     const authorizationCodeSearch =
       await ctx.state.iguhealth.store.auth.authorization_code.where(
-        asRoot(ctx.state.iguhealth),
+        await asRoot(ctx.state.iguhealth),
         ctx.state.iguhealth.tenant,
         {
           type: "password_reset",
@@ -114,7 +114,7 @@ async function getAuthorizationCode(
   code: string,
 ): Promise<AuthorizationCode> {
   const res = await ctx.store.auth.authorization_code.where(
-    asRoot({ ...ctx, tenant }),
+    await asRoot({ ...ctx, tenant }),
     tenant,
     {
       type: "password_reset",
@@ -221,7 +221,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           const email = (authorizationCode.meta as Record<string, string>)
             ?.email;
           const user = await fhirContext.store.auth.user.read(
-            asRoot(fhirContext),
+            await asRoot(fhirContext),
             fhirContext.tenant,
             authorizationCode.user_id as id,
           );
@@ -233,7 +233,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           }
 
           const update = await fhirContext.store.auth.user.update(
-            asRoot(fhirContext),
+            await asRoot(fhirContext),
             fhirContext.tenant,
             user.fhir_user_id as id,
             {
@@ -246,7 +246,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
 
           await fhirContext.client.update(
-            asRoot({
+            await asRoot({
               ...fhirContext,
               tenant: update.tenant as TenantId,
             }),
@@ -257,7 +257,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
 
           await fhirContext.store.auth.authorization_code.delete(
-            asRoot(fhirContext),
+            await asRoot(fhirContext),
             fhirContext.tenant,
             {
               code: body.code,
@@ -265,7 +265,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           );
         },
       );
-      const AdminAppURL = adminApp.redirectURL(
+      const AdminAppURL = await adminApp.redirectURL(
         ctx.state.iguhealth.config,
         ctx.state.iguhealth.tenant,
       );
@@ -345,7 +345,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     }
 
     const usersWithEmail = await ctx.state.iguhealth.store.auth.user.where(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       ctx.state.iguhealth.tenant,
       {
         email: email,
@@ -388,7 +388,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
 
     const membership =
       await ctx.state.iguhealth.store.fhir.readLatestResourceById(
-        asRoot(ctx.state.iguhealth),
+        await asRoot(ctx.state.iguhealth),
         R4,
         "Membership",
         user.fhir_user_id as id,
@@ -400,13 +400,17 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    await sendPasswordResetEmail(asRoot(ctx.state.iguhealth), membership, {
-      email: {
-        subject: "IGUHealth Email Verification",
-        body: "To verify your email and set your password click below.",
-        acceptText: "Reset Password",
+    await sendPasswordResetEmail(
+      await asRoot(ctx.state.iguhealth),
+      membership,
+      {
+        email: {
+          subject: "IGUHealth Email Verification",
+          body: "To verify your email and set your password click below.",
+          acceptText: "Reset Password",
+        },
       },
-    });
+    );
 
     ctx.status = 200;
     ctx.body = views.renderString(

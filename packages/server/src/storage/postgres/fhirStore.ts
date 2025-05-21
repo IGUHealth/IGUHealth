@@ -116,7 +116,7 @@ async function getHistory<
 
   const history = await historySQL.run(pg);
 
-  const resourceHistory = history.map((row) => {
+  const resourceHistory = await Promise.all(history.map(async (row) => {
     const resource = row.resource as unknown as Resource<
       Version,
       AllResourceTypes
@@ -124,7 +124,7 @@ async function getHistory<
     return {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resource: resource as any,
-      fullUrl: createFHIRURL(
+      fullUrl: await createFHIRURL(
         config,
         fhirVersion,
         tenant,
@@ -141,7 +141,7 @@ async function getHistory<
         lastModified: resource.meta?.lastUpdated,
       },
     };
-  });
+  }));
 
   return resourceHistory;
 }

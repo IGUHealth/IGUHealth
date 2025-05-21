@@ -76,18 +76,23 @@ export async function launchView<Version extends FHIR_VERSION>(
   resourceType: ResourceType<Version>,
 ) {
   const accesspolicies = await ctx.state.iguhealth.client.search_type(
-    await asRoot(ctx.state.iguhealth),
+    await await asRoot(ctx.state.iguhealth),
     R4,
     "AccessPolicy",
     [{ name: "link", value: [ctx.state.oidc.user?.fhir_user_id as id] }],
   );
   const accessToken = await createToken<AccessTokenPayload<user_role>>({
-    signingKey: await getSigningKey(getCertConfig(ctx.state.iguhealth.config)),
+    signingKey: await getSigningKey(
+      await getCertConfig(ctx.state.iguhealth.config),
+    ),
     payload: {
       sub: ctx.state.oidc.user?.fhir_user_id as Subject,
       // So for a user to select a patient, they must have the user/Patient.s scope.
       scope: `${ctx.state.oidc.parameters.scope ?? ""} user/SearchParameter.rs`,
-      iss: getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant),
+      iss: await getIssuer(
+        ctx.state.iguhealth.config,
+        ctx.state.iguhealth.tenant,
+      ),
       aud: SYSTEM_APP.id as string,
       [CUSTOM_CLAIMS.ROLE]: ctx.state.oidc.user?.role as user_role,
       [CUSTOM_CLAIMS.TENANT]: ctx.state.iguhealth.tenant,
@@ -149,7 +154,7 @@ async function derivePatientFromMembership(
 
   if (scope.launchType === "patient" && userId) {
     const membership = await ctx.state.iguhealth.client.read(
-      await asRoot(ctx.state.iguhealth),
+      await await asRoot(ctx.state.iguhealth),
       R4,
       "Membership",
       userId,

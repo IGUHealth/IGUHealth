@@ -6,23 +6,23 @@ import { TenantId } from "@iguhealth/jwt/types";
 
 import { ConfigProvider } from "../config/provider/interface.js";
 
-export function createTenantURL(
+export async function createTenantURL(
   config: ConfigProvider,
   tenant: TenantId,
-): string {
-  const base = new URL(config.get("API_URL"));
+): Promise<string> {
+  const base = new URL(await config.get("API_URL"));
   return new URL(path.join(base.pathname, "w", tenant), base.origin).href;
 }
 
-export function createFHIRURL(
+export async function createFHIRURL(
   config: ConfigProvider,
   fhirVersion: FHIR_VERSION,
   tenant: TenantId,
   end: string,
-): uri {
+): Promise<uri> {
   const fhirSlug =
     fhirVersion === R4 ? "r4" : fhirVersion === R4B ? "r4b" : fhirVersion;
-  const tenantURL = new URL(createTenantURL(config, tenant));
+  const tenantURL = new URL(await createTenantURL(config, tenant));
 
   return new URL(
     path.join(tenantURL.pathname, "api/v1/fhir", fhirSlug, end),

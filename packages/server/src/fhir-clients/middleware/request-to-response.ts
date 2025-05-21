@@ -272,7 +272,7 @@ async function conditionalDelete(
     | SystemSearchRequest<FHIR_VERSION>,
 ) {
   const limit = parseInt(
-    ctx.config.get("FHIR_DELETE_CONDITIONAL_LIMIT") ?? "20",
+    (await ctx.config.get("FHIR_DELETE_CONDITIONAL_LIMIT")) ?? "20",
   );
   searchRequest.parameters = [
     ...searchRequest.parameters.filter(
@@ -449,12 +449,14 @@ export default function createRequestToResponseMiddleware<
                   total: result.total as unsignedInt | undefined,
                   resourceType: "Bundle",
                   type: "searchset",
-                  entry: resources.map((r) =>
-                    fhirResourceToBundleEntry(
-                      context.ctx.config,
-                      context.request.fhirVersion,
-                      context.ctx.tenant,
-                      r,
+                  entry: await Promise.all(
+                    resources.map(async (r) =>
+                      fhirResourceToBundleEntry(
+                        context.ctx.config,
+                        context.request.fhirVersion,
+                        context.ctx.tenant,
+                        r,
+                      ),
                     ),
                   ),
                 },
@@ -475,12 +477,14 @@ export default function createRequestToResponseMiddleware<
                   total: result.total as unsignedInt | undefined,
                   resourceType: "Bundle",
                   type: "searchset",
-                  entry: resources.map((r) =>
-                    fhirResourceToBundleEntry(
-                      context.ctx.config,
-                      context.request.fhirVersion,
-                      context.ctx.tenant,
-                      r,
+                  entry: await Promise.all(
+                    resources.map(async (r) =>
+                      fhirResourceToBundleEntry(
+                        context.ctx.config,
+                        context.request.fhirVersion,
+                        context.ctx.tenant,
+                        r,
+                      ),
                     ),
                   ),
                 },
@@ -892,7 +896,7 @@ export default function createRequestToResponseMiddleware<
                 fhirRequest,
               );
 
-              const responseEntry = fhirResponseToBundleEntry(
+              const responseEntry = await fhirResponseToBundleEntry(
                 txCTX.config,
                 txCTX.tenant,
                 fhirResponse,

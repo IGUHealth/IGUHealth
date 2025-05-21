@@ -39,7 +39,7 @@ import { PUBLIC_APP } from "./oidc/hardcodedClients/public-app.js";
 async function createLocalJWTSecret(
   config: ConfigProvider,
 ): Promise<ReturnType<typeof jwksRsa.koaJwtSecret>> {
-  const jwks = await getJWKS(getCertConfig(config));
+  const jwks = await getJWKS(await getCertConfig(config));
   return jwksRsa.koaJwtSecret({
     jwksUri: "_not_used",
     cache: true,
@@ -72,7 +72,7 @@ export async function verifyBasicAuth<
     }
 
     const clientApplication = await ctx.state.iguhealth.client.read(
-      asRoot(ctx.state.iguhealth),
+      await asRoot(ctx.state.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,
@@ -150,13 +150,13 @@ async function findResourceAndAccessPolicies<
 
   const [member, accessPolicies] = await Promise.all([
     ctx.store.fhir.readLatestResourceById(
-      asRoot(ctx),
+      await asRoot(ctx),
       R4,
       memberType,
       memberId,
     ),
     ctx.store.fhir.readResourcesByVersionId(
-      asRoot(ctx),
+      await asRoot(ctx),
       R4,
       accessPolicyVersionIds,
     ),
@@ -190,7 +190,7 @@ async function userResourceAndAccessPolicies(
     case "ClientApplication":
     case "OperationDefinition": {
       return findResourceAndAccessPolicies(
-        asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
+        await asRoot({ ...context, tenant: user[CUSTOM_CLAIMS.TENANT] }),
         user[CUSTOM_CLAIMS.RESOURCE_TYPE],
         user[CUSTOM_CLAIMS.RESOURCE_ID],
         user[CUSTOM_CLAIMS.ACCESS_POLICY_VERSION_IDS],
@@ -223,7 +223,7 @@ export const associateUserToIGUHealth: Koa.Middleware<
   }
 
   const { resource, accessPolicies } = await userResourceAndAccessPolicies(
-    asRoot(ctx.state.iguhealth),
+    await asRoot(ctx.state.iguhealth),
     ctx.state.__user__,
   );
 
@@ -253,7 +253,10 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   KoaExtensions.KoaIGUHealthContext
 > = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.state.iguhealth.config, ctx.params.tenant as TenantId),
+    iss: await getIssuer(
+      ctx.state.iguhealth.config,
+      ctx.params.tenant as TenantId,
+    ),
     aud: "iguhealth",
     sub: "public-user" as Subject,
     scope: "user/*.*",
@@ -265,7 +268,9 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   };
 
   const token = await createToken({
-    signingKey: await getSigningKey(getCertConfig(ctx.state.iguhealth.config)),
+    signingKey: await getSigningKey(
+      await getCertConfig(ctx.state.iguhealth.config),
+    ),
     payload: user,
   });
 
