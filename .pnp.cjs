@@ -16792,7 +16792,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/koa-multipart-form", "workspace:packages/koa-multipart-form"],\
           ["@types/koa", "npm:2.15.0"],\
           ["@types/multer", "npm:1.4.12"],\
-          ["multer", "npm:1.4.5-lts.1"],\
+          ["multer", "npm:2.0.0"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -46464,10 +46464,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["multer", [\
-      ["npm:1.4.5-lts.1", {\
-        "packageLocation": "./.yarn/cache/multer-npm-1.4.5-lts.1-2b83a2d180-957c09956f.zip/node_modules/multer/",\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/multer-npm-2.0.0-aefd211bd2-e6aebea164.zip/node_modules/multer/",\
         "packageDependencies": [\
-          ["multer", "npm:1.4.5-lts.1"],\
+          ["multer", "npm:2.0.0"],\
           ["append-field", "npm:1.0.0"],\
           ["busboy", "npm:1.6.0"],\
           ["concat-stream", "npm:1.6.2"],\
