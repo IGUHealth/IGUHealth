@@ -1,12 +1,16 @@
 import { ALGORITHMS, JWTCertificationConfig } from "@iguhealth/jwt";
 
-export function getCertConfig(): JWTCertificationConfig {
+import { ConfigProvider } from "./config/provider/interface.js";
+
+export function getCertConfig(config: ConfigProvider): JWTCertificationConfig {
   const alg = ALGORITHMS.RS384;
-  const kid = process.env.AUTH_LOCAL_SIGNING_KEY;
-  switch (process.env.AUTH_CERTIFICATION_TYPE) {
+  const kid = config.get("AUTH_LOCAL_SIGNING_KEY");
+  const certificateType = config.get("AUTH_CERTIFICATION_TYPE");
+
+  switch (certificateType) {
     case "environment": {
-      const publicKey = process.env.AUTH_CERTIFICATION_PUBLIC_KEY;
-      const privateKey = process.env.AUTH_CERTIFICATION_PRIVATE_KEY;
+      const publicKey = config.get("AUTH_CERTIFICATION_PUBLIC_KEY");
+      const privateKey = config.get("AUTH_CERTIFICATION_PRIVATE_KEY");
       if (!publicKey || !privateKey) {
         throw new Error(
           "Missing AUTH_CERTIFICATION_PUBLIC_KEY or AUTH_CERTIFICATION_PRIVATE_KEY",
@@ -22,7 +26,7 @@ export function getCertConfig(): JWTCertificationConfig {
       };
     }
     case "file": {
-      const directory = process.env.AUTH_LOCAL_CERTIFICATION_LOCATION;
+      const directory = config.get("AUTH_LOCAL_CERTIFICATION_LOCATION");
 
       if (!directory) {
         throw new Error("Missing AUTH_CERTIFICATION_DIRECTORY");

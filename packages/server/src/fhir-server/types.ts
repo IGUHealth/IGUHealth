@@ -37,6 +37,7 @@ import {
   sessionLogout,
 } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
+import { ConfigProvider } from "../config/provider/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
@@ -121,6 +122,7 @@ export interface UserContext {
 }
 
 export interface IGUHealthServices {
+  config: ConfigProvider;
   environment: string;
   // Server Information
   queue: IQueue | IQueueBatch;
@@ -160,12 +162,13 @@ export interface IGUHealthServerCTX extends IGUHealthServices {
 }
 
 function createRootClaims(
+  config: ConfigProvider,
   tenant: TenantId,
   clientApp: ClientApplication,
 ): AccessTokenPayload<s.user_role> {
   return {
     scope: "system/*.*",
-    iss: getIssuer(tenant),
+    iss: getIssuer(config, tenant),
     sub: clientApp.id as string as Subject,
     aud: clientApp.id as id,
     [CUSTOM_CLAIMS.RESOURCE_ID]: clientApp.id as id,
@@ -185,7 +188,7 @@ function createRootClaims(
 export function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
 ): IGUHealthServerCTX {
-  const rootClaims = createRootClaims(ctx.tenant, SYSTEM_APP);
+  const rootClaims = createRootClaims(ctx.config, ctx.tenant, SYSTEM_APP);
 
   return {
     ...ctx,

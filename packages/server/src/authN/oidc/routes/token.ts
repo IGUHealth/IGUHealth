@@ -255,7 +255,7 @@ async function createTokenResponse({
   clientApplication: ClientApplication;
   launchParameters?: ResolvedLaunchParameters;
 }): Promise<Oauth2TokenBodyResponse> {
-  const signingKey = await getSigningKey(getCertConfig());
+  const signingKey = await getSigningKey(getCertConfig(ctx.config));
   const approvedScopes = await scopes.getApprovedScope(
     ctx,
     ctx.tenant,
@@ -271,7 +271,7 @@ async function createTokenResponse({
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.tenant),
+    iss: getIssuer(ctx.config, ctx.tenant),
 
     // Smart claims.
     patient: launchParameters?.Patient,

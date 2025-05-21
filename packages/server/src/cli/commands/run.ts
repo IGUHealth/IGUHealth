@@ -1,5 +1,7 @@
 import { Command } from "commander";
 
+import getConfigProvider from "../../config/index.js";
+import { ConfigProvider } from "../../config/provider/interface.js";
 import { IGUHealthServices } from "../../fhir-server/types.js";
 import { pushFromStoreWorker } from "../../queue/from-store/index.js";
 import indexingHandler from "../../queue/implementations/consumers/handlers/search-indexing.js";
@@ -22,13 +24,14 @@ async function runServer(port: number) {
 }
 
 async function runWorker(
+  config: ConfigProvider,
   groupId: IConsumerGroupID,
   handler: MessageHandler<IGUHealthServices>,
 ) {
   return createWorker(
     TENANT_TOPIC_PATTERN(OperationsTopic),
     groupId,
-    process.env.QUEUE_TYPE,
+    config.get("QUEUE_TYPE"),
     await createConsumerServices(),
     handler,
   );
@@ -49,6 +52,8 @@ export function terminateServices() {
   }
 }
 
+const config = getConfigProvider();
+
 const server: Parameters<Command["action"]>[0] = async (options) => {
   terminateServices();
   runningServices = {
@@ -62,7 +67,9 @@ const worker: Parameters<Command["action"]>[0] = async () => {
 
   runningServices = {
     ...runningServices,
-    workers: [await runWorker(Consumers.SubscriptionV1, subscriptionHandler)],
+    workers: [
+      await runWorker(config, Consumers.SubscriptionV1, subscriptionHandler),
+    ],
   };
 };
 
@@ -70,7 +77,7 @@ const storageWorker: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
     workers: [
       ...runningServices.workers,
-      await runWorker(Consumers.Storage, storageHandler),
+      await runWorker(config, Consumers.Storage, storageHandler),
     ],
   };
 };
@@ -79,7 +86,7 @@ const searchIndexingWorker: Parameters<Command["action"]>[0] = async () => {
   runningServices = {
     workers: [
       ...runningServices.workers,
-      await runWorker(Consumers.SearchIndexing, indexingHandler),
+      await runWorker(config, Consumers.SearchIndexing, indexingHandler),
     ],
   };
 };
@@ -99,7 +106,7 @@ const all: Parameters<Command["action"]>[0] = async (options) => {
     runServer(options.port),
     // runWorker(Consumers.Storage, storageHandler),
     // runWorker(Consumers.SearchIndexing, indexingHandler),
-    runWorker(Consumers.SubscriptionV1, subscriptionHandler),
+    runWorker(config, Consumers.SubscriptionV1, subscriptionHandler),
     await pushFromStoreWorker(await createConsumerServices()),
   ]);
 

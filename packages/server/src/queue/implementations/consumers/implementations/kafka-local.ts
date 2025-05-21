@@ -1,5 +1,6 @@
 import { Batch, Consumer, Kafka, KafkaMessage } from "kafkajs";
 
+import { IGUHealthServices } from "../../../../fhir-server/types.js";
 import { createKafkaClient } from "../../providers/index.js";
 import { DYNAMIC_TOPIC } from "../../topics/dynamic-topic.js";
 import { IConsumerGroupID, ITopic, ITopicPattern } from "../../topics/index.js";
@@ -137,13 +138,13 @@ async function handlePattern<CTX>(
 
 type Handler<CTX> = { eachMessage: MessageHandler<CTX> };
 
-async function createKafkaConsumer<CTX>(
+async function createKafkaConsumer<CTX extends IGUHealthServices>(
   ctx: CTX,
   topic: ITopic | ITopicPattern,
   consumerGroupId: IConsumerGroupID,
   handler: Handler<CTX>,
 ): Promise<() => Promise<void>> {
-  const kafka = createKafkaClient();
+  const kafka = createKafkaClient(ctx.config);
 
   const consumer = kafka.consumer({ groupId: consumerGroupId });
 
@@ -154,7 +155,7 @@ async function createKafkaConsumer<CTX>(
   }
 }
 
-export default async function createKafkaWorker<CTX>(
+export default async function createKafkaWorker<CTX extends IGUHealthServices>(
   topic: ITopicPattern | ITopic,
   groupId: IConsumerGroupID,
   ctx: CTX,

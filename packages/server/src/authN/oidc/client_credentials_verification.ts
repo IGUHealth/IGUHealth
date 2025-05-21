@@ -69,7 +69,7 @@ export async function createClientCredentialToken(
   client: ClientApplication,
   expiresIn = "1h",
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
-  const signingKey = await getSigningKey(getCertConfig());
+  const signingKey = await getSigningKey(getCertConfig(ctx.config));
 
   const policies = await ctx.client.search_type(
     asRoot(ctx),
@@ -79,7 +79,7 @@ export async function createClientCredentialToken(
   );
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-    iss: getIssuer(ctx.tenant),
+    iss: getIssuer(ctx.config, ctx.tenant),
     aud: client.id as string,
     [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
     [CUSTOM_CLAIMS.ROLE]: "member",

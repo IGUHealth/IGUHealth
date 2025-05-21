@@ -135,7 +135,7 @@ async function processSubscription(
       asRoot(ctx),
       R4,
       createAuditEvent(
-        workerTokenClaims("subscription-v1", ctx.tenant),
+        workerTokenClaims(ctx.config, "subscription-v1", ctx.tenant),
         SERIOUS_FAILURE,
         { reference: `Subscription/${subscription.id}` },
         errorDescription,

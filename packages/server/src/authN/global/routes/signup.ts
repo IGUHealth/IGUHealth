@@ -111,6 +111,7 @@ async function createOrRetrieveUser(
 
     // Alert system admin of new user.
     await sendAlertEmail(
+      ctx.config,
       ctx.emailProvider,
       "New User",
       `A new user with email '${email}' has signed up.`,

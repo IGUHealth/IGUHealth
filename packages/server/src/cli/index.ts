@@ -1,13 +1,10 @@
 import { program } from "commander";
 
-import loadEnv from "../env.js";
 import { adminCommands } from "./commands/admin.js";
 import { generateCommands } from "./commands/generate.js";
+import { migrateCommands } from "./commands/migrate.js";
 import { runCommands, terminateServices } from "./commands/run.js";
 import { terminologyCommands } from "./commands/terminology.js";
-import { migrateCommands } from "./commands/migrate.js";
-
-loadEnv();
 
 runCommands(program.command("run"));
 generateCommands(program.command("generate"));

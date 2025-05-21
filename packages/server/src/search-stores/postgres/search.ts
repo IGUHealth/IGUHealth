@@ -335,7 +335,7 @@ export async function executeSearchQuery<Request extends FHIRSearchRequest>(
   const request = await fhirSearchRequesttoInternalRequest(ctx, fhirRequest);
   const searchSQL = await deriveResourceSearchSQL(ctx, request);
 
-  if (process.env.LOG_SQL) {
+  if (ctx.config.get("LOG_SQL")) {
     ctx.logger.info(toSQLString(searchSQL));
   }
 

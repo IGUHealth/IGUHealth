@@ -14,19 +14,28 @@ import {
 import { getIssuer } from "../../../authN/oidc/constants.js";
 import { WORKER_APP } from "../../../authN/oidc/hardcodedClients/worker-app.js";
 import { getCertConfig } from "../../../certification.js";
+import { ConfigProvider } from "../../../config/provider/interface.js";
 import { IGUHealthServerCTX } from "../../../fhir-server/types.js";
 
 export type IGUHealthWorkerCTX = Pick<
   IGUHealthServerCTX,
-  "tenant" | "store" | "logger" | "lock" | "cache" | "user" | "resolveCanonical"
+  | "tenant"
+  | "store"
+  | "logger"
+  | "lock"
+  | "cache"
+  | "user"
+  | "resolveCanonical"
+  | "config"
 > & { workerID: string; client: ReturnType<typeof createHTTPClient> };
 
 export function workerTokenClaims(
+  config: ConfigProvider,
   workerID: string,
   tenant: TenantId,
 ): AccessTokenPayload<s.user_role> {
   const accessTokenPayload = {
-    iss: getIssuer(tenant),
+    iss: getIssuer(config, tenant),
     scope: "system/*.*",
     aud: WORKER_APP.id as id,
     sub: WORKER_APP.id as string as Subject,
@@ -44,6 +53,7 @@ export type WorkerClient = ReturnType<typeof createWorkerIGUHealthClient>;
 export type WorkerClientCTX = Parameters<WorkerClient["request"]>[0];
 
 function createWorkerIGUHealthClient(
+  services: Omit<IGUHealthWorkerCTX, "user" | "tenant" | "client">,
   tenant: TenantId,
   tokenPayload: AccessTokenPayload<s.user_role>,
 ): ReturnType<typeof createHTTPClient> {
@@ -52,10 +62,10 @@ function createWorkerIGUHealthClient(
   }
 
   const client = createHTTPClient({
-    url: new URL(`w/${tenant}`, process.env.API_URL).href,
+    url: new URL(`w/${tenant}`, services.config.get("API_URL")).href,
     getAccessToken: async () => {
       const token = await createToken({
-        signingKey: await getSigningKey(getCertConfig()),
+        signingKey: await getSigningKey(getCertConfig(services.config)),
         payload: tokenPayload,
       });
       return token;
@@ -73,7 +83,7 @@ export function tenantWorkerContext(
   return {
     ...services,
     tenant: tenant,
-    client: createWorkerIGUHealthClient(tenant, claims),
+    client: createWorkerIGUHealthClient(services, tenant, claims),
     user: {
       resource: WORKER_APP,
       payload: claims,

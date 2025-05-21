@@ -2,6 +2,7 @@ import pg from "pg";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
+import { ConfigProvider } from "../config/provider/interface.js";
 import { IGUHealthServerCTX } from "../fhir-server/types.js";
 import { SearchEngine } from "./interface.js";
 import { PostgresSearchEngine } from "./postgres/index.js";
@@ -13,24 +14,25 @@ interface PostgresSearchEngineConfig {
 export type SearchEngineConfig = PostgresSearchEngineConfig;
 
 export async function createSearchStore<CTX extends IGUHealthServerCTX>(
-  config: SearchEngineConfig,
+  config: ConfigProvider,
 ): Promise<SearchEngine<CTX>> {
-  switch (config.type) {
+  const type = config.get("SEARCH_STORE_TYPE");
+  switch (type) {
     case "postgres": {
       return new PostgresSearchEngine(
         new pg.Pool({
-          user: process.env.SEARCH_STORE_PG_USERNAME,
-          password: process.env.SEARCH_STORE_PG_PASSWORD,
-          host: process.env.SEARCH_STORE_PG_HOST,
-          database: process.env.SEARCH_STORE_PG_NAME,
-          port: parseInt(process.env.SEARCH_STORE_PG_PORT ?? "5432"),
+          user: config.get("SEARCH_STORE_PG_USERNAME"),
+          password: config.get("SEARCH_STORE_PG_PASSWORD"),
+          host: config.get("SEARCH_STORE_PG_HOST"),
+          database: config.get("SEARCH_STORE_PG_NAME"),
+          port: parseInt(config.get("SEARCH_STORE_PG_PORT") ?? "5432"),
           ssl:
-            process.env.SEARCH_STORE_PG_SSL === "true"
+            config.get("SEARCH_STORE_PG_SSL") === "true"
               ? {
                   // Self signed certificate CA is not used.
                   rejectUnauthorized: false,
-                  host: process.env.SEARCH_STORE_PG_HOST,
-                  port: parseInt(process.env.SEARCH_STORE_PG_PORT ?? "5432"),
+                  host: config.get("SEARCH_STORE_PG_HOST"),
+                  port: parseInt(config.get("SEARCH_STORE_PG_PORT") ?? "5432"),
                 }
               : false,
         }),
@@ -38,7 +40,7 @@ export async function createSearchStore<CTX extends IGUHealthServerCTX>(
     }
     default: {
       throw new OperationError(
-        outcomeFatal("exception", `Unknown store type: ${config.type}`),
+        outcomeFatal("exception", `Unknown store type: ${type}`),
       );
     }
   }

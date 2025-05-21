@@ -41,9 +41,9 @@ import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyUserHasAccessToTenant } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import { getCertConfig } from "./certification.js";
+import getConfigProvider from "./config/index.js";
 import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
-import loadEnv from "./env.js";
 import {
   deriveFHIRVersion,
   fhirResponseToHTTPResponse,
@@ -68,8 +68,6 @@ import createStore from "./storage/index.js";
 import PostgresLock from "./synchronization/postgres.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
-
-loadEnv();
 
 function fhirResponseSetKoa(
   ctx: Koa.ParameterizedContext<
@@ -130,7 +128,7 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
     try {
       await next();
     } catch (e) {
-      createLogger().error(e);
+      ctx.state.iguhealth.logger.error(e);
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
         const status = operationOutcome.issue
@@ -171,47 +169,48 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
 export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
-  if (process.env.SENTRY_SERVER_DSN)
-    MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
-      tracesSampleRate: parseFloat(
-        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
-      ),
-      profilesSampleRate: parseFloat(
-        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
-      ),
-    });
-
-  if (process.env.NODE_ENV === "development") {
-    await createCertsIfNoneExists(getCertConfig());
-  }
-
-  const redis = getRedisClient();
-  const logger = createLogger();
-  const store = await createStore({
-    type: "postgres",
-  });
+  const config = getConfigProvider();
+  const redis = getRedisClient(config);
+  const logger = createLogger(config);
+  const store = await createStore(config);
 
   const iguhealthServices: IGUHealthServices = {
-    environment: process.env.IGUHEALTH_ENVIRONMENT,
-    queue: await createQueue(),
+    environment: config.get("IGUHEALTH_ENVIRONMENT"),
+    config,
+    queue: await createQueue(config),
     store,
-    search: await createSearchStore({ type: "postgres" }),
+    search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     logger,
     cache: new RedisCache(redis),
     terminologyProvider: new TerminologyProvider(),
-    encryptionProvider: createEncryptionProvider(),
-    emailProvider: createEmailProvider(),
-    client: createClient(),
+    encryptionProvider: createEncryptionProvider(config),
+    emailProvider: createEmailProvider(config),
+    client: createClient(config),
     resolveCanonical,
   };
+
+  const sentryServerDSN = config.get("SENTRY_SERVER_DSN");
+  if (sentryServerDSN)
+    MonitoringSentry.enableSentry(sentryServerDSN, LIB_VERSION, {
+      tracesSampleRate: parseFloat(
+        config.get("SENTRY_TRACES_SAMPLE_RATE") ?? "0.1",
+      ),
+      profilesSampleRate: parseFloat(
+        config.get("SENTRY_PROFILES_SAMPLE_RATE") ?? "0.1",
+      ),
+    });
+
+  if (config.get("NODE_ENV") === "development") {
+    await createCertsIfNoneExists(getCertConfig(config));
+  }
 
   const app = new Koa<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >({
-    proxy: process.env.PROXY === "true",
-    proxyIpHeader: process.env.PROXY_IP_HEADER,
+    proxy: config.get("PROXY") === "true",
+    proxyIpHeader: config.get("PROXY_IP_HEADER"),
   });
   app.use(
     koaCompress({
@@ -233,7 +232,10 @@ export default async function createServer(): Promise<
     await next();
   });
 
-  app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
+  app.keys = config
+    .get("SESSION_COOKIE_SECRETS")
+    .split(":")
+    .map((s) => s.trim());
 
   const rootRouter = new Router<
     KoaExtensions.IGUHealth,
@@ -241,7 +243,7 @@ export default async function createServer(): Promise<
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    const jwks = await getJWKS(getCertConfig());
+    const jwks = await getJWKS(getCertConfig(ctx.state.iguhealth.config));
     ctx.body = jwks;
     await next();
   });
@@ -251,16 +253,16 @@ export default async function createServer(): Promise<
     KoaExtensions.KoaIGUHealthContext
   >[] = [
     authN.verifyBasicAuth,
-    process.env.AUTH_PUBLIC_ACCESS === "true"
+    config.get("AUTH_PUBLIC_ACCESS") === "true"
       ? authN.allowPublicAccessMiddleware
-      : await authN.createValidateUserJWTMiddleware(),
+      : await authN.createValidateUserJWTMiddleware(iguhealthServices.config),
     authN.associateUserToIGUHealth,
     verifyUserHasAccessToTenant,
   ];
 
   const globalAuth = await createGlobalAuthRouter("/auth", {
     middleware: [
-      setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
+      setAllowSignup(config.get("AUTH_ALLOW_GLOBAL_SIGNUP") === "true"),
     ],
   });
 
@@ -305,7 +307,7 @@ export default async function createServer(): Promise<
     {
       tokenAuthMiddlewares: authMiddlewares,
       middleware: [
-        setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
+        setAllowSignup(config.get("AUTH_ALLOW_TENANT_SIGNUP") === "true"),
       ],
     },
   );
@@ -386,12 +388,12 @@ export default async function createServer(): Promise<
       session(
         {
           prefix: "__koa_session",
-          store: redisStore({ client: getRedisClient() }),
+          store: redisStore({ client: getRedisClient(config) }),
         },
         app,
       ),
     )
-    .use(MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN))
+    .use(MonitoringSentry.tracingMiddleWare(config.get("SENTRY_SERVER_DSN")))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
@@ -399,7 +401,7 @@ export default async function createServer(): Promise<
       // For development we don't want to log all worker requests.
       if (
         ctx.state.iguhealth.user?.payload.sub !== (WORKER_APP.id as string) ||
-        process.env.NODE_ENV !== "development"
+        config.get("NODE_ENV") !== "development"
       ) {
         logger.info({
           ip: ctx.ip,

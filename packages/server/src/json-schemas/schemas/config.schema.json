@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "IGUHealthEnvironment",
+  "title": "ConfigSchema",
   "type": "object",
-  "$id": "https://IGUHealth.app/environment-variables",
+  "$id": "https://IGUHealth.app/config-variables",
   "additionalProperties": true,
   "allOf": [
     {
@@ -22,17 +22,17 @@
     }
   ],
   "required": [
-    "AUTH_ISSUER",
     "API_URL",
+    "IGUHEALTH_ENVIRONMENT",
+    "AUTH_ISSUER",
     "REDIS_HOST",
     "REDIS_PORT",
+    "SESSION_COOKIE_SECRETS",
+    "AUTH_LOCAL_SIGNING_KEY",
+    "QUEUE_TYPE",
     "RESOURCE_STORE_TYPE",
     "SEARCH_STORE_TYPE",
     "ARTIFACT_DB_TYPE",
-    "SESSION_COOKIE_SECRETS",
-    "AUTH_LOCAL_SIGNING_KEY",
-    "IGUHEALTH_ENVIRONMENT",
-    "QUEUE_TYPE",
     "AUTH_CERTIFICATION_TYPE"
   ],
   "properties": {
@@ -277,6 +277,15 @@
           "description": "Postgres port",
           "default": "5432"
         },
+        "RESOURCE_STORE_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        },
         "RESOURCE_STORE_PG_PASSWORD": {
           "type": "string",
           "description": "postgres password",
@@ -286,15 +295,6 @@
           "type": "string",
           "description": "postgres username",
           "default": "postgres"
-        },
-        "RESOURCE_STORE_PG_SSL": {
-          "type": "string",
-          "enum": [
-            "true",
-            "false"
-          ],
-          "description": "Whether Postgres connection is SSL",
-          "default": "false"
         }
       }
     },
@@ -317,6 +317,15 @@
           "description": "Postgres port",
           "default": "5432"
         },
+        "SEARCH_STORE_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        },
         "SEARCH_STORE_PG_PASSWORD": {
           "type": "string",
           "description": "postgres password",
@@ -326,15 +335,6 @@
           "type": "string",
           "description": "postgres username",
           "default": "postgres"
-        },
-        "SEARCH_STORE_PG_SSL": {
-          "type": "string",
-          "enum": [
-            "true",
-            "false"
-          ],
-          "description": "Whether Postgres connection is SSL",
-          "default": "false"
         }
       }
     },
@@ -357,6 +357,15 @@
           "description": "Postgres port",
           "default": "5432"
         },
+        "ARTIFACT_DB_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        },
         "ARTIFACT_DB_PG_PASSWORD": {
           "type": "string",
           "description": "postgres password",
@@ -366,15 +375,6 @@
           "type": "string",
           "description": "postgres username",
           "default": "postgres"
-        },
-        "ARTIFACT_DB_PG_SSL": {
-          "type": "string",
-          "enum": [
-            "true",
-            "false"
-          ],
-          "description": "Whether Postgres connection is SSL",
-          "default": "false"
         }
       }
     },
@@ -410,6 +410,15 @@
           "description": "Postgres port",
           "default": "5432"
         },
+        "QUEUE_DB_PG_SSL": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Whether Postgres connection is SSL",
+          "default": "false"
+        },
         "QUEUE_DB_PG_PASSWORD": {
           "type": "string",
           "description": "postgres password",
@@ -419,15 +428,6 @@
           "type": "string",
           "description": "postgres username",
           "default": "postgres"
-        },
-        "QUEUE_DB_PG_SSL": {
-          "type": "string",
-          "enum": [
-            "true",
-            "false"
-          ],
-          "description": "Whether Postgres connection is SSL",
-          "default": "false"
         }
       }
     }

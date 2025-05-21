@@ -1,3 +1,4 @@
+import getConfigProvider from "../../../config/index.js";
 import { createClient, createLogger } from "../../../fhir-server/index.js";
 import resolveCanonical from "../../../fhir-server/resolvers/resolveCanonical.js";
 import { IGUHealthServices } from "../../../fhir-server/types.js";
@@ -9,16 +10,18 @@ import createQueue from "../providers/index.js";
 
 export const createConsumerServices: () => Promise<IGUHealthServices> =
   async () => {
-    const store = await createStore({ type: "postgres" });
+    const config = getConfigProvider();
+    const store = await createStore(config);
     const iguhealthServices: IGUHealthServices = {
-      environment: process.env.IGUHEALTH_ENVIRONMENT,
-      queue: await createQueue(),
+      config,
+      environment: config.get("IGUHEALTH_ENVIRONMENT"),
+      queue: await createQueue(config),
       store,
-      search: await createSearchStore({ type: "postgres" }),
+      search: await createSearchStore(config),
       lock: new PostgresLock(store.getClient()),
-      logger: createLogger(),
+      logger: createLogger(config),
       terminologyProvider: new TerminologyProvider(),
-      client: createClient(),
+      client: createClient(config),
       resolveCanonical,
     };
     return iguhealthServices;

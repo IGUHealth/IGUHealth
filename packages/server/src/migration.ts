@@ -3,6 +3,7 @@ import DBMigrate from "db-migrate";
 
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 
+import getConfigProvider from "./config/index.js";
 import syncArtifacts from "./fhir-clients/clients/artifacts/load.js";
 import createQueue from "./queue/implementations/providers/index.js";
 import { DYNAMIC_TOPIC } from "./queue/implementations/topics/dynamic-topic.js";
@@ -31,7 +32,8 @@ export const migratePostgres = async () => {
 };
 
 export const migrateQueue = async () => {
-  const queue = await createQueue();
+  const config = getConfigProvider();
+  const queue = await createQueue(config);
   await queue.createTopic(DYNAMIC_TOPIC);
   await queue.disconnect();
 };

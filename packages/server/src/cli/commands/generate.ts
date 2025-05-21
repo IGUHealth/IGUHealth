@@ -14,6 +14,7 @@ import {
 import { loadParameters } from "@iguhealth/search-parameters/api/load";
 import { generateSP1Sets } from "@iguhealth/search-parameters/api/sp1.parameters";
 
+import getConfigProvider from "../../config/index.js";
 import {
   generateSP1SQLTable,
   generateSP1TSCode,
@@ -22,10 +23,10 @@ import {
 
 function generateReadme() {
   const schema = JSON.parse(
-    readFileSync("src/json-schemas/schemas/environment.schema.json", "utf-8"),
+    readFileSync("src/json-schemas/schemas/config.schema.json", "utf-8"),
   );
 
-  const required = schema.required || [];
+  const required = schema.required ?? [];
 
   const md = `
 # Environment Variables
@@ -42,6 +43,7 @@ ${Object.keys(schema.properties)
 }
 
 async function generateTypes() {
+  const config = getConfigProvider();
   const schemaFiles = await glob("src/**/*.schema.json");
   await Promise.all(
     schemaFiles.map(async (schemaFile) => {
@@ -51,18 +53,18 @@ async function generateTypes() {
   );
   await generateSQL.generate({
     db: {
-      user: process.env.RESOURCE_STORE_PG_USERNAME,
-      password: process.env.RESOURCE_STORE_PG_PASSWORD,
-      host: process.env.RESOURCE_STORE_PG_HOST,
-      database: process.env.RESOURCE_STORE_PG_NAME,
-      port: parseInt(process.env.RESOURCE_STORE_PG_PORT || "5432"),
+      user: config.get("RESOURCE_STORE_PG_USERNAME"),
+      password: config.get("RESOURCE_STORE_PG_PASSWORD"),
+      host: config.get("RESOURCE_STORE_PG_HOST"),
+      database: config.get("RESOURCE_STORE_PG_NAME"),
+      port: parseInt(config.get("RESOURCE_STORE_PG_PORT") ?? "5432"),
       ssl:
-        process.env.RESOURCE_STORE_SSL === "true"
+        config.get("RESOURCE_STORE_SSL") === "true"
           ? {
               // Self signed certificate CA is not used.
               rejectUnauthorized: false,
-              host: process.env.RESOURCE_STORE_PG_HOST,
-              port: parseInt(process.env.RESOURCE_STORE_PG_PORT || "5432"),
+              host: config.get("RESOURCE_STORE_PG_HOST"),
+              port: parseInt(config.get("RESOURCE_STORE_PG_PORT") ?? "5432"),
             }
           : false,
     },

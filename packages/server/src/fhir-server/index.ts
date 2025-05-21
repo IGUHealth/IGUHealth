@@ -20,6 +20,7 @@ import {
   createInjectScopesMiddleware,
   createValidateScopesMiddleware,
 } from "../authZ/middleware/scopes.js";
+import { ConfigProvider } from "../config/provider/interface.js";
 import { createArtifactClient } from "../fhir-clients/clients/artifacts/index.js";
 import {
   MEMBERSHIP_METHODS_ALLOWED,
@@ -119,10 +120,10 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
     R4B_ALL_SPECIAL_TYPES.find((k) => k.resourceType === type) === undefined,
 );
 
-export const createLogger = () =>
+export const createLogger = (config: ConfigProvider) =>
   pino<string>(
     {},
-    process.env.NODE_ENV === "development"
+    config.get("NODE_ENV") === "development"
       ? pretty({
           levelFirst: true,
           colorize: true,
@@ -135,13 +136,13 @@ let _redis_client: Redis | undefined = undefined;
  * Returns instantiated Redis client based on environment variables.
  * @returns Singleton Redis client
  */
-export function getRedisClient(): Redis {
+export function getRedisClient(config: ConfigProvider): Redis {
   if (!_redis_client) {
     _redis_client = new Redis({
-      host: process.env.REDIS_HOST,
-      port: parseInt(process.env.REDIS_PORT || "6739"),
+      host: config.get("REDIS_HOST"),
+      port: parseInt(config.get("REDIS_PORT") || "6739"),
       tls:
-        process.env.REDIS_SSL === "true"
+        config.get("REDIS_SSL") === "true"
           ? {
               rejectUnauthorized: false,
             }
@@ -152,7 +153,9 @@ export function getRedisClient(): Redis {
   return _redis_client;
 }
 
-export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
+export function createClient(
+  config: ConfigProvider,
+): FHIRClientAsync<IGUHealthServerCTX> {
   const storage: FHIRClient<IGUHealthServerCTX> =
     new AsynchronousClient<IGUHealthServerCTX>(
       createMiddlewareAsync(
@@ -160,7 +163,7 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
         [
           createRequestToResponseMiddleware({
             transaction_entry_limit: parseInt(
-              process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT ?? "20",
+              config.get("POSTGRES_TRANSACTION_ENTRY_LIMIT") ?? "20",
             ),
           }),
           transactionMiddleware(),
@@ -174,11 +177,11 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
     );
 
   const executioner = new AWSLambdaExecutioner({
-    AWS_REGION: process.env.AWS_REGION as string,
-    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-    AWS_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-    AWS_LAMBDA_LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+    AWS_REGION: config.get("AWS_REGION") as string,
+    AWS_ACCESS_KEY_ID: config.get("AWS_LAMBDA_ACCESS_KEY_ID") as string,
+    AWS_ACCESS_KEY_SECRET: config.get("AWS_LAMBDA_ACCESS_KEY_SECRET") as string,
+    AWS_ROLE: config.get("AWS_LAMBDA_ROLE") as string,
+    AWS_LAMBDA_LAYERS: [config.get("AWS_LAMBDA_LAYER_ARN") as string],
   });
 
   const lambdaSource = createOperationExecutioner(executioner);
@@ -267,11 +270,11 @@ export function createClient(): FHIRClientAsync<IGUHealthServerCTX> {
         },
         middleware: createArtifactClient({
           db: new pg.Pool({
-            host: process.env.ARTIFACT_DB_PG_HOST,
-            password: process.env.ARTIFACT_DB_PG_PASSWORD,
-            user: process.env.ARTIFACT_DB_PG_USERNAME,
-            database: process.env.ARTIFACT_DB_PG_NAME,
-            port: parseInt(process.env.ARTIFACT_DB_PG_PORT ?? "5432"),
+            host: config.get("ARTIFACT_DB_PG_HOST"),
+            password: config.get("ARTIFACT_DB_PG_PASSWORD"),
+            user: config.get("ARTIFACT_DB_PG_USERNAME"),
+            database: config.get("ARTIFACT_DB_PG_NAME"),
+            port: parseInt(config.get("ARTIFACT_DB_PG_PORT") ?? "5432"),
           }),
           operationsAllowed: [
             "read-request",

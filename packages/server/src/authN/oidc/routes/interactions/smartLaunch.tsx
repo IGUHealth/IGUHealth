@@ -82,12 +82,12 @@ export async function launchView<Version extends FHIR_VERSION>(
     [{ name: "link", value: [ctx.state.oidc.user?.fhir_user_id as id] }],
   );
   const accessToken = await createToken<AccessTokenPayload<user_role>>({
-    signingKey: await getSigningKey(getCertConfig()),
+    signingKey: await getSigningKey(getCertConfig(ctx.state.iguhealth.config)),
     payload: {
       sub: ctx.state.oidc.user?.fhir_user_id as Subject,
       // So for a user to select a patient, they must have the user/Patient.s scope.
       scope: `${ctx.state.oidc.parameters.scope ?? ""} user/SearchParameter.rs`,
-      iss: getIssuer(ctx.state.iguhealth.tenant),
+      iss: getIssuer(ctx.state.iguhealth.config, ctx.state.iguhealth.tenant),
       aud: SYSTEM_APP.id as string,
       [CUSTOM_CLAIMS.ROLE]: ctx.state.oidc.user?.role as user_role,
       [CUSTOM_CLAIMS.TENANT]: ctx.state.iguhealth.tenant,
@@ -100,7 +100,10 @@ export async function launchView<Version extends FHIR_VERSION>(
   });
 
   const variables = {
-    API_URL: createTenantURL(ctx.state.iguhealth.tenant),
+    API_URL: createTenantURL(
+      ctx.state.iguhealth.config,
+      ctx.state.iguhealth.tenant,
+    ),
     ACCESS_TOKEN: accessToken,
     FHIR_VERSION: fhirVersion,
     RESOURCE_TYPE: resourceType,
