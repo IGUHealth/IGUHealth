@@ -26,7 +26,7 @@ function generateReadme() {
     readFileSync("src/json-schemas/schemas/config.schema.json", "utf-8"),
   );
 
-  const required = schema.required || [];
+  const required = schema.required ?? [];
 
   const md = `
 # Environment Variables
@@ -57,14 +57,14 @@ async function generateTypes() {
       password: config.get("RESOURCE_STORE_PG_PASSWORD"),
       host: config.get("RESOURCE_STORE_PG_HOST"),
       database: config.get("RESOURCE_STORE_PG_NAME"),
-      port: parseInt(config.get("RESOURCE_STORE_PG_PORT") || "5432"),
+      port: parseInt(config.get("RESOURCE_STORE_PG_PORT") ?? "5432"),
       ssl:
         config.get("RESOURCE_STORE_SSL") === "true"
           ? {
               // Self signed certificate CA is not used.
               rejectUnauthorized: false,
               host: config.get("RESOURCE_STORE_PG_HOST"),
-              port: parseInt(config.get("RESOURCE_STORE_PG_PORT") || "5432"),
+              port: parseInt(config.get("RESOURCE_STORE_PG_PORT") ?? "5432"),
             }
           : false,
     },

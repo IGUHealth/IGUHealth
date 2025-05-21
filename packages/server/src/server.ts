@@ -41,7 +41,7 @@ import { wellKnownSmartGET } from "./authN/oidc/routes/well_known.js";
 import { verifyUserHasAccessToTenant } from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/providers/redis.js";
 import { getCertConfig } from "./certification.js";
-import getConfigProvider, { ConfigProviderType } from "./config/index.js";
+import getConfigProvider from "./config/index.js";
 import createEmailProvider from "./email/index.js";
 import createEncryptionProvider from "./encryption/index.js";
 import {
@@ -194,10 +194,10 @@ export default async function createServer(): Promise<
   if (sentryServerDSN)
     MonitoringSentry.enableSentry(sentryServerDSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
-        config.get("SENTRY_TRACES_SAMPLE_RATE") || "0.1",
+        config.get("SENTRY_TRACES_SAMPLE_RATE") ?? "0.1",
       ),
       profilesSampleRate: parseFloat(
-        config.get("SENTRY_PROFILES_SAMPLE_RATE") || "0.1",
+        config.get("SENTRY_PROFILES_SAMPLE_RATE") ?? "0.1",
       ),
     });
 
