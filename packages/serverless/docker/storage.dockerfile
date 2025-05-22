@@ -1,4 +1,4 @@
-FROM alpine:latest AS layer-copy 
+FROM alpine:3.21.3 AS layer-copy 
 
 RUN mkdir -p /opt
 
