@@ -1,3 +1,11 @@
+FROM alpine:3.21.3 AS layer-copy 
+
+RUN mkdir -p /opt
+
+COPY ./layers/lambda-parameter-extension:17.zip layer.zip
+RUN unzip layer.zip -d /opt
+RUN rm layer.zip
+
 FROM public.ecr.aws/lambda/nodejs:22
 
 COPY package.json package.json
