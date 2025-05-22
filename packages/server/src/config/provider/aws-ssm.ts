@@ -1,7 +1,7 @@
 import type { ConfigSchema } from "../../json-schemas/schemas/config.schema.js";
 import { ConfigProvider } from "./interface.js";
 
-export default class EnvironmentConfigProvider implements ConfigProvider {
+export default class AWSSSMConfigProvider implements ConfigProvider {
   private readonly _port: string;
   constructor(port = "2773") {
     this._port = port;
