@@ -53,12 +53,12 @@ jobs:
           echo VERSION=$VERSION
 
           # --platform linux/amd64,linux/arm64 \
-          docker buildx build . \
-          --file docker/server/server.dockerfile \
-          --tag $IMAGE_ID:$VERSION \
-          --tag $IMAGE_ID:latest \
-          --label "runnumber=${GITHUB_RUN_ID}" \
-          --push
+          docker buildx build packages/serverless/docker \
+           --file packages/serverless/docker/server.dockerfile \
+           --tag $IMAGE_ID:$VERSION \
+           --tag $IMAGE_ID:latest \
+           --label "runnumber=${GITHUB_RUN_ID}" \
+           --push
 
   storage-lambda:
     environment: production
