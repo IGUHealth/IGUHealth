@@ -13,7 +13,8 @@ export default function getConfigProvider(): ConfigProvider {
       return new EnvironmentConfigProvider();
     }
     case "aws-parameter": {
-      return new AWSSSMConfigProvider();
+      const namespace = process.env.AWS_SSM_NAMESPACE ?? "iguhealth/";
+      return new AWSSSMConfigProvider(namespace);
     }
     default:
       throw new Error(`Unknown config provider type: ${configType}`);
