@@ -135,7 +135,7 @@ async function findResourceAndAccessPolicies<
   resource?: Resource<R4, Type>;
   accessPolicies: AccessPolicyV2[];
 }> {
-  const clients = getHardCodedClients(ctx.config);
+  const clients = await getHardCodedClients(ctx.config);
 
   // For hardcoded clients access check is needed
   // IE iguhealth system app and worker app.
