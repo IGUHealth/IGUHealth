@@ -14,13 +14,13 @@ export async function findClient(
   >,
   clientId: string,
 ): Promise<ClientApplication | undefined> {
+  const hardcodedClients = await getHardCodedClients(
+    ctx.state.iguhealth.config,
+  );
   switch (true) {
-    case getHardCodedClients(ctx.state.iguhealth.config).find(
-      (client) => client.id === clientId,
-    ) !== undefined: {
-      return getHardCodedClients(ctx.state.iguhealth.config).find(
-        (client) => client.id === clientId,
-      );
+    case hardcodedClients.find((client) => client.id === clientId) !==
+      undefined: {
+      return hardcodedClients.find((client) => client.id === clientId);
     }
     default: {
       try {
