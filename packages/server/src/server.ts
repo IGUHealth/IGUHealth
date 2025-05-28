@@ -170,12 +170,17 @@ export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   const config = getConfigProvider();
+  const environment = await config.get("IGUHEALTH_ENVIRONMENT");
+  if (!environment) {
+    throw new Error("IGUHEALTH_ENVIRONMENT is not set in the config.");
+  }
+  console.log(`Starting IGUHealth server in environment: ${environment}`);
   const redis = await getRedisClient(config);
   const logger = await createLogger(config);
   const store = await createStore(config);
 
   const iguhealthServices: IGUHealthServices = {
-    environment: await config.get("IGUHEALTH_ENVIRONMENT"),
+    environment,
     config,
     queue: await createQueue(config),
     store,
