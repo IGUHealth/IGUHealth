@@ -7,7 +7,7 @@ export async function sendAlertEmail(
   subject: string,
   text: string,
 ): Promise<boolean> {
-  if (!config.get("EMAIL_FROM") || !emailProvider) {
+  if (!(await config.get("EMAIL_FROM")) || !emailProvider) {
     return false;
   }
 

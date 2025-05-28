@@ -7,7 +7,7 @@ export default async function createEmailProvider(
 ): Promise<EmailProvider | undefined> {
   switch (await config.get("EMAIL_PROVIDER")) {
     case "sendgrid": {
-      if (!config.get("EMAIL_SENDGRID_API_KEY"))
+      if (!(await config.get("EMAIL_SENDGRID_API_KEY")))
         throw new Error("EMAIL_SENDGRID_API_KEY not set");
       return new SendGrid(
         (await config.get("EMAIL_SENDGRID_API_KEY")) as string,
