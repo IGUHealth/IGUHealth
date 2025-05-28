@@ -19,10 +19,16 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
           "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN,
         } as Record<string, string>,
       },
-    )
-      .then((r) => r.json())
-      .catch((e) => console.error(`Error fetching config from AWS SSM`, e));
+    );
 
-    return response["SecretString"] as ConfigSchema[K];
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch config for key ${key} from AWS SSM: '${response.statusText}' ${await response.text()}`,
+      );
+    }
+
+    const body = await response.json();
+
+    return body["SecretString"] as ConfigSchema[K];
   }
 }
