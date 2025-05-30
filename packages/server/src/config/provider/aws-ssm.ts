@@ -12,7 +12,9 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
       region: process.env.AWS_REGION,
     });
   }
-  async get<K extends keyof ConfigSchema>(key: K): Promise<ConfigSchema[K]> {
+  async get<K extends keyof ConfigSchema>(
+    key: K,
+  ): Promise<ConfigSchema[K] | undefined> {
     const namespacedKey = `${this._namespace}${key}`;
     try {
       const response = await this._client.send(
@@ -27,8 +29,8 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
 
       return value;
     } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to get parameter ${namespacedKey}: ${error}`);
+      console.log(`Failed to get parameter ${namespacedKey}: ${error}`);
+      return undefined;
     }
   }
 }

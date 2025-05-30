@@ -79,7 +79,7 @@ async function createServices(): Promise<IGUHealthServices> {
     config,
     environment: await config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(config),
-    cache: new RedisCache(redis),
+    cache: redis ? new RedisCache(redis) : redis,
     store,
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
