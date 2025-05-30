@@ -33,6 +33,7 @@ export const migratePostgres = async () => {
 
 export const migrateQueue = async () => {
   const config = getConfigProvider();
+  await config.validate();
   const queue = await createQueue(config);
   await queue.createTopic(DYNAMIC_TOPIC);
   await queue.disconnect();

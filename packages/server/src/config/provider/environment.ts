@@ -8,12 +8,14 @@ import { ConfigProvider } from "./interface.js";
 export default class EnvironmentConfigProvider implements ConfigProvider {
   constructor() {
     dotEnv.config();
+  }
+  async get<K extends keyof ConfigSchema>(key: K): Promise<ConfigSchema[K]> {
+    return process.env[key];
+  }
+  async validate(): Promise<void> {
     const ajv = new Ajv.default({});
     const environmentValidator = ajv.compile(IGUHealthEnvironmentSchema);
     const envValid = environmentValidator(process.env);
     if (!envValid) throw new Error(ajv.errorsText(environmentValidator.errors));
-  }
-  async get<K extends keyof ConfigSchema>(key: K): Promise<ConfigSchema[K]> {
-    return process.env[key];
   }
 }

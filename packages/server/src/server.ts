@@ -170,6 +170,8 @@ export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   const config = getConfigProvider();
+  await config.validate();
+
   const environment = await config.get("IGUHEALTH_ENVIRONMENT");
   if (!environment) {
     throw new Error("IGUHEALTH_ENVIRONMENT is not set in the config.");

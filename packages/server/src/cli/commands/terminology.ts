@@ -167,6 +167,8 @@ export function terminologyCommands(command: Command) {
     .option("-d, --delete", "Delete existing data.", false)
     .action(async (options) => {
       const config = getConfigProvider();
+      await config.validate();
+
       const store = await createStore(config);
 
       db.serializable(store.getClient(), async (tx) => {

@@ -73,6 +73,8 @@ async function getTenant(
 
 async function createServices(): Promise<IGUHealthServices> {
   const config = getConfigProvider();
+  await config.validate();
+
   const redis = await getRedisClient(config);
   const store = await createStore(config);
   return {
