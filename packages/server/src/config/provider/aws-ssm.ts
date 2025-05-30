@@ -43,18 +43,31 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
     }
   }
   async validate(): Promise<void> {
-    const keys = await this._client.send(
-      new GetParametersCommand({
-        Names: IGUHealthEnvironmentSchema.required.map((key) =>
-          namespace(this._namespace, key),
-        ),
-        WithDecryption: false,
-      }),
-    );
-    for (const requiredValue of IGUHealthEnvironmentSchema.required) {
-      const namespacedKey = namespace(this._namespace, requiredValue);
-      if (!keys.Parameters?.some((param) => param.Name === namespacedKey)) {
-        throw new Error(`Required parameter '${namespacedKey}' is missing`);
+    const chunkSize = 10;
+    for (
+      let i = 0;
+      i < IGUHealthEnvironmentSchema.required.length;
+      i += chunkSize
+    ) {
+      const requiredKeys = IGUHealthEnvironmentSchema.required.slice(
+        i,
+        i + chunkSize,
+      );
+      // do whatever
+      const keysToCheck = await this._client.send(
+        new GetParametersCommand({
+          Names: requiredKeys.map((key) => namespace(this._namespace, key)),
+          WithDecryption: false,
+        }),
+      );
+
+      for (const requiredValue of requiredKeys) {
+        const namespacedKey = namespace(this._namespace, requiredValue);
+        if (
+          !keysToCheck.Parameters?.some((param) => param.Name === namespacedKey)
+        ) {
+          throw new Error(`Required parameter '${namespacedKey}' is missing`);
+        }
       }
     }
   }
