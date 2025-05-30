@@ -11,6 +11,7 @@ import createQueue from "../providers/index.js";
 export const createConsumerServices: () => Promise<IGUHealthServices> =
   async () => {
     const config = getConfigProvider();
+    await config.validate();
     const store = await createStore(config);
     const iguhealthServices: IGUHealthServices = {
       config,

@@ -44,6 +44,8 @@ ${Object.keys(schema.properties)
 
 async function generateTypes() {
   const config = getConfigProvider();
+  await config.validate();
+
   const schemaFiles = await glob("src/**/*.schema.json");
   await Promise.all(
     schemaFiles.map(async (schemaFile) => {

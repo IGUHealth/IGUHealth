@@ -1,7 +1,16 @@
-import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
+import {
+  GetParameterCommand,
+  GetParametersCommand,
+  SSMClient,
+} from "@aws-sdk/client-ssm";
 
 import type { ConfigSchema } from "../../json-schemas/schemas/config.schema.js";
+import IGUHealthEnvironmentSchema from "../../json-schemas/schemas/config.schema.json" with { type: "json" };
 import { ConfigProvider } from "./interface.js";
+
+function namespace(namespace_: string, key: string | number): string {
+  return `${namespace_}${key}`;
+}
 
 export default class AWSSSMConfigProvider implements ConfigProvider {
   private readonly _namespace: string;
@@ -12,8 +21,10 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
       region: process.env.AWS_REGION,
     });
   }
-  async get<K extends keyof ConfigSchema>(key: K): Promise<ConfigSchema[K]> {
-    const namespacedKey = `${this._namespace}${key}`;
+  async get<K extends keyof ConfigSchema>(
+    key: K,
+  ): Promise<ConfigSchema[K] | undefined> {
+    const namespacedKey = namespace(this._namespace, key);
     try {
       const response = await this._client.send(
         new GetParameterCommand({ Name: namespacedKey, WithDecryption: true }),
@@ -27,8 +38,24 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
 
       return value;
     } catch (error) {
-      console.error(error);
-      throw new Error(`Failed to get parameter ${namespacedKey}: ${error}`);
+      console.log(`Failed to get parameter ${namespacedKey}: ${error}`);
+      return undefined;
+    }
+  }
+  async validate(): Promise<void> {
+    const keys = await this._client.send(
+      new GetParametersCommand({
+        Names: IGUHealthEnvironmentSchema.required.map((key) =>
+          namespace(this._namespace, key),
+        ),
+        WithDecryption: false,
+      }),
+    );
+    for (const requiredValue of IGUHealthEnvironmentSchema.required) {
+      const namespacedKey = namespace(this._namespace, requiredValue);
+      if (!keys.Parameters?.some((param) => param.Name === namespacedKey)) {
+        throw new Error(`Required parameter '${namespacedKey}' is missing`);
+      }
     }
   }
 }

@@ -108,6 +108,7 @@ async function createServices(): Promise<
   Omit<IGUHealthServerCTX, "resolveCanonical" | "user">
 > {
   const config = getConfigProvider();
+  await config.validate();
   const logger = await createLogger(config);
   const store = await createStore(config);
 

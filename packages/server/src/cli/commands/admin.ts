@@ -73,13 +73,15 @@ async function getTenant(
 
 async function createServices(): Promise<IGUHealthServices> {
   const config = getConfigProvider();
+  await config.validate();
+
   const redis = await getRedisClient(config);
   const store = await createStore(config);
   return {
     config,
     environment: await config.get("IGUHEALTH_ENVIRONMENT"),
     queue: await createQueue(config),
-    cache: new RedisCache(redis),
+    cache: redis ? new RedisCache(redis) : redis,
     store,
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),

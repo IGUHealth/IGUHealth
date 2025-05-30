@@ -170,6 +170,8 @@ export default async function createServer(): Promise<
   Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   const config = getConfigProvider();
+  await config.validate();
+
   const environment = await config.get("IGUHEALTH_ENVIRONMENT");
   if (!environment) {
     throw new Error("IGUHEALTH_ENVIRONMENT is not set in the config.");
@@ -187,7 +189,7 @@ export default async function createServer(): Promise<
     search: await createSearchStore(config),
     lock: new PostgresLock(store.getClient()),
     logger,
-    cache: new RedisCache(redis),
+    cache: redis ? new RedisCache(redis) : undefined,
     terminologyProvider: new TerminologyProvider(),
     encryptionProvider: await createEncryptionProvider(config),
     emailProvider: await createEmailProvider(config),
