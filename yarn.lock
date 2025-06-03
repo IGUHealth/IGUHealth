@@ -10592,6 +10592,7 @@ __metadata:
     "@iguhealth/search-parameters": "workspace:^"
     "@iguhealth/smart-launch": "workspace:^"
     "@inquirer/prompts": "npm:^5.5.0"
+    "@isaacs/ttlcache": "npm:^1.4.1"
     "@jest/globals": "npm:^29.7.0"
     "@koa/bodyparser": "npm:^5.1.1"
     "@koa/cors": "npm:^5.0.0"
@@ -11174,6 +11175,13 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
   checksum: 10/ffd282f4a7f559f3d99a6354064ffbd7e246e44c0ed76aa443c7954a82d9e16a7361222028bd6e93ecbff73be949226a35de09177e4f9025f0a3933708a7e0c1
+  languageName: node
+  linkType: hard
+
+"@isaacs/ttlcache@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@isaacs/ttlcache@npm:1.4.1"
+  checksum: 10/57f2b00b58845d48a173c7668c58c27c3e6f91a56c17d6d4c58b38780a475a858ce3b4fc2cd4304469eee9f49818b79a187f0e13120b3617c4f67e4abc475698
   languageName: node
   linkType: hard
 

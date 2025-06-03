@@ -57,6 +57,7 @@
     "@iguhealth/search-parameters": "workspace:^",
     "@iguhealth/smart-launch": "workspace:^",
     "@inquirer/prompts": "^5.5.0",
+    "@isaacs/ttlcache": "^1.4.1",
     "@koa/bodyparser": "^5.1.1",
     "@koa/cors": "^5.0.0",
     "@koa/router": "^13.1.0",

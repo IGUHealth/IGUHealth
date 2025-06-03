@@ -3,6 +3,7 @@ import {
   GetParametersCommand,
   SSMClient,
 } from "@aws-sdk/client-ssm";
+import TTLCache from "@isaacs/ttlcache";
 
 import type { ConfigSchema } from "../../json-schemas/schemas/config.schema.js";
 import IGUHealthEnvironmentSchema from "../../json-schemas/schemas/config.schema.json" with { type: "json" };
@@ -15,10 +16,16 @@ function namespace(namespace_: string, key: string | number): string {
 export default class AWSSSMConfigProvider implements ConfigProvider {
   private readonly _namespace: string;
   private readonly _client: SSMClient;
+  private readonly _cache: TTLCache<string, ConfigSchema[keyof ConfigSchema]>;
+
   constructor(namespace: string) {
     this._namespace = namespace;
     this._client = new SSMClient({
       region: process.env.AWS_REGION,
+    });
+    this._cache = new TTLCache({
+      max: 5000,
+      ttl: 1000 * 60 * 15, // 15 minutes
     });
   }
   async get<K extends keyof ConfigSchema>(
@@ -26,6 +33,11 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
   ): Promise<ConfigSchema[K] | undefined> {
     const namespacedKey = namespace(this._namespace, key);
     try {
+      // Check if the value is already cached. This is to avoid unnecessary
+      // calls to AWS SSM and improve performance.
+      if (this._cache.has(namespacedKey)) {
+        return this._cache.get(namespacedKey) as ConfigSchema[K] | undefined;
+      }
       const response = await this._client.send(
         new GetParameterCommand({ Name: namespacedKey, WithDecryption: true }),
       );
