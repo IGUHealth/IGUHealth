@@ -17,6 +17,10 @@ interface DBMigrate {
 export const migratePostgres = async () => {
   const storeMigrate: DBMigrate = DBMigrate.getInstance(true, {
     env: "store",
+    config: path.join(
+      fileURLToPath(import.meta.url),
+      "../migrations/postgres/db-migrate/database.json",
+    ),
     cmdOptions: {
       "sql-file": true,
       "migrations-dir": path.join(
@@ -28,6 +32,10 @@ export const migratePostgres = async () => {
 
   const artifactMigrate: DBMigrate = DBMigrate.getInstance(true, {
     env: "artifact",
+    config: path.join(
+      fileURLToPath(import.meta.url),
+      "../migrations/postgres/db-migrate/database.json",
+    ),
     cmdOptions: {
       "sql-file": true,
       "migrations-dir": path.join(
