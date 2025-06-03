@@ -33,6 +33,8 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
   ): Promise<ConfigSchema[K] | undefined> {
     const namespacedKey = namespace(this._namespace, key);
     try {
+      // Check if the value is already cached. This is to avoid unnecessary
+      // calls to AWS SSM and improve performance.
       if (this._cache.has(namespacedKey)) {
         return this._cache.get(namespacedKey) as ConfigSchema[K] | undefined;
       }
