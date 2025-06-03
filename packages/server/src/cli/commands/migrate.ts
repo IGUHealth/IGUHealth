@@ -1,5 +1,6 @@
 import { Command } from "commander";
 
+import getConfigProvider from "../../config/index.js";
 import {
   migrateAll,
   migrateArtifacts,
@@ -12,10 +13,11 @@ function artifactCommands(command: Command) {
 }
 
 export function migrateCommands(command: Command) {
+  const config = getConfigProvider();
   command
     .command("postgres")
     .description("Run Postgres SQL migrations.")
-    .action(migratePostgres);
+    .action(() => migratePostgres(config));
 
   command
     .command("queue")
@@ -28,6 +30,6 @@ export function migrateCommands(command: Command) {
     .command("all")
     .description("Run all migrations.")
     .action(async () => {
-      await migrateAll();
+      await migrateAll(config);
     });
 }
