@@ -1,5 +1,7 @@
 // @ts-ignore
 import DBMigrate from "db-migrate";
+import * as path from "node:path";
+import { fileURLToPath } from "url";
 
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 
@@ -17,7 +19,10 @@ export const migratePostgres = async () => {
     env: "store",
     cmdOptions: {
       "sql-file": true,
-      "migrations-dir": "src/migrations/postgres/db-migrate",
+      "migrations-dir": path.join(
+        fileURLToPath(import.meta.url),
+        "../migrations/postgres/db-migrate",
+      ),
     },
   });
 
@@ -25,7 +30,10 @@ export const migratePostgres = async () => {
     env: "artifact",
     cmdOptions: {
       "sql-file": true,
-      "migrations-dir": "src/migrations/postgres/db-migrate",
+      "migrations-dir": path.join(
+        fileURLToPath(import.meta.url),
+        "../migrations/postgres/db-migrate",
+      ),
     },
   });
   await Promise.all([storeMigrate.up(), artifactMigrate.up()]);
