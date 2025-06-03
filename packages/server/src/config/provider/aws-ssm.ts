@@ -48,8 +48,11 @@ export default class AWSSSMConfigProvider implements ConfigProvider {
         throw new Error(`Parameter ${namespacedKey} not found`);
       }
 
+      this._cache.set(namespacedKey, value);
+
       return value;
     } catch (error) {
+      this._cache.set(namespacedKey, undefined);
       console.log(`Failed to get parameter ${namespacedKey}: ${error}`);
       return undefined;
     }
