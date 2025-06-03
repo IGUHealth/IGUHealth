@@ -17346,6 +17346,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/search-parameters", "workspace:packages/search-parameters"],\
           ["@iguhealth/smart-launch", "workspace:packages/smart-launch"],\
           ["@inquirer/prompts", "npm:5.5.0"],\
+          ["@isaacs/ttlcache", "npm:1.4.1"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@koa/bodyparser", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:5.1.1"],\
           ["@koa/cors", "npm:5.0.0"],\
@@ -18100,6 +18101,15 @@ const RAW_RUNTIME_STATE =
           "@types/swc__wasm",\
           "@types/typescript",\
           "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@isaacs/ttlcache", [\
+      ["npm:1.4.1", {\
+        "packageLocation": "./.yarn/cache/@isaacs-ttlcache-npm-1.4.1-1de33cdaab-57f2b00b58.zip/node_modules/@isaacs/ttlcache/",\
+        "packageDependencies": [\
+          ["@isaacs/ttlcache", "npm:1.4.1"]\
         ],\
         "linkType": "HARD"\
       }]\
