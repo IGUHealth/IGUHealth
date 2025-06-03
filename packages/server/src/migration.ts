@@ -21,7 +21,7 @@ export const migratePostgres = async () => {
       "sql-file": true,
       "migrations-dir": path.join(
         fileURLToPath(import.meta.url),
-        "./migrations/postgres/db-migrate",
+        "../migrations/postgres/db-migrate",
       ),
     },
   });
@@ -32,7 +32,7 @@ export const migratePostgres = async () => {
       "sql-file": true,
       "migrations-dir": path.join(
         fileURLToPath(import.meta.url),
-        "./migrations/postgres/db-migrate",
+        "../migrations/postgres/db-migrate",
       ),
     },
   });
