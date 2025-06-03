@@ -15,7 +15,7 @@
   "scripts": {
     "generate": "yarn node ./lib/cli/index.js generate types",
     "inject-version": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
-    "build": "yarn inject-version && tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib && yarn build-css",
+    "build": "yarn inject-version && tsc && yarn copyfiles  -u 1 \"src/migrations/**/*\" lib && yarn build-css",
     "cli": "yarn node ./lib/cli/index.js",
     "build-css": "yarn postcss -o public/css/index.css index.css",
     "watch-css": "yarn postcss --watch -o public/css/index.css index.css ",
