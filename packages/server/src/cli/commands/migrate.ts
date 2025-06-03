@@ -13,11 +13,10 @@ function artifactCommands(command: Command) {
 }
 
 export function migrateCommands(command: Command) {
-  const config = getConfigProvider();
   command
     .command("postgres")
     .description("Run Postgres SQL migrations.")
-    .action(() => migratePostgres(config));
+    .action(() => migratePostgres());
 
   command
     .command("queue")
@@ -30,6 +29,6 @@ export function migrateCommands(command: Command) {
     .command("all")
     .description("Run all migrations.")
     .action(async () => {
-      await migrateAll(config);
+      await migrateAll();
     });
 }

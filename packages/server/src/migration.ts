@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 
-import { ConfigProvider } from "./config/provider/interface.js";
+import getConfigProvider from "./config/index.js";
 import syncArtifacts from "./fhir-clients/clients/artifacts/load.js";
 import createQueue from "./queue/implementations/providers/index.js";
 import { DYNAMIC_TOPIC } from "./queue/implementations/topics/dynamic-topic.js";
@@ -14,7 +14,8 @@ interface DBMigrate {
   up: () => Promise<void>;
 }
 
-export const migratePostgres = async (config: ConfigProvider) => {
+export const migratePostgres = async () => {
+  const config = getConfigProvider();
   const storeMigrate: DBMigrate = DBMigrate.getInstance(true, {
     env: "store",
     config: {
@@ -61,7 +62,8 @@ export const migratePostgres = async (config: ConfigProvider) => {
   await Promise.all([storeMigrate.up(), artifactMigrate.up()]);
 };
 
-export const migrateQueue = async (config: ConfigProvider) => {
+export const migrateQueue = async () => {
+  const config = getConfigProvider();
   await config.validate();
   const queue = await createQueue(config);
   await queue.createTopic(DYNAMIC_TOPIC);
@@ -100,12 +102,13 @@ const artifactsToLoad = {
   ],
 };
 
-export const migrateArtifacts = async (config: ConfigProvider) => {
+export const migrateArtifacts = async () => {
+  const config = getConfigProvider();
   await syncArtifacts(artifactsToLoad);
 };
 
-export async function migrateAll(config: ConfigProvider) {
-  await migratePostgres(config);
-  await migrateQueue(config);
-  await migrateArtifacts(config);
+export async function migrateAll() {
+  await migratePostgres();
+  await migrateQueue();
+  await migrateArtifacts();
 }
