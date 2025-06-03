@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 import { AllResourceTypes } from "@iguhealth/fhir-types/versions";
 
-import getConfigProvider from "./config/index.js";
+import { ConfigProvider } from "./config/provider/interface.js";
 import syncArtifacts from "./fhir-clients/clients/artifacts/load.js";
 import createQueue from "./queue/implementations/providers/index.js";
 import { DYNAMIC_TOPIC } from "./queue/implementations/topics/dynamic-topic.js";
@@ -14,13 +14,20 @@ interface DBMigrate {
   up: () => Promise<void>;
 }
 
-export const migratePostgres = async () => {
+export const migratePostgres = async (config: ConfigProvider) => {
   const storeMigrate: DBMigrate = DBMigrate.getInstance(true, {
     env: "store",
-    config: path.join(
-      fileURLToPath(import.meta.url),
-      "../migrations/postgres/db-migrate/database.json",
-    ),
+    config: {
+      store: {
+        driver: "pg",
+        user: await config.get("RESOURCE_STORE_PG_USERNAME"),
+        password: await config.get("RESOURCE_STORE_PG_PASSWORD"),
+        host: await config.get("RESOURCE_STORE_PG_HOST"),
+        database: await config.get("RESOURCE_STORE_PG_NAME"),
+        port: await config.get("RESOURCE_STORE_PG_PORT"),
+        ssl: await config.get("RESOURCE_STORE_PG_SSL"),
+      },
+    },
     cmdOptions: {
       "sql-file": true,
       "migrations-dir": path.join(
@@ -32,10 +39,17 @@ export const migratePostgres = async () => {
 
   const artifactMigrate: DBMigrate = DBMigrate.getInstance(true, {
     env: "artifact",
-    config: path.join(
-      fileURLToPath(import.meta.url),
-      "../migrations/postgres/db-migrate/database.json",
-    ),
+    config: {
+      artifact: {
+        driver: "pg",
+        user: await config.get("ARTIFACT_DB_PG_USERNAME"),
+        password: await config.get("ARTIFACT_DB_PG_PASSWORD"),
+        host: await config.get("ARTIFACT_DB_PG_HOST"),
+        database: await config.get("ARTIFACT_DB_PG_NAME"),
+        port: await config.get("ARTIFACT_DB_PG_PORT"),
+        ssl: await config.get("ARTIFACT_DB_PG_SSL"),
+      },
+    },
     cmdOptions: {
       "sql-file": true,
       "migrations-dir": path.join(
@@ -47,8 +61,7 @@ export const migratePostgres = async () => {
   await Promise.all([storeMigrate.up(), artifactMigrate.up()]);
 };
 
-export const migrateQueue = async () => {
-  const config = getConfigProvider();
+export const migrateQueue = async (config: ConfigProvider) => {
   await config.validate();
   const queue = await createQueue(config);
   await queue.createTopic(DYNAMIC_TOPIC);
@@ -87,12 +100,12 @@ const artifactsToLoad = {
   ],
 };
 
-export const migrateArtifacts = async () => {
+export const migrateArtifacts = async (config: ConfigProvider) => {
   await syncArtifacts(artifactsToLoad);
 };
 
-export async function migrateAll() {
-  await migratePostgres();
-  await migrateQueue();
-  await migrateArtifacts();
+export async function migrateAll(config: ConfigProvider) {
+  await migratePostgres(config);
+  await migrateQueue(config);
+  await migrateArtifacts(config);
 }
