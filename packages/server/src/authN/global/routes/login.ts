@@ -126,12 +126,11 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       email,
       tenants: tenantClaims,
       generateTenantURL: (email, tenantId) => {
-        admin_app_url?.replace("<placeholder>", tenantId);
         if (!admin_app_url)
           throw new OperationError(
             outcomeFatal("exception", "Admin app URL not found"),
           );
-        return admin_app_url;
+        return admin_app_url?.replace("<placeholder>", tenantId);
       },
     }),
   );
