@@ -14,8 +14,8 @@ Resources:
     Type: AWS::Serverless::Function
     Metadata:
       DockerTag: nodejs22.x-v1
-      Dockerfile: server.dockerfile
-      DockerContext: ./docker
+      Dockerfile: docker/server.dockerfile
+      DockerContext: ./
 
     Properties:
       PackageType: Image
