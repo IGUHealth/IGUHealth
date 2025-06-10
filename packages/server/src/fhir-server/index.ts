@@ -143,6 +143,8 @@ export async function getRedisClient(
     _redis_client = new Redis({
       host: await config.get("REDIS_HOST"),
       port: parseInt((await config.get("REDIS_PORT")) || "6739"),
+      username: await config.get("REDIS_USERNAME"),
+      password: await config.get("REDIS_PASSWORD"),
       tls:
         (await config.get("REDIS_SSL")) === "true"
           ? {
