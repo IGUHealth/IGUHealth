@@ -11,8 +11,8 @@ function constructKey(tenant: TenantId, key: string) {
 export default class RedisCache<CTX extends { tenant: TenantId }>
   implements IOCache<CTX>
 {
-  private _client: Redis.default;
-  constructor(client: Redis.Redis) {
+  private _client: Redis.default | Redis.Cluster;
+  constructor(client: Redis.Redis | Redis.Cluster) {
     this._client = client;
   }
   async get(ctx: CTX, key: string) {

@@ -43,6 +43,14 @@ export type ConfigSchema = ResourceStorePg &
      */
     REDIS_PORT: string;
     /**
+     * Redis username
+     */
+    REDIS_USERNAME?: string;
+    /**
+     * Redis password
+     */
+    REDIS_PASSWORD?: string;
+    /**
      * Whether Redis connection is SSL
      */
     REDIS_SSL?: "true" | "false";

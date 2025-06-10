@@ -86,6 +86,14 @@
       "description": "Redis port",
       "default": "6379"
     },
+    "REDIS_USERNAME": {
+      "type": "string",
+      "description": "Redis username"
+    },
+    "REDIS_PASSWORD": {
+      "type": "string",
+      "description": "Redis password"
+    },
     "REDIS_SSL": {
       "type": "string",
       "enum": [
