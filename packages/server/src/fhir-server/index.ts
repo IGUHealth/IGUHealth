@@ -1,4 +1,4 @@
-import { Redis } from "ioredis";
+import { Cluster, Redis } from "ioredis";
 import pg from "pg";
 import { pino } from "pino";
 import pretty from "pino-pretty";
@@ -131,14 +131,14 @@ export const createLogger = async (config: ConfigProvider) =>
       : undefined,
   );
 
-let _redis_client: Redis | undefined = undefined;
+let _redis_client: Redis | Cluster | undefined = undefined;
 /**
  * Returns instantiated Redis client based on environment variables.
  * @returns Singleton Redis client
  */
 export async function getRedisClient(
   config: ConfigProvider,
-): Promise<Redis | undefined> {
+): Promise<Redis | Cluster | undefined> {
   if (!_redis_client) {
     _redis_client = new Redis({
       host: await config.get("REDIS_HOST"),
