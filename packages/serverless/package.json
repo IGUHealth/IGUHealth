@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/serverless",
   "description": "Serverless functions for IGUHealth.",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "homepage": "https://iguhealth.app",
   "repository": {
     "type": "git",
