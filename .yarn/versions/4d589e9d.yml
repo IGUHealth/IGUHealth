@@ -1,4 +1,0 @@
-releases:
-  "@iguhealth/koa-multipart-form": patch
-  "@iguhealth/server": patch
-  "@iguhealth/serverless": patch
