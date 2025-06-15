@@ -51,25 +51,38 @@ function makePromise(
     // eslint-disable-next-line prefer-rest-params
     const middleware = Reflect.apply(fn, this, arguments);
 
-    return async (ctx: any, next: () => any) => {
+    return async (ctx: Koa.Context, next: () => any) => {
+      if (ctx.header["content-type"] !== "multipart/form-data") return next();
       await new Promise((resolve, reject) => {
+        // Ignore if not multipart/form-data
         middleware(ctx.req, ctx.res, (err: any) => {
           if (err) return reject(err);
           if ("request" in ctx) {
+            // @ts-ignore
             if (ctx.req.body) {
+              // @ts-ignore
               ctx.request.body = ctx.req.body;
+              // @ts-ignore
               delete ctx.req.body;
             }
 
+            // @ts-ignore
             if (ctx.req.file) {
+              // @ts-ignore
               ctx.request.file = ctx.req.file;
+              // @ts-ignore
               ctx.file = ctx.req.file;
+              // @ts-ignore
               delete ctx.req.file;
             }
 
+            // @ts-ignore
             if (ctx.req.files) {
+              // @ts-ignore
               ctx.request.files = ctx.req.files;
+              // @ts-ignore
               ctx.files = ctx.req.files;
+              // @ts-ignore
               delete ctx.req.files;
             }
           }
