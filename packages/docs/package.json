@@ -36,7 +36,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.3",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "wrangler": "^4.20.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.4.0",
