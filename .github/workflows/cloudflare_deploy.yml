@@ -98,11 +98,10 @@ jobs:
           IGUHEALTH_CLIENT_ID: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_ID }}
           IGUHEALTH_CLIENT_SECRET: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_SECRET }}
 
-      - name: Cloudflare Deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: secrets.CLOUDFLARE_API_TOKEN
-          workingDirectory: "packages/docs"
+      - name: Deploy Documentation
+        run: yarn workspace @iguhealth/docs deploy
+        env:
+          CLOUDFLARE_API_TOKEN: secrets.CLOUDFLARE_API_TOKEN
 
   build_story_book:
     environment: production
