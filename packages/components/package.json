@@ -12,6 +12,8 @@
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs && yarn postcss --config postcss.config.js -o dist/index.css src/index.css",
     "storybook": "storybook dev -p 6006",
+    "deploy": "wrangler deploy",
+    "remove": "wrangler delete",
     "build-storybook": "storybook build",
     "watch-js": "rollup --watch -c --bundleConfigAsCjs",
     "watch-css": "postcss --watch --config postcss.config.js -o dist/index.css src/index.css",
@@ -64,7 +66,8 @@
     "storybook": "^8.2.9",
     "tailwindcss": "^3.4.17",
     "tslib": "^2.8.1",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "wrangler": "^4.20.1"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.3.2",
