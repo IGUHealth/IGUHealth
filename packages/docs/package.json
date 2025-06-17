@@ -11,7 +11,8 @@
     "start": "docusaurus start --port 3006",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "wrangler deploy",
+    "remove": "wrangler delete",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
@@ -36,7 +37,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.3",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "wrangler": "^4.20.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.4.0",
