@@ -9,7 +9,7 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
-  build_api_reference:
+  deploy_api_reference:
     environment: production
     name: Upload API Reference
     runs-on: ubuntu-latest
@@ -53,7 +53,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-  build_docs:
+  deploy_main_site:
     environment: production
     name: Upload Docs
     runs-on: ubuntu-latest
@@ -100,7 +100,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-  build_story_book:
+  deploy_story_book:
     environment: production
     name: Upload Storybook to S3
     runs-on: ubuntu-latest
@@ -140,6 +140,53 @@ jobs:
 
       - name: Deploy API Reference
         run: yarn workspace @iguhealth/components deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  deploy_admin_app:
+    environment: production
+    name: Upload Storybook to S3
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+          cache: "yarn"
+
+      - name: Yarn Setup
+        run: corepack prepare yarn@4.7.0 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install
+        run: sh install.sh
+
+      - name: Build Admin App
+        run: yarn workspaces foreach -ptR --topological-dev --from @iguhealth/admin-app run build
+
+      - name: Compile Admin App
+        run: yarn workspace @iguhealth/admin-app build
+        env:
+          REACT_APP_FHIR_BASE_URL: https://api.iguhealth.app/
+          REACT_APP_CLIENT_ID: admin-app
+
+      - name: Deploy API Reference
+        run: yarn workspace @iguhealth/admin-app deploy
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
