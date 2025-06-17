@@ -9,6 +9,7 @@
     "publish": "yarn workspaces foreach -A -pt --topological-dev run publish",
     "configure": "yarn node configure_packages.cjs",
     "generate-documentation": "yarn typedoc",
+    "deploy-documentation": "wrangler deploy",
     "format": "yarn prettier --write ",
     "start-server-and-test": "start-server-and-test"
   },
@@ -22,7 +23,8 @@
     "start-server-and-test": "^2.0.11",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.4",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "wrangler": "^4.20.1"
   },
   "description": "",
   "keywords": [],
