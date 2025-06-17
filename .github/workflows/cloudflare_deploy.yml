@@ -47,15 +47,11 @@ jobs:
       - name: Compile documentation
         run: yarn generate-documentation
 
-      - name: Configure AWS credentials from Github account
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
-          aws-region: us-east-1
-
-      - name: Copy files to the production website with the AWS CLI
-        run: |
-          aws s3 sync ./docs s3://api-reference.iguhealth.app
+      - name: Deploy API Reference
+        run: yarn deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   build_docs:
     environment: production
@@ -142,11 +138,8 @@ jobs:
       - name: Compile storybook
         run: yarn workspace @iguhealth/components build-storybook
 
-      - name: Configure AWS credentials from Github account
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
-          aws-region: us-east-1
-      - name: Copy files to the production website with the AWS CLI
-        run: |
-          aws s3 sync packages/components/storybook-static s3://storybook.iguhealth.app
+      - name: Deploy API Reference
+        run: yarn workspace @iguhealth/components deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
