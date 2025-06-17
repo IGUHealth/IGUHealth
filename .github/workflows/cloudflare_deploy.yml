@@ -19,7 +19,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -67,7 +67,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -98,14 +98,11 @@ jobs:
           IGUHEALTH_CLIENT_ID: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_ID }}
           IGUHEALTH_CLIENT_SECRET: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_SECRET }}
 
-      - name: Configure AWS credentials from Github account
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Cloudflare Deploy
+        uses: cloudflare/wrangler-action@v3
         with:
-          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
-          aws-region: us-east-1
-      - name: Copy files to the production website with the AWS CLI
-        run: |
-          aws s3 sync packages/docs/build s3://iguhealth.app
+          apiToken: secrets.CLOUDFLARE_API_TOKEN
+          workingDirectory: "packages/docs"
 
   build_story_book:
     environment: production
@@ -117,7 +114,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
