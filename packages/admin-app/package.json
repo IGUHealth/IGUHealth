@@ -41,7 +41,7 @@
   "scripts": {
     "start:headless": "BROWSER=none yarn run start",
     "start": "HOST=0.0.0.0 PORT=3001 react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "eject": "react-scripts eject",
     "deploy": "wrangler deploy",
     "remove": "wrangler delete"
