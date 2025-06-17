@@ -4,7 +4,7 @@
  */
 {
   // "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "documentation",
+  "name": "iguhealth-app",
   "compatibility_date": "2025-06-14",
   "assets": {
     "directory": "./build",
