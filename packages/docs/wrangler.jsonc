@@ -14,7 +14,7 @@
   },
   "routes": [
     {
-      "pattern": "test.iguhealth.app",
+      "pattern": "iguhealth.app",
       "custom_domain": true,
     },
   ],

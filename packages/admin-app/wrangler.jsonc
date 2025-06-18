@@ -14,8 +14,8 @@
   },
   "routes": [
     {
-      "pattern": "admin.iguhealth.app",
-      "custom_domain": true,
+      "pattern": "*.admin.iguhealth.app/*",
+      "zone_name": "iguhealth.app",
     },
   ],
   /**

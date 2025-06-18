@@ -14,7 +14,7 @@
   },
   "routes": [
     {
-      "pattern": "api-reference2.iguhealth.app",
+      "pattern": "api-reference.iguhealth.app",
       "custom_domain": true,
     },
   ],

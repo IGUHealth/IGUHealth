@@ -14,7 +14,7 @@
   },
   "routes": [
     {
-      "pattern": "storybook2.iguhealth.app",
+      "pattern": "storybook.iguhealth.app",
       "custom_domain": true,
     },
   ],
