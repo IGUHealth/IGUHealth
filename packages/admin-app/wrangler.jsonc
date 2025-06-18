@@ -16,6 +16,7 @@
     {
       "pattern": "*.admin.iguhealth.app/*",
       "zone_name": "iguhealth.app",
+      "not_found_handling": "single-page-application",
     },
   ],
   /**
