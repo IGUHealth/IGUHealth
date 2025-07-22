@@ -752,7 +752,7 @@ const RAW_RUNTIME_STATE =
           ["eventemitter3", "npm:4.0.7"],\
           ["fast-deep-equal", "npm:3.1.3"],\
           ["filtrex", "npm:0.5.4"],\
-          ["form-data", "npm:3.0.1"],\
+          ["form-data", "npm:3.0.4"],\
           ["got", "npm:11.8.6"],\
           ["hpagent", "npm:0.1.2"],\
           ["https-proxy-agent", "npm:5.0.1"],\
@@ -29034,7 +29034,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/node-fetch", "npm:2.6.4"],\
           ["@types/node", "npm:20.3.3"],\
-          ["form-data", "npm:3.0.1"]\
+          ["form-data", "npm:3.0.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -31752,7 +31752,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["axios", "npm:1.8.4"],\
           ["follow-redirects", "virtual:8cf735eb2b9f70962d771e00a864e9e0536f45b1a3899af224ac07f4fa06f6303e4a41f37b803333808763ece4c23df875efb5ad0daa70f6856aaaee39943a11#npm:1.15.6"],\
-          ["form-data", "npm:4.0.0"],\
+          ["form-data", "npm:4.0.2"],\
           ["proxy-from-env", "npm:1.1.0"]\
         ],\
         "linkType": "HARD"\
@@ -40044,22 +40044,14 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["form-data", [\
-      ["npm:3.0.1", {\
-        "packageLocation": "./.yarn/cache/form-data-npm-3.0.1-d080d436e0-944b40ff63.zip/node_modules/form-data/",\
+      ["npm:3.0.4", {\
+        "packageLocation": "./.yarn/cache/form-data-npm-3.0.4-2a63eafd8b-68e4598e55.zip/node_modules/form-data/",\
         "packageDependencies": [\
-          ["form-data", "npm:3.0.1"],\
+          ["form-data", "npm:3.0.4"],\
           ["asynckit", "npm:0.4.0"],\
           ["combined-stream", "npm:1.0.8"],\
-          ["mime-types", "npm:2.1.35"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.0.0", {\
-        "packageLocation": "./.yarn/cache/form-data-npm-4.0.0-916facec2d-7264aa760a.zip/node_modules/form-data/",\
-        "packageDependencies": [\
-          ["form-data", "npm:4.0.0"],\
-          ["asynckit", "npm:0.4.0"],\
-          ["combined-stream", "npm:1.0.8"],\
+          ["es-set-tostringtag", "npm:2.1.0"],\
+          ["hasown", "npm:2.0.2"],\
           ["mime-types", "npm:2.1.35"]\
         ],\
         "linkType": "HARD"\
@@ -44672,7 +44664,7 @@ const RAW_RUNTIME_STATE =
           ["decimal.js", "npm:10.4.3"],\
           ["domexception", "npm:2.0.1"],\
           ["escodegen", "npm:2.1.0"],\
-          ["form-data", "npm:3.0.1"],\
+          ["form-data", "npm:3.0.4"],\
           ["html-encoding-sniffer", "npm:2.0.1"],\
           ["http-proxy-agent", "npm:4.0.1"],\
           ["https-proxy-agent", "npm:5.0.1"],\
