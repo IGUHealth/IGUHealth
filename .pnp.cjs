@@ -17675,7 +17675,7 @@ const RAW_RUNTIME_STATE =
           ["jsonpointer", "npm:5.0.1"],\
           ["jwks-rsa", "npm:3.2.0"],\
           ["kafkajs", "npm:2.2.4"],\
-          ["koa", "npm:3.0.0"],\
+          ["koa", "npm:3.0.1"],\
           ["koa-compress", "npm:5.1.1"],\
           ["koa-helmet", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:8.0.1"],\
           ["koa-jwt", "npm:4.0.4"],\
@@ -19350,7 +19350,7 @@ const RAW_RUNTIME_STATE =
           ["@koa/bodyparser", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:5.1.1"],\
           ["@types/koa", "npm:2.15.0"],\
           ["co-body", "npm:6.1.0"],\
-          ["koa", "npm:3.0.0"],\
+          ["koa", "npm:3.0.1"],\
           ["lodash.merge", "npm:4.6.2"],\
           ["type-is", "npm:1.6.18"]\
         ],\
@@ -33089,17 +33089,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["cache-content-type", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "./.yarn/cache/cache-content-type-npm-1.0.1-f709f8c309-18db4d5945.zip/node_modules/cache-content-type/",\
-        "packageDependencies": [\
-          ["cache-content-type", "npm:1.0.1"],\
-          ["mime-types", "npm:2.1.35"],\
-          ["ylru", "npm:1.3.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["cacheable-lookup", [\
       ["npm:5.0.4", {\
         "packageLocation": "./.yarn/cache/cacheable-lookup-npm-5.0.4-8f13e8b44b-618a8b3eea.zip/node_modules/cacheable-lookup/",\
@@ -45097,16 +45086,14 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["koa", [\
-      ["npm:3.0.0", {\
-        "packageLocation": "./.yarn/cache/koa-npm-3.0.0-dda3f7b8df-212c84c40a.zip/node_modules/koa/",\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/koa-npm-3.0.1-b25d97703b-0e56f77f71.zip/node_modules/koa/",\
         "packageDependencies": [\
-          ["koa", "npm:3.0.0"],\
+          ["koa", "npm:3.0.1"],\
           ["accepts", "npm:1.3.8"],\
-          ["cache-content-type", "npm:1.0.1"],\
           ["content-disposition", "npm:0.5.4"],\
           ["content-type", "npm:1.0.5"],\
           ["cookies", "npm:0.9.1"],\
-          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["delegates", "npm:1.0.0"],\
           ["destroy", "npm:1.2.0"],\
           ["encodeurl", "npm:2.0.0"],\
@@ -45115,6 +45102,7 @@ const RAW_RUNTIME_STATE =
           ["http-assert", "npm:1.5.0"],\
           ["http-errors", "npm:2.0.0"],\
           ["koa-compose", "npm:4.1.0"],\
+          ["mime-types", "npm:3.0.1"],\
           ["on-finished", "npm:2.4.1"],\
           ["parseurl", "npm:1.3.3"],\
           ["statuses", "npm:2.0.1"],\
@@ -62862,15 +62850,6 @@ const RAW_RUNTIME_STATE =
           ["yauzl", "npm:2.10.0"],\
           ["buffer-crc32", "npm:0.2.13"],\
           ["fd-slicer", "npm:1.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["ylru", [\
-      ["npm:1.3.2", {\
-        "packageLocation": "./.yarn/cache/ylru-npm-1.3.2-81969d097f-56ea73b6fd.zip/node_modules/ylru/",\
-        "packageDependencies": [\
-          ["ylru", "npm:1.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\
