@@ -15443,7 +15443,7 @@ const RAW_RUNTIME_STATE =
           ["@docusaurus/utils-validation", "npm:3.4.0"],\
           ["@types/react", null],\
           ["@types/react-dom", null],\
-          ["mermaid", "npm:10.9.0"],\
+          ["mermaid", "npm:10.9.4"],\
           ["react", "npm:19.1.0"],\
           ["react-dom", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:19.1.0"],\
           ["tslib", "npm:2.6.2"]\
@@ -29461,13 +29461,6 @@ const RAW_RUNTIME_STATE =
           ["@types/trusted-types", "npm:2.0.3"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:2.0.7", {\
-        "packageLocation": "./.yarn/cache/@types-trusted-types-npm-2.0.7-a07fc44f59-8e4202766a.zip/node_modules/@types/trusted-types/",\
-        "packageDependencies": [\
-          ["@types/trusted-types", "npm:2.0.7"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@types/ua-parser-js", [\
@@ -35866,10 +35859,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:3cb51a313b8427e9230b00b38af22bed3e437241553159dbe3605f3c9d9692f4edaaf0e4d1e63a27beeaac04d6bb4674e7f7ba958f07f1efcdf118936a09da14#npm:4.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/cytoscape-cose-bilkent-virtual-4147fc0376/0/cache/cytoscape-cose-bilkent-npm-4.1.0-30566f1cf4-9ec2999159.zip/node_modules/cytoscape-cose-bilkent/",\
+      ["virtual:313c1bd44fa2ebfe31221b96d2076160d5beaf573eecf9c0eb22bb14ed30a63963bbb8bc896d8337605fa6168b9efdc4ecfd9ba230d879ce167b965651584af1#npm:4.1.0", {\
+        "packageLocation": "./.yarn/__virtual__/cytoscape-cose-bilkent-virtual-e3e40c547f/0/cache/cytoscape-cose-bilkent-npm-4.1.0-30566f1cf4-9ec2999159.zip/node_modules/cytoscape-cose-bilkent/",\
         "packageDependencies": [\
-          ["cytoscape-cose-bilkent", "virtual:3cb51a313b8427e9230b00b38af22bed3e437241553159dbe3605f3c9d9692f4edaaf0e4d1e63a27beeaac04d6bb4674e7f7ba958f07f1efcdf118936a09da14#npm:4.1.0"],\
+          ["cytoscape-cose-bilkent", "virtual:313c1bd44fa2ebfe31221b96d2076160d5beaf573eecf9c0eb22bb14ed30a63963bbb8bc896d8337605fa6168b9efdc4ecfd9ba230d879ce167b965651584af1#npm:4.1.0"],\
           ["@types/cytoscape", null],\
           ["cose-base", "npm:1.0.3"],\
           ["cytoscape", "npm:3.29.2"]\
@@ -37323,11 +37316,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["dompurify", [\
-      ["npm:3.2.4", {\
-        "packageLocation": "./.yarn/cache/dompurify-npm-3.2.4-d8ea6c7c6a-98570c5338.zip/node_modules/dompurify/",\
+      ["npm:3.1.6", {\
+        "packageLocation": "./.yarn/cache/dompurify-npm-3.1.6-344fd47e23-036844bc9b.zip/node_modules/dompurify/",\
         "packageDependencies": [\
-          ["dompurify", "npm:3.2.4"],\
-          ["@types/trusted-types", "npm:2.0.7"]\
+          ["dompurify", "npm:3.1.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -46571,20 +46563,20 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["mermaid", [\
-      ["npm:10.9.0", {\
-        "packageLocation": "./.yarn/cache/mermaid-npm-10.9.0-3cb51a313b-458c2dec31.zip/node_modules/mermaid/",\
+      ["npm:10.9.4", {\
+        "packageLocation": "./.yarn/cache/mermaid-npm-10.9.4-313c1bd44f-1d51839345.zip/node_modules/mermaid/",\
         "packageDependencies": [\
-          ["mermaid", "npm:10.9.0"],\
+          ["mermaid", "npm:10.9.4"],\
           ["@braintree/sanitize-url", "npm:6.0.4"],\
           ["@types/d3-scale", "npm:4.0.8"],\
           ["@types/d3-scale-chromatic", "npm:3.0.3"],\
           ["cytoscape", "npm:3.29.2"],\
-          ["cytoscape-cose-bilkent", "virtual:3cb51a313b8427e9230b00b38af22bed3e437241553159dbe3605f3c9d9692f4edaaf0e4d1e63a27beeaac04d6bb4674e7f7ba958f07f1efcdf118936a09da14#npm:4.1.0"],\
+          ["cytoscape-cose-bilkent", "virtual:313c1bd44fa2ebfe31221b96d2076160d5beaf573eecf9c0eb22bb14ed30a63963bbb8bc896d8337605fa6168b9efdc4ecfd9ba230d879ce167b965651584af1#npm:4.1.0"],\
           ["d3", "npm:7.9.0"],\
           ["d3-sankey", "npm:0.12.3"],\
           ["dagre-d3-es", "npm:7.0.10"],\
           ["dayjs", "npm:1.11.11"],\
-          ["dompurify", "npm:3.2.4"],\
+          ["dompurify", "npm:3.1.6"],\
           ["elkjs", "npm:0.9.3"],\
           ["katex", "npm:0.16.21"],\
           ["khroma", "npm:2.1.0"],\
