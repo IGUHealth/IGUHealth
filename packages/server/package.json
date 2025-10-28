@@ -95,7 +95,7 @@
     "pino": "^9.6.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "validator": "^13.15.0",
+    "validator": "^13.15.20",
     "zapatos": "^6.5.0"
   },
   "devDependencies": {
