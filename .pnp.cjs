@@ -41173,7 +41173,7 @@ const RAW_RUNTIME_STATE =
           ["hast-util-from-parse5", "npm:8.0.1"],\
           ["hast-util-to-parse5", "npm:8.0.0"],\
           ["html-void-elements", "npm:3.0.0"],\
-          ["mdast-util-to-hast", "npm:13.0.2"],\
+          ["mdast-util-to-hast", "npm:13.2.1"],\
           ["parse5", "npm:7.1.2"],\
           ["unist-util-position", "npm:5.0.0"],\
           ["unist-util-visit", "npm:5.0.0"],\
@@ -46408,10 +46408,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["mdast-util-to-hast", [\
-      ["npm:13.0.2", {\
-        "packageLocation": "./.yarn/cache/mdast-util-to-hast-npm-13.0.2-87e682f4f1-6f91926ca5.zip/node_modules/mdast-util-to-hast/",\
+      ["npm:13.2.1", {\
+        "packageLocation": "./.yarn/cache/mdast-util-to-hast-npm-13.2.1-c34c4454f4-8fddf5e66e.zip/node_modules/mdast-util-to-hast/",\
         "packageDependencies": [\
-          ["mdast-util-to-hast", "npm:13.0.2"],\
+          ["mdast-util-to-hast", "npm:13.2.1"],\
           ["@types/hast", "npm:3.0.3"],\
           ["@types/mdast", "npm:4.0.3"],\
           ["@ungap/structured-clone", "npm:1.2.0"],\
@@ -46419,7 +46419,8 @@ const RAW_RUNTIME_STATE =
           ["micromark-util-sanitize-uri", "npm:2.0.0"],\
           ["trim-lines", "npm:3.0.1"],\
           ["unist-util-position", "npm:5.0.0"],\
-          ["unist-util-visit", "npm:5.0.0"]\
+          ["unist-util-visit", "npm:5.0.0"],\
+          ["vfile", "npm:6.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -56265,7 +56266,7 @@ const RAW_RUNTIME_STATE =
           ["remark-rehype", "npm:11.0.0"],\
           ["@types/hast", "npm:3.0.3"],\
           ["@types/mdast", "npm:4.0.3"],\
-          ["mdast-util-to-hast", "npm:13.0.2"],\
+          ["mdast-util-to-hast", "npm:13.2.1"],\
           ["unified", "npm:11.0.4"],\
           ["vfile", "npm:6.0.1"]\
         ],\
