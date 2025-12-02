@@ -17697,7 +17697,7 @@ const RAW_RUNTIME_STATE =
           ["ts-jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.3.2"],\
           ["tsx", "npm:4.11.2"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
-          ["validator", "npm:13.15.0"],\
+          ["validator", "npm:13.15.23"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.5.0"]\
         ],\
         "linkType": "SOFT"\
@@ -61368,10 +61368,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["validator", [\
-      ["npm:13.15.0", {\
-        "packageLocation": "./.yarn/cache/validator-npm-13.15.0-b048a51909-cc4435e37a.zip/node_modules/validator/",\
+      ["npm:13.15.23", {\
+        "packageLocation": "./.yarn/cache/validator-npm-13.15.23-617cdf95cc-03e4a37c04.zip/node_modules/validator/",\
         "packageDependencies": [\
-          ["validator", "npm:13.15.0"]\
+          ["validator", "npm:13.15.23"]\
         ],\
         "linkType": "HARD"\
       }]\
