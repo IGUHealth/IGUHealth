@@ -115,6 +115,7 @@ async function evaluateAccessPolicyRule<CTX, Role>(
       outcomeFatal("exception", `Invalid access policy rule at '${loc}'.`),
     );
   }
+  
   const shouldEvaluate = await shouldEvaluateRule(
     context,
     pt.descend(loc, "target"),

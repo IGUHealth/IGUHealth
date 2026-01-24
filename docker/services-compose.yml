@@ -28,7 +28,7 @@ services:
       - 6379:6379
 
   postgres:
-    image: postgres:16.3
+    image: postgres:18.1
 
     ports:
       - 5432:5432
