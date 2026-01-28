@@ -17475,7 +17475,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/koa-multipart-form", "workspace:packages/koa-multipart-form"],\
           ["@types/koa", "npm:2.15.0"],\
           ["@types/multer", "npm:1.4.12"],\
-          ["multer", "npm:2.0.0"],\
+          ["multer", "npm:2.0.2"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -34250,13 +34250,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["concat-stream", [\
-      ["npm:1.6.2", {\
-        "packageLocation": "./.yarn/cache/concat-stream-npm-1.6.2-2bee337060-71db903c84.zip/node_modules/concat-stream/",\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/concat-stream-npm-2.0.0-8bb2ad5aa0-250e576d06.zip/node_modules/concat-stream/",\
         "packageDependencies": [\
-          ["concat-stream", "npm:1.6.2"],\
+          ["concat-stream", "npm:2.0.0"],\
           ["buffer-from", "npm:1.1.2"],\
           ["inherits", "npm:2.0.4"],\
-          ["readable-stream", "npm:2.3.8"],\
+          ["readable-stream", "npm:3.6.2"],\
           ["typedarray", "npm:0.0.6"]\
         ],\
         "linkType": "HARD"\
@@ -47866,13 +47866,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["multer", [\
-      ["npm:2.0.0", {\
-        "packageLocation": "./.yarn/cache/multer-npm-2.0.0-aefd211bd2-e6aebea164.zip/node_modules/multer/",\
+      ["npm:2.0.2", {\
+        "packageLocation": "./.yarn/cache/multer-npm-2.0.2-8feabf7be2-4bdcb07138.zip/node_modules/multer/",\
         "packageDependencies": [\
-          ["multer", "npm:2.0.0"],\
+          ["multer", "npm:2.0.2"],\
           ["append-field", "npm:1.0.0"],\
           ["busboy", "npm:1.6.0"],\
-          ["concat-stream", "npm:1.6.2"],\
+          ["concat-stream", "npm:2.0.0"],\
           ["mkdirp", "npm:0.5.6"],\
           ["object-assign", "npm:4.1.1"],\
           ["type-is", "npm:1.6.18"],\
