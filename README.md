@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **This project is archived and no longer maintained.**
+> IGUHealth has been superseded by **[Haste Health](https://haste.health)**, a high-performance FHIR R4 clinical data repository rewritten in Rust (Apache 2.0) by the same team.
+> New development, issues, and support: **[https://github.com/HasteHealth/HasteHealth](https://github.com/HasteHealth/HasteHealth)**
+
 # IGUHealth
 
 FHIR development environment. Code is written in typescript
